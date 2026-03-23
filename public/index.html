@@ -321,7 +321,7 @@
     <a class="nav-item active" href="#dashboard">
       <span class="nav-icon">📊</span> Dashboard
     </a>
-    <a class="nav-item" href="#projects">
+    <a class="nav-item" href="/projects/">
       <span class="nav-icon">🗂️</span> Projects
     </a>
     <a class="nav-item" href="#ai-team">
@@ -338,7 +338,7 @@
     </a>
   </nav>
   <div class="sidebar-footer">
-    <span>BenBot ₿ · v4.0</span>
+    <span>BenBot ₿ · v4.1</span>
   </div>
 </div>
 
@@ -488,7 +488,274 @@
   // ─── Store projects globally for detail panel ───
   let allProjects = [];
 
-  // [helpers and render functions unchanged: ...]
+  // ─── Helpers ───
+  function fmt(n) {
+    if (n === null || n === undefined) return '—';
+    if (n >= 1_000_000) return 'A$' + (n / 1_000_000).toFixed(1) + 'M';
+    if (n >= 1_000) return '$' + Math.round(n / 1_000) + 'K';
+    return '$' + n.toLocaleString();
+  }
+
+  function statusBadge(status) {
+    const cls = { overdue:'badge-overdue', in_progress:'badge-in_progress', not_started:'badge-not_started',
+      pending_decision:'badge-pending_decision', pending:'badge-pending', completed:'badge-completed' };
+    const lbl = { overdue:'Overdue', in_progress:'In Progress', not_started:'Not Started',
+      pending_decision:'Pending', pending:'Pending', completed:'Done' };
+    return `<span class="badge ${cls[status] || 'badge-not_started'}">${lbl[status] || status}</span>`;
+  }
+
+  function catBadge(cat) {
+    const cls = { Product:'cat-product', Finance:'cat-finance', Sales:'cat-sales',
+      Legal:'cat-legal', Marketing:'cat-marketing', Operations:'cat-operations' };
+    return `<span class="badge ${cls[cat] || 'badge-not_started'}">${cat || ''}</span>`;
+  }
+
+  function timeSince(isoStr) {
+    if (!isoStr) return '';
+    const diff = (Date.now() - new Date(isoStr).getTime()) / 3600000;
+    if (diff < 1) return Math.round(diff * 60) + 'm ago';
+    if (diff < 24) return Math.round(diff) + 'h ago';
+    return Math.round(diff / 24) + 'd ago';
+  }
+
+  function agentDotClass(isoStr) {
+    if (!isoStr) return 'dot-red';
+    const diff = (Date.now() - new Date(isoStr).getTime()) / 3600000;
+    if (diff < 2) return 'dot-green';
+    if (diff < 8) return 'dot-yellow';
+    return 'dot-red';
+  }
+
+  function greeting() {
+    const h = new Date().getHours();
+    if (h < 12) return 'Good morning, Ben ₿';
+    if (h < 17) return 'Good afternoon, Ben ₿';
+    return 'Good evening, Ben ₿';
+  }
+
+  function fmtDate(d) {
+    return d.toLocaleDateString('en-AU', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
+  function minutesSince(isoStr) {
+    if (!isoStr) return '?';
+    const diff = Math.round((Date.now() - new Date(isoStr).getTime()) / 60000);
+    if (diff < 1) return 'just now';
+    if (diff === 1) return '1 min ago';
+    if (diff < 60) return diff + ' mins ago';
+    return Math.round(diff / 60) + 'h ago';
+  }
+
+  function fileIcon(type) {
+    const m = { doc:'📄', sheet:'📊', pdf:'📑', deck:'📽️', image:'🖼️' };
+    return m[type] || '📄';
+  }
+
+  function parseTimeToMinutes(t) {
+    if (!t) return null;
+    const [timePart, ampm] = t.trim().split(' ');
+    let [h, m] = timePart.split(':').map(Number);
+    if (ampm === 'PM' && h !== 12) h += 12;
+    if (ampm === 'AM' && h === 12) h = 0;
+    return h * 60 + m;
+  }
+
+  function nowMinutes() {
+    const n = new Date();
+    return n.getHours() * 60 + n.getMinutes();
+  }
+
+  function nowTimeLabel() {
+    const n = new Date();
+    return n.toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit', hour12: true });
+  }
+
+  function sortByTime(events) {
+    return [...events].sort((a, b) => (parseTimeToMinutes(a.time) || 0) - (parseTimeToMinutes(b.time) || 0));
+  }
+
+  // ─── Render: Priorities ───
+  function renderPriorities(items) {
+    document.getElementById('priority-count').textContent = items.length;
+    document.getElementById('priorities-list').innerHTML = items.map(p => `
+      <div class="priority-item">
+        ${statusBadge(p.status)}
+        <span class="priority-title">${p.title}</span>
+        <span class="priority-assignee">👤 ${p.assignee || '—'}</span>
+        ${p.due ? `<span class="priority-meta">${p.due}</span>` : ''}
+      </div>
+    `).join('');
+  }
+
+  // ─── Render: Projects (numbered list) ───
+  function renderProjects(items) {
+    allProjects = items;
+    document.getElementById('project-count').textContent = items.length;
+    document.getElementById('projects-list').innerHTML = items.map((p, i) => `
+      <div class="project-list-item" data-project-index="${i}" onclick="openDetail(${i})">
+        <span class="project-num">${i + 1}</span>
+        <span class="project-list-name">${p.name}</span>
+        <span class="project-list-owner">👤 ${p.owner}</span>
+        ${catBadge(p.category)}
+        ${statusBadge(p.status)}
+        <span class="project-list-arrow">›</span>
+      </div>
+    `).join('');
+  }
+
+  // ─── Render: Calendar (time-aware) ───
+  function renderCalendar(items) {
+    const sorted = sortByTime(items);
+    const now = nowMinutes();
+    document.getElementById('cal-count').textContent = sorted.length;
+
+    let nowInserted = false;
+    let html = '';
+
+    for (let i = 0; i < sorted.length; i++) {
+      const e = sorted[i];
+      const start = parseTimeToMinutes(e.time);
+      const end   = parseTimeToMinutes(e.end_time);
+      const isPast    = end !== null && end < now;
+      const isCurrent = start !== null && end !== null && start <= now && now < end;
+      const isFuture  = start !== null && start > now;
+
+      if (!nowInserted && isFuture) {
+        nowInserted = true;
+        html += `
+          <div class="now-marker">
+            <div class="now-dot"></div>
+            <span class="now-label">▶ NOW</span>
+            <span class="now-time">${nowTimeLabel()}</span>
+          </div>`;
+      }
+
+      let cls = '';
+      if (isPast) cls = 'past';
+      else if (isCurrent) cls = 'current';
+
+      html += `
+        <div class="cal-item ${cls}">
+          <div class="cal-time-wrap">
+            <span class="cal-time-main">${e.time}</span>
+            <span class="cal-time-end">→ ${e.end_time}</span>
+          </div>
+          <span class="cal-title">${isCurrent ? '🔴 ' : ''}${e.title}</span>
+          <span class="type-badge type-${e.type}">${e.type}</span>
+        </div>`;
+    }
+
+    if (!nowInserted) {
+      html += `
+        <div class="now-marker">
+          <div class="now-dot"></div>
+          <span class="now-label">▶ NOW</span>
+          <span class="now-time">${nowTimeLabel()}</span>
+        </div>`;
+    }
+
+    document.getElementById('calendar-list').innerHTML = html;
+  }
+
+  // ─── Render: Agents ───
+  function renderAgents(items) {
+    document.getElementById('agent-count').textContent = items.length;
+    document.getElementById('agents-grid').innerHTML = items.map(a => {
+      const statusCls = { active:'pill-active', waiting:'pill-waiting', idle:'pill-idle' };
+      const statusLbl = { active:'● Active', waiting:'⏳ Waiting', idle:'○ Idle' };
+      return `
+        <div class="agent-card">
+          <span class="status-pill ${statusCls[a.status] || 'pill-idle'}">${statusLbl[a.status] || a.status}</span>
+          <div class="agent-emoji">${a.emoji}</div>
+          <div class="agent-name">${a.name}</div>
+          <div class="agent-role">${a.role}</div>
+          ${a.current_task ? `<div class="agent-current">${a.current_task}</div>` : ''}
+          ${a.last_completed ? `<div class="agent-completed">✅ ${a.last_completed}</div>` : ''}
+          ${a.waiting_on ? `<div class="agent-waiting">⏳ ${a.waiting_on}</div>` : ''}
+          <div class="agent-time">${timeSince(a.last_updated)}</div>
+        </div>`;
+    }).join('');
+  }
+
+  // ─── Render: KPIs ───
+  function renderKPIs(kpis) {
+    document.getElementById('kpi-cash').textContent = fmt(kpis.cash_at_bank);
+    document.getElementById('kpi-survivor').textContent = fmt(kpis.survivor_line_april);
+    document.getElementById('kpi-members').textContent = (kpis.active_members || '—').toLocaleString();
+    document.getElementById('kpi-platinum').textContent = (kpis.platinum_members || '—') + ' Platinum';
+    const pct = kpis.renewals_won && kpis.renewals_target
+      ? Math.min(100, Math.round(kpis.renewals_won / kpis.renewals_target * 100)) : 0;
+    document.getElementById('kpi-renewals').textContent = fmt(kpis.renewals_won) + ' / ' + fmt(kpis.renewals_target);
+    document.getElementById('renewal-bar').style.width = pct + '%';
+    document.getElementById('kpi-days-left').textContent = (kpis.renewals_days_left || '—') + ' days left · ' + pct + '%';
+    document.getElementById('kpi-arr').textContent = fmt(kpis.arr);
+  }
+
+  // ─── Project Detail Panel ───
+  function openDetail(idx) {
+    const p = allProjects[idx];
+    if (!p) return;
+
+    document.getElementById('dp-name').textContent = p.name;
+    document.getElementById('dp-status-badge').innerHTML = statusBadge(p.status);
+    document.getElementById('dp-cat-badge').innerHTML   = catBadge(p.category);
+    document.getElementById('dp-owner').textContent     = '👤 ' + (p.owner || '—');
+    document.getElementById('dp-due').textContent       = p.due ? '📅 Due: ' + p.due : '';
+
+    const notesEl = document.getElementById('dp-notes');
+    const notesSec = document.getElementById('dp-notes-section');
+    if (p.notes) {
+      notesEl.textContent = p.notes;
+      notesSec.style.display = '';
+    } else {
+      notesSec.style.display = 'none';
+    }
+
+    const files = p.files || [];
+    document.getElementById('dp-file-count').textContent = files.length ? `(${files.length})` : '';
+    if (files.length === 0) {
+      document.getElementById('dp-files').innerHTML =
+        '<div style="font-size:0.82rem;color:#475569;padding:8px 0">No files attached yet.</div>';
+    } else {
+      document.getElementById('dp-files').innerHTML = files.map(f => `
+        <div class="file-item">
+          <span class="file-icon">${fileIcon(f.type)}</span>
+          <div class="file-info">
+            <div class="file-name">${f.name}</div>
+            <div class="file-meta">By ${f.bot || '—'} · Updated ${f.updated || '—'}</div>
+          </div>
+          ${f.url
+            ? `<a class="file-view" href="${f.url}" target="_blank" rel="noopener">View →</a>`
+            : `<span class="file-view-disabled">No link</span>`
+          }
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('detail-backdrop').classList.add('open');
+    document.getElementById('detail-panel').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDetail() {
+    document.getElementById('detail-backdrop').classList.remove('open');
+    document.getElementById('detail-panel').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
+
+  // ─── BTC live price ───
+  async function fetchBTC() {
+    try {
+      const res  = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+      const data = await res.json();
+      const price = data?.bitcoin?.usd;
+      if (price) document.getElementById('kpi-btc').textContent = '$' + price.toLocaleString();
+    } catch {
+      document.getElementById('kpi-btc').textContent = 'Unavailable';
+    }
+  }
 
   // --- Fear & Greed fetch ---
   async function fetchFG() {
@@ -541,19 +808,14 @@
   }
   setInterval(updateCountdown, 15000);
 
-  // --- Patch data fetches to track calendar globally for countdown ---
-  const origRenderCalendar = renderCalendar;
+  // --- Patch renderCalendar to track data globally for countdown ---
+  const _origRenderCalendar = renderCalendar;
   window.latestCalData = null;
   renderCalendar = function(items) {
     window.latestCalData = items;
-    origRenderCalendar(items);
+    _origRenderCalendar(items);
     updateCountdown();
   };
-
-  // Rest of helpers and renders unchanged...
-
-  // --- BTC fetch unchanged, see above ---
-  // --- Load snapshot unchanged, see above ---
 
   let lastUpdatedISO = null;
   async function loadData() {

@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Positioning For What Comes Next — Collective Shift</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --white: #FFFFFF;
+  --warm-white: #FAFAFA;
+  --dark: #02000D;
+  --dark-navy: #1B1925;
+  --orange: #FC5C03;
+  --body-text: #4A4A4A;
+  --caption: #807F86;
+  --heading-font: 'Plus Jakarta Sans', sans-serif;
+  --body-font: 'Barlow', sans-serif;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  font-family: var(--body-font);
+  background: #000;
+}
+
+/* SLIDE CONTAINER */
+.deck {
+  width: 100vw; height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 100px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  overflow-y: auto;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* BACKGROUNDS */
+.bg-white { background: var(--white); }
+.bg-warm { background: var(--warm-white); }
+.bg-dark { background: var(--dark); }
+.bg-navy { background: var(--dark-navy); }
+.bg-orange { background: var(--orange); }
+
+/* TYPOGRAPHY — WHITE BACKGROUNDS */
+.bg-white h1, .bg-warm h1,
+.bg-white h2, .bg-warm h2 {
+  font-family: var(--heading-font);
+  color: var(--dark-navy);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 24px;
+}
+
+.bg-white h1, .bg-warm h1 { font-size: 56px; }
+.bg-white h2, .bg-warm h2 { font-size: 42px; font-weight: 700; }
+
+.bg-white p, .bg-warm p,
+.bg-white li, .bg-warm li {
+  font-family: var(--body-font);
+  color: var(--body-text);
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.6;
+}
+
+.bg-white .caption, .bg-warm .caption {
+  color: var(--caption);
+  font-weight: 300;
+  font-size: 16px;
+}
+
+/* TYPOGRAPHY — DARK BACKGROUNDS */
+.bg-dark h1, .bg-navy h1,
+.bg-dark h2, .bg-navy h2 {
+  font-family: var(--heading-font);
+  color: var(--white);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 24px;
+}
+
+.bg-dark h1, .bg-navy h1 { font-size: 56px; }
+.bg-dark h2, .bg-navy h2 { font-size: 42px; font-weight: 700; }
+
+.bg-dark p, .bg-navy p,
+.bg-dark li, .bg-navy li {
+  color: rgba(255,255,255,0.9);
+  font-family: var(--body-font);
+  font-size: 20px;
+  line-height: 1.6;
+}
+
+/* TYPOGRAPHY — ORANGE BACKGROUNDS */
+.bg-orange h1, .bg-orange h2 {
+  font-family: var(--heading-font);
+  color: var(--white);
+  font-weight: 800;
+  font-size: 56px;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+
+.bg-orange p, .bg-orange .subtitle {
+  color: rgba(255,255,255,0.85);
+  font-family: var(--body-font);
+  font-size: 24px;
+  font-weight: 400;
+}
+
+/* ACCENT */
+.accent { color: var(--orange); }
+.accent-num {
+  font-family: var(--heading-font);
+  font-size: 84px;
+  font-weight: 800;
+  color: var(--orange);
+  line-height: 1;
+}
+
+/* STEP TAG */
+.step-tag {
+  font-family: var(--heading-font);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--orange);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+/* CARDS */
+.card {
+  background: var(--white);
+  border-left: 4px solid var(--orange);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 16px;
+}
+
+.card h3 {
+  font-family: var(--heading-font);
+  color: var(--dark-navy);
+  font-weight: 700;
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.card p, .card li {
+  font-family: var(--body-font);
+  color: var(--body-text);
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+/* QUOTE BLOCKS */
+.quote {
+  border-left: 4px solid var(--orange);
+  background: rgba(252,92,3,0.04);
+  padding: 24px 32px;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--dark-navy);
+  border-radius: 0 12px 12px 0;
+  margin-top: 24px;
+  font-family: var(--body-font);
+  line-height: 1.5;
+}
+
+.quote-dark {
+  border-left: 4px solid var(--orange);
+  background: rgba(252,92,3,0.12);
+  padding: 24px 32px;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--white);
+  border-radius: 0 12px 12px 0;
+  margin-top: 24px;
+  font-family: var(--body-font);
+  line-height: 1.5;
+}
+
+/* GRID LAYOUTS */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 32px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; margin-top: 32px; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 32px; }
+
+/* LISTS */
+ul.clean { list-style: none; padding: 0; }
+ul.clean li { padding: 8px 0; padding-left: 24px; position: relative; font-size: 20px; }
+ul.clean li::before { content: '→'; position: absolute; left: 0; color: var(--orange); font-weight: 700; }
+
+ul.check { list-style: none; padding: 0; }
+ul.check li { padding: 8px 0; padding-left: 32px; position: relative; font-size: 20px; }
+ul.check li::before { content: '✓'; position: absolute; left: 0; color: var(--orange); font-weight: 700; font-size: 20px; }
+
+/* EXERCISE BOX */
+.exercise {
+  border: 2px solid var(--orange);
+  border-radius: 12px;
+  padding: 24px 32px;
+  margin-top: 24px;
+  background: rgba(252,92,3,0.03);
+}
+
+.exercise .label {
+  font-family: var(--heading-font);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 8px;
+}
+
+/* TABLE */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+}
+
+.data-table th {
+  background: var(--dark-navy);
+  color: var(--white);
+  font-family: var(--heading-font);
+  font-weight: 600;
+  font-size: 16px;
+  padding: 16px 24px;
+  text-align: left;
+}
+
+.data-table td {
+  padding: 16px 24px;
+  font-family: var(--body-font);
+  font-size: 18px;
+  color: var(--body-text);
+  border-bottom: 1px solid #F0F0F0;
+  background: var(--white);
+}
+
+.data-table tr:last-child td { border-bottom: none; }
+
+/* PROGRESS BAR */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: var(--orange);
+  transition: width 0.4s ease;
+  z-index: 1000;
+}
+
+/* SLIDE COUNTER */
+.slide-counter {
+  position: fixed;
+  bottom: 24px;
+  right: 40px;
+  font-family: var(--body-font);
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(128,127,134,0.6);
+  z-index: 1000;
+  pointer-events: none;
+}
+
+/* LOGO */
+.logo {
+  position: absolute;
+  top: 32px;
+  right: 40px;
+  font-family: var(--heading-font);
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.bg-white .logo, .bg-warm .logo { color: var(--dark-navy); }
+.bg-dark .logo, .bg-navy .logo, .bg-orange .logo { color: var(--white); }
+
+/* JOURNEY MAP */
+.journey-map {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 32px;
+  width: 100%;
+}
+
+.journey-step {
+  flex: 1;
+  text-align: center;
+  padding: 16px 8px;
+  position: relative;
+  border-bottom: 3px solid #E0E0E0;
+}
+
+.journey-step.active {
+  border-bottom-color: var(--orange);
+}
+
+.journey-step.completed {
+  border-bottom-color: rgba(252,92,3,0.3);
+}
+
+.journey-step .num {
+  font-family: var(--heading-font);
+  font-size: 28px;
+  font-weight: 800;
+  color: #D0D0D0;
+}
+
+.journey-step.active .num {
+  color: var(--orange);
+}
+
+.journey-step.completed .num {
+  color: rgba(252,92,3,0.4);
+}
+
+.journey-step .step-label {
+  font-family: var(--body-font);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--caption);
+  margin-top: 4px;
+}
+
+.journey-step.active .step-label {
+  color: var(--orange);
+  font-weight: 600;
+}
+
+.phase-label {
+  font-family: var(--heading-font);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--caption);
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* SVG CHARTS */
+.chart-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 24px auto;
+}
+
+.chart-container svg {
+  width: 100%;
+  height: auto;
+}
+
+/* FULLSCREEN HINT */
+.fs-hint {
+  position: fixed;
+  bottom: 24px;
+  left: 40px;
+  font-family: var(--body-font);
+  font-size: 12px;
+  color: rgba(128,127,134,0.4);
+  z-index: 1000;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .slide { padding: 40px 60px; }
+  .bg-white h1, .bg-warm h1, .bg-dark h1, .bg-navy h1 { font-size: 44px; }
+  .bg-orange h1 { font-size: 44px; }
+  .accent-num { font-size: 64px; }
+}
+
+@media (max-width: 768px) {
+  .slide { padding: 32px 32px; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .bg-white h1, .bg-warm h1, .bg-dark h1, .bg-navy h1 { font-size: 36px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="slide-counter" id="slideCounter">1 / 50</div>
+<div class="fs-hint">Press <strong>F</strong> for fullscreen · Arrow keys or click to navigate</div>
+
+<div class="deck" id="deck">
+
+<!-- ============================================================ -->
+<!-- SLIDE 1 — TITLE (DARK) -->
+<!-- ============================================================ -->
+<div class="slide bg-dark active" data-slide="1">
+  <div class="logo" style="opacity:0.7;">COLLECTIVE SHIFT</div>
+  <div style="text-align:center; max-width:900px; margin:0 auto;">
+    <p style="font-family:var(--heading-font); font-size:16px; font-weight:600; letter-spacing:4px; color:var(--orange); text-transform:uppercase; margin-bottom:32px;">New Member Strategy Sessions · March 2026</p>
+    <h1 style="font-size:68px; letter-spacing:-1px;">POSITIONING FOR<br>WHAT COMES NEXT</h1>
+    <div style="width:80px; height:3px; background:var(--orange); margin:40px auto;"></div>
+    <p style="font-size:22px; color:rgba(255,255,255,0.7); font-weight:300;">Ben Simpson&ensp;·&ensp;Founder & CEO, Collective Shift</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 2 — WHY I RUN THESE SESSIONS (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="2">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"The First Few Months<br>Are Everything"</h1>
+  <ul class="clean" style="margin-top:24px; max-width:800px;">
+    <li>You joined at an unusual moment — Bitcoin, AI, and macro all moving simultaneously</li>
+    <li>Tonight we build your entire strategy from the ground up</li>
+    <li>By the end you'll have a real framework — not just information</li>
+  </ul>
+  <div class="quote">"Not a sales session. Just here to get you positioned as well as possible."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 3 — MY STORY (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="3">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"I Built the Resource<br>I Wished I Had"</h1>
+  <div class="grid-2">
+    <div>
+      <ul class="clean">
+        <li><strong>9 years</strong> full-time in Bitcoin</li>
+        <li>Made costly mistakes — no infrastructure, no system</li>
+        <li>Scaled crypto media from <span class="accent" style="font-weight:700;">$10K → $430K MRR</span></li>
+        <li>Invests own capital alongside members</li>
+        <li>No affiliates. 100% independent.</li>
+      </ul>
+      <p style="margin-top:16px; font-size:16px; color:var(--caption);">🏆 Community Leader of the Year — Blockies 2025</p>
+    </div>
+    <div style="display:flex; align-items:center; justify-content:center;">
+      <div class="quote" style="margin-top:0;">"Collective Shift is the resource I wish I had when I started."</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 4 — CONVICTION (DARK) -->
+<!-- ============================================================ -->
+<div class="slide bg-dark" data-slide="4">
+  <div class="logo" style="opacity:0.7;">COLLECTIVE SHIFT</div>
+  <div style="max-width:850px; margin:0 auto; text-align:center;">
+    <h1 style="font-size:52px;">"9 Years In.<br>More Convicted Than Ever."</h1>
+    <ul class="clean" style="text-align:left; margin:32px auto; max-width:700px;">
+      <li style="color:rgba(255,255,255,0.85);">Bitcoin = fundamental shift in how value is stored globally. Not a trade. A paradigm shift.</li>
+      <li style="color:rgba(255,255,255,0.85);">Every cycle has felt like the end. None of them were.</li>
+      <li style="color:rgba(255,255,255,0.85);">The intersection of Bitcoin, AI, and blockchain — <span class="accent">"I haven't been this excited since I first discovered Bitcoin."</span></li>
+    </ul>
+    <div class="quote-dark" style="max-width:700px; margin:32px auto;">"I'm not here to sell you on Bitcoin. You've already made that decision. I'm here to help you do it right."</div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 5 — WHO'S IN THIS ROOM (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="5">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"You're Not New to Investing.<br>You're New to This Asset Class."</h1>
+  <div class="grid-2">
+    <div>
+      <h2 style="font-size:24px; margin-bottom:16px;">Who You Are</h2>
+      <ul class="clean">
+        <li>Successful investor or business owner</li>
+        <li>Real wealth built — property, equities, business, super</li>
+        <li>Time-poor. Can't watch charts all day.</li>
+      </ul>
+    </div>
+    <div>
+      <h2 style="font-size:24px; margin-bottom:16px;">Why Tonight Matters</h2>
+      <ul class="clean">
+        <li>Made a serious financial decision joining</li>
+        <li>You came in because something felt off</li>
+        <li>You're not here for tips. You're here for a system.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 6 — SECTION DIVIDER: THE WORLD RIGHT NOW (ORANGE) -->
+<!-- ============================================================ -->
+<div class="slide bg-orange" data-slide="6" style="justify-content:center; align-items:center; text-align:center;">
+  <p style="font-family:var(--heading-font); font-size:16px; font-weight:600; letter-spacing:4px; text-transform:uppercase; color:rgba(255,255,255,0.7); margin-bottom:24px;">Section One</p>
+  <h1 style="font-size:64px;">The World<br>Right Now</h1>
+  <p class="subtitle" style="margin-top:16px;">Macro, markets, and the case for Bitcoin</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 7 — INFLATION (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="7">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"Your Savings Are<br>a Melting Ice Cube"</h1>
+  <div class="grid-2" style="margin-top:24px;">
+    <div>
+      <div class="card">
+        <h3><span class="accent" style="font-size:36px; font-weight:800;">80%+</span></h3>
+        <p>of all USD printed since 2020</p>
+      </div>
+      <div class="card">
+        <h3>Inflation ≠ supermarket prices</h3>
+        <p>Systematic erosion of purchasing power across all asset classes</p>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <h3>Fixed income & cash savings</h3>
+        <p>Losing real value every year — the math is simple</p>
+      </div>
+      <div class="card">
+        <h3>Property absorbed some</h3>
+        <p>But it's illiquid, leveraged, and concentrated</p>
+      </div>
+    </div>
+  </div>
+  <div class="quote">"This is not a political statement. This is arithmetic."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 8 — THE 60/40 PROBLEM (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-warm" data-slide="8">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"You're Not as Diversified<br>as You Think"</h1>
+  <div class="grid-2" style="margin-top:24px;">
+    <div>
+      <h2 style="font-size:22px; margin-bottom:16px; color:var(--caption);">The Old Assumption</h2>
+      <p style="font-size:24px; color:var(--dark-navy); font-weight:500;">When stocks fall, bonds rise.<br>60/40 = diversified.</p>
+    </div>
+    <div>
+      <h2 style="font-size:22px; margin-bottom:16px; color:var(--orange);">The New Reality</h2>
+      <ul class="clean">
+        <li>2022: 60/40 lost <span class="accent" style="font-weight:700;">~16%</span> in one year</li>
+        <li>Top 10 S&P stocks = largest concentration in modern history</li>
+        <li>49% probability of 10–20% equity correction</li>
+      </ul>
+    </div>
+  </div>
+  <div class="quote">"Most investors aren't overexposed to crypto. They're underexposed to it."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 9 — BITCOIN'S 10-YEAR TRACK RECORD (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="9">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"The Best Performing Asset<br>of the Last Decade. Full Stop."</h1>
+  <div style="text-align:center; margin:32px 0 16px;">
+    <span class="accent-num">$300 → $100,000+</span>
+    <p style="font-size:24px; color:var(--dark-navy); font-weight:600; margin-top:8px;">30,000%+ gain (2015–2025)</p>
+  </div>
+  <div class="grid-2" style="margin-top:16px;">
+    <ul class="clean">
+      <li>Outperformed equities, real estate, gold, bonds over 10 years</li>
+      <li>Even accounting for 80%+ bear markets — long-term holders won</li>
+    </ul>
+    <ul class="clean">
+      <li>Fixed supply: <span class="accent" style="font-weight:700;">21 million coins</span>. No central bank can print more.</li>
+      <li>Asymmetric upside: 1–5% allocation risk vs. meaningful return potential</li>
+    </ul>
+  </div>
+  <div class="quote">"That kind of asymmetry is rare."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 10 — THE MACRO OVERRIDE (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-warm" data-slide="10">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"Geopolitics Is the Override.<br>It Sits On Top of Everything."</h1>
+  <div class="grid-4" style="margin-top:24px;">
+    <div class="card">
+      <h3>🛢️ Oil Above $100</h3>
+      <p>Strait of Hormuz effectively closed</p>
+    </div>
+    <div class="card">
+      <h3>📉 Rate Cuts Delayed</h3>
+      <p>2–3 expected Jan 2026 → now ~1</p>
+    </div>
+    <div class="card">
+      <h3>💵 DXY Above 100</h3>
+      <p>Strong dollar = headwinds for risk assets</p>
+    </div>
+    <div class="card">
+      <h3>⚠️ Middle East Conflict</h3>
+      <p>Escalating — not resolved</p>
+    </div>
+  </div>
+  <div class="quote">"I'm not predicting disaster. But it's why I'm holding 33% stablecoins."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 11 — INSTITUTIONAL SHIFT + ETF FUND FLOWS (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="11">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"The World's Most Conservative Asset Managers Did the Analysis. They Moved."</h1>
+  <div class="grid-2" style="margin-top:16px;">
+    <div>
+      <ul class="clean">
+        <li><strong>BlackRock. Fidelity. State Street.</strong> — Bitcoin ETFs launched</li>
+        <li>Strategy: ~40,000 BTC purchased in two weeks</li>
+        <li>ETF holders barely reduced exposure through 40–45% drawdown</li>
+      </ul>
+    </div>
+    <div>
+      <!-- ETF Fund Flow Chart -->
+      <div class="chart-container">
+        <svg viewBox="0 0 480 280" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="redGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#E53935"/>
+              <stop offset="100%" stop-color="#C62828"/>
+            </linearGradient>
+            <linearGradient id="greenGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#43A047"/>
+              <stop offset="100%" stop-color="#2E7D32"/>
+            </linearGradient>
+            <linearGradient id="greenGradBright" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#66BB6A"/>
+              <stop offset="100%" stop-color="#43A047"/>
+            </linearGradient>
+          </defs>
+          <!-- Title -->
+          <text x="240" y="24" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="15" font-weight="700" fill="#1B1925">ETF Fund Flows (Billions USD)</text>
+          <!-- Axis -->
+          <line x1="60" y1="160" x2="460" y2="160" stroke="#E0E0E0" stroke-width="1"/>
+          <text x="55" y="164" text-anchor="end" font-family="Barlow,sans-serif" font-size="11" fill="#807F86">$0</text>
+          <!-- Bar: Prior Outflow -->
+          <rect x="100" y="160" width="70" height="90" rx="6" fill="url(#redGrad)"/>
+          <text x="135" y="262" text-anchor="middle" font-family="Barlow,sans-serif" font-size="12" fill="#807F86">Prior</text>
+          <text x="135" y="275" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" fill="#807F86">Outflow</text>
+          <text x="135" y="153" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#E53935">-$3.9B</text>
+          <!-- Bar: Week 1 -->
+          <rect x="200" y="105" width="70" height="55" rx="6" fill="url(#greenGrad)"/>
+          <text x="235" y="262" text-anchor="middle" font-family="Barlow,sans-serif" font-size="12" fill="#807F86">Week 1</text>
+          <text x="235" y="99" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#43A047">+$0.8B</text>
+          <!-- Bar: Week 2 -->
+          <rect x="290" y="90" width="70" height="70" rx="6" fill="url(#greenGrad)"/>
+          <text x="325" y="262" text-anchor="middle" font-family="Barlow,sans-serif" font-size="12" fill="#807F86">Week 2</text>
+          <text x="325" y="84" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#43A047">+$0.9B</text>
+          <!-- Bar: Week 3 -->
+          <rect x="380" y="60" width="70" height="100" rx="6" fill="url(#greenGradBright)"/>
+          <text x="415" y="262" text-anchor="middle" font-family="Barlow,sans-serif" font-size="12" fill="#807F86">Week 3</text>
+          <text x="415" y="54" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="14" font-weight="800" fill="#2E7D32">+$1.06B</text>
+          <text x="415" y="44" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10" fill="#66BB6A">Strongest since Jan '26</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="quote">"An 80% drawdown is increasingly unlikely. The demand structure has changed."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 12 — AI, BITCOIN & CRYPTO INTERSECTION (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="12">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"I Haven't Been This Excited Since I First Discovered Bitcoin."</h1>
+  <div class="grid-2" style="margin-top:24px;">
+    <div>
+      <!-- Venn Diagram -->
+      <div class="chart-container">
+        <svg viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="160" cy="140" r="100" fill="rgba(252,92,3,0.08)" stroke="#FC5C03" stroke-width="2"/>
+          <circle cx="240" cy="140" r="100" fill="rgba(27,25,37,0.06)" stroke="#1B1925" stroke-width="2"/>
+          <circle cx="200" cy="220" r="100" fill="rgba(252,92,3,0.04)" stroke="#807F86" stroke-width="1.5"/>
+          <text x="120" y="120" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="16" font-weight="700" fill="#FC5C03">Bitcoin</text>
+          <text x="280" y="120" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="16" font-weight="700" fill="#1B1925">AI</text>
+          <text x="200" y="275" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="14" font-weight="700" fill="#807F86">Blockchain</text>
+          <text x="200" y="290" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="14" font-weight="700" fill="#807F86">Infrastructure</text>
+          <text x="200" y="165" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="11" font-weight="600" fill="#FC5C03">Zero-to-One</text>
+          <text x="200" y="180" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="11" font-weight="600" fill="#FC5C03">Moment</text>
+        </svg>
+      </div>
+    </div>
+    <div>
+      <ul class="clean">
+        <li>NASDAQ bringing securities infrastructure on-chain</li>
+        <li>ICE (NYSE) partnering with OKX</li>
+        <li>S&P Dow Jones × Hyperliquid licensing deal</li>
+        <li>RWA tokenisation wave underway</li>
+        <li><strong>Shift AI</strong> — our own AI research agent in development</li>
+      </ul>
+    </div>
+  </div>
+  <div class="quote">"This could be the zero-to-one moment for this entire asset class."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 13 — BEAR MARKET REALITY + PORTFOLIO DONUT (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-warm" data-slide="13">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"I'm Going to Be Straight With You.<br>We Are in a Bear Market."</h1>
+  <div class="grid-2" style="margin-top:16px;">
+    <div>
+      <ul class="clean">
+        <li>Recent rally sold hard — textbook bear market behaviour</li>
+        <li>Short-term holder cost basis ~84K = resistance ceiling</li>
+        <li>On-chain: 50/50 crossover = months of base-building</li>
+        <li>Base case: Bitcoin revisits 200-week MA (~$59K)</li>
+      </ul>
+    </div>
+    <div>
+      <!-- Portfolio Donut Chart -->
+      <div class="chart-container">
+        <svg viewBox="0 0 320 280" xmlns="http://www.w3.org/2000/svg">
+          <text x="160" y="24" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="14" font-weight="700" fill="#1B1925">CS Portfolio Allocation</text>
+          <!-- BTC 59.4% = 214deg -->
+          <circle cx="160" cy="155" r="80" fill="none" stroke="#FC5C03" stroke-width="32" stroke-dasharray="300.3 505.1" stroke-dashoffset="0" transform="rotate(-90 160 155)"/>
+          <!-- Stablecoins 33.4% = 120.2deg -->
+          <circle cx="160" cy="155" r="80" fill="none" stroke="#1B1925" stroke-width="32" stroke-dasharray="168.7 505.1" stroke-dashoffset="-300.3" transform="rotate(-90 160 155)"/>
+          <!-- Alts 7.1% = 25.6deg -->
+          <circle cx="160" cy="155" r="80" fill="none" stroke="#807F86" stroke-width="32" stroke-dasharray="35.9 505.1" stroke-dashoffset="-469" transform="rotate(-90 160 155)"/>
+          <!-- Center -->
+          <circle cx="160" cy="155" r="58" fill="var(--warm-white)"/>
+          <text x="160" y="150" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="12" font-weight="600" fill="#807F86">PORTFOLIO</text>
+          <text x="160" y="168" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="11" fill="#807F86">March 2026</text>
+          <!-- Legend -->
+          <rect x="60" y="252" width="14" height="14" rx="3" fill="#FC5C03"/>
+          <text x="80" y="264" font-family="Barlow,sans-serif" font-size="13" fill="#4A4A4A">BTC 59.4%</text>
+          <rect x="155" y="252" width="14" height="14" rx="3" fill="#1B1925"/>
+          <text x="175" y="264" font-family="Barlow,sans-serif" font-size="13" fill="#4A4A4A">Stables 33.4%</text>
+          <rect x="268" y="252" width="14" height="14" rx="3" fill="#807F86"/>
+          <text x="288" y="264" font-family="Barlow,sans-serif" font-size="13" fill="#4A4A4A">Alts 7.1%</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="quote">"Bear markets are where generational wealth is built."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 14 — SECTION DIVIDER: THE SHIFT OS (ORANGE) -->
+<!-- ============================================================ -->
+<div class="slide bg-orange" data-slide="14" style="justify-content:center; align-items:center; text-align:center;">
+  <p style="font-family:var(--heading-font); font-size:16px; font-weight:600; letter-spacing:4px; text-transform:uppercase; color:rgba(255,255,255,0.7); margin-bottom:24px;">Section Two</p>
+  <h1 style="font-size:64px;">The Shift OS</h1>
+  <p class="subtitle" style="margin-top:16px;">Your 7-step system for building & protecting wealth</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 15 — INTRODUCING THE SHIFT OS (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="15">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"This Is the System I Wish I'd Had<br>When I Started."</h1>
+  <!-- Full Journey Map -->
+  <div class="journey-map" style="margin-top:32px;">
+    <div class="journey-step active"><div class="num">01</div><div class="step-label">Foundation</div></div>
+    <div class="journey-step"><div class="num">02</div><div class="step-label">Security</div></div>
+    <div class="journey-step"><div class="num">03</div><div class="step-label">Investor OS</div></div>
+    <div class="journey-step"><div class="num">04</div><div class="step-label">Portfolio</div></div>
+    <div class="journey-step"><div class="num">05</div><div class="step-label">Self Custody</div></div>
+    <div class="journey-step"><div class="num">06</div><div class="step-label">Sell Strategy</div></div>
+    <div class="journey-step"><div class="num">07</div><div class="step-label">Tax & Wealth</div></div>
+  </div>
+  <div style="display:flex; gap:40px; margin-top:16px;">
+    <div style="flex:1;">
+      <div class="phase-label" style="text-align:left;">Phase 1 — Foundations · First 30 Days</div>
+    </div>
+    <div style="flex:1;">
+      <div class="phase-label" style="text-align:left;">Phase 2 — Progressive · Months 2–9</div>
+    </div>
+  </div>
+  <p style="margin-top:24px; font-size:20px;">"Tonight we go through every step — and build yours."</p>
+  <div class="quote">"We teach you how to think. Not what to think."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 16 — STEP 01 OVERVIEW (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="16">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <div class="step-tag">STEP 01</div>
+  <h1>Foundation &<br>Market Positioning</h1>
+  <ul class="clean" style="max-width:800px; margin-top:16px;">
+    <li>The lens through which you see everything in this space</li>
+    <li>How markets work, how cycles work, how to form your own view</li>
+    <li>Before you allocate a single dollar, understand the game you're playing</li>
+    <li>Skipping this = buying on narrative, selling on fear, never building real conviction</li>
+  </ul>
+  <div class="quote">"Information without a framework is just noise."</div>
+  <!-- Journey Map -->
+  <div class="journey-map" style="margin-top:24px;">
+    <div class="journey-step active"><div class="num">01</div><div class="step-label">Foundation</div></div>
+    <div class="journey-step"><div class="num">02</div><div class="step-label">Security</div></div>
+    <div class="journey-step"><div class="num">03</div><div class="step-label">Investor OS</div></div>
+    <div class="journey-step"><div class="num">04</div><div class="step-label">Portfolio</div></div>
+    <div class="journey-step"><div class="num">05</div><div class="step-label">Self Custody</div></div>
+    <div class="journey-step"><div class="num">06</div><div class="step-label">Sell Strategy</div></div>
+    <div class="journey-step"><div class="num">07</div><div class="step-label">Tax & Wealth</div></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 17 — HOW CRYPTO CYCLES WORK (WHITE) + 4-PHASE DIAGRAM -->
+<!-- ============================================================ -->
+<div class="slide bg-warm" data-slide="17">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"The Market Has a Pattern.<br>Learn to Read It."</h1>
+  <!-- 4-Phase Cycle Diagram -->
+  <div class="chart-container" style="margin-top:16px;">
+    <svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg">
+      <!-- Sine wave path -->
+      <defs>
+        <linearGradient id="cycleGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#43A047"/>
+          <stop offset="25%" stop-color="#66BB6A"/>
+          <stop offset="50%" stop-color="#FC5C03"/>
+          <stop offset="75%" stop-color="#E53935"/>
+          <stop offset="100%" stop-color="#43A047"/>
+        </linearGradient>
+      </defs>
+      <!-- Grid lines -->
+      <line x1="60" y1="160" x2="760" y2="160" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4"/>
+      <!-- Sine wave -->
+      <path d="M 60,160 C 120,160 140,60 235,60 C 330,60 340,160 400,160 C 460,160 480,260 575,260 C 670,260 680,160 760,160" fill="none" stroke="url(#cycleGrad)" stroke-width="4" stroke-linecap="round"/>
+      <!-- Phase labels -->
+      <rect x="40" y="250" width="160" height="36" rx="8" fill="rgba(67,160,71,0.1)"/>
+      <text x="120" y="273" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#43A047">1. Accumulation</text>
+      <rect x="210" y="30" width="160" height="36" rx="8" fill="rgba(102,187,106,0.1)"/>
+      <text x="290" y="53" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#66BB6A">2. Expansion</text>
+      <rect x="380" y="30" width="160" height="36" rx="8" fill="rgba(252,92,3,0.1)"/>
+      <text x="460" y="53" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#FC5C03">3. Peak / Euphoria</text>
+      <rect x="540" y="250" width="180" height="36" rx="8" fill="rgba(229,57,53,0.1)"/>
+      <text x="630" y="273" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#E53935">4. Contraction / Bear</text>
+      <!-- Current position marker -->
+      <circle cx="700" cy="200" r="10" fill="#FC5C03" stroke="#FFFFFF" stroke-width="3"/>
+      <rect x="660" y="203" width="80" height="24" rx="6" fill="#FC5C03"/>
+      <text x="700" y="219" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="10" font-weight="700" fill="#FFFFFF">YOU ARE HERE</text>
+      <!-- Halving note -->
+      <text x="400" y="308" text-anchor="middle" font-family="Barlow,sans-serif" font-size="12" fill="#807F86">April 2024 halving → historically 12–18 months to next bull phase</text>
+    </svg>
+  </div>
+  <div class="quote">"The best time to build your position is when everyone else is uncertain."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 18 — FORMING YOUR STRATEGIC VIEW (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="18">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"I Don't Want You Asking Me What to Buy.<br>I Want You to Answer That Yourself."</h1>
+  <div class="grid-3" style="margin-top:24px;">
+    <div class="card">
+      <h3>Macro Context</h3>
+      <p>Rates, USD, inflation, global risk — the backdrop everything trades against</p>
+    </div>
+    <div class="card">
+      <h3>On-Chain Data</h3>
+      <p>Holder behaviour, supply dynamics, demand signals — the truth layer</p>
+    </div>
+    <div class="card">
+      <h3>Market Structure</h3>
+      <p>Cycle position, key levels, momentum — where we sit today</p>
+    </div>
+  </div>
+  <p style="margin-top:20px; color:var(--caption); font-size:18px;">How to use CS: <strong style="color:var(--dark-navy);">Daily Pulse</strong> + <strong style="color:var(--dark-navy);">Weekly Outlook</strong> cover all three — every week.</p>
+  <div class="exercise">
+    <div class="label">Exercise</div>
+    <p style="font-size:18px;">Write down in one sentence: where are we in the cycle right now, and why?</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 19 — STEP 02 OVERVIEW: SECURITY (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-warm" data-slide="19">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <div class="step-tag">STEP 02</div>
+  <h1>Security Setup</h1>
+  <p style="font-size:22px; color:var(--dark-navy); font-weight:500; margin-bottom:24px;">"Get This Right Once. You Never Have to Think About It Again."</p>
+  <div class="grid-3" style="margin-top:8px;">
+    <div class="card" style="text-align:center;">
+      <h3 style="font-size:48px; color:var(--orange);">1</h3>
+      <h3>Top-Tier Exchange</h3>
+      <p>Use a regulated exchange for transacting — not storing</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <h3 style="font-size:48px; color:var(--orange);">2</h3>
+      <h3>Hardware Wallet</h3>
+      <p>Ledger or Trezor for meaningful holdings</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <h3 style="font-size:48px; color:var(--orange);">3</h3>
+      <h3>Seed Phrase Security</h3>
+      <p>24 words, written by hand, two physical locations, never digital</p>
+    </div>
+  </div>
+  <div class="quote">"If someone gets your seed phrase, they own your Bitcoin. No customer service. No recovery."</div>
+  <div class="journey-map" style="margin-top:16px;">
+    <div class="journey-step completed"><div class="num">01</div><div class="step-label">Foundation</div></div>
+    <div class="journey-step active"><div class="num">02</div><div class="step-label">Security</div></div>
+    <div class="journey-step"><div class="num">03</div><div class="step-label">Investor OS</div></div>
+    <div class="journey-step"><div class="num">04</div><div class="step-label">Portfolio</div></div>
+    <div class="journey-step"><div class="num">05</div><div class="step-label">Self Custody</div></div>
+    <div class="journey-step"><div class="num">06</div><div class="step-label">Sell Strategy</div></div>
+    <div class="journey-step"><div class="num">07</div><div class="step-label">Tax & Wealth</div></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 20 — THE ONE RULE THAT MATTERS MOST (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="20">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"Exchanges Are for Transacting.<br>Not Storing."</h1>
+  <div style="max-width:700px; margin-top:32px;">
+    <div class="card" style="border-left-color:#E53935;">
+      <h3 style="color:#E53935;">FTX — $8 Billion Lost</h3>
+      <p>By people who thought an exchange was safe enough. It wasn't.</p>
+    </div>
+    <div style="margin-top:24px;">
+      <p style="font-size:22px; color:var(--dark-navy); font-weight:600;">The Rule: Move meaningful holdings to a hardware wallet. Do it in week 2.</p>
+    </div>
+  </div>
+  <div class="quote">"Get it right once — never think about it again. Get it wrong once — it can cost you everything."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 21 — STEP 03 OVERVIEW: INVESTOR OS (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-warm" data-slide="21">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <div class="step-tag">STEP 03</div>
+  <h1>Investor OS &<br>Risk Framework</h1>
+  <ul class="clean" style="max-width:800px; margin-top:16px;">
+    <li>Your personal decision-making framework — the system you run every investment through</li>
+    <li><strong>Without it:</strong> every market move = a fresh decision made under pressure</li>
+    <li><strong>With it:</strong> the market either triggers your plan or it doesn't. You're executing, not deciding.</li>
+  </ul>
+  <div class="quote">"I don't react to the market. I have a plan. The market either validates it or it doesn't."</div>
+  <div class="journey-map" style="margin-top:16px;">
+    <div class="journey-step completed"><div class="num">01</div><div class="step-label">Foundation</div></div>
+    <div class="journey-step completed"><div class="num">02</div><div class="step-label">Security</div></div>
+    <div class="journey-step active"><div class="num">03</div><div class="step-label">Investor OS</div></div>
+    <div class="journey-step"><div class="num">04</div><div class="step-label">Portfolio</div></div>
+    <div class="journey-step"><div class="num">05</div><div class="step-label">Self Custody</div></div>
+    <div class="journey-step"><div class="num">06</div><div class="step-label">Sell Strategy</div></div>
+    <div class="journey-step"><div class="num">07</div><div class="step-label">Tax & Wealth</div></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 22 — INVESTOR PROFILE HEXAGON (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="22">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"Your Strategy Should Be Calibrated<br>to You — Not Someone Else."</h1>
+  <div class="grid-2" style="margin-top:8px;">
+    <div>
+      <!-- 6-Dimension Radar Chart -->
+      <div class="chart-container">
+        <svg viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg">
+          <!-- Hexagon grid -->
+          <g transform="translate(200,175)">
+            <!-- Outer hexagon (10) -->
+            <polygon points="0,-120 104,-60 104,60 0,120 -104,60 -104,-60" fill="none" stroke="#E0E0E0" stroke-width="1"/>
+            <!-- Mid hexagon (7) -->
+            <polygon points="0,-84 73,-42 73,42 0,84 -73,42 -73,-42" fill="none" stroke="#E0E0E0" stroke-width="1"/>
+            <!-- Inner hexagon (4) -->
+            <polygon points="0,-48 42,-24 42,24 0,48 -42,24 -42,-24" fill="none" stroke="#E0E0E0" stroke-width="1"/>
+            <!-- Data shape -->
+            <polygon points="0,-84 73,-42 52,42 0,72 -62,36 -73,-42" fill="rgba(252,92,3,0.12)" stroke="#FC5C03" stroke-width="2.5"/>
+            <!-- Dots -->
+            <circle cx="0" cy="-84" r="5" fill="#FC5C03"/>
+            <circle cx="73" cy="-42" r="5" fill="#FC5C03"/>
+            <circle cx="52" cy="42" r="5" fill="#FC5C03"/>
+            <circle cx="0" cy="72" r="5" fill="#FC5C03"/>
+            <circle cx="-62" cy="36" r="5" fill="#FC5C03"/>
+            <circle cx="-73" cy="-42" r="5" fill="#FC5C03"/>
+            <!-- Axis lines -->
+            <line x1="0" y1="0" x2="0" y2="-120" stroke="#E0E0E0" stroke-width="0.5"/>
+            <line x1="0" y1="0" x2="104" y2="-60" stroke="#E0E0E0" stroke-width="0.5"/>
+            <line x1="0" y1="0" x2="104" y2="60" stroke="#E0E0E0" stroke-width="0.5"/>
+            <line x1="0" y1="0" x2="0" y2="120" stroke="#E0E0E0" stroke-width="0.5"/>
+            <line x1="0" y1="0" x2="-104" y2="60" stroke="#E0E0E0" stroke-width="0.5"/>
+            <line x1="0" y1="0" x2="-104" y2="-60" stroke="#E0E0E0" stroke-width="0.5"/>
+          </g>
+          <!-- Labels -->
+          <text x="200" y="36" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="600" fill="#1B1925">Risk Tolerance</text>
+          <text x="330" y="105" text-anchor="start" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="600" fill="#1B1925">Time Horizon</text>
+          <text x="330" y="250" text-anchor="start" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="600" fill="#1B1925">Knowledge</text>
+          <text x="200" y="318" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="600" fill="#1B1925">Active vs Passive</text>
+          <text x="70" y="250" text-anchor="end" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="600" fill="#1B1925">Income Needs</text>
+          <text x="70" y="105" text-anchor="end" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="600" fill="#1B1925">Tax Situation</text>
+          <!-- Score labels -->
+          <text x="200" y="82" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" font-weight="600" fill="#FC5C03">7</text>
+          <text x="285" y="126" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" font-weight="600" fill="#FC5C03">7</text>
+          <text x="263" y="225" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" font-weight="600" fill="#FC5C03">5</text>
+          <text x="200" y="257" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" font-weight="600" fill="#FC5C03">6</text>
+          <text x="130" y="220" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" font-weight="600" fill="#FC5C03">5</text>
+          <text x="120" y="126" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" font-weight="600" fill="#FC5C03">7</text>
+        </svg>
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; justify-content:center;">
+      <p style="font-size:20px; color:var(--dark-navy); font-weight:500; margin-bottom:16px;">Score yourself 1–10 on each dimension:</p>
+      <ul class="clean">
+        <li>Risk Tolerance</li>
+        <li>Time Horizon</li>
+        <li>Knowledge Level</li>
+        <li>Active vs. Passive</li>
+        <li>Income Needs</li>
+        <li>Tax Situation</li>
+      </ul>
+      <div class="exercise" style="margin-top:16px;">
+        <div class="label">Exercise</div>
+        <p style="font-size:18px;">Score yourself on each right now. Your strategy should match your profile.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 23 — RISK FRAMEWORK 2x2 (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="23">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"Risk in Crypto Is Not Just<br>'What If the Price Goes Down'"</h1>
+  <!-- Risk Matrix -->
+  <div class="chart-container" style="margin-top:16px;">
+    <svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg">
+      <!-- Grid -->
+      <rect x="20" y="20" width="370" height="160" rx="12" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1.5"/>
+      <rect x="410" y="20" width="370" height="160" rx="12" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1.5"/>
+      <rect x="20" y="200" width="370" height="160" rx="12" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1.5"/>
+      <rect x="410" y="200" width="370" height="160" rx="12" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1.5"/>
+      <!-- Left borders -->
+      <rect x="20" y="20" width="5" height="160" rx="2" fill="#FC5C03"/>
+      <rect x="410" y="20" width="5" height="160" rx="2" fill="#FC5C03"/>
+      <rect x="20" y="200" width="5" height="160" rx="2" fill="#FC5C03"/>
+      <rect x="410" y="200" width="5" height="160" rx="2" fill="#FC5C03"/>
+      <!-- Market Risk -->
+      <text x="48" y="52" font-family="Plus Jakarta Sans,sans-serif" font-size="17" font-weight="700" fill="#1B1925">📊 Market Risk</text>
+      <text x="48" y="78" font-family="Barlow,sans-serif" font-size="14" fill="#4A4A4A">Managed by:</text>
+      <text x="48" y="100" font-family="Barlow,sans-serif" font-size="14" fill="#4A4A4A">→ Position sizing</text>
+      <text x="48" y="120" font-family="Barlow,sans-serif" font-size="14" fill="#4A4A4A">→ Staged entry</text>
+      <text x="48" y="140" font-family="Barlow,sans-serif" font-size="14" fill="#4A4A4A">→ Time horizon</text>
+      <!-- Security Risk -->
+      <text x="438" y="52" font-family="Plus Jakarta Sans,sans-serif" font-size="17" font-weight="700" fill="#1B1925">🔒 Security Risk</text>
+      <text x="438" y="78" font-family="Barlow,sans-serif" font-size="14" fill="#4A4A4A">Managed by:</text>
+      <text x="438" y="100" font-family="Barlow,sans-serif" font-size="14" fill="#4A4A4A">→ Hardware wallet</text>
+      <text x="438" y="120" font-family="Barlow,sans-serif" font-size="14" fill="#4A4A4A">→ Seed phrase protocol</text>
+      <text x="438" y="140" font-family="Barlow,sans-serif" font-size="14" fill="#4A4A4A">→ Exchange hygiene</text>
+      <!-- Liquidity Risk -->
+      <text x="48" y="232" font-family="Plus Jakarta Sans,sans-serif" font-size="17" font-weight="700" fill="#1B1925">💧 Liquidity Risk</text>
+      <text x="48" y="258" font-family="Barlow,sans-serif" font-size="14" fill="#4A4A4A">Managed by:</text>
+      <text x="48" y="280" font-family="Barlow,sans-serif" font-size="14" fill="#4A4A4A">→ BTC/ETH core positions</text>
+      <text x="48" y="300" font-family="Barlow,sans-serif" font-size="14" fill="#4A4A4A">→ Avoid illiquid alts for large positions</text>
+      <!-- Emotional Risk -->
+      <text x="438" y="232" font-family="Plus Jakarta Sans,sans-serif" font-size="17" font-weight="700" fill="#1B1925">🧠 Emotional Risk</text>
+      <text x="438" y="258" font-family="Barlow,sans-serif" font-size="14" fill="#4A4A4A">Managed by:</text>
+      <text x="438" y="280" font-family="Barlow,sans-serif" font-size="14" fill="#4A4A4A">→ Written framework</text>
+      <text x="438" y="300" font-family="Barlow,sans-serif" font-size="14" fill="#4A4A4A">→ Pre-set rules</text>
+      <text x="438" y="320" font-family="Barlow,sans-serif" font-size="14" fill="#4A4A4A">→ Not checking daily</text>
+    </svg>
+  </div>
+  <div class="quote">"Only allocate what you're comfortable watching drop 50% without changing your strategy."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 24 — DECISION FRAMEWORK: TRAFFIC LIGHT (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-warm" data-slide="24">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"Pre-Set Your Rules in Advance.<br>In a Calm Moment."</h1>
+  <!-- Traffic Light -->
+  <div class="grid-3" style="margin-top:16px;">
+    <div class="card" style="border-left-color:#43A047; background:rgba(67,160,71,0.03);">
+      <h3 style="color:#43A047;">● Buy MORE When</h3>
+      <ul style="list-style:none; padding:0; margin-top:12px;">
+        <li style="padding:6px 0; font-size:18px; color:var(--body-text);">→ Price hits pre-defined accumulation targets</li>
+        <li style="padding:6px 0; font-size:18px; color:var(--body-text);">→ Macro improves (rate cuts, conflict resolution)</li>
+        <li style="padding:6px 0; font-size:18px; color:var(--body-text);">→ On-chain reaches accumulation zones</li>
+      </ul>
+    </div>
+    <div class="card" style="border-left-color:#FFA000; background:rgba(255,160,0,0.03);">
+      <h3 style="color:#FFA000;">● HOLD When</h3>
+      <ul style="list-style:none; padding:0; margin-top:12px;">
+        <li style="padding:6px 0; font-size:18px; color:var(--body-text);">→ Everything else</li>
+        <li style="padding:6px 0; font-size:18px; color:var(--body-text);">→ Including "price is going up"</li>
+        <li style="padding:6px 0; font-size:18px; color:var(--body-text);">→ And "price is going down"</li>
+      </ul>
+    </div>
+    <div class="card" style="border-left-color:#E53935; background:rgba(229,57,53,0.03);">
+      <h3 style="color:#E53935;">● REDUCE When</h3>
+      <ul style="list-style:none; padding:0; margin-top:12px;">
+        <li style="padding:6px 0; font-size:18px; color:var(--body-text);">→ Pre-defined price targets hit</li>
+        <li style="padding:6px 0; font-size:18px; color:var(--body-text);">→ Allocation exceeds pre-set max %</li>
+        <li style="padding:6px 0; font-size:18px; color:var(--body-text);">→ Fundamental thesis changes materially</li>
+      </ul>
+    </div>
+  </div>
+  <div class="quote">"If it's not in your framework, the answer is hold."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 25 — STEP 04 OVERVIEW (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="25">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <div class="step-tag">STEP 04</div>
+  <h1>Portfolio Strategy<br>& Goal Setting</h1>
+  <ul class="clean" style="max-width:800px; margin-top:16px;">
+    <li>Translate your Investor Profile into a concrete portfolio strategy</li>
+    <li>Define goals, allocation, and success conditions — in writing</li>
+  </ul>
+  <div class="quote">"A strategy that lives in your head is not a strategy. It's a vague intention."</div>
+  <div class="journey-map" style="margin-top:24px;">
+    <div class="journey-step completed"><div class="num">01</div><div class="step-label">Foundation</div></div>
+    <div class="journey-step completed"><div class="num">02</div><div class="step-label">Security</div></div>
+    <div class="journey-step completed"><div class="num">03</div><div class="step-label">Investor OS</div></div>
+    <div class="journey-step active"><div class="num">04</div><div class="step-label">Portfolio</div></div>
+    <div class="journey-step"><div class="num">05</div><div class="step-label">Self Custody</div></div>
+    <div class="journey-step"><div class="num">06</div><div class="step-label">Sell Strategy</div></div>
+    <div class="journey-step"><div class="num">07</div><div class="step-label">Tax & Wealth</div></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 26 — DEFINING YOUR GOALS (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-warm" data-slide="26">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"Vague Goals Produce Vague Strategies."</h1>
+  <p style="font-size:22px; color:var(--body-text); margin-bottom:8px;">Vague strategies produce emotional decisions.</p>
+  <div class="grid-3" style="margin-top:16px;">
+    <div class="card" style="text-align:center;">
+      <h3 style="font-size:32px; margin-bottom:8px;">🛡️</h3>
+      <h3>Wealth Preservation</h3>
+      <p>Protect purchasing power. Bitcoin is the primary tool.</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <h3 style="font-size:32px; margin-bottom:8px;">📈</h3>
+      <h3>Wealth Growth</h3>
+      <p>Defined % allocation, defined time horizon, defined target</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <h3 style="font-size:32px; margin-bottom:8px;">💰</h3>
+      <h3>Income Generation</h3>
+      <p>Stablecoin yield, DeFi — Phase 2+</p>
+    </div>
+  </div>
+  <div class="exercise">
+    <div class="label">Exercise</div>
+    <p style="font-size:18px;">Write your primary goal in one sentence. Bring it to your analyst call.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 27 — PORTFOLIO PYRAMID (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="27">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"Start Simple. Add Complexity<br>Only When You've Earned It."</h1>
+  <div class="grid-2" style="margin-top:8px;">
+    <div>
+      <!-- Portfolio Pyramid -->
+      <div class="chart-container">
+        <svg viewBox="0 0 420 360" xmlns="http://www.w3.org/2000/svg">
+          <!-- Pyramid tiers (bottom to top) -->
+          <!-- Foundation: BTC -->
+          <rect x="30" y="250" width="360" height="70" rx="8" fill="#FC5C03"/>
+          <text x="210" y="282" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="16" font-weight="700" fill="#FFFFFF">BITCOIN · 50–70%</text>
+          <text x="210" y="302" text-anchor="middle" font-family="Barlow,sans-serif" font-size="12" fill="rgba(255,255,255,0.8)">Foundation — Long-term hold, sound money</text>
+          <!-- Second: ETH -->
+          <rect x="80" y="170" width="260" height="70" rx="8" fill="#1B1925"/>
+          <text x="210" y="202" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="15" font-weight="700" fill="#FFFFFF">ETHEREUM · 20–30%</text>
+          <text x="210" y="222" text-anchor="middle" font-family="Barlow,sans-serif" font-size="12" fill="rgba(255,255,255,0.7)">Smart contract platform</text>
+          <!-- Opportunistic: Alts -->
+          <rect x="130" y="90" width="160" height="70" rx="8" fill="#807F86"/>
+          <text x="210" y="122" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">ALTS · 0–20%</text>
+          <text x="210" y="142" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" fill="rgba(255,255,255,0.7)">Deep thesis only</text>
+          <!-- Variable: Stablecoins -->
+          <rect x="165" y="30" width="90" height="50" rx="8" fill="rgba(252,92,3,0.15)" stroke="#FC5C03" stroke-width="1.5"/>
+          <text x="210" y="52" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="12" font-weight="700" fill="#FC5C03">STABLES</text>
+          <text x="210" y="68" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10" fill="#807F86">Dry powder</text>
+          <!-- Arrow label -->
+          <text x="12" y="185" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10" fill="#807F86" transform="rotate(-90,12,185)">← Higher Risk</text>
+        </svg>
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; justify-content:center;">
+      <ul class="clean">
+        <li>Adding 1–5% Bitcoin improves portfolio risk-adjusted returns (research-backed)</li>
+        <li>Most members start at <span class="accent" style="font-weight:700;">5–15%</span> of total investable assets</li>
+      </ul>
+      <div class="quote" style="margin-top:16px;">"Start with Bitcoin. Get that right first."</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 28 — INVESTMENT POLICY STATEMENT (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-warm" data-slide="28">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"Every Professional Fund Manager Has One.<br>You Should Too."</h1>
+  <div style="max-width:800px; margin-top:24px;">
+    <div class="card"><h3><span class="accent">1.</span> Total Target Allocation</h3><p>% of total investable assets (excl. primary residence)</p></div>
+    <div class="card"><h3><span class="accent">2.</span> Asset Breakdown</h3><p>BTC / ETH / alts / stablecoins — exact percentages</p></div>
+    <div class="card"><h3><span class="accent">3.</span> Rebalancing Rules</h3><p>When and how you'll rebalance — quarterly, drift-based, or both</p></div>
+    <div class="card"><h3><span class="accent">4.</span> Entry Criteria</h3><p>What triggers deployment of capital</p></div>
+    <div class="card"><h3><span class="accent">5.</span> Exit Criteria</h3><p>Covered in Step 06 — the most critical component</p></div>
+    <div class="card"><h3><span class="accent">6.</span> Review Cadence</h3><p>Quarterly + annual. Stick to the schedule.</p></div>
+  </div>
+  <div class="exercise">
+    <div class="label">Exercise</div>
+    <p style="font-size:18px;">Draft your IPS before your first analyst call. Bring it. Your analyst will help you refine it.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 29 — SECTION DIVIDER: PHASE 2 (ORANGE) -->
+<!-- ============================================================ -->
+<div class="slide bg-orange" data-slide="29" style="justify-content:center; align-items:center; text-align:center;">
+  <p style="font-family:var(--heading-font); font-size:16px; font-weight:600; letter-spacing:4px; text-transform:uppercase; color:rgba(255,255,255,0.7); margin-bottom:24px;">Phase Two</p>
+  <h1 style="font-size:60px;">Progressive Mastery</h1>
+  <p class="subtitle" style="margin-top:16px;">Steps 05–07 · Months 2–9</p>
+  <p class="subtitle" style="margin-top:24px; font-size:28px; font-weight:700;">Step 06 — the Sell Strategy — is the most important thing I'll cover tonight.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 30 — PHASE 2 TRANSITION (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="30">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"Phase 1 Gives You the Foundation.<br>Phase 2 Is Where It Gets Powerful."</h1>
+  <div class="grid-2" style="margin-top:24px;">
+    <div>
+      <h2 style="font-size:22px; margin-bottom:16px; color:var(--caption);">Phase 1 — Complete ✓</h2>
+      <ul class="clean">
+        <li>The framework</li>
+        <li>The security</li>
+        <li>The plan</li>
+      </ul>
+    </div>
+    <div>
+      <h2 style="font-size:22px; margin-bottom:16px; color:var(--orange);">Phase 2 — Building Now</h2>
+      <ul class="clean">
+        <li>Executing independently — and profitably</li>
+        <li>Steps 05, 06, 07 separate serious investors from everyone else</li>
+      </ul>
+    </div>
+  </div>
+  <!-- Journey map showing phase transition -->
+  <div class="journey-map" style="margin-top:32px;">
+    <div class="journey-step completed"><div class="num">01</div><div class="step-label">Foundation</div></div>
+    <div class="journey-step completed"><div class="num">02</div><div class="step-label">Security</div></div>
+    <div class="journey-step completed"><div class="num">03</div><div class="step-label">Investor OS</div></div>
+    <div class="journey-step completed"><div class="num">04</div><div class="step-label">Portfolio</div></div>
+    <div class="journey-step active"><div class="num">05</div><div class="step-label">Self Custody</div></div>
+    <div class="journey-step"><div class="num">06</div><div class="step-label">Sell Strategy</div></div>
+    <div class="journey-step"><div class="num">07</div><div class="step-label">Tax & Wealth</div></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 31 — STEP 05 OVERVIEW (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-warm" data-slide="31">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <div class="step-tag">STEP 05</div>
+  <h1>Self Custody,<br>Stablecoins & DeFi</h1>
+  <ul class="clean" style="max-width:800px; margin-top:16px;">
+    <li>Move beyond exchanges to true self-custody</li>
+    <li>Use stablecoins strategically — not just idle cash</li>
+    <li>Navigate DeFi opportunities safely</li>
+  </ul>
+  <div class="quote">"Not your keys, not your coins."</div>
+  <div class="journey-map" style="margin-top:24px;">
+    <div class="journey-step completed"><div class="num">01</div><div class="step-label">Foundation</div></div>
+    <div class="journey-step completed"><div class="num">02</div><div class="step-label">Security</div></div>
+    <div class="journey-step completed"><div class="num">03</div><div class="step-label">Investor OS</div></div>
+    <div class="journey-step completed"><div class="num">04</div><div class="step-label">Portfolio</div></div>
+    <div class="journey-step active"><div class="num">05</div><div class="step-label">Self Custody</div></div>
+    <div class="journey-step"><div class="num">06</div><div class="step-label">Sell Strategy</div></div>
+    <div class="journey-step"><div class="num">07</div><div class="step-label">Tax & Wealth</div></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 32 — CUSTODY SPECTRUM (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="32">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"Financial Sovereignty Is the Destination.<br>Self-Custody Is How You Get There."</h1>
+  <!-- Custody Spectrum -->
+  <div class="chart-container" style="margin-top:16px;">
+    <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="spectrumGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#E0E0E0"/>
+          <stop offset="33%" stop-color="#807F86"/>
+          <stop offset="66%" stop-color="#FC5C03"/>
+          <stop offset="100%" stop-color="#1B1925"/>
+        </linearGradient>
+      </defs>
+      <!-- Spectrum bar -->
+      <rect x="40" y="60" width="720" height="28" rx="14" fill="url(#spectrumGrad)"/>
+      <!-- Arrow -->
+      <polygon points="770,74 785,74 778,60" fill="#1B1925"/>
+      <!-- Labels -->
+      <text x="90" y="50" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="14" font-weight="700" fill="#807F86">Exchange</text>
+      <text x="90" y="112" text-anchor="middle" font-family="Barlow,sans-serif" font-size="12" fill="#807F86">Least sovereign</text>
+      <text x="290" y="50" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="14" font-weight="700" fill="#807F86">Software Wallet</text>
+      <text x="490" y="50" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="14" font-weight="700" fill="#FC5C03">Hardware Wallet</text>
+      <text x="490" y="112" text-anchor="middle" font-family="Barlow,sans-serif" font-size="12" fill="#FC5C03">Most members target</text>
+      <text x="690" y="50" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="14" font-weight="700" fill="#1B1925">Multi-Sig</text>
+      <text x="690" y="112" text-anchor="middle" font-family="Barlow,sans-serif" font-size="12" fill="#1B1925">8-figure+ members</text>
+      <!-- More sovereign label -->
+      <text x="780" y="112" text-anchor="end" font-family="Barlow,sans-serif" font-size="12" fill="#1B1925" font-weight="600">More sovereign →</text>
+      <!-- Migration steps -->
+      <text x="40" y="152" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#1B1925">Migration Plan:</text>
+      <text x="40" y="174" font-family="Barlow,sans-serif" font-size="14" fill="#4A4A4A">1. Set up hardware wallet + test restore → 2. Transfer small amount first → 3. Move holdings in tranches → 4. Keep working amount on exchange</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 33 — STABLECOINS AS STRATEGIC TOOL (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-warm" data-slide="33">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"Stablecoins Are Not Just Crypto Cash.<br>They're a Strategic Instrument."</h1>
+  <div class="grid-3" style="margin-top:24px;">
+    <div class="card" style="text-align:center;">
+      <h3 style="font-size:28px; margin-bottom:8px;">🎯</h3>
+      <h3>Dry Powder</h3>
+      <p>Ready to deploy at your buy triggers</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <h3 style="font-size:28px; margin-bottom:8px;">💹</h3>
+      <h3>Yield</h3>
+      <p>5–8%+ in reputable on-chain protocols</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <h3 style="font-size:28px; margin-bottom:8px;">🛡️</h3>
+      <h3>Risk Management</h3>
+      <p>Take profits on-chain without cashing out</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px; background:rgba(252,92,3,0.03);">
+    <h3>Live Example — CS Portfolio</h3>
+    <p><span class="accent" style="font-weight:700; font-size:24px;">33.4%</span> in syrupUSDC — earning yield while waiting for 200-week MA</p>
+  </div>
+  <div class="quote">"Patience + yield. That's smart capital management."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 34 — DEFI: OPPORTUNITY & RISKS (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="34">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"One of the Most Exciting Areas Right Now.<br>Start Small."</h1>
+  <div class="grid-2" style="margin-top:24px;">
+    <div>
+      <h2 style="font-size:22px; margin-bottom:16px; color:#43A047;">Opportunities</h2>
+      <ul class="clean">
+        <li>Stablecoin lending protocols — earn yield</li>
+        <li>RWA tokenisation: NASDAQ, ICE, S&P moving on-chain</li>
+        <li>Tokenised treasuries and bonds</li>
+      </ul>
+    </div>
+    <div>
+      <h2 style="font-size:22px; margin-bottom:16px; color:#E53935;">Risks</h2>
+      <ul class="clean">
+        <li>Smart contract bugs — use battle-tested protocols only</li>
+        <li>Complexity — if you don't understand it, don't put large capital in</li>
+        <li>Elevated yield = elevated risk — always ask why</li>
+      </ul>
+    </div>
+  </div>
+  <div class="quote">"This is a Phase 2 module for a reason. Get foundations right first."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 35 — BITCOIN LENDING (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-warm" data-slide="35">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"Holding Bitcoin Long-Term?<br>Here's How to Put It to Work."</h1>
+  <p style="font-size:20px; margin-bottom:16px;">Deposit BTC → lends to overcollateralised borrowers → you earn yield</p>
+  <table class="data-table" style="max-width:700px;">
+    <thead>
+      <tr><th></th><th>Centralised</th><th>Decentralised</th></tr>
+    </thead>
+    <tbody>
+      <tr><td style="font-weight:600;">Custody</td><td>Platform holds</td><td>Smart contract</td></tr>
+      <tr><td style="font-weight:600;">Complexity</td><td>Simple</td><td>More complex</td></tr>
+      <tr><td style="font-weight:600;">Risk</td><td>Platform failure</td><td>Smart contract bugs</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:16px; font-size:16px; color:var(--caption);">🇦🇺 Tax note: Interest = ordinary income. Track every payment date + value.</p>
+  <div class="quote">"For long-term holders — putting idle BTC to work makes sense. Start small."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 36 — STEP 06 OVERVIEW: SELL STRATEGY (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="36">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <div class="step-tag" style="font-size:24px; letter-spacing:4px;">STEP 06</div>
+  <h1 style="font-size:52px;">Sell Strategy &<br>Profit Taking</h1>
+  <p style="font-size:24px; color:var(--dark-navy); font-weight:500; margin-top:8px;">"This Is the Step I Wish I'd Had From Day One."</p>
+  <ul class="clean" style="max-width:800px; margin-top:16px;">
+    <li>The step that separates wealth <em>builders</em> from wealth <em>watchers</em></li>
+    <li>"How many of you have a written sell strategy right now?"</li>
+    <li>Most don't. That's normal. And it's the most expensive gap in the portfolio.</li>
+    <li><strong>Jason:</strong> moved from loss to 2.5x — "the sell strategy was the game changer"</li>
+  </ul>
+  <div class="quote" style="font-size:24px;">"I've watched people turn $500K into $5M and then back to $200K. No exit framework."</div>
+  <div class="journey-map" style="margin-top:16px;">
+    <div class="journey-step completed"><div class="num">01</div><div class="step-label">Foundation</div></div>
+    <div class="journey-step completed"><div class="num">02</div><div class="step-label">Security</div></div>
+    <div class="journey-step completed"><div class="num">03</div><div class="step-label">Investor OS</div></div>
+    <div class="journey-step completed"><div class="num">04</div><div class="step-label">Portfolio</div></div>
+    <div class="journey-step completed"><div class="num">05</div><div class="step-label">Self Custody</div></div>
+    <div class="journey-step active"><div class="num">06</div><div class="step-label">Sell Strategy</div></div>
+    <div class="journey-step"><div class="num">07</div><div class="step-label">Tax & Wealth</div></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 37 — WHY MOST INVESTORS FAIL: EMOTIONAL ARC (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-warm" data-slide="37">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"The Pattern That Destroys Portfolios —<br>Over and Over Again"</h1>
+  <!-- Emotional Arc Diagram -->
+  <div class="chart-container" style="margin-top:8px;">
+    <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="arcGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#43A047"/>
+          <stop offset="30%" stop-color="#66BB6A"/>
+          <stop offset="45%" stop-color="#FC5C03"/>
+          <stop offset="60%" stop-color="#E53935"/>
+          <stop offset="100%" stop-color="#B71C1C"/>
+        </linearGradient>
+      </defs>
+      <!-- Arc path: up then down -->
+      <path d="M 40,220 C 80,220 100,80 200,60 C 280,45 300,50 340,80 C 380,110 420,160 500,200 C 560,230 620,250 720,270" fill="none" stroke="url(#arcGrad)" stroke-width="4" stroke-linecap="round"/>
+      <!-- Steps -->
+      <circle cx="60" cy="215" r="6" fill="#43A047"/>
+      <text x="60" y="245" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" fill="#43A047" font-weight="600">1. Buy with</text>
+      <text x="60" y="258" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" fill="#43A047" font-weight="600">good intentions</text>
+
+      <circle cx="160" cy="90" r="6" fill="#66BB6A"/>
+      <text x="160" y="78" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" fill="#66BB6A" font-weight="600">2. Price rises</text>
+      <text x="160" y="66" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" fill="#66BB6A">"Let it run"</text>
+
+      <circle cx="250" cy="52" r="6" fill="#FC5C03"/>
+      <text x="250" y="40" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="12" font-weight="700" fill="#FC5C03">3. ATH!</text>
+      <text x="250" y="28" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" fill="#FC5C03">"What if it keeps going?"</text>
+
+      <circle cx="370" cy="95" r="6" fill="#E53935"/>
+      <text x="370" y="85" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" fill="#E53935" font-weight="600">4. Falls</text>
+      <text x="370" y="73" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" fill="#E53935">"It'll recover"</text>
+
+      <circle cx="480" cy="185" r="6" fill="#E53935"/>
+      <text x="480" y="178" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" fill="#E53935" font-weight="600">5. Falls 40%</text>
+      <text x="480" y="166" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" fill="#E53935">"I'll sell at breakeven"</text>
+
+      <circle cx="590" cy="238" r="6" fill="#C62828"/>
+      <text x="590" y="230" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" fill="#C62828" font-weight="600">6. Falls 60%</text>
+      <text x="590" y="218" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" fill="#C62828">"Long-term investor now"</text>
+
+      <circle cx="710" cy="267" r="6" fill="#B71C1C"/>
+      <text x="710" y="260" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" fill="#B71C1C" font-weight="600">7. Bear market</text>
+      <text x="710" y="248" text-anchor="middle" font-family="Barlow,sans-serif" font-size="11" fill="#B71C1C">"Maybe crypto isn't for me"</text>
+    </svg>
+  </div>
+  <div class="quote">"You make the sell decision in a calm moment. Not a panicking one. Not an euphoric one."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 38 — BUILDING YOUR SELL STRATEGY (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="38">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"Three Components. One Written Document. Done."</h1>
+  <div class="grid-3" style="margin-top:24px;">
+    <div class="card">
+      <h3 style="color:var(--orange);">1. Target-Based</h3>
+      <p>Define price targets → sell defined % at each</p>
+      <p style="margin-top:8px; font-size:16px; color:var(--caption);">e.g. 10% at 2×, 20% at 3×, 30% at 5×</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--orange);">2. Time-Based</h3>
+      <p>Take profits at defined cycle points regardless of price</p>
+      <p style="margin-top:8px; font-size:16px; color:var(--caption);">"You don't have to call the top."</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--orange);">3. Indicator-Based</h3>
+      <p>CS flags on-chain signals: NUPL, MVRV, LTH distribution</p>
+      <p style="margin-top:8px; font-size:16px; color:var(--caption);">"When we see the signals, we'll tell you."</p>
+    </div>
+  </div>
+  <div class="quote">"A sell strategy is not about leaving money on the table. It's about not giving it all back."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 39 — PROFIT-TAKING PYRAMID (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-warm" data-slide="39">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"You Will Never Perfectly Time the Top.<br>Build Around That."</h1>
+  <!-- Profit-Taking Pyramid -->
+  <div class="chart-container" style="margin-top:8px;">
+    <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
+      <!-- Pyramid tiers (bottom=hold, top=first take) -->
+      <!-- Long-term Hold -->
+      <rect x="60" y="240" width="580" height="52" rx="8" fill="#1B1925"/>
+      <text x="200" y="270" font-family="Plus Jakarta Sans,sans-serif" font-size="15" font-weight="700" fill="#FFFFFF">Long-term Hold</text>
+      <text x="540" y="270" text-anchor="end" font-family="Barlow,sans-serif" font-size="14" fill="rgba(255,255,255,0.7)">Never sell — hold 25–35%</text>
+      <!-- Cycle peak -->
+      <rect x="110" y="182" width="480" height="50" rx="8" fill="#E53935"/>
+      <text x="230" y="212" font-family="Plus Jakarta Sans,sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">Cycle Peak Signals</text>
+      <text x="510" y="212" text-anchor="end" font-family="Barlow,sans-serif" font-size="14" fill="rgba(255,255,255,0.8)">Sell 25–30%</text>
+      <!-- 5x -->
+      <rect x="160" y="124" width="380" height="50" rx="8" fill="#FC5C03"/>
+      <text x="260" y="154" font-family="Plus Jakarta Sans,sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">5× Entry</text>
+      <text x="480" y="154" text-anchor="end" font-family="Barlow,sans-serif" font-size="14" fill="rgba(255,255,255,0.8)">Sell 20%</text>
+      <!-- 3x -->
+      <rect x="210" y="66" width="280" height="50" rx="8" fill="rgba(252,92,3,0.7)"/>
+      <text x="290" y="96" font-family="Plus Jakarta Sans,sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">3× Entry</text>
+      <text x="440" y="96" text-anchor="end" font-family="Barlow,sans-serif" font-size="14" fill="rgba(255,255,255,0.8)">Sell 15%</text>
+      <!-- 2x -->
+      <rect x="260" y="8" width="180" height="50" rx="8" fill="rgba(252,92,3,0.45)"/>
+      <text x="310" y="38" font-family="Plus Jakarta Sans,sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">2× Entry</text>
+      <text x="410" y="38" text-anchor="end" font-family="Barlow,sans-serif" font-size="14" fill="rgba(255,255,255,0.8)">Sell 10%</text>
+    </svg>
+  </div>
+  <div class="quote">"The people who won the last cycle took profits in stages."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 40 — LIVE EXERCISE: SELL STRATEGY (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="40">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"We're Doing This Now.<br>Get Out Your Phone."</h1>
+  <div style="max-width:700px; margin-top:24px;">
+    <div class="exercise" style="padding:40px; background:rgba(252,92,3,0.02);">
+      <div class="label" style="font-size:16px; margin-bottom:20px;">Your Sell Strategy Template</div>
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div style="display:flex; align-items:center; gap:16px;">
+          <span style="font-size:18px; color:var(--dark-navy); font-weight:500; min-width:240px;">My BTC entry average:</span>
+          <span style="flex:1; border-bottom:2px dotted var(--orange); height:24px;"></span>
+        </div>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <span style="font-size:18px; color:var(--dark-navy); font-weight:500; min-width:240px;">My 2× target: $______ →</span>
+          <span style="font-size:18px; color:var(--body-text);">I will sell ______%</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <span style="font-size:18px; color:var(--dark-navy); font-weight:500; min-width:240px;">My 3× target: $______ →</span>
+          <span style="font-size:18px; color:var(--body-text);">I will sell ______%</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <span style="font-size:18px; color:var(--dark-navy); font-weight:500; min-width:240px;">My 5× target: $______ →</span>
+          <span style="font-size:18px; color:var(--body-text);">I will sell ______%</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <span style="font-size:18px; color:var(--dark-navy); font-weight:500; min-width:240px;">Long-term hold (never sell):</span>
+          <span style="font-size:18px; color:var(--body-text);">______%</span>
+        </div>
+        <div style="margin-top:8px; padding:16px; background:rgba(252,92,3,0.06); border-radius:8px;">
+          <p style="font-size:18px; color:var(--dark-navy);"><strong>Cycle peak trigger:</strong> When CS signals NUPL/MVRV extreme → I am ready to act</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="quote">"This document is worth more than any tip I could give you."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 41 — STEP 07 OVERVIEW: TAX PLANNING (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-warm" data-slide="41">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <div class="step-tag">STEP 07</div>
+  <h1>Tax Planning &<br>Wealth Preservation</h1>
+  <p style="font-size:22px; color:var(--dark-navy); font-weight:500; margin-bottom:16px;">"The Most Painful Way to Lose Money in Crypto Is to Taxes and Poor Structure."</p>
+  <ul class="clean" style="max-width:800px;">
+    <li>Build legal/financial structures that protect your wealth after you've built it</li>
+    <li>Position yourself to engage professional advisors effectively — before you need them</li>
+    <li>CGT events: every trade, swap, DeFi interaction is potentially taxable</li>
+  </ul>
+  <div class="quote">"This is not financial advice. This is the framework for getting the right advice at the right time."</div>
+  <div class="journey-map" style="margin-top:16px;">
+    <div class="journey-step completed"><div class="num">01</div><div class="step-label">Foundation</div></div>
+    <div class="journey-step completed"><div class="num">02</div><div class="step-label">Security</div></div>
+    <div class="journey-step completed"><div class="num">03</div><div class="step-label">Investor OS</div></div>
+    <div class="journey-step completed"><div class="num">04</div><div class="step-label">Portfolio</div></div>
+    <div class="journey-step completed"><div class="num">05</div><div class="step-label">Self Custody</div></div>
+    <div class="journey-step completed"><div class="num">06</div><div class="step-label">Sell Strategy</div></div>
+    <div class="journey-step active"><div class="num">07</div><div class="step-label">Tax & Wealth</div></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 42 — CGT REALITY IN AUSTRALIA (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="42">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"Every Disposal Is a CGT Event.<br>Every Single One."</h1>
+  <div class="grid-2" style="margin-top:24px;">
+    <div>
+      <h2 style="font-size:22px; margin-bottom:16px;">What Counts as a Disposal</h2>
+      <ul class="clean">
+        <li>Selling for AUD</li>
+        <li>Crypto-to-crypto swaps</li>
+        <li>DeFi transactions</li>
+        <li>Spending crypto</li>
+      </ul>
+      <div class="card" style="margin-top:16px; border-left-color:#43A047;">
+        <h3 style="color:#43A047;">12+ Month Hold</h3>
+        <p><span style="font-size:24px; font-weight:700; color:#43A047;">50%</span> CGT discount. Significant.</p>
+      </div>
+    </div>
+    <div>
+      <h2 style="font-size:22px; margin-bottom:16px;">Record-Keeping Rules</h2>
+      <ul class="check">
+        <li>Use Koinly or CryptoTaxCalculator — start now, not at tax time</li>
+        <li>Every transaction: date, value at time, fees</li>
+        <li>Every DeFi interaction: all of it needs to be recorded</li>
+      </ul>
+      <div class="card" style="margin-top:16px; border-left-color:#E53935;">
+        <p style="font-size:18px; color:#E53935; font-weight:600;">⚠️ The ATO has significantly increased its focus on crypto.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 43 — STRUCTURES FOR HNW (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-warm" data-slide="43">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"If You Don't Have This Conversation<br>Before You Have Gains to Protect..."</h1>
+  <p style="font-size:20px; color:var(--body-text); margin-bottom:8px;">You're paying more tax than you need to.</p>
+  <div class="grid-3" style="margin-top:16px;">
+    <div class="card">
+      <h3>🏦 SMSF</h3>
+      <p style="margin-top:8px;">Hold Bitcoin inside super</p>
+      <p><span class="accent" style="font-weight:700;">15%</span> tax rate vs. marginal rate</p>
+      <p>Pension phase: potentially <span class="accent" style="font-weight:700;">0%</span> on gains</p>
+      <p style="font-size:16px; color:var(--caption); margin-top:8px;">Requires SMSF advisor with crypto experience</p>
+    </div>
+    <div class="card">
+      <h3>👨‍👩‍👧‍👦 Family Trust</h3>
+      <p style="margin-top:8px;">Distribute gains to lower-tax beneficiaries</p>
+      <p>Estate planning benefits</p>
+      <p style="font-size:16px; color:var(--caption); margin-top:8px;">"Know this exists before you sell"</p>
+    </div>
+    <div class="card">
+      <h3>🏢 Company Structure</h3>
+      <p style="margin-top:8px;">25–30% corporate tax rate</p>
+      <p>Less flexibility, right for some situations</p>
+      <p style="font-size:16px; color:var(--caption); margin-top:8px;">Consult a specialist before choosing</p>
+    </div>
+  </div>
+  <p style="margin-top:16px; font-size:16px; color:var(--caption); text-align:center;">Not financial advice. Speak to a specialist.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 44 — WEALTH PRESERVATION (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="44">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"Building Wealth and Keeping It<br>Are Two Different Skills."</h1>
+  <ul class="clean" style="max-width:800px; margin-top:24px;">
+    <li>Estate planning must include crypto — who has the seed phrase? How is it transferred?</li>
+    <li>"I've heard of families losing Bitcoin forever because no one knew where the seed phrase was."</li>
+    <li>Build an access document: sealed letter to family/executor — instructions only, not the seed phrase itself</li>
+    <li>Insurance: check if crypto is covered under existing policies. Most aren't.</li>
+  </ul>
+  <div class="quote">"Wealth preservation is the unglamorous part of this journey. But it's what separates building wealth from keeping it."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 45 — ENGAGING ADVISORS (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-warm" data-slide="45">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"Most Accountants Don't Understand<br>Crypto Well Enough."</h1>
+  <p style="font-size:20px; color:var(--body-text); margin-bottom:24px;">That's a problem. Ask any advisor these four questions:</p>
+  <div style="max-width:750px;">
+    <div class="card">
+      <h3><span class="accent">1.</span> "Do you have experience with crypto CGT and self-custody in Australia?"</h3>
+    </div>
+    <div class="card">
+      <h3><span class="accent">2.</span> "Do you understand DeFi taxation?"</h3>
+    </div>
+    <div class="card">
+      <h3><span class="accent">3.</span> "Have you helped clients set up SMSF for crypto?"</h3>
+    </div>
+    <div class="card">
+      <h3><span class="accent">4.</span> "Can you give me a client reference in this area?"</h3>
+    </div>
+  </div>
+  <p style="margin-top:16px; font-size:18px; color:var(--dark-navy); font-weight:500;">If they can't answer confidently — find someone who can.</p>
+  <p style="margin-top:8px; font-size:16px; color:var(--caption);">CS connects members with crypto-specialist advisors — ask your CSM</p>
+  <div class="quote">"The goal is to be the most informed client your advisor has ever worked with."</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 46 — SECTION DIVIDER: BRINGING IT TOGETHER (ORANGE) -->
+<!-- ============================================================ -->
+<div class="slide bg-orange" data-slide="46" style="justify-content:center; align-items:center; text-align:center;">
+  <p style="font-family:var(--heading-font); font-size:16px; font-weight:600; letter-spacing:4px; text-transform:uppercase; color:rgba(255,255,255,0.7); margin-bottom:24px;">Section Three</p>
+  <h1 style="font-size:64px;">Bringing It<br>Together</h1>
+  <p class="subtitle" style="margin-top:16px;">Your roadmap, your actions, your next 30 days</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 47 — COMPLETE SHIFT OS SUMMARY TABLE (WHITE) -->
+<!-- ============================================================ -->
+<div class="slide bg-white" data-slide="47">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"This Is Your Roadmap.<br>A System to Build."</h1>
+  <table class="data-table" style="margin-top:16px;">
+    <thead>
+      <tr><th>Step</th><th>Module</th><th>Your Deliverable</th></tr>
+    </thead>
+    <tbody>
+      <tr><td style="color:var(--orange); font-weight:700;">01</td><td>Foundation & Market Positioning</td><td>Written strategic view of cycle position</td></tr>
+      <tr><td style="color:var(--orange); font-weight:700;">02</td><td>Asset Exposure & Security Setup</td><td>Hardware wallet set up + tested</td></tr>
+      <tr><td style="color:var(--orange); font-weight:700;">03</td><td>Investor OS & Risk Framework</td><td>Profile scored. Decision framework written.</td></tr>
+      <tr><td style="color:var(--orange); font-weight:700;">04</td><td>Portfolio Strategy & Goal Setting</td><td>IPS: allocation, targets, entry/exit rules</td></tr>
+      <tr><td style="color:var(--orange); font-weight:700;">05</td><td>Self Custody, Stablecoins & DeFi</td><td>BTC in self-custody. Stablecoin strategy.</td></tr>
+      <tr><td style="color:var(--orange); font-weight:700;">06</td><td>Sell Strategy & Profit Taking</td><td>Written sell strategy with % targets</td></tr>
+      <tr><td style="color:var(--orange); font-weight:700;">07</td><td>Tax Planning & Wealth Preservation</td><td>Advisor engaged. Records system in place.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SLIDE 48 — THE FOUR QUESTIONS -->
+<div class="slide bg-white" data-slide="48">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"If You Take Nothing Else From Tonight —<br>Take These."</h1>
+  <div class="grid-4" style="margin-top:16px;">
+    <div class="card" style="text-align:center;">
+      <span class="accent-num" style="font-size:48px;">1</span>
+      <h3 style="margin-top:8px;">What is your target allocation?</h3>
+      <p>% of total investable assets (excl. primary residence)</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <span class="accent-num" style="font-size:48px;">2</span>
+      <h3 style="margin-top:8px;">What is your time horizon?</h3>
+      <p>Minimum hold period you're genuinely committed to</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <span class="accent-num" style="font-size:48px;">3</span>
+      <h3 style="margin-top:8px;">What is your risk tolerance?</h3>
+      <p>A 40–50% drawdown is normal. How did you feel the last 3 months?</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <span class="accent-num" style="font-size:48px;">4</span>
+      <h3 style="margin-top:8px;">What does success look like?</h3>
+      <p>At what price, in what conditions, in what size do you take profits? Written. In advance.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 49 — YOUR NEXT 30 DAYS -->
+<div class="slide bg-warm" data-slide="49">
+  <div class="logo">COLLECTIVE SHIFT</div>
+  <h1>"Here's Exactly What to Do<br>This Week and This Month."</h1>
+  <div class="grid-2" style="margin-top:24px;">
+    <div>
+      <h2 style="font-size:24px; margin-bottom:16px; color:var(--orange);">This Week</h2>
+      <ul class="check">
+        <li>Set up hardware wallet — before anything else</li>
+        <li>Answer the four questions — write them down</li>
+        <li>Read this week's Weekly Outlook on the research platform</li>
+        <li>Introduce yourself in the community</li>
+      </ul>
+    </div>
+    <div>
+      <h2 style="font-size:24px; margin-bottom:16px; color:var(--dark-navy);">This Month</h2>
+      <ul class="check">
+        <li>Complete Steps 01–04</li>
+        <li>Book 1:1 analyst session — bring IPS + four questions</li>
+        <li>Start your sell strategy — define 2× and 3× targets minimum</li>
+        <li>Set up Koinly or CryptoTaxCalculator — start records now</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card" style="margin-top:24px; border-left-color:var(--orange); background:rgba(252,92,3,0.03);">
+    <p style="font-size:20px; color:var(--dark-navy); font-weight:500;"><span class="accent" style="font-weight:700;">Talk to Reece</span> if you're sitting on large dry powder or have allocation questions</p>
+  </div>
+</div>
+
+<!-- SLIDE 50 — CLOSING (DARK) -->
+<div class="slide bg-dark" data-slide="50">
+  <div class="logo" style="opacity:0.7;">COLLECTIVE SHIFT</div>
+  <div style="max-width:750px; margin:0 auto; text-align:center;">
+    <div style="font-family:var(--body-font); font-size:26px; font-style:italic; color:rgba(255,255,255,0.9); line-height:1.8;">
+      <p>"Bear markets don't destroy investors.</p>
+      <p>Bad decisions during bear markets do.</p>
+      <br>
+      <p>You now have a system.</p>
+      <p>You have the frameworks.</p>
+      <p>You have the research.</p>
+      <p>You have the team.</p>
+      <br>
+      <p style="color:var(--orange); font-weight:600;">What you need now is to execute.</p>
+      <p>Step by step. Patiently. With conviction.</p>
+      <br>
+      <p>That's what we built tonight."</p>
+    </div>
+    <div style="width:60px; height:3px; background:var(--orange); margin:40px auto;"></div>
+    <p style="font-size:18px; color:rgba(255,255,255,0.5); font-weight:300;">— Ben Simpson, Collective Shift</p>
+  </div>
+</div>
+
+</div>
+
+<script>
+(function(){
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+  const progressBar = document.getElementById('progressBar');
+  const counter = document.getElementById('slideCounter');
+
+  function updateUI() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === current));
+    progressBar.style.width = ((current + 1) / total * 100) + '%';
+    counter.textContent = (current + 1) + ' / ' + total;
+    const active = slides[current];
+    const isDark = active.classList.contains('bg-dark') || active.classList.contains('bg-navy') || active.classList.contains('bg-orange');
+    counter.style.color = isDark ? 'rgba(255,255,255,0.4)' : 'rgba(128,127,134,0.6)';
+    document.querySelector('.fs-hint').style.color = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(128,127,134,0.4)';
+  }
+
+  function goTo(n) { current = Math.max(0, Math.min(n, total - 1)); updateUI(); }
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prev(); }
+    if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+    if (e.key === 'End') { e.preventDefault(); goTo(total - 1); }
+    if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
+      else document.exitFullscreen();
+    }
+  });
+
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('a,button,input,select,textarea')) return;
+    if (e.clientX < window.innerWidth / 3) prev(); else next();
+  });
+
+  let touchX = 0;
+  document.addEventListener('touchstart', function(e) { touchX = e.changedTouches[0].screenX; });
+  document.addEventListener('touchend', function(e) {
+    const d = touchX - e.changedTouches[0].screenX;
+    if (Math.abs(d) > 50) { d > 0 ? next() : prev(); }
+  });
+
+  updateUI();
+})();
+</script>
+</body>
+</html>
