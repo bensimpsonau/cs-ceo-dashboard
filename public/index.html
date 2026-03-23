@@ -3,510 +3,597 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Collective Shift — CEO Dashboard</title>
+  <title>CS CEO Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --bg: #0f172a;
-      --surface: #1e293b;
-      --surface2: #263244;
-      --border: #334155;
-      --text: #e2e8f0;
-      --muted: #94a3b8;
-      --accent: #f7931a;
-      --green: #22c55e;
-      --yellow: #eab308;
-      --red: #ef4444;
-      --orange: #f97316;
-      --blue: #3b82f6;
-      --purple: #a855f7;
-    }
     * { box-sizing: border-box; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    body { margin: 0; font-family: 'Inter', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; }
+
+    /* Sidebar */
+    #sidebar {
+      position: fixed; top: 0; left: 0; width: 220px; height: 100vh;
+      background: #0b1120; border-right: 1px solid #1e293b;
+      display: flex; flex-direction: column; z-index: 50;
+    }
+    .sidebar-logo {
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid #1e293b;
+    }
+    .sidebar-logo .logo-title {
+      font-size: 1.15rem; font-weight: 700; color: #f59e0b; letter-spacing: 0.03em;
+    }
+    .sidebar-logo .logo-sub {
+      font-size: 0.7rem; color: #64748b; margin-top: 2px;
+    }
+    nav { flex: 1; padding: 12px 10px; }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 8px; cursor: pointer;
+      font-size: 0.875rem; font-weight: 500; color: #94a3b8;
+      text-decoration: none; transition: all 0.15s ease;
+      margin-bottom: 2px;
+    }
+    .nav-item:hover { background: #1e293b; color: #e2e8f0; }
+    .nav-item.active { background: #f59e0b22; color: #f59e0b; border-left: 3px solid #f59e0b; padding-left: 9px; }
+    .nav-icon { font-size: 1.1rem; width: 22px; text-align: center; }
+    .sidebar-footer { padding: 16px; border-top: 1px solid #1e293b; }
+    .sidebar-footer span { font-size: 0.7rem; color: #475569; }
+
+    /* Main layout */
+    #main {
+      margin-left: 220px;
       min-height: 100vh;
-    }
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-    }
-    .card2 {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-    }
-    /* KPI cards */
-    .kpi-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px 18px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      min-width: 0;
     }
-    .kpi-card:hover { border-color: var(--accent); transition: border-color 0.2s; }
-    .kpi-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
-    .kpi-value { font-size: 28px; font-weight: 800; line-height: 1; color: var(--text); }
-    .kpi-sub { font-size: 12px; color: var(--muted); }
-    /* Progress bar */
-    .progress-track { background: var(--border); border-radius: 999px; height: 6px; width: 100%; margin-top: 6px; }
-    .progress-fill { background: var(--accent); border-radius: 999px; height: 6px; transition: width 0.4s; }
+
+    /* Header */
+    #header {
+      background: #0f172a;
+      border-bottom: 1px solid #1e293b;
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky; top: 0; z-index: 40;
+    }
+    .header-greeting { font-size: 1.3rem; font-weight: 700; color: #f1f5f9; }
+    .header-date { font-size: 0.875rem; color: #64748b; margin-top: 2px; }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .last-updated { font-size: 0.8rem; color: #64748b; }
+    .refresh-btn {
+      background: #1e293b; border: 1px solid #334155; color: #94a3b8;
+      padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 0.8rem;
+      transition: all 0.15s ease; display: flex; align-items: center; gap: 6px;
+    }
+    .refresh-btn:hover { background: #293548; color: #e2e8f0; }
+
+    /* KPI strip */
+    #kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      padding: 16px 28px;
+      background: #0f172a;
+      border-bottom: 1px solid #1e293b;
+    }
+    .kpi-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .kpi-label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+    .kpi-value { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; line-height: 1.2; }
+    .kpi-sub { font-size: 0.7rem; color: #94a3b8; margin-top: 2px; }
+    .kpi-progress { height: 3px; background: #334155; border-radius: 2px; margin-top: 6px; overflow: hidden; }
+    .kpi-progress-bar { height: 3px; background: #f59e0b; border-radius: 2px; transition: width 0.8s ease; }
+    .kpi-btc { color: #f59e0b; }
+
+    /* Content area */
+    #content {
+      flex: 1;
+      padding: 24px 28px;
+    }
+
+    /* Section styles */
+    .section { margin-bottom: 32px; }
+    .section-title {
+      font-size: 1rem; font-weight: 700; color: #f1f5f9;
+      margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+    }
+    .section-count {
+      font-size: 0.7rem; background: #334155; color: #94a3b8;
+      padding: 2px 8px; border-radius: 20px; font-weight: 500;
+    }
+
+    /* Priority list */
+    .priority-card {
+      background: #1e293b; border: 1px solid #334155; border-radius: 12px; overflow: hidden;
+    }
+    .priority-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 13px 18px; border-bottom: 1px solid #273344;
+    }
+    .priority-item:last-child { border-bottom: none; }
+    .priority-title { font-size: 0.9rem; color: #e2e8f0; font-weight: 500; flex: 1; }
+    .priority-meta { font-size: 0.75rem; color: #64748b; white-space: nowrap; }
+    .priority-assignee { font-size: 0.75rem; color: #94a3b8; white-space: nowrap; }
+
     /* Status badges */
     .badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.04em;
+      font-size: 0.65rem; font-weight: 600; padding: 2px 8px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap;
     }
-    .badge-overdue   { background: rgba(239,68,68,0.15); color: var(--red); }
-    .badge-today     { background: rgba(249,115,22,0.15); color: var(--orange); }
-    .badge-progress  { background: rgba(59,130,246,0.15); color: var(--blue); }
-    .badge-pending   { background: rgba(168,85,247,0.15); color: var(--purple); }
-    .badge-notstart  { background: rgba(148,163,184,0.12); color: var(--muted); }
-    .badge-done      { background: rgba(34,197,94,0.15); color: var(--green); }
-    /* Agent status dot */
-    .dot {
-      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    .badge-overdue { background: #7f1d1d; color: #fca5a5; }
+    .badge-in_progress { background: #1e3a5f; color: #93c5fd; }
+    .badge-not_started { background: #1e293b; color: #64748b; border: 1px solid #334155; }
+    .badge-pending_decision, .badge-pending { background: #431407; color: #fdba74; }
+    .badge-completed { background: #14532d; color: #86efac; }
+
+    /* Category badges */
+    .cat-product { background: #312e81; color: #a5b4fc; }
+    .cat-finance { background: #14532d; color: #86efac; }
+    .cat-sales { background: #7c2d12; color: #fb923c; }
+    .cat-legal { background: #3f3f46; color: #a1a1aa; }
+    .cat-marketing { background: #701a75; color: #f0abfc; }
+    .cat-operations { background: #164e63; color: #67e8f9; }
+
+    /* Project grid */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
     }
-    .dot-green  { background: var(--green);  box-shadow: 0 0 6px var(--green); }
-    .dot-yellow { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
-    .dot-red    { background: var(--red);    box-shadow: 0 0 6px var(--red); }
-    /* Category pill */
-    .cat-pill {
-      display: inline-block; padding: 1px 7px; border-radius: 999px;
-      font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+    .project-card {
+      background: #1e293b; border: 1px solid #334155; border-radius: 10px;
+      padding: 16px; display: flex; flex-direction: column; gap: 8px;
     }
-    .cat-Product    { background: rgba(59,130,246,0.15); color: #60a5fa; }
-    .cat-Finance    { background: rgba(34,197,94,0.15); color: #4ade80; }
-    .cat-Sales      { background: rgba(247,147,26,0.15); color: var(--accent); }
-    .cat-Legal      { background: rgba(168,85,247,0.15); color: #c084fc; }
-    .cat-Marketing  { background: rgba(236,72,153,0.15); color: #f472b6; }
-    .cat-Operations { background: rgba(148,163,184,0.12); color: var(--muted); }
+    .project-name { font-size: 0.9rem; font-weight: 700; color: #f1f5f9; }
+    .project-owner { font-size: 0.75rem; color: #64748b; }
+    .project-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+    .project-due { font-size: 0.7rem; color: #64748b; }
+
+    /* Calendar timeline */
+    .calendar-card {
+      background: #1e293b; border: 1px solid #334155; border-radius: 12px; overflow: hidden;
+    }
+    .cal-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 12px 18px; border-bottom: 1px solid #273344;
+    }
+    .cal-item:last-child { border-bottom: none; }
+    .time-pill {
+      font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+      white-space: nowrap; min-width: 68px; text-align: center;
+    }
+    .time-call { background: #14532d; color: #86efac; }
+    .time-meeting { background: #1e3a5f; color: #93c5fd; }
+    .time-work { background: #3b0764; color: #d8b4fe; }
+    .time-travel { background: #451a03; color: #fcd34d; }
+    .time-focus { background: #042f2e; color: #5eead4; }
+    .cal-title { font-size: 0.875rem; color: #e2e8f0; font-weight: 500; flex: 1; }
+    .cal-end { font-size: 0.75rem; color: #64748b; white-space: nowrap; }
+
+    /* Type badges for calendar */
+    .type-badge { font-size: 0.62rem; font-weight: 600; padding: 2px 7px; border-radius: 10px; text-transform: capitalize; }
+    .type-call { background: #14532d; color: #86efac; }
+    .type-meeting { background: #1e3a5f; color: #93c5fd; }
+    .type-work { background: #3b0764; color: #d8b4fe; }
+    .type-travel { background: #451a03; color: #fcd34d; }
+    .type-focus { background: #042f2e; color: #5eead4; }
+
+    /* Agent grid */
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .agent-card {
+      background: #1e293b; border: 1px solid #334155; border-radius: 10px;
+      padding: 16px; position: relative;
+    }
+    .agent-emoji { font-size: 1.6rem; line-height: 1; margin-bottom: 8px; }
+    .agent-name { font-size: 0.9rem; font-weight: 700; color: #f1f5f9; }
+    .agent-role { font-size: 0.72rem; color: #64748b; margin-bottom: 8px; line-height: 1.3; }
+    .agent-task { font-size: 0.75rem; color: #94a3b8; line-height: 1.3; }
+    .agent-time { font-size: 0.7rem; color: #64748b; margin-top: 4px; }
+    .status-dot {
+      position: absolute; top: 14px; right: 14px;
+      width: 9px; height: 9px; border-radius: 50%;
+    }
+    .dot-green { background: #22c55e; box-shadow: 0 0 6px #22c55e88; }
+    .dot-yellow { background: #eab308; box-shadow: 0 0 6px #eab30888; }
+    .dot-red { background: #ef4444; box-shadow: 0 0 6px #ef444488; }
+
+    /* Footer */
+    #footer {
+      padding: 16px 28px;
+      border-top: 1px solid #1e293b;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #475569;
+    }
+
     /* Toast */
     #toast {
       position: fixed; bottom: 24px; right: 24px;
-      background: #1e3a5f; border: 1px solid #3b82f6;
-      color: #93c5fd; padding: 12px 20px; border-radius: 10px;
-      font-size: 14px; font-weight: 500; z-index: 1000;
-      display: none; max-width: 320px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+      background: #1e293b; border: 1px solid #f59e0b44; color: #f59e0b;
+      padding: 12px 20px; border-radius: 10px; font-size: 0.85rem; font-weight: 600;
+      transform: translateY(80px); opacity: 0;
+      transition: all 0.3s ease; z-index: 999; pointer-events: none;
     }
-    /* Refresh button */
-    .refresh-btn {
-      background: rgba(247,147,26,0.1); border: 1px solid rgba(247,147,26,0.3);
-      color: var(--accent); border-radius: 8px; padding: 6px 14px;
-      font-size: 13px; font-weight: 600; cursor: pointer;
-      display: flex; align-items: center; gap: 6px;
-      transition: all 0.2s;
+    #toast.show { transform: translateY(0); opacity: 1; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+
+    @media (max-width: 1200px) {
+      .agent-grid { grid-template-columns: repeat(3, 1fr); }
     }
-    .refresh-btn:hover { background: rgba(247,147,26,0.2); border-color: var(--accent); }
-    .refresh-btn.spinning svg { animation: spin 1s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    /* Scrollable project list */
-    .scroll-y { overflow-y: auto; }
-    .scroll-y::-webkit-scrollbar { width: 4px; }
-    .scroll-y::-webkit-scrollbar-track { background: transparent; }
-    .scroll-y::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-    /* Calendar event type colours */
-    .cal-meeting  { background: rgba(59,130,246,0.15); color: #60a5fa; border-left: 3px solid #3b82f6; }
-    .cal-call     { background: rgba(34,197,94,0.15);  color: #4ade80; border-left: 3px solid #22c55e; }
-    .cal-deadline { background: rgba(239,68,68,0.12);  color: #f87171; border-left: 3px solid #ef4444; }
-    .cal-focus    { background: rgba(168,85,247,0.12); color: #c084fc; border-left: 3px solid #a855f7; }
-    .cal-other    { background: rgba(148,163,184,0.10);color: var(--muted); border-left: 3px solid var(--border); }
-    .cal-time-pill {
-      font-size: 11px; font-weight: 700; letter-spacing: 0.03em;
-      padding: 2px 8px; border-radius: 999px; white-space: nowrap;
-      background: rgba(255,255,255,0.06); color: var(--muted);
+    @media (max-width: 900px) {
+      #kpi-strip { grid-template-columns: repeat(3, 1fr); }
+      .project-grid { grid-template-columns: repeat(2, 1fr); }
+      .agent-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
-<body class="p-0">
+<body>
 
-<!-- ═══════════════════════════ HEADER ═══════════════════════════ -->
-<header style="background: #0a0f1e; border-bottom: 1px solid var(--border);" class="px-6 py-4">
-  <div class="flex items-center justify-between flex-wrap gap-3">
-    <!-- Left: Title + meta -->
-    <div class="flex items-center gap-4 flex-wrap">
-      <div class="flex items-center gap-2">
-        <span style="color: var(--accent); font-size: 22px;">₿</span>
-        <h1 class="font-bold text-white" style="font-size: 18px; letter-spacing: -0.01em;">Collective Shift CEO Dashboard</h1>
-      </div>
-      <div class="flex items-center gap-3 text-sm" style="color: var(--muted);">
-        <span id="header-date">—</span>
-        <span style="color: var(--border);">|</span>
-        <span id="header-btc" style="color: var(--accent); font-weight: 700;">BTC —</span>
-        <span style="color: var(--border);">|</span>
-        <span id="header-days">— days left in month</span>
-      </div>
+<!-- Sidebar -->
+<div id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-title">₿ CS CEO</div>
+    <div class="logo-sub">Collective Shift · Command Centre</div>
+  </div>
+  <nav>
+    <a class="nav-item active" href="#dashboard">
+      <span class="nav-icon">📊</span> Dashboard
+    </a>
+    <a class="nav-item" href="#projects">
+      <span class="nav-icon">🗂️</span> Projects
+    </a>
+    <a class="nav-item" href="#ai-team">
+      <span class="nav-icon">🤖</span> AI Team
+    </a>
+    <a class="nav-item" href="#calendar">
+      <span class="nav-icon">📅</span> Calendar
+    </a>
+    <a class="nav-item" href="#kpi-strip">
+      <span class="nav-icon">💰</span> Finance
+    </a>
+    <a class="nav-item" href="#" style="opacity:0.4;cursor:not-allowed">
+      <span class="nav-icon">⚙️</span> Settings
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <span>BenBot ₿ · v2.0</span>
+  </div>
+</div>
+
+<!-- Main -->
+<div id="main">
+
+  <!-- Header -->
+  <div id="header">
+    <div>
+      <div class="header-greeting" id="greeting">Good morning, Ben ₿</div>
+      <div class="header-date" id="header-date">Loading…</div>
     </div>
-    <!-- Right: Last updated + Refresh -->
-    <div class="flex items-center gap-3">
-      <span id="last-updated" class="text-xs" style="color: var(--muted);">Last updated: —</span>
-      <button class="refresh-btn" id="refresh-btn" onclick="requestRefresh()">
-        <svg id="refresh-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
-          <path d="M21 3v5h-5"/>
-          <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
-          <path d="M8 16H3v5"/>
-        </svg>
-        Refresh Now
-      </button>
+    <div class="header-right">
+      <span class="last-updated" id="last-updated">Loading…</span>
+      <button class="refresh-btn" onclick="refresh()">🔄 Refresh</button>
     </div>
   </div>
-</header>
 
-<!-- ═══════════════════════════ KPI STRIP ═══════════════════════════ -->
-<div class="px-6 pt-5 pb-2">
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;">
-
-    <!-- 1. Cash at Bank -->
+  <!-- KPI Strip -->
+  <div id="kpi-strip">
     <div class="kpi-card">
       <div class="kpi-label">💰 Cash at Bank</div>
       <div class="kpi-value" id="kpi-cash">—</div>
       <div class="kpi-sub">AUD</div>
     </div>
-
-    <!-- 2. Survivor Line -->
     <div class="kpi-card">
       <div class="kpi-label">📉 Survivor Line</div>
-      <div class="kpi-value" id="kpi-survivor-april">—</div>
-      <div class="kpi-sub">April &nbsp;|&nbsp; <span id="kpi-survivor-steady">—</span> steady</div>
+      <div class="kpi-value" id="kpi-survivor">—</div>
+      <div class="kpi-sub" id="kpi-survivor-sub">Apr</div>
     </div>
-
-    <!-- 3. Active Members -->
     <div class="kpi-card">
-      <div class="kpi-label">👥 Active Members</div>
+      <div class="kpi-label">👥 Members</div>
       <div class="kpi-value" id="kpi-members">—</div>
-      <div class="kpi-sub"><span id="kpi-platinum">—</span> Platinum</div>
+      <div class="kpi-sub" id="kpi-platinum">— Platinum</div>
     </div>
-
-    <!-- 4. March Renewals -->
     <div class="kpi-card">
-      <div class="kpi-label">📈 March Renewals</div>
-      <div class="kpi-value" id="kpi-renewals-won">—</div>
-      <div class="kpi-sub">Target: <span id="kpi-renewals-target">—</span> &nbsp;·&nbsp; <span id="kpi-renewals-days">—</span> days left</div>
-      <div class="progress-track"><div class="progress-fill" id="kpi-renewals-bar" style="width:0%"></div></div>
-      <div class="text-xs mt-1" style="color: var(--muted);"><span id="kpi-renewals-pct">—</span>% to target</div>
+      <div class="kpi-label">📈 Renewals</div>
+      <div class="kpi-value" id="kpi-renewals">—</div>
+      <div class="kpi-progress"><div class="kpi-progress-bar" id="renewal-bar" style="width:0%"></div></div>
+      <div class="kpi-sub" id="kpi-days-left">— days left</div>
     </div>
-
-    <!-- 5. ARR -->
     <div class="kpi-card">
       <div class="kpi-label">📊 ARR</div>
       <div class="kpi-value" id="kpi-arr">—</div>
-      <div class="kpi-sub">Annual Recurring Revenue</div>
+      <div class="kpi-sub">Annualised</div>
     </div>
-
-    <!-- 6. BTC Price -->
     <div class="kpi-card">
       <div class="kpi-label">₿ BTC Price</div>
-      <div class="kpi-value" id="kpi-btc" style="color: var(--accent);">—</div>
-      <div class="kpi-sub">Live · CoinGecko</div>
+      <div class="kpi-value kpi-btc" id="kpi-btc">Fetching…</div>
+      <div class="kpi-sub">USD · Live</div>
     </div>
-
   </div>
-</div>
 
-<!-- ═══════════════════════════ MAIN CONTENT ═══════════════════════════ -->
-<div class="px-6 py-4" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start;">
+  <!-- Content -->
+  <div id="content">
 
-  <!-- ─── LEFT COLUMN ─── -->
-  <div style="display: flex; flex-direction: column; gap: 16px;">
-
-    <!-- TODAY'S PRIORITIES -->
-    <div class="card p-5">
-      <h2 class="font-bold text-base mb-4" style="color: var(--text);">📋 Today's Priorities</h2>
-      <div id="priorities-list" style="display: flex; flex-direction: column; gap: 10px;"></div>
-    </div>
-
-    <!-- TODAY'S CALENDAR -->
-    <div class="card p-5">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="font-bold text-base" style="color: var(--text);">📅 Today's Calendar</h2>
-        <span class="text-xs px-2 py-1 rounded" style="background:rgba(148,163,184,0.1);color:var(--muted);">Placeholder · EA Bot will sync Google Cal</span>
+    <!-- Section 1: Today's Priorities -->
+    <div class="section" id="dashboard">
+      <div class="section-title">
+        📋 Today's Priorities
+        <span class="section-count" id="priority-count">0</span>
       </div>
-      <div id="calendar-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+      <div class="priority-card" id="priorities-list">
+        <div class="priority-item" style="color:#64748b;font-size:0.85rem">Loading…</div>
+      </div>
     </div>
 
-    <!-- ACTIVE PROJECTS -->
-    <div class="card p-5">
-      <h2 class="font-bold text-base mb-4" style="color: var(--text);">🗂️ Active Projects</h2>
-      <div id="projects-list" class="scroll-y" style="display: flex; flex-direction: column; gap: 8px; max-height: 520px;"></div>
+    <!-- Section 2: Active Projects -->
+    <div class="section" id="projects">
+      <div class="section-title">
+        🗂️ Active Projects
+        <span class="section-count" id="project-count">0</span>
+      </div>
+      <div class="project-grid" id="projects-grid">
+      </div>
     </div>
 
-  </div>
+    <!-- Section 3: Today's Calendar -->
+    <div class="section" id="calendar">
+      <div class="section-title">
+        📅 Today's Calendar
+        <span class="section-count" id="cal-count">0</span>
+      </div>
+      <div class="calendar-card" id="calendar-list">
+        <div class="cal-item" style="color:#64748b;font-size:0.85rem">Loading…</div>
+      </div>
+    </div>
 
-  <!-- ─── RIGHT COLUMN: AGENT TEAM ─── -->
-  <div class="card p-5">
-    <h2 class="font-bold text-base mb-4" style="color: var(--text);">🤖 AI Agent Team</h2>
-    <div id="agents-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
-  </div>
+    <!-- Section 4: AI Agent Team -->
+    <div class="section" id="ai-team">
+      <div class="section-title">
+        🤖 AI Agent Team
+        <span class="section-count" id="agent-count">0</span>
+      </div>
+      <div class="agent-grid" id="agents-grid">
+      </div>
+    </div>
 
-</div>
+  </div><!-- /content -->
 
-<!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
-<footer class="px-6 py-4 text-center text-xs" style="color: var(--muted); border-top: 1px solid var(--border); margin-top: 8px;">
-  Powered by BenBot ₿ &nbsp;·&nbsp; Built <span id="build-ts"></span>
-</footer>
+  <div id="footer">Powered by BenBot ₿ · Collective Shift</div>
+</div><!-- /main -->
 
-<!-- Toast -->
-<div id="toast"></div>
+<div id="toast">🔄 BenBot is updating…</div>
 
 <script>
-// ── Utilities ─────────────────────────────────────────────────────────────────
-
-function fmtAUD(n) {
-  if (n == null) return '—';
-  if (n >= 1_000_000) return 'A$' + (n / 1_000_000).toFixed(1) + 'M';
-  if (n >= 1_000)     return 'A$' + Math.round(n / 1_000) + 'K';
-  return 'A$' + n.toLocaleString();
-}
-
-function fmtUSD(n) {
-  if (n == null) return '—';
-  return '$' + Math.round(n).toLocaleString();
-}
-
-function timeAgo(isoStr) {
-  if (!isoStr) return '—';
-  const diff = (Date.now() - new Date(isoStr).getTime()) / 1000;
-  if (diff < 60)   return 'just now';
-  if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
-  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
-  return Math.floor(diff / 86400) + 'd ago';
-}
-
-function agentStatusInfo(agent) {
-  const hrs = (Date.now() - new Date(agent.last_updated).getTime()) / 3600000;
-  if (hrs < 2)  return { cls: 'dot-green',  label: 'Active' };
-  if (hrs < 8)  return { cls: 'dot-yellow', label: 'Idle' };
-  return           { cls: 'dot-red',    label: 'Offline' };
-}
-
-function priorityBadge(item) {
-  const today = new Date().toISOString().slice(0, 10);
-  if (item.status === 'overdue')          return ['badge-overdue',  '⚠ Overdue'];
-  if (item.status === 'pending_decision') return ['badge-pending',  '⏳ Decision'];
-  if (item.status === 'completed')        return ['badge-done',     '✓ Done'];
-  if (item.status === 'in_progress') {
-    if (item.due && item.due <= today)    return ['badge-today',    '🔥 Due Today'];
-    return                                       ['badge-progress',  '▶ In Progress'];
+  // --- Helpers ---
+  function fmt(n, decimals = 0) {
+    if (n === null || n === undefined) return '—';
+    if (n >= 1_000_000) return 'A$' + (n / 1_000_000).toFixed(1) + 'M';
+    if (n >= 1_000) return '$' + Math.round(n / 1_000) + 'K';
+    return '$' + n.toLocaleString();
   }
-  if (item.status === 'not_started') {
-    if (item.due && item.due <= today)    return ['badge-today',    '⚡ Due Today'];
-    return                                       ['badge-notstart',  '○ Not Started'];
-  }
-  return ['badge-notstart', item.status || '—'];
-}
 
-function fmtDate(d) {
-  if (!d) return '';
-  const dt = new Date(d + 'T00:00:00');
-  return dt.toLocaleDateString('en-AU', { month: 'short', day: 'numeric' });
-}
-
-function showToast(msg, durationMs = 4000) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.display = 'block';
-  setTimeout(() => { t.style.display = 'none'; }, durationMs);
-}
-
-// ── Refresh Now ───────────────────────────────────────────────────────────────
-
-async function requestRefresh() {
-  const btn = document.getElementById('refresh-btn');
-  btn.classList.add('spinning');
-  btn.disabled = true;
-  try {
-    await fetch('/refresh', { method: 'POST' });
-  } catch (_) {}
-  setTimeout(() => {
-    btn.classList.remove('spinning');
-    btn.disabled = false;
-    showToast('🔄 Refresh requested — BenBot will update within a few minutes.');
-  }, 800);
-}
-
-// ── Render Functions ──────────────────────────────────────────────────────────
-
-function renderKPIs(data) {
-  const k = data.kpis || {};
-  document.getElementById('kpi-cash').textContent = fmtAUD(k.cash_at_bank);
-  document.getElementById('kpi-survivor-april').textContent = fmtAUD(k.survivor_line_april);
-  document.getElementById('kpi-survivor-steady').textContent = fmtAUD(k.survivor_line_steady);
-  document.getElementById('kpi-members').textContent = (k.active_members || 0).toLocaleString();
-  document.getElementById('kpi-platinum').textContent = (k.platinum_members || 0).toLocaleString();
-  document.getElementById('kpi-arr').textContent = fmtAUD(k.arr);
-
-  const won    = k.renewals_won    || 0;
-  const target = k.renewals_target || 1;
-  const pct    = Math.min(100, Math.round((won / target) * 100));
-  document.getElementById('kpi-renewals-won').textContent    = fmtAUD(won);
-  document.getElementById('kpi-renewals-target').textContent = fmtAUD(target);
-  document.getElementById('kpi-renewals-days').textContent   = k.renewals_days_left ?? '—';
-  document.getElementById('kpi-renewals-bar').style.width    = pct + '%';
-  document.getElementById('kpi-renewals-pct').textContent    = pct;
-
-  // BTC from snapshot if available (overwritten by live fetch below)
-  if (k.btc_price) {
-    document.getElementById('kpi-btc').textContent = fmtUSD(k.btc_price);
-    document.getElementById('header-btc').textContent = 'BTC ' + fmtUSD(k.btc_price);
-  }
-}
-
-function renderPriorities(items) {
-  const el = document.getElementById('priorities-list');
-  if (!items || !items.length) { el.innerHTML = '<p class="text-sm" style="color:var(--muted)">No priorities found.</p>'; return; }
-  el.innerHTML = items.map(item => {
-    const [cls, label] = priorityBadge(item);
-    const dueStr = item.due ? `<span style="color:var(--muted);font-size:11px;">${fmtDate(item.due)}</span>` : '';
-    return `
-      <div class="card2 px-4 py-3 flex items-start justify-between gap-3">
-        <div style="flex:1; min-width:0;">
-          <div class="font-medium text-sm leading-snug" style="color:var(--text);">${item.title}</div>
-          <div class="text-xs mt-1" style="color:var(--muted);">→ ${item.assignee || '—'} ${dueStr}</div>
-        </div>
-        <span class="badge ${cls}" style="flex-shrink:0; margin-top:2px;">${label}</span>
-      </div>`;
-  }).join('');
-}
-
-function renderProjects(items) {
-  const el = document.getElementById('projects-list');
-  if (!items || !items.length) { el.innerHTML = '<p class="text-sm" style="color:var(--muted)">No projects.</p>'; return; }
-  el.innerHTML = items.map(p => {
-    const statusMap = {
-      in_progress: ['badge-progress', '▶ In Progress'],
-      not_started: ['badge-notstart', '○ Not Started'],
-      completed:   ['badge-done',     '✓ Done'],
-      on_hold:     ['badge-pending',  '⏸ On Hold'],
+  function statusBadge(status) {
+    const map = {
+      overdue: 'badge-overdue', in_progress: 'badge-in_progress',
+      not_started: 'badge-not_started', pending_decision: 'badge-pending_decision',
+      pending: 'badge-pending', completed: 'badge-completed'
     };
-    const [sCls, sLabel] = statusMap[p.status] || ['badge-notstart', p.status];
-    const catCls = 'cat-' + (p.category || 'Operations');
-    const dueStr = p.due ? `<span style="color:var(--muted);">· ${fmtDate(p.due)}</span>` : '';
-    return `
-      <div class="card2 px-4 py-3 flex items-start justify-between gap-3">
-        <div style="flex:1; min-width:0;">
-          <div class="font-semibold text-sm leading-snug" style="color:var(--text);">${p.name}</div>
-          <div class="text-xs mt-1 flex items-center gap-2 flex-wrap" style="color:var(--muted);">
-            <span>${p.owner || '—'}</span>
-            ${dueStr}
-            <span class="cat-pill ${catCls}">${p.category || 'Ops'}</span>
-          </div>
-        </div>
-        <span class="badge ${sCls}" style="flex-shrink:0; margin-top:2px;">${sLabel}</span>
-      </div>`;
-  }).join('');
-}
-
-function renderCalendar(events) {
-  const el = document.getElementById('calendar-list');
-  if (!events || !events.length) {
-    el.innerHTML = '<p class="text-sm" style="color:var(--muted)">No events today.</p>';
-    return;
+    const label = { overdue: 'Overdue', in_progress: 'In Progress', not_started: 'Not Started',
+      pending_decision: 'Pending', pending: 'Pending', completed: 'Done' };
+    return `<span class="badge ${map[status] || 'badge-not_started'}">${label[status] || status}</span>`;
   }
-  const typeClass = { meeting: 'cal-meeting', call: 'cal-call', deadline: 'cal-deadline', focus: 'cal-focus' };
-  const typeLabel = { meeting: 'Meeting', call: 'Call', deadline: 'Deadline', focus: 'Focus' };
-  el.innerHTML = events.map(ev => {
-    const cls   = typeClass[ev.type] || 'cal-other';
-    const label = typeLabel[ev.type] || ev.type || '';
-    const dur   = ev.duration ? `<span style="color:var(--muted);font-size:11px;">${ev.duration}</span>` : '';
-    return `
-      <div class="${cls} rounded-lg px-3 py-2 flex items-center gap-3">
-        <span class="cal-time-pill">${ev.time || '—'}</span>
-        <span class="text-sm font-medium flex-1" style="color:inherit;">${ev.title}</span>
-        ${dur}
-        <span class="badge" style="background:rgba(255,255,255,0.07);color:inherit;font-size:10px;">${label}</span>
-      </div>`;
-  }).join('');
-}
 
-function renderAgents(agents) {
-  const el = document.getElementById('agents-grid');
-  if (!agents || !agents.length) { el.innerHTML = '<p class="text-sm" style="color:var(--muted)">No agents.</p>'; return; }
-  el.innerHTML = agents.map(agent => {
-    const si = agentStatusInfo(agent);
-    return `
-      <div class="card2 px-3 py-3" style="display:flex; flex-direction:column; gap:5px;">
-        <div style="display:flex; align-items:center; justify-content:space-between;">
-          <div style="display:flex; align-items:center; gap:6px;">
-            <span style="font-size:16px;">${agent.emoji}</span>
-            <span class="font-bold text-sm" style="color:var(--text);">${agent.name}</span>
-          </div>
-          <div class="dot ${si.cls}" title="${si.label}"></div>
-        </div>
-        <div class="text-xs" style="color:var(--muted); line-height:1.35;">${agent.role}</div>
-        <div class="text-xs" style="color:#64748b; line-height:1.35; font-style:italic; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${agent.last_task}">${agent.last_task}</div>
-        <div class="text-xs" style="color:#475569;">${timeAgo(agent.last_updated)}</div>
-      </div>`;
-  }).join('');
-}
-
-// ── Header helpers ────────────────────────────────────────────────────────────
-
-function updateHeader(data) {
-  // Date
-  document.getElementById('header-date').textContent = new Date().toLocaleDateString('en-AU', {
-    weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
-  });
-  // Days left in month
-  const now = new Date();
-  const daysLeft = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate() - now.getDate();
-  document.getElementById('header-days').textContent = daysLeft + ' days left in month';
-  // Last updated
-  if (data && data.last_updated) {
-    document.getElementById('last-updated').textContent = 'Last updated: ' + timeAgo(data.last_updated);
+  function catBadge(cat) {
+    const map = { Product:'cat-product', Finance:'cat-finance', Sales:'cat-sales',
+      Legal:'cat-legal', Marketing:'cat-marketing', Operations:'cat-operations' };
+    return `<span class="badge ${map[cat] || 'badge-not_started'}">${cat}</span>`;
   }
-}
 
-// ── Live BTC from CoinGecko ───────────────────────────────────────────────────
+  function timeSince(isoStr) {
+    if (!isoStr) return '';
+    const diff = (Date.now() - new Date(isoStr).getTime()) / 3600000;
+    if (diff < 1) return Math.round(diff * 60) + 'm ago';
+    if (diff < 24) return Math.round(diff) + 'h ago';
+    return Math.round(diff / 24) + 'd ago';
+  }
 
-async function fetchBTC() {
-  try {
-    const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-    const j = await r.json();
-    const price = j?.bitcoin?.usd;
-    if (price) {
-      document.getElementById('kpi-btc').textContent = fmtUSD(price);
-      document.getElementById('header-btc').textContent = 'BTC ' + fmtUSD(price);
+  function agentDotClass(isoStr) {
+    if (!isoStr) return 'dot-red';
+    const diff = (Date.now() - new Date(isoStr).getTime()) / 3600000;
+    if (diff < 2) return 'dot-green';
+    if (diff < 8) return 'dot-yellow';
+    return 'dot-red';
+  }
+
+  function greeting() {
+    const h = new Date().getHours();
+    if (h < 12) return 'Good morning, Ben ₿';
+    if (h < 17) return 'Good afternoon, Ben ₿';
+    return 'Good evening, Ben ₿';
+  }
+
+  function fmtDate(d) {
+    return d.toLocaleDateString('en-AU', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
+  function minutesSince(isoStr) {
+    if (!isoStr) return '?';
+    const diff = Math.round((Date.now() - new Date(isoStr).getTime()) / 60000);
+    if (diff < 1) return 'just now';
+    if (diff === 1) return '1 min ago';
+    if (diff < 60) return diff + ' mins ago';
+    return Math.round(diff / 60) + 'h ago';
+  }
+
+  function sortByTime(events) {
+    function parseTime(t) {
+      const [time, ampm] = t.split(' ');
+      let [h, m] = time.split(':').map(Number);
+      if (ampm === 'PM' && h !== 12) h += 12;
+      if (ampm === 'AM' && h === 12) h = 0;
+      return h * 60 + m;
     }
-  } catch (_) {
-    // silently fail — snapshot fallback already rendered
+    return [...events].sort((a, b) => parseTime(a.time) - parseTime(b.time));
   }
-}
 
-// ── Main data fetch + render ──────────────────────────────────────────────────
-
-async function loadDashboard() {
-  try {
-    const r = await fetch('/data');
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const data = await r.json();
-    updateHeader(data);
-    renderKPIs(data);
-    renderPriorities(data.daily_priorities);
-    renderCalendar(data.calendar);
-    renderProjects(data.projects);
-    renderAgents(data.agents);
-  } catch (err) {
-    console.error('Dashboard load error:', err);
-    showToast('⚠ Could not load dashboard data.', 6000);
+  // --- Render ---
+  function renderPriorities(items) {
+    document.getElementById('priority-count').textContent = items.length;
+    document.getElementById('priorities-list').innerHTML = items.map(p => `
+      <div class="priority-item">
+        ${statusBadge(p.status)}
+        <span class="priority-title">${p.title}</span>
+        <span class="priority-assignee">👤 ${p.assignee || '—'}</span>
+        <span class="priority-meta">${p.due ? p.due : ''}</span>
+      </div>
+    `).join('');
   }
-}
 
-// ── Init ──────────────────────────────────────────────────────────────────────
+  function renderProjects(items) {
+    document.getElementById('project-count').textContent = items.length;
+    document.getElementById('projects-grid').innerHTML = items.map(p => `
+      <div class="project-card">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+          <div class="project-name">${p.name}</div>
+          ${catBadge(p.category)}
+        </div>
+        <div class="project-owner">👤 ${p.owner}</div>
+        <div class="project-footer">
+          ${statusBadge(p.status)}
+          <span class="project-due">${p.due ? '📅 ' + p.due : ''}</span>
+        </div>
+      </div>
+    `).join('');
+  }
 
-document.getElementById('build-ts').textContent = new Date().toISOString().slice(0, 10);
+  function renderCalendar(items) {
+    const sorted = sortByTime(items);
+    document.getElementById('cal-count').textContent = sorted.length;
+    document.getElementById('calendar-list').innerHTML = sorted.map(e => `
+      <div class="cal-item">
+        <span class="time-pill time-${e.type}">${e.time}</span>
+        <span class="cal-title">${e.title}</span>
+        <span class="cal-end">ends ${e.end_time}</span>
+        <span class="type-badge type-${e.type}">${e.type}</span>
+      </div>
+    `).join('');
+  }
 
-loadDashboard();
-fetchBTC();
+  function renderAgents(items) {
+    document.getElementById('agent-count').textContent = items.length;
+    document.getElementById('agents-grid').innerHTML = items.map(a => `
+      <div class="agent-card">
+        <div class="status-dot ${agentDotClass(a.last_updated)}"></div>
+        <div class="agent-emoji">${a.emoji}</div>
+        <div class="agent-name">${a.name}</div>
+        <div class="agent-role">${a.role}</div>
+        <div class="agent-task">${a.last_task}</div>
+        <div class="agent-time">${timeSince(a.last_updated)}</div>
+      </div>
+    `).join('');
+  }
 
-// Auto-refresh every 60 seconds
-setInterval(() => { loadDashboard(); fetchBTC(); }, 60_000);
+  function renderKPIs(kpis) {
+    document.getElementById('kpi-cash').textContent = fmt(kpis.cash_at_bank);
+    document.getElementById('kpi-survivor').textContent = fmt(kpis.survivor_line_april);
+    document.getElementById('kpi-members').textContent = (kpis.active_members || '—').toLocaleString();
+    document.getElementById('kpi-platinum').textContent = (kpis.platinum_members || '—') + ' Platinum';
+    const pct = kpis.renewals_won && kpis.renewals_target ? Math.min(100, Math.round(kpis.renewals_won / kpis.renewals_target * 100)) : 0;
+    document.getElementById('kpi-renewals').textContent = fmt(kpis.renewals_won) + ' / ' + fmt(kpis.renewals_target);
+    document.getElementById('renewal-bar').style.width = pct + '%';
+    document.getElementById('kpi-days-left').textContent = (kpis.renewals_days_left || '—') + ' days left · ' + pct + '%';
+    document.getElementById('kpi-arr').textContent = fmt(kpis.arr);
+  }
+
+  // --- BTC live price ---
+  async function fetchBTC() {
+    try {
+      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+      const data = await res.json();
+      const price = data?.bitcoin?.usd;
+      if (price) {
+        document.getElementById('kpi-btc').textContent = '$' + price.toLocaleString();
+      }
+    } catch {
+      document.getElementById('kpi-btc').textContent = 'Unavailable';
+    }
+  }
+
+  // --- Load snapshot ---
+  let lastUpdatedISO = null;
+  async function loadData() {
+    try {
+      const res = await fetch('/api/snapshot');
+      const data = await res.json();
+      lastUpdatedISO = data.last_updated;
+      document.getElementById('last-updated').textContent = 'Last updated: ' + minutesSince(lastUpdatedISO);
+      if (data.kpis) renderKPIs(data.kpis);
+      if (data.daily_priorities) renderPriorities(data.daily_priorities);
+      if (data.projects) renderProjects(data.projects);
+      if (data.calendar) renderCalendar(data.calendar);
+      if (data.agents) renderAgents(data.agents);
+    } catch (e) {
+      document.getElementById('last-updated').textContent = 'Error loading data';
+    }
+  }
+
+  // --- Refresh button ---
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  function refresh() {
+    showToast('🔄 BenBot is updating…');
+    loadData();
+    fetchBTC();
+  }
+
+  // --- Sidebar active state on scroll ---
+  const sections = ['dashboard', 'projects', 'calendar', 'ai-team'];
+  const navLinks = document.querySelectorAll('.nav-item');
+
+  function updateActiveNav() {
+    let current = 'dashboard';
+    for (const id of sections) {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top < 200) current = id;
+    }
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href')?.replace('#', '');
+      link.classList.toggle('active', href === current);
+    });
+  }
+
+  document.getElementById('main').addEventListener('scroll', updateActiveNav);
+  window.addEventListener('scroll', updateActiveNav);
+
+  // --- Init ---
+  document.getElementById('greeting').textContent = greeting();
+  document.getElementById('header-date').textContent = fmtDate(new Date());
+  loadData();
+  fetchBTC();
+
+  // Refresh last-updated label every minute
+  setInterval(() => {
+    if (lastUpdatedISO) {
+      document.getElementById('last-updated').textContent = 'Last updated: ' + minutesSince(lastUpdatedISO);
+    }
+  }, 60000);
 </script>
 </body>
 </html>
