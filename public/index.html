@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Collective Shift — CEO Command Centre</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: {
+              900: '#0a0f1e',
+              800: '#0d1528',
+              700: '#111d35',
+              600: '#162240',
+              500: '#1e2f52',
+            },
+            bitcoin: '#f7931a',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body { background: #0a0f1e; font-family: 'Inter', system-ui, sans-serif; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0d1528; }
+    ::-webkit-scrollbar-thumb { background: #1e2f52; border-radius: 3px; }
+
+    /* Animations */
+    @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .pulse-dot { animation: pulse-dot 2s infinite; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .skeleton {
+      background: linear-gradient(90deg, #1e2f52 25%, #253a63 50%, #1e2f52 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+    }
+
+    /* Progress bar */
+    .progress-bar-track { background: #1e2f52; border-radius: 999px; height: 8px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; border-radius: 999px; transition: width 1s ease; }
+
+    /* Glow effects */
+    .glow-green { box-shadow: 0 0 12px rgba(34,197,94,0.25); }
+    .glow-orange { box-shadow: 0 0 12px rgba(249,115,22,0.25); }
+    .glow-blue { box-shadow: 0 0 12px rgba(59,130,246,0.25); }
+    .glow-btc { box-shadow: 0 0 16px rgba(247,147,26,0.3); }
+
+    /* Agent card hover */
+    .agent-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .agent-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+
+    /* Status dot */
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+    /* KPI card */
+    .kpi-card { transition: transform 0.2s ease; }
+    .kpi-card:hover { transform: translateY(-2px); }
+
+    /* Login overlay */
+    #login-screen { backdrop-filter: blur(12px); }
+  </style>
+</head>
+<body class="min-h-screen text-white">
+
+  <!-- LOGIN SCREEN -->
+  <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-navy-900/95">
+    <div class="w-full max-w-sm mx-4">
+      <div class="text-center mb-8">
+        <div class="text-5xl mb-3">₿</div>
+        <h1 class="text-2xl font-bold text-white">Collective Shift</h1>
+        <p class="text-slate-400 text-sm mt-1">CEO Command Centre</p>
+      </div>
+      <div class="bg-navy-700 border border-slate-700/50 rounded-2xl p-6">
+        <form id="login-form">
+          <label class="block text-sm text-slate-400 mb-2">Password</label>
+          <input
+            id="password-input"
+            type="password"
+            placeholder="Enter dashboard password"
+            class="w-full bg-navy-900 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 mb-4"
+            autofocus
+          />
+          <div id="login-error" class="hidden text-red-400 text-sm mb-3 text-center">Incorrect password</div>
+          <button
+            type="submit"
+            class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl transition-colors"
+          >
+            Enter Dashboard
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN DASHBOARD -->
+  <div id="dashboard" class="hidden min-h-screen">
+
+    <!-- TOP HEADER BAR -->
+    <header class="sticky top-0 z-40 bg-navy-800/90 backdrop-blur border-b border-slate-700/50 px-6 py-3">
+      <div class="max-w-screen-2xl mx-auto flex items-center justify-between gap-4">
+        <!-- Logo + Title -->
+        <div class="flex items-center gap-3 flex-shrink-0">
+          <span class="text-2xl">₿</span>
+          <div>
+            <h1 class="text-base font-bold text-white leading-tight">Collective Shift</h1>
+            <p class="text-xs text-slate-500">CEO Command Centre</p>
+          </div>
+        </div>
+
+        <!-- Market Ticker -->
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2 bg-navy-700/80 border border-orange-500/30 rounded-xl px-4 py-2 glow-btc">
+            <span class="text-bitcoin text-lg font-bold">₿</span>
+            <div>
+              <div id="btc-price" class="text-white font-bold text-sm">Loading…</div>
+              <div class="text-slate-500 text-xs">BTC/USD</div>
+            </div>
+          </div>
+          <div id="fg-card" class="flex items-center gap-2 bg-navy-700/80 border border-slate-600/50 rounded-xl px-4 py-2">
+            <div id="fg-emoji" class="text-xl">😐</div>
+            <div>
+              <div id="fg-value" class="text-white font-bold text-sm">—</div>
+              <div id="fg-label" class="text-slate-500 text-xs">Fear & Greed</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Clock + Refresh -->
+        <div class="flex items-center gap-4 flex-shrink-0">
+          <div class="text-right">
+            <div id="clock" class="text-white font-mono text-sm font-semibold"></div>
+            <div id="datestamp" class="text-slate-500 text-xs"></div>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="pulse-dot status-dot bg-green-400"></div>
+            <span id="refresh-countdown" class="text-slate-500 text-xs">60s</span>
+          </div>
+          <button id="refresh-btn" onclick="loadAll()" class="bg-navy-600 hover:bg-navy-500 border border-slate-600 text-slate-300 text-xs px-3 py-1.5 rounded-lg transition-colors">
+            ↻ Refresh
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-screen-2xl mx-auto px-6 py-6 space-y-8">
+
+      <!-- SECTION 1: KPI CARDS -->
+      <section>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-slate-400 text-xs font-semibold uppercase tracking-widest">Key Metrics</span>
+          <div class="flex-1 h-px bg-slate-700/50"></div>
+          <span id="kpi-updated" class="text-slate-600 text-xs"></span>
+        </div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+
+          <!-- Renewals -->
+          <div class="kpi-card col-span-2 bg-navy-700 border border-slate-700/50 rounded-2xl p-5 glow-green">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <p class="text-slate-400 text-xs font-medium uppercase tracking-wide mb-1">March Renewals</p>
+                <div class="flex items-baseline gap-2">
+                  <span id="renewals-won" class="text-3xl font-bold text-white">$131,354</span>
+                  <span class="text-slate-500 text-sm">/ $180,000</span>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="bg-orange-500/20 text-orange-400 rounded-lg px-3 py-1 text-xs font-semibold" id="days-left-badge">8 days left</div>
+                <div id="renewals-gap" class="text-slate-500 text-xs mt-1">$48,646 to go</div>
+              </div>
+            </div>
+            <div class="progress-bar-track">
+              <div id="renewals-bar" class="progress-bar-fill bg-gradient-to-r from-green-500 to-emerald-400" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between mt-2">
+              <span id="renewals-pct" class="text-green-400 text-xs font-semibold">0%</span>
+              <span class="text-slate-500 text-xs">Target: $180K</span>
+            </div>
+          </div>
+
+          <!-- Cash at Bank -->
+          <div class="kpi-card bg-navy-700 border border-slate-700/50 rounded-2xl p-5">
+            <p class="text-slate-400 text-xs font-medium uppercase tracking-wide mb-2">Cash at Bank</p>
+            <div id="cash-at-bank" class="text-3xl font-bold text-white mb-1">$915K</div>
+            <div class="text-slate-500 text-xs">AUD</div>
+          </div>
+
+          <!-- Members -->
+          <div class="kpi-card bg-navy-700 border border-slate-700/50 rounded-2xl p-5 glow-blue">
+            <p class="text-slate-400 text-xs font-medium uppercase tracking-wide mb-2">Active Members</p>
+            <div id="active-members" class="text-3xl font-bold text-white mb-1">1,163</div>
+            <div class="flex items-center gap-2">
+              <span class="bg-yellow-500/20 text-yellow-400 rounded px-2 py-0.5 text-xs font-semibold">
+                👑 <span id="platinum-members">402</span> Platinum
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SECTION 2: TEAM VIEW (PROMINENT) -->
+      <section id="team-section">
+        <div class="flex items-center gap-2 mb-5">
+          <span class="text-slate-400 text-xs font-semibold uppercase tracking-widest">AI Agent Team</span>
+          <div class="flex-1 h-px bg-slate-700/50"></div>
+          <div class="flex items-center gap-3">
+            <span class="text-slate-600 text-xs" id="team-updated"></span>
+            <div class="flex gap-3 text-xs">
+              <span class="flex items-center gap-1"><span class="status-dot bg-green-400 inline-block"></span> Active</span>
+              <span class="flex items-center gap-1"><span class="status-dot bg-yellow-400 inline-block"></span> Idle</span>
+              <span class="flex items-center gap-1"><span class="status-dot bg-red-400 inline-block"></span> Offline</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="agent-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+          <!-- Populated by JS -->
+          <div class="skeleton h-44 rounded-2xl"></div>
+          <div class="skeleton h-44 rounded-2xl"></div>
+          <div class="skeleton h-44 rounded-2xl"></div>
+          <div class="skeleton h-44 rounded-2xl"></div>
+          <div class="skeleton h-44 rounded-2xl"></div>
+          <div class="skeleton h-44 rounded-2xl"></div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: NOTION TASKS -->
+      <section id="tasks-section">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-slate-400 text-xs font-semibold uppercase tracking-widest">Task Board</span>
+          <div class="flex-1 h-px bg-slate-700/50"></div>
+          <span id="tasks-updated" class="text-slate-600 text-xs"></span>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+          <!-- Overdue -->
+          <div class="bg-navy-700 border border-red-500/20 rounded-2xl overflow-hidden">
+            <div class="px-4 py-3 bg-red-500/10 border-b border-red-500/20 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-red-400"></span>
+                <span class="text-red-400 text-sm font-semibold">Overdue</span>
+              </div>
+              <span id="overdue-count" class="bg-red-500/20 text-red-400 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+            </div>
+            <div id="overdue-list" class="p-3 space-y-2 max-h-64 overflow-y-auto">
+              <div class="text-slate-600 text-xs text-center py-4">Loading…</div>
+            </div>
+          </div>
+
+          <!-- Due This Week -->
+          <div class="bg-navy-700 border border-orange-500/20 rounded-2xl overflow-hidden">
+            <div class="px-4 py-3 bg-orange-500/10 border-b border-orange-500/20 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-orange-400"></span>
+                <span class="text-orange-400 text-sm font-semibold">Due This Week</span>
+              </div>
+              <span id="week-count" class="bg-orange-500/20 text-orange-400 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+            </div>
+            <div id="week-list" class="p-3 space-y-2 max-h-64 overflow-y-auto">
+              <div class="text-slate-600 text-xs text-center py-4">Loading…</div>
+            </div>
+          </div>
+
+          <!-- In Progress -->
+          <div class="bg-navy-700 border border-blue-500/20 rounded-2xl overflow-hidden">
+            <div class="px-4 py-3 bg-blue-500/10 border-b border-blue-500/20 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                <span class="text-blue-400 text-sm font-semibold">In Progress</span>
+              </div>
+              <span id="progress-count" class="bg-blue-500/20 text-blue-400 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+            </div>
+            <div id="progress-list" class="p-3 space-y-2 max-h-64 overflow-y-auto">
+              <div class="text-slate-600 text-xs text-center py-4">Loading…</div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SECTION 4: WHOP ACTIVITY -->
+      <section id="whop-section">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-slate-400 text-xs font-semibold uppercase tracking-widest">Recent Member Activity</span>
+          <div class="flex-1 h-px bg-slate-700/50"></div>
+          <span id="whop-updated" class="text-slate-600 text-xs"></span>
+        </div>
+        <div class="bg-navy-700 border border-slate-700/50 rounded-2xl overflow-hidden">
+          <div id="whop-list" class="divide-y divide-slate-700/50">
+            <div class="text-slate-600 text-xs text-center py-8">Loading membership activity…</div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-700/30 mt-8 px-6 py-4">
+      <div class="max-w-screen-2xl mx-auto flex items-center justify-between text-slate-600 text-xs">
+        <span>Collective Shift CEO Command Centre — powered by BenBot</span>
+        <span id="last-full-refresh">Never refreshed</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- JAVASCRIPT -->
+  <script>
+    // ────────────────────────────────────────────────
+    // CONFIG
+    // ────────────────────────────────────────────────
+    let AUTH_TOKEN = localStorage.getItem('dashboard_token') || '';
+    const REFRESH_INTERVAL = 60; // seconds
+
+    // Agent metadata (name, role, icon, channel)
+    const AGENT_META = {
+      finance:       { label: 'Finance Bot',       role: 'Cash flow & KPIs',             icon: '💰', channel: '#finance-bot',          color: 'green' },
+      sales:         { label: 'Sales Bot',          role: 'Pipeline & conversions',        icon: '📈', channel: '#sales-bot',             color: 'emerald' },
+      marketing:     { label: 'Marketing Bot',      role: 'Campaigns & funnels',           icon: '🎯', channel: '#marketing-bot',         color: 'violet' },
+      social:        { label: 'Social Media Bot',   role: 'Content & social strategy',     icon: '📣', channel: '#social-media-bot',      color: 'pink' },
+      email:         { label: 'Email Bot',           role: 'Customer.io & nurture',         icon: '✉️',  channel: '#email-marketing-bot',   color: 'sky' },
+      seo:           { label: 'SEO Bot',             role: 'Backlinks & rankings',          icon: '🔍', channel: '#seo-bot',               color: 'lime' },
+      csm:           { label: 'CSM Bot',             role: 'Retention & onboarding',        icon: '🤝', channel: '#client-success-bot',    color: 'cyan' },
+      analyst:       { label: 'Crypto Analyst Bot', role: 'Market research & analysis',    icon: '📊', channel: '#crypto-analyst-bot',    color: 'orange' },
+      'ben-analyst': { label: 'Ben Analyst Bot',    role: 'Voice DNA & teaching framework',icon: '🧠', channel: '#ben-analyst-bot',       color: 'purple' },
+      video:         { label: 'Video Clipper Bot',  role: 'Long → short-form content',     icon: '🎬', channel: '#video-clipper-bot',     color: 'red' },
+      ea:            { label: 'EA Bot',              role: 'Calendar & email triage',       icon: '📅', channel: '#executive-assistant',   color: 'blue' },
+    };
+
+    const COLOR_MAP = {
+      green:   { border: 'border-green-500/30',   icon: 'bg-green-500/15 text-green-400',   badge: 'bg-green-500/20 text-green-400' },
+      emerald: { border: 'border-emerald-500/30', icon: 'bg-emerald-500/15 text-emerald-400', badge: 'bg-emerald-500/20 text-emerald-400' },
+      violet:  { border: 'border-violet-500/30',  icon: 'bg-violet-500/15 text-violet-400', badge: 'bg-violet-500/20 text-violet-400' },
+      pink:    { border: 'border-pink-500/30',     icon: 'bg-pink-500/15 text-pink-400',     badge: 'bg-pink-500/20 text-pink-400' },
+      sky:     { border: 'border-sky-500/30',      icon: 'bg-sky-500/15 text-sky-400',       badge: 'bg-sky-500/20 text-sky-400' },
+      lime:    { border: 'border-lime-500/30',     icon: 'bg-lime-500/15 text-lime-400',     badge: 'bg-lime-500/20 text-lime-400' },
+      cyan:    { border: 'border-cyan-500/30',     icon: 'bg-cyan-500/15 text-cyan-400',     badge: 'bg-cyan-500/20 text-cyan-400' },
+      orange:  { border: 'border-orange-500/30',   icon: 'bg-orange-500/15 text-orange-400', badge: 'bg-orange-500/20 text-orange-400' },
+      purple:  { border: 'border-purple-500/30',   icon: 'bg-purple-500/15 text-purple-400', badge: 'bg-purple-500/20 text-purple-400' },
+      red:     { border: 'border-red-500/30',      icon: 'bg-red-500/15 text-red-400',       badge: 'bg-red-500/20 text-red-400' },
+      blue:    { border: 'border-blue-500/30',     icon: 'bg-blue-500/15 text-blue-400',     badge: 'bg-blue-500/20 text-blue-400' },
+    };
+
+    // ────────────────────────────────────────────────
+    // CLOCK
+    // ────────────────────────────────────────────────
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clock').textContent =
+        now.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      document.getElementById('datestamp').textContent =
+        now.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // ────────────────────────────────────────────────
+    // REFRESH COUNTDOWN
+    // ────────────────────────────────────────────────
+    let countdown = REFRESH_INTERVAL;
+    let countdownTimer;
+    function startCountdown() {
+      clearInterval(countdownTimer);
+      countdown = REFRESH_INTERVAL;
+      countdownTimer = setInterval(() => {
+        countdown--;
+        const el = document.getElementById('refresh-countdown');
+        if (el) el.textContent = countdown + 's';
+        if (countdown <= 0) {
+          loadAll();
+          countdown = REFRESH_INTERVAL;
+        }
+      }, 1000);
+    }
+
+    // ────────────────────────────────────────────────
+    // AUTH
+    // ────────────────────────────────────────────────
+    async function tryLogin(password) {
+      try {
+        const res = await fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          AUTH_TOKEN = data.token;
+          localStorage.setItem('dashboard_token', AUTH_TOKEN);
+          showDashboard();
+        } else {
+          document.getElementById('login-error').classList.remove('hidden');
+        }
+      } catch (e) {
+        document.getElementById('login-error').textContent = 'Connection error';
+        document.getElementById('login-error').classList.remove('hidden');
+      }
+    }
+
+    async function checkAuth() {
+      if (!AUTH_TOKEN) return;
+      try {
+        const res = await fetch('/api/kpis', {
+          headers: { 'x-dashboard-token': AUTH_TOKEN }
+        });
+        if (res.ok) showDashboard();
+        else { AUTH_TOKEN = ''; localStorage.removeItem('dashboard_token'); }
+      } catch (e) {}
+    }
+
+    function showDashboard() {
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+      loadAll();
+      startCountdown();
+    }
+
+    document.getElementById('login-form').addEventListener('submit', e => {
+      e.preventDefault();
+      tryLogin(document.getElementById('password-input').value);
+    });
+
+    // ────────────────────────────────────────────────
+    // API FETCH
+    // ────────────────────────────────────────────────
+    async function apiFetch(path) {
+      const res = await fetch(path, { headers: { 'x-dashboard-token': AUTH_TOKEN } });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    }
+
+    // ────────────────────────────────────────────────
+    // FORMATTERS
+    // ────────────────────────────────────────────────
+    function fmt$(n) {
+      if (n == null) return '—';
+      if (n >= 1e6) return '$' + (n / 1e6).toFixed(1) + 'M';
+      if (n >= 1e3) return '$' + (n / 1e3).toFixed(0) + 'K';
+      return '$' + n.toLocaleString();
+    }
+
+    function fmtNum(n) {
+      if (n == null) return '—';
+      return n.toLocaleString();
+    }
+
+    function fmtDate(str) {
+      if (!str) return null;
+      try {
+        const d = new Date(str);
+        return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+      } catch { return str; }
+    }
+
+    function fmtRelTime(str) {
+      if (!str) return 'Never';
+      try {
+        const diff = Date.now() - new Date(str).getTime();
+        const mins = Math.floor(diff / 60000);
+        if (mins < 1) return 'Just now';
+        if (mins < 60) return `${mins}m ago`;
+        const hrs = Math.floor(mins / 60);
+        if (hrs < 24) return `${hrs}h ago`;
+        const days = Math.floor(hrs / 24);
+        return `${days}d ago`;
+      } catch { return str; }
+    }
+
+    function statusDotColor(status, lastUpdated) {
+      if (!status) return 'bg-slate-600';
+      const s = status.toLowerCase();
+      if (s === 'offline' || s === 'error') return 'bg-red-400';
+      if (s === 'idle') return 'bg-yellow-400';
+      // Check staleness: if last update >2h, show yellow
+      if (lastUpdated) {
+        const diff = Date.now() - new Date(lastUpdated).getTime();
+        if (diff > 2 * 60 * 60 * 1000) return 'bg-yellow-400';
+      }
+      return 'bg-green-400';
+    }
+
+    function fgEmoji(val) {
+      const n = parseInt(val);
+      if (isNaN(n)) return '😐';
+      if (n <= 20) return '😱';
+      if (n <= 40) return '😨';
+      if (n <= 55) return '😐';
+      if (n <= 75) return '😄';
+      return '🤑';
+    }
+
+    function fgColor(val) {
+      const n = parseInt(val);
+      if (isNaN(n)) return 'text-slate-400';
+      if (n <= 20) return 'text-red-400';
+      if (n <= 40) return 'text-orange-400';
+      if (n <= 55) return 'text-yellow-400';
+      if (n <= 75) return 'text-green-400';
+      return 'text-emerald-400';
+    }
+
+    // ────────────────────────────────────────────────
+    // RENDER: KPIs
+    // ────────────────────────────────────────────────
+    function renderKPIs(kpis) {
+      if (!kpis || kpis.error) return;
+
+      const won = kpis.renewals_won || 0;
+      const target = kpis.renewals_target || 180000;
+      const gap = target - won;
+      const pct = Math.min(100, Math.round((won / target) * 100));
+      const daysLeft = kpis.renewals_days_left ?? 8;
+
+      document.getElementById('renewals-won').textContent = fmt$(won);
+      document.getElementById('renewals-gap').textContent = fmt$(gap) + ' to go';
+      document.getElementById('days-left-badge').textContent = daysLeft + ' days left';
+      document.getElementById('renewals-pct').textContent = pct + '% of target';
+      setTimeout(() => {
+        document.getElementById('renewals-bar').style.width = pct + '%';
+      }, 100);
+
+      document.getElementById('cash-at-bank').textContent = fmt$(kpis.cash_at_bank);
+      document.getElementById('active-members').textContent = fmtNum(kpis.active_members);
+      document.getElementById('platinum-members').textContent = fmtNum(kpis.platinum_members);
+
+      if (kpis.last_updated) {
+        document.getElementById('kpi-updated').textContent = 'Updated ' + fmtRelTime(kpis.last_updated);
+      }
+    }
+
+    // ────────────────────────────────────────────────
+    // RENDER: MARKET
+    // ────────────────────────────────────────────────
+    function renderMarket(kpis) {
+      const btc = kpis?.btc_price;
+      const fg = kpis?.fear_greed;
+
+      if (btc) {
+        document.getElementById('btc-price').textContent =
+          '$' + btc.toLocaleString('en-US', { maximumFractionDigits: 0 });
+      } else {
+        document.getElementById('btc-price').textContent = 'Unavailable';
+      }
+
+      if (fg && fg.value) {
+        const val = fg.value;
+        const label = fg.classification || '';
+        document.getElementById('fg-value').textContent = val + ' — ' + label;
+        document.getElementById('fg-value').className = 'font-bold text-sm ' + fgColor(val);
+        document.getElementById('fg-emoji').textContent = fgEmoji(val);
+        document.getElementById('fg-label').textContent = 'Fear & Greed';
+      } else {
+        document.getElementById('fg-value').textContent = 'Unavailable';
+      }
+    }
+
+    // ────────────────────────────────────────────────
+    // RENDER: TASKS
+    // ────────────────────────────────────────────────
+    function taskCard(task, colorClass) {
+      const due = task.dueDate ? `<span class="text-xs ${colorClass} ml-auto flex-shrink-0">${fmtDate(task.dueDate)}</span>` : '';
+      const assignee = task.assignee
+        ? `<span class="text-slate-500 text-xs mt-0.5 block truncate">👤 ${task.assignee}</span>`
+        : '';
+      const url = task.url
+        ? `href="${task.url}" target="_blank"`
+        : '';
+
+      return `
+        <a ${url} class="block bg-navy-800/60 hover:bg-navy-600/50 rounded-xl p-3 transition-colors cursor-pointer group">
+          <div class="flex items-start gap-2">
+            <span class="w-1.5 h-1.5 rounded-full ${colorClass.replace('text-', 'bg-')} mt-1.5 flex-shrink-0"></span>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-start gap-1">
+                <span class="text-white text-xs font-medium leading-snug flex-1 group-hover:text-blue-300 transition-colors">${escHtml(task.name)}</span>
+                ${due}
+              </div>
+              ${assignee}
+            </div>
+          </div>
+        </a>`;
+    }
+
+    function renderTasks(notion) {
+      const ts = notion?.fetched_at || notion?.last_updated;
+      if (ts) document.getElementById('tasks-updated').textContent = 'Fetched ' + fmtRelTime(ts);
+
+      if (notion?.error) {
+        const msg = `<div class="text-slate-500 text-xs text-center py-4">⚠️ ${escHtml(notion.error)}</div>`;
+        ['overdue-list','week-list','progress-list'].forEach(id => document.getElementById(id).innerHTML = msg);
+        return;
+      }
+
+      const overdue = notion?.overdue || [];
+      const week = notion?.dueThisWeek || [];
+      const inProg = notion?.inProgress || [];
+
+      document.getElementById('overdue-count').textContent = overdue.length;
+      document.getElementById('week-count').textContent = week.length;
+      document.getElementById('progress-count').textContent = inProg.length;
+
+      document.getElementById('overdue-list').innerHTML = overdue.length
+        ? overdue.map(t => taskCard(t, 'text-red-400')).join('')
+        : '<div class="text-slate-600 text-xs text-center py-4">✅ Nothing overdue</div>';
+
+      document.getElementById('week-list').innerHTML = week.length
+        ? week.map(t => taskCard(t, 'text-orange-400')).join('')
+        : '<div class="text-slate-600 text-xs text-center py-4">Nothing due this week</div>';
+
+      document.getElementById('progress-list').innerHTML = inProg.length
+        ? inProg.map(t => taskCard(t, 'text-blue-400')).join('')
+        : '<div class="text-slate-600 text-xs text-center py-4">No tasks in progress</div>';
+    }
+
+    // ────────────────────────────────────────────────
+    // RENDER: AGENT TEAM (PROMINENT)
+    // ────────────────────────────────────────────────
+    function renderAgents(agents, notion) {
+      // Build a map of assignee name → tasks from Notion
+      const tasksByAgent = {};
+      const allTasks = [
+        ...(notion?.inProgress || []),
+        ...(notion?.dueThisWeek || []),
+        ...(notion?.overdue || [])
+      ];
+
+      allTasks.forEach(task => {
+        if (task.assignee) {
+          const names = task.assignee.split(',').map(n => n.trim().toLowerCase());
+          names.forEach(name => {
+            if (!tasksByAgent[name]) tasksByAgent[name] = [];
+            // Avoid duplicates
+            if (!tasksByAgent[name].find(t => t.id === task.id)) {
+              tasksByAgent[name].push(task);
+            }
+          });
+        }
+      });
+
+      const grid = document.getElementById('agent-grid');
+      grid.innerHTML = '';
+
+      const agentOrder = ['finance','sales','marketing','social','email','seo','csm','analyst','ben-analyst','video','ea'];
+
+      agentOrder.forEach(key => {
+        const meta = AGENT_META[key];
+        const colors = COLOR_MAP[meta.color] || COLOR_MAP.blue;
+        const agentData = agents?.[key] || {};
+        const status = agentData.status || 'active';
+        const lastTask = agentData.last_task || 'No recent activity';
+        const lastUpdated = agentData.last_updated;
+
+        // Find Notion tasks for this agent (try to match by label keywords)
+        const labelWords = meta.label.toLowerCase().replace(' bot','').split(' ');
+        const matchedTasks = Object.entries(tasksByAgent)
+          .filter(([name]) => labelWords.some(w => name.includes(w)))
+          .flatMap(([, tasks]) => tasks)
+          .slice(0, 4);
+
+        const dotColor = statusDotColor(status, lastUpdated);
+        const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
+        const timeAgo = fmtRelTime(lastUpdated);
+
+        // Build task items for the card
+        let tasksHtml = '';
+        if (matchedTasks.length > 0) {
+          tasksHtml = matchedTasks.map(t => {
+            const isOverdue = t.dueDate && t.dueDate < new Date().toISOString().split('T')[0];
+            const dueColor = isOverdue ? 'text-red-400' : 'text-slate-500';
+            const dueStr = t.dueDate ? ` · <span class="${dueColor}">${fmtDate(t.dueDate)}</span>` : '';
+            return `
+              <div class="flex items-start gap-2 py-1.5 border-b border-slate-700/40 last:border-0">
+                <span class="w-1 h-1 rounded-full bg-blue-400 mt-2 flex-shrink-0"></span>
+                <div class="flex-1 min-w-0">
+                  <span class="text-slate-300 text-xs leading-snug line-clamp-2">${escHtml(t.name)}</span>
+                  <span class="text-slate-600 text-xs">${escHtml(t.status)}${dueStr}</span>
+                </div>
+              </div>`;
+          }).join('');
+        } else {
+          // Fall back to last_task from agent-status.json
+          if (lastTask && lastTask !== 'Awaiting first task') {
+            tasksHtml = `
+              <div class="flex items-start gap-2 py-1.5">
+                <span class="w-1 h-1 rounded-full bg-slate-500 mt-2 flex-shrink-0"></span>
+                <span class="text-slate-400 text-xs leading-snug">${escHtml(lastTask)}</span>
+              </div>`;
+          } else {
+            tasksHtml = `<div class="text-slate-600 text-xs py-2 text-center">No active tasks</div>`;
+          }
+        }
+
+        const card = document.createElement('div');
+        card.className = `agent-card fade-in bg-navy-700 border ${colors.border} rounded-2xl overflow-hidden`;
+        card.innerHTML = `
+          <!-- Card Header -->
+          <div class="px-4 pt-4 pb-3 flex items-start gap-3">
+            <div class="w-10 h-10 rounded-xl ${colors.icon} flex items-center justify-center text-xl flex-shrink-0">
+              ${meta.icon}
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2">
+                <h3 class="text-white text-sm font-semibold truncate">${meta.label}</h3>
+                <span class="status-dot ${dotColor} pulse-dot flex-shrink-0"></span>
+              </div>
+              <p class="text-slate-500 text-xs truncate">${meta.role}</p>
+              <p class="text-slate-600 text-xs mt-0.5">${meta.channel}</p>
+            </div>
+            <div class="flex-shrink-0 text-right">
+              <span class="${colors.badge} text-xs px-2 py-0.5 rounded-full font-medium">${statusLabel}</span>
+              <div class="text-slate-600 text-xs mt-1 whitespace-nowrap">${timeAgo}</div>
+            </div>
+          </div>
+
+          <!-- Divider -->
+          <div class="mx-4 border-t border-slate-700/50"></div>
+
+          <!-- Active Tasks -->
+          <div class="px-4 py-3">
+            <div class="text-slate-500 text-xs font-medium uppercase tracking-wide mb-2">
+              ${matchedTasks.length > 0
+                ? `${matchedTasks.length} Active Task${matchedTasks.length > 1 ? 's' : ''}`
+                : 'Last Activity'}
+            </div>
+            <div class="space-y-0">
+              ${tasksHtml}
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      document.getElementById('team-updated').textContent = 'Updated ' + fmtRelTime(new Date().toISOString());
+    }
+
+    // ────────────────────────────────────────────────
+    // RENDER: WHOP ACTIVITY
+    // ────────────────────────────────────────────────
+    function renderWhop(whop) {
+      const ts = whop?.fetched_at;
+      if (ts) document.getElementById('whop-updated').textContent = 'Fetched ' + fmtRelTime(ts);
+
+      const list = document.getElementById('whop-list');
+
+      if (whop?.error) {
+        list.innerHTML = `<div class="text-slate-500 text-xs text-center py-6">⚠️ ${escHtml(whop.error)}</div>`;
+        return;
+      }
+
+      const memberships = whop?.memberships || [];
+      if (!memberships.length) {
+        list.innerHTML = `<div class="text-slate-600 text-xs text-center py-6">No recent membership activity</div>`;
+        return;
+      }
+
+      list.innerHTML = memberships.map(m => {
+        const name = m.user?.name || m.user?.username || m.discord?.username || 'Member';
+        const email = m.user?.email || '';
+        const plan = m.product?.name || m.plan?.name || m.access_pass?.name || 'Membership';
+        const price = m.checkout?.total != null ? '$' + (m.checkout.total / 100).toFixed(2) : '';
+        const date = m.created_at ? fmtDate(new Date(m.created_at * 1000).toISOString()) : '';
+        const statusBadge = m.valid
+          ? '<span class="bg-green-500/20 text-green-400 text-xs px-2 py-0.5 rounded-full">Active</span>'
+          : '<span class="bg-slate-500/20 text-slate-400 text-xs px-2 py-0.5 rounded-full">Expired</span>';
+
+        return `
+          <div class="flex items-center gap-4 px-4 py-3 hover:bg-navy-600/30 transition-colors">
+            <div class="w-8 h-8 rounded-full bg-navy-600 border border-slate-600 flex items-center justify-center text-sm font-bold text-slate-300 flex-shrink-0">
+              ${(name[0] || '?').toUpperCase()}
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-white text-sm font-medium truncate">${escHtml(name)}</div>
+              <div class="text-slate-500 text-xs truncate">${escHtml(email || plan)}</div>
+            </div>
+            <div class="text-right flex-shrink-0">
+              <div class="text-slate-300 text-xs font-medium">${escHtml(plan)}</div>
+              <div class="flex items-center gap-2 mt-0.5 justify-end">
+                ${price ? `<span class="text-green-400 text-xs font-semibold">${price}</span>` : ''}
+                ${statusBadge}
+                ${date ? `<span class="text-slate-600 text-xs">${date}</span>` : ''}
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // ────────────────────────────────────────────────
+    // UTILITIES
+    // ────────────────────────────────────────────────
+    function escHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // ────────────────────────────────────────────────
+    // MAIN LOAD
+    // ────────────────────────────────────────────────
+    async function loadAll() {
+      startCountdown();
+      try {
+        const data = await apiFetch('/api/all');
+        renderKPIs(data.kpis);
+        renderMarket(data.kpis);
+        renderAgents(data.agents, data.notion);
+        renderTasks(data.notion);
+        renderWhop(data.whop);
+
+        const now = new Date().toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        document.getElementById('last-full-refresh').textContent = 'Last refreshed: ' + now;
+      } catch (e) {
+        console.error('Dashboard load error:', e);
+        if (e.message.includes('401')) {
+          AUTH_TOKEN = '';
+          localStorage.removeItem('dashboard_token');
+          location.reload();
+        }
+      }
+    }
+
+    // ────────────────────────────────────────────────
+    // INIT
+    // ────────────────────────────────────────────────
+    checkAuth();
+  </script>
+</body>
+</html>
