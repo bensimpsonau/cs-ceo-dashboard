@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Member Strategy Session | Collective Shift</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #1B1925;
+    --bg-deep:  #02000D;
+    --orange:   #FC5C03;
+    --orange-d: #C94902;
+    --teal:     #0BF4B9;
+    --blue:     #2404FC;
+    --white:    #FFFFFF;
+    --grey:     #B3B2B6;
+    --grey-d:   #4D4C55;
+    --card-bg:  rgba(255,255,255,0.04);
+    --card-border: rgba(252,92,3,0.18);
+  }
+
+  html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg-deep); }
+
+  #deck { position: relative; width: 100%; height: 100%; }
+
+  #progress-bar {
+    position: fixed; top: 0; left: 0; height: 3px;
+    background: var(--orange); z-index: 999;
+    transition: width 0.4s ease;
+  }
+
+  #slide-counter {
+    position: fixed; bottom: 28px; right: 36px;
+    font-family: 'Barlow', Arial, sans-serif;
+    font-size: 13px; font-weight: 600;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.08em;
+    z-index: 999;
+  }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: none;
+    font-family: 'Barlow', Arial, sans-serif;
+    color: var(--white);
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+  .slide.active { display: flex; }
+  .slide.visible { opacity: 1; transform: translateY(0); }
+
+  .layout-hero {
+    background: var(--bg-deep);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px;
+  }
+  .layout-content {
+    background: var(--bg);
+    flex-direction: column;
+    padding: 64px 80px;
+    justify-content: flex-start;
+  }
+  .layout-divider {
+    background: var(--orange);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px;
+  }
+  .layout-dark {
+    background: var(--bg-deep);
+    flex-direction: column;
+    padding: 64px 80px;
+    justify-content: flex-start;
+  }
+  .layout-split {
+    background: var(--bg);
+    flex-direction: row;
+    padding: 0;
+  }
+
+  /* Decorative */
+  .hero-line {
+    width: 120px; height: 3px;
+    background: linear-gradient(90deg, var(--orange), transparent);
+    margin: 28px auto;
+  }
+  .accent-line {
+    width: 56px; height: 3px;
+    background: var(--orange);
+    margin-bottom: 24px;
+  }
+  .dot-grid {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image: radial-gradient(rgba(252,92,3,0.08) 1px, transparent 1px);
+    background-size: 36px 36px;
+  }
+  .noise-overlay {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse at 80% 20%, rgba(252,92,3,0.07) 0%, transparent 60%);
+  }
+
+  /* Typography */
+  .kicker {
+    font-family: 'Barlow', Arial, sans-serif;
+    font-size: 14px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 16px;
+  }
+  .slide-title {
+    font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+    font-size: 56px; font-weight: 700;
+    line-height: 1.1; letter-spacing: -0.03em;
+    color: var(--white);
+  }
+  .slide-title-lg { font-size: 72px; letter-spacing: -0.04em; }
+  .slide-title-sm { font-size: 42px; }
+  .slide-subtitle {
+    font-family: 'Barlow', Arial, sans-serif;
+    font-size: 22px; font-weight: 400;
+    line-height: 1.55;
+    color: var(--grey);
+    max-width: 680px;
+    margin-top: 20px;
+  }
+  .body-text {
+    font-size: 20px; font-weight: 400;
+    line-height: 1.65; color: rgba(255,255,255,0.75);
+  }
+  .label {
+    font-family: 'Barlow', Arial, sans-serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--grey-d);
+  }
+  .slide-header { margin-bottom: 36px; }
+  .slide-header .kicker { margin-bottom: 12px; }
+  .slide-header .slide-title { margin-bottom: 12px; }
+
+  /* Cards */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 28px 30px;
+  }
+  .card-title {
+    font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+    font-size: 18px; font-weight: 700;
+    color: var(--orange); margin-bottom: 10px;
+  }
+  .card-body { font-size: 18px; color: rgba(255,255,255,0.72); line-height: 1.6; }
+
+  /* Grids */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+
+  /* Big stat */
+  .big-stat {
+    font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+    font-size: 72px; font-weight: 800;
+    color: var(--orange); line-height: 1;
+    letter-spacing: -0.04em;
+  }
+  .big-stat-label {
+    font-size: 16px; color: var(--grey);
+    font-weight: 500; margin-top: 8px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+
+  /* Steps */
+  .steps { display: flex; flex-direction: column; gap: 16px; }
+  .step { display: flex; align-items: flex-start; gap: 20px; }
+  .step-num {
+    flex-shrink: 0;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--orange); color: var(--bg-deep);
+    font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+    font-size: 18px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step-content { padding-top: 6px; }
+  .step-content strong {
+    font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+    font-size: 20px; font-weight: 700;
+    display: block; margin-bottom: 4px;
+  }
+  .step-content p { font-size: 18px; color: rgba(255,255,255,0.65); }
+
+  /* Pillars */
+  .pillar { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+  .pillar-icon {
+    width: 52px; height: 52px;
+    background: rgba(252,92,3,0.12);
+    border: 1px solid rgba(252,92,3,0.3);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+  }
+  .pillar-title {
+    font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+    font-size: 22px; font-weight: 700; color: var(--white);
+  }
+  .pillar-body { font-size: 17px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+
+  /* Divider slide text */
+  .divider-kicker {
+    font-family: 'Barlow', Arial, sans-serif;
+    font-size: 14px; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(2,0,13,0.65); margin-bottom: 16px;
+  }
+  .divider-title {
+    font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+    font-size: 64px; font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--bg-deep); line-height: 1.05;
+  }
+  .divider-sub {
+    font-size: 22px; color: rgba(2,0,13,0.65);
+    font-family: 'Barlow', Arial, sans-serif;
+    margin-top: 16px; font-weight: 500;
+  }
+
+  /* Teal badge */
+  .teal-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(11,244,185,0.1);
+    border: 1px solid rgba(11,244,185,0.3);
+    border-radius: 100px;
+    padding: 8px 20px;
+    font-size: 16px; font-weight: 600;
+    color: var(--teal);
+  }
+  .teal-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); }
+
+  /* Quote */
+  .quote {
+    border-left: 3px solid var(--orange);
+    padding: 18px 24px;
+    background: rgba(252,92,3,0.05);
+    border-radius: 0 8px 8px 0;
+    font-family: 'Barlow', Arial, sans-serif;
+    font-size: 22px; font-style: italic;
+    color: rgba(255,255,255,0.85); line-height: 1.55;
+  }
+
+  /* Table */
+  .cs-table { width: 100%; border-collapse: collapse; font-size: 18px; }
+  .cs-table th {
+    text-align: left; padding: 12px 18px;
+    background: rgba(252,92,3,0.08);
+    color: var(--orange); font-weight: 700;
+    font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+    border-bottom: 1px solid rgba(252,92,3,0.2);
+  }
+  .cs-table td {
+    padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.8);
+  }
+  .cs-table tr:last-child td { border-bottom: none; }
+
+  /* Split layout */
+  .split-left {
+    flex: 1; background: var(--bg-deep);
+    display: flex; flex-direction: column;
+    padding: 64px 56px; justify-content: center;
+  }
+  .split-right {
+    flex: 1; background: var(--orange);
+    display: flex; flex-direction: column;
+    padding: 64px 56px; justify-content: center;
+  }
+  .split-right * { color: var(--bg-deep) !important; }
+
+  /* List */
+  .cs-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .cs-list li {
+    display: flex; align-items: flex-start; gap: 14px;
+    font-size: 20px; color: rgba(255,255,255,0.8); line-height: 1.5;
+  }
+  .cs-list li::before {
+    content: '';
+    flex-shrink: 0;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--orange);
+    margin-top: 8px;
+  }
+  .cs-list.teal li::before { background: var(--teal); }
+
+  /* Week cards */
+  .week-num {
+    font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+    font-size: 48px; font-weight: 800;
+    color: var(--orange); line-height: 1;
+    letter-spacing: -0.04em;
+    margin-bottom: 8px;
+  }
+  .week-label {
+    font-family: 'Barlow', Arial, sans-serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--grey-d); margin-bottom: 12px;
+  }
+  .week-title {
+    font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--white); margin-bottom: 10px;
+  }
+  .week-body { font-size: 16px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+</style>
+</head>
+<body>
+<div id="progress-bar"></div>
+<div id="slide-counter"></div>
+<div id="deck">
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 1 — TITLE
+═══════════════════════════════════════════ -->
+<div class="slide layout-hero">
+  <div class="dot-grid"></div>
+  <div class="noise-overlay"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;">
+    <div class="teal-badge" style="margin-bottom:36px;">
+      <span class="teal-dot"></span>
+      New Member Session · Mon 23 & Wed 25 March 2026
+    </div>
+    <div class="slide-title slide-title-lg" style="text-align:center;max-width:900px;">
+      Positioning For<br><span style="color:var(--orange);">What Comes Next</span>
+    </div>
+    <div class="hero-line"></div>
+    <div class="slide-subtitle" style="text-align:center;">
+      Your foundation, framework, and first moves as a Collective Shift member.
+    </div>
+    <div style="margin-top:48px;display:flex;gap:12px;align-items:center;">
+      <div style="font-family:'Plus Jakarta Sans',Arial,sans-serif;font-size:15px;font-weight:700;color:var(--orange);">COLLECTIVE SHIFT</div>
+      <div style="width:4px;height:4px;border-radius:50%;background:var(--grey-d);"></div>
+      <div style="font-family:'Barlow',Arial,sans-serif;font-size:15px;color:var(--grey);">Member Education Series</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 2 — WELCOME & AGENDA
+═══════════════════════════════════════════ -->
+<div class="slide layout-content">
+  <div class="noise-overlay"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">Welcome</div>
+      <div class="slide-title slide-title-sm">Two sessions. One framework.</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div class="grid-2" style="flex:1;gap:24px;">
+      <div class="card">
+        <div class="card-title">Session 1 — Mon 23 March</div>
+        <ul class="cs-list" style="gap:10px;margin-top:4px;">
+          <li style="font-size:18px;">The world right now — macro lens</li>
+          <li style="font-size:18px;">Why Bitcoin (not gold, not equities)</li>
+          <li style="font-size:18px;">Where we are in the cycle</li>
+          <li style="font-size:18px;">The Collective Shift system</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Session 2 — Wed 25 March</div>
+        <ul class="cs-list" style="gap:10px;margin-top:4px;">
+          <li style="font-size:18px;">Your first 30 days as a member</li>
+          <li style="font-size:18px;">Portfolio construction & risk</li>
+          <li style="font-size:18px;">Altcoins — when and how</li>
+          <li style="font-size:18px;">Your action plan + Q&A</li>
+        </ul>
+      </div>
+    </div>
+    <div class="quote" style="margin-top:24px;">
+      "You don't need more information. You need a better framework for using it."
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 3 — DIVIDER: THE WORLD RIGHT NOW
+═══════════════════════════════════════════ -->
+<div class="slide layout-divider">
+  <div style="position:relative;z-index:1;">
+    <div class="divider-kicker">Section 01</div>
+    <div class="divider-title">The World<br>Right Now</div>
+    <div class="divider-sub">Understanding the macro environment before touching an asset</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 4 — MACRO CONTEXT
+═══════════════════════════════════════════ -->
+<div class="slide layout-content">
+  <div class="noise-overlay"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">Macro Context · Q1 2026</div>
+      <div class="slide-title slide-title-sm">Four forces reshaping capital allocation</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div class="grid-2" style="flex:1;gap:20px;">
+      <div class="card">
+        <div class="card-title">📉 Inflation Plateauing</div>
+        <div class="card-body">CPI peaked in 2022. Disinflation trend intact but sticky above 2% target. Central banks reluctant to cut aggressively until data confirms.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🏦 Rates Have Peaked</div>
+        <div class="card-body">Fed Funds at cycle high. Rate cut cycle has begun — historically the most powerful macro tailwind for risk assets including Bitcoin.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">💧 Global Liquidity Turning</div>
+        <div class="card-body">Global M2 money supply expanding again. Liquidity cycles drive crypto cycles. This is the tide — everything rises and falls with it.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🌏 Geopolitical Uncertainty</div>
+        <div class="card-body">Middle East tensions, US-China trade dynamics, and USD dominance debates are accelerating the Bitcoin sovereign money thesis.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 5 — USD & BITCOIN RELATIONSHIP
+═══════════════════════════════════════════ -->
+<div class="slide layout-dark">
+  <div class="dot-grid"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">Key Relationship</div>
+      <div class="slide-title slide-title-sm">The US Dollar & Bitcoin</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div style="flex:1;display:flex;gap:32px;align-items:stretch;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+        <div class="teal-badge" style="align-self:flex-start;margin-bottom:8px;">
+          <span class="teal-dot"></span> The DXY Inverse
+        </div>
+        <p class="body-text">Bitcoin and the US Dollar Index (DXY) have a historically inverse relationship. When the dollar weakens, capital flows into hard assets.</p>
+        <p class="body-text" style="margin-top:8px;">A weakening dollar cycle — driven by rate cuts and fiscal deficits — is structurally bullish for Bitcoin over 12–18 month timeframes.</p>
+        <div class="quote" style="margin-top:16px;font-size:19px;">
+          "Bitcoin is not anti-dollar. It's the answer to a question about what money should be."
+        </div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+        <div class="card">
+          <div class="card-title">When DXY Falls</div>
+          <div class="card-body">Risk assets rally. Bitcoin historically outperforms all asset classes in weak-dollar environments.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">When DXY Rises</div>
+          <div class="card-body">Short-term headwinds for crypto. But BTC's long-term supply scarcity absorbs these cycles over 4+ year horizons.</div>
+        </div>
+        <div class="card" style="border-color:rgba(11,244,185,0.25);">
+          <div class="card-title" style="color:var(--teal);">Current Read (Q1 2026)</div>
+          <div class="card-body">DXY at key resistance. Rate cut expectations = structural dollar weakness ahead. Watch for breakdowns.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 6 — GLOBAL M2
+═══════════════════════════════════════════ -->
+<div class="slide layout-content">
+  <div class="noise-overlay"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">Global Liquidity</div>
+      <div class="slide-title slide-title-sm">Global M2 — The tide that lifts all boats</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div style="flex:1;display:flex;gap:40px;align-items:center;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:20px;">
+        <p class="body-text">Global M2 is the total money supply across all major economies. It is the single most powerful macro correlate to Bitcoin's price — with a ~12-week lead.</p>
+        <p class="body-text">When central banks print, expand credit, or cut rates → M2 rises → excess capital finds its way into scarce assets.</p>
+        <div class="teal-badge" style="align-self:flex-start;">
+          <span class="teal-dot"></span>
+          Global M2 expanding as of Q1 2026
+        </div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+        <div class="card">
+          <div class="card-title">The Liquidity Cycle</div>
+          <div class="card-body">Tightening → BTC tops. Easing → BTC bottoms. The 2022 bear market was a liquidity withdrawal event. The 2024–2025 cycle reopened as M2 expanded again.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Why This Matters to You</div>
+          <div class="card-body">You're not timing the news. You're reading the liquidity cycle. This is the professional investor edge — macro first, asset second.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 7 — DIVIDER: WHY BITCOIN
+═══════════════════════════════════════════ -->
+<div class="slide layout-divider">
+  <div style="position:relative;z-index:1;">
+    <div class="divider-kicker">Section 02</div>
+    <div class="divider-title">Why Bitcoin</div>
+    <div class="divider-sub">The case built on data, not belief</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 8 — BITCOIN'S TRACK RECORD
+═══════════════════════════════════════════ -->
+<div class="slide layout-dark">
+  <div class="dot-grid"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">Performance</div>
+      <div class="slide-title slide-title-sm">Bitcoin's 15-Year Track Record</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div style="flex:1;overflow:auto;">
+      <table class="cs-table">
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>BTC Return</th>
+            <th>S&P 500</th>
+            <th>Gold</th>
+            <th>Context</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>2013</td><td style="color:var(--teal);font-weight:700;">+5,429%</td><td>+32%</td><td>-28%</td><td>First mainstream cycle</td></tr>
+          <tr><td>2017</td><td style="color:var(--teal);font-weight:700;">+1,318%</td><td>+22%</td><td>+13%</td><td>ICO boom era</td></tr>
+          <tr><td>2020</td><td style="color:var(--teal);font-weight:700;">+302%</td><td>+18%</td><td>+25%</td><td>COVID money printing</td></tr>
+          <tr><td>2021</td><td style="color:var(--teal);font-weight:700;">+59%</td><td>+27%</td><td>-4%</td><td>Institutional adoption begins</td></tr>
+          <tr><td>2022</td><td style="color:var(--orange);">-65%</td><td>-19%</td><td>-1%</td><td>Liquidity withdrawal + FTX</td></tr>
+          <tr><td>2023</td><td style="color:var(--teal);font-weight:700;">+154%</td><td>+24%</td><td>+13%</td><td>Recovery year</td></tr>
+          <tr><td>2024</td><td style="color:var(--teal);font-weight:700;">+120%</td><td>+23%</td><td>+27%</td><td>ETF approval + halving</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="teal-badge" style="align-self:flex-start;margin-top:20px;">
+      <span class="teal-dot"></span>
+      Best performing asset class in 10 of the last 12 years
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 9 — BTC vs GOLD vs EQUITIES
+═══════════════════════════════════════════ -->
+<div class="slide layout-content">
+  <div class="noise-overlay"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">Comparison</div>
+      <div class="slide-title slide-title-sm">Bitcoin vs Gold vs Equities</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div class="grid-3" style="flex:1;gap:20px;">
+      <div class="card" style="border-color:rgba(252,92,3,0.5);">
+        <div style="font-size:32px;margin-bottom:12px;">₿</div>
+        <div class="card-title" style="font-size:22px;margin-bottom:16px;">Bitcoin</div>
+        <ul class="cs-list" style="gap:8px;">
+          <li style="font-size:17px;">Fixed supply: 21M</li>
+          <li style="font-size:17px;">Portable, divisible, programmable</li>
+          <li style="font-size:17px;">No counterparty risk (self-custody)</li>
+          <li style="font-size:17px;">Global, 24/7 market</li>
+          <li style="font-size:17px;">10% allocation = institutional consensus</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div style="font-size:32px;margin-bottom:12px;">🥇</div>
+        <div class="card-title" style="font-size:22px;margin-bottom:16px;">Gold</div>
+        <ul class="cs-list" style="gap:8px;">
+          <li style="font-size:17px;">5,000+ year store of value</li>
+          <li style="font-size:17px;">Inflation hedge, proven</li>
+          <li style="font-size:17px;">Low volatility</li>
+          <li style="font-size:17px;">Not programmable or portable</li>
+          <li style="font-size:17px;">Slow appreciation vs Bitcoin</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div style="font-size:32px;margin-bottom:12px;">📈</div>
+        <div class="card-title" style="font-size:22px;margin-bottom:16px;">Equities</div>
+        <ul class="cs-list" style="gap:8px;">
+          <li style="font-size:17px;">Company earnings-driven</li>
+          <li style="font-size:17px;">Dividends + buybacks</li>
+          <li style="font-size:17px;">Subject to business risk</li>
+          <li style="font-size:17px;">Regulated, accessible</li>
+          <li style="font-size:17px;">Lower ceiling than BTC this decade</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 10 — THE 4-YEAR CYCLE
+═══════════════════════════════════════════ -->
+<div class="slide layout-dark">
+  <div class="dot-grid"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">Market Structure</div>
+      <div class="slide-title slide-title-sm">The 4-Year Bitcoin Cycle</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div style="flex:1;display:flex;gap:32px;">
+      <div style="flex:3;display:flex;flex-direction:column;gap:16px;">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <strong>Halving (supply shock)</strong>
+              <p>Bitcoin block reward cuts in half. Supply issuance drops. Historically triggers 12–18 month bull markets. Last halving: April 2024.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <strong>Accumulation phase</strong>
+              <p>Smart money buys quietly. On-chain signals show supply moving to long-term holders. We are/were here in 2023–early 2024.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <strong>Expansion / euphoria</strong>
+              <p>Price discovery phase. Retail enters. Media coverage spikes. FOMO drives final leg. 2024–2025 cycle.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <strong>Distribution / bear</strong>
+              <p>Long-term holders sell. On-chain shows profit-taking. Liquidity contracts. 2022 was this phase.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="flex:2;display:flex;flex-direction:column;gap:16px;">
+        <div class="card" style="border-color:rgba(11,244,185,0.25);">
+          <div class="card-title" style="color:var(--teal);">Where Are We Now?</div>
+          <div class="card-body">Post-halving 2024. Historically Q4 2024–Q2 2026 is the most profitable window of the cycle. The cycle isn't over.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">The Framework Rule</div>
+          <div class="card-body">Don't react to the news cycle. Read the on-chain data. The halving clock doesn't care about headlines.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 11 — ON-CHAIN SIGNALS
+═══════════════════════════════════════════ -->
+<div class="slide layout-content">
+  <div class="noise-overlay"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">On-Chain Intelligence</div>
+      <div class="slide-title slide-title-sm">What we watch — and why</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div class="grid-3" style="flex:1;gap:18px;">
+      <div class="card">
+        <div class="card-title">MVRV Z-Score</div>
+        <div class="card-body">Market Value vs Realised Value. Measures how overheated or undervalued Bitcoin is relative to what people paid. Red zone = top risk. Blue zone = accumulate.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">SOPR</div>
+        <div class="card-body">Spent Output Profit Ratio. When spent coins are at a loss, holders are capitulating — historically the best time to buy. Measures market pain.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Exchange Flows</div>
+        <div class="card-body">BTC flowing onto exchanges = selling pressure. BTC flowing off = long-term holding. When supply leaves exchanges, price tends to follow.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Long-Term Holder Supply</div>
+        <div class="card-body">Coins held 155+ days. When LTH supply is accumulating, smart money is positioning. The strongest signal of where we are in the cycle.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Funding Rates</div>
+        <div class="card-body">Positive = longs paying shorts (overheated). Negative = shorts paying longs (fear). Used to fade extremes and size positions accordingly.</div>
+      </div>
+      <div class="card" style="border-color:rgba(11,244,185,0.25);">
+        <div class="card-title" style="color:var(--teal);">Where to Find These</div>
+        <div class="card-body">CryptoQuant, Glassnode, Checkonchain. All covered in your weekly research reports from the CS team.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 12 — DIVIDER: THE CS SYSTEM
+═══════════════════════════════════════════ -->
+<div class="slide layout-divider">
+  <div style="position:relative;z-index:1;">
+    <div class="divider-kicker">Section 03</div>
+    <div class="divider-title">The Collective<br>Shift System</div>
+    <div class="divider-sub">How we turn data into conviction</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 13 — THE 4 PILLARS
+═══════════════════════════════════════════ -->
+<div class="slide layout-content">
+  <div class="noise-overlay"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">Our Framework</div>
+      <div class="slide-title slide-title-sm">The Four Pillars of Collective Shift</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div class="grid-4" style="flex:1;gap:18px;">
+      <div class="pillar card">
+        <div class="pillar-icon">📚</div>
+        <div class="pillar-title">Education</div>
+        <div class="pillar-body">Deep curriculum: Bitcoin fundamentals, on-chain analysis, macro economics, trading psychology. Not surface-level content.</div>
+      </div>
+      <div class="pillar card">
+        <div class="pillar-icon">🔬</div>
+        <div class="pillar-title">Research</div>
+        <div class="pillar-body">Weekly institutional-grade research reports written by James Check, Matt Willemsen, and the CS research team.</div>
+      </div>
+      <div class="pillar card">
+        <div class="pillar-icon">🤝</div>
+        <div class="pillar-title">Community</div>
+        <div class="pillar-body">350+ high-net-worth investors. Peers who run portfolios from $100K to $35M+. The network is part of the value.</div>
+      </div>
+      <div class="pillar card">
+        <div class="pillar-icon">🎯</div>
+        <div class="pillar-title">Coaching</div>
+        <div class="pillar-body">Direct access to Ben and the CS team. Strategy sessions, personal portfolio reviews, and live Q&A every week.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 14 — THE SHIFT OS
+═══════════════════════════════════════════ -->
+<div class="slide layout-dark">
+  <div class="dot-grid"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">Your Operating System</div>
+      <div class="slide-title slide-title-sm">The Shift OS — 7-Step Framework</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div style="flex:1;display:flex;gap:32px;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:12px;">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <strong>Foundation</strong>
+            <p>Why Bitcoin. The monetary thesis. Store of value properties.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <strong>Market Positioning</strong>
+            <p>Macro lens. Where are we in the global cycle?</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <strong>Reading Cycles</strong>
+            <p>On-chain signals. 4-year cycle. Halving framework.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <strong>What to Buy</strong>
+            <p>BTC vs ETH vs alts. Conviction tiers. Portfolio construction.</p>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:12px;">
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <strong>Custody & Security</strong>
+            <p>Cold storage. Hardware wallets. Exchange risk.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div>
+          <div class="step-content">
+            <strong>Investor OS</strong>
+            <p>Psychology, journaling, thesis management, position sizing.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">7</div>
+          <div class="step-content">
+            <strong>Exit Strategy</strong>
+            <p>When to take profit. Tax optimisation. Long-term planning.</p>
+          </div>
+        </div>
+        <div class="teal-badge" style="align-self:flex-start;margin-top:8px;">
+          <span class="teal-dot"></span>
+          Full curriculum in your member portal
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 15 — HOW RESEARCH DRIVES DECISIONS
+═══════════════════════════════════════════ -->
+<div class="slide layout-content">
+  <div class="noise-overlay"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">Philosophy</div>
+      <div class="slide-title slide-title-sm">Research drives decisions. Not signals.</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div style="flex:1;display:flex;gap:40px;align-items:center;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:20px;">
+        <div class="card" style="border-color:rgba(255,10,0,0.25);">
+          <div class="card-title" style="color:#FF4040;">❌ What we don't do</div>
+          <ul class="cs-list" style="gap:8px;margin-top:4px;">
+            <li style="font-size:18px;">Follow Twitter/X influencers</li>
+            <li style="font-size:18px;">Buy because "it's going to the moon"</li>
+            <li style="font-size:18px;">React to headlines and media fear</li>
+            <li style="font-size:18px;">Trade on "calls" or signals</li>
+            <li style="font-size:18px;">Copy trade without understanding why</li>
+          </ul>
+        </div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:20px;">
+        <div class="card" style="border-color:rgba(11,244,185,0.25);">
+          <div class="card-title" style="color:var(--teal);">✅ What we do instead</div>
+          <ul class="cs-list teal" style="gap:8px;margin-top:4px;">
+            <li style="font-size:18px;">Read weekly research reports</li>
+            <li style="font-size:18px;">Track macro + on-chain data</li>
+            <li style="font-size:18px;">Build a written investment thesis</li>
+            <li style="font-size:18px;">Position size based on conviction</li>
+            <li style="font-size:18px;">Make decisions slowly, execute decisively</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="quote" style="margin-top:20px;">
+      "The edge isn't information. It's a better process for using it."
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 16 — DIVIDER: YOUR FIRST 30 DAYS
+═══════════════════════════════════════════ -->
+<div class="slide layout-divider">
+  <div style="position:relative;z-index:1;">
+    <div class="divider-kicker">Section 04</div>
+    <div class="divider-title">Your First<br>30 Days</div>
+    <div class="divider-sub">A week-by-week onboarding roadmap</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 17 — WEEK BY WEEK OVERVIEW
+═══════════════════════════════════════════ -->
+<div class="slide layout-content">
+  <div class="noise-overlay"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">30-Day Roadmap</div>
+      <div class="slide-title slide-title-sm">Don't rush. Build the foundation.</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div class="grid-4" style="flex:1;gap:18px;">
+      <div class="card">
+        <div class="week-num">W1</div>
+        <div class="week-label">Week One</div>
+        <div class="week-title">Getting Oriented</div>
+        <div class="week-body">Set up your accounts. Log into the member portal. Read the Foundation module. Attend your first live session.</div>
+      </div>
+      <div class="card">
+        <div class="week-num">W2</div>
+        <div class="week-label">Week Two</div>
+        <div class="week-title">Deep Dive</div>
+        <div class="week-body">Read your first weekly research report. Learn the 3 core on-chain metrics. Watch the market cycle module.</div>
+      </div>
+      <div class="card">
+        <div class="week-num">W3</div>
+        <div class="week-label">Week Three</div>
+        <div class="week-title">Community</div>
+        <div class="week-body">Introduce yourself in the community. Join a weekly live Q&A call. Connect with 2–3 members at your portfolio level.</div>
+      </div>
+      <div class="card">
+        <div class="week-num">W4</div>
+        <div class="week-label">Week Four</div>
+        <div class="week-title">Strategy Formation</div>
+        <div class="week-body">Write your investment thesis. Map your current portfolio. Book a 1:1 strategy session with the coaching team.</div>
+      </div>
+    </div>
+    <div class="teal-badge" style="align-self:flex-start;margin-top:20px;">
+      <span class="teal-dot"></span>
+      Members who complete Week 1 within 48 hours retain at 3× the rate
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 18 — WEEK 1: GETTING ORIENTED
+═══════════════════════════════════════════ -->
+<div class="slide layout-dark">
+  <div class="dot-grid"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">Week One</div>
+      <div class="slide-title slide-title-sm">Getting Oriented — Your Checklist</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div style="flex:1;display:flex;gap:32px;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:14px;">
+        <div class="card">
+          <div class="card-title">✅ Member Portal</div>
+          <div class="card-body">Log in at members.collectiveshift.io. Find the Foundation module. Bookmark the research library.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">✅ Community Access</div>
+          <div class="card-body">Join the Collective Shift community platform. Introduce yourself in #new-members. This is where the deals, insights and conversations happen.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">✅ Live Session Calendar</div>
+          <div class="card-body">Add the weekly live session schedule to your calendar. These are the most valuable 60 minutes of your week.</div>
+        </div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:14px;">
+        <div class="card">
+          <div class="card-title">✅ Research Reports</div>
+          <div class="card-body">Find the most recent weekly report. Skim the structure — you'll learn to read these fluently within 2 weeks.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">✅ Your 1:1 Session</div>
+          <div class="card-body">Book your new member strategy call with the CS team this week. Come with questions about your current portfolio and goals.</div>
+        </div>
+        <div class="card" style="border-color:rgba(252,92,3,0.4);">
+          <div class="card-title">📌 Don't Skip This</div>
+          <div class="card-body">Watch: "Why Bitcoin — The Monetary Thesis" (Module 1). It's the foundation everything else builds on.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 19 — WEEK 2: RESEARCH STACK
+═══════════════════════════════════════════ -->
+<div class="slide layout-content">
+  <div class="noise-overlay"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">Week Two</div>
+      <div class="slide-title slide-title-sm">The Research Stack — What to learn first</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div style="flex:1;display:flex;gap:32px;">
+      <div style="flex:3;display:flex;flex-direction:column;gap:16px;">
+        <table class="cs-table">
+          <thead>
+            <tr><th>Resource</th><th>What It Is</th><th>When to Use</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="color:var(--orange);font-weight:700;">CS Weekly Report</td>
+              <td>Institutional-grade Bitcoin + macro analysis</td>
+              <td>Every week, Sunday or Monday</td>
+            </tr>
+            <tr>
+              <td style="color:var(--orange);font-weight:700;">Checkonchain.com</td>
+              <td>Free on-chain charts (MVRV, SOPR, LTH)</td>
+              <td>Weekly — track 3 core metrics</td>
+            </tr>
+            <tr>
+              <td style="color:var(--orange);font-weight:700;">Trading Economics</td>
+              <td>Macro data: CPI, rates, M2, DXY</td>
+              <td>Monthly when data drops</td>
+            </tr>
+            <tr>
+              <td style="color:var(--orange);font-weight:700;">Bitcoin Magazine Pro</td>
+              <td>Advanced on-chain research (paid)</td>
+              <td>For deeper on-chain dives</td>
+            </tr>
+            <tr>
+              <td style="color:var(--orange);font-weight:700;">CS Community Slack</td>
+              <td>Member discussions, live market commentary</td>
+              <td>Daily — check #research channel</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="flex:2;display:flex;flex-direction:column;gap:16px;">
+        <div class="card" style="border-color:rgba(11,244,185,0.25);">
+          <div class="card-title" style="color:var(--teal);">The 30-Min Weekly Ritual</div>
+          <div class="card-body">Read the CS weekly report. Check MVRV Z-Score and exchange flows. Note where BTC is in the cycle. That's it. You're ahead of 95% of investors.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 20 — WEEK 3: COMMUNITY
+═══════════════════════════════════════════ -->
+<div class="slide layout-dark">
+  <div class="dot-grid"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">Week Three</div>
+      <div class="slide-title slide-title-sm">The Community — Your unfair advantage</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div style="flex:1;display:flex;gap:32px;align-items:stretch;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+        <p class="body-text">350+ high-net-worth investors are already inside this community. Portfolios from $100K to $35M+. People who have been through 2–3 cycles.</p>
+        <p class="body-text" style="margin-top:4px;">This peer group is not available anywhere else. The conversations in the community are worth more than the research reports alone.</p>
+        <div class="quote" style="margin-top:12px;font-size:19px;">
+          "We invest our own capital alongside our members. Skin in the game is not optional."
+        </div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:14px;">
+        <div class="card">
+          <div class="card-title">Live Sessions</div>
+          <div class="card-body">Weekly market briefings, Q&A calls with Ben and the research team. Ask anything — no question is too basic.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Community Channels</div>
+          <div class="card-body">#research, #market-updates, #altcoins, #tax-legal, #strategy. Each channel is curated, no noise.</div>
+        </div>
+        <div class="card" style="border-color:rgba(11,244,185,0.25);">
+          <div class="card-title" style="color:var(--teal);">Week 3 Action</div>
+          <div class="card-body">Post one insight, question, or update in the community. Introduce yourself. This is where relationships compound.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 21 — WEEK 4: STRATEGY FORMATION
+═══════════════════════════════════════════ -->
+<div class="slide layout-content">
+  <div class="noise-overlay"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">Week Four</div>
+      <div class="slide-title slide-title-sm">Build your personal investment framework</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div style="flex:1;display:flex;gap:32px;align-items:stretch;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <strong>Write your investment thesis</strong>
+              <p>Why are you here? What's your 3-year goal? What would make you sell? Get it in writing.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <strong>Map your current portfolio</strong>
+              <p>Asset allocation, average entry prices, risk exposure. Know what you own and why.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <strong>Set your buy zones</strong>
+              <p>Using the on-chain data you've learned — identify accumulation zones vs hold vs reduce.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <strong>Book your 1:1 strategy session</strong>
+              <p>Bring your thesis and portfolio map. We'll review it together and build your action plan.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:16px;justify-content:center;">
+        <div class="card" style="border-color:rgba(11,244,185,0.25);">
+          <div class="card-title" style="color:var(--teal);">The Investor Journal</div>
+          <div class="card-body">Start tracking every buy/sell decision with a written reason. In 12 months, you'll have a data set of your own psychology. This is what separates serious investors.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Your North Star Metric</div>
+          <div class="card-body">Pick one portfolio target and one timeframe. Write it down. Everything you learn in CS should serve that target.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 22 — DIVIDER: PORTFOLIO & RISK
+═══════════════════════════════════════════ -->
+<div class="slide layout-divider">
+  <div style="position:relative;z-index:1;">
+    <div class="divider-kicker">Section 05</div>
+    <div class="divider-title">Portfolio<br>& Risk</div>
+    <div class="divider-sub">How professionals size positions and protect capital</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 23 — RISK MANAGEMENT FRAMEWORK
+═══════════════════════════════════════════ -->
+<div class="slide layout-content">
+  <div class="noise-overlay"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">Risk First</div>
+      <div class="slide-title slide-title-sm">Risk Management — The non-negotiables</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div style="flex:1;display:flex;gap:32px;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+        <div class="card">
+          <div class="card-title">Position Sizing</div>
+          <div class="card-body">Never allocate more than you can hold through a 70–80% drawdown without panic selling. If you'd sell at -50%, you're over-allocated. Size down.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">The 1% Rule (Alts)</div>
+          <div class="card-body">For speculative altcoin positions: max 1–2% of total portfolio per position. Most won't survive a bear market. Size accordingly.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Drawdowns Are Normal</div>
+          <div class="card-body">Bitcoin has drawn down 80%+ four times and recovered to new highs each time. Your job is to stay solvent through the cycle.</div>
+        </div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+        <div class="card" style="border-color:rgba(11,244,185,0.25);">
+          <div class="card-title" style="color:var(--teal);">The CS Framework: Conviction Tiers</div>
+          <div class="card-body">
+            <strong style="display:block;margin-bottom:8px;">Tier 1 — Bitcoin (60–80%)</strong>
+            Core holding. Long-term. Never trade it. Buy the cycle.
+            <strong style="display:block;margin:12px 0 8px;">Tier 2 — Ethereum (10–20%)</strong>
+            High conviction. Protocol-level bet. 3–5 year horizon.
+            <strong style="display:block;margin:12px 0 8px;">Tier 3 — Alts (5–20%)</strong>
+            Speculative. High risk, high reward. Liquid only.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 24 — PORTFOLIO CONSTRUCTION
+═══════════════════════════════════════════ -->
+<div class="slide layout-dark">
+  <div class="dot-grid"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">Construction</div>
+      <div class="slide-title slide-title-sm">Building a portfolio that survives cycles</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div style="flex:1;display:flex;gap:32px;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <strong>Establish your BTC base</strong>
+              <p>Start with Bitcoin. Get comfortable with the volatility. Build conviction through one full cycle before diversifying heavily.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <strong>Dollar-cost average (DCA)</strong>
+              <p>Regular buys at fixed intervals remove the emotional burden of timing. DCA on-chain signals, not price alone.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <strong>Hold liquidity in peaks</strong>
+              <p>When on-chain signals show MVRV is extreme, reduce exposure. Cash is a position in a euphoria market.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+        <div class="card">
+          <div class="card-title">Rebalancing Rule</div>
+          <div class="card-body">If alts grow to exceed their target allocation % due to price appreciation, trim back to target. Don't let speculation dominate your portfolio accidentally.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">The Accumulation Mindset</div>
+          <div class="card-body">The goal is to accumulate as much BTC as possible over a 4–10 year window. Every decision should serve that goal. Not short-term gains.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 25 — ALTCOINS
+═══════════════════════════════════════════ -->
+<div class="slide layout-content">
+  <div class="noise-overlay"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">Altcoins</div>
+      <div class="slide-title slide-title-sm">When, why, and how — in context of BTC</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div style="flex:1;display:flex;gap:32px;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+        <div class="card" style="border-color:rgba(255,10,0,0.25);">
+          <div class="card-title" style="color:#FF4040;">When to be cautious</div>
+          <ul class="cs-list" style="gap:8px;margin-top:4px;">
+            <li style="font-size:17px;">Bitcoin dominance rising (alts losing to BTC)</li>
+            <li style="font-size:17px;">Early cycle — BTC hasn't broken ATH yet</li>
+            <li style="font-size:17px;">Market euphoria — everyone is bullish on alts</li>
+            <li style="font-size:17px;">No clear narrative or use case</li>
+          </ul>
+        </div>
+        <div class="card" style="border-color:rgba(11,244,185,0.25);">
+          <div class="card-title" style="color:var(--teal);">When alts outperform</div>
+          <ul class="cs-list teal" style="gap:8px;margin-top:4px;">
+            <li style="font-size:17px;">BTC dominance peaks and starts to fall</li>
+            <li style="font-size:17px;">Post-halving mid-cycle phase</li>
+            <li style="font-size:17px;">Clear sector narratives (AI, DeFi, L2s)</li>
+            <li style="font-size:17px;">BTC has already made 3–4x from cycle bottom</li>
+          </ul>
+        </div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+        <div class="card">
+          <div class="card-title">The CS Altcoin Filter</div>
+          <div class="card-body">
+            <strong style="display:block;margin-bottom:8px;color:rgba(255,255,255,0.9);">Only buy altcoins that pass all 5:</strong>
+            <ol style="padding-left:20px;display:flex;flex-direction:column;gap:6px;color:rgba(255,255,255,0.7);font-size:17px;">
+              <li>Real team with track record</li>
+              <li>Clear product / market fit</li>
+              <li>Liquid on major exchange</li>
+              <li>Narrative supported by data</li>
+              <li>BTC-denominated chart is trending up</li>
+            </ol>
+          </div>
+        </div>
+        <div class="quote" style="font-size:18px;">
+          "Most altcoins return to zero. A handful return 100x. The filter separates them."
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 26 — DIVIDER: RESOURCES & NEXT STEPS
+═══════════════════════════════════════════ -->
+<div class="slide layout-divider">
+  <div style="position:relative;z-index:1;">
+    <div class="divider-kicker">Section 06</div>
+    <div class="divider-title">Resources &<br>Next Steps</div>
+    <div class="divider-sub">Everything you need to get started this week</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 27 — YOUR RESOURCE STACK
+═══════════════════════════════════════════ -->
+<div class="slide layout-dark">
+  <div class="dot-grid"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">Tools & Platforms</div>
+      <div class="slide-title slide-title-sm">Your complete resource stack</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div class="grid-3" style="flex:1;gap:18px;">
+      <div class="card">
+        <div class="card-title">🏠 Member Portal</div>
+        <div class="card-body">members.collectiveshift.io — All courses, research archive, community, live session replays. Your home base.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">📊 On-Chain</div>
+        <div class="card-body">checkonchain.com (free), CryptoQuant, Glassnode. Start with checkonchain — it's curated and beginner-friendly.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🌐 Macro Data</div>
+        <div class="card-body">tradingeconomics.com — CPI, Fed rates, M2, DXY, global PMI. Bookmark the US and global sections.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">📰 Weekly Reports</div>
+        <div class="card-body">CS Research drops every week — written by James Check and Matt Willemsen. Most valuable thing you'll read all week.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">💬 Community</div>
+        <div class="card-body">Collective Shift Slack/Discord. #research, #market-updates, #altcoins, #strategy. Check in daily — the real insights are here.</div>
+      </div>
+      <div class="card" style="border-color:rgba(11,244,185,0.25);">
+        <div class="card-title" style="color:var(--teal);">📞 1:1 Coaching</div>
+        <div class="card-body">Direct access to Ben and the CS strategy team. Book your new member session this week via the portal.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 28 — WEEKLY SCHEDULE
+═══════════════════════════════════════════ -->
+<div class="slide layout-content">
+  <div class="noise-overlay"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+    <div class="slide-header">
+      <div class="kicker">Recurring Schedule</div>
+      <div class="slide-title slide-title-sm">Your weekly rhythm as a CS member</div>
+      <div class="accent-line" style="margin-top:20px;"></div>
+    </div>
+    <div style="flex:1;overflow:auto;">
+      <table class="cs-table">
+        <thead>
+          <tr><th>Day</th><th>What Happens</th><th>Your Action</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--orange);font-weight:700;">Monday</td>
+            <td>Weekly Research Report published</td>
+            <td>Read the CS weekly report (30 min)</td>
+          </tr>
+          <tr>
+            <td style="color:var(--orange);font-weight:700;">Tuesday</td>
+            <td>Community research discussion opens</td>
+            <td>Check #research channel, share a takeaway</td>
+          </tr>
+          <tr>
+            <td style="color:var(--orange);font-weight:700;">Wednesday</td>
+            <td>Weekly market briefing (live)</td>
+            <td>Join the live session — Ben + research team</td>
+          </tr>
+          <tr>
+            <td style="color:var(--orange);font-weight:700;">Thursday</td>
+            <td>On-chain data update</td>
+            <td>Check your 3 core metrics on checkonchain</td>
+          </tr>
+          <tr>
+            <td style="color:var(--orange);font-weight:700;">Friday</td>
+            <td>Portfolio review day</td>
+            <td>Review your holdings, update your journal</td>
+          </tr>
+          <tr>
+            <td style="color:var(--grey);">Weekend</td>
+            <td>Course content, deep dives</td>
+            <td>One module in the Shift OS curriculum</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="teal-badge" style="align-self:flex-start;margin-top:20px;">
+      <span class="teal-dot"></span>
+      90 minutes per week is enough to be a serious investor
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 29 — Q&A
+═══════════════════════════════════════════ -->
+<div class="slide layout-dark">
+  <div class="dot-grid"></div>
+  <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+    <div class="kicker" style="margin-bottom:24px;">Open Discussion</div>
+    <div class="slide-title slide-title-lg" style="max-width:800px;color:var(--white);">
+      Questions &<br><span style="color:var(--orange);">Discussion</span>
+    </div>
+    <div class="hero-line"></div>
+    <div class="slide-subtitle" style="max-width:600px;text-align:center;">
+      No question is too basic. You're all at different stages — every question helps everyone in the room.
+    </div>
+    <div style="display:flex;gap:20px;margin-top:40px;flex-wrap:wrap;justify-content:center;">
+      <div class="teal-badge"><span class="teal-dot"></span> Portfolio construction</div>
+      <div class="teal-badge"><span class="teal-dot"></span> On-chain reading</div>
+      <div class="teal-badge"><span class="teal-dot"></span> Tax & legal</div>
+      <div class="teal-badge"><span class="teal-dot"></span> Altcoin selection</div>
+      <div class="teal-badge"><span class="teal-dot"></span> Getting started</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 30 — CLOSING
+═══════════════════════════════════════════ -->
+<div class="slide layout-hero">
+  <div class="dot-grid"></div>
+  <div class="noise-overlay"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;">
+    <div class="kicker" style="margin-bottom:24px;">Collective Shift</div>
+    <div class="slide-title slide-title-lg" style="text-align:center;max-width:900px;color:var(--white);">
+      The edge isn't<br><span style="color:var(--orange);">information.</span><br>It's framework.
+    </div>
+    <div class="hero-line"></div>
+    <div class="slide-subtitle" style="text-align:center;max-width:640px;">
+      You now have the system. The research. The community. The coaching. The next step is yours.
+    </div>
+    <div style="margin-top:48px;display:flex;flex-direction:column;gap:12px;align-items:center;">
+      <div class="teal-badge">
+        <span class="teal-dot"></span>
+        Welcome to Collective Shift
+      </div>
+      <div style="font-family:'Barlow',Arial,sans-serif;font-size:15px;color:var(--grey);margin-top:8px;">
+        collectiveshift.io · members.collectiveshift.io
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let current = 0;
+
+  function show(n) {
+    slides[current].classList.remove('active', 'visible');
+    current = (n + total) % total;
+    const s = slides[current];
+    s.classList.add('active');
+    requestAnimationFrame(() => requestAnimationFrame(() => s.classList.add('visible')));
+    document.getElementById('progress-bar').style.width = ((current + 1) / total * 100) + '%';
+    document.getElementById('slide-counter').textContent = (current + 1) + ' / ' + total;
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'ArrowDown') { e.preventDefault(); show(current + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); show(current - 1); }
+    if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+  });
+
+  document.getElementById('deck').addEventListener('click', () => show(current + 1));
+
+  // Touch swipe
+  let tx = 0;
+  document.addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 40) show(dx < 0 ? current + 1 : current - 1);
+  }, { passive: true });
+
+  show(0);
+</script>
+</body>
+</html>
