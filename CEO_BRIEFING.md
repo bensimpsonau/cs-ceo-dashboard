@@ -1,7 +1,7 @@
 # CEO Briefing — Collective Shift
 
 > This file is maintained by BenBot (CEO Agent) and shared with all sub-agents.
-> Last updated: 2026-03-24 13:06 AEDT
+> Last updated: 2026-03-24 18:24 AEDT
 
 ## Latest Completions — 24 March 2026
 
@@ -11,9 +11,13 @@
 | 2 | **Brand Guidelines Logo Fix** | ✅ Delivered | Web + print versions rebuilt with correct Figma logomark + wordmark weights |
 | 3 | **CEO Dashboard v4.0** | ✅ Pushed | Fear & Greed Index, countdown timer, refreshed agent statuses, calendar sync (commit f0c96d5) |
 | 4 | **Project File Hub v4.1** | ✅ Live | Mobile-friendly /projects/ file browser on Render site (commit d2e8501) |
-| 5 | **New Member Strategy Deck v8** | 🔄 In Progress | Manus two-phase methodology rebuild — content structure → brand normalization |
-| 6 | **Presentation Design Skill** | ✅ Saved | Marketing Bot now permanent slide design expert — research + learning docs saved |
-| 7 | **Investor Seed Deck** | ✅ Saved | PDF saved to investor-deck/ — "Bloomberg for Digital Assets", ARR $580K→$5.2M |
+| 5 | **New Member Strategy Deck v8** | ✅ Delivered | Manus two-phase methodology rebuild — 73KB, Opus-built |
+| 6 | **New Member Strategy Deck v9** | ✅ Delivered | Further refinements on v8 — 95KB, Opus-built |
+| 7 | **New Member Strategy Deck v10 FINAL** | ✅ Delivered | Final version — 1.4MB with embedded visuals, 50 slides |
+| 8 | **Shift OS v8 Deck** | ✅ Delivered | Shift OS presentation deck — slides/shift-os-v8-deck.html |
+| 9 | **Presentation Design Skill** | ✅ Saved | Marketing Bot now permanent slide design expert — research + learning docs saved |
+| 10 | **Investor Seed Deck** | ✅ Saved | PDF saved to investor-deck/ — "Bloomberg for Digital Assets", ARR $580K→$5.2M |
+| 11 | **Evening Recap** | ✅ Posted | Full status update posted to #daily-recap (msg 1485897150041817138) |
 
 ### Live Market Data (24 Mar 2026)
 - **BTC:** $70,962 (+3.84% 24h)
