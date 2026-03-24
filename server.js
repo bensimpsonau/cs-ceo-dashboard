@@ -8,6 +8,7 @@ const SNAPSHOT_PATH = path.join(__dirname, 'dashboard-data', 'snapshot.json');
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/slides', express.static(path.join(__dirname, 'slides')));
 
 // GET /api/snapshot
 app.get('/api/snapshot', (req, res) => {
