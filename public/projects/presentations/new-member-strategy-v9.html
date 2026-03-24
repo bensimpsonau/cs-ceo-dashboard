@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Member Strategy Session — Collective Shift · March 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+/* ═══ RESET & BASE ═══ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-snap-type: y mandatory; overflow-x: hidden; }
+body { font-family: 'Barlow', sans-serif; background: #02000D; color: #1B1925; }
+
+/* ═══ BRAND TOKENS ═══ */
+:root {
+  --bg-dark: #02000D;
+  --bg-mid: #1B1925;
+  --bg-light: #FFFFFF;
+  --bg-offwhite: #F9F9F9;
+  --accent: #FC5C03;
+  --positive: #0BF4B9;
+  --cta: #2404FC;
+  --text-dark: #1B1925;
+  --text-light: #FFFFFF;
+  --text-muted: #8A8A8A;
+  --heading-font: 'Plus Jakarta Sans', sans-serif;
+  --body-font: 'Barlow', sans-serif;
+}
+
+/* ═══ SLIDE SYSTEM ═══ */
+.slide {
+  width: 100vw; height: 100vh;
+  scroll-snap-align: start;
+  position: relative; overflow: hidden;
+  display: flex; align-items: stretch;
+}
+.slide-inner {
+  width: 100%; padding: 3.5rem 4rem;
+  display: flex; flex-direction: column;
+}
+
+/* ═══ BACKGROUNDS ═══ */
+.bg-dark { background: var(--bg-dark); color: var(--text-light); }
+.bg-mid { background: var(--bg-mid); color: var(--text-light); }
+.bg-light { background: var(--bg-light); color: var(--text-dark); }
+.bg-offwhite { background: var(--bg-offwhite); color: var(--text-dark); }
+.bg-accent { background: var(--accent); color: var(--text-light); }
+
+/* ═══ TEXTURE OVERLAY ═══ */
+.grid-texture::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 30px 30px; pointer-events: none; z-index: 0;
+}
+.grid-texture .slide-inner { position: relative; z-index: 1; }
+
+/* ═══ TYPOGRAPHY ═══ */
+.headline {
+  font-family: var(--heading-font);
+  font-size: 2.6rem; font-weight: 800;
+  line-height: 1.12; margin-bottom: 0.75rem;
+  letter-spacing: -0.5px;
+}
+.headline-lg {
+  font-family: var(--heading-font);
+  font-size: 3.2rem; font-weight: 800;
+  line-height: 1.08; letter-spacing: -1px;
+}
+.section-label {
+  font-family: var(--heading-font);
+  font-size: 0.85rem; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 0.5rem;
+}
+.accent-line {
+  width: 50px; height: 4px;
+  background: var(--accent);
+  margin: 0.75rem 0 1.5rem;
+}
+.body-text { font-size: 1.25rem; line-height: 1.6; color: inherit; }
+.bg-light .body-text, .bg-offwhite .body-text { color: #4A4A4A; }
+.muted { color: var(--text-muted); }
+.step-tag {
+  display: inline-block;
+  font-family: var(--heading-font); font-weight: 800;
+  font-size: 0.85rem; color: var(--accent);
+  background: rgba(252,92,3,0.1); padding: 6px 18px;
+  border-radius: 20px; letter-spacing: 2px;
+  margin-bottom: 0.75rem;
+}
+
+/* ═══ STAT CALLOUT ═══ */
+.stat-number {
+  font-family: var(--heading-font);
+  font-size: 4.5rem; font-weight: 800;
+  color: var(--accent); letter-spacing: -3px; line-height: 1;
+}
+.stat-label {
+  font-family: var(--body-font);
+  font-size: 0.9rem; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-top: 0.5rem;
+}
+
+/* ═══ BULLET POINTS ═══ */
+.points { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+.points li {
+  font-size: 1.2rem; line-height: 1.5;
+  padding-left: 1.5rem; position: relative;
+}
+.points li::before {
+  content: ''; position: absolute; left: 0; top: 0.55rem;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+}
+.bg-dark .points li, .bg-mid .points li, .bg-accent .points li { color: rgba(255,255,255,0.85); }
+.bg-light .points li, .bg-offwhite .points li { color: #4A4A4A; }
+
+/* ═══ CARDS ═══ */
+.card {
+  background: #fff; border-radius: 14px; padding: 1.75rem;
+  border-top: 4px solid var(--accent);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08);
+}
+.card-plain {
+  background: #fff; border-radius: 14px; padding: 1.75rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04), 0 6px 18px rgba(0,0,0,0.06);
+}
+.bg-dark .card, .bg-mid .card {
+  background: rgba(255,255,255,0.05); border-top-color: var(--accent);
+  box-shadow: none; color: #fff;
+}
+.bg-dark .card-plain, .bg-mid .card-plain {
+  background: rgba(255,255,255,0.05); box-shadow: none; color: #fff;
+}
+
+/* ═══ GRIDS ═══ */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+
+/* ═══ CHART CONTAINER ═══ */
+.chart-wrap { max-width: 600px; margin: 0 auto; flex: 1; display: flex; align-items: center; }
+
+/* ═══ EXERCISE BOX ═══ */
+.exercise-box {
+  border: 2px dashed var(--accent); border-radius: 12px;
+  padding: 1.5rem 2rem; margin-top: 1rem;
+  background: rgba(252,92,3,0.04);
+}
+.exercise-box h4 { color: var(--accent); font-family: var(--heading-font); font-weight: 700; margin-bottom: 0.5rem; }
+
+/* ═══ TABLE ═══ */
+table { width: 100%; border-collapse: collapse; font-size: 1rem; }
+th { background: var(--accent); color: #fff; padding: 0.75rem 1rem; text-align: left; font-family: var(--heading-font); font-weight: 600; }
+td { padding: 0.75rem 1rem; border-bottom: 1px solid #E5E5E5; color: #4A4A4A; }
+tr:nth-child(even) td { background: var(--bg-offwhite); }
+.bg-dark table th { background: rgba(252,92,3,0.8); }
+.bg-dark table td { border-bottom-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); }
+.bg-dark tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+
+/* ═══ NAVIGATION ═══ */
+.progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px;
+  background: var(--accent); z-index: 1000;
+  transition: width 0.3s ease;
+}
+.nav-buttons {
+  position: fixed; bottom: 1.5rem; right: 1.5rem;
+  display: flex; gap: 0.5rem; z-index: 1000;
+}
+.nav-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4); color: #fff;
+  cursor: pointer; font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.nav-btn:hover { background: var(--accent); border-color: var(--accent); }
+.slide-number {
+  position: absolute; bottom: 2rem; left: 4rem;
+  font-size: 0.8rem; opacity: 0.4;
+  font-family: var(--body-font);
+}
+
+/* ═══ GROW ═══ */
+.grow { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  .slide-inner { padding: 1.5rem 1.25rem; }
+  .headline { font-size: 1.8rem; }
+  .headline-lg { font-size: 2.2rem; }
+  .stat-number { font-size: 3rem; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .slide-number { left: 1.25rem; bottom: 1rem; }
+  .points li { font-size: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Navigation -->
+<div class="nav-buttons">
+  <button class="nav-btn" onclick="prevSlide()" title="Previous">&#9650;</button>
+  <button class="nav-btn" onclick="nextSlide()" title="Next">&#9660;</button>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 1 — Title Hero (dark) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-dark grid-texture" id="slide1">
+  <div class="slide-inner" style="justify-content: center; align-items: center; text-align: center;">
+    <div class="section-label" style="color: rgba(255,255,255,0.4); letter-spacing: 5px;">NEW MEMBER</div>
+    <h1 class="headline-lg" style="font-size: 3.8rem; color: #fff; margin-bottom: 0.5rem;">Positioning for<br>What Comes Next</h1>
+    <div class="accent-line" style="margin: 1rem auto;"></div>
+    <p style="color: rgba(255,255,255,0.5); font-size: 1.1rem; margin-bottom: 2rem;">Digital Asset Strategy Session · March 2026</p>
+    <p style="color: rgba(255,255,255,0.35); font-size: 0.95rem;">Ben Simpson · Founder & CEO, Collective Shift</p>
+    <div class="slide-number" style="color: rgba(255,255,255,0.3);">01 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 2 — Icebreaker (dark) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-mid grid-texture" id="slide2">
+  <div class="slide-inner">
+    <div class="section-label">Before We Start</div>
+    <h2 class="headline" style="color:#fff;">Quick Pulse Check</h2>
+    <div class="accent-line"></div>
+    <div class="grid-4 grow" style="margin-top:1rem;">
+      <div class="card-plain" style="text-align:center;padding:2rem;">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">🎯</div>
+        <div style="color:var(--accent);font-weight:700;font-size:0.85rem;letter-spacing:2px;margin-bottom:0.5rem;">QUESTION 1</div>
+        <p style="font-size:1.1rem;color:rgba(255,255,255,0.8);">How long have you been a member?</p>
+      </div>
+      <div class="card-plain" style="text-align:center;padding:2rem;">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">📊</div>
+        <div style="color:var(--accent);font-weight:700;font-size:0.85rem;letter-spacing:2px;margin-bottom:0.5rem;">QUESTION 2</div>
+        <p style="font-size:1.1rem;color:rgba(255,255,255,0.8);">Do you own any Bitcoin yet?</p>
+      </div>
+      <div class="card-plain" style="text-align:center;padding:2rem;">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">🔐</div>
+        <div style="color:var(--accent);font-weight:700;font-size:0.85rem;letter-spacing:2px;margin-bottom:0.5rem;">QUESTION 3</div>
+        <p style="font-size:1.1rem;color:rgba(255,255,255,0.8);">Do you have a hardware wallet?</p>
+      </div>
+      <div class="card-plain" style="text-align:center;padding:2rem;">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">📝</div>
+        <div style="color:var(--accent);font-weight:700;font-size:0.85rem;letter-spacing:2px;margin-bottom:0.5rem;">QUESTION 4</div>
+        <p style="font-size:1.1rem;color:rgba(255,255,255,0.8);">Do you have a written sell strategy?</p>
+      </div>
+    </div>
+    <div class="slide-number" style="color:rgba(255,255,255,0.3);">02 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 3 — Session Roadmap (light) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-light" id="slide3">
+  <div class="slide-inner">
+    <div class="section-label">AGENDA</div>
+    <h2 class="headline">What We Cover & What You Leave With</h2>
+    <div class="accent-line"></div>
+    <div class="grid-2 grow">
+      <div>
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.2rem;margin-bottom:1rem;color:var(--accent);">Session Contents</h3>
+        <ul class="points">
+          <li>Where Bitcoin and macro sit right now</li>
+          <li>The Shift OS — 7-step investment system</li>
+          <li>Security, custody, and risk frameworks</li>
+          <li>Sell strategy and profit-taking</li>
+          <li>Tax planning and wealth preservation</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.2rem;margin-bottom:1rem;color:var(--positive);">What You Leave With</h3>
+        <ul class="points">
+          <li>A personalised investment framework</li>
+          <li>A written sell strategy template</li>
+          <li>A clear 30-day action plan</li>
+          <li>Confidence to execute — not just information</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-number">03 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 4 — Why I Run These Sessions (offwhite) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-offwhite" id="slide4">
+  <div class="slide-inner">
+    <h2 class="headline">Why Your First 90 Days Define Your Strategy</h2>
+    <div class="accent-line"></div>
+    <div class="grow">
+      <ul class="points" style="margin-bottom:2rem;">
+        <li>You joined at an unusual moment — Bitcoin, AI, and macro all moving simultaneously</li>
+        <li>This session builds your entire strategy from the ground up</li>
+        <li>By the end you have a real framework — not just information</li>
+      </ul>
+      <p class="body-text" style="border-left:3px solid var(--accent);padding-left:1.5rem;font-style:italic;color:var(--text-muted);">This is not a sales session. The goal is to get you positioned as well as possible.</p>
+    </div>
+    <div class="slide-number">04 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 5 — My Story (light) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-light" id="slide5">
+  <div class="slide-inner">
+    <h2 class="headline">The Resource I Wished Existed When I Started</h2>
+    <div class="accent-line"></div>
+    <div class="grid-2 grow">
+      <ul class="points">
+        <li>9 years full-time in Bitcoin</li>
+        <li>Made costly mistakes — no infrastructure, no system</li>
+        <li>Scaled crypto media from $10K → $430K MRR</li>
+        <li>Invests own capital alongside members. No affiliates. 100% independent.</li>
+      </ul>
+      <div class="card" style="text-align:center;display:flex;flex-direction:column;justify-content:center;">
+        <div class="section-label">Recognition</div>
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.4rem;margin:0.5rem 0;">Community Leader of the Year</h3>
+        <p class="muted">Blockies 2025</p>
+      </div>
+    </div>
+    <div class="slide-number">05 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 6 — Conviction (dark) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-dark grid-texture" id="slide6">
+  <div class="slide-inner" style="justify-content:center;align-items:center;text-align:center;">
+    <div class="section-label">9 YEARS IN</div>
+    <h2 class="headline-lg" style="color:#fff;margin-bottom:1.5rem;">More Convicted Than Ever</h2>
+    <div class="accent-line" style="margin:0 auto 2rem;"></div>
+    <ul class="points" style="text-align:left;max-width:640px;margin-bottom:2rem;">
+      <li>Bitcoin is a fundamental shift in how value is stored globally. Not a trade. A paradigm shift.</li>
+      <li>Every cycle has felt like the end. None of them were.</li>
+      <li>The intersection of Bitcoin, AI, and blockchain has never been more exciting.</li>
+    </ul>
+    <p style="font-size:1.3rem;color:var(--accent);max-width:600px;font-weight:600;line-height:1.5;">The goal is not to sell you on Bitcoin. You already made that decision. The goal is to help you do it right.</p>
+    <div class="slide-number" style="color:rgba(255,255,255,0.3);">06 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 7 — Who's In This Room (offwhite) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-offwhite" id="slide7">
+  <div class="slide-inner">
+    <h2 class="headline">You're Not New to Investing. You're New to This Asset Class.</h2>
+    <div class="accent-line"></div>
+    <div class="grid-2 grow">
+      <div class="card">
+        <div class="section-label">Who You Are</div>
+        <ul class="points" style="margin-top:0.75rem;">
+          <li>Successful investor or business owner</li>
+          <li>Real wealth built — property, equities, business, super</li>
+          <li>Time-poor. Can't watch charts all day.</li>
+        </ul>
+      </div>
+      <div class="card" style="border-top-color:var(--positive);">
+        <div class="section-label" style="color:var(--positive);">Why This Session Matters</div>
+        <ul class="points" style="margin-top:0.75rem;">
+          <li>Made a serious financial decision joining</li>
+          <li>Something felt off about the old portfolio mix</li>
+          <li>Here for a system, not tips</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-number">07 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 8 — SECTION DIVIDER: The World Right Now (accent) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-accent" id="slide8">
+  <div class="slide-inner" style="justify-content:center;align-items:center;text-align:center;">
+    <div style="font-size:0.85rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:1rem;">PART ONE</div>
+    <h1 class="headline-lg" style="color:#fff;font-size:3.5rem;">The World Right Now</h1>
+    <div style="width:50px;height:4px;background:#fff;margin:1.5rem auto;opacity:0.5;"></div>
+    <p style="color:rgba(255,255,255,0.7);font-size:1.15rem;max-width:500px;">Macro context, institutional shifts, and where Bitcoin sits in the landscape today.</p>
+    <div class="slide-number" style="color:rgba(255,255,255,0.4);">08 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 9 — Inflation (light) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-light" id="slide9">
+  <div class="slide-inner">
+    <h2 class="headline">The Purchasing Power Erosion Problem</h2>
+    <div class="accent-line"></div>
+    <div class="grow">
+      <div class="grid-2" style="margin-bottom:1.5rem;">
+        <div class="card-plain" style="text-align:center;padding:1.5rem;">
+          <div class="stat-number" style="font-size:3.5rem;">80%+</div>
+          <div class="stat-label">of all USD printed since 2020</div>
+        </div>
+        <div class="card-plain" style="text-align:center;padding:1.5rem;">
+          <div class="stat-number" style="font-size:3.5rem;color:var(--bg-mid);">-3.2%</div>
+          <div class="stat-label">real value loss per year on cash</div>
+        </div>
+      </div>
+      <ul class="points">
+        <li>Inflation is systematic erosion of purchasing power — not just supermarket prices</li>
+        <li>Fixed income and cash savings losing real value every year</li>
+        <li>Property absorbed some — but illiquid, leveraged, concentrated</li>
+      </ul>
+      <p class="body-text" style="margin-top:1.5rem;border-left:3px solid var(--accent);padding-left:1.5rem;font-style:italic;color:var(--text-muted);">This is not a political statement. This is arithmetic.</p>
+    </div>
+    <div class="slide-number">09 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 10 — The 60/40 Problem (offwhite) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-offwhite" id="slide10">
+  <div class="slide-inner">
+    <h2 class="headline">Portfolio Diversification Is Not What It Used to Be</h2>
+    <div class="accent-line"></div>
+    <div class="grid-2 grow">
+      <div class="card-plain">
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;border-bottom:2px solid var(--accent);padding-bottom:0.5rem;margin-bottom:1rem;">The Old Assumption</h3>
+        <p class="body-text">When stocks fall, bonds rise. 60/40 = diversified. That model worked for decades.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;border-bottom:2px solid var(--positive);padding-bottom:0.5rem;margin-bottom:1rem;color:var(--text-dark);">The New Reality</h3>
+        <ul class="points">
+          <li>2022: 60/40 lost ~16% in one year</li>
+          <li>Top 10 S&P stocks = largest index concentration in modern history</li>
+          <li>49% probability of 10–20% equity correction</li>
+        </ul>
+      </div>
+    </div>
+    <p class="body-text" style="margin-top:1.5rem;font-weight:600;color:var(--accent);text-align:center;">Most investors aren't overexposed to crypto. They're underexposed to it.</p>
+    <div class="slide-number">10 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 11 — Bitcoin's Track Record (light) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-light" id="slide11">
+  <div class="slide-inner" style="align-items:center;text-align:center;">
+    <h2 class="headline">The Best Performing Asset of the Last Decade</h2>
+    <div class="accent-line" style="margin:0.75rem auto 1.5rem;"></div>
+    <div class="card-plain grow" style="max-width:550px;padding:2.5rem;display:flex;flex-direction:column;justify-content:center;align-items:center;">
+      <p class="muted" style="margin-bottom:0.5rem;">2015 – 2025</p>
+      <div style="display:flex;align-items:baseline;gap:1rem;margin-bottom:0.5rem;">
+        <span style="font-family:var(--heading-font);font-size:2.2rem;font-weight:800;color:var(--text-muted);text-decoration:line-through;">$300</span>
+        <span style="font-size:1.5rem;color:var(--text-muted);">→</span>
+        <span class="stat-number">$100K+</span>
+      </div>
+      <div class="stat-label">30,000%+ gain</div>
+    </div>
+    <ul class="points" style="text-align:left;max-width:560px;margin-top:1.5rem;">
+      <li>Outperformed equities, real estate, gold, bonds over 10 years</li>
+      <li>Even accounting for 80%+ bear markets — long-term holders won</li>
+      <li>Fixed supply: 21 million coins. No central bank can print more.</li>
+    </ul>
+    <div class="slide-number">11 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 12 — Macro Override (offwhite) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-offwhite" id="slide12">
+  <div class="slide-inner">
+    <h2 class="headline">Geopolitics Overrides Everything Else</h2>
+    <div class="accent-line"></div>
+    <div class="grid-4 grow" style="margin-bottom:1.5rem;">
+      <div class="card-plain" style="padding:1.25rem;">
+        <span style="font-size:1.75rem;">🛢️</span>
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;margin:0.5rem 0;">Oil Above $100</h3>
+        <p class="muted" style="font-size:0.9rem;">Strait of Hormuz effectively closed</p>
+      </div>
+      <div class="card-plain" style="padding:1.25rem;">
+        <span style="font-size:1.75rem;">📉</span>
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;margin:0.5rem 0;">Rate Cuts Delayed</h3>
+        <p class="muted" style="font-size:0.9rem;">2–3 expected → now ~1</p>
+      </div>
+      <div class="card-plain" style="padding:1.25rem;">
+        <span style="font-size:1.75rem;">💵</span>
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;margin:0.5rem 0;">DXY Above 100</h3>
+        <p class="muted" style="font-size:0.9rem;">Strong dollar = headwinds for risk assets</p>
+      </div>
+      <div class="card-plain" style="padding:1.25rem;">
+        <span style="font-size:1.75rem;">⚠️</span>
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;margin:0.5rem 0;">Conflict Escalating</h3>
+        <p class="muted" style="font-size:0.9rem;">Middle East — not resolved</p>
+      </div>
+    </div>
+    <p class="body-text" style="font-weight:600;color:var(--accent);">Strong dollar + higher rates = headwinds for all risk assets. That is why the CS portfolio holds 33% stablecoins.</p>
+    <div class="slide-number">12 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 13 — Institutional Shift + ETF Chart (light) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-light" id="slide13">
+  <div class="slide-inner">
+    <h2 class="headline">Institutional Capital Has Moved</h2>
+    <div class="accent-line"></div>
+    <div class="grid-2 grow">
+      <div>
+        <ul class="points" style="margin-bottom:1.5rem;">
+          <li>BlackRock. Fidelity. State Street. — Bitcoin ETFs launched</li>
+          <li>Strategy: ~40,000 BTC purchased in two weeks</li>
+          <li>ETF holders barely reduced exposure through 40–45% drawdown</li>
+        </ul>
+        <p class="body-text" style="font-weight:600;color:var(--accent);margin-top:auto;">An 80% drawdown is increasingly unlikely. The demand structure has changed.</p>
+      </div>
+      <div style="display:flex;align-items:center;">
+        <canvas id="etfFlowChart" style="width:100%;max-height:280px;"></canvas>
+      </div>
+    </div>
+    <div class="slide-number">13 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 14 — AI + Bitcoin + Crypto (dark) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-dark grid-texture" id="slide14">
+  <div class="slide-inner" style="align-items:center;">
+    <h2 class="headline" style="color:#fff;text-align:center;">The AI, Bitcoin & Blockchain Convergence</h2>
+    <div class="accent-line" style="margin:0.75rem auto 1.5rem;"></div>
+    <div class="grow" style="align-items:center;justify-content:center;">
+      <svg viewBox="0 0 400 300" style="max-width:420px;margin-bottom:1.5rem;">
+        <circle cx="155" cy="135" r="95" fill="rgba(252,92,3,0.12)" stroke="var(--accent)" stroke-width="1.5"/>
+        <circle cx="245" cy="135" r="95" fill="rgba(11,244,185,0.12)" stroke="var(--positive)" stroke-width="1.5"/>
+        <circle cx="200" cy="215" r="95" fill="rgba(36,4,252,0.12)" stroke="var(--cta)" stroke-width="1.5"/>
+        <text x="115" y="110" text-anchor="middle" font-family="Plus Jakarta Sans" font-weight="700" font-size="14" fill="#FC5C03">Bitcoin</text>
+        <text x="285" y="110" text-anchor="middle" font-family="Plus Jakarta Sans" font-weight="700" font-size="14" fill="#0BF4B9">AI</text>
+        <text x="200" y="268" text-anchor="middle" font-family="Plus Jakarta Sans" font-weight="700" font-size="14" fill="#2404FC">Blockchain</text>
+        <text x="200" y="155" text-anchor="middle" font-family="Barlow" font-weight="600" font-size="11" fill="#fff">Convergence</text>
+      </svg>
+      <div class="grid-3" style="max-width:660px;">
+        <div class="card-plain" style="text-align:center;padding:1rem;"><p style="font-size:0.95rem;color:rgba(255,255,255,0.7);">NASDAQ bringing securities on-chain</p></div>
+        <div class="card-plain" style="text-align:center;padding:1rem;"><p style="font-size:0.95rem;color:rgba(255,255,255,0.7);">ICE (NYSE) × OKX partnership</p></div>
+        <div class="card-plain" style="text-align:center;padding:1rem;"><p style="font-size:0.95rem;color:rgba(255,255,255,0.7);">Shift AI — proprietary research agent</p></div>
+      </div>
+    </div>
+    <p style="color:var(--accent);font-size:1.15rem;font-weight:600;text-align:center;margin-top:1rem;">This could be the zero-to-one moment for this entire asset class.</p>
+    <div class="slide-number" style="color:rgba(255,255,255,0.3);">14 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 15 — Bear Market Reality + Donut (offwhite) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-offwhite" id="slide15">
+  <div class="slide-inner">
+    <h2 class="headline">Current Market Assessment: Bear Phase</h2>
+    <div class="accent-line"></div>
+    <div class="grid-2 grow">
+      <div>
+        <ul class="points" style="margin-bottom:1.5rem;">
+          <li>Recent rally sold hard — textbook bear market behaviour</li>
+          <li>Short-term holder cost basis ~84K = resistance ceiling</li>
+          <li>On-chain: 50/50 crossover = months of base-building historically</li>
+          <li>Base case: Bitcoin revisits 200-week MA (~59K)</li>
+        </ul>
+        <p class="body-text" style="font-weight:600;color:var(--accent);">Bear markets are where generational wealth is built.</p>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;">
+        <canvas id="portfolioDonut" style="max-width:260px;max-height:260px;"></canvas>
+      </div>
+    </div>
+    <div class="slide-number">15 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 16 — SECTION DIVIDER: The Shift OS (accent) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-accent" id="slide16">
+  <div class="slide-inner" style="justify-content:center;align-items:center;text-align:center;">
+    <div style="font-size:0.85rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:1rem;">PART TWO</div>
+    <h1 class="headline-lg" style="color:#fff;font-size:3.5rem;">The Shift OS</h1>
+    <div style="width:50px;height:4px;background:#fff;margin:1.5rem auto;opacity:0.5;"></div>
+    <p style="color:rgba(255,255,255,0.7);font-size:1.15rem;max-width:500px;">A 7-step system for building, managing, and protecting wealth in digital assets.</p>
+    <div class="slide-number" style="color:rgba(255,255,255,0.4);">16 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 17 — Introducing the Shift OS (light) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-light" id="slide17">
+  <div class="slide-inner">
+    <h2 class="headline">The System — 7 Steps Across Two Phases</h2>
+    <div class="accent-line"></div>
+    <div class="grow" style="align-items:center;">
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:2rem;">
+        <div style="text-align:center;">
+          <div class="section-label" style="font-size:0.7rem;margin-bottom:0.3rem;">PHASE 1 — FOUNDATIONS</div>
+          <div style="display:flex;gap:0.5rem;">
+            <div class="card-plain" style="padding:0.75rem 1rem;text-align:center;min-width:80px;"><div style="font-family:var(--heading-font);font-weight:800;font-size:1.5rem;color:var(--accent);">01</div><div class="muted" style="font-size:0.7rem;">Foundation</div></div>
+            <div class="card-plain" style="padding:0.75rem 1rem;text-align:center;min-width:80px;"><div style="font-family:var(--heading-font);font-weight:800;font-size:1.5rem;color:var(--accent);">02</div><div class="muted" style="font-size:0.7rem;">Security</div></div>
+            <div class="card-plain" style="padding:0.75rem 1rem;text-align:center;min-width:80px;"><div style="font-family:var(--heading-font);font-weight:800;font-size:1.5rem;color:var(--accent);">03</div><div class="muted" style="font-size:0.7rem;">Risk OS</div></div>
+            <div class="card-plain" style="padding:0.75rem 1rem;text-align:center;min-width:80px;"><div style="font-family:var(--heading-font);font-weight:800;font-size:1.5rem;color:var(--accent);">04</div><div class="muted" style="font-size:0.7rem;">Portfolio</div></div>
+          </div>
+        </div>
+        <div style="text-align:center;">
+          <div class="section-label" style="font-size:0.7rem;margin-bottom:0.3rem;color:var(--positive);">PHASE 2 — PROGRESSIVE</div>
+          <div style="display:flex;gap:0.5rem;">
+            <div class="card-plain" style="padding:0.75rem 1rem;text-align:center;min-width:80px;"><div style="font-family:var(--heading-font);font-weight:800;font-size:1.5rem;color:var(--positive);">05</div><div class="muted" style="font-size:0.7rem;">Custody</div></div>
+            <div class="card-plain" style="padding:0.75rem 1rem;text-align:center;min-width:80px;"><div style="font-family:var(--heading-font);font-weight:800;font-size:1.5rem;color:var(--positive);">06</div><div class="muted" style="font-size:0.7rem;">Sell</div></div>
+            <div class="card-plain" style="padding:0.75rem 1rem;text-align:center;min-width:80px;"><div style="font-family:var(--heading-font);font-weight:800;font-size:1.5rem;color:var(--positive);">07</div><div class="muted" style="font-size:0.7rem;">Tax</div></div>
+          </div>
+        </div>
+      </div>
+      <p class="body-text" style="text-align:center;max-width:560px;">Every step tonight — and you build yours as we go.</p>
+    </div>
+    <p style="text-align:center;font-weight:600;color:var(--accent);font-size:1.1rem;margin-top:1rem;">The goal: teach you how to think. Not what to think.</p>
+    <div class="slide-number">17 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 18 — Step 01 (dark section divider) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-dark grid-texture" id="slide18">
+  <div class="slide-inner" style="justify-content:center;">
+    <div style="display:flex;align-items:baseline;gap:1.5rem;margin-bottom:1rem;">
+      <span style="font-size:0.85rem;color:var(--accent);letter-spacing:3px;font-weight:700;">STEP</span>
+      <span style="font-size:5rem;font-weight:800;color:var(--accent);font-family:var(--heading-font);">01</span>
+    </div>
+    <h2 class="headline" style="color:#fff;">Foundation & Market Positioning</h2>
+    <div class="accent-line"></div>
+    <p style="color:rgba(255,255,255,0.6);font-size:1.1rem;max-width:500px;">The lens through which you see everything in this space. Before allocating a single dollar, understand the game you are playing.</p>
+    <div class="slide-number" style="color:rgba(255,255,255,0.3);">18 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 19 — How Crypto Cycles Work + Chart (light) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-light" id="slide19">
+  <div class="slide-inner">
+    <h2 class="headline">Understanding the Market Cycle Pattern</h2>
+    <div class="accent-line"></div>
+    <div class="grow" style="align-items:center;">
+      <canvas id="cycleChart" style="max-width:650px;max-height:300px;margin-bottom:1rem;"></canvas>
+      <p class="muted" style="text-align:center;">April 2024 halving → historically 12–18 months to next bull phase</p>
+    </div>
+    <p class="body-text" style="font-weight:600;color:var(--accent);text-align:center;margin-top:1rem;">The best time to build a position is when everyone else is uncertain.</p>
+    <div class="slide-number">19 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 20 — Form Your Own View (offwhite) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-offwhite" id="slide20">
+  <div class="slide-inner">
+    <h2 class="headline">How to Form Your Own Strategic View</h2>
+    <div class="accent-line"></div>
+    <div class="grid-3 grow" style="margin-bottom:1.5rem;">
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">📊</div>
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;margin-bottom:0.5rem;">Macro Context</h3>
+        <p class="muted" style="font-size:0.95rem;">Rates, USD, inflation, global risk</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">⛓️</div>
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;margin-bottom:0.5rem;">On-Chain Data</h3>
+        <p class="muted" style="font-size:0.95rem;">Holder behaviour, supply, demand</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">📈</div>
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;margin-bottom:0.5rem;">Market Structure</h3>
+        <p class="muted" style="font-size:0.95rem;">Cycle position, key levels</p>
+      </div>
+    </div>
+    <p class="body-text" style="margin-bottom:1rem;"><strong>How to use CS:</strong> Daily Pulse + Weekly Outlook cover all three lenses</p>
+    <div class="exercise-box">
+      <h4>✏️ ACTION ITEM</h4>
+      <p class="body-text">Write down in one sentence: where are we in the cycle right now, and why?</p>
+    </div>
+    <div class="slide-number">20 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 21 — Step 02 (dark section divider) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-dark grid-texture" id="slide21">
+  <div class="slide-inner" style="justify-content:center;">
+    <div style="display:flex;align-items:baseline;gap:1.5rem;margin-bottom:1rem;">
+      <span style="font-size:0.85rem;color:var(--accent);letter-spacing:3px;font-weight:700;">STEP</span>
+      <span style="font-size:5rem;font-weight:800;color:var(--accent);font-family:var(--heading-font);">02</span>
+    </div>
+    <h2 class="headline" style="color:#fff;">Asset Security & Exchange Best Practices</h2>
+    <div class="accent-line"></div>
+    <p style="color:rgba(255,255,255,0.6);font-size:1.1rem;max-width:500px;">Set this up correctly once. Never think about it again.</p>
+    <div class="slide-number" style="color:rgba(255,255,255,0.3);">21 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 22 — Security Setup (light) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-light" id="slide22">
+  <div class="slide-inner">
+    <div class="step-tag">STEP 02</div>
+    <h2 class="headline">The Three Security Fundamentals</h2>
+    <div class="accent-line"></div>
+    <div class="grid-3 grow">
+      <div class="card" style="text-align:center;">
+        <div class="stat-number" style="font-size:3rem;">1</div>
+        <p class="body-text" style="margin-top:0.75rem;">Top-tier regulated exchange — for <strong>transacting</strong>, not storing</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="stat-number" style="font-size:3rem;">2</div>
+        <p class="body-text" style="margin-top:0.75rem;">Hardware wallet (Ledger/Trezor) for meaningful holdings</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="stat-number" style="font-size:3rem;">3</div>
+        <p class="body-text" style="margin-top:0.75rem;">Seed phrase — 24 words, handwritten, 2 locations, never digital</p>
+      </div>
+    </div>
+    <p class="body-text" style="font-weight:600;color:var(--accent);margin-top:1.5rem;">If someone gets your seed phrase, they own your Bitcoin. No customer service. No recovery.</p>
+    <div class="slide-number">22 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 23 — FTX Warning (offwhite) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-offwhite" id="slide23">
+  <div class="slide-inner" style="align-items:center;text-align:center;">
+    <h2 class="headline">Exchanges Are for Transacting. Not Storing.</h2>
+    <div class="accent-line" style="margin:0.75rem auto 2rem;"></div>
+    <div class="card grow" style="max-width:480px;border-top-color:#ef4444;display:flex;flex-direction:column;justify-content:center;align-items:center;">
+      <div style="font-size:3rem;margin-bottom:0.75rem;">💀</div>
+      <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.5rem;color:#ef4444;margin-bottom:0.5rem;">FTX — $8 Billion Lost</h3>
+      <p class="body-text">By people who thought an exchange was safe enough.</p>
+    </div>
+    <p class="body-text" style="margin-top:2rem;"><strong>Rule:</strong> Move meaningful holdings to a hardware wallet. Do it in week 2.</p>
+    <div class="slide-number">23 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 24 — Step 03 (dark section divider) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-dark grid-texture" id="slide24">
+  <div class="slide-inner" style="justify-content:center;">
+    <div style="display:flex;align-items:baseline;gap:1.5rem;margin-bottom:1rem;">
+      <span style="font-size:0.85rem;color:var(--accent);letter-spacing:3px;font-weight:700;">STEP</span>
+      <span style="font-size:5rem;font-weight:800;color:var(--accent);font-family:var(--heading-font);">03</span>
+    </div>
+    <h2 class="headline" style="color:#fff;">Investor OS & Risk Framework</h2>
+    <div class="accent-line"></div>
+    <p style="color:rgba(255,255,255,0.6);font-size:1.1rem;max-width:520px;">Your personal decision-making framework — the system you run every investment through.</p>
+    <div class="slide-number" style="color:rgba(255,255,255,0.3);">24 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 25 — Investor Profile Radar (light) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-light" id="slide25">
+  <div class="slide-inner">
+    <h2 class="headline">Your Investor Profile — Calibrated to You</h2>
+    <div class="accent-line"></div>
+    <div class="grid-2 grow">
+      <div style="display:flex;align-items:center;justify-content:center;">
+        <canvas id="radarChart" style="max-width:320px;max-height:320px;"></canvas>
+      </div>
+      <div style="display:flex;flex-direction:column;justify-content:center;">
+        <p class="body-text" style="margin-bottom:1.5rem;">Score yourself 1–10 on each dimension. Your strategy should match your profile — not someone else's.</p>
+        <div class="exercise-box">
+          <h4>✏️ ACTION ITEM</h4>
+          <p class="body-text">Rate yourself on all six dimensions now. Bring this to your analyst call.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-number">25 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 26 — Risk Framework (offwhite) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-offwhite" id="slide26">
+  <div class="slide-inner">
+    <h2 class="headline">Risk in Crypto Is Not Just Price Going Down</h2>
+    <div class="accent-line"></div>
+    <div class="grid-4 grow">
+      <div class="card">
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1rem;color:var(--accent);margin-bottom:0.5rem;">📉 Market Risk</h3>
+        <p class="body-text" style="font-size:1rem;">Position sizing, staged entry, time horizon</p>
+      </div>
+      <div class="card">
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1rem;color:var(--accent);margin-bottom:0.5rem;">🔒 Security Risk</h3>
+        <p class="body-text" style="font-size:1rem;">Hardware wallet, seed phrase, exchange hygiene</p>
+      </div>
+      <div class="card">
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1rem;color:var(--accent);margin-bottom:0.5rem;">💧 Liquidity Risk</h3>
+        <p class="body-text" style="font-size:1rem;">BTC/ETH core, avoid illiquid alts for large positions</p>
+      </div>
+      <div class="card">
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1rem;color:var(--accent);margin-bottom:0.5rem;">🧠 Emotional Risk</h3>
+        <p class="body-text" style="font-size:1rem;">Written framework, pre-set rules, not checking daily</p>
+      </div>
+    </div>
+    <p class="body-text" style="font-weight:600;color:var(--accent);margin-top:1.5rem;">Only allocate what you are comfortable watching drop 50% without changing your strategy.</p>
+    <div class="slide-number">26 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 27 — Decision Framework (light) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-light" id="slide27">
+  <div class="slide-inner">
+    <h2 class="headline">Pre-Set Decision Rules in a Calm Moment</h2>
+    <div class="accent-line"></div>
+    <div class="grid-3 grow">
+      <div class="card" style="border-top-color:#22c55e;">
+        <h3 style="color:#22c55e;font-family:var(--heading-font);font-weight:700;font-size:1.1rem;margin-bottom:0.75rem;">🟢 BUY More When</h3>
+        <ul class="points"><li>Price hits accumulation targets</li><li>Macro improves (rate cuts)</li><li>On-chain = accumulation zone</li></ul>
+      </div>
+      <div class="card" style="border-top-color:#f59e0b;">
+        <h3 style="color:#f59e0b;font-family:var(--heading-font);font-weight:700;font-size:1.1rem;margin-bottom:0.75rem;">🟡 HOLD When</h3>
+        <p class="body-text" style="font-size:1.05rem;">Everything else. Including "price going up" and "price going down." If it is not in your framework, the answer is hold.</p>
+      </div>
+      <div class="card" style="border-top-color:#ef4444;">
+        <h3 style="color:#ef4444;font-family:var(--heading-font);font-weight:700;font-size:1.1rem;margin-bottom:0.75rem;">🔴 REDUCE When</h3>
+        <ul class="points"><li>Price targets hit</li><li>Allocation exceeds max %</li><li>Thesis changes materially</li></ul>
+      </div>
+    </div>
+    <div class="slide-number">27 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 28 — Step 04 (dark section divider) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-dark grid-texture" id="slide28">
+  <div class="slide-inner" style="justify-content:center;">
+    <div style="display:flex;align-items:baseline;gap:1.5rem;margin-bottom:1rem;">
+      <span style="font-size:0.85rem;color:var(--accent);letter-spacing:3px;font-weight:700;">STEP</span>
+      <span style="font-size:5rem;font-weight:800;color:var(--accent);font-family:var(--heading-font);">04</span>
+    </div>
+    <h2 class="headline" style="color:#fff;">Portfolio Strategy & Goal Setting</h2>
+    <div class="accent-line"></div>
+    <p style="color:rgba(255,255,255,0.6);font-size:1.1rem;max-width:500px;">Translate your Investor Profile into a concrete portfolio strategy — in writing.</p>
+    <div class="slide-number" style="color:rgba(255,255,255,0.3);">28 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 29 — Defining Your Goals (light) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-light" id="slide29">
+  <div class="slide-inner">
+    <h2 class="headline">Vague Goals Produce Emotional Decisions</h2>
+    <div class="accent-line"></div>
+    <div class="grid-3 grow" style="margin-bottom:1.5rem;">
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">🛡️</div>
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;margin-bottom:0.5rem;">Wealth Preservation</h3>
+        <p class="body-text" style="font-size:0.95rem;">Protect purchasing power. Bitcoin is the primary tool.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">📈</div>
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;margin-bottom:0.5rem;">Wealth Growth</h3>
+        <p class="body-text" style="font-size:0.95rem;">Defined % allocation, time horizon, target.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">💰</div>
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;margin-bottom:0.5rem;">Income Generation</h3>
+        <p class="body-text" style="font-size:0.95rem;">Stablecoin yield, DeFi (Phase 2+).</p>
+      </div>
+    </div>
+    <div class="exercise-box">
+      <h4>✏️ ACTION ITEM</h4>
+      <p class="body-text">Write your primary goal in one sentence. Bring it to your analyst call.</p>
+    </div>
+    <div class="slide-number">29 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 30 — Portfolio Pyramid (offwhite) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-offwhite" id="slide30">
+  <div class="slide-inner">
+    <h2 class="headline">Start Simple. Add Complexity When Earned.</h2>
+    <div class="accent-line"></div>
+    <div class="grow" style="align-items:center;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin:1.5rem auto;max-width:500px;width:100%;">
+        <div style="width:35%;padding:0.85rem;background:var(--text-muted);color:#fff;text-align:center;border-radius:8px 8px 0 0;font-family:var(--heading-font);font-weight:700;font-size:0.9rem;">0–20% Selective Alts</div>
+        <div style="width:55%;padding:0.85rem;background:var(--positive);color:#fff;text-align:center;font-family:var(--heading-font);font-weight:700;font-size:0.95rem;">20–30% Ethereum</div>
+        <div style="width:80%;padding:1rem;background:var(--accent);color:#fff;text-align:center;border-radius:0 0 8px 8px;font-family:var(--heading-font);font-weight:700;font-size:1.1rem;">50–70% Bitcoin — Foundation</div>
+      </div>
+      <p class="body-text" style="text-align:center;margin-top:1rem;">Adding 1–5% Bitcoin improves portfolio risk-adjusted returns (research-backed)</p>
+      <p class="muted" style="text-align:center;">Most members start at 5–15% of total investable assets</p>
+    </div>
+    <div class="slide-number">30 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 31 — Investment Policy Statement (light) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-light" id="slide31">
+  <div class="slide-inner">
+    <h2 class="headline">Every Professional Fund Manager Has One</h2>
+    <div class="accent-line"></div>
+    <div class="grid-3 grow" style="margin-bottom:1.5rem;">
+      <div class="card-plain" style="text-align:center;padding:1.5rem;"><div class="stat-number" style="font-size:2.5rem;">1</div><p class="muted" style="margin-top:0.5rem;">Total target allocation<br>(% of investable assets)</p></div>
+      <div class="card-plain" style="text-align:center;padding:1.5rem;"><div class="stat-number" style="font-size:2.5rem;">2</div><p class="muted" style="margin-top:0.5rem;">Asset breakdown<br>(BTC/ETH/alts/stables)</p></div>
+      <div class="card-plain" style="text-align:center;padding:1.5rem;"><div class="stat-number" style="font-size:2.5rem;">3</div><p class="muted" style="margin-top:0.5rem;">Rebalancing<br>rules</p></div>
+    </div>
+    <div class="grid-3" style="margin-bottom:1.5rem;">
+      <div class="card-plain" style="text-align:center;padding:1.5rem;"><div class="stat-number" style="font-size:2.5rem;">4</div><p class="muted" style="margin-top:0.5rem;">Entry criteria<br>(what triggers buy)</p></div>
+      <div class="card-plain" style="text-align:center;padding:1.5rem;"><div class="stat-number" style="font-size:2.5rem;">5</div><p class="muted" style="margin-top:0.5rem;">Exit criteria<br>(Step 06)</p></div>
+      <div class="card-plain" style="text-align:center;padding:1.5rem;"><div class="stat-number" style="font-size:2.5rem;">6</div><p class="muted" style="margin-top:0.5rem;">Review cadence<br>(quarterly + annual)</p></div>
+    </div>
+    <div class="exercise-box">
+      <h4>✏️ ACTION ITEM</h4>
+      <p class="body-text">Draft your IPS before your first analyst call. Bring it. Your analyst will help refine it.</p>
+    </div>
+    <div class="slide-number">31 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 32 — Phase 2 Transition (offwhite) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-offwhite" id="slide32">
+  <div class="slide-inner">
+    <h2 class="headline">Phase 2 Is Where It Gets Powerful</h2>
+    <div class="accent-line"></div>
+    <div class="grow">
+      <ul class="points" style="margin-bottom:2rem;">
+        <li><strong>Phase 1:</strong> the framework, the security, the plan</li>
+        <li><strong>Phase 2:</strong> executing independently — and profitably</li>
+        <li>Steps 05, 06, 07 separate serious investors from everyone else</li>
+      </ul>
+      <div class="card" style="text-align:center;max-width:480px;margin:0 auto;background:rgba(252,92,3,0.05);border:2px solid var(--accent);">
+        <div class="section-label">THE MOST IMPORTANT STEP</div>
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.75rem;color:var(--accent);">Step 06 — The Sell Strategy</h3>
+        <p class="body-text" style="margin-top:0.5rem;">The most important thing covered in this session.</p>
+      </div>
+    </div>
+    <div class="slide-number">32 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 33 — Step 05 (dark section divider) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-dark grid-texture" id="slide33">
+  <div class="slide-inner" style="justify-content:center;">
+    <div style="display:flex;align-items:baseline;gap:1.5rem;margin-bottom:1rem;">
+      <span style="font-size:0.85rem;color:var(--positive);letter-spacing:3px;font-weight:700;">STEP</span>
+      <span style="font-size:5rem;font-weight:800;color:var(--positive);font-family:var(--heading-font);">05</span>
+    </div>
+    <h2 class="headline" style="color:#fff;">Self Custody, Stablecoins & DeFi</h2>
+    <div class="accent-line" style="background:var(--positive);"></div>
+    <p style="color:rgba(255,255,255,0.6);font-size:1.1rem;max-width:500px;">Move beyond exchanges to true self-custody. Use stablecoins strategically — not just idle cash.</p>
+    <div class="slide-number" style="color:rgba(255,255,255,0.3);">33 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 34 — Custody Spectrum (light) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-light" id="slide34">
+  <div class="slide-inner">
+    <h2 class="headline">The Custody Spectrum — Financial Sovereignty</h2>
+    <div class="accent-line"></div>
+    <div class="grow" style="align-items:center;">
+      <div style="display:flex;gap:4px;max-width:620px;width:100%;margin-bottom:2rem;">
+        <div style="flex:1;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px 0 0 12px;padding:1rem;text-align:center;">
+          <p style="font-family:var(--heading-font);font-weight:700;font-size:0.9rem;color:#ef4444;">Exchange</p>
+          <p class="muted" style="font-size:0.75rem;">Least sovereign</p>
+        </div>
+        <div style="flex:1;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);padding:1rem;text-align:center;">
+          <p style="font-family:var(--heading-font);font-weight:700;font-size:0.9rem;color:#f59e0b;">Software Wallet</p>
+        </div>
+        <div style="flex:1;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);padding:1rem;text-align:center;">
+          <p style="font-family:var(--heading-font);font-weight:700;font-size:0.9rem;color:#22c55e;">Hardware Wallet</p>
+          <p class="muted" style="font-size:0.75rem;">Target for most</p>
+        </div>
+        <div style="flex:1;background:rgba(252,92,3,0.1);border:1px solid rgba(252,92,3,0.3);border-radius:0 12px 12px 0;padding:1rem;text-align:center;">
+          <p style="font-family:var(--heading-font);font-weight:700;font-size:0.9rem;color:var(--accent);">Multi-Sig</p>
+          <p class="muted" style="font-size:0.75rem;">8-figure+</p>
+        </div>
+      </div>
+      <div class="grid-4" style="max-width:620px;">
+        <div class="card-plain" style="padding:1rem;"><strong style="color:var(--accent);">1.</strong> Set up hardware wallet + test restore</div>
+        <div class="card-plain" style="padding:1rem;"><strong style="color:var(--accent);">2.</strong> Transfer small amount — confirm it works</div>
+        <div class="card-plain" style="padding:1rem;"><strong style="color:var(--accent);">3.</strong> Move holdings in tranches</div>
+        <div class="card-plain" style="padding:1rem;"><strong style="color:var(--accent);">4.</strong> Keep working amount on exchange</div>
+      </div>
+    </div>
+    <div class="slide-number">34 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 35 — Stablecoins Strategic (offwhite) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-offwhite" id="slide35">
+  <div class="slide-inner">
+    <h2 class="headline">Stablecoins as a Strategic Instrument</h2>
+    <div class="accent-line"></div>
+    <div class="grid-3 grow" style="margin-bottom:1.5rem;">
+      <div class="card"><h3 style="font-family:var(--heading-font);font-weight:700;font-size:1rem;margin-bottom:0.5rem;">🎯 Dry Powder</h3><p class="body-text" style="font-size:0.95rem;">Ready to deploy at your buy triggers</p></div>
+      <div class="card"><h3 style="font-family:var(--heading-font);font-weight:700;font-size:1rem;margin-bottom:0.5rem;">📊 Yield</h3><p class="body-text" style="font-size:0.95rem;">5–8%+ in reputable on-chain protocols</p></div>
+      <div class="card"><h3 style="font-family:var(--heading-font);font-weight:700;font-size:1rem;margin-bottom:0.5rem;">⚖️ Risk Management</h3><p class="body-text" style="font-size:0.95rem;">Take profits on-chain without cashing out</p></div>
+    </div>
+    <div class="card-plain" style="text-align:center;max-width:480px;margin:0 auto;padding:1.5rem;">
+      <p class="muted" style="margin-bottom:0.25rem;">CS Portfolio Live Example</p>
+      <div class="stat-number" style="font-size:3rem;">33.4%</div>
+      <p class="body-text" style="margin-top:0.25rem;font-size:0.95rem;">in syrupUSDC — earning yield while waiting for 200-week MA</p>
+    </div>
+    <div class="slide-number">35 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 36 — DeFi Opportunity & Risks (light) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-light" id="slide36">
+  <div class="slide-inner">
+    <h2 class="headline">DeFi: Phase 2 for a Reason — Start Small</h2>
+    <div class="accent-line"></div>
+    <div class="grid-2 grow">
+      <div class="card" style="border-top-color:#22c55e;">
+        <h3 style="color:#22c55e;font-family:var(--heading-font);font-weight:700;font-size:1.1rem;margin-bottom:0.75rem;">Opportunities</h3>
+        <ul class="points"><li>Stablecoin lending protocols</li><li>RWA tokenisation: NASDAQ, ICE, S&P</li><li>Tokenised treasuries and bonds</li></ul>
+      </div>
+      <div class="card" style="border-top-color:#ef4444;">
+        <h3 style="color:#ef4444;font-family:var(--heading-font);font-weight:700;font-size:1.1rem;margin-bottom:0.75rem;">Risks</h3>
+        <ul class="points"><li>Smart contract bugs — battle-tested only</li><li>Complexity — do not understand = do not deploy large</li><li>Elevated yield = elevated risk</li></ul>
+      </div>
+    </div>
+    <p class="body-text" style="font-weight:600;color:var(--accent);margin-top:1.5rem;">Get foundations right first. DeFi is a Phase 2 module for a reason.</p>
+    <div class="slide-number">36 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 37 — SECTION DIVIDER: Putting It Together (accent) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-accent" id="slide37">
+  <div class="slide-inner" style="justify-content:center;align-items:center;text-align:center;">
+    <div style="font-size:0.85rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:1rem;">PART THREE</div>
+    <h1 class="headline-lg" style="color:#fff;font-size:3.5rem;">Putting It All Together</h1>
+    <div style="width:50px;height:4px;background:#fff;margin:1.5rem auto;opacity:0.5;"></div>
+    <p style="color:rgba(255,255,255,0.7);font-size:1.15rem;max-width:500px;">Exit strategies, profit-taking, tax, and the psychology of wealth building.</p>
+    <div class="slide-number" style="color:rgba(255,255,255,0.4);">37 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 38 — Step 06 (dark section divider — emphasized) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-dark grid-texture" id="slide38">
+  <div class="slide-inner" style="justify-content:center;">
+    <div style="display:flex;align-items:baseline;gap:1.5rem;margin-bottom:1rem;">
+      <span style="font-size:0.85rem;color:var(--accent);letter-spacing:3px;font-weight:700;">STEP</span>
+      <span style="font-size:5rem;font-weight:800;color:var(--accent);font-family:var(--heading-font);">06</span>
+    </div>
+    <h2 class="headline" style="color:#fff;font-size:2.8rem;">Sell Strategy & Profit Taking</h2>
+    <div class="accent-line"></div>
+    <p style="color:rgba(255,255,255,0.7);font-size:1.2rem;max-width:560px;">The step that separates wealth builders from wealth watchers. The most important thing covered in this entire session.</p>
+    <div class="slide-number" style="color:rgba(255,255,255,0.3);">38 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 39 — Why Most Fail at Exits (light) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-light" id="slide39">
+  <div class="slide-inner">
+    <h2 class="headline">The Emotional Pattern That Destroys Portfolios</h2>
+    <div class="accent-line"></div>
+    <div class="grow" style="align-items:center;">
+      <!-- Timeline pattern -->
+      <div style="display:flex;align-items:flex-start;gap:0;margin:1rem 0;max-width:650px;width:100%;position:relative;">
+        <div style="flex:1;text-align:center;position:relative;">
+          <div style="width:36px;height:36px;background:var(--positive);border-radius:50%;margin:0 auto 0.5rem;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.8rem;">1</div>
+          <div style="font-weight:700;font-size:0.8rem;">Buy</div>
+        </div>
+        <div style="flex:1;text-align:center;">
+          <div style="width:36px;height:36px;background:#22c55e;border-radius:50%;margin:0 auto 0.5rem;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.8rem;">2</div>
+          <div style="font-weight:700;font-size:0.8rem;">Let it run</div>
+        </div>
+        <div style="flex:1;text-align:center;">
+          <div style="width:36px;height:36px;background:var(--accent);border-radius:50%;margin:0 auto 0.5rem;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.8rem;">3</div>
+          <div style="font-weight:700;font-size:0.8rem;">ATH</div>
+        </div>
+        <div style="flex:1;text-align:center;">
+          <div style="width:36px;height:36px;background:#f59e0b;border-radius:50%;margin:0 auto 0.5rem;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.8rem;">4</div>
+          <div style="font-weight:700;font-size:0.8rem;">It'll recover</div>
+        </div>
+        <div style="flex:1;text-align:center;">
+          <div style="width:36px;height:36px;background:#ef4444;border-radius:50%;margin:0 auto 0.5rem;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.8rem;">5</div>
+          <div style="font-weight:700;font-size:0.8rem;color:#ef4444;">-40%</div>
+        </div>
+        <div style="flex:1;text-align:center;">
+          <div style="width:36px;height:36px;background:#ef4444;border-radius:50%;margin:0 auto 0.5rem;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.8rem;">6</div>
+          <div style="font-weight:700;font-size:0.8rem;color:#ef4444;">-60%</div>
+        </div>
+        <div style="flex:1;text-align:center;">
+          <div style="width:36px;height:36px;background:var(--bg-mid);border-radius:50%;margin:0 auto 0.5rem;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.8rem;">7</div>
+          <div style="font-weight:700;font-size:0.8rem;">Quit</div>
+        </div>
+      </div>
+      <p class="body-text" style="font-weight:600;color:var(--accent);text-align:center;margin-top:2rem;">Make the sell decision in a calm moment. Not a panicking one. Not a euphoric one.</p>
+    </div>
+    <div class="slide-number">39 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 40 — Building Your Sell Strategy (offwhite) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-offwhite" id="slide40">
+  <div class="slide-inner">
+    <h2 class="headline">Three Components. One Document. Done.</h2>
+    <div class="accent-line"></div>
+    <div class="grid-3 grow">
+      <div class="card">
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1rem;color:var(--accent);margin-bottom:0.75rem;">Target-Based</h3>
+        <p class="body-text" style="font-size:0.95rem;">Define price targets → sell defined % at each. Example: 10% at 2×, 20% at 3×, 30% at 5×</p>
+      </div>
+      <div class="card">
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1rem;color:var(--accent);margin-bottom:0.75rem;">Time-Based</h3>
+        <p class="body-text" style="font-size:0.95rem;">Take profits at defined cycle points regardless of price. You do not have to call the top.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1rem;color:var(--accent);margin-bottom:0.75rem;">Indicator-Based</h3>
+        <p class="body-text" style="font-size:0.95rem;">CS flags on-chain signals: NUPL, MVRV, LTH distribution. Have your plan ready when signals fire.</p>
+      </div>
+    </div>
+    <p class="body-text" style="font-weight:600;color:var(--accent);margin-top:1.5rem;">A sell strategy is not about leaving money on the table. It is about not giving it all back.</p>
+    <div class="slide-number">40 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 41 — Profit-Taking Pyramid Table (light) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-light" id="slide41">
+  <div class="slide-inner">
+    <h2 class="headline">Staged Profit-Taking Framework</h2>
+    <div class="accent-line"></div>
+    <div class="grow">
+      <table style="margin-bottom:1.5rem;">
+        <tr><th>Level</th><th>Trigger</th><th>Action</th></tr>
+        <tr><td>2× entry</td><td>First take</td><td style="font-weight:700;color:var(--accent);">Sell 10%</td></tr>
+        <tr><td>3× entry</td><td>Second take</td><td style="font-weight:700;color:var(--accent);">Sell 15%</td></tr>
+        <tr><td>5× entry</td><td>Third take</td><td style="font-weight:700;color:var(--accent);">Sell 20%</td></tr>
+        <tr><td>Cycle peak signals</td><td>Major reduction</td><td style="font-weight:700;color:var(--accent);">Sell 25–30%</td></tr>
+        <tr><td>Long-term hold</td><td>Never sell</td><td style="font-weight:700;color:var(--positive);">Hold 25–35%</td></tr>
+      </table>
+      <p class="body-text" style="font-weight:600;color:var(--accent);">The people who won the last cycle took profits in stages.</p>
+    </div>
+    <div class="slide-number">41 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 42 — Live Exercise: Sell Strategy Worksheet (offwhite) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-offwhite" id="slide42">
+  <div class="slide-inner">
+    <h2 class="headline">Build Your Sell Strategy Now</h2>
+    <div class="accent-line"></div>
+    <div class="grow" style="align-items:center;">
+      <div class="exercise-box" style="max-width:520px;width:100%;border-style:solid;padding:2rem 2.5rem;">
+        <div class="section-label" style="margin-bottom:1rem;">YOUR SELL STRATEGY TEMPLATE</div>
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed #E5E5E5;padding-bottom:0.5rem;"><span class="body-text" style="font-size:1rem;">My BTC entry average:</span><span style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;color:var(--accent);">$_______</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed #E5E5E5;padding-bottom:0.5rem;"><span class="body-text" style="font-size:1rem;">My 2× target → sell:</span><span style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;color:var(--accent);">_______%</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed #E5E5E5;padding-bottom:0.5rem;"><span class="body-text" style="font-size:1rem;">My 3× target → sell:</span><span style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;color:var(--accent);">_______%</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed #E5E5E5;padding-bottom:0.5rem;"><span class="body-text" style="font-size:1rem;">My 5× target → sell:</span><span style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;color:var(--accent);">_______%</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;"><span class="body-text" style="font-size:1rem;">Long-term hold (never sell):</span><span style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;color:var(--positive);">_______%</span></div>
+        </div>
+      </div>
+      <p class="body-text" style="font-weight:600;color:var(--accent);text-align:center;margin-top:1.5rem;">This document is worth more than any tip.</p>
+    </div>
+    <div class="slide-number">42 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 43 — Step 07 (dark section divider) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-dark grid-texture" id="slide43">
+  <div class="slide-inner" style="justify-content:center;">
+    <div style="display:flex;align-items:baseline;gap:1.5rem;margin-bottom:1rem;">
+      <span style="font-size:0.85rem;color:var(--positive);letter-spacing:3px;font-weight:700;">STEP</span>
+      <span style="font-size:5rem;font-weight:800;color:var(--positive);font-family:var(--heading-font);">07</span>
+    </div>
+    <h2 class="headline" style="color:#fff;">Tax Planning & Wealth Preservation</h2>
+    <div class="accent-line" style="background:var(--positive);"></div>
+    <p style="color:rgba(255,255,255,0.6);font-size:1.1rem;max-width:520px;">Build legal and financial structures that protect wealth after it is built.</p>
+    <div class="slide-number" style="color:rgba(255,255,255,0.3);">43 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 44 — CGT Reality (light) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-light" id="slide44">
+  <div class="slide-inner">
+    <h2 class="headline">Every Disposal Is a CGT Event</h2>
+    <div class="accent-line"></div>
+    <div class="grow">
+      <ul class="points" style="margin-bottom:1.5rem;">
+        <li>Disposals: selling for AUD, crypto-to-crypto swaps, DeFi transactions, spending</li>
+        <li>12+ month hold → 50% CGT discount. Significant.</li>
+        <li>Time horizon affects tax bill as much as price target</li>
+      </ul>
+      <div class="grid-3" style="margin-bottom:1.5rem;">
+        <div class="card-plain" style="text-align:center;padding:1rem;"><span style="font-size:1.5rem;">✅</span><p class="muted" style="margin-top:0.25rem;font-size:0.85rem;">Use Koinly or CryptoTaxCalculator — start now</p></div>
+        <div class="card-plain" style="text-align:center;padding:1rem;"><span style="font-size:1.5rem;">✅</span><p class="muted" style="margin-top:0.25rem;font-size:0.85rem;">Every transaction: date, value, fees</p></div>
+        <div class="card-plain" style="text-align:center;padding:1rem;"><span style="font-size:1.5rem;">✅</span><p class="muted" style="margin-top:0.25rem;font-size:0.85rem;">Every DeFi interaction recorded</p></div>
+      </div>
+      <div style="background:rgba(252,92,3,0.06);border:1px solid rgba(252,92,3,0.2);border-radius:12px;padding:1rem;text-align:center;">
+        <p style="font-family:var(--heading-font);font-weight:700;color:var(--accent);">⚠️ The ATO has significantly increased its focus on crypto.</p>
+      </div>
+    </div>
+    <div class="slide-number">44 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 45 — HNW Structures (offwhite) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-offwhite" id="slide45">
+  <div class="slide-inner">
+    <h2 class="headline">Structures for High-Net-Worth Investors</h2>
+    <div class="accent-line"></div>
+    <div class="grid-3 grow">
+      <div class="card">
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;margin-bottom:0.75rem;">🏦 SMSF</h3>
+        <ul class="points"><li>15% tax rate vs marginal</li><li>Pension phase: potentially 0%</li><li>Requires specialist advisor</li></ul>
+      </div>
+      <div class="card">
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;margin-bottom:0.75rem;">👨‍👩‍👧 Family Trust</h3>
+        <ul class="points"><li>Distribute to lower-tax beneficiaries</li><li>Estate planning benefits</li><li>Know this exists before you sell</li></ul>
+      </div>
+      <div class="card">
+        <h3 style="font-family:var(--heading-font);font-weight:700;font-size:1.1rem;margin-bottom:0.75rem;">🏢 Company</h3>
+        <ul class="points"><li>25–30% corporate tax rate</li><li>Less flexibility</li><li>Right for some situations</li></ul>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:1rem;text-align:center;font-style:italic;">Not financial advice. Speak to a specialist.</p>
+    <div class="slide-number">45 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 46 — How to Engage Advisors (light) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-light" id="slide46">
+  <div class="slide-inner">
+    <h2 class="headline">Engaging the Right Professional Advisors</h2>
+    <div class="accent-line"></div>
+    <div class="grid-4 grow" style="margin-bottom:1.5rem;">
+      <div class="card-plain" style="padding:1.25rem;"><span style="font-family:var(--heading-font);font-weight:800;color:var(--accent);font-size:1.25rem;">1</span><p class="body-text" style="font-size:0.95rem;margin-top:0.25rem;">Do you have experience with crypto CGT and self-custody in Australia?</p></div>
+      <div class="card-plain" style="padding:1.25rem;"><span style="font-family:var(--heading-font);font-weight:800;color:var(--accent);font-size:1.25rem;">2</span><p class="body-text" style="font-size:0.95rem;margin-top:0.25rem;">Do you understand DeFi taxation?</p></div>
+      <div class="card-plain" style="padding:1.25rem;"><span style="font-family:var(--heading-font);font-weight:800;color:var(--accent);font-size:1.25rem;">3</span><p class="body-text" style="font-size:0.95rem;margin-top:0.25rem;">Have you helped clients set up SMSF for crypto?</p></div>
+      <div class="card-plain" style="padding:1.25rem;"><span style="font-family:var(--heading-font);font-weight:800;color:var(--accent);font-size:1.25rem;">4</span><p class="body-text" style="font-size:0.95rem;margin-top:0.25rem;">Can you give me a client reference?</p></div>
+    </div>
+    <p class="body-text" style="font-weight:600;"><strong>If they cannot answer confidently — find someone who can.</strong></p>
+    <p class="body-text" style="font-weight:600;color:var(--accent);margin-top:0.75rem;">The goal: be the most informed client your advisor has ever worked with.</p>
+    <div class="slide-number">46 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 47 — SECTION DIVIDER: Your Next Step (accent) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-accent" id="slide47">
+  <div class="slide-inner" style="justify-content:center;align-items:center;text-align:center;">
+    <div style="font-size:0.85rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:1rem;">PART FOUR</div>
+    <h1 class="headline-lg" style="color:#fff;font-size:3.5rem;">Your Next Step</h1>
+    <div style="width:50px;height:4px;background:#fff;margin:1.5rem auto;opacity:0.5;"></div>
+    <p style="color:rgba(255,255,255,0.7);font-size:1.15rem;max-width:500px;">Everything covered tonight — now make it real.</p>
+    <div class="slide-number" style="color:rgba(255,255,255,0.4);">47 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 48 — Your Next 30 Days (light) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-light" id="slide48">
+  <div class="slide-inner">
+    <h2 class="headline">Your Action Plan: This Week & This Month</h2>
+    <div class="accent-line"></div>
+    <div class="grid-2 grow" style="margin-bottom:1.5rem;">
+      <div class="card">
+        <div class="section-label">This Week</div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:0.75rem;">
+          <p style="font-size:1.1rem;">✅ Set up hardware wallet</p>
+          <p style="font-size:1.1rem;">✅ Answer the four questions — write them down</p>
+          <p style="font-size:1.1rem;">✅ Read this week's Weekly Outlook</p>
+          <p style="font-size:1.1rem;">✅ Introduce yourself in the community</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-label">This Month</div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:0.75rem;">
+          <p style="font-size:1.1rem;">✅ Complete Steps 01–04</p>
+          <p style="font-size:1.1rem;">✅ Book 1:1 analyst session — bring IPS</p>
+          <p style="font-size:1.1rem;">✅ Start sell strategy — define 2× and 3× min</p>
+          <p style="font-size:1.1rem;">✅ Set up Koinly or CryptoTaxCalculator</p>
+        </div>
+      </div>
+    </div>
+    <div style="background:rgba(252,92,3,0.06);border:2px solid var(--accent);border-radius:12px;padding:1rem;text-align:center;">
+      <p style="font-family:var(--heading-font);font-weight:700;color:var(--accent);">Talk to Reece if you are sitting on large dry powder or have allocation questions</p>
+    </div>
+    <div class="slide-number">48 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 49 — Closing Statement (dark) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-dark grid-texture" id="slide49">
+  <div class="slide-inner" style="justify-content:center;align-items:center;text-align:center;">
+    <div style="max-width:640px;">
+      <p style="font-size:1.6rem;line-height:1.7;color:rgba(255,255,255,0.9);margin-bottom:3rem;">
+        Bear markets do not destroy investors.<br>
+        Bad decisions during bear markets do.<br><br>
+        You now have a system.<br>
+        You have the frameworks.<br>
+        You have the research.<br>
+        You have the team.<br><br>
+        What you need now is to execute.<br>
+        Step by step. Patiently. With conviction.<br><br>
+        <span style="color:var(--accent);font-weight:700;">That is what we built in this session.</span>
+      </p>
+      <p style="font-size:0.95rem;color:rgba(255,255,255,0.35);">— Ben Simpson, Collective Shift</p>
+    </div>
+    <div class="slide-number" style="color:rgba(255,255,255,0.3);">49 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 50 — Live Q&A (dark) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="slide bg-dark grid-texture" id="slide50">
+  <div class="slide-inner" style="justify-content:center;align-items:center;text-align:center;">
+    <h2 style="font-family:var(--heading-font);font-weight:700;font-size:2.2rem;color:#fff;line-height:1.4;margin-bottom:2rem;">
+      Bring your portfolio.<br>
+      Bring your questions.<br>
+      <span style="color:var(--accent);">Nothing is off limits.</span>
+    </h2>
+    <p style="font-size:1rem;color:rgba(255,255,255,0.4);font-style:italic;max-width:500px;">Opening prompt: Should I be deploying more capital or holding stablecoins? Let's start there.</p>
+    <div class="slide-number" style="color:rgba(255,255,255,0.3);">50 / 50</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- CHART.JS INITIALIZATION -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+// ── NAVIGATION ──
+const slides = document.querySelectorAll('.slide');
+let current = 0;
+
+function goToSlide(i) {
+  current = Math.max(0, Math.min(i, slides.length - 1));
+  slides[current].scrollIntoView({ behavior: 'smooth' });
+  updateProgress();
+}
+function nextSlide() { goToSlide(current + 1); }
+function prevSlide() { goToSlide(current - 1); }
+function updateProgress() {
+  const pct = ((current + 1) / slides.length) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+document.addEventListener('keydown', e => {
+  if (['ArrowDown','ArrowRight','Space','PageDown'].includes(e.code)) { e.preventDefault(); nextSlide(); }
+  if (['ArrowUp','ArrowLeft','PageUp'].includes(e.code)) { e.preventDefault(); prevSlide(); }
+  if (e.code === 'KeyF') {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+  if (e.code === 'Home') { e.preventDefault(); goToSlide(0); }
+  if (e.code === 'End') { e.preventDefault(); goToSlide(slides.length - 1); }
+});
+
+let touchStartX = 0, touchStartY = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 50) { dy < 0 ? nextSlide() : prevSlide(); }
+});
+
+let scrollTimeout;
+window.addEventListener('scroll', () => {
+  clearTimeout(scrollTimeout);
+  scrollTimeout = setTimeout(() => {
+    const vh = window.innerHeight;
+    const idx = Math.round(window.scrollY / vh);
+    if (idx !== current) { current = idx; updateProgress(); }
+  }, 100);
+});
+
+updateProgress();
+
+// ── CHARTS ──
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ETF Fund Flows (Slide 13)
+  new Chart(document.getElementById('etfFlowChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Prior Outflow', '3-Week Recovery', 'Last Week'],
+      datasets: [{
+        label: 'Fund Flows ($B)',
+        data: [-3.9, 2.8, 1.06],
+        backgroundColor: ['#ef4444', '#22c55e', '#22c55e'],
+        borderRadius: 8, barThickness: 40
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#02000D',
+          titleFont: { family: 'Plus Jakarta Sans', size: 13 },
+          bodyFont: { family: 'Barlow', size: 14 },
+          callbacks: { label: ctx => '$' + ctx.parsed.y + 'B' }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#8A8A8A', font: { family: 'Barlow' } }, grid: { display: false } },
+        y: { ticks: { color: '#8A8A8A', font: { family: 'Barlow' }, callback: v => '$'+v+'B' }, grid: { color: 'rgba(0,0,0,0.05)' } }
+      }
+    }
+  });
+
+  // Portfolio Donut (Slide 15)
+  new Chart(document.getElementById('portfolioDonut'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Bitcoin 59.4%', 'Stablecoins 33.4%', 'Alts 7.1%'],
+      datasets: [{
+        data: [59.4, 33.4, 7.1],
+        backgroundColor: ['#FC5C03', '#0BF4B9', '#1B1925'],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      responsive: true, cutout: '62%',
+      plugins: {
+        legend: { position: 'bottom', labels: { color: '#4A4A4A', font: { family: 'Barlow', size: 13 }, padding: 16 } },
+        tooltip: { backgroundColor: '#02000D', bodyFont: { family: 'Barlow' } }
+      }
+    }
+  });
+
+  // Market Cycle (Slide 19) — Line chart showing cycle phases
+  new Chart(document.getElementById('cycleChart'), {
+    type: 'line',
+    data: {
+      labels: ['Accumulation', '', 'Expansion', '', 'Euphoria', '', 'Contraction', '', 'Accumulation', '← YOU ARE HERE'],
+      datasets: [{
+        data: [20, 30, 55, 75, 95, 80, 50, 25, 15, 20],
+        borderColor: '#FC5C03', backgroundColor: 'rgba(252,92,3,0.08)',
+        fill: true, tension: 0.4, pointRadius: [6, 0, 6, 0, 6, 0, 6, 0, 0, 8],
+        pointBackgroundColor: ['#0BF4B9','','#22c55e','','#FC5C03','','#ef4444','','','#FC5C03'],
+        pointBorderColor: '#fff', pointBorderWidth: 2, borderWidth: 3
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor: '#02000D', bodyFont: { family: 'Barlow' } }
+      },
+      scales: {
+        x: { ticks: { color: '#8A8A8A', font: { family: 'Barlow', size: 11 }, maxRotation: 0 }, grid: { display: false } },
+        y: { display: false }
+      }
+    }
+  });
+
+  // Radar Chart (Slide 25)
+  new Chart(document.getElementById('radarChart'), {
+    type: 'radar',
+    data: {
+      labels: ['Risk Tolerance', 'Time Horizon', 'Knowledge', 'Active/Passive', 'Income Needs', 'Tax Situation'],
+      datasets: [{
+        label: 'Your Profile',
+        data: [7, 8, 5, 4, 3, 6],
+        backgroundColor: 'rgba(252,92,3,0.15)',
+        borderColor: '#FC5C03', borderWidth: 2,
+        pointBackgroundColor: '#FC5C03', pointBorderColor: '#fff', pointBorderWidth: 2, pointRadius: 5
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        r: {
+          beginAtZero: true, max: 10,
+          ticks: { display: false },
+          grid: { color: 'rgba(0,0,0,0.08)' },
+          pointLabels: { color: '#4A4A4A', font: { family: 'Barlow', size: 12, weight: 600 } }
+        }
+      }
+    }
+  });
+
+});
+</script>
+</body>
+</html>
