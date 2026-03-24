@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shift OS V8 — Collective Shift</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #02000D;
+    --orange: #FC5C03;
+    --white: #FFFFFF;
+    --grey: #B3B2B6;
+    --grid: rgba(255,255,255,0.03);
+  }
+
+  html, body {
+    height: 100%; width: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 400;
+  }
+
+  body {
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  h1, h2, h3, h4, .heading {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+  }
+
+  /* Slide container */
+  .deck {
+    width: 100vw; height: 100vh;
+    position: relative;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    padding: 60px 80px 80px;
+    overflow-y: auto;
+  }
+  .slide.active { display: flex; }
+
+  /* Section tag */
+  .tag {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 32px;
+  }
+
+  /* Footer */
+  .footer {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 80px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--grey);
+    z-index: 100;
+    background: linear-gradient(transparent, var(--bg));
+    pointer-events: none;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: var(--orange);
+    transition: width 0.4s ease;
+    z-index: 100;
+  }
+
+  /* Slide counter */
+  .slide-counter {
+    position: fixed;
+    top: 20px; right: 80px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--grey);
+    z-index: 100;
+  }
+  .slide-counter .current { color: var(--orange); font-weight: 700; }
+
+  /* Typography helpers */
+  .big-heading { font-size: 48px; line-height: 1.15; margin-bottom: 24px; }
+  .medium-heading { font-size: 36px; line-height: 1.2; margin-bottom: 20px; }
+  .small-heading { font-size: 24px; line-height: 1.3; margin-bottom: 16px; }
+  .body-text { font-size: 18px; line-height: 1.6; color: var(--grey); }
+  .body-text.white { color: var(--white); }
+
+  .orange { color: var(--orange); }
+  .grey { color: var(--grey); }
+  .bold { font-weight: 700; }
+
+  /* Quote block */
+  .quote {
+    border-left: 4px solid var(--orange);
+    padding: 20px 24px;
+    margin: 24px 0;
+    font-size: 18px;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--white);
+    max-width: 800px;
+  }
+  .quote .attribution {
+    display: block;
+    margin-top: 12px;
+    font-style: normal;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--orange);
+    text-transform: uppercase;
+  }
+
+  /* Outcome box */
+  .outcome {
+    border-left: 4px solid var(--orange);
+    padding: 16px 24px;
+    margin: 16px 0;
+    background: rgba(252, 92, 3, 0.05);
+    border-radius: 0 8px 8px 0;
+  }
+  .outcome-label {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 6px;
+  }
+  .outcome-text { font-size: 16px; color: var(--white); line-height: 1.5; }
+
+  /* Component card */
+  .component {
+    margin-bottom: 28px;
+    max-width: 900px;
+  }
+  .component-number {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--orange);
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+  .component-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .component-desc { font-size: 15px; color: var(--grey); line-height: 1.5; }
+
+  /* Grid layouts */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 24px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; margin-top: 24px; }
+  .four-col { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 24px; margin-top: 24px; }
+
+  /* Pillars */
+  .pillar {
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    text-align: center;
+  }
+  .pillar-icon { font-size: 28px; margin-bottom: 8px; }
+  .pillar-name {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .pillar-desc { font-size: 13px; color: var(--grey); line-height: 1.4; }
+
+  /* Session label */
+  .session-label {
+    display: inline-block;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--orange);
+    padding: 4px 14px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+  }
+
+  /* Compliance table */
+  .compliance-grid { margin-top: 24px; max-width: 900px; }
+  .compliance-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 15px;
+  }
+  .compliance-row.header {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--orange);
+    padding-bottom: 12px;
+    margin-bottom: 4px;
+  }
+  .avoid { color: #ff6b6b; }
+  .approved { color: #51cf66; }
+
+  /* Ongoing features */
+  .ongoing {
+    margin-top: 28px;
+    padding: 20px 24px;
+    border: 1px solid rgba(252,92,3,0.2);
+    border-radius: 8px;
+    background: rgba(252,92,3,0.03);
+  }
+  .ongoing-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 10px;
+  }
+
+  /* Title slide special */
+  .title-slide { justify-content: center; align-items: center; text-align: center; }
+  .title-slide .big-heading { font-size: 56px; margin-bottom: 12px; }
+  .title-slide .subtitle {
+    font-size: 20px;
+    color: var(--grey);
+    font-style: italic;
+    margin-bottom: 32px;
+    max-width: 600px;
+  }
+  .title-slide .tags {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: var(--orange);
+  }
+  .title-slide .doc-type {
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: var(--grey);
+    margin-bottom: 24px;
+  }
+
+  /* Closing slide */
+  .close-center { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+
+  /* Data point */
+  .data-point {
+    display: inline-block;
+    background: rgba(252,92,3,0.08);
+    border: 1px solid rgba(252,92,3,0.2);
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--orange);
+    margin: 4px 4px 4px 0;
+  }
+
+  /* Compact list */
+  .compact-list { list-style: none; }
+  .compact-list li {
+    padding: 6px 0;
+    font-size: 15px;
+    color: var(--grey);
+    line-height: 1.4;
+  }
+  .compact-list li .orange { font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="slide-counter"><span class="current" id="currentSlide">01</span> / <span id="totalSlides">09</span></div>
+
+<div class="footer">
+  <span>COLLECTIVE SHIFT — SHIFT OS V8</span>
+  <span>CONFIDENTIAL | MARCH 2026</span>
+</div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: Title -->
+  <div class="slide title-slide active" data-index="0">
+    <div class="doc-type">COLLECTIVE SHIFT // INTERNAL DOCUMENT</div>
+    <h1 class="big-heading">SHIFT OS <span class="orange">V8</span></h1>
+    <div class="body-text" style="margin-bottom:8px;">March 2026</div>
+    <div class="subtitle">"A Systematic Framework for Digital Asset Education"</div>
+    <div class="tags">EDUCATION · FRAMEWORKS · SELF-SOVEREIGNTY</div>
+  </div>
+
+  <!-- SLIDE 2: Education First -->
+  <div class="slide" data-index="1">
+    <div class="tag">// EDUCATION FIRST</div>
+    <h2 class="big-heading" style="font-size:40px; margin-bottom:8px;">WE ARE AN <span class="orange">EDUCATION COMPANY.</span></h2>
+    <h2 class="big-heading" style="font-size:40px; margin-bottom:8px;">NOT ADVISORS.</h2>
+    <p class="body-text" style="font-size:22px; color:var(--white); margin-bottom:32px;">We teach you how to think. Not what to think.</p>
+
+    <div class="quote">
+      "At the core of everything we do is education. We don't tell people what to buy or sell. We give them the frameworks, the data, and the confidence to make their own decisions."
+      <span class="attribution">— Ben Simpson, CEO</span>
+    </div>
+    <div class="quote">
+      "Our job is to make sure everything we communicate helps members learn — never to direct their financial decisions."
+      <span class="attribution">— Travis, Head of Education</span>
+    </div>
+
+    <div class="four-col" style="margin-top:36px;">
+      <div class="pillar">
+        <div class="pillar-icon">📊</div>
+        <div class="pillar-name">Research</div>
+        <div class="pillar-desc">Live data, reports, CS Portfolio</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">📚</div>
+        <div class="pillar-name">Education</div>
+        <div class="pillar-desc">Recorded + live sessions</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">👥</div>
+        <div class="pillar-name">Community</div>
+        <div class="pillar-desc">Events, masterminds, peer support</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🎯</div>
+        <div class="pillar-name">Coaching</div>
+        <div class="pillar-desc">1:1 analyst sessions, CSM support</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Framework Overview -->
+  <div class="slide" data-index="2">
+    <div class="tag">// THE FRAMEWORK</div>
+    <h2 class="medium-heading">THE 12-COMPONENT SHIFT OS:<br><span class="orange">TWO SESSIONS, ONE JOURNEY</span></h2>
+
+    <div class="two-col">
+      <div>
+        <div class="session-label">Session 1 — Strategy Foundations</div>
+        <ul class="compact-list">
+          <li><span class="orange">01</span> Market Outlook & Macro Context → <em>Written market view</em></li>
+          <li><span class="orange">02</span> Bitcoin & Crypto Landscape + Signal vs Noise → <em>Research time audit</em></li>
+          <li><span class="orange">03</span> Goal Setting → <em>Goal statement + time horizon</em></li>
+          <li><span class="orange">04</span> Risk Management → <em>Drawdown tolerance + sizing rules</em></li>
+          <li><span class="orange">05</span> The Emotional Cycle → <em>Bias audit + media check</em></li>
+        </ul>
+      </div>
+      <div>
+        <div class="session-label">Session 2 — Building Your Portfolio System</div>
+        <ul class="compact-list">
+          <li><span class="orange">06</span> Portfolio Strategy Part 1 → <em>Net worth map + target %</em></li>
+          <li><span class="orange">07</span> Portfolio Strategy Part 2 → <em>Crypto breakdown with targets</em></li>
+          <li><span class="orange">08</span> Asset Analysis & Investment Thesis → <em>Written thesis</em></li>
+          <li><span class="orange">09</span> Platforms, Wallets & Security → <em>Security setup done</em></li>
+          <li><span class="orange">10</span> Tax, Structure & Partners → <em>Tax tool + advisor booked</em></li>
+          <li><span class="orange">11</span> Bitcoin Lending & Yield → <em>Yield strategy decision</em></li>
+          <li><span class="orange">12</span> Sell Strategy & Profit Taking → <em>Written sell strategy</em></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ongoing">
+      <div class="ongoing-title">Ongoing Features</div>
+      <p class="body-text" style="font-size:15px;">Quarterly Coaching · CS Portfolio · Research Platform · Community · Masterminds</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Components 01 & 02 -->
+  <div class="slide" data-index="3">
+    <div class="tag">// SESSION 1 — STRATEGY FOUNDATIONS</div>
+
+    <div class="two-col">
+      <div class="component">
+        <div class="component-number">COMPONENT 01</div>
+        <div class="component-title">Market Outlook & Macro Context</div>
+        <div class="component-desc">Where we are in the cycle. Three macro scenarios. On-chain signals: NUPL, MVRV, STH cost basis, 200-week MA. Institutional fund flows and what they signal.</div>
+        <div class="outcome" style="margin-top:16px;">
+          <div class="outcome-label">Educational Purpose</div>
+          <div class="outcome-text">Teach members to assess market positioning using publicly available data and on-chain metrics — forming their own macro view.</div>
+        </div>
+        <div class="outcome">
+          <div class="outcome-label">Deliverable</div>
+          <div class="outcome-text">Written one-sentence market view based on data frameworks taught.</div>
+        </div>
+      </div>
+
+      <div class="component">
+        <div class="component-number">COMPONENT 02</div>
+        <div class="component-title">Bitcoin & Crypto Landscape + Signal vs Noise</div>
+        <div class="component-desc">Why BTC is different. AI/blockchain convergence. Narrative cycles. Why 98% of what CS does is say no.</div>
+        <div class="outcome" style="margin-top:16px;">
+          <div class="outcome-label">Educational Purpose</div>
+          <div class="outcome-text">Educate on Bitcoin's fundamental differences and teach the skill of filtering signal from noise.</div>
+        </div>
+        <div class="outcome">
+          <div class="outcome-label">Deliverable</div>
+          <div class="outcome-text">Research time audit + noise sources identified.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Components 03 & 04 -->
+  <div class="slide" data-index="4">
+    <div class="tag">// SESSION 1 — GOALS & RISK</div>
+
+    <div class="two-col">
+      <div class="component">
+        <div class="component-number">COMPONENT 03</div>
+        <div class="component-title">Goal Setting</div>
+        <div class="component-desc">Define your "why". Three goal types (preservation, accumulation, income). Time horizon. Alignment between goals and risk capacity.</div>
+        <div class="quote" style="margin-top:16px;">
+          "Really understand your why... what is your time horizon? Is it two years? Is it five years? Is it longer than that?"
+          <span class="attribution">— Ben Simpson</span>
+        </div>
+        <div class="outcome">
+          <div class="outcome-label">Deliverable</div>
+          <div class="outcome-text">Written goal statement + target allocation + time horizon.</div>
+        </div>
+      </div>
+
+      <div class="component">
+        <div class="component-number">COMPONENT 04</div>
+        <div class="component-title">Risk Management</div>
+        <div class="component-desc">Four types of risk (market, platform, protocol, personal). Position sizing. Staged entry. DCA vs lump sum.</div>
+        <div class="quote" style="margin-top:16px;">
+          "If your goal is quite big and if you're only going to put in a small amount that you're comfortable with, that's absolutely fine..."
+          <span class="attribution">— Ben Simpson</span>
+        </div>
+        <div class="outcome">
+          <div class="outcome-label">Deliverable</div>
+          <div class="outcome-text">Max drawdown tolerance + position sizing rules.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: Component 05 + Session 1 Recap -->
+  <div class="slide" data-index="5">
+    <div class="tag">// SESSION 1 — THE EMOTIONAL CYCLE</div>
+
+    <div class="component" style="max-width:700px;">
+      <div class="component-number">COMPONENT 05</div>
+      <div class="component-title">The Emotional Cycle</div>
+      <div class="component-desc">The 7-step emotional destruction pattern. Five cognitive biases. Social media as a noise machine. Building emotional resilience.</div>
+    </div>
+
+    <div class="quote">
+      "So many people end up in a position where they can do extremely well and they watch it come all the way back down..."
+      <span class="attribution">— Ben Simpson</span>
+    </div>
+
+    <div class="outcome" style="max-width:700px;">
+      <div class="outcome-label">Deliverable</div>
+      <div class="outcome-text">Personal bias audit + social media time check.</div>
+    </div>
+
+    <div style="margin-top:40px; padding:24px; border:1px solid rgba(252,92,3,0.3); border-radius:8px; max-width:700px; background:rgba(252,92,3,0.04);">
+      <div class="small-heading" style="margin-bottom:16px;">Session 1 <span class="orange">Complete</span></div>
+      <ul class="compact-list">
+        <li>✅ Market view formed from data frameworks</li>
+        <li>✅ Goals defined with target allocation & time horizon</li>
+        <li>✅ Risk tolerance scored with position sizing rules</li>
+        <li>✅ Personal biases identified with mitigation strategies</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: Components 06, 07 & 08 -->
+  <div class="slide" data-index="6">
+    <div class="tag">// SESSION 2 — PORTFOLIO CONSTRUCTION</div>
+
+    <div class="three-col">
+      <div class="component">
+        <div class="component-number">COMPONENT 06</div>
+        <div class="component-title">Portfolio Strategy Part 1</div>
+        <div class="component-desc">How crypto fits total net worth. Institutional research:</div>
+        <div style="margin-top:10px;">
+          <span class="data-point">BlackRock 1–2%</span>
+          <span class="data-point">Bitwise 5%</span>
+          <span class="data-point">CoinShares 4%</span>
+        </div>
+        <div class="outcome" style="margin-top:14px;">
+          <div class="outcome-label">Deliverable</div>
+          <div class="outcome-text">Net worth map + target crypto %</div>
+        </div>
+      </div>
+
+      <div class="component">
+        <div class="component-number">COMPONENT 07</div>
+        <div class="component-title">Portfolio Strategy Part 2</div>
+        <div class="component-desc">The allocation pyramid:</div>
+        <div style="margin-top:10px;">
+          <span class="data-point">BTC 50–70%</span>
+          <span class="data-point">ETH 15–30%</span>
+          <span class="data-point">Alts 0–20%</span>
+          <span class="data-point">Stablecoins var.</span>
+        </div>
+        <div class="outcome" style="margin-top:14px;">
+          <div class="outcome-label">Deliverable</div>
+          <div class="outcome-text">Written crypto breakdown with % targets</div>
+        </div>
+      </div>
+
+      <div class="component">
+        <div class="component-number">COMPONENT 08</div>
+        <div class="component-title">Asset Analysis & Investment Thesis</div>
+        <div class="component-desc">CS Portfolio deep dives: BTC, ETH, SOL, HYPE, SYRUP. Building YOUR thesis.</div>
+        <div class="outcome" style="margin-top:14px;">
+          <div class="outcome-label">Deliverable</div>
+          <div class="outcome-text">Written investment thesis for chosen assets</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote" style="margin-top:24px;">
+      "Crypto doesn't need to be complicated... We do have a lot of people join us where they've been in crypto for three or four years, and they arrive and they might have 20, 30, 40 cryptocurrencies..."
+      <span class="attribution">— Ben Simpson</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Components 09, 10, 11 & 12 -->
+  <div class="slide" data-index="7">
+    <div class="tag">// SESSION 2 — EXECUTION & EXIT</div>
+
+    <div class="two-col">
+      <div>
+        <div class="component">
+          <div class="component-number">COMPONENT 09</div>
+          <div class="component-title">Platforms, Wallets & Security</div>
+          <div class="component-desc">Exchanges for transacting, not storing. Hardware wallets. Seed phrase rules. The FTX lesson.</div>
+          <div class="outcome" style="margin-top:10px;">
+            <div class="outcome-label">Deliverable</div>
+            <div class="outcome-text">Security setup completed</div>
+          </div>
+        </div>
+
+        <div class="component">
+          <div class="component-number">COMPONENT 10</div>
+          <div class="component-title">Tax, Structure & Partners</div>
+          <div class="component-desc">AU, NZ, US tax frameworks. Record keeping. Koinly / CryptoTaxCalculator.</div>
+          <div class="outcome" style="margin-top:10px;">
+            <div class="outcome-label">Deliverable</div>
+            <div class="outcome-text">Tax tool set up + advisor booked</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="component">
+          <div class="component-number">COMPONENT 11</div>
+          <div class="component-title">Bitcoin Lending & Yield</div>
+          <div class="component-desc">Four tiers of risk (2–5% to 24%+). CS approach: syrupUSDC at 33.4% of portfolio.</div>
+          <div class="outcome" style="margin-top:10px;">
+            <div class="outcome-label">Deliverable</div>
+            <div class="outcome-text">Yield strategy decision</div>
+          </div>
+        </div>
+
+        <div class="component" style="border:2px solid var(--orange); border-radius:8px; padding:20px; background:rgba(252,92,3,0.04);">
+          <div class="component-number">COMPONENT 12 — THE CAPSTONE</div>
+          <div class="component-title">Sell Strategy & Profit Taking</div>
+          <div class="component-desc">Three trigger types. Three questions for every position. On-chain peak signals.</div>
+          <div class="outcome" style="margin-top:10px;">
+            <div class="outcome-label">Deliverable</div>
+            <div class="outcome-text">Written sell strategy with specific targets</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote" style="margin-top:20px;">
+      "I've been in crypto for nine years. I've met so many people that try to time the exact top..."
+      <span class="attribution">— Ben Simpson</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: Compliance + Close -->
+  <div class="slide" data-index="8">
+    <div class="tag">// COMPLIANCE GUIDE</div>
+    <h2 class="medium-heading">Language That <span class="orange">Protects</span> Us</h2>
+
+    <div class="compliance-grid">
+      <div class="compliance-row header">
+        <div class="approved">✅ WE SAY (EDUCATION)</div>
+        <div class="avoid">⊘ WE AVOID (ADVISORY)</div>
+      </div>
+      <div class="compliance-row">
+        <div class="approved">"Here's how to evaluate whether BTC fits your portfolio"</div>
+        <div class="avoid">"You should buy BTC"</div>
+      </div>
+      <div class="compliance-row">
+        <div class="approved">"Portfolios with 50–70% BTC have shown these characteristics"</div>
+        <div class="avoid">"I recommend allocating 60% to BTC"</div>
+      </div>
+      <div class="compliance-row">
+        <div class="approved">"Here are on-chain signals that historically precede cycle tops"</div>
+        <div class="avoid">"Sell your ETH now"</div>
+      </div>
+      <div class="compliance-row">
+        <div class="approved">"Here's the framework for evaluating fundamentals"</div>
+        <div class="avoid">"This is a good investment"</div>
+      </div>
+      <div class="compliance-row">
+        <div class="approved">"Research suggests these allocation ranges..."</div>
+        <div class="avoid">"Put 5% of your net worth in crypto"</div>
+      </div>
+      <div class="compliance-row">
+        <div class="approved">"Here's how DCA and staged entry strategies work"</div>
+        <div class="avoid">"Buy the dip"</div>
+      </div>
+      <div class="compliance-row">
+        <div class="approved">"Three frameworks for building a sell strategy"</div>
+        <div class="avoid">"Take profits at $X"</div>
+      </div>
+    </div>
+
+    <div class="close-center" style="flex:0; margin-top:40px; text-align:center;">
+      <div class="small-heading">SHIFT OS V8</div>
+      <div class="tags" style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:600; font-size:13px; letter-spacing:4px; color:var(--orange);">EDUCATION · FRAMEWORKS · SELF-SOVEREIGNTY</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const counter = document.getElementById('currentSlide');
+  const totalEl = document.getElementById('totalSlides');
+  const bar = document.getElementById('progressBar');
+
+  totalEl.textContent = String(total).padStart(2, '0');
+
+  function show(n) {
+    slides[current].classList.remove('active');
+    current = Math.max(0, Math.min(n, total - 1));
+    slides[current].classList.add('active');
+    counter.textContent = String(current + 1).padStart(2, '0');
+    bar.style.width = ((current + 1) / total * 100) + '%';
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); show(current + 1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); show(current - 1); }
+    else if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+  });
+
+  // Touch support
+  let touchX = 0;
+  document.addEventListener('touchstart', function(e) { touchX = e.touches[0].clientX; });
+  document.addEventListener('touchend', function(e) {
+    const diff = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(diff) > 50) show(current + (diff < 0 ? 1 : -1));
+  });
+
+  show(0);
+})();
+</script>
+</body>
+</html>
