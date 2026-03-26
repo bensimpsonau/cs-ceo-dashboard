@@ -1,864 +1,598 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CS CEO Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: 'Inter', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; }
-
-    /* ─── Sidebar ─── */
-    #sidebar {
-      position: fixed; top: 0; left: 0; width: 220px; height: 100vh;
-      background: #0b1120; border-right: 1px solid #1e293b;
-      display: flex; flex-direction: column; z-index: 50;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CEO Command Centre — Collective Shift</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Barlow:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'cs-bg': '#1B1925',
+        'cs-card': '#242232',
+        'cs-border': '#2E2C3E',
+        'cs-orange': '#FC5C03',
+        'cs-green': '#08C394',
+        'cs-turq': '#0BF4B9',
+        'cs-text': '#E8E6F0',
+        'cs-muted': '#9896A6',
+        'cs-surface': '#1E1C2C',
+      },
+      fontFamily: {
+        oswald: ['Oswald', 'sans-serif'],
+        barlow: ['Barlow', 'sans-serif'],
+        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+        mono: ['Source Code Pro', 'monospace'],
+      }
     }
-    .sidebar-logo { padding: 20px 20px 16px; border-bottom: 1px solid #1e293b; }
-    .sidebar-logo .logo-title { font-size: 1.15rem; font-weight: 700; color: #f59e0b; letter-spacing: 0.03em; }
-    .sidebar-logo .logo-sub { font-size: 0.7rem; color: #64748b; margin-top: 2px; }
-    nav { flex: 1; padding: 12px 10px; }
-    .nav-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 12px; border-radius: 8px; cursor: pointer;
-      font-size: 0.875rem; font-weight: 500; color: #94a3b8;
-      text-decoration: none; transition: all 0.15s ease; margin-bottom: 2px;
-    }
-    .nav-item:hover { background: #1e293b; color: #e2e8f0; }
-    .nav-item.active { background: #f59e0b22; color: #f59e0b; border-left: 3px solid #f59e0b; padding-left: 9px; }
-    .nav-icon { font-size: 1.1rem; width: 22px; text-align: center; }
-    .sidebar-footer { padding: 16px; border-top: 1px solid #1e293b; }
-    .sidebar-footer span { font-size: 0.7rem; color: #475569; }
-
-    /* ─── Main layout ─── */
-    #main { margin-left: 220px; min-height: 100vh; display: flex; flex-direction: column; }
-
-    /* ─── Header ─── */
-    #header {
-      background: #0f172a; border-bottom: 1px solid #1e293b;
-      padding: 16px 28px; display: flex; align-items: center;
-      justify-content: space-between; position: sticky; top: 0; z-index: 40;
-    }
-    .header-greeting { font-size: 1.3rem; font-weight: 700; color: #f1f5f9; }
-    .header-date { font-size: 0.875rem; color: #64748b; margin-top: 2px; }
-    .header-right { display: flex; align-items: center; gap: 12px; }
-    .last-updated { font-size: 0.8rem; color: #64748b; }
-    .refresh-btn {
-      background: #1e293b; border: 1px solid #334155; color: #94a3b8;
-      padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 0.8rem;
-      transition: all 0.15s ease; display: flex; align-items: center; gap: 6px;
-    }
-    .refresh-btn:hover { background: #293548; color: #e2e8f0; }
-
-    /* ─── KPI strip ─── */
-    #kpi-strip {
-      display: grid; grid-template-columns: repeat(7, 1fr);
-      gap: 12px; padding: 16px 28px;
-      background: #0f172a; border-bottom: 1px solid #1e293b;
-    }
-    .kpi-card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 14px 16px; }
-    .kpi-label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
-    .kpi-value { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; line-height: 1.2; }
-    .kpi-sub { font-size: 0.7rem; color: #94a3b8; margin-top: 2px; }
-    .kpi-progress { height: 3px; background: #334155; border-radius: 2px; margin-top: 6px; overflow: hidden; }
-    .kpi-progress-bar { height: 3px; background: #f59e0b; border-radius: 2px; transition: width 0.8s ease; }
-    .kpi-btc { color: #f59e0b; }
-
-    /* ─── Content ─── */
-    #content { flex: 1; padding: 24px 28px; }
-    .section { margin-bottom: 32px; }
-    .section-title {
-      font-size: 1rem; font-weight: 700; color: #f1f5f9;
-      margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
-    }
-    .section-count {
-      font-size: 0.7rem; background: #334155; color: #94a3b8;
-      padding: 2px 8px; border-radius: 20px; font-weight: 500;
-    }
-
-    /* ─── Row 1: Two-column ─── */
-    .row-two-col {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px;
-    }
-    .col-section { min-width: 0; }
-
-    /* ─── Priorities ─── */
-    .priority-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; overflow: hidden; }
-    .priority-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 12px 16px; border-bottom: 1px solid #273344;
-    }
-    .priority-item:last-child { border-bottom: none; }
-    .priority-title { font-size: 0.875rem; color: #e2e8f0; font-weight: 500; flex: 1; min-width: 0; }
-    .priority-meta { font-size: 0.72rem; color: #64748b; white-space: nowrap; }
-    .priority-assignee { font-size: 0.72rem; color: #94a3b8; white-space: nowrap; }
-
-    /* ─── Status / category badges ─── */
-    .badge {
-      font-size: 0.63rem; font-weight: 600; padding: 2px 8px; border-radius: 20px;
-      text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; flex-shrink: 0;
-    }
-    .badge-overdue          { background: #7f1d1d; color: #fca5a5; }
-    .badge-in_progress      { background: #1e3a5f; color: #93c5fd; }
-    .badge-not_started      { background: #1e293b; color: #64748b; border: 1px solid #334155; }
-    .badge-pending_decision,
-    .badge-pending          { background: #431407; color: #fdba74; }
-    .badge-completed        { background: #14532d; color: #86efac; }
-    .cat-product    { background: #312e81; color: #a5b4fc; }
-    .cat-finance    { background: #14532d; color: #86efac; }
-    .cat-sales      { background: #7c2d12; color: #fb923c; }
-    .cat-legal      { background: #3f3f46; color: #a1a1aa; }
-    .cat-marketing  { background: #701a75; color: #f0abfc; }
-    .cat-operations { background: #164e63; color: #67e8f9; }
-
-    /* ─── Projects list (numbered, stacked) ─── */
-    .project-list { background: #1e293b; border: 1px solid #334155; border-radius: 12px; overflow: hidden; }
-    .project-list-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 11px 16px; border-bottom: 1px solid #273344;
-      cursor: pointer; transition: background 0.12s ease;
-    }
-    .project-list-item:last-child { border-bottom: none; }
-    .project-list-item:hover { background: #243044; }
-    .project-num {
-      font-size: 0.7rem; font-weight: 700; color: #64748b;
-      background: #334155; border-radius: 50%;
-      width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .project-list-name { font-size: 0.875rem; font-weight: 600; color: #f1f5f9; flex: 1; min-width: 0; }
-    .project-list-owner { font-size: 0.72rem; color: #64748b; white-space: nowrap; }
-    .project-list-arrow { font-size: 0.75rem; color: #475569; flex-shrink: 0; }
-
-    /* ─── Calendar ─── */
-    .calendar-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; overflow: hidden; }
-    .cal-item {
-      display: flex; align-items: center; gap: 14px;
-      padding: 12px 18px; border-bottom: 1px solid #273344;
-      transition: opacity 0.2s;
-    }
-    .cal-item:last-child { border-bottom: none; }
-    .cal-item.past { opacity: 0.4; }
-    .cal-item.current {
-      background: #1a1500; border-left: 3px solid #f59e0b;
-      padding-left: 15px;
-      box-shadow: inset 0 0 30px #f59e0b0a;
-    }
-    .cal-time-wrap { display: flex; flex-direction: column; align-items: flex-end; min-width: 70px; }
-    .cal-time-main {
-      font-size: 0.8rem; font-weight: 700; color: #f1f5f9;
-      white-space: nowrap;
-    }
-    .cal-item.past .cal-time-main { text-decoration: line-through; color: #475569; }
-    .cal-time-end { font-size: 0.68rem; color: #64748b; white-space: nowrap; }
-    .cal-title { font-size: 0.875rem; color: #e2e8f0; font-weight: 500; flex: 1; }
-    .cal-item.current .cal-title { color: #fbbf24; font-weight: 600; }
-    .type-badge {
-      font-size: 0.62rem; font-weight: 600; padding: 2px 8px;
-      border-radius: 10px; text-transform: capitalize; white-space: nowrap;
-    }
-    .type-call    { background: #14532d; color: #86efac; }
-    .type-meeting { background: #1e3a5f; color: #93c5fd; }
-    .type-work    { background: #3b0764; color: #d8b4fe; }
-    .type-travel  { background: #451a03; color: #fcd34d; }
-    .type-focus   { background: #042f2e; color: #5eead4; }
-
-    /* NOW marker */
-    .now-marker {
-      display: flex; align-items: center; gap: 10px;
-      padding: 8px 18px; background: #f59e0b11;
-      border-top: 1px solid #f59e0b44; border-bottom: 1px solid #f59e0b44;
-    }
-    .now-dot {
-      width: 10px; height: 10px; border-radius: 50%;
-      background: #f59e0b; box-shadow: 0 0 8px #f59e0b88; flex-shrink: 0;
-    }
-    .now-label { font-size: 0.75rem; font-weight: 700; color: #f59e0b; letter-spacing: 0.08em; }
-    .now-time   { font-size: 0.72rem; color: #92400e; }
-
-    /* ─── Agent grid ─── */
-    .agent-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-    .agent-card {
-      background: #1e293b; border: 1px solid #334155; border-radius: 10px;
-      padding: 16px; position: relative;
-    }
-    .agent-emoji { font-size: 1.6rem; line-height: 1; margin-bottom: 6px; }
-    .agent-name  { font-size: 0.9rem; font-weight: 700; color: #f1f5f9; }
-    .agent-role  { font-size: 0.72rem; color: #64748b; margin-bottom: 8px; line-height: 1.3; }
-    .agent-current { font-size: 0.75rem; color: #94a3b8; line-height: 1.4; margin-bottom: 4px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-    .agent-completed { font-size: 0.68rem; color: #475569; line-height: 1.3; margin-bottom: 5px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
-    .agent-waiting { display: inline-block; font-size: 0.65rem; color: #f59e0b; background: #f59e0b1a; border: 1px solid #f59e0b44; border-radius: 4px; padding: 2px 6px; margin-bottom: 4px; line-height: 1.4; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
-    .agent-time  { font-size: 0.7rem; color: #64748b; margin-top: 4px; }
-    .status-pill { position: absolute; top: 12px; right: 12px; font-size: 0.65rem; font-weight: 600; padding: 2px 7px; border-radius: 20px; }
-    .pill-active  { background: #22c55e22; color: #22c55e; border: 1px solid #22c55e44; }
-    .pill-waiting { background: #eab30822; color: #eab308; border: 1px solid #eab30844; }
-    .pill-idle    { background: #47556922; color: #94a3b8; border: 1px solid #47556944; }
-    /* legacy dot classes kept for backward compat */
-    .dot-green  { background: #22c55e; box-shadow: 0 0 6px #22c55e88; }
-    .dot-yellow { background: #eab308; box-shadow: 0 0 6px #eab30888; }
-    .dot-red    { background: #ef4444; box-shadow: 0 0 6px #ef444488; }
-
-    /* ─── Project detail slide-out panel ─── */
-    #detail-backdrop {
-      display: none; position: fixed; inset: 0;
-      background: #00000066; z-index: 100;
-      backdrop-filter: blur(2px);
-      transition: opacity 0.2s;
-    }
-    #detail-backdrop.open { display: block; }
-
-    #detail-panel {
-      position: fixed; top: 0; right: 0; height: 100vh;
-      width: 480px; max-width: 95vw;
-      background: #0f172a; border-left: 1px solid #334155;
-      z-index: 101; overflow-y: auto;
-      transform: translateX(100%);
-      transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
-      display: flex; flex-direction: column;
-    }
-    #detail-panel.open { transform: translateX(0); }
-
-    .detail-header {
-      padding: 20px 24px 16px;
-      border-bottom: 1px solid #1e293b;
-      position: sticky; top: 0; background: #0f172a; z-index: 10;
-    }
-    .detail-header-top {
-      display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
-      margin-bottom: 10px;
-    }
-    .detail-project-name { font-size: 1.1rem; font-weight: 700; color: #f1f5f9; line-height: 1.3; }
-    .detail-close {
-      background: #1e293b; border: 1px solid #334155; color: #94a3b8;
-      width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
-      font-size: 1rem; display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; transition: all 0.15s;
-    }
-    .detail-close:hover { background: #293548; color: #e2e8f0; }
-    .detail-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-    .detail-owner { font-size: 0.78rem; color: #94a3b8; }
-
-    .detail-body { padding: 20px 24px; flex: 1; }
-    .detail-section { margin-bottom: 24px; }
-    .detail-section-title {
-      font-size: 0.75rem; font-weight: 700; color: #64748b;
-      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;
-    }
-    .detail-notes {
-      font-size: 0.875rem; color: #94a3b8; line-height: 1.6;
-      background: #1e293b; border: 1px solid #334155; border-radius: 8px;
-      padding: 12px 14px;
-    }
-
-    /* Files list */
-    .file-list { display: flex; flex-direction: column; gap: 6px; }
-    .file-item {
-      display: flex; align-items: center; gap: 10px;
-      background: #1e293b; border: 1px solid #334155; border-radius: 8px;
-      padding: 10px 14px;
-    }
-    .file-icon { font-size: 1.1rem; flex-shrink: 0; }
-    .file-info { flex: 1; min-width: 0; }
-    .file-name { font-size: 0.83rem; font-weight: 600; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .file-meta { font-size: 0.7rem; color: #64748b; margin-top: 2px; }
-    .file-view {
-      font-size: 0.72rem; font-weight: 600; color: #f59e0b;
-      background: #f59e0b18; border: 1px solid #f59e0b33;
-      padding: 3px 9px; border-radius: 6px; text-decoration: none;
-      white-space: nowrap; flex-shrink: 0; cursor: pointer;
-      transition: all 0.15s;
-    }
-    .file-view:hover { background: #f59e0b2a; }
-    .file-view-disabled {
-      font-size: 0.72rem; color: #475569;
-      padding: 3px 9px; flex-shrink: 0; white-space: nowrap;
-    }
-
-    /* ─── Footer ─── */
-    #footer {
-      padding: 16px 28px; border-top: 1px solid #1e293b;
-      text-align: center; font-size: 0.75rem; color: #475569;
-    }
-
-    /* ─── Toast ─── */
-    #toast {
-      position: fixed; bottom: 24px; right: 24px;
-      background: #1e293b; border: 1px solid #f59e0b44; color: #f59e0b;
-      padding: 12px 20px; border-radius: 10px; font-size: 0.85rem; font-weight: 600;
-      transform: translateY(80px); opacity: 0;
-      transition: all 0.3s ease; z-index: 999; pointer-events: none;
-    }
-    #toast.show { transform: translateY(0); opacity: 1; }
-
-    /* ─── Scrollbar ─── */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-
-    /* ─── Responsive ─── */
-    @media (max-width: 1200px) {
-      .agent-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-    @media (max-width: 1000px) {
-      .row-two-col { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 900px) {
-      #kpi-strip { grid-template-columns: repeat(4, 1fr); }
-      .agent-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-  </style>
+  }
+}
+</script>
+<style>
+  html, body { margin:0; padding:0; background:#1B1925; color:#E8E6F0; font-family:'Barlow',sans-serif; }
+  ::-webkit-scrollbar { width:6px; }
+  ::-webkit-scrollbar-track { background:#1B1925; }
+  ::-webkit-scrollbar-thumb { background:#2E2C3E; border-radius:3px; }
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
+  .sidebar-btn { transition: all 0.15s ease; }
+  .sidebar-btn:hover, .sidebar-btn.active { background:#242232; border-left:3px solid #FC5C03; }
+  .sidebar-btn { border-left:3px solid transparent; }
+  .kpi-card { background:#242232; border:1px solid #2E2C3E; border-radius:12px; padding:16px 20px; min-width:140px; }
+  .priority-card { border-left:4px solid; padding:12px 16px; background:#242232; border-radius:0 8px 8px 0; margin-bottom:8px; }
+  .agent-row { padding:12px 16px; background:#242232; border-radius:8px; margin-bottom:6px; border:1px solid #2E2C3E; }
+  .task-item { padding:10px 16px; background:#242232; border-radius:0 8px 8px 0; margin-bottom:6px; border-left:4px solid; }
+  .progress-bar { background:#2E2C3E; border-radius:99px; overflow:hidden; height:8px; }
+  .progress-fill { height:100%; border-radius:99px; transition: width 0.5s ease; }
+  .collapsible-header { cursor:pointer; user-select:none; }
+  .collapsible-body { overflow:hidden; transition: max-height 0.3s ease; }
+  .doc-link { display:block; padding:10px 16px; background:#242232; border:1px solid #2E2C3E; border-radius:8px; margin-bottom:6px; text-decoration:none; color:#0BF4B9; transition: background 0.15s; }
+  .doc-link:hover { background:#2E2C3E; }
+  .badge { font-family:'Source Code Pro',monospace; font-size:11px; font-weight:500; padding:2px 8px; border-radius:4px; text-transform:uppercase; }
+  @media(max-width:1024px) {
+    #sidebar { position:fixed; left:-260px; z-index:50; transition:left 0.2s ease; height:100vh; }
+    #sidebar.open { left:0; }
+    #main { margin-left:0 !important; }
+    #mobile-toggle { display:flex !important; }
+    #overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:40; }
+    #overlay.open { display:block; }
+  }
+</style>
 </head>
-<body>
+<body class="bg-cs-bg min-h-screen flex">
 
-<!-- ─── Sidebar ─── -->
-<div id="sidebar">
-  <div class="sidebar-logo">
-    <div class="logo-title">₿ CS CEO</div>
-    <div class="logo-sub">Collective Shift · Command Centre</div>
+<!-- Mobile Toggle -->
+<button id="mobile-toggle" onclick="toggleSidebar()" class="hidden fixed top-4 left-4 z-50 bg-cs-card border border-cs-border rounded-lg p-2 text-cs-text">
+  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+</button>
+<div id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
+<aside id="sidebar" class="w-[240px] min-h-screen bg-cs-surface border-r border-cs-border flex flex-col flex-shrink-0">
+  <div class="p-5 border-b border-cs-border">
+    <div class="flex items-center gap-3 mb-1">
+      <div class="w-8 h-8 rounded-lg bg-cs-orange flex items-center justify-center font-oswald text-white text-sm font-bold">CS</div>
+      <div>
+        <div class="font-oswald text-sm tracking-wider text-cs-text">COLLECTIVE SHIFT</div>
+        <div class="font-mono text-[10px] text-cs-muted tracking-wide">CEO COMMAND CENTRE</div>
+      </div>
+    </div>
   </div>
-  <nav>
-    <a class="nav-item active" href="#dashboard">
-      <span class="nav-icon">📊</span> Dashboard
-    </a>
-    <a class="nav-item" href="/projects/">
-      <span class="nav-icon">🗂️</span> Projects
-    </a>
-    <a class="nav-item" href="#ai-team">
-      <span class="nav-icon">🤖</span> AI Team
-    </a>
-    <a class="nav-item" href="#calendar">
-      <span class="nav-icon">📅</span> Calendar
-    </a>
-    <a class="nav-item" href="#kpi-strip">
-      <span class="nav-icon">💰</span> Finance
-    </a>
-    <a class="nav-item" href="#" style="opacity:0.4;cursor:not-allowed">
-      <span class="nav-icon">⚙️</span> Settings
-    </a>
+  <nav class="flex-1 py-3 flex flex-col gap-1">
+    <button class="sidebar-btn active w-full text-left px-5 py-3 text-sm font-barlow font-medium text-cs-text flex items-center gap-3" data-tab="overview">
+      <span>🏠</span> Overview
+    </button>
+    <button class="sidebar-btn w-full text-left px-5 py-3 text-sm font-barlow font-medium text-cs-text flex items-center gap-3" data-tab="tasks">
+      <span>📋</span> Tasks
+    </button>
+    <button class="sidebar-btn w-full text-left px-5 py-3 text-sm font-barlow font-medium text-cs-text flex items-center gap-3" data-tab="marketing">
+      <span>📊</span> Marketing
+    </button>
+    <button class="sidebar-btn w-full text-left px-5 py-3 text-sm font-barlow font-medium text-cs-text flex items-center gap-3" data-tab="education">
+      <span>🎓</span> Education
+    </button>
+    <button class="sidebar-btn w-full text-left px-5 py-3 text-sm font-barlow font-medium text-cs-text flex items-center gap-3" data-tab="sales">
+      <span>💼</span> Sales &amp; Retention
+    </button>
+    <button class="sidebar-btn w-full text-left px-5 py-3 text-sm font-barlow font-medium text-cs-text flex items-center gap-3" data-tab="documents">
+      <span>📁</span> Documents
+    </button>
+    <button class="sidebar-btn w-full text-left px-5 py-3 text-sm font-barlow font-medium text-cs-text flex items-center gap-3" data-tab="system">
+      <span>⚙️</span> System
+    </button>
   </nav>
-  <div class="sidebar-footer">
-    <span>BenBot ₿ · v4.1</span>
+  <div class="p-4 border-t border-cs-border">
+    <div class="font-mono text-[10px] text-cs-muted" id="last-updated">Loading...</div>
   </div>
-</div>
+</aside>
 
-<!-- ─── Main ─── -->
-<div id="main">
+<!-- Main Content -->
+<main id="main" class="flex-1 min-h-screen overflow-y-auto" style="margin-left:0">
+<div class="p-6 max-w-[1600px] mx-auto">
 
-  <!-- Header -->
-  <div id="header">
-    <div>
-      <div class="header-greeting" id="greeting">Good morning, Ben ₿</div>
-      <div class="header-date" id="header-date">Loading…</div>
-      <div id="countdown-timer" style="font-size:0.92rem;color:#38bdf8;padding-top:2px;"></div>
-    </div>
-    <div class="header-right">
-      <span class="last-updated" id="last-updated">Loading…</span>
-      <button class="refresh-btn" onclick="refresh()">🔄 Refresh</button>
-    </div>
-  </div>
+<!-- ============ TAB: OVERVIEW ============ -->
+<div id="tab-overview" class="tab-content active">
+  <h1 class="font-oswald text-2xl tracking-wide mb-6">Overview</h1>
 
   <!-- KPI Strip -->
-  <div id="kpi-strip">
+  <div class="flex flex-wrap gap-3 mb-8">
     <div class="kpi-card">
-      <div class="kpi-label">💰 Cash at Bank</div>
-      <div class="kpi-value" id="kpi-cash">—</div>
-      <div class="kpi-sub">AUD</div>
+      <div class="font-mono text-[10px] text-cs-muted uppercase tracking-wider mb-1">Cash at Bank</div>
+      <div class="font-jakarta text-xl font-bold text-cs-green">$915K</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">📉 Survivor Line</div>
-      <div class="kpi-value" id="kpi-survivor">—</div>
-      <div class="kpi-sub" id="kpi-survivor-sub">Apr</div>
+      <div class="font-mono text-[10px] text-cs-muted uppercase tracking-wider mb-1">Survivor Line (Apr)</div>
+      <div class="font-jakarta text-xl font-bold text-cs-orange">$613K</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">👥 Members</div>
-      <div class="kpi-value" id="kpi-members">—</div>
-      <div class="kpi-sub" id="kpi-platinum">— Platinum</div>
+      <div class="font-mono text-[10px] text-cs-muted uppercase tracking-wider mb-1">Active Members</div>
+      <div class="font-jakarta text-xl font-bold text-cs-text">1,163</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">📈 Renewals</div>
-      <div class="kpi-value" id="kpi-renewals">—</div>
-      <div class="kpi-progress"><div class="kpi-progress-bar" id="renewal-bar" style="width:0%"></div></div>
-      <div class="kpi-sub" id="kpi-days-left">— days left</div>
+      <div class="font-mono text-[10px] text-cs-muted uppercase tracking-wider mb-1">Platinum</div>
+      <div class="font-jakarta text-xl font-bold text-cs-turq">402</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">📊 ARR</div>
-      <div class="kpi-value" id="kpi-arr">—</div>
-      <div class="kpi-sub">Annualised</div>
+      <div class="font-mono text-[10px] text-cs-muted uppercase tracking-wider mb-1">ARR</div>
+      <div class="font-jakarta text-xl font-bold text-cs-green">A$7.3M</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">₿ BTC Price</div>
-      <div class="kpi-value kpi-btc" id="kpi-btc">Fetching…</div>
-      <div class="kpi-sub">USD · Live</div>
+      <div class="font-mono text-[10px] text-cs-muted uppercase tracking-wider mb-1">BTC Price</div>
+      <div class="font-jakarta text-xl font-bold text-cs-turq" id="kpi-btc">—</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">😱 Fear & Greed</div>
-      <div class="kpi-value" id="kpi-fg">—</div>
-      <div class="kpi-sub" id="kpi-fg-label">Loading…</div>
+      <div class="font-mono text-[10px] text-cs-muted uppercase tracking-wider mb-1">Fear &amp; Greed</div>
+      <div class="font-jakarta text-xl font-bold" id="kpi-fng">—</div>
+    </div>
+    <div class="kpi-card min-w-[220px]">
+      <div class="font-mono text-[10px] text-cs-muted uppercase tracking-wider mb-1">Renewals — $131K / $180K</div>
+      <div class="progress-bar mt-2">
+        <div class="progress-fill bg-cs-green" style="width:73%"></div>
+      </div>
+      <div class="font-mono text-[10px] text-cs-muted mt-1">73% • 5 days left</div>
     </div>
   </div>
 
-  <!-- ─── Content ─── -->
-  <div id="content">
-
-    <!-- ROW 1: Priorities + Projects side by side -->
-    <div class="row-two-col" id="dashboard">
-
-      <!-- Left: Today's Priorities -->
-      <div class="col-section">
-        <div class="section-title">
-          📋 Today's Priorities
-          <span class="section-count" id="priority-count">0</span>
+  <!-- Two columns -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Left: Priorities -->
+    <div>
+      <h2 class="font-jakarta text-lg font-bold mb-4 flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-cs-orange inline-block"></span> Active Priorities
+      </h2>
+      <div class="priority-card" style="border-color:#EF4444">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="badge bg-red-900/60 text-red-300">URGENT</span>
+          <span class="font-mono text-[10px] text-cs-muted">In Progress</span>
         </div>
-        <div class="priority-card" id="priorities-list">
-          <div class="priority-item" style="color:#64748b;font-size:0.85rem">Loading…</div>
+        <div class="text-sm font-barlow font-medium">Email Veronica — office decision (The Commons)</div>
+      </div>
+      <div class="priority-card" style="border-color:#EF4444">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="badge bg-red-900/60 text-red-300">URGENT</span>
+          <span class="badge bg-red-900/40 text-red-400 ml-1">6+ DAYS OVERDUE</span>
         </div>
+        <div class="text-sm font-barlow font-medium">Chat with Raf — Delaware entity for US raise</div>
       </div>
-
-      <!-- Right: Active Projects (numbered list) -->
-      <div class="col-section" id="projects">
-        <div class="section-title">
-          🗂️ Active Projects
-          <span class="section-count" id="project-count">0</span>
+      <div class="priority-card" style="border-color:#EF4444">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="badge bg-red-900/60 text-red-300">URGENT</span>
+          <span class="font-mono text-[10px] text-cs-muted">In Progress</span>
         </div>
-        <div class="project-list" id="projects-list">
+        <div class="text-sm font-barlow font-medium">Review restructure game plan</div>
+      </div>
+      <div class="priority-card" style="border-color:#EF4444">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="badge bg-red-900/60 text-red-300">URGENT</span>
+          <span class="font-mono text-[10px] text-cs-muted">In Progress</span>
         </div>
+        <div class="text-sm font-barlow font-medium">Review &amp; sign off CS Education System Master Outline</div>
       </div>
-
-    </div><!-- /row-two-col -->
-
-    <!-- ROW 2: Today's Calendar (full width) -->
-    <div class="section" id="calendar">
-      <div class="section-title">
-        📅 Today's Calendar
-        <span class="section-count" id="cal-count">0</span>
+      <div class="priority-card" style="border-color:#F59E0B">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="badge bg-yellow-900/60 text-yellow-300">HIGH</span>
+          <span class="font-mono text-[10px] text-cs-muted">In Progress</span>
+        </div>
+        <div class="text-sm font-barlow font-medium">Build V4 Slide Decks — Level 1 + Level 2 content outlines</div>
       </div>
-      <div class="calendar-card" id="calendar-list">
-        <div class="cal-item" style="color:#64748b;font-size:0.85rem">Loading…</div>
+      <div class="priority-card" style="border-color:#F59E0B">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="badge bg-yellow-900/60 text-yellow-300">HIGH</span>
+          <span class="font-mono text-[10px] text-cs-muted">Not Started</span>
+        </div>
+        <div class="text-sm font-barlow font-medium">Connect ben@collectiveshift.io to gog CLI</div>
+      </div>
+      <div class="priority-card" style="border-color:#F59E0B">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="badge bg-yellow-900/60 text-yellow-300">HIGH</span>
+          <span class="font-mono text-[10px] text-cs-muted">Not Started</span>
+        </div>
+        <div class="text-sm font-barlow font-medium">Build and update unit economics sheet</div>
       </div>
     </div>
 
-    <!-- ROW 3: AI Agent Team (full width) -->
-    <div class="section" id="ai-team">
-      <div class="section-title">
-        🤖 AI Agent Team
-        <span class="section-count" id="agent-count">0</span>
+    <!-- Right: Agent Status -->
+    <div>
+      <h2 class="font-jakarta text-lg font-bold mb-4 flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-cs-turq inline-block"></span> Agent Status
+      </h2>
+      <div class="space-y-1" id="agent-grid">
+        <!-- Agents rendered by JS -->
       </div>
-      <div class="agent-grid" id="agents-grid">
-      </div>
-    </div>
-
-  </div><!-- /content -->
-
-  <div id="footer">Powered by BenBot ₿ · Collective Shift</div>
-</div><!-- /main -->
-
-<!-- ─── Project Detail Slide-out ─── -->
-<div id="detail-backdrop" onclick="closeDetail()"></div>
-<div id="detail-panel">
-  <div class="detail-header">
-    <div class="detail-header-top">
-      <div class="detail-project-name" id="dp-name">—</div>
-      <button class="detail-close" onclick="closeDetail()">✕</button>
-    </div>
-    <div class="detail-meta">
-      <span id="dp-status-badge"></span>
-      <span id="dp-cat-badge"></span>
-      <span class="detail-owner" id="dp-owner"></span>
-      <span class="detail-owner" id="dp-due"></span>
-    </div>
-  </div>
-  <div class="detail-body">
-    <!-- Notes -->
-    <div class="detail-section" id="dp-notes-section">
-      <div class="detail-section-title">📝 Notes</div>
-      <div class="detail-notes" id="dp-notes"></div>
-    </div>
-    <!-- Files -->
-    <div class="detail-section">
-      <div class="detail-section-title">📁 Files <span id="dp-file-count" style="color:#475569;font-weight:400;font-size:0.7rem"></span></div>
-      <div class="file-list" id="dp-files"></div>
     </div>
   </div>
 </div>
 
-<div id="toast">🔄 BenBot is updating…</div>
+<!-- ============ TAB: TASKS ============ -->
+<div id="tab-tasks" class="tab-content">
+  <h1 class="font-oswald text-2xl tracking-wide mb-6">Tasks</h1>
+
+  <!-- Urgent -->
+  <h3 class="font-jakarta text-sm font-bold text-red-400 uppercase tracking-wider mb-3 mt-6">🔴 Urgent</h3>
+  <div class="task-item" style="border-color:#EF4444"><span class="badge bg-red-900/60 text-red-300 mr-2">URGENT</span> Review &amp; sign off CS Education System Master Outline <span class="font-mono text-[10px] text-cs-muted ml-2">In Progress</span></div>
+  <div class="task-item" style="border-color:#EF4444"><span class="badge bg-red-900/60 text-red-300 mr-2">URGENT</span> Email Veronica (The Commons) re: downsize/exit <span class="font-mono text-[10px] text-cs-muted ml-2">In Progress</span></div>
+  <div class="task-item" style="border-color:#EF4444"><span class="badge bg-red-900/60 text-red-300 mr-2">URGENT</span> Chat with Raf — Delaware entity for US raise <span class="font-mono text-[10px] text-cs-muted ml-2">In Progress • 6+ days overdue</span></div>
+  <div class="task-item" style="border-color:#EF4444"><span class="badge bg-red-900/60 text-red-300 mr-2">URGENT</span> Review restructure game plan <span class="font-mono text-[10px] text-cs-muted ml-2">In Progress</span></div>
+
+  <!-- In Progress -->
+  <h3 class="font-jakarta text-sm font-bold text-cs-orange uppercase tracking-wider mb-3 mt-6">🟠 In Progress</h3>
+  <div class="task-item" style="border-color:#FC5C03"><span class="badge bg-orange-900/60 text-orange-300 mr-2">HIGH</span> Build V4 Slide Decks — Level 1 + Level 2</div>
+  <div class="task-item" style="border-color:#FC5C03"><span class="badge bg-orange-900/60 text-orange-300 mr-2">HIGH</span> Sarn build organic pro and platinum pages</div>
+
+  <!-- Not Started -->
+  <h3 class="font-jakarta text-sm font-bold text-cs-muted uppercase tracking-wider mb-3 mt-6">⚪ Not Started</h3>
+  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-purple-900/50 text-purple-300 mr-2">P2</span> DEV TASK: Twilio &gt; CIO Inbound SMS Reply Trigger</div>
+  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-yellow-900/60 text-yellow-300 mr-2">HIGH</span> Connect ben@collectiveshift.io to gog CLI</div>
+  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-yellow-900/60 text-yellow-300 mr-2">HIGH</span> Build and update unit economics sheet</div>
+  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-blue-900/50 text-blue-300 mr-2">MED</span> Caleb &amp; Brown B2B partnership</div>
+  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-blue-900/50 text-blue-300 mr-2">MED</span> AI Setter &gt; Just Call</div>
+  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-gray-700/50 text-gray-400 mr-2">LOW</span> Connect with syrup guy</div>
+  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-blue-900/50 text-blue-300 mr-2">MED</span> Go through team goals and fantasy stories</div>
+  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-gray-700/50 text-gray-400 mr-2">LOW</span> $50k Upsell Product Strategy</div>
+  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-gray-700/50 text-gray-400 mr-2">LOW</span> Update Branding/Comms Doc with Travis feedback</div>
+  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-gray-700/50 text-gray-400 mr-2">LOW</span> CS &amp; Travis Content Strategy</div>
+  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-gray-700/50 text-gray-400 mr-2">LOW</span> CS Brand strategy</div>
+  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-gray-700/50 text-gray-400 mr-2">LOW</span> Ben Simpson Brand strategy</div>
+  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-gray-700/50 text-gray-400 mr-2">LOW</span> Clean up CS social profile</div>
+  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-gray-700/50 text-gray-400 mr-2">LOW</span> Record video for Cohort 1 feedback</div>
+  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-gray-700/50 text-gray-400 mr-2">LOW</span> Apply for new address sticker</div>
+
+  <!-- Done (collapsible) -->
+  <div class="mt-6">
+    <div class="collapsible-header flex items-center gap-2 mb-3" onclick="toggleDone()">
+      <svg id="done-chevron" class="w-4 h-4 text-cs-muted transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      <h3 class="font-jakarta text-sm font-bold text-cs-green uppercase tracking-wider">✅ Done (last 10)</h3>
+    </div>
+    <div id="done-body" class="collapsible-body" style="max-height:0">
+      <div class="task-item" style="border-color:#08C394; opacity:0.7">YouTube Strategy V2</div>
+      <div class="task-item" style="border-color:#08C394; opacity:0.7">CS Operating System Manual</div>
+      <div class="task-item" style="border-color:#08C394; opacity:0.7">Update 3 Whop Splitit plan prices</div>
+      <div class="task-item" style="border-color:#08C394; opacity:0.7">PetRock Capital call prep</div>
+      <div class="task-item" style="border-color:#08C394; opacity:0.7">Banjo $500K business loan</div>
+      <div class="task-item" style="border-color:#08C394; opacity:0.7">Platinum Pitch Deck</div>
+      <div class="task-item" style="border-color:#08C394; opacity:0.7">CWB Day 2 expanded outline</div>
+      <div class="task-item" style="border-color:#08C394; opacity:0.7">Set up Notion CEO Dashboard</div>
+      <div class="task-item" style="border-color:#08C394; opacity:0.7">Commission restructure</div>
+      <div class="task-item" style="border-color:#08C394; opacity:0.7">Sarn conversation</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TAB: MARKETING ============ -->
+<div id="tab-marketing" class="tab-content">
+  <h1 class="font-oswald text-2xl tracking-wide mb-6">Marketing</h1>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- YouTube Strategy -->
+    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
+      <h3 class="font-jakarta font-bold text-base mb-4 flex items-center gap-2">
+        <span class="text-red-500">▶</span> YouTube Strategy
+      </h3>
+      <div class="space-y-3 text-sm">
+        <div class="flex justify-between"><span class="text-cs-muted">Framework</span><span class="text-cs-turq font-medium">Jeremy Haynes — 90/10 System</span></div>
+        <div class="flex justify-between"><span class="text-cs-muted">Frequency</span><span>2–3 videos / week</span></div>
+        <div class="flex justify-between"><span class="text-cs-muted">Format</span><span>15–35 min long-form</span></div>
+        <div class="flex justify-between"><span class="text-cs-muted">Content Split</span><span>90% value • 10% pitch</span></div>
+        <div class="flex justify-between"><span class="text-cs-muted">Status</span><span class="text-cs-green">✅ Strategy V2 Complete</span></div>
+      </div>
+    </div>
+
+    <!-- Campaigns -->
+    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
+      <h3 class="font-jakarta font-bold text-base mb-4">🚀 Active Campaigns</h3>
+      <div class="space-y-4">
+        <div>
+          <div class="text-sm font-medium mb-1">Crypto Wealth Blueprint — 2-Day Event</div>
+          <div class="font-mono text-[10px] text-cs-muted">Live event funnel • conversion-focused</div>
+        </div>
+        <div class="border-t border-cs-border pt-3">
+          <div class="text-sm font-medium mb-1">Organic 4-Day Cash Machine (Patrick)</div>
+          <div class="font-mono text-[10px] text-cs-muted">Organic launch sequence • no ad spend</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Calendar -->
+    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
+      <h3 class="font-jakarta font-bold text-base mb-4">📅 Content Calendar</h3>
+      <div class="text-cs-muted text-sm italic">Awaiting content calendar setup from Social Bot</div>
+    </div>
+
+    <!-- Social Rhythm -->
+    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
+      <h3 class="font-jakarta font-bold text-base mb-4">📱 Social Media Posting</h3>
+      <div class="text-cs-muted text-sm italic">Posting rhythm TBD — Social Bot idle, awaiting calendar</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TAB: EDUCATION ============ -->
+<div id="tab-education" class="tab-content">
+  <h1 class="font-oswald text-2xl tracking-wide mb-6">Education — Shift OS</h1>
+
+  <!-- Status bar -->
+  <div class="flex flex-wrap gap-3 mb-8">
+    <div class="kpi-card"><div class="font-mono text-[10px] text-cs-muted mb-1">Framework</div><div class="font-jakarta font-bold text-cs-green">Shift OS V11 ✅</div></div>
+    <div class="kpi-card"><div class="font-mono text-[10px] text-cs-muted mb-1">Modules</div><div class="font-jakarta font-bold">16 docs</div></div>
+    <div class="kpi-card"><div class="font-mono text-[10px] text-cs-muted mb-1">Word Count</div><div class="font-jakarta font-bold">27,000</div></div>
+    <div class="kpi-card"><div class="font-mono text-[10px] text-cs-muted mb-1">Team Deck</div><div class="font-jakarta font-bold">V4 • 20 slides</div></div>
+    <div class="kpi-card"><div class="font-mono text-[10px] text-cs-muted mb-1">Overview</div><div class="font-jakarta font-bold text-cs-turq">Live on Render</div></div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Level 1 -->
+    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
+      <h3 class="font-jakarta font-bold text-base mb-4 text-cs-turq">Level 1 — Beginner (8 Modules)</h3>
+      <div class="space-y-2 text-sm">
+        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">B1-M1</span><span>Why Crypto &amp; Bitcoin</span></div>
+        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">B1-M2</span><span>Bitcoin Deep Dive</span></div>
+        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">B1-M3</span><span>Altcoins Intro</span></div>
+        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">B1-M4</span><span>How We Invest</span></div>
+        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">B2-M5</span><span>How to Buy &amp; Sell</span></div>
+        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">B2-M6</span><span>Send &amp; Store</span></div>
+        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">B2-M7</span><span>Tax Basics</span></div>
+        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">B2-M8</span><span>Sell Strategy Basics</span></div>
+      </div>
+    </div>
+    <!-- Level 2 -->
+    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
+      <h3 class="font-jakarta font-bold text-base mb-4 text-cs-orange">Level 2 — Advanced (8 Modules)</h3>
+      <div class="space-y-2 text-sm">
+        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">A1-M1</span><span>Advanced Foundations</span></div>
+        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">A1-M2</span><span>Advanced Bitcoin</span></div>
+        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">A1-M3</span><span>Advanced Altcoins</span></div>
+        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">A1-M4</span><span>Advanced Principles</span></div>
+        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">A2-M5</span><span>Yield &amp; Staking</span></div>
+        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">A2-M6</span><span>Advanced Tax</span></div>
+        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">A2-M7</span><span>Advanced Sell Strategy</span></div>
+        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">A2-M8</span><span>Borrowing Against Bitcoin</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TAB: SALES ============ -->
+<div id="tab-sales" class="tab-content">
+  <h1 class="font-oswald text-2xl tracking-wide mb-6">Sales &amp; Retention</h1>
+
+  <!-- KPIs -->
+  <div class="flex flex-wrap gap-3 mb-8">
+    <div class="kpi-card min-w-[260px]">
+      <div class="font-mono text-[10px] text-cs-muted uppercase tracking-wider mb-1">March Renewals — $131K / $180K</div>
+      <div class="progress-bar mt-2"><div class="progress-fill bg-cs-green" style="width:73%"></div></div>
+      <div class="font-mono text-[10px] text-cs-muted mt-1">73% complete • 5 days remaining</div>
+    </div>
+    <div class="kpi-card"><div class="font-mono text-[10px] text-cs-muted mb-1">Pipeline</div><div class="font-jakarta font-bold">23 renewals</div><div class="font-mono text-[10px] text-cs-muted">$330K potential</div></div>
+    <div class="kpi-card"><div class="font-mono text-[10px] text-cs-muted mb-1">ROAS</div><div class="font-jakarta font-bold text-cs-orange">1.84x</div><div class="font-mono text-[10px] text-cs-muted">breakeven</div></div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Membership -->
+    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
+      <h3 class="font-jakarta font-bold text-base mb-4">👥 Active Members — 1,163</h3>
+      <div class="space-y-3">
+        <div class="flex justify-between items-center text-sm">
+          <span>Platinum</span>
+          <div class="flex items-center gap-3">
+            <div class="w-32 h-2 rounded-full bg-cs-border overflow-hidden"><div class="h-full rounded-full bg-cs-turq" style="width:34.6%"></div></div>
+            <span class="font-mono text-xs text-cs-turq">402</span>
+          </div>
+        </div>
+        <div class="flex justify-between items-center text-sm">
+          <span>Pro</span>
+          <div class="flex items-center gap-3">
+            <div class="w-32 h-2 rounded-full bg-cs-border overflow-hidden"><div class="h-full rounded-full bg-cs-orange" style="width:33.4%"></div></div>
+            <span class="font-mono text-xs text-cs-orange">388</span>
+          </div>
+        </div>
+        <div class="flex justify-between items-center text-sm">
+          <span>Legacy</span>
+          <div class="flex items-center gap-3">
+            <div class="w-32 h-2 rounded-full bg-cs-border overflow-hidden"><div class="h-full rounded-full bg-cs-muted" style="width:32%"></div></div>
+            <span class="font-mono text-xs text-cs-muted">373</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sales GPT -->
+    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
+      <h3 class="font-jakarta font-bold text-base mb-4">🤖 Sales GPT</h3>
+      <div class="space-y-3 text-sm">
+        <div class="flex justify-between"><span class="text-cs-muted">Status</span><span class="text-yellow-400">Building knowledge base</span></div>
+        <div class="flex justify-between"><span class="text-cs-muted">Blocker</span><span class="text-cs-orange">Waiting for call recordings from Ben</span></div>
+        <div class="flex justify-between"><span class="text-cs-muted">Funding model</span><span>Organic only — overhead funded</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TAB: DOCUMENTS ============ -->
+<div id="tab-documents" class="tab-content">
+  <h1 class="font-oswald text-2xl tracking-wide mb-6">Documents</h1>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div>
+      <h3 class="font-jakarta font-bold text-sm uppercase tracking-wider text-cs-turq mb-4">📡 Hosted on Render</h3>
+      <a href="/cs-operating-system-manual.html" target="_blank" class="doc-link">CS Operating System Manual</a>
+      <a href="/cs-youtube-strategy.html" target="_blank" class="doc-link">YouTube Strategy</a>
+      <a href="/cs-education-system-overview.html" target="_blank" class="doc-link">Education System Overview</a>
+      <a href="/CS_Brand_Guidelines_Figma_2026.html" target="_blank" class="doc-link">Brand Guidelines</a>
+      <a href="/strategy-session-v2.html" target="_blank" class="doc-link">Strategy Session V2</a>
+      <a href="/q2-market-briefing.html" target="_blank" class="doc-link">Q2 Market Briefing</a>
+      <a href="/new-member-strategy-final.html" target="_blank" class="doc-link">New Member Strategy</a>
+      <a href="/designs/circle-v5.html" target="_blank" class="doc-link">Circle Design V5</a>
+      <a href="/designs/shift-os-v8-deck.html" target="_blank" class="doc-link">Shift OS V8 Deck</a>
+    </div>
+    <div>
+      <h3 class="font-jakarta font-bold text-sm uppercase tracking-wider text-cs-muted mb-4">💾 Workspace (Local Only)</h3>
+      <div class="doc-link cursor-default" style="color:#9896A6">Webinar deck — 54 slides</div>
+      <div class="doc-link cursor-default" style="color:#9896A6">Brand guide PDF</div>
+      <div class="doc-link cursor-default" style="color:#9896A6">16 module documents — 27K words</div>
+      <div class="doc-link cursor-default" style="color:#9896A6">Shift OS frameworks (V8, V9) — hosted as .md</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TAB: SYSTEM ============ -->
+<div id="tab-system" class="tab-content">
+  <h1 class="font-oswald text-2xl tracking-wide mb-6">System</h1>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
+      <h3 class="font-jakarta font-bold text-base mb-4">🔧 Infrastructure</h3>
+      <div class="space-y-3 text-sm">
+        <div class="flex justify-between"><span class="text-cs-muted">Gateway</span><span class="text-cs-green">● Running</span></div>
+        <div class="flex justify-between"><span class="text-cs-muted">Discord</span><span class="text-cs-green">✅ Connected</span></div>
+        <div class="flex justify-between"><span class="text-cs-muted">Telegram</span><span class="text-cs-green">✅ Connected</span></div>
+        <div class="flex justify-between"><span class="text-cs-muted">Agents</span><span>16 total (Opus + 11 Sonnet)</span></div>
+        <div class="flex justify-between"><span class="text-cs-muted">Heartbeat</span><span>30m default • 1h main</span></div>
+        <div class="flex justify-between"><span class="text-cs-muted">Memory</span><span>47 files • 301 chunks</span></div>
+      </div>
+    </div>
+
+    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
+      <h3 class="font-jakarta font-bold text-base mb-4">⚠️ Blockers</h3>
+      <div class="space-y-3 text-sm">
+        <div class="flex items-start gap-3">
+          <span class="text-red-400 mt-0.5">❌</span>
+          <div>
+            <div class="font-medium">Google OAuth Disabled</div>
+            <div class="text-cs-muted text-xs">Blocks Calendar, Sheets, Gmail access for Finance Bot, EA Bot</div>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="text-yellow-400 mt-0.5">⏳</span>
+          <div>
+            <div class="font-medium">Customer.io Access</div>
+            <div class="text-cs-muted text-xs">Email Bot blocked — needs API credentials</div>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="text-yellow-400 mt-0.5">⏳</span>
+          <div>
+            <div class="font-medium">Call Recordings</div>
+            <div class="text-cs-muted text-xs">Sales Bot waiting for Ben to upload recordings</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+</main>
 
 <script>
-  // ─── Store projects globally for detail panel ───
-  let allProjects = [];
+// Agent data
+const agents = [
+  { name:'Finance Bot', ch:'#finance-bot', status:'idle', activity:'Awaiting data access (Google OAuth blocked)', project:null },
+  { name:'EA Bot', ch:'#executive-assistant', status:'idle', activity:'Awaiting calendar setup', project:null },
+  { name:'Marketing Bot', ch:'#marketing-bot', status:'active', activity:'YouTube strategy research complete', project:'Jeremy Haynes framework' },
+  { name:'Social Bot', ch:'#social-media-bot', status:'idle', activity:'Awaiting content calendar', project:null },
+  { name:'Email Bot', ch:'#email-marketing-bot', status:'idle', activity:'Awaiting Customer.io access', project:null },
+  { name:'SEO Bot', ch:'#seo-bot', status:'idle', activity:'Awaiting priorities', project:null },
+  { name:'Sales Bot', ch:'#sales-bot', status:'active', activity:'Building Sales GPT knowledge base', project:'Waiting for call recordings' },
+  { name:'CSM Bot', ch:'#client-success-bot', status:'active', activity:'Shift OS V8 + two-track onboarding delivered', project:'Onboarding integration' },
+  { name:'Analyst Bot', ch:'#crypto-analyst-bot', status:'active', activity:'Shift OS V11 complete, 16 modules (27K words)', project:'V4 team deck (20 slides)' },
+  { name:'Ben Analyst Bot', ch:'#ben-analyst-bot', status:'active', activity:'Education system + CS OS website requested', project:'CS Education System' },
+  { name:'Video Bot', ch:'#video-clipper-bot', status:'idle', activity:'Awaiting video content', project:null },
+];
 
-  // ─── Helpers ───
-  function fmt(n) {
-    if (n === null || n === undefined) return '—';
-    if (n >= 1_000_000) return 'A$' + (n / 1_000_000).toFixed(1) + 'M';
-    if (n >= 1_000) return '$' + Math.round(n / 1_000) + 'K';
-    return '$' + n.toLocaleString();
-  }
-
-  function statusBadge(status) {
-    const cls = { overdue:'badge-overdue', in_progress:'badge-in_progress', not_started:'badge-not_started',
-      pending_decision:'badge-pending_decision', pending:'badge-pending', completed:'badge-completed' };
-    const lbl = { overdue:'Overdue', in_progress:'In Progress', not_started:'Not Started',
-      pending_decision:'Pending', pending:'Pending', completed:'Done' };
-    return `<span class="badge ${cls[status] || 'badge-not_started'}">${lbl[status] || status}</span>`;
-  }
-
-  function catBadge(cat) {
-    const cls = { Product:'cat-product', Finance:'cat-finance', Sales:'cat-sales',
-      Legal:'cat-legal', Marketing:'cat-marketing', Operations:'cat-operations' };
-    return `<span class="badge ${cls[cat] || 'badge-not_started'}">${cat || ''}</span>`;
-  }
-
-  function timeSince(isoStr) {
-    if (!isoStr) return '';
-    const diff = (Date.now() - new Date(isoStr).getTime()) / 3600000;
-    if (diff < 1) return Math.round(diff * 60) + 'm ago';
-    if (diff < 24) return Math.round(diff) + 'h ago';
-    return Math.round(diff / 24) + 'd ago';
-  }
-
-  function agentDotClass(isoStr) {
-    if (!isoStr) return 'dot-red';
-    const diff = (Date.now() - new Date(isoStr).getTime()) / 3600000;
-    if (diff < 2) return 'dot-green';
-    if (diff < 8) return 'dot-yellow';
-    return 'dot-red';
-  }
-
-  function greeting() {
-    const h = new Date().getHours();
-    if (h < 12) return 'Good morning, Ben ₿';
-    if (h < 17) return 'Good afternoon, Ben ₿';
-    return 'Good evening, Ben ₿';
-  }
-
-  function fmtDate(d) {
-    return d.toLocaleDateString('en-AU', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-  }
-
-  function minutesSince(isoStr) {
-    if (!isoStr) return '?';
-    const diff = Math.round((Date.now() - new Date(isoStr).getTime()) / 60000);
-    if (diff < 1) return 'just now';
-    if (diff === 1) return '1 min ago';
-    if (diff < 60) return diff + ' mins ago';
-    return Math.round(diff / 60) + 'h ago';
-  }
-
-  function fileIcon(type) {
-    const m = { doc:'📄', sheet:'📊', pdf:'📑', deck:'📽️', image:'🖼️' };
-    return m[type] || '📄';
-  }
-
-  function parseTimeToMinutes(t) {
-    if (!t) return null;
-    const [timePart, ampm] = t.trim().split(' ');
-    let [h, m] = timePart.split(':').map(Number);
-    if (ampm === 'PM' && h !== 12) h += 12;
-    if (ampm === 'AM' && h === 12) h = 0;
-    return h * 60 + m;
-  }
-
-  function nowMinutes() {
-    const n = new Date();
-    return n.getHours() * 60 + n.getMinutes();
-  }
-
-  function nowTimeLabel() {
-    const n = new Date();
-    return n.toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit', hour12: true });
-  }
-
-  function sortByTime(events) {
-    return [...events].sort((a, b) => (parseTimeToMinutes(a.time) || 0) - (parseTimeToMinutes(b.time) || 0));
-  }
-
-  // ─── Render: Priorities ───
-  function renderPriorities(items) {
-    document.getElementById('priority-count').textContent = items.length;
-    document.getElementById('priorities-list').innerHTML = items.map(p => `
-      <div class="priority-item">
-        ${statusBadge(p.status)}
-        <span class="priority-title">${p.title}</span>
-        <span class="priority-assignee">👤 ${p.assignee || '—'}</span>
-        ${p.due ? `<span class="priority-meta">${p.due}</span>` : ''}
-      </div>
-    `).join('');
-  }
-
-  // ─── Render: Projects (numbered list) ───
-  function renderProjects(items) {
-    allProjects = items;
-    document.getElementById('project-count').textContent = items.length;
-    document.getElementById('projects-list').innerHTML = items.map((p, i) => `
-      <div class="project-list-item" data-project-index="${i}" onclick="openDetail(${i})">
-        <span class="project-num">${i + 1}</span>
-        <span class="project-list-name">${p.name}</span>
-        <span class="project-list-owner">👤 ${p.owner}</span>
-        ${catBadge(p.category)}
-        ${statusBadge(p.status)}
-        <span class="project-list-arrow">›</span>
-      </div>
-    `).join('');
-  }
-
-  // ─── Render: Calendar (time-aware) ───
-  function renderCalendar(items) {
-    const sorted = sortByTime(items);
-    const now = nowMinutes();
-    document.getElementById('cal-count').textContent = sorted.length;
-
-    let nowInserted = false;
-    let html = '';
-
-    for (let i = 0; i < sorted.length; i++) {
-      const e = sorted[i];
-      const start = parseTimeToMinutes(e.time);
-      const end   = parseTimeToMinutes(e.end_time);
-      const isPast    = end !== null && end < now;
-      const isCurrent = start !== null && end !== null && start <= now && now < end;
-      const isFuture  = start !== null && start > now;
-
-      if (!nowInserted && isFuture) {
-        nowInserted = true;
-        html += `
-          <div class="now-marker">
-            <div class="now-dot"></div>
-            <span class="now-label">▶ NOW</span>
-            <span class="now-time">${nowTimeLabel()}</span>
-          </div>`;
-      }
-
-      let cls = '';
-      if (isPast) cls = 'past';
-      else if (isCurrent) cls = 'current';
-
-      html += `
-        <div class="cal-item ${cls}">
-          <div class="cal-time-wrap">
-            <span class="cal-time-main">${e.time}</span>
-            <span class="cal-time-end">→ ${e.end_time}</span>
-          </div>
-          <span class="cal-title">${isCurrent ? '🔴 ' : ''}${e.title}</span>
-          <span class="type-badge type-${e.type}">${e.type}</span>
-        </div>`;
-    }
-
-    if (!nowInserted) {
-      html += `
-        <div class="now-marker">
-          <div class="now-dot"></div>
-          <span class="now-label">▶ NOW</span>
-          <span class="now-time">${nowTimeLabel()}</span>
-        </div>`;
-    }
-
-    document.getElementById('calendar-list').innerHTML = html;
-  }
-
-  // ─── Render: Agents ───
-  function renderAgents(items) {
-    document.getElementById('agent-count').textContent = items.length;
-    document.getElementById('agents-grid').innerHTML = items.map(a => {
-      const statusCls = { active:'pill-active', waiting:'pill-waiting', idle:'pill-idle' };
-      const statusLbl = { active:'● Active', waiting:'⏳ Waiting', idle:'○ Idle' };
-      return `
-        <div class="agent-card">
-          <span class="status-pill ${statusCls[a.status] || 'pill-idle'}">${statusLbl[a.status] || a.status}</span>
-          <div class="agent-emoji">${a.emoji}</div>
-          <div class="agent-name">${a.name}</div>
-          <div class="agent-role">${a.role}</div>
-          ${a.current_task ? `<div class="agent-current">${a.current_task}</div>` : ''}
-          ${a.last_completed ? `<div class="agent-completed">✅ ${a.last_completed}</div>` : ''}
-          ${a.waiting_on ? `<div class="agent-waiting">⏳ ${a.waiting_on}</div>` : ''}
-          <div class="agent-time">${timeSince(a.last_updated)}</div>
-        </div>`;
-    }).join('');
-  }
-
-  // ─── Render: KPIs ───
-  function renderKPIs(kpis) {
-    document.getElementById('kpi-cash').textContent = fmt(kpis.cash_at_bank);
-    document.getElementById('kpi-survivor').textContent = fmt(kpis.survivor_line_april);
-    document.getElementById('kpi-members').textContent = (kpis.active_members || '—').toLocaleString();
-    document.getElementById('kpi-platinum').textContent = (kpis.platinum_members || '—') + ' Platinum';
-    const pct = kpis.renewals_won && kpis.renewals_target
-      ? Math.min(100, Math.round(kpis.renewals_won / kpis.renewals_target * 100)) : 0;
-    document.getElementById('kpi-renewals').textContent = fmt(kpis.renewals_won) + ' / ' + fmt(kpis.renewals_target);
-    document.getElementById('renewal-bar').style.width = pct + '%';
-    document.getElementById('kpi-days-left').textContent = (kpis.renewals_days_left || '—') + ' days left · ' + pct + '%';
-    document.getElementById('kpi-arr').textContent = fmt(kpis.arr);
-  }
-
-  // ─── Project Detail Panel ───
-  function openDetail(idx) {
-    const p = allProjects[idx];
-    if (!p) return;
-
-    document.getElementById('dp-name').textContent = p.name;
-    document.getElementById('dp-status-badge').innerHTML = statusBadge(p.status);
-    document.getElementById('dp-cat-badge').innerHTML   = catBadge(p.category);
-    document.getElementById('dp-owner').textContent     = '👤 ' + (p.owner || '—');
-    document.getElementById('dp-due').textContent       = p.due ? '📅 Due: ' + p.due : '';
-
-    const notesEl = document.getElementById('dp-notes');
-    const notesSec = document.getElementById('dp-notes-section');
-    if (p.notes) {
-      notesEl.textContent = p.notes;
-      notesSec.style.display = '';
-    } else {
-      notesSec.style.display = 'none';
-    }
-
-    const files = p.files || [];
-    document.getElementById('dp-file-count').textContent = files.length ? `(${files.length})` : '';
-    if (files.length === 0) {
-      document.getElementById('dp-files').innerHTML =
-        '<div style="font-size:0.82rem;color:#475569;padding:8px 0">No files attached yet.</div>';
-    } else {
-      document.getElementById('dp-files').innerHTML = files.map(f => `
-        <div class="file-item">
-          <span class="file-icon">${fileIcon(f.type)}</span>
-          <div class="file-info">
-            <div class="file-name">${f.name}</div>
-            <div class="file-meta">By ${f.bot || '—'} · Updated ${f.updated || '—'}</div>
-          </div>
-          ${f.url
-            ? `<a class="file-view" href="${f.url}" target="_blank" rel="noopener">View →</a>`
-            : `<span class="file-view-disabled">No link</span>`
-          }
+function renderAgents() {
+  const grid = document.getElementById('agent-grid');
+  grid.innerHTML = agents.map(a => {
+    const dot = a.status === 'active' ? '🟢' : '🟡';
+    return `<div class="agent-row flex items-start gap-3">
+      <span class="text-sm mt-0.5">${dot}</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-medium">${a.name}</span>
+          <span class="font-mono text-[10px] text-cs-muted">${a.ch}</span>
         </div>
-      `).join('');
+        <div class="text-xs text-cs-muted truncate">${a.activity}</div>
+        ${a.project ? `<div class="text-xs text-cs-turq mt-0.5">${a.project}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Tab switching
+document.querySelectorAll('.sidebar-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    // Close sidebar on mobile
+    if (window.innerWidth <= 1024) toggleSidebar();
+  });
+});
+
+// Collapsible done tasks
+let doneOpen = false;
+function toggleDone() {
+  doneOpen = !doneOpen;
+  const body = document.getElementById('done-body');
+  const chevron = document.getElementById('done-chevron');
+  body.style.maxHeight = doneOpen ? body.scrollHeight + 'px' : '0';
+  chevron.style.transform = doneOpen ? 'rotate(90deg)' : '';
+}
+
+// Mobile sidebar
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+
+// Snapshot loader
+async function loadSnapshot() {
+  try {
+    const res = await fetch('/api/snapshot');
+    if (!res.ok) throw new Error('no snapshot');
+    const data = await res.json();
+    if (data.btcPrice) document.getElementById('kpi-btc').textContent = '$' + Number(data.btcPrice).toLocaleString();
+    if (data.fearGreed) {
+      const fg = document.getElementById('kpi-fng');
+      fg.textContent = data.fearGreed;
+      const v = parseInt(data.fearGreed);
+      fg.className = 'font-jakarta text-xl font-bold ' + (v >= 60 ? 'text-cs-green' : v >= 40 ? 'text-yellow-400' : 'text-red-400');
     }
-
-    document.getElementById('detail-backdrop').classList.add('open');
-    document.getElementById('detail-panel').classList.add('open');
-    document.body.style.overflow = 'hidden';
+  } catch(e) {
+    document.getElementById('kpi-btc').textContent = '—';
+    document.getElementById('kpi-fng').textContent = '—';
   }
+  document.getElementById('last-updated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-AU', { hour:'2-digit', minute:'2-digit' });
+}
 
-  function closeDetail() {
-    document.getElementById('detail-backdrop').classList.remove('open');
-    document.getElementById('detail-panel').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
-
-  // ─── BTC live price ───
-  async function fetchBTC() {
-    try {
-      const res  = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-      const data = await res.json();
-      const price = data?.bitcoin?.usd;
-      if (price) document.getElementById('kpi-btc').textContent = '$' + price.toLocaleString();
-    } catch {
-      document.getElementById('kpi-btc').textContent = 'Unavailable';
-    }
-  }
-
-  // --- Fear & Greed fetch ---
-  async function fetchFG() {
-    try {
-      const res = await fetch('https://api.alternative.me/fng/?limit=1');
-      const data = await res.json();
-      const fg = data?.data?.[0];
-      if (fg) {
-        document.getElementById('kpi-fg').textContent = fg.value;
-        document.getElementById('kpi-fg-label').textContent = fg.value_classification;
-        const el = document.getElementById('kpi-fg');
-        if (parseInt(fg.value) <= 25) el.style.color = '#ef4444';
-        else if (parseInt(fg.value) <= 50) el.style.color = '#f59e0b';
-        else el.style.color = '#22c55e';
-      }
-    } catch {
-      document.getElementById('kpi-fg').textContent = '—';
-    }
-  }
-
-  // --- Countdown timer (shows next event in calendar data) ---
-  function updateCountdown() {
-    if (!window.latestCalData || !Array.isArray(window.latestCalData)) {
-      document.getElementById('countdown-timer').textContent = '';
-      return;
-    }
-    const now = new Date();
-    // Find next future event
-    let next = null;
-    for (const e of window.latestCalData) {
-      const [tstr, ap] = e.time.split(' ');
-      let [h, m] = tstr.split(':').map(Number);
-      if (ap === 'PM' && h !== 12) h += 12;
-      if (ap === 'AM' && h === 12) h = 0;
-      const evtStart = new Date(now);
-      evtStart.setHours(h, m, 0, 0);
-      if (evtStart > now) {
-        next = {title: e.title, start: evtStart};
-        break;
-      }
-    }
-    if (!next) {
-      document.getElementById('countdown-timer').textContent = '';
-      return;
-    }
-    const ms = next.start - now;
-    const mins = Math.floor(ms / 60000) % 60;
-    const hrs = Math.floor(ms / 3600000);
-    document.getElementById('countdown-timer').textContent = `Next: ${next.title} in ${hrs > 0 ? hrs + 'h ' : ''}${mins}m`;
-  }
-  setInterval(updateCountdown, 15000);
-
-  // --- Patch renderCalendar to track data globally for countdown ---
-  const _origRenderCalendar = renderCalendar;
-  window.latestCalData = null;
-  renderCalendar = function(items) {
-    window.latestCalData = items;
-    _origRenderCalendar(items);
-    updateCountdown();
-  };
-
-  let lastUpdatedISO = null;
-  async function loadData() {
-    try {
-      const res  = await fetch('/api/snapshot');
-      const data = await res.json();
-      lastUpdatedISO = data.last_updated;
-      document.getElementById('last-updated').textContent = 'Last updated: ' + minutesSince(lastUpdatedISO);
-      if (data.kpis)             renderKPIs(data.kpis);
-      if (data.daily_priorities) renderPriorities(data.daily_priorities);
-      if (data.projects)         renderProjects(data.projects);
-      if (data.calendar)         renderCalendar(data.calendar);
-      if (data.agents)           renderAgents(data.agents);
-    } catch {
-      document.getElementById('last-updated').textContent = 'Error loading data';
-    }
-  }
-
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
-  }
-  function refresh() {
-    showToast('🔄 BenBot is updating…');
-    loadData();
-    fetchBTC();
-    fetchFG();
-  }
-  
-  // Sidebar active state unchanged
-  // ...
-  
-  document.getElementById('greeting').textContent  = greeting();
-  document.getElementById('header-date').textContent = fmtDate(new Date());
-  loadData();
-  fetchBTC();
-  fetchFG();
-
-  setInterval(() => {
-    if (lastUpdatedISO)
-      document.getElementById('last-updated').textContent = 'Last updated: ' + minutesSince(lastUpdatedISO);
-  }, 60000);
+// Init
+renderAgents();
+loadSnapshot();
+setInterval(loadSnapshot, 300000);
 </script>
 </body>
 </html>
