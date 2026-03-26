@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouTube Content Strategy — Collective Shift</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --dark: #0a0a0a;
+    --dark-card: rgba(255,255,255,0.05);
+    --dark-card-border: rgba(255,255,255,0.08);
+    --orange: #F7931A;
+    --orange-dim: rgba(247,147,26,0.15);
+    --teal: #00D4AA;
+    --teal-dim: rgba(0,212,170,0.12);
+    --light-bg: #f8f9fa;
+    --light-text: #1a1a2e;
+    --white: #ffffff;
+    --white-60: rgba(255,255,255,0.6);
+    --white-80: rgba(255,255,255,0.8);
+    --protect-color: #E74C3C;
+    --build-color: #3498DB;
+    --yield-color: #F7931A;
+    --proof-color: #00D4AA;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font);
+    background: var(--dark);
+    color: var(--white);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Grid texture overlay */
+  .grid-bg {
+    position: relative;
+  }
+  .grid-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .grid-bg > * { position: relative; z-index: 1; }
+
+  /* Sticky Nav */
+  .top-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--dark-card-border);
+    padding: 0 2rem;
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0.75rem 0;
+  }
+  .nav-inner::-webkit-scrollbar { display: none; }
+  .nav-inner a {
+    color: var(--white-60);
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.4rem 0.75rem;
+    border-radius: 6px;
+    white-space: nowrap;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .nav-inner a:hover {
+    color: var(--orange);
+    background: var(--orange-dim);
+  }
+  .nav-logo {
+    font-weight: 800;
+    color: var(--orange) !important;
+    font-size: 0.85rem !important;
+    margin-right: 1rem;
+    letter-spacing: -0.02em;
+    text-transform: none !important;
+  }
+
+  /* Sections */
+  section { padding: 5rem 2rem; }
+  .container { max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.03em;
+  }
+  .section-subtitle {
+    font-size: 1.1rem;
+    color: var(--white-60);
+    max-width: 700px;
+    line-height: 1.7;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 8rem 2rem 5rem;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(247,147,26,0.06) 0%, transparent 60%);
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--orange-dim);
+    border: 1px solid rgba(247,147,26,0.25);
+    border-radius: 100px;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--orange);
+    margin-bottom: 2rem;
+  }
+  .hero .section-title {
+    font-size: 3.5rem;
+    max-width: 900px;
+    margin: 0 auto 1.5rem;
+  }
+  .hero .section-subtitle {
+    margin: 0 auto 2.5rem;
+    max-width: 800px;
+    font-size: 1.2rem;
+  }
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+  }
+  .hero-meta-item {
+    text-align: center;
+  }
+  .hero-meta-item .value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--orange);
+  }
+  .hero-meta-item .label {
+    font-size: 0.75rem;
+    color: var(--white-60);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.25rem;
+  }
+
+  /* Big Topic */
+  .big-topic-box {
+    background: linear-gradient(135deg, rgba(247,147,26,0.1), rgba(247,147,26,0.03));
+    border: 1px solid rgba(247,147,26,0.2);
+    border-radius: 16px;
+    padding: 3rem;
+    text-align: center;
+    margin-top: 2rem;
+  }
+  .big-topic-box h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--white);
+  }
+  .big-topic-box p {
+    margin-top: 1rem;
+    color: var(--white-60);
+    font-size: 0.95rem;
+  }
+
+  /* Funnel Diagram */
+  .funnel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin: 3rem auto;
+    max-width: 700px;
+  }
+  .funnel-step {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1.25rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    position: relative;
+    text-align: center;
+    width: 100%;
+    transition: transform 0.2s;
+  }
+  .funnel-step:hover { transform: scale(1.02); }
+  .funnel-step .step-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    min-width: 80px;
+    text-align: right;
+  }
+  .funnel-step .step-name { flex: 1; text-align: left; }
+  .funnel-step .step-detail {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--white-60);
+    min-width: 200px;
+    text-align: right;
+  }
+  .funnel-arrow {
+    color: var(--white-60);
+    font-size: 1.2rem;
+    margin: 0.25rem 0;
+  }
+  .f-level0 { background: rgba(247,147,26,0.08); border: 1px solid rgba(247,147,26,0.2); }
+  .f-level05 { background: rgba(247,147,26,0.06); border: 1px solid rgba(247,147,26,0.15); }
+  .f-level1 { background: rgba(0,212,170,0.06); border: 1px solid rgba(0,212,170,0.15); }
+  .f-level2 { background: rgba(0,212,170,0.08); border: 1px solid rgba(0,212,170,0.2); }
+  .f-level3 { background: rgba(0,212,170,0.12); border: 1px solid rgba(0,212,170,0.3); }
+
+  /* 90/10 Rule Visual */
+  .rule-bar {
+    display: flex;
+    border-radius: 12px;
+    overflow: hidden;
+    height: 48px;
+    margin: 2rem 0;
+    max-width: 600px;
+  }
+  .rule-what {
+    width: 10%;
+    background: var(--orange);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.85rem;
+    color: var(--dark);
+  }
+  .rule-how {
+    width: 90%;
+    background: var(--dark-card);
+    border: 1px solid var(--dark-card-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--white-60);
+  }
+
+  /* Pillar Cards */
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+  .pillar-card {
+    border-radius: 16px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+  .pillar-card:hover { transform: translateY(-2px); }
+  .pillar-card .pillar-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  .pillar-card h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .pillar-card .pillar-trigger {
+    font-size: 0.85rem;
+    color: var(--white-60);
+    margin-bottom: 0.75rem;
+    font-style: italic;
+  }
+  .pillar-card .pillar-modules {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .module-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 100px;
+    background: rgba(255,255,255,0.1);
+    letter-spacing: 0.03em;
+  }
+  .p-protect { background: rgba(231,76,60,0.08); border: 1px solid rgba(231,76,60,0.2); }
+  .p-protect h3 { color: var(--protect-color); }
+  .p-build { background: rgba(52,152,219,0.08); border: 1px solid rgba(52,152,219,0.2); }
+  .p-build h3 { color: var(--build-color); }
+  .p-yield { background: rgba(247,147,26,0.08); border: 1px solid rgba(247,147,26,0.2); }
+  .p-yield h3 { color: var(--yield-color); }
+  .p-proof { background: rgba(0,212,170,0.08); border: 1px solid rgba(0,212,170,0.2); }
+  .p-proof h3 { color: var(--proof-color); }
+
+  /* Video Ideas */
+  .video-pillar-section { margin-bottom: 3rem; }
+  .video-pillar-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--dark-card-border);
+  }
+  .video-pillar-header .pill-icon { font-size: 1.5rem; }
+  .video-pillar-header h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+  .video-source {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--orange);
+    margin-bottom: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  .video-source:first-child { margin-top: 0; }
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 0.75rem;
+  }
+  .video-card {
+    background: var(--dark-card);
+    border: 1px solid var(--dark-card-border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    transition: border-color 0.2s;
+  }
+  .video-card:hover { border-color: rgba(255,255,255,0.15); }
+  .video-num {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--orange);
+    min-width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--orange-dim);
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+  .video-info { flex: 1; }
+  .video-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 0.35rem;
+  }
+  .video-module {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--teal);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* Calendar */
+  .calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    font-size: 0.88rem;
+  }
+  .calendar-table thead th {
+    background: var(--orange);
+    color: var(--dark);
+    font-weight: 700;
+    padding: 0.85rem 1rem;
+    text-align: left;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .calendar-table thead th:first-child { border-radius: 10px 0 0 0; }
+  .calendar-table thead th:last-child { border-radius: 0 10px 0 0; }
+  .calendar-table tbody tr {
+    border-bottom: 1px solid var(--dark-card-border);
+    transition: background 0.15s;
+  }
+  .calendar-table tbody tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+  .calendar-table tbody tr:hover { background: rgba(247,147,26,0.04); }
+  .calendar-table td {
+    padding: 0.85rem 1rem;
+    vertical-align: top;
+  }
+  .calendar-table .week-num {
+    font-weight: 800;
+    color: var(--orange);
+    white-space: nowrap;
+  }
+  .calendar-table .vid-title {
+    font-weight: 500;
+  }
+  .calendar-table .os-mod {
+    font-size: 0.72rem;
+    color: var(--teal);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  /* Quote/Callout */
+  .callout-box {
+    background: rgba(247,147,26,0.06);
+    border-left: 4px solid var(--orange);
+    border-radius: 0 12px 12px 0;
+    padding: 2rem 2.5rem;
+    margin-top: 2rem;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--white-80);
+    font-style: italic;
+  }
+
+  /* ICP Card */
+  .icp-card {
+    background: var(--dark-card);
+    border: 1px solid var(--dark-card-border);
+    border-radius: 16px;
+    padding: 2.5rem;
+    margin-top: 2rem;
+    max-width: 700px;
+  }
+  .icp-card h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--orange);
+    margin-bottom: 1.5rem;
+  }
+  .icp-row {
+    display: flex;
+    gap: 1rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--dark-card-border);
+    font-size: 0.9rem;
+  }
+  .icp-row:last-child { border-bottom: none; }
+  .icp-label {
+    font-weight: 700;
+    color: var(--white-80);
+    min-width: 100px;
+    flex-shrink: 0;
+  }
+  .icp-value { color: var(--white-60); }
+
+  /* Competitor Cards */
+  .comp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin-top: 2rem;
+  }
+  .comp-card {
+    background: var(--dark-card);
+    border: 1px solid var(--dark-card-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+  .comp-card h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .comp-card p {
+    font-size: 0.85rem;
+    color: var(--white-60);
+    line-height: 1.5;
+  }
+  .comp-card.cs-diff {
+    border-color: var(--orange);
+    background: rgba(247,147,26,0.06);
+  }
+  .comp-card.cs-diff h4 { color: var(--orange); }
+
+  /* Light section */
+  .light-section {
+    background: var(--light-bg);
+    color: var(--light-text);
+  }
+  .light-section .section-subtitle { color: #555; }
+  .light-section .callout-box {
+    background: rgba(247,147,26,0.08);
+    color: #333;
+  }
+  .light-section .video-card {
+    background: white;
+    border-color: #e0e0e0;
+  }
+  .light-section .video-title { color: var(--light-text); }
+  .light-section .video-num { color: #fff; background: var(--orange); }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    border-top: 1px solid var(--dark-card-border);
+    color: var(--white-60);
+    font-size: 0.8rem;
+  }
+  .footer strong { color: var(--orange); }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero .section-title { font-size: 2.2rem; }
+    .pillars-grid { grid-template-columns: 1fr; }
+    .video-grid { grid-template-columns: 1fr; }
+    .hero-meta { gap: 1.5rem; }
+    section { padding: 3rem 1.25rem; }
+    .funnel-step .step-detail { display: none; }
+    .calendar-table { font-size: 0.78rem; }
+    .calendar-table td { padding: 0.6rem 0.5rem; }
+    .comp-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Print */
+  @media print {
+    .top-nav { display: none; }
+    body { background: white; color: black; }
+    section { padding: 1.5rem 0; break-inside: avoid; }
+    .hero { padding: 2rem 0; }
+    .grid-bg::before { display: none; }
+    .pillar-card, .video-card, .icp-card, .comp-card, .callout-box {
+      border: 1px solid #ddd;
+      background: #fafafa;
+      color: #222;
+    }
+    .section-title { font-size: 1.6rem; }
+    .video-grid { grid-template-columns: 1fr 1fr; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Sticky Nav -->
+<nav class="top-nav">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">CS</a>
+    <a href="#big-topic">Topic</a>
+    <a href="#rule">90/10 Rule</a>
+    <a href="#pillars">Pillars</a>
+    <a href="#videos">40 Videos</a>
+    <a href="#calendar">Calendar</a>
+    <a href="#bridge">Bridge Script</a>
+    <a href="#icp">ICP</a>
+    <a href="#competitors">Competitors</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section id="hero" class="hero grid-bg">
+  <div class="container">
+    <div class="hero-badge">▶ @BenCollectiveShift</div>
+    <h1 class="section-title">YouTube Content Strategy</h1>
+    <p class="section-subtitle">A complete content engine mapped to the Shift OS education system — 40 video ideas, 4 pillars, and a 12-week calendar designed to attract high-net-worth investors and funnel them into Platinum membership.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <div class="value">40</div>
+        <div class="label">Video Ideas</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="value">4</div>
+        <div class="label">Content Pillars</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="value">12</div>
+        <div class="label">Week Calendar</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="value">5</div>
+        <div class="label">Funnel Levels</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Big Topic -->
+<section id="big-topic" class="grid-bg">
+  <div class="container">
+    <div class="section-label">The Big Topic</div>
+    <div class="big-topic-box">
+      <h3>"How Successful People Are Using Digital Assets to Protect and Build Generational Wealth — Without the Noise"</h3>
+      <p>Aligned to the 3-level education system: every video maps to a specific Shift OS module and naturally funnels toward Platinum membership.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 90/10 Rule -->
+<section id="rule">
+  <div class="container">
+    <div class="section-label">The 90/10 Rule</div>
+    <h2 class="section-title">Give the WHAT. Hold the HOW.</h2>
+    <p class="section-subtitle">Jeremy's rule: share 10% (the strategic overview) on YouTube, reserve 90% (the implementation) for Platinum members.</p>
+
+    <div class="rule-bar">
+      <div class="rule-what">10%</div>
+      <div class="rule-how">90% — Inside Platinum</div>
+    </div>
+
+    <div class="funnel">
+      <div class="funnel-step f-level0">
+        <span class="step-label">Level 0</span>
+        <span class="step-name">▶ YouTube</span>
+        <span class="step-detail">The strategic overview (WHAT to think about)</span>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step f-level05">
+        <span class="step-label">Level 0.5</span>
+        <span class="step-name">🚀 Accelerator</span>
+        <span class="step-detail">30-day taste</span>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step f-level1">
+        <span class="step-label">Level 1</span>
+        <span class="step-name">⭐ Platinum Beginner</span>
+        <span class="step-detail">Full frameworks + 8-step process</span>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step f-level2">
+        <span class="step-label">Level 2</span>
+        <span class="step-name">💎 Platinum Advanced</span>
+        <span class="step-detail">DeFi, yield, borrowing, multi-entity</span>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step f-level3">
+        <span class="step-label">Level 3</span>
+        <span class="step-name">👑 Platinum Elite</span>
+        <span class="step-detail">Time-gated, year 2+ renewals</span>
+      </div>
+    </div>
+
+    <p style="color: var(--white-60); font-size: 0.95rem; text-align: center; max-width: 600px; margin: 0 auto;">Every video teaches one concept from the OS, gives the WHAT, and bridges to <em>"Inside Platinum, we go deeper on this every single week."</em></p>
+  </div>
+</section>
+
+<!-- 4 Content Pillars -->
+<section id="pillars" class="grid-bg">
+  <div class="container">
+    <div class="section-label">Content Strategy</div>
+    <h2 class="section-title">4 Content Pillars</h2>
+    <p class="section-subtitle">Each pillar maps to specific ICP triggers and Shift OS modules, creating a cohesive content ecosystem.</p>
+
+    <div class="pillars-grid">
+      <div class="pillar-card p-protect">
+        <div class="pillar-icon">🛡️</div>
+        <h3>PROTECT — Bear Market + Wealth Preservation</h3>
+        <div class="pillar-trigger">ICP trigger: fear of loss, inflation, real estate risk</div>
+        <div class="pillar-modules">
+          <span class="module-badge">B1-M1 Foundations</span>
+          <span class="module-badge">B1-M4 Principles</span>
+          <span class="module-badge">B2-M8 Sell Strategy</span>
+        </div>
+      </div>
+
+      <div class="pillar-card p-build">
+        <div class="pillar-icon">📚</div>
+        <h3>BUILD — Shift OS Education</h3>
+        <div class="pillar-trigger">ICP trigger: "I need a framework, not tips"</div>
+        <div class="pillar-modules">
+          <span class="module-badge">B1-M2 Bitcoin</span>
+          <span class="module-badge">B1-M3 Altcoins</span>
+          <span class="module-badge">B2-M5 – B2-M8</span>
+        </div>
+      </div>
+
+      <div class="pillar-card p-yield">
+        <div class="pillar-icon">💰</div>
+        <h3>YIELD — Income & DeFi Education</h3>
+        <div class="pillar-trigger">ICP trigger: "How do I earn passive income on crypto?"</div>
+        <div class="pillar-modules">
+          <span class="module-badge">A2-M5 Yield & Staking</span>
+          <span class="module-badge">Teased at L0, detailed in Advanced</span>
+        </div>
+      </div>
+
+      <div class="pillar-card p-proof">
+        <div class="pillar-icon">📊</div>
+        <h3>PROOF — Transparency & Authority</h3>
+        <div class="pillar-trigger">ICP trigger: "Show me, don't tell me"</div>
+        <div class="pillar-modules">
+          <span class="module-badge">CS Portfolio</span>
+          <span class="module-badge">Member Stories</span>
+          <span class="module-badge">Market Updates</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 40 Video Ideas -->
+<section id="videos">
+  <div class="container">
+    <div class="section-label">Video Library</div>
+    <h2 class="section-title">40 Video Ideas — Mapped to Shift OS</h2>
+    <p class="section-subtitle" style="margin-bottom: 3rem;">Every video title is mapped to a specific Shift OS module. Numbered for easy reference in planning meetings.</p>
+
+    <!-- PILLAR 1: PROTECT -->
+    <div class="video-pillar-section">
+      <div class="video-pillar-header">
+        <span class="pill-icon">🛡️</span>
+        <h3 style="color: var(--protect-color);">PILLAR 1: PROTECT — Bear Market + Wealth Preservation</h3>
+      </div>
+
+      <div class="video-source">From B1-M1 (Foundations)</div>
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="video-num">1</div>
+          <div class="video-info">
+            <div class="video-title">Bitcoin at $70K: Is This the Buying Opportunity of the Decade?</div>
+            <div class="video-module">B1-M1 · Foundations</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">2</div>
+          <div class="video-info">
+            <div class="video-title">Is Bitcoin Actually a Hedge Against Inflation? The Honest Answer</div>
+            <div class="video-module">B1-M1 · Foundations</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">3</div>
+          <div class="video-info">
+            <div class="video-title">The Real Estate Correction No One's Talking About</div>
+            <div class="video-module">B1-M1 · Foundations</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">4</div>
+          <div class="video-info">
+            <div class="video-title">Why $100K+ Investors Are Quietly Moving Into Bitcoin</div>
+            <div class="video-module">B1-M1 · Foundations</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">5</div>
+          <div class="video-info">
+            <div class="video-title">3 Months in Crypto = 3 Years in Traditional Finance. Here's Why.</div>
+            <div class="video-module">B1-M1 · Foundations</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-source">From B2-M8 + A2-M7 (Sell Strategy)</div>
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="video-num">6</div>
+          <div class="video-info">
+            <div class="video-title">The #1 Mistake That Destroys Crypto Portfolios (No Exit Strategy)</div>
+            <div class="video-module">B2-M8 · Sell Strategy</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">7</div>
+          <div class="video-info">
+            <div class="video-title">How to Build a Sell Strategy Before the Next Bull Run</div>
+            <div class="video-module">B2-M8 · Sell Strategy</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">8</div>
+          <div class="video-info">
+            <div class="video-title">I've Never Met Anyone Who Took Profits and Regretted It</div>
+            <div class="video-module">B2-M8 · Sell Strategy</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-source">Bear Market Specific</div>
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="video-num">9</div>
+          <div class="video-info">
+            <div class="video-title">Bear Markets Are Where Generational Wealth Is Built</div>
+            <div class="video-module">B1-M1 · Bear Market</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">10</div>
+          <div class="video-info">
+            <div class="video-title">The 5 Things Smart Investors Do When Prices Drop</div>
+            <div class="video-module">B1-M1 · Bear Market</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PILLAR 2: BUILD -->
+    <div class="video-pillar-section">
+      <div class="video-pillar-header">
+        <span class="pill-icon">📚</span>
+        <h3 style="color: var(--build-color);">PILLAR 2: BUILD — Shift OS Education</h3>
+      </div>
+
+      <div class="video-source">From B1-M2 (Bitcoin)</div>
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="video-num">11</div>
+          <div class="video-info">
+            <div class="video-title">Two Different Games: Why Bitcoin and Altcoins Are NOT the Same</div>
+            <div class="video-module">B1-M2 · Bitcoin</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">12</div>
+          <div class="video-info">
+            <div class="video-title">How Much Bitcoin Should Be in Your Portfolio? (The Data)</div>
+            <div class="video-module">B1-M2 · Bitcoin</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">13</div>
+          <div class="video-info">
+            <div class="video-title">I Would Never Put My Retirement Into Crypto. Here's What I'd Do Instead.</div>
+            <div class="video-module">B1-M2 · Bitcoin</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">14</div>
+          <div class="video-info">
+            <div class="video-title">The 'I Will Buy at X' Framework: How to Invest Without Emotion</div>
+            <div class="video-module">B1-M2 · Bitcoin</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">15</div>
+          <div class="video-info">
+            <div class="video-title">Bitcoin Has Never Been Lower Than 4 Years Prior. Here's the Data.</div>
+            <div class="video-module">B1-M2 · Bitcoin</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-source">From B1-M3 (Altcoins)</div>
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="video-num">16</div>
+          <div class="video-info">
+            <div class="video-title">The Altcoin Trap: Why 98% of Crypto Projects Fail</div>
+            <div class="video-module">B1-M3 · Altcoins</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">17</div>
+          <div class="video-info">
+            <div class="video-title">Show Me the Usage, Not the Roadmap</div>
+            <div class="video-module">B1-M3 · Altcoins</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">18</div>
+          <div class="video-info">
+            <div class="video-title">HYPE vs Cardano: What Separates Winners from Losers</div>
+            <div class="video-module">B1-M3 · Altcoins</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">19</div>
+          <div class="video-info">
+            <div class="video-title">If You Can't Explain Why You Own It in One Sentence, Should You?</div>
+            <div class="video-module">B1-M3 · Altcoins</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">20</div>
+          <div class="video-info">
+            <div class="video-title">The 15% Inflation Trap: What Tokenomics Means for Your Investment</div>
+            <div class="video-module">B1-M3 · Altcoins</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-source">From B1-M4 (Principles)</div>
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="video-num">21</div>
+          <div class="video-info">
+            <div class="video-title">The 50% Rule: How Much Crypto You Should Actually Own</div>
+            <div class="video-module">B1-M4 · Principles</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">22</div>
+          <div class="video-info">
+            <div class="video-title">Your Feed Is Not Your Financial Advisor</div>
+            <div class="video-module">B1-M4 · Principles</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">23</div>
+          <div class="video-info">
+            <div class="video-title">I've Been in Crypto 9 Years. Here Are the 5 Things That Actually Matter.</div>
+            <div class="video-module">B1-M4 · Principles</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-source">From the 8-Step Process (B3)</div>
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="video-num">24</div>
+          <div class="video-info">
+            <div class="video-title">The 7-Step System I Use to Invest in Crypto (No Signals, No Hype)</div>
+            <div class="video-module">B3 · 8-Step Process</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">25</div>
+          <div class="video-info">
+            <div class="video-title">How to Build a Complete Crypto Strategy in 8 Steps</div>
+            <div class="video-module">B3 · 8-Step Process</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PILLAR 3: YIELD -->
+    <div class="video-pillar-section">
+      <div class="video-pillar-header">
+        <span class="pill-icon">💰</span>
+        <h3 style="color: var(--yield-color);">PILLAR 3: YIELD — Income & DeFi Education</h3>
+      </div>
+
+      <div class="video-source">From A2-M5 (Yield & Staking)</div>
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="video-num">26</div>
+          <div class="video-info">
+            <div class="video-title">Stablecoin Yields: The Best Kept Secret in Crypto (Earn 5-18% on USD)</div>
+            <div class="video-module">A2-M5 · Yield & Staking</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">27</div>
+          <div class="video-info">
+            <div class="video-title">Where Does the Yield Come From? The Only Question That Matters</div>
+            <div class="video-module">A2-M5 · Yield & Staking</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">28</div>
+          <div class="video-info">
+            <div class="video-title">Is Staking Free Money? The Honest Answer</div>
+            <div class="video-module">A2-M5 · Yield & Staking</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">29</div>
+          <div class="video-info">
+            <div class="video-title">How We Earn Yield on 33% of Our Portfolio (syrupUSDC Explained)</div>
+            <div class="video-module">A2-M5 · Yield & Staking</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-source">From A2-M8 (Borrowing)</div>
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="video-num">30</div>
+          <div class="video-info">
+            <div class="video-title">Why Selling Bitcoin to Access Cash Is a Mistake (And What to Do Instead)</div>
+            <div class="video-module">A2-M8 · Borrowing</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">31</div>
+          <div class="video-info">
+            <div class="video-title">Bitcoin-Backed Loans Explained: Ledn, Unchained, and DeFi</div>
+            <div class="video-module">A2-M8 · Borrowing</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PILLAR 4: PROOF -->
+    <div class="video-pillar-section">
+      <div class="video-pillar-header">
+        <span class="pill-icon">📊</span>
+        <h3 style="color: var(--proof-color);">PILLAR 4: PROOF — Authority & Transparency</h3>
+      </div>
+
+      <div class="video-source">Monthly Series</div>
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="video-num">32</div>
+          <div class="video-info">
+            <div class="video-title">My Exact Crypto Portfolio (Monthly Update)</div>
+            <div class="video-module">Proof · Portfolio</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">33</div>
+          <div class="video-info">
+            <div class="video-title">What I'm Buying, Selling, and Watching This Month</div>
+            <div class="video-module">Proof · Market Update</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-source">Member Stories</div>
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="video-num">34</div>
+          <div class="video-info">
+            <div class="video-title">How One Member Went From Losing 2/3 of His Portfolio to Getting It All Back</div>
+            <div class="video-module">Proof · Member Story</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">35</div>
+          <div class="video-info">
+            <div class="video-title">From Certain Loss to 250% Up: How a Framework Changed Everything</div>
+            <div class="video-module">Proof · Member Story</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">36</div>
+          <div class="video-info">
+            <div class="video-title">He Paid Off His Mortgage with Crypto — Here's How</div>
+            <div class="video-module">Proof · Member Story</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">37</div>
+          <div class="video-info">
+            <div class="video-title">$120K From One Trade — And It Paid for Years of Membership</div>
+            <div class="video-module">Proof · Member Story</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-source">Authority</div>
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="video-num">38</div>
+          <div class="video-info">
+            <div class="video-title">116% Average Return Per Year: How We Do It (And Why)</div>
+            <div class="video-module">Proof · Authority</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">39</div>
+          <div class="video-info">
+            <div class="video-title">What $15,000 Gets You Inside Collective Shift Platinum (Full Tour)</div>
+            <div class="video-module">Proof · Authority</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-num">40</div>
+          <div class="video-info">
+            <div class="video-title">No Affiliates. No Shilling. No Signals. Here's Why.</div>
+            <div class="video-module">Proof · Authority</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12-Week Calendar -->
+<section id="calendar" class="light-section">
+  <div class="container">
+    <div class="section-label" style="color: var(--orange);">Publishing Schedule</div>
+    <h2 class="section-title" style="color: var(--light-text);">12-Week Content Calendar</h2>
+    <p class="section-subtitle">April – June 2026 · Two videos per week (Tuesday & Thursday)</p>
+
+    <table class="calendar-table">
+      <thead>
+        <tr>
+          <th>Week</th>
+          <th>Video 1 — Tuesday</th>
+          <th>Video 2 — Thursday</th>
+          <th>OS Modules</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="week-num">1</td>
+          <td class="vid-title">Is Bitcoin a Hedge Against Inflation?</td>
+          <td class="vid-title">My Portfolio (March Update)</td>
+          <td class="os-mod">B1-M1, Proof</td>
+        </tr>
+        <tr>
+          <td class="week-num">2</td>
+          <td class="vid-title">The #1 Mistake That Destroys Portfolios</td>
+          <td class="vid-title">What BlackRock Knows About Bitcoin</td>
+          <td class="os-mod">B2-M8, B1-M2</td>
+        </tr>
+        <tr>
+          <td class="week-num">3</td>
+          <td class="vid-title">Bitcoin at $70K: Opportunity or Trap?</td>
+          <td class="vid-title">Stablecoin Yields: Earn 5-18% on USD</td>
+          <td class="os-mod">B1-M1, A2-M5</td>
+        </tr>
+        <tr>
+          <td class="week-num">4</td>
+          <td class="vid-title">The Real Estate Correction Coming</td>
+          <td class="vid-title">The 7-Step System I Use</td>
+          <td class="os-mod">B1-M1, B3</td>
+        </tr>
+        <tr>
+          <td class="week-num">5</td>
+          <td class="vid-title">Two Different Games: BTC vs Alts</td>
+          <td class="vid-title">My Portfolio (April Update)</td>
+          <td class="os-mod">B1-M2, Proof</td>
+        </tr>
+        <tr>
+          <td class="week-num">6</td>
+          <td class="vid-title">98% of Crypto Projects Fail — Find the 2%</td>
+          <td class="vid-title">The 50% Rule: How Much to Own</td>
+          <td class="os-mod">B1-M3, B1-M4</td>
+        </tr>
+        <tr>
+          <td class="week-num">7</td>
+          <td class="vid-title">Bear Markets = Generational Wealth</td>
+          <td class="vid-title">How to Build a Sell Strategy</td>
+          <td class="os-mod">B1-M1, B2-M8</td>
+        </tr>
+        <tr>
+          <td class="week-num">8</td>
+          <td class="vid-title">I Lost Everything. Here's What I Learned.</td>
+          <td class="vid-title">Where Does the Yield Come From?</td>
+          <td class="os-mod">Proof, A2-M5</td>
+        </tr>
+        <tr>
+          <td class="week-num">9</td>
+          <td class="vid-title">HYPE vs Cardano: Winners vs Losers</td>
+          <td class="vid-title">My Portfolio (May Update)</td>
+          <td class="os-mod">B1-M3, Proof</td>
+        </tr>
+        <tr>
+          <td class="week-num">10</td>
+          <td class="vid-title">The 15% Inflation Trap</td>
+          <td class="vid-title">The 'I Will Buy at X' Framework</td>
+          <td class="os-mod">B1-M3, B1-M2</td>
+        </tr>
+        <tr>
+          <td class="week-num">11</td>
+          <td class="vid-title">5 Things Smart Investors Do in Bear Markets</td>
+          <td class="vid-title">Your Feed Is Not Your Advisor</td>
+          <td class="os-mod">B1-M4, B1-M4</td>
+        </tr>
+        <tr>
+          <td class="week-num">12</td>
+          <td class="vid-title">$120K From One Trade (Member Story)</td>
+          <td class="vid-title">No Affiliates. No Shilling. Here's Why.</td>
+          <td class="os-mod">Proof, Proof</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Bridge Script -->
+<section id="bridge" class="grid-bg">
+  <div class="container">
+    <div class="section-label">Conversion Engine</div>
+    <h2 class="section-title">The Bridge Script</h2>
+    <p class="section-subtitle" style="margin-bottom: 0.5rem;">Every video's last 60 seconds — the consistent CTA that converts viewers into consultation applicants.</p>
+
+    <div class="callout-box">
+      "Everything I've shared today is the kind of strategic education we provide inside Collective Shift Platinum. I've given you the WHAT — the frameworks, the data, the levels. Inside Platinum, our members get the HOW — weekly implementation calls, 8 private analyst sessions, our live audited portfolio, and a community of 350+ serious investors.<br><br>
+      If you're a successful professional who wants a professional framework for digital assets, not tips, not signals — a real system — check the link below to apply for a consultation. It's by application only."
+    </div>
+  </div>
+</section>
+
+<!-- ICP -->
+<section id="icp">
+  <div class="container">
+    <div class="section-label">Target Audience</div>
+    <h2 class="section-title">Ideal Customer Profile</h2>
+    <p class="section-subtitle">Every piece of content is designed for this specific person.</p>
+
+    <div class="icp-card">
+      <h3>🎯 Strategic Wealth Builder</h3>
+      <div class="icp-row">
+        <span class="icp-label">Age</span>
+        <span class="icp-value">35–55</span>
+      </div>
+      <div class="icp-row">
+        <span class="icp-label">Net Worth</span>
+        <span class="icp-value">$1M+</span>
+      </div>
+      <div class="icp-row">
+        <span class="icp-label">Profile</span>
+        <span class="icp-value">Business owner, executive, FIFO worker, or professional</span>
+      </div>
+      <div class="icp-row">
+        <span class="icp-label">Pain</span>
+        <span class="icp-value">Inflation eroding wealth, real estate plateauing, noise/scams in crypto</span>
+      </div>
+      <div class="icp-row">
+        <span class="icp-label">Want</span>
+        <span class="icp-value">Professional framework, not tips or signals</span>
+      </div>
+      <div class="icp-row">
+        <span class="icp-label">Trigger</span>
+        <span class="icp-value">Fear of missing the opportunity + fear of doing it wrong</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Competitors -->
+<section id="competitors" class="grid-bg">
+  <div class="container">
+    <div class="section-label">Market Position</div>
+    <h2 class="section-title">Competitor Landscape</h2>
+    <p class="section-subtitle">Where Collective Shift fits — and why we win.</p>
+
+    <div class="comp-grid">
+      <div class="comp-card">
+        <h4>Mark Moss</h4>
+        <p>"Retire Off Bitcoin" — similar ICP, more aggressive BTC maxi positioning</p>
+      </div>
+      <div class="comp-card">
+        <h4>Raoul Pal</h4>
+        <p>Macro + crypto, institutional lens, skews older audience demographic</p>
+      </div>
+      <div class="comp-card">
+        <h4>Anthony Pompliano</h4>
+        <p>Broad Bitcoin education, mainstream bridging, high volume content</p>
+      </div>
+      <div class="comp-card cs-diff">
+        <h4>✦ Collective Shift Differentiator</h4>
+        <p>Education system (not signals) · Audited returns (116% avg) · 9 years track record · No affiliates · No shilling · Application-only membership</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <p><strong>Collective Shift</strong> · YouTube Content Strategy · Internal Document · March 2026</p>
+  <p style="margin-top: 0.5rem;">Prepared for team review · @BenCollectiveShift</p>
+</footer>
+
+</body>
+</html>
