@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Shift Operating System — Collective Shift</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: #0a0a0a; color: #e0e0e0; line-height: 1.7;
+  }
+
+  /* ── Grid Texture Overlay ── */
+  .dark-section { position: relative; }
+  .dark-section::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .dark-section > * { position: relative; z-index: 1; }
+
+  /* ── Utility ── */
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+  .text-orange { color: #F7931A; }
+  .text-teal { color: #00D4AA; }
+  .text-muted { color: #888; }
+  a { color: #F7931A; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── Top Navigation ── */
+  .top-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,10,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(247,147,26,0.15);
+    padding: 0 24px;
+  }
+  .top-nav-inner {
+    max-width: 1140px; margin: 0 auto;
+    display: flex; align-items: center; gap: 8px;
+    overflow-x: auto; white-space: nowrap;
+    scrollbar-width: none; -ms-overflow-style: none;
+    padding: 12px 0;
+  }
+  .top-nav-inner::-webkit-scrollbar { display: none; }
+  .nav-brand {
+    font-weight: 800; font-size: 0.85rem; color: #F7931A;
+    margin-right: 16px; flex-shrink: 0; letter-spacing: -0.02em;
+  }
+  .nav-link {
+    font-size: 0.78rem; color: #999; padding: 5px 10px;
+    border-radius: 6px; transition: all 0.2s; flex-shrink: 0;
+    font-weight: 500;
+  }
+  .nav-link:hover { color: #fff; background: rgba(247,147,26,0.12); text-decoration: none; }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 100px 24px 80px; text-align: center;
+    background: linear-gradient(180deg, #0a0a0a 0%, #111 50%, #0a0a0a 100%);
+    border-bottom: 1px solid rgba(247,147,26,0.1);
+  }
+  .hero-badge {
+    display: inline-block; padding: 6px 18px; border-radius: 50px;
+    background: rgba(247,147,26,0.1); border: 1px solid rgba(247,147,26,0.25);
+    color: #F7931A; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-size: clamp(2.4rem, 5vw, 3.8rem); font-weight: 900;
+    background: linear-gradient(135deg, #fff 30%, #F7931A);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; line-height: 1.15; margin-bottom: 24px;
+  }
+  .hero-quote {
+    font-size: 1.25rem; color: #bbb; font-style: italic;
+    max-width: 560px; margin: 0 auto 32px;
+  }
+  .hero-sub {
+    font-size: 0.95rem; color: #777; max-width: 620px; margin: 0 auto;
+  }
+
+  /* ── Section Headings ── */
+  .section { padding: 72px 0; }
+  .section-num {
+    font-size: 0.75rem; font-weight: 700; color: #F7931A;
+    letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .section h2 {
+    font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .section h3 {
+    font-size: 1.35rem; font-weight: 700; color: #fff; margin-top: 40px; margin-bottom: 12px;
+  }
+  .section h4 {
+    font-size: 1.1rem; font-weight: 700; color: #F7931A; margin-top: 28px; margin-bottom: 8px;
+  }
+  .section-intro {
+    font-size: 1.05rem; color: #aaa; max-width: 740px; margin-bottom: 40px; line-height: 1.8;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 28px 28px; margin-bottom: 20px;
+    transition: border-color 0.3s, transform 0.2s;
+  }
+  .card:hover { border-color: rgba(247,147,26,0.25); transform: translateY(-2px); }
+  .card-grid { display: grid; gap: 20px; }
+  .card-grid-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+  .card-grid-3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .card-grid-4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+  /* ── Module Cards ── */
+  .module-card { border-left: 3px solid #F7931A; }
+  .module-badge {
+    display: inline-block; background: #F7931A; color: #0a0a0a;
+    font-size: 0.7rem; font-weight: 800; padding: 3px 10px;
+    border-radius: 4px; letter-spacing: 0.06em; margin-bottom: 10px;
+  }
+  .module-card h4 { margin-top: 0; font-size: 1.15rem; }
+  .module-card p { color: #bbb; font-size: 0.92rem; margin-bottom: 12px; }
+  .objectives-list { list-style: none; padding: 0; margin: 12px 0; }
+  .objectives-list li {
+    padding: 4px 0 4px 22px; position: relative; font-size: 0.88rem; color: #ccc;
+  }
+  .objectives-list li::before {
+    content: '✓'; position: absolute; left: 0; color: #00D4AA; font-weight: 700;
+  }
+  .action-items { margin-top: 12px; }
+  .action-items li { color: #ddd; }
+  .action-items li::before { content: '→'; color: #F7931A; }
+
+  /* ── Pillar Cards ── */
+  .pillar-icon { font-size: 2rem; margin-bottom: 8px; display: block; }
+  .pillar-card h4 { color: #fff; margin-top: 4px; }
+  .pillar-card p { color: #aaa; font-size: 0.88rem; }
+
+  /* ── Investor Type Cards ── */
+  .investor-card { border-top: 3px solid; padding-top: 24px; }
+  .investor-card.generation { border-color: #00D4AA; }
+  .investor-card.protection { border-color: #4A9EFF; }
+  .investor-card.income { border-color: #F7931A; }
+  .investor-card h4 { margin-top: 0; }
+  .investor-card.generation h4 { color: #00D4AA; }
+  .investor-card.protection h4 { color: #4A9EFF; }
+  .investor-card.income h4 { color: #F7931A; }
+
+  /* ── Tables ── */
+  .table-wrap { overflow-x: auto; margin: 20px 0; border-radius: 10px; }
+  table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    font-size: 0.88rem; border-radius: 10px; overflow: hidden;
+  }
+  thead th {
+    background: #F7931A; color: #0a0a0a; padding: 12px 16px;
+    font-weight: 700; text-align: left; white-space: nowrap;
+  }
+  tbody td {
+    padding: 11px 16px; border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  tbody tr:nth-child(even) td { background: rgba(255,255,255,0.025); }
+  tbody tr:hover td { background: rgba(247,147,26,0.06); }
+  tbody tr:last-child td { border-bottom: none; }
+  td .check { color: #00D4AA; font-weight: 700; }
+
+  /* ── Blockquote ── */
+  blockquote {
+    border-left: 3px solid #F7931A; padding: 14px 20px; margin: 16px 0;
+    background: rgba(247,147,26,0.04); border-radius: 0 8px 8px 0;
+    font-style: italic; color: #ddd; font-size: 0.95rem;
+  }
+
+  /* ── Quote Wall ── */
+  .quote-wall { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .quote-wall blockquote { margin: 0; }
+
+  /* ── Progress Flow ── */
+  .progress-flow {
+    display: flex; align-items: center; gap: 0; flex-wrap: wrap;
+    justify-content: center; margin: 40px 0;
+  }
+  .progress-node {
+    padding: 14px 22px; border-radius: 10px; font-weight: 700;
+    font-size: 0.82rem; text-align: center; white-space: nowrap;
+  }
+  .progress-node.track { background: rgba(247,147,26,0.12); border: 1px solid rgba(247,147,26,0.3); color: #F7931A; }
+  .progress-node.gate {
+    background: rgba(0,212,170,0.1); border: 1px solid rgba(0,212,170,0.3);
+    color: #00D4AA; font-size: 0.72rem;
+  }
+  .progress-arrow { color: #555; font-size: 1.4rem; padding: 0 6px; flex-shrink: 0; }
+
+  /* ── Yield Tier Chart ── */
+  .yield-tiers { display: grid; gap: 12px; margin: 20px 0; }
+  .yield-tier {
+    display: flex; align-items: center; border-radius: 10px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .yield-tier-bar {
+    width: 8px; min-height: 60px; flex-shrink: 0;
+  }
+  .yield-tier-content { padding: 14px 18px; flex: 1; }
+  .yield-tier-content strong { font-size: 0.92rem; }
+  .yield-tier-content .range { color: #F7931A; font-weight: 700; font-size: 0.85rem; }
+  .yield-tier-content .desc { color: #999; font-size: 0.82rem; }
+  .tier-1 .yield-tier-bar { background: #00D4AA; }
+  .tier-2 .yield-tier-bar { background: #4A9EFF; }
+  .tier-3 .yield-tier-bar { background: #F7931A; }
+  .tier-4 .yield-tier-bar { background: #E74C3C; }
+
+  /* ── Platform Cards ── */
+  .platform-card { text-align: center; }
+  .platform-card h4 { margin-top: 8px; font-size: 1rem; }
+  .platform-card .tag {
+    display: inline-block; font-size: 0.7rem; padding: 2px 8px;
+    border-radius: 4px; font-weight: 700; margin-bottom: 8px;
+  }
+  .tag-cefi { background: rgba(74,158,255,0.15); color: #4A9EFF; }
+  .tag-defi { background: rgba(0,212,170,0.15); color: #00D4AA; }
+
+  /* ── Light Sections ── */
+  .light-section {
+    background: #f8f9fa; color: #1a1a2e; padding: 72px 0;
+  }
+  .light-section h2, .light-section h3, .light-section h4 { color: #1a1a2e; }
+  .light-section .section-intro { color: #555; }
+  .light-section .card {
+    background: #fff; border-color: #e0e0e0; color: #333;
+  }
+  .light-section .card:hover { border-color: #F7931A; }
+  .light-section .module-card p, .light-section .objectives-list li { color: #555; }
+  .light-section table thead th { background: #F7931A; color: #0a0a0a; }
+  .light-section table tbody td { border-color: #eee; color: #333; }
+  .light-section table tbody tr:nth-child(even) td { background: #f4f4f4; }
+  .light-section table tbody tr:hover td { background: #fff3e0; }
+  .light-section blockquote { background: rgba(247,147,26,0.06); color: #333; }
+  .light-section .section-num { color: #F7931A; }
+  .light-section .module-badge { background: #F7931A; color: #fff; }
+  .light-section .objectives-list li { color: #444; }
+  .light-section .objectives-list li::before { color: #00D4AA; }
+
+  /* ── Footer ── */
+  .footer {
+    padding: 40px 24px; text-align: center; border-top: 1px solid rgba(255,255,255,0.06);
+    font-size: 0.82rem; color: #666;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .hero { padding: 60px 16px 50px; }
+    .hero h1 { font-size: 2rem; }
+    .section { padding: 48px 0; }
+    .card { padding: 20px; }
+    .card-grid-4 { grid-template-columns: 1fr 1fr; }
+    .progress-flow { flex-direction: column; gap: 4px; }
+    .progress-arrow { transform: rotate(90deg); }
+    .top-nav-inner { padding: 10px 0; }
+  }
+
+  /* ── Print ── */
+  @media print {
+    .top-nav { display: none; }
+    body { background: #fff; color: #000; }
+    .dark-section::before { display: none; }
+    .hero { background: #fff; }
+    .hero h1 { -webkit-text-fill-color: #0a0a0a; color: #0a0a0a; }
+    .card { border-color: #ccc; break-inside: avoid; }
+    .section { padding: 24px 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════ TOP NAV ═══════ -->
+<nav class="top-nav">
+  <div class="top-nav-inner">
+    <span class="nav-brand">COLLECTIVE SHIFT</span>
+    <a href="#intro" class="nav-link">Introduction</a>
+    <a href="#overview" class="nav-link">Overview</a>
+    <a href="#level1" class="nav-link">Level 1</a>
+    <a href="#level2" class="nav-link">Level 2</a>
+    <a href="#level3" class="nav-link">Level 3</a>
+    <a href="#calls" class="nav-link">Calls</a>
+    <a href="#strategy-builder" class="nav-link">Strategy Builder</a>
+    <a href="#workbook" class="nav-link">Workbook</a>
+    <a href="#delivery" class="nav-link">Delivery Matrix</a>
+    <a href="#quotes" class="nav-link">Quotes</a>
+  </div>
+</nav>
+
+<!-- ═══════ HERO ═══════ -->
+<header class="hero dark-section">
+  <div class="container">
+    <div class="hero-badge">Complete Reference Manual — March 2026</div>
+    <h1>The Shift Operating System</h1>
+    <p class="hero-quote">"We teach you how to think. Not what to think."</p>
+    <p class="hero-sub">Collective Shift's end-to-end education framework for Bitcoin and digital asset investors. From first principles to a complete, written investment strategy.</p>
+  </div>
+</header>
+
+<!-- ═══════ 1. INTRODUCTION ═══════ -->
+<section id="intro" class="section dark-section">
+  <div class="container">
+    <div class="section-num">Section 01</div>
+    <h2>Introduction</h2>
+    <p class="section-intro">The Shift Operating System transforms the overwhelming, noisy world of crypto into a structured, repeatable process — giving every member a clear path from first principles to a complete, written investment strategy.</p>
+
+    <h3>What Is the Shift OS?</h3>
+    <p style="color:#bbb; max-width:740px; margin-bottom:20px;">The Shift OS is not a signals group. It's not a tips service. It's the infrastructure that Ben Simpson wished existed when he started investing nine years ago — a system that replaces emotional decision-making with evidence-based frameworks.</p>
+
+    <blockquote>"Education, not advice." Every module, call, and resource is designed to build independent thinking. The goal is members who can evaluate any opportunity themselves — not members who wait for someone to tell them what to buy.</blockquote>
+
+    <!-- Four Pillars -->
+    <h3>The Four Pillars</h3>
+    <div class="card-grid card-grid-4" style="margin-top:20px;">
+      <div class="card pillar-card">
+        <span class="pillar-icon">📚</span>
+        <h4>Education</h4>
+        <p>Modules, courses, live calls — the knowledge layer</p>
+      </div>
+      <div class="card pillar-card">
+        <span class="pillar-icon">📊</span>
+        <h4>Research</h4>
+        <p>Weekly updates, CS portfolio transparency, research library</p>
+      </div>
+      <div class="card pillar-card">
+        <span class="pillar-icon">👥</span>
+        <h4>Community</h4>
+        <p>Circle platform, masterminds, peer support</p>
+      </div>
+      <div class="card pillar-card">
+        <span class="pillar-icon">🎯</span>
+        <h4>Coaching</h4>
+        <p>1:1 analyst sessions bookable on any module</p>
+      </div>
+    </div>
+
+    <!-- Three Investor Types -->
+    <h3>The Three Investor Types</h3>
+    <p style="color:#aaa; margin-bottom:20px;">Every member falls primarily into one of three categories. The Shift OS tailors frameworks, worked examples, and allocation guidance to each:</p>
+    <div class="card-grid card-grid-3">
+      <div class="card investor-card generation">
+        <h4>💰 Wealth Generation</h4>
+        <p style="color:#bbb; font-size:0.9rem;">Growing capital significantly. Higher risk tolerance. Longer time horizon. Larger altcoin allocation as satellite positions around a Bitcoin core.</p>
+      </div>
+      <div class="card investor-card protection">
+        <h4>🛡️ Wealth Protection</h4>
+        <p style="color:#bbb; font-size:0.9rem;">Protecting existing wealth. Bitcoin-dominant (70–80% of crypto portfolio). Lower amounts per DCA. Focus on long-term thesis over price action.</p>
+      </div>
+      <div class="card investor-card income">
+        <h4>📈 Income Creation</h4>
+        <p style="color:#bbb; font-size:0.9rem;">Generating yield on holdings. Stablecoin and DeFi strategies. Systematic withdrawal schedules. Yield strategies covered in Advanced track.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ 2. SYSTEM OVERVIEW ═══════ -->
+<section id="overview" class="section light-section">
+  <div class="container">
+    <div class="section-num">Section 02</div>
+    <h2>System Overview</h2>
+    <p class="section-intro">A structured, two-track progression system with clear gates between levels. No shortcuts, no exceptions.</p>
+
+    <!-- Two-Track Table -->
+    <h3>The Two-Track Structure</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Track</th><th>Level</th><th>Who It's For</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Beginner (Level 1)</strong></td><td>Foundation</td><td>New to crypto, or experienced but without a system. CEX only. No DeFi, yield, staking, or borrowing.</td></tr>
+          <tr><td><strong>Advanced (Level 2)</strong></td><td>Advanced</td><td>Completed all 8 Beginner steps. Adds yield, staking, DeFi, borrowing, advanced tax, multi-entity strategies.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Progression Diagram -->
+    <h3>Level Progression</h3>
+    <div class="progress-flow">
+      <div class="progress-node track">🚀 Pro Accelerator</div>
+      <span class="progress-arrow">→</span>
+      <div class="progress-node track">📗 Level 1 — Beginner</div>
+      <span class="progress-arrow">→</span>
+      <div class="progress-node gate">🔒 GATE<br>Complete 8 Steps</div>
+      <span class="progress-arrow">→</span>
+      <div class="progress-node track">📘 Level 2 — Advanced</div>
+      <span class="progress-arrow">→</span>
+      <div class="progress-node gate">⏳ TIME GATE<br>Year 2+</div>
+      <span class="progress-arrow">→</span>
+      <div class="progress-node track">👑 Level 3 — Elite</div>
+    </div>
+
+    <h3>The Gate</h3>
+    <p style="color:#555; margin-bottom:20px;">Complete all 8 steps of the Beginner track → unlock the Advanced track. This is non-negotiable. The gate protects members from going too deep too fast. No shortcuts, no exceptions.</p>
+
+    <h3>Pro Accelerator</h3>
+    <p style="color:#555;">A 30-day intensive that gives new members a taste of the Platinum Level 1 experience. Designed to fast-track engagement with the Shift OS and demonstrate the full value of the education system.</p>
+  </div>
+</section>
+
+<!-- ═══════ 3. LEVEL 1 — BEGINNER ═══════ -->
+<section id="level1" class="section dark-section">
+  <div class="container">
+    <div class="section-num">Section 03</div>
+    <h2>Level 1 — Beginner Track</h2>
+    <p class="section-intro">The complete foundation: from understanding why crypto exists to a written investment strategy with buy targets, allocation, and sell plan.</p>
+
+    <!-- ── B1 Foundations ── -->
+    <h3>3A. Foundations Session (B1: Modules 1–4)</h3>
+    <p style="color:#aaa; margin-bottom:28px;">A one-off, 2-hour live session (40–50 slides) covering the foundational framework every crypto investor needs before allocating a dollar.</p>
+
+    <!-- B1-M1 -->
+    <div class="card module-card">
+      <span class="module-badge">B1-M1</span>
+      <h4>Foundations</h4>
+      <p>Why crypto exists, why it matters, and where we are in the cycle. The macro lens every investor needs.</p>
+      <h4 style="font-size:0.85rem; color:#00D4AA;">Learning Objectives</h4>
+      <ul class="objectives-list">
+        <li>Understand what makes crypto/Bitcoin fundamentally different from traditional assets</li>
+        <li>Identify where we are in the market cycle using simple signals</li>
+        <li>Understand why most people lose money in crypto (emotional decisions, no framework)</li>
+        <li>Articulate a one-sentence market view</li>
+        <li>Understand what Collective Shift is, what it isn't, and how the OS works</li>
+      </ul>
+      <h4 style="font-size:0.85rem; color:#aaa;">What's Covered</h4>
+      <p>Ben's personal 9-year journey and early mistakes. Bitcoin as the best-performing asset of the last decade. Market cycle phases (accumulation, expansion, peak/euphoria, contraction). The 200-week moving average as a "fair value floor." Bitcoin ETF impact on demand structure. Full CS portfolio transparency with entry prices: BTC, ETH, SOL, HYPE, SYRUP, syrupUSDC. The Four Pillars walkthrough.</p>
+      <p style="color:#F7931A; font-weight:600; font-size:0.85rem; margin-top:10px;">Key Deliverable: Written answers to: (1) Why did you join CS? (2) What's your #1 goal?</p>
+      <blockquote>"Before you allocate a single dollar, understand the game you're playing."</blockquote>
+      <blockquote>"Collective Shift is the resource I wish I had when I started."</blockquote>
+    </div>
+
+    <!-- B1-M2 -->
+    <div class="card module-card">
+      <span class="module-badge">B1-M2</span>
+      <h4>Bitcoin</h4>
+      <p>Why Bitcoin is fundamentally different from every other cryptocurrency — and how to build conviction before the fear hits.</p>
+      <h4 style="font-size:0.85rem; color:#00D4AA;">Learning Objectives</h4>
+      <ul class="objectives-list">
+        <li>Understand Bitcoin's core value proposition: fixed supply, decentralised, no counterparty</li>
+        <li>Distinguish Bitcoin from altcoins as two separate asset classes</li>
+        <li>Build a personal "I will buy at X" conviction framework</li>
+        <li>Understand the emotional cycle and why best buying opportunities feel terrible</li>
+        <li>Define a BTC allocation target and DCA approach</li>
+      </ul>
+      <h4 style="font-size:0.85rem; color:#aaa;">What's Covered</h4>
+      <p>Two separate asset classes — BTC as digital gold/monetary network vs altcoins as venture bets. Fixed supply of 21 million. Network effect and the Lindy effect. Institutional adoption (ETFs, sovereign wealth funds, corporate treasuries). DCA as the default strategy. The 200-week MA as accumulation floor. The "I will buy at X" framework. The emotional cycle of investing. The confidence scale (rate conviction 1–10).</p>
+      <p style="color:#F7931A; font-weight:600; font-size:0.85rem; margin-top:10px;">Key Deliverable: Written BTC allocation target (%), buy prices, DCA plan, conviction level (1–10), and what would change your mind.</p>
+      <blockquote>"Bitcoin is the same asset today as it was at $120K — nothing changed except what someone's willing to pay."</blockquote>
+      <blockquote>"The best buying opportunities feel the worst."</blockquote>
+    </div>
+
+    <!-- B1-M3 -->
+    <div class="card module-card">
+      <span class="module-badge">B1-M3</span>
+      <h4>Altcoins</h4>
+      <p>Understanding altcoins as a higher-risk asset class — and how to filter the 98% you should never invest in.</p>
+      <h4 style="font-size:0.85rem; color:#00D4AA;">Learning Objectives</h4>
+      <ul class="objectives-list">
+        <li>Understand why altcoins are venture bets, not monetary assets</li>
+        <li>Learn how narrative cycles work and why most fail</li>
+        <li>Apply the CS filter framework to evaluate any altcoin</li>
+        <li>Understand tokenomics and the supply trap</li>
+        <li>Define maximum altcoin allocation and filter criteria</li>
+      </ul>
+      <h4 style="font-size:0.85rem; color:#aaa;">What's Covered</h4>
+      <p>The altcoin landscape — 5–10 winners per cycle, thousands of losers. Historical top-20 analysis (2017, 2021 — most down 90%+ or dead). Narrative cycles (2017: ICOs, 2021: NFTs/memecoins, 2024–25: AI/RWA). Tokenomics: FDV vs market cap, VC unlock schedules, inflation as headwind. Daily active users as the litmus test (Solana 2M+ vs Cardano). The CS filter. Position sizing: no single alt &gt;5–10% of crypto portfolio, total alt exposure &lt;30–40%.</p>
+      <p style="color:#F7931A; font-weight:600; font-size:0.85rem; margin-top:10px;">Key Deliverable: Per-altcoin assessment — which you hold, why, filter score, max position size, exit criteria.</p>
+      <blockquote>"Altcoins are a good time, not a long time."</blockquote>
+      <blockquote>"Show me the usage, not the roadmap."</blockquote>
+      <blockquote>"98% of what CS does is say no."</blockquote>
+    </div>
+
+    <!-- B1-M4 -->
+    <div class="card module-card">
+      <span class="module-badge">B1-M4</span>
+      <h4>How We Invest / Principles</h4>
+      <p>The CS investment philosophy — frameworks over predictions, risk-first, education not advice.</p>
+      <h4 style="font-size:0.85rem; color:#00D4AA;">Learning Objectives</h4>
+      <ul class="objectives-list">
+        <li>Understand CS philosophy: frameworks &gt; predictions, education not advice</li>
+        <li>Identify the four types of investment risk (market, security, liquidity, emotional)</li>
+        <li>Apply the 50% rule to personal position sizing</li>
+        <li>Recognise the emotional cycle and cognitive biases</li>
+        <li>Leave with a clear sense of what Collective Shift is and is not</li>
+      </ul>
+      <h4 style="font-size:0.85rem; color:#aaa;">What's Covered</h4>
+      <p>Education not advice — "here's how we think about it," never "here's what to do." Signals vs noise — research time audit. The four risks. The 50% rule: only allocate what you can watch drop 50% without changing strategy. Beginner guideline: 5–20% of total investable assets in crypto. The 7-step emotional cycle. What the OS delivers by completing all 8 steps.</p>
+      <p style="color:#F7931A; font-weight:600; font-size:0.85rem; margin-top:10px;">Key Deliverable: Master action — Goals + BTC plan + altcoin framework + setup plan + sell strategy = investment thesis. Book 1:1 analyst session.</p>
+      <blockquote>"Only allocate what you're comfortable watching drop 50% without changing strategy."</blockquote>
+      <blockquote>"A strategy in your head is not a strategy. It's a vague intention."</blockquote>
+    </div>
+
+    <!-- ── B2 How-To's ── -->
+    <h3 style="margin-top:56px;">3B. Practical How-To's (B2: Modules 5–8)</h3>
+    <p style="color:#aaa; margin-bottom:28px;">B2 modules rotate through the weekly Beginner Coaching Call. 15–25 slides per module. Interactive coaching format with worked examples and Q&amp;A.</p>
+
+    <!-- B2-M5 -->
+    <div class="card module-card">
+      <span class="module-badge">B2-M5</span>
+      <h4>How to Buy &amp; Sell Crypto</h4>
+      <p>The practical mechanics of buying and selling crypto on a centralised exchange — by country, step by step.</p>
+      <h4 style="font-size:0.85rem; color:#00D4AA;">Learning Objectives</h4>
+      <ul class="objectives-list">
+        <li>Select the right exchange for their country</li>
+        <li>Execute a buy order (market vs limit) with confidence</li>
+        <li>Know how to sell and withdraw funds</li>
+        <li>Understand OTC for larger amounts (&gt;$50K–$100K)</li>
+        <li>Know the golden rule: exchanges are for transacting, not storing</li>
+      </ul>
+      <h4 style="font-size:0.85rem; color:#aaa;">Exchange Recommendations by Country</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Country</th><th>Primary</th><th>Secondary</th></tr></thead>
+          <tbody>
+            <tr><td>🇦🇺 Australia</td><td>Swyftx (beginner-friendly)</td><td>Independent Reserve (larger amounts, OTC)</td></tr>
+            <tr><td>🇳🇿 New Zealand</td><td>Easy Crypto</td><td>Independent Reserve</td></tr>
+            <tr><td>🇨🇦 Canada</td><td>Coinbase One</td><td>Shakepay (BTC-focused)</td></tr>
+            <tr><td>🇺🇸 United States</td><td>Coinbase One</td><td>Kraken</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <blockquote>"Exchanges are for transacting, not storing. The FTX lesson cost millions of people billions of dollars."</blockquote>
+      <p style="color:#F7931A; font-weight:600; font-size:0.85rem; margin-top:10px;">Action Items: Exchange account open and KYC verified. First practice buy ($50–$100). Bank account linked and withdrawal tested.</p>
+    </div>
+
+    <!-- B2-M6 -->
+    <div class="card module-card">
+      <span class="module-badge">B2-M6</span>
+      <h4>How to Send, Receive &amp; Store Crypto Safely</h4>
+      <p>Moving crypto safely, understanding addresses and networks, and setting up self-custody with a hardware wallet.</p>
+      <h4 style="font-size:0.85rem; color:#00D4AA;">Learning Objectives</h4>
+      <ul class="objectives-list">
+        <li>Understand crypto addresses, networks, and why wrong network = lost funds</li>
+        <li>Execute safe send/receive with test transactions</li>
+        <li>Understand the self-custody spectrum</li>
+        <li>Complete hardware wallet setup and seed phrase backup</li>
+        <li>Know the 24-word rule by heart</li>
+      </ul>
+      <blockquote>"Not your keys, not your coins."</blockquote>
+      <blockquote>"24 words. Handwritten. Two locations. Never digital. That's the rule."</blockquote>
+      <p style="color:#F7931A; font-weight:600; font-size:0.85rem; margin-top:10px;">Action Items: Hardware wallet ordered/received. Seed phrase written and secured in two locations. Test send/receive completed. Exchange holdings moved to hardware wallet.</p>
+    </div>
+
+    <!-- B2-M7 -->
+    <div class="card module-card">
+      <span class="module-badge">B2-M7</span>
+      <h4>Tax Basics</h4>
+      <p>Country-specific crypto tax basics, transaction tracking, and finding a crypto-specialist accountant.</p>
+      <h4 style="font-size:0.85rem; color:#00D4AA;">Learning Objectives</h4>
+      <ul class="objectives-list">
+        <li>Understand crypto tax obligations in their country</li>
+        <li>Know basic CGT rules and 12-month discount where applicable</li>
+        <li>Set up tax tracking software immediately</li>
+        <li>Identify required records</li>
+        <li>Find a crypto-specialist accountant</li>
+      </ul>
+      <h4 style="font-size:0.85rem; color:#aaa;">Country-by-Country Tax Rules</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Country</th><th>Key Rules</th></tr></thead>
+          <tbody>
+            <tr><td>🇦🇺 Australia</td><td>CGT event on disposal. 50% discount if held 12+ months. SMSF option. ATO treats crypto as property.</td></tr>
+            <tr><td>🇳🇿 New Zealand</td><td>Intent-based — if bought to sell, it's income. No formal CGT. IRD guidance increasingly strict.</td></tr>
+            <tr><td>🇺🇸 United States</td><td>Short-term (&lt;1yr) = ordinary income. Long-term (&gt;1yr) = lower CGT rates. Roth IRA is the most powerful tax structure.</td></tr>
+            <tr><td>🇨🇦 Canada</td><td>50% capital gains inclusion rate. TFSA not eligible for crypto held directly.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="color:#aaa; font-size:0.88rem; margin-top:10px;"><strong>Recommended Tax Software:</strong> Koinly (most countries), CryptoTaxCalculator (AU), CoinTracker (US).</p>
+      <blockquote>"Start tracking NOW. The cost of not tracking is much higher than the cost of tracking."</blockquote>
+      <p style="color:#F7931A; font-weight:600; font-size:0.85rem; margin-top:10px;">Action Items: Tax tracking software set up with exchange APIs connected. Historical transactions imported. Crypto-specialist accountant identified or booked.</p>
+    </div>
+
+    <!-- B2-M8 -->
+    <div class="card module-card">
+      <span class="module-badge">B2-M8</span>
+      <h4>Sell Strategy Basics</h4>
+      <p>The most important module. Building a written sell strategy before you need it — by goal type.</p>
+      <h4 style="font-size:0.85rem; color:#00D4AA;">Learning Objectives</h4>
+      <ul class="objectives-list">
+        <li>Understand why a written sell strategy must exist before market peaks</li>
+        <li>Know how sell strategy differs by goal type</li>
+        <li>Apply a simple scale-out framework</li>
+        <li>Understand basic on-chain peak signals</li>
+        <li>Write a personal sell strategy per position</li>
+      </ul>
+      <h4 style="font-size:0.85rem; color:#aaa;">Sell Frameworks by Investor Type</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Type</th><th>Approach</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Wealth Generation</strong></td><td>Scale-out ladder: sell 10% at 2×, 15% at 3×, 20% at 5×, 25–30% at peak cycle signals. Some profit &gt; perfect timing.</td></tr>
+            <tr><td><strong>Wealth Protection</strong></td><td>Heavier BTC. Less trading. Rebalance on extreme euphoria signals only. "If you've won, stop playing."</td></tr>
+            <tr><td><strong>Income Creation</strong></td><td>Systematic selling for living expenses. Highest-gain alts first → ETH → BTC last. Tax implications considered.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <blockquote>"The best time to write your sell strategy is today, not when it's up 500%."</blockquote>
+      <blockquote>"I've never met anyone who took significant profits and had deep regrets."</blockquote>
+      <p style="color:#F7931A; font-weight:600; font-size:0.85rem; margin-top:10px;">Action Items: Write sell strategy per position with target price/multiple, sell % at each level, signal triggers, and what changes your mind. Print it. Put it where you'll see it.</p>
+    </div>
+
+    <!-- ── B3 8-Step Process ── -->
+    <h3 style="margin-top:56px;">3C. The 8-Step Strategy Process (B3)</h3>
+    <p style="color:#aaa; margin-bottom:28px;">The Beginner 8-Step Process runs through the weekly Strategy Call — one step per call. The workbook is completed in parallel. Each step includes worked examples for all three investor types.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Step</th><th>Name</th><th>Key Deliverable</th></tr></thead>
+        <tbody>
+          <tr><td><strong>S1</strong></td><td>Define Your Goals</td><td>Written goal statement: target $, time horizon, how crypto fits broader picture</td></tr>
+          <tr><td><strong>S2</strong></td><td>Risk Profile &amp; Emotional Triggers</td><td>Risk score (1–10) + dominant bias + personal trigger map + circuit breaker</td></tr>
+          <tr><td><strong>S3</strong></td><td>Build Your Investment Thesis</td><td>Per-position thesis: why you own it, what changes conviction</td></tr>
+          <tr><td><strong>S4</strong></td><td>Portfolio Allocation</td><td>% targets per asset: BTC core, growth alts, stablecoins/cash</td></tr>
+          <tr><td><strong>S5</strong></td><td>Buy Strategy</td><td>DCA vs lump sum vs hybrid, specific prices, amounts, timing</td></tr>
+          <tr><td><strong>S6</strong></td><td>Tax &amp; Record Keeping</td><td>Tax tracking active, accountant identified, structure defined</td></tr>
+          <tr><td><strong>S7</strong></td><td>Wallet &amp; Security</td><td>Hardware wallet tested, seed phrase secured, estate contact named</td></tr>
+          <tr><td><strong>S8</strong></td><td>Sell Strategy</td><td>Per-position sell ladder with price triggers, %, on-chain signals</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4 style="margin-top:32px;">Worked Example Allocation Templates</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>BTC</th><th>Growth Alts</th><th>Stablecoins</th></tr></thead>
+        <tbody>
+          <tr><td><strong style="color:#00D4AA;">Wealth Generation</strong></td><td>50%</td><td>30% (ETH 15%, SOL 10%, HYPE 5%)</td><td>20%</td></tr>
+          <tr><td><strong style="color:#4A9EFF;">Wealth Protection</strong></td><td>80%</td><td>10% (ETH)</td><td>10%</td></tr>
+          <tr><td><strong style="color:#F7931A;">Income Creation</strong></td><td>40%</td><td>20% (ETH)</td><td>40% (yield in Adv track)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <blockquote>"A strategy in your head is not a strategy." Completion of all 8 steps unlocks the Advanced track.</blockquote>
+  </div>
+</section>
+
+<!-- ═══════ 4. LEVEL 2 — ADVANCED ═══════ -->
+<section id="level2" class="section light-section">
+  <div class="container">
+    <div class="section-num">Section 04</div>
+    <h2>Level 2 — Advanced Track</h2>
+    <p class="section-intro">For members who've completed all 8 Beginner steps. Adds yield, staking, DeFi, borrowing, advanced tax, and multi-entity strategies.</p>
+
+    <!-- ── A1 Advanced Foundations ── -->
+    <h3>4A. Advanced Foundations (A1: Modules 1–4)</h3>
+    <p style="color:#555; margin-bottom:20px;">A one-off, 2-hour live session (45–55 slides). Same structural flow as B1 but deeper on all dimensions.</p>
+
+    <h4>What A1 Adds Beyond B1</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Module</th><th>Advanced Additions</th></tr></thead>
+        <tbody>
+          <tr><td><strong>A1-M1: Advanced Foundations</strong></td><td>Full on-chain signal suite (NUPL, MVRV, STH cost basis). Global liquidity cycles (M2, DXY, oil, sovereign debt). Institutional allocation models. Three macro scenarios with probability-weighted analysis. AI/blockchain convergence.</td></tr>
+          <tr><td><strong>A1-M2: Advanced Bitcoin</strong></td><td>ETF demand structure, corporate treasury adoption (MicroStrategy model), sovereign wealth fund allocations. SMSF frameworks (AU) + Roth IRA (US). Multi-sig for positions &gt;$500K. Estate planning. Bitcoin dominance cycle as alt rotation timing tool.</td></tr>
+          <tr><td><strong>A1-M3: Advanced Altcoins</strong></td><td>On-chain metrics tools (Artemis, DeFiLlama, Token Terminal, Dune). DeFi protocol analysis: TVL, revenue, P/F ratios. Governance analysis. Liquidity provision risk. HYPE case study ($1.2B revenue, community-owned, fee burn).</td></tr>
+          <tr><td><strong>A1-M4: Advanced Principles</strong></td><td>Portfolio correlation analysis. Multi-entity strategies (personal + SMSF + trust + company). Cognitive bias taxonomy. Systematic hedging. Multi-entity risk frameworks.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── A2 Advanced How-To's ── -->
+    <h3 style="margin-top:48px;">4B. Advanced How-To's (A2: Modules 5–8)</h3>
+    <p style="color:#555; margin-bottom:28px;">A2 modules rotate through the weekly Advanced Coaching Call. 15–25 slides per module.</p>
+
+    <!-- A2-M5 Yield & Staking -->
+    <div class="card module-card">
+      <span class="module-badge">A2-M5</span>
+      <h4 style="color:#1a1a2e;">Yield &amp; Staking</h4>
+      <p>The full yield landscape — stablecoins, staking, liquid staking, DeFi — and how to build income without excessive risk.</p>
+
+      <h4 style="font-size:0.9rem; color:#1a1a2e; margin-top:20px;">The Four-Tier Yield Spectrum</h4>
+      <div class="yield-tiers">
+        <div class="yield-tier tier-1">
+          <div class="yield-tier-bar"></div>
+          <div class="yield-tier-content">
+            <strong>Tier 1</strong> <span class="range">2–5%</span><br>
+            <span class="desc">USDC on Coinbase, traditional money market — Lowest risk, treasury-backed</span>
+          </div>
+        </div>
+        <div class="yield-tier tier-2">
+          <div class="yield-tier-bar"></div>
+          <div class="yield-tier-content">
+            <strong>Tier 2</strong> <span class="range">5–9%</span><br>
+            <span class="desc">Aave, Compound on major stablecoins — DeFi blue-chip</span>
+          </div>
+        </div>
+        <div class="yield-tier tier-3">
+          <div class="yield-tier-bar"></div>
+          <div class="yield-tier-content">
+            <strong>Tier 3</strong> <span class="range">9–18%</span><br>
+            <span class="desc">Maple Finance, syrupUSDC, Morpho — <strong>CS sits here</strong> — Higher-yield DeFi, institutional lending</span>
+          </div>
+        </div>
+        <div class="yield-tier tier-4">
+          <div class="yield-tier-bar"></div>
+          <div class="yield-tier-content">
+            <strong>Tier 4</strong> <span class="range">18%+</span><br>
+            <span class="desc">Algorithm-backed, newer protocols, incentive emissions — Highest risk</span>
+          </div>
+        </div>
+      </div>
+
+      <p style="color:#555; font-size:0.9rem; margin-top:16px;"><strong>CS Position:</strong> syrupUSDC at 33.4% via Maple Finance — institutional lending to verified borrowers, real yield from lending fees (not token emissions).</p>
+      <p style="color:#555; font-size:0.9rem;"><strong>Staking:</strong> ETH ~3–4% APR, SOL ~7% APR. Staking offsets supply inflation — it's not free money. Liquid staking (Lido, Rocket Pool, Marinade, Jito) provides tradeable receipt tokens.</p>
+      <blockquote>"Where does the yield come from? That's the only question that matters."</blockquote>
+    </div>
+
+    <!-- A2-M6 Advanced Tax -->
+    <div class="card module-card">
+      <span class="module-badge">A2-M6</span>
+      <h4 style="color:#1a1a2e;">Advanced Tax &amp; Structure</h4>
+      <p>Multi-entity structures, DeFi tax complexity, CGT optimisation, and engaging advisors effectively.</p>
+
+      <h4 style="font-size:0.85rem; color:#555; margin-top:16px;">Advanced Structures</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Structure</th><th>Key Details</th></tr></thead>
+          <tbody>
+            <tr><td><strong>SMSF (AU)</strong></td><td>Contributions taxed at 15%. CGT at 10% with 12-month discount. Sole purpose test applies. Most powerful AU structure for crypto.</td></tr>
+            <tr><td><strong>Discretionary Trust</strong></td><td>Income splitting, asset protection, CGT discount preservation. Complex setup — needs specialist.</td></tr>
+            <tr><td><strong>Company</strong></td><td>25–30% flat rate. No CGT discount. Better for trading activity than long-term holding.</td></tr>
+            <tr><td><strong>Roth IRA (US)</strong></td><td>Most powerful US structure — tax-free growth.</td></tr>
+            <tr><td><strong>Cross-border</strong></td><td>Residency rules, tax treaties, reporting obligations — specialist territory.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="color:#555; font-size:0.88rem; margin-top:12px;"><strong>DeFi Tax Complexity:</strong> Each yield reward = income event. LP changes = disposals on both legs. Bridging = potentially two disposal events. Hundreds of taxable events per year from active on-chain usage.</p>
+      <p style="color:#555; font-size:0.88rem;"><strong>CGT Optimisation:</strong> Maximise 12-month holding. Loss harvesting in bear markets. Wash sale rules (US: 30+ days). Plan before tax time.</p>
+      <blockquote>"Your accountant can only optimise what you've planned for. Surprises at tax time are expensive."</blockquote>
+    </div>
+
+    <!-- A2-M7 Advanced Sell -->
+    <div class="card module-card">
+      <span class="module-badge">A2-M7</span>
+      <h4 style="color:#1a1a2e;">Advanced Sell Strategy</h4>
+      <p>Multi-entity selling, tax-optimal sequences, large-position exit mechanics, and hedging.</p>
+      <p style="color:#555; font-size:0.9rem; margin-top:12px;"><strong>What's Covered:</strong> Multi-entity sell sequencing (sell from highest marginal rate structure last). Full on-chain signal suite (NUPL, MVRV, STH/LTH cost basis, reserve risk, SOPR) — multiple signals in extreme territory simultaneously = high conviction exit zone. OTC for exits &gt;$100K (Independent Reserve, Galaxy Digital, Kraken). TWAP execution for large positions. Hedging with put options (Deribit, CME), structured products, and stablecoin allocation. Estate and legacy planning — who inherits your crypto and how.</p>
+      <blockquote>"Generational wealth is built intentionally, not by accident."</blockquote>
+    </div>
+
+    <!-- A2-M8 Borrowing -->
+    <div class="card module-card">
+      <span class="module-badge">A2-M8</span>
+      <h4 style="color:#1a1a2e;">Borrowing Against Crypto</h4>
+      <p>How crypto-backed lending works — mechanics, platforms, liquidation risk, and who it's appropriate for.</p>
+
+      <h4 style="font-size:0.85rem; color:#555; margin-top:16px;">Platform Comparison</h4>
+      <div class="card-grid card-grid-2" style="margin-top:12px;">
+        <div class="card platform-card" style="border-color:#e0e0e0;">
+          <span class="tag tag-cefi">CeFi</span>
+          <h4 style="color:#1a1a2e;">Ledn</h4>
+          <p style="font-size:0.85rem; color:#555;">Proof-of-reserves, no rehypothecation. Min ~$1K. Best for centralised convenience with transparency.</p>
+        </div>
+        <div class="card platform-card" style="border-color:#e0e0e0;">
+          <span class="tag tag-cefi">CeFi</span>
+          <h4 style="color:#1a1a2e;">Unchained</h4>
+          <p style="font-size:0.85rem; color:#555;">2-of-3 multisig (you hold 2 keys). Min ~$10K–$150K. Best for large positions prioritising security.</p>
+        </div>
+        <div class="card platform-card" style="border-color:#e0e0e0;">
+          <span class="tag tag-defi">DeFi</span>
+          <h4 style="color:#1a1a2e;">Coinbase / Morpho</h4>
+          <p style="font-size:0.85rem; color:#555;">Smart contract governed, lower rates. Best for DeFi-comfortable members.</p>
+        </div>
+        <div class="card platform-card" style="border-color:#e0e0e0;">
+          <span class="tag tag-defi">DeFi</span>
+          <h4 style="color:#1a1a2e;">Aave</h4>
+          <p style="font-size:0.85rem; color:#555;">No KYC, algorithmic rates. Best for advanced DeFi users.</p>
+        </div>
+      </div>
+
+      <p style="color:#555; font-size:0.9rem; margin-top:16px;"><strong>The Conservative Buffer Framework:</strong> Borrow at 30–35% LTV maximum, not the 50% ceiling. A 40% BTC drawdown should not threaten collateral.</p>
+      <p style="color:#555; font-size:0.9rem;"><strong>Who This Is For:</strong> Clear use for funds. Realistic repayment plan. Confidence to hold through volatility. Position large enough that losing collateral isn't catastrophic. <strong>Not for:</strong> funding more speculation, small positions, or financial pressure situations.</p>
+      <blockquote>"If you don't understand the liquidation mechanics, you shouldn't be borrowing."</blockquote>
+      <blockquote>"Over-borrowing is the most common mistake. Borrow at 30–35% LTV and treat the buffer as insurance."</blockquote>
+    </div>
+
+    <!-- ── A3 Advanced 8-Step ── -->
+    <h3 style="margin-top:48px;">4C. Advanced 8-Step Strategy Process (A3)</h3>
+    <p style="color:#555; margin-bottom:20px;">The A3 process mirrors B3's 8 steps with a complexity layer for experienced investors:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Step</th><th>A3 Addition vs B3</th></tr></thead>
+        <tbody>
+          <tr><td><strong>S1 Goals</strong></td><td>Multi-entity goals, generational wealth, legacy planning</td></tr>
+          <tr><td><strong>S2 Risk</strong></td><td>Cross-entity risk, leverage risk overlay, DeFi platform risk</td></tr>
+          <tr><td><strong>S3 Thesis</strong></td><td>DeFi protocols, LP positions, yield strategies integrated into thesis</td></tr>
+          <tr><td><strong>S4 Allocation</strong></td><td>Multi-entity allocation across personal / SMSF / trust / company</td></tr>
+          <tr><td><strong>S5 Buy Strategy</strong></td><td>OTC execution, TWAP, limit laddering, DeFi protocol entries</td></tr>
+          <tr><td><strong>S6 Tax</strong></td><td>Multi-entity record keeping, DeFi tax, CGT optimisation, structures</td></tr>
+          <tr><td><strong>S7 Security</strong></td><td>Multi-sig setup, institutional custody, estate planning</td></tr>
+          <tr><td><strong>S8 Sell Strategy</strong></td><td>Multi-entity sell sequences, tax-optimal ordering, hedging</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:#555; font-size:0.88rem; margin-top:12px;">A3 workbook adds: entity mapping fields, DeFi position details, accountant/advisor coordination notes, and multi-signature custody plans.</p>
+  </div>
+</section>
+
+<!-- ═══════ 5. LEVEL 3 — PLATINUM ELITE ═══════ -->
+<section id="level3" class="section dark-section">
+  <div class="container">
+    <div class="section-num">Section 05</div>
+    <h2>Level 3 — Platinum Elite 👑</h2>
+    <p class="section-intro">Time-gated: available only to year 2+ renewals. It cannot be purchased outright — it's earned through sustained membership.</p>
+
+    <div class="card-grid card-grid-2">
+      <div class="card" style="border-left: 3px solid #F7931A;">
+        <h4 style="margin-top:0;">🎙️ Monthly Bonus Sessions</h4>
+        <p style="color:#bbb; font-size:0.9rem;">Direct sessions with Ben Simpson. Advanced strategy discussions beyond the standard A1–A3 curriculum.</p>
+      </div>
+      <div class="card" style="border-left: 3px solid #F7931A;">
+        <h4 style="margin-top:0;">🏛️ Elite Community Access</h4>
+        <p style="color:#bbb; font-size:0.9rem;">Separate from L1/L2. Direct peer network of the most committed, long-term CS members.</p>
+      </div>
+      <div class="card" style="border-left: 3px solid #F7931A;">
+        <h4 style="margin-top:0;">🚀 Priority Access</h4>
+        <p style="color:#bbb; font-size:0.9rem;">First access to new features, content, and tools before they reach the wider membership.</p>
+      </div>
+      <div class="card" style="border-left: 3px solid #F7931A;">
+        <h4 style="margin-top:0;">🧠 Advanced Discussions</h4>
+        <p style="color:#bbb; font-size:0.9rem;">Topics beyond the standard curriculum — deeper macro, institutional strategy, and edge cases.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ 6. WEEKLY CALL SCHEDULE ═══════ -->
+<section id="calls" class="section light-section">
+  <div class="container">
+    <div class="section-num">Section 06</div>
+    <h2>Weekly Call Schedule</h2>
+    <p class="section-intro">Every live session has an equivalent self-paced pre-recorded course on Circle.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Call</th><th>Track</th><th>Content</th><th>Rotation</th></tr></thead>
+        <tbody>
+          <tr><td><strong>L1 Coaching Call</strong></td><td>Beginner</td><td>B2 modules</td><td>Rotates M5 → M6 → M7 → M8</td></tr>
+          <tr><td><strong>L2 Coaching Call</strong></td><td>Advanced</td><td>A2 modules</td><td>Rotates M5 → M6 → M7 → M8</td></tr>
+          <tr><td><strong>L1 Strategy Call</strong></td><td>Beginner</td><td>B3 steps</td><td>One step per call (S1 → S8)</td></tr>
+          <tr><td><strong>L2 Strategy Call</strong></td><td>Advanced</td><td>A3 steps</td><td>One step per call (S1 → S8)</td></tr>
+          <tr><td><strong>Ben's Monthly Session</strong></td><td>All members</td><td>Strategy, market context, Q&amp;A</td><td>Monthly</td></tr>
+          <tr><td><strong>PE Monthly Bonus</strong></td><td>Platinum Elite only</td><td>Advanced topics with Ben</td><td>Monthly</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ 7. STRATEGY BUILDER TOOL ═══════ -->
+<section id="strategy-builder" class="section dark-section">
+  <div class="container">
+    <div class="section-num">Section 07</div>
+    <h2>The Shift Strategy Builder Tool</h2>
+    <p class="section-intro">A digital tool available on the CS Circle platform. It walks members through all 8 steps of the strategy process interactively.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Step</th><th>Tool Prompt</th><th>Output</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1</strong></td><td>Goal type selector (3 options) + free text</td><td>Goal statement block</td></tr>
+          <tr><td><strong>2</strong></td><td>Risk score slider (1–10) + bias selector + trigger/breaker</td><td>Risk framework summary</td></tr>
+          <tr><td><strong>3</strong></td><td>Per-asset thesis builder (up to 10 assets)</td><td>Investment thesis table</td></tr>
+          <tr><td><strong>4</strong></td><td>Allocation slider (BTC / Alts / Stablecoins)</td><td>Portfolio allocation chart</td></tr>
+          <tr><td><strong>5</strong></td><td>Strategy selector (DCA/Lump/Hybrid) + amounts + targets</td><td>Buy plan summary</td></tr>
+          <tr><td><strong>6</strong></td><td>Country selector → tax rules + software + accountant</td><td>Tax plan checklist</td></tr>
+          <tr><td><strong>7</strong></td><td>Wallet model + seed phrase checklist + estate contact</td><td>Security checklist</td></tr>
+          <tr><td><strong>8</strong></td><td>Per-asset sell ladder (up to 10 assets)</td><td>Sell strategy table</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="color:#aaa; margin-top:20px;"><strong>Output:</strong> "Your Shift Strategy" — a formatted, print-ready PDF/HTML document with CS branding, educational disclaimers, all filled fields rendered cleanly, and a one-page summary snapshot.</p>
+  </div>
+</section>
+
+<!-- ═══════ 8. WORKBOOK OVERVIEW ═══════ -->
+<section id="workbook" class="section light-section">
+  <div class="container">
+    <div class="section-num">Section 08</div>
+    <h2>Workbook Overview</h2>
+    <p class="section-intro">Available in two formats: HTML (fillable, browser-based, responsive on Circle) and PDF (print-ready A4 with CS branding). 8 sections mapping to 8 steps.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Section</th><th>Beginner Fields</th><th>Advanced Additions</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1. My Goals</strong></td><td>Goal type, target $, time horizon, crypto % of assets</td><td>Multi-entity goals, legacy planning</td></tr>
+          <tr><td><strong>2. My Risk Profile</strong></td><td>Risk score, dominant bias, max drawdown, circuit breaker, 50% test</td><td>Cross-entity risk, leverage overlay</td></tr>
+          <tr><td><strong>3. My Investment Thesis</strong></td><td>Per-asset: reason, usage evidence, conviction change trigger</td><td>Entity holding, DeFi protocol details</td></tr>
+          <tr><td><strong>4. My Portfolio Allocation</strong></td><td>BTC %, alt positions, stablecoin %, rebalancing trigger</td><td>Entity breakdown (personal/SMSF/trust/company)</td></tr>
+          <tr><td><strong>5. My Buy Strategy</strong></td><td>DCA/lump/hybrid, amounts, price targets, limit orders</td><td>OTC desk details, TWAP plan</td></tr>
+          <tr><td><strong>6. My Tax Plan</strong></td><td>Country, software, APIs connected, accountant, structure</td><td>Entity map, DeFi tagging, CGT notes</td></tr>
+          <tr><td><strong>7. My Security Plan</strong></td><td>Hardware wallet, seed phrase, test tx, 2FA, estate contact</td><td>Multi-sig config, institutional custody</td></tr>
+          <tr><td><strong>8. My Sell Strategy</strong></td><td>Per-asset exit triggers, % per level, signal triggers</td><td>Entity sell sequence, tax-optimal ordering</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ 9. CONTENT DELIVERY MATRIX ═══════ -->
+<section id="delivery" class="section dark-section">
+  <div class="container">
+    <div class="section-num">Section 09</div>
+    <h2>Content Delivery Matrix</h2>
+    <p class="section-intro">Every module is delivered through multiple channels — live decks, self-paced courses, workbook integration, and 1:1 coaching.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Module</th><th>Live Deck</th><th>Circle Course</th><th>Workbook</th><th>1:1 Coaching</th></tr></thead>
+        <tbody>
+          <tr><td>B1-M1 Foundations</td><td><span class="check">✅</span> B1</td><td><span class="check">✅</span></td><td>Intro</td><td><span class="check">✅</span></td></tr>
+          <tr><td>B1-M2 Bitcoin</td><td><span class="check">✅</span> B1</td><td><span class="check">✅</span></td><td>S3, S5 inputs</td><td><span class="check">✅</span></td></tr>
+          <tr><td>B1-M3 Altcoins</td><td><span class="check">✅</span> B1</td><td><span class="check">✅</span></td><td>S3 inputs</td><td><span class="check">✅</span></td></tr>
+          <tr><td>B1-M4 Principles</td><td><span class="check">✅</span> B1</td><td><span class="check">✅</span></td><td>S2 inputs</td><td><span class="check">✅</span></td></tr>
+          <tr><td>B2-M5 Buy &amp; Sell</td><td><span class="check">✅</span> B2</td><td><span class="check">✅</span></td><td>S5</td><td><span class="check">✅</span></td></tr>
+          <tr><td>B2-M6 Send &amp; Store</td><td><span class="check">✅</span> B2</td><td><span class="check">✅</span></td><td>S7</td><td><span class="check">✅</span></td></tr>
+          <tr><td>B2-M7 Tax Basics</td><td><span class="check">✅</span> B2</td><td><span class="check">✅</span></td><td>S6</td><td><span class="check">✅</span></td></tr>
+          <tr><td>B2-M8 Sell Strategy</td><td><span class="check">✅</span> B2</td><td><span class="check">✅</span></td><td>S8</td><td><span class="check">✅</span></td></tr>
+          <tr><td>B3-S1 through S8</td><td><span class="check">✅</span> B3</td><td><span class="check">✅</span></td><td>Full workbook</td><td><span class="check">✅</span></td></tr>
+          <tr><td>A1-M1 Adv Foundations</td><td><span class="check">✅</span> A1</td><td><span class="check">✅</span></td><td>Intro</td><td><span class="check">✅</span></td></tr>
+          <tr><td>A1-M2 Adv Bitcoin</td><td><span class="check">✅</span> A1</td><td><span class="check">✅</span></td><td>S3, S5 inputs</td><td><span class="check">✅</span></td></tr>
+          <tr><td>A1-M3 Adv Altcoins</td><td><span class="check">✅</span> A1</td><td><span class="check">✅</span></td><td>S3 inputs</td><td><span class="check">✅</span></td></tr>
+          <tr><td>A1-M4 Adv Principles</td><td><span class="check">✅</span> A1</td><td><span class="check">✅</span></td><td>S2 inputs</td><td><span class="check">✅</span></td></tr>
+          <tr><td>A2-M5 Yield &amp; Staking</td><td><span class="check">✅</span> A2</td><td><span class="check">✅</span></td><td>S4, S8 inputs</td><td><span class="check">✅</span></td></tr>
+          <tr><td>A2-M6 Adv Tax</td><td><span class="check">✅</span> A2</td><td><span class="check">✅</span></td><td>S6</td><td><span class="check">✅</span></td></tr>
+          <tr><td>A2-M7 Adv Sell</td><td><span class="check">✅</span> A2</td><td><span class="check">✅</span></td><td>S8</td><td><span class="check">✅</span></td></tr>
+          <tr><td>A2-M8 Borrowing</td><td><span class="check">✅</span> A2</td><td><span class="check">✅</span></td><td>S5, S8</td><td><span class="check">✅</span></td></tr>
+          <tr><td>A3-S1 through S8</td><td><span class="check">✅</span> A3</td><td><span class="check">✅</span></td><td>Full workbook (adv)</td><td><span class="check">✅</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ 10. KEY QUOTES ═══════ -->
+<section id="quotes" class="section light-section">
+  <div class="container">
+    <div class="section-num">Section 10</div>
+    <h2>Key Quotes Reference</h2>
+    <p class="section-intro">The philosophy that runs through every module, call, and conversation at Collective Shift.</p>
+
+    <div class="quote-wall">
+      <blockquote>"We teach you how to think. Not what to think."</blockquote>
+      <blockquote>"Before you allocate a single dollar, understand the game you're playing."</blockquote>
+      <blockquote>"Bitcoin is the same asset today as it was at $120K — nothing changed except what someone's willing to pay."</blockquote>
+      <blockquote>"Collective Shift is the resource I wish I had when I started."</blockquote>
+      <blockquote>"Altcoins are a good time, not a long time."</blockquote>
+      <blockquote>"If you don't understand the tokenomics, you don't understand the investment."</blockquote>
+      <blockquote>"Show me the usage, not the roadmap."</blockquote>
+      <blockquote>"Only allocate what you're comfortable watching drop 50% without changing strategy."</blockquote>
+      <blockquote>"A strategy in your head is not a strategy. It's a vague intention."</blockquote>
+      <blockquote>"The best time to write your sell strategy is today. The worst is when it's already up 500%."</blockquote>
+      <blockquote>"The best time to sell feels the worst."</blockquote>
+      <blockquote>"I've never met anyone who took significant profits and had deep regrets."</blockquote>
+      <blockquote>"If you've won, stop playing."</blockquote>
+      <blockquote>"Bear markets are where generational wealth is built."</blockquote>
+      <blockquote>"24 words. Handwritten. Two locations. Never digital. That's the rule."</blockquote>
+      <blockquote>"Not your keys, not your coins."</blockquote>
+      <blockquote>"Start tracking NOW. The cost of not tracking is much higher than the cost of tracking."</blockquote>
+      <blockquote>"Where does the yield come from? That's the only question that matters."</blockquote>
+      <blockquote>"If you don't understand the liquidation mechanics, you shouldn't be borrowing."</blockquote>
+      <blockquote>"We are an education company. Not advisors."</blockquote>
+      <blockquote>"I don't react to the market. I have a plan."</blockquote>
+      <blockquote>"I don't make money when you buy. I make money the same way you do — when the strategy works."</blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer class="footer dark-section">
+  <div class="container">
+    <p style="color:#F7931A; font-weight:700; margin-bottom:8px;">COLLECTIVE SHIFT</p>
+    <p>Operating System Manual — March 2026</p>
+    <p style="margin-top:12px; font-size:0.78rem; color:#555;">This document is an educational reference. It is not financial advice. All investment decisions are your own.</p>
+  </div>
+</footer>
+
+</body>
+</html>
