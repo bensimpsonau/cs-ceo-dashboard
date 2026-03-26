@@ -1,0 +1,1955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collective Shift — Strategy Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   COLLECTIVE SHIFT — STRATEGY HUB
+   Single-file internal dashboard
+   ══════════════════════════════════════════ */
+
+:root {
+  --dark: #0a0a0a;
+  --dark-card: rgba(255,255,255,0.05);
+  --dark-card-border: rgba(255,255,255,0.08);
+  --orange: #F7931A;
+  --orange-dim: rgba(247,147,26,0.15);
+  --teal: #00D4AA;
+  --teal-dim: rgba(0,212,170,0.12);
+  --red: #E74C3C;
+  --red-dim: rgba(231,76,60,0.1);
+  --blue: #3498DB;
+  --blue-dim: rgba(52,152,219,0.1);
+  --light-bg: #f8f9fa;
+  --light-text: #1a1a2e;
+  --white: #ffffff;
+  --white-60: rgba(255,255,255,0.6);
+  --white-80: rgba(255,255,255,0.8);
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: var(--font);
+  background: var(--dark);
+  color: var(--white);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Grid texture */
+.grid-bg { position: relative; }
+.grid-bg::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none; z-index: 0;
+}
+.grid-bg > * { position: relative; z-index: 1; }
+
+/* ── Sticky Nav ── */
+.top-nav {
+  position: sticky; top: 0; z-index: 1000;
+  background: rgba(10,10,10,0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--dark-card-border);
+  padding: 0 2rem;
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; gap: 0.25rem;
+  overflow-x: auto; scrollbar-width: none;
+  padding: 0.75rem 0;
+}
+.nav-inner::-webkit-scrollbar { display: none; }
+.nav-inner a {
+  color: var(--white-60); text-decoration: none;
+  font-size: 0.75rem; font-weight: 500;
+  padding: 0.4rem 0.75rem; border-radius: 6px;
+  white-space: nowrap; transition: all 0.2s;
+  letter-spacing: 0.02em; text-transform: uppercase;
+}
+.nav-inner a:hover, .nav-inner a.active {
+  color: var(--orange); background: var(--orange-dim);
+}
+.nav-logo {
+  font-weight: 800; color: var(--orange) !important;
+  font-size: 0.85rem !important; margin-right: 1rem;
+  letter-spacing: -0.02em; text-transform: none !important;
+}
+
+/* ── Container ── */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+section { padding: 5rem 2rem; }
+
+/* ── Typography ── */
+.section-label {
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--orange); margin-bottom: 0.75rem;
+}
+.section-title {
+  font-size: 2.5rem; font-weight: 800;
+  line-height: 1.15; margin-bottom: 1.5rem;
+  letter-spacing: -0.03em;
+}
+.section-subtitle {
+  font-size: 1.1rem; color: var(--white-60);
+  max-width: 700px; line-height: 1.7;
+}
+h3.sub-heading {
+  font-size: 1.4rem; font-weight: 700;
+  margin-top: 3rem; margin-bottom: 1rem;
+  color: var(--white);
+}
+h4.sub-sub {
+  font-size: 1.1rem; font-weight: 700;
+  color: var(--orange); margin-top: 2rem; margin-bottom: 0.75rem;
+}
+
+/* ── Hero ── */
+.hero {
+  padding: 8rem 2rem 5rem;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(247,147,26,0.06) 0%, transparent 60%);
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--orange-dim);
+  border: 1px solid rgba(247,147,26,0.25);
+  border-radius: 100px; padding: 0.5rem 1.25rem;
+  font-size: 0.8rem; font-weight: 600; color: var(--orange);
+  margin-bottom: 2rem;
+}
+.hero .section-title {
+  font-size: 3.5rem; max-width: 900px; margin: 0 auto 1.5rem;
+}
+.hero .section-subtitle {
+  margin: 0 auto 3rem; max-width: 800px; font-size: 1.2rem;
+}
+
+/* ── Nav Cards Grid ── */
+.nav-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem; max-width: 1000px; margin: 0 auto;
+}
+.nav-card {
+  background: var(--dark-card);
+  border: 1px solid var(--dark-card-border);
+  border-radius: 14px; padding: 1.75rem 1.5rem;
+  text-decoration: none; color: var(--white);
+  transition: all 0.25s; text-align: center;
+}
+.nav-card:hover {
+  border-color: var(--orange);
+  transform: translateY(-3px);
+  background: rgba(247,147,26,0.06);
+}
+.nav-card .nc-icon { font-size: 2rem; margin-bottom: 0.75rem; display: block; }
+.nav-card .nc-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.35rem; }
+.nav-card .nc-desc { font-size: 0.8rem; color: var(--white-60); }
+
+/* ── Cards ── */
+.card {
+  background: var(--dark-card);
+  border: 1px solid var(--dark-card-border);
+  border-radius: 14px; padding: 1.75rem;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.card:hover { border-color: rgba(247,147,26,0.2); transform: translateY(-2px); }
+.card-grid { display: grid; gap: 1.25rem; }
+.card-grid-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+.card-grid-3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.card-grid-4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+/* ── Stat Cards ── */
+.stat-cards {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem; margin: 2rem 0;
+}
+.stat-card {
+  background: var(--dark-card);
+  border: 1px solid var(--dark-card-border);
+  border-radius: 12px; padding: 1.5rem; text-align: center;
+}
+.stat-card .stat-value {
+  font-size: 2rem; font-weight: 800; color: var(--orange);
+  line-height: 1.2;
+}
+.stat-card .stat-label {
+  font-size: 0.75rem; color: var(--white-60);
+  text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.35rem;
+}
+.stat-card .stat-detail {
+  font-size: 0.78rem; color: var(--white-60); margin-top: 0.25rem;
+}
+
+/* ── For / Not For cards ── */
+.persona-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem; margin-top: 1.5rem;
+}
+.persona-card {
+  border-radius: 12px; padding: 1.25rem 1.5rem;
+  border-left: 4px solid;
+}
+.persona-card.for-card {
+  background: rgba(0,212,170,0.06);
+  border-color: var(--teal);
+}
+.persona-card.not-card {
+  background: rgba(231,76,60,0.06);
+  border-color: var(--red);
+}
+.persona-card h4 {
+  font-size: 0.95rem; font-weight: 700; margin-bottom: 0.35rem;
+}
+.persona-card.for-card h4 { color: var(--teal); }
+.persona-card.not-card h4 { color: var(--red); }
+.persona-card p { font-size: 0.85rem; color: var(--white-80); }
+
+/* ── Progress Bars (pain points) ── */
+.pain-bar-wrap { margin: 1.5rem 0; }
+.pain-item { margin-bottom: 1rem; }
+.pain-label {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.85rem; margin-bottom: 0.35rem;
+}
+.pain-label .pain-name { color: var(--white-80); font-weight: 500; }
+.pain-label .pain-score { color: var(--orange); font-weight: 700; }
+.pain-track {
+  width: 100%; height: 8px; background: rgba(255,255,255,0.06);
+  border-radius: 4px; overflow: hidden;
+}
+.pain-fill {
+  height: 100%; border-radius: 4px;
+  background: linear-gradient(90deg, var(--orange), #ff6b00);
+  transition: width 0.6s ease;
+}
+
+/* ── Quote Block ── */
+.quote-block {
+  background: rgba(247,147,26,0.06);
+  border-left: 4px solid var(--orange);
+  border-radius: 0 12px 12px 0;
+  padding: 1.5rem 2rem; margin: 1.5rem 0;
+  font-size: 1rem; line-height: 1.8;
+  color: var(--white-80); font-style: italic;
+}
+
+/* ── Callout ── */
+.callout {
+  background: var(--orange-dim);
+  border: 1px solid rgba(247,147,26,0.25);
+  border-radius: 12px; padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+.callout strong { color: var(--orange); }
+
+/* ── Tables ── */
+.table-wrap { overflow-x: auto; margin: 1.5rem 0; border-radius: 10px; }
+table {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  font-size: 0.88rem; border-radius: 10px; overflow: hidden;
+}
+thead th {
+  background: var(--orange); color: var(--dark);
+  font-weight: 700; padding: 0.85rem 1rem;
+  text-align: left; white-space: nowrap;
+  font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase;
+}
+thead th:first-child { border-radius: 10px 0 0 0; }
+thead th:last-child { border-radius: 0 10px 0 0; }
+tbody td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--dark-card-border);
+}
+tbody tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+tbody tr:hover td { background: rgba(247,147,26,0.04); }
+tbody tr:last-child td { border-bottom: none; }
+.check { color: var(--teal); font-weight: 700; }
+
+/* ── Light Sections ── */
+.light-section { background: var(--light-bg); color: var(--light-text); }
+.light-section .section-title { color: var(--light-text); }
+.light-section .section-subtitle { color: #555; }
+.light-section .section-label { color: var(--orange); }
+.light-section h3.sub-heading { color: var(--light-text); }
+.light-section h4.sub-sub { color: var(--orange); }
+.light-section .card { background: #fff; border-color: #e0e0e0; color: #333; }
+.light-section .card:hover { border-color: var(--orange); }
+.light-section table tbody td { color: #333; border-color: #eee; }
+.light-section table tbody tr:nth-child(even) td { background: #f4f4f4; }
+.light-section table tbody tr:hover td { background: #fff3e0; }
+.light-section .quote-block { background: rgba(247,147,26,0.06); color: #333; }
+.light-section p { color: #444; }
+.light-section .persona-card p { color: #555; }
+.light-section .persona-card.for-card { background: rgba(0,212,170,0.08); }
+.light-section .persona-card.not-card { background: rgba(231,76,60,0.08); }
+.light-section .stat-card { background: #fff; border-color: #e0e0e0; }
+.light-section .stat-card .stat-label { color: #777; }
+.light-section .stat-card .stat-detail { color: #777; }
+
+/* ── Pillar Cards (YouTube / Instagram) ── */
+.pillar-card {
+  border-radius: 14px; padding: 1.75rem; position: relative;
+  overflow: hidden; transition: transform 0.2s;
+}
+.pillar-card:hover { transform: translateY(-2px); }
+.pillar-card .p-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+.pillar-card h4 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
+.pillar-card .p-trigger {
+  font-size: 0.85rem; color: var(--white-60);
+  font-style: italic; margin-bottom: 0.75rem;
+}
+.pillar-card .p-modules { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.module-tag {
+  display: inline-block; font-size: 0.7rem; font-weight: 600;
+  padding: 0.2rem 0.6rem; border-radius: 100px;
+  background: rgba(255,255,255,0.1); letter-spacing: 0.03em;
+}
+
+.p-protect { background: rgba(231,76,60,0.08); border: 1px solid rgba(231,76,60,0.2); }
+.p-protect h4 { color: var(--red); }
+.p-build { background: var(--blue-dim); border: 1px solid rgba(52,152,219,0.2); }
+.p-build h4 { color: var(--blue); }
+.p-yield { background: var(--orange-dim); border: 1px solid rgba(247,147,26,0.2); }
+.p-yield h4 { color: var(--orange); }
+.p-proof { background: var(--teal-dim); border: 1px solid rgba(0,212,170,0.2); }
+.p-proof h4 { color: var(--teal); }
+
+/* ── Video Cards ── */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 0.75rem; margin-bottom: 1rem;
+}
+.video-card {
+  background: var(--dark-card);
+  border: 1px solid var(--dark-card-border);
+  border-radius: 10px; padding: 1rem 1.25rem;
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  transition: border-color 0.2s;
+}
+.video-card:hover { border-color: rgba(255,255,255,0.15); }
+.video-num {
+  font-size: 0.75rem; font-weight: 800; color: var(--orange);
+  min-width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--orange-dim); border-radius: 8px; flex-shrink: 0;
+}
+.video-info { flex: 1; }
+.video-title { font-size: 0.9rem; font-weight: 600; line-height: 1.4; margin-bottom: 0.25rem; }
+.video-module { font-size: 0.65rem; font-weight: 600; color: var(--teal); letter-spacing: 0.05em; text-transform: uppercase; }
+.video-source {
+  font-size: 0.8rem; font-weight: 600; color: var(--orange);
+  margin-bottom: 0.75rem; margin-top: 1.25rem;
+}
+
+/* ── Funnel ── */
+.funnel { display: flex; flex-direction: column; align-items: center; gap: 0; margin: 2rem auto; max-width: 700px; }
+.funnel-step {
+  display: flex; align-items: center; justify-content: center;
+  gap: 1rem; padding: 1rem 1.5rem; border-radius: 12px;
+  font-weight: 600; font-size: 0.9rem; width: 100%;
+}
+.funnel-step .f-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.7; min-width: 80px; text-align: right; }
+.funnel-step .f-name { flex: 1; text-align: left; }
+.funnel-step .f-detail { font-size: 0.78rem; font-weight: 400; color: var(--white-60); min-width: 180px; text-align: right; }
+.funnel-arrow { color: var(--white-60); font-size: 1rem; margin: 0.15rem 0; }
+.fl0 { background: rgba(247,147,26,0.08); border: 1px solid rgba(247,147,26,0.2); }
+.fl05 { background: rgba(247,147,26,0.06); border: 1px solid rgba(247,147,26,0.15); }
+.fl1 { background: rgba(0,212,170,0.06); border: 1px solid rgba(0,212,170,0.15); }
+.fl2 { background: rgba(0,212,170,0.08); border: 1px solid rgba(0,212,170,0.2); }
+.fl3 { background: rgba(0,212,170,0.12); border: 1px solid rgba(0,212,170,0.3); }
+
+/* ── 90/10 Bar ── */
+.rule-bar {
+  display: flex; border-radius: 12px; overflow: hidden;
+  height: 44px; margin: 1.5rem 0; max-width: 600px;
+}
+.rule-what {
+  width: 10%; background: var(--orange);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 0.85rem; color: var(--dark);
+}
+.rule-how {
+  width: 90%; background: var(--dark-card); border: 1px solid var(--dark-card-border);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: 0.85rem; color: var(--white-60);
+}
+
+/* ── Competitor Cards ── */
+.comp-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem; margin-top: 1.5rem;
+}
+.comp-card {
+  background: var(--dark-card); border: 1px solid var(--dark-card-border);
+  border-radius: 12px; padding: 1.5rem;
+}
+.comp-card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+.comp-card p { font-size: 0.85rem; color: var(--white-60); }
+.comp-card.cs-diff { border-color: var(--orange); background: rgba(247,147,26,0.06); }
+.comp-card.cs-diff h4 { color: var(--orange); }
+
+/* ── IG specific ── */
+.ig-pillar {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 1rem 1.25rem; border-radius: 10px;
+  background: var(--dark-card); border: 1px solid var(--dark-card-border);
+  margin-bottom: 0.75rem;
+}
+.ig-pillar .ig-pct {
+  font-size: 1.5rem; font-weight: 800; color: var(--orange);
+  min-width: 60px; text-align: center;
+}
+.ig-pillar .ig-name { font-weight: 700; font-size: 0.95rem; }
+.ig-pillar .ig-desc { font-size: 0.82rem; color: var(--white-60); margin-top: 0.15rem; }
+
+.ig-content-bar {
+  display: flex; border-radius: 10px; overflow: hidden; height: 36px; margin: 1rem 0;
+}
+.ig-bar-seg {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; color: var(--dark);
+}
+
+.bio-block {
+  background: var(--dark-card); border: 1px solid var(--dark-card-border);
+  border-radius: 12px; padding: 1.5rem; font-family: monospace;
+  font-size: 0.9rem; line-height: 1.8; color: var(--white-80);
+  max-width: 500px;
+}
+
+.keyword-card {
+  background: var(--dark-card); border: 1px solid var(--dark-card-border);
+  border-radius: 10px; padding: 1rem 1.25rem;
+  display: flex; gap: 0.75rem; align-items: flex-start;
+}
+.keyword-card .kw {
+  background: var(--orange); color: var(--dark);
+  font-weight: 800; font-size: 0.75rem; padding: 0.25rem 0.6rem;
+  border-radius: 6px; flex-shrink: 0;
+}
+.keyword-card .kw-desc { font-size: 0.85rem; color: var(--white-80); }
+
+/* ── Progress flow (OS) ── */
+.progress-flow {
+  display: flex; align-items: center; gap: 0; flex-wrap: wrap;
+  justify-content: center; margin: 2.5rem 0;
+}
+.progress-node {
+  padding: 12px 18px; border-radius: 10px; font-weight: 700;
+  font-size: 0.8rem; text-align: center; white-space: nowrap;
+}
+.progress-node.track { background: rgba(247,147,26,0.12); border: 1px solid rgba(247,147,26,0.3); color: var(--orange); }
+.progress-node.gate { background: var(--teal-dim); border: 1px solid rgba(0,212,170,0.3); color: var(--teal); font-size: 0.7rem; }
+.progress-arrow { color: #555; font-size: 1.2rem; padding: 0 6px; flex-shrink: 0; }
+
+/* ── Module Cards (OS) ── */
+.module-card { border-left: 3px solid var(--orange); }
+.mod-badge {
+  display: inline-block; background: var(--orange); color: var(--dark);
+  font-size: 0.7rem; font-weight: 800; padding: 3px 10px;
+  border-radius: 4px; letter-spacing: 0.06em; margin-bottom: 10px;
+}
+.objectives-list { list-style: none; padding: 0; margin: 10px 0; }
+.objectives-list li {
+  padding: 3px 0 3px 20px; position: relative;
+  font-size: 0.86rem; color: #ccc;
+}
+.objectives-list li::before {
+  content: '✓'; position: absolute; left: 0;
+  color: var(--teal); font-weight: 700;
+}
+
+/* ── Yield tiers ── */
+.yield-tiers { display: grid; gap: 10px; margin: 1rem 0; }
+.yield-tier {
+  display: flex; align-items: center; border-radius: 10px;
+  overflow: hidden; border: 1px solid rgba(255,255,255,0.06);
+}
+.yield-tier-bar { width: 8px; min-height: 56px; flex-shrink: 0; }
+.yield-tier-content { padding: 12px 16px; flex: 1; }
+.yield-tier-content strong { font-size: 0.9rem; }
+.yield-tier-content .range { color: var(--orange); font-weight: 700; font-size: 0.83rem; }
+.yield-tier-content .desc { color: #999; font-size: 0.8rem; }
+.t1 .yield-tier-bar { background: var(--teal); }
+.t2 .yield-tier-bar { background: var(--blue); }
+.t3 .yield-tier-bar { background: var(--orange); }
+.t4 .yield-tier-bar { background: var(--red); }
+
+/* ── Investor type cards ── */
+.investor-card { border-top: 3px solid; padding-top: 1.25rem; }
+.investor-card.gen { border-color: var(--teal); }
+.investor-card.prot { border-color: var(--blue); }
+.investor-card.inc { border-color: var(--orange); }
+.investor-card.gen h4 { color: var(--teal); }
+.investor-card.prot h4 { color: var(--blue); }
+.investor-card.inc h4 { color: var(--orange); }
+
+/* ── Quote Wall ── */
+.quote-wall {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+.quote-wall .quote-block { margin: 0; }
+
+/* ── Back to Top ── */
+.back-to-top {
+  position: fixed; bottom: 2rem; right: 2rem;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--orange); color: var(--dark);
+  border: none; cursor: pointer; font-size: 1.2rem;
+  font-weight: 800; display: flex; align-items: center;
+  justify-content: center; z-index: 999;
+  opacity: 0; transition: opacity 0.3s;
+  box-shadow: 0 4px 12px rgba(247,147,26,0.3);
+}
+.back-to-top.visible { opacity: 1; }
+
+/* ── Section Divider ── */
+.section-divider {
+  border: none; border-top: 1px solid var(--dark-card-border);
+  margin: 0;
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center; padding: 3rem 2rem;
+  border-top: 1px solid var(--dark-card-border);
+  color: var(--white-60); font-size: 0.8rem;
+}
+.footer strong { color: var(--orange); }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .hero .section-title { font-size: 2.2rem; }
+  section { padding: 3rem 1.25rem; }
+  .nav-cards { grid-template-columns: 1fr 1fr; }
+  .stat-cards { grid-template-columns: 1fr 1fr; }
+  .persona-grid { grid-template-columns: 1fr; }
+  .video-grid { grid-template-columns: 1fr; }
+  .comp-grid { grid-template-columns: 1fr; }
+  .card-grid-2, .card-grid-3, .card-grid-4 { grid-template-columns: 1fr; }
+  .funnel-step .f-detail { display: none; }
+  .progress-flow { flex-direction: column; gap: 4px; }
+  .progress-arrow { transform: rotate(90deg); }
+  .quote-wall { grid-template-columns: 1fr; }
+}
+
+/* ── Print ── */
+@media print {
+  .top-nav, .back-to-top { display: none; }
+  body { background: white; color: black; }
+  section { padding: 1.5rem 0; break-inside: avoid; }
+  .hero { padding: 2rem 0; }
+  .grid-bg::before { display: none; }
+  .card, .pillar-card, .video-card, .quote-block, .stat-card, .persona-card, .comp-card {
+    border: 1px solid #ddd; background: #fafafa; color: #222;
+  }
+  .section-title { font-size: 1.6rem; }
+  a { color: inherit; text-decoration: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════
+     STICKY NAV
+     ═══════════════════════════════════════════════════ -->
+<nav class="top-nav">
+  <div class="nav-inner">
+    <a href="#home" class="nav-logo">CS Strategy Hub</a>
+    <a href="#home">Home</a>
+    <a href="#persona">Target Persona</a>
+    <a href="#youtube">YouTube</a>
+    <a href="#instagram">Instagram</a>
+    <a href="#os">Operating System</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 1: HERO + NAVIGATION HUB
+     ═══════════════════════════════════════════════════ -->
+<section id="home" class="hero grid-bg">
+  <div class="container">
+    <div class="hero-badge">🔒 Internal Document — March 2026</div>
+    <h1 class="section-title">Collective Shift — Strategy Hub</h1>
+    <p class="section-subtitle">Internal strategy documents for the CS team. One place, every strategy, always current.</p>
+
+    <div class="nav-cards">
+      <a href="#persona" class="nav-card">
+        <span class="nc-icon">🎯</span>
+        <div class="nc-title">Target Persona</div>
+        <div class="nc-desc">Who we're for, who we're not</div>
+      </a>
+      <a href="#youtube" class="nav-card">
+        <span class="nc-icon">🎬</span>
+        <div class="nc-title">YouTube Strategy</div>
+        <div class="nc-desc">40 videos, 4 pillars, 12-week calendar</div>
+      </a>
+      <a href="#instagram" class="nav-card">
+        <span class="nc-icon">📸</span>
+        <div class="nc-title">Instagram Strategy</div>
+        <div class="nc-desc">Reels, stories, DM funnels, KPIs</div>
+      </a>
+      <a href="#os" class="nav-card">
+        <span class="nc-icon">📘</span>
+        <div class="nc-title">Operating System</div>
+        <div class="nc-desc">Shift OS manual — L1, L2, L3</div>
+      </a>
+      <a href="#os-quotes" class="nav-card">
+        <span class="nc-icon">💬</span>
+        <div class="nc-title">Key Quotes</div>
+        <div class="nc-desc">The philosophy that drives CS</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 2: TARGET PERSONA — "WHO WE'RE FOR"
+     ═══════════════════════════════════════════════════ -->
+<section id="persona" class="grid-bg">
+  <div class="container">
+    <div class="section-label">Target Persona</div>
+    <h2 class="section-title">🎯 The Strategic Wealth Builder</h2>
+    <p class="section-subtitle">Every piece of content, every call, every strategy — designed for this specific person.</p>
+
+    <!-- Demographics -->
+    <h3 class="sub-heading">Demographics & Profile</h3>
+    <div class="stat-cards">
+      <div class="stat-card">
+        <div class="stat-value">40–59</div>
+        <div class="stat-label">Primary Age</div>
+        <div class="stat-detail">67% of audience</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">$500K–$2M+</div>
+        <div class="stat-label">Net Worth</div>
+        <div class="stat-detail">Property, super, investments</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">$50K–$250K</div>
+        <div class="stat-label">Digital Asset Portfolio</div>
+        <div class="stat-detail">46% of members</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">$25K–$250K+</div>
+        <div class="stat-label">Capital Ready</div>
+        <div class="stat-detail">To allocate in next 12 months</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">17%</div>
+        <div class="stat-label">Age 60+</div>
+        <div class="stat-detail">Growing segment</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">24%</div>
+        <div class="stat-label">4+ Years Experience</div>
+        <div class="stat-detail">But still feel lost</div>
+      </div>
+    </div>
+
+    <p style="font-size:0.9rem; color:var(--white-60); margin-top:1rem;"><strong style="color:var(--white);">Professions:</strong> Business owners, FIFO workers, executives, property investors, pre-retirees, SMSF trustees</p>
+    <p style="font-size:0.9rem; color:var(--white-60);"><strong style="color:var(--white);">Location:</strong> Primarily Australia · Emerging: USA, UK/Europe</p>
+    <p style="font-size:0.9rem; color:var(--white-60);"><strong style="color:var(--white);">Key insight:</strong> 29% are new, 24% have 4+ years but feel lost. Time ≠ confidence.</p>
+
+    <!-- Primary Goals -->
+    <h3 class="sub-heading">Primary Goals</h3>
+    <div class="card-grid card-grid-2">
+      <div class="card" style="border-left:3px solid var(--teal);">
+        <h4 style="color:var(--teal); margin-top:0; font-size:1rem;">💰 Generational Wealth (28%)</h4>
+        <p style="color:var(--white-60); font-size:0.88rem;">Build for family. Legacy mindset. 5–10+ year horizon.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--orange);">
+        <h4 style="color:var(--orange); margin-top:0; font-size:1rem;">📈 Grow Wealth Faster (25%)</h4>
+        <p style="color:var(--white-60); font-size:0.88rem;">Outperform traditional investments. Data-driven allocation.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--blue);">
+        <h4 style="color:var(--blue); margin-top:0; font-size:1rem;">⏰ Buy Back Time</h4>
+        <p style="color:var(--white-60); font-size:0.88rem;">Achieve financial freedom. Reduce dependency on active income.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--red);">
+        <h4 style="color:var(--red); margin-top:0; font-size:1rem;">🛡️ Hedge Against Inflation</h4>
+        <p style="color:var(--white-60); font-size:0.88rem;">Systemic risk protection. "The Silent Thief" — 3,266x ROAS ad.</p>
+      </div>
+    </div>
+
+    <!-- Pain Points -->
+    <h3 class="sub-heading">Core Pain Points <span style="font-size:0.75rem; color:var(--white-60); font-weight:400;">(Survey data, n=76)</span></h3>
+    <div class="pain-bar-wrap">
+      <div class="pain-item">
+        <div class="pain-label">
+          <span class="pain-name">No exit strategy</span>
+          <span class="pain-score">2.8 / 10 confidence</span>
+        </div>
+        <div class="pain-track"><div class="pain-fill" style="width:28%;"></div></div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-label">
+          <span class="pain-name">Feeling isolated — no support network</span>
+          <span class="pain-score">3.2 / 10 support</span>
+        </div>
+        <div class="pain-track"><div class="pain-fill" style="width:32%;"></div></div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-label">
+          <span class="pain-name">Information overload / lack of trust</span>
+          <span class="pain-score">3.7 / 10 confidence</span>
+        </div>
+        <div class="pain-track"><div class="pain-fill" style="width:37%;"></div></div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-label">
+          <span class="pain-name">Lack of time — #1 concern</span>
+          <span class="pain-score">38% of leads</span>
+        </div>
+        <div class="pain-track"><div class="pain-fill" style="width:100%; background:linear-gradient(90deg, var(--red), #ff4444);"></div></div>
+      </div>
+    </div>
+
+    <!-- Who We're For -->
+    <h3 class="sub-heading">Who We're For ✅</h3>
+    <div class="persona-grid">
+      <div class="persona-card for-card">
+        <h4>Business Owners</h4>
+        <p>Construction, digital media, trades, professional services — high income, little time</p>
+      </div>
+      <div class="persona-card for-card">
+        <h4>Executives &amp; Professionals</h4>
+        <p>Corporate leaders, lawyers, doctors — want frameworks not tips</p>
+      </div>
+      <div class="persona-card for-card">
+        <h4>FIFO &amp; High-Income Earners</h4>
+        <p>Mining, oil &amp; gas, aviation — large lump sums, need a strategy</p>
+      </div>
+      <div class="persona-card for-card">
+        <h4>Property Investors</h4>
+        <p>$1M+ in real estate, looking to diversify into digital assets</p>
+      </div>
+      <div class="persona-card for-card">
+        <h4>Pre-Retirees &amp; Retirees</h4>
+        <p>55–65+, $2M+ net worth, concerned about inflation eroding savings</p>
+      </div>
+      <div class="persona-card for-card">
+        <h4>Family Office / SMSF Trustees</h4>
+        <p>Multi-entity wealth, need institutional-grade research</p>
+      </div>
+    </div>
+
+    <!-- Who We're NOT For -->
+    <h3 class="sub-heading">Who We're NOT For ❌</h3>
+    <div class="persona-grid">
+      <div class="persona-card not-card">
+        <h4>Day Traders / Speculators</h4>
+        <p>We teach frameworks for long-term wealth, not short-term trades</p>
+      </div>
+      <div class="persona-card not-card">
+        <h4>Memecoin / NFT Chasers</h4>
+        <p>We filter out 98% of the market</p>
+      </div>
+      <div class="persona-card not-card">
+        <h4>"Next 100x" Seekers</h4>
+        <p>We build portfolios, not lottery tickets</p>
+      </div>
+      <div class="persona-card not-card">
+        <h4>Signal Group Seekers</h4>
+        <p>We don't tell you what to buy — we teach you how to think</p>
+      </div>
+      <div class="persona-card not-card">
+        <h4>People Who Can't Afford to Lose</h4>
+        <p>Digital assets are volatile — strong financial base first</p>
+      </div>
+      <div class="persona-card not-card">
+        <h4>Get-Rich-Quick Mindset</h4>
+        <p>Generational wealth over 5–10+ years, not overnight</p>
+      </div>
+      <div class="persona-card not-card">
+        <h4>Anyone Expecting Financial Advice</h4>
+        <p>We are an education company. Not advisors.</p>
+      </div>
+    </div>
+
+    <!-- Path to Platinum -->
+    <h3 class="sub-heading">Path to Platinum</h3>
+    <div class="funnel">
+      <div class="funnel-step fl0">
+        <span class="f-label">Discovery</span>
+        <span class="f-name">📸 Instagram</span>
+        <span class="f-detail">25–50% of acquisitions</span>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step fl05">
+        <span class="f-label">Nurture</span>
+        <span class="f-name">👀 Follow weeks/months</span>
+        <span class="f-detail">Build trust via content</span>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step fl1">
+        <span class="f-label">Engage</span>
+        <span class="f-name">🎓 Masterclass / Seminar</span>
+        <span class="f-detail">Free education touchpoint</span>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step fl2">
+        <span class="f-label">Convert</span>
+        <span class="f-name">📞 Team Call</span>
+        <span class="f-detail">87% learn via 1:1 calls</span>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step fl3">
+        <span class="f-label">Close</span>
+        <span class="f-name">💎 Join Platinum ($15K)</span>
+        <span class="f-detail">High-touch, non-negotiable</span>
+      </div>
+    </div>
+
+    <!-- Winning Messaging -->
+    <h3 class="sub-heading">Winning Messaging</h3>
+    <div class="card-grid card-grid-3">
+      <div class="card" style="text-align:center; padding:1.25rem;">
+        <p style="font-weight:700; color:var(--orange); font-size:0.95rem;">"Cut through the noise"</p>
+      </div>
+      <div class="card" style="text-align:center; padding:1.25rem;">
+        <p style="font-weight:700; color:var(--orange); font-size:0.95rem;">"A structured plan"</p>
+      </div>
+      <div class="card" style="text-align:center; padding:1.25rem;">
+        <p style="font-weight:700; color:var(--orange); font-size:0.95rem;">"Know when to take profits"</p>
+      </div>
+      <div class="card" style="text-align:center; padding:1.25rem;">
+        <p style="font-weight:700; color:var(--orange); font-size:0.95rem;">"Generational wealth"</p>
+      </div>
+      <div class="card" style="text-align:center; padding:1.25rem;">
+        <p style="font-weight:700; color:var(--orange); font-size:0.95rem;">"Building a legacy"</p>
+      </div>
+      <div class="card" style="text-align:center; padding:1.25rem;">
+        <p style="font-weight:700; color:var(--red); font-size:0.95rem;">"The Silent Thief" — 3,266x ROAS</p>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:1.5rem;">
+      <strong>Master positioning:</strong> "Helping high-net-worth investors build &amp; protect wealth with digital assets"
+    </div>
+
+    <div class="quote-block">
+      "I can't be with the techno bro. And I can't be with the old world solid bankers — trying to discern who are really the deep integrity people."
+    </div>
+
+    <!-- How they find & learn -->
+    <h3 class="sub-heading">How They Find Us</h3>
+    <div class="card-grid card-grid-3">
+      <div class="card" style="text-align:center;">
+        <p style="font-size:1.5rem; font-weight:800; color:var(--orange);">25–50%</p>
+        <p style="font-size:0.85rem; color:var(--white-60);">Instagram acquisitions</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <p style="font-size:1.5rem; font-weight:800; color:var(--teal);">Ben's Brand</p>
+        <p style="font-size:0.85rem; color:var(--white-60);">Personal authority & trust</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <p style="font-size:1.5rem; font-weight:800; color:var(--blue);">Word of Mouth</p>
+        <p style="font-size:0.85rem; color:var(--white-60);">Member referrals</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">How They Learn</h3>
+    <div class="stat-cards">
+      <div class="stat-card">
+        <div class="stat-value">87%</div>
+        <div class="stat-label">1:1 Calls</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">86%</div>
+        <div class="stat-label">WhatsApp</div>
+      </div>
+      <div class="stat-card" style="border: 1px solid var(--orange);">
+        <div class="stat-value" style="font-size:1.2rem;">High-Touch</div>
+        <div class="stat-label">Non-Negotiable</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 3: YOUTUBE STRATEGY
+     ═══════════════════════════════════════════════════ -->
+<section id="youtube" class="grid-bg" style="padding-top:5rem;">
+  <div class="container">
+    <div class="section-label">YouTube Strategy</div>
+    <h2 class="section-title">🎬 YouTube Content Strategy</h2>
+    <p class="section-subtitle" style="margin-bottom:1rem;">A complete content engine mapped to the Shift OS education system — 40 video ideas, 4 pillars, and a 12-week calendar designed to attract high-net-worth investors and funnel them into Platinum membership.</p>
+
+    <div class="stat-cards">
+      <div class="stat-card">
+        <div class="stat-value">40</div>
+        <div class="stat-label">Video Ideas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">4</div>
+        <div class="stat-label">Content Pillars</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">12</div>
+        <div class="stat-label">Week Calendar</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">5</div>
+        <div class="stat-label">Funnel Levels</div>
+      </div>
+    </div>
+
+    <!-- Big Topic -->
+    <h3 class="sub-heading" id="yt-topic">The Big Topic</h3>
+    <div class="callout" style="text-align:center; padding:2rem;">
+      <p style="font-size:1.25rem; font-weight:700; color:var(--white); line-height:1.5;">"How Successful People Are Using Digital Assets to Protect and Build Generational Wealth — Without the Noise"</p>
+      <p style="font-size:0.88rem; color:var(--white-60); margin-top:0.75rem;">Aligned to the 3-level education system: every video maps to a specific Shift OS module and naturally funnels toward Platinum membership.</p>
+    </div>
+
+    <!-- 90/10 Rule -->
+    <h3 class="sub-heading" id="yt-rule">The 90/10 Rule</h3>
+    <p style="color:var(--white-60); font-size:0.95rem; margin-bottom:1rem;">Give the WHAT (10% strategic overview on YouTube). Hold the HOW (90% implementation inside Platinum).</p>
+    <div class="rule-bar">
+      <div class="rule-what">10%</div>
+      <div class="rule-how">90% — Inside Platinum</div>
+    </div>
+
+    <div class="funnel" style="margin-top:2rem;">
+      <div class="funnel-step fl0">
+        <span class="f-label">Level 0</span>
+        <span class="f-name">▶ YouTube</span>
+        <span class="f-detail">Strategic overview (WHAT to think about)</span>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step fl05">
+        <span class="f-label">Level 0.5</span>
+        <span class="f-name">🚀 Accelerator</span>
+        <span class="f-detail">30-day taste</span>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step fl1">
+        <span class="f-label">Level 1</span>
+        <span class="f-name">⭐ Platinum Beginner</span>
+        <span class="f-detail">Full frameworks + 8-step process</span>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step fl2">
+        <span class="f-label">Level 2</span>
+        <span class="f-name">💎 Platinum Advanced</span>
+        <span class="f-detail">DeFi, yield, borrowing, multi-entity</span>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step fl3">
+        <span class="f-label">Level 3</span>
+        <span class="f-name">👑 Platinum Elite</span>
+        <span class="f-detail">Time-gated, year 2+ renewals</span>
+      </div>
+    </div>
+    <p style="color: var(--white-60); font-size: 0.9rem; text-align: center; max-width: 600px; margin: 1rem auto 0;">Every video teaches one concept from the OS, gives the WHAT, and bridges to <em>"Inside Platinum, we go deeper on this every single week."</em></p>
+
+    <!-- 4 Pillars -->
+    <h3 class="sub-heading" id="yt-pillars">4 Content Pillars</h3>
+    <p style="color:var(--white-60); font-size:0.95rem; margin-bottom:1.5rem;">Each pillar maps to specific ICP triggers and Shift OS modules.</p>
+
+    <div class="card-grid card-grid-2">
+      <div class="pillar-card p-protect">
+        <div class="p-icon">🛡️</div>
+        <h4>PROTECT — Bear Market + Wealth Preservation</h4>
+        <div class="p-trigger">ICP trigger: fear of loss, inflation, real estate risk</div>
+        <div class="p-modules">
+          <span class="module-tag">B1-M1 Foundations</span>
+          <span class="module-tag">B1-M4 Principles</span>
+          <span class="module-tag">B2-M8 Sell Strategy</span>
+        </div>
+      </div>
+      <div class="pillar-card p-build">
+        <div class="p-icon">📚</div>
+        <h4>BUILD — Shift OS Education</h4>
+        <div class="p-trigger">ICP trigger: "I need a framework, not tips"</div>
+        <div class="p-modules">
+          <span class="module-tag">B1-M2 Bitcoin</span>
+          <span class="module-tag">B1-M3 Altcoins</span>
+          <span class="module-tag">B2-M5 – B2-M8</span>
+        </div>
+      </div>
+      <div class="pillar-card p-yield">
+        <div class="p-icon">💰</div>
+        <h4>YIELD — Income &amp; DeFi Education</h4>
+        <div class="p-trigger">ICP trigger: "How do I earn passive income on digital assets?"</div>
+        <div class="p-modules">
+          <span class="module-tag">A2-M5 Yield & Staking</span>
+          <span class="module-tag">Teased at L0, detailed in Advanced</span>
+        </div>
+      </div>
+      <div class="pillar-card p-proof">
+        <div class="p-icon">📊</div>
+        <h4>PROOF — Transparency &amp; Authority</h4>
+        <div class="p-trigger">ICP trigger: "Show me, don't tell me"</div>
+        <div class="p-modules">
+          <span class="module-tag">CS Portfolio</span>
+          <span class="module-tag">Member Stories</span>
+          <span class="module-tag">Market Updates</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 40 Video Ideas -->
+    <h3 class="sub-heading" id="yt-videos">40 Video Ideas — Mapped to Shift OS</h3>
+    <p style="color:var(--white-60); font-size:0.9rem; margin-bottom:2rem;">Every video title is mapped to a specific Shift OS module. Numbered for easy reference in planning meetings.</p>
+
+    <!-- PILLAR 1: PROTECT -->
+    <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1.25rem; padding-bottom:0.75rem; border-bottom:2px solid var(--dark-card-border);">
+      <span style="font-size:1.5rem;">🛡️</span>
+      <h4 style="font-size:1.2rem; font-weight:700; color:var(--red); margin:0;">PILLAR 1: PROTECT — Bear Market + Wealth Preservation</h4>
+    </div>
+
+    <div class="video-source">From B1-M1 (Foundations)</div>
+    <div class="video-grid">
+      <div class="video-card"><div class="video-num">1</div><div class="video-info"><div class="video-title">Bitcoin at $70K: Is This the Buying Opportunity of the Decade?</div><div class="video-module">B1-M1 · Foundations</div></div></div>
+      <div class="video-card"><div class="video-num">2</div><div class="video-info"><div class="video-title">Is Bitcoin Actually a Hedge Against Inflation? The Honest Answer</div><div class="video-module">B1-M1 · Foundations</div></div></div>
+      <div class="video-card"><div class="video-num">3</div><div class="video-info"><div class="video-title">The Real Estate Correction No One's Talking About</div><div class="video-module">B1-M1 · Foundations</div></div></div>
+      <div class="video-card"><div class="video-num">4</div><div class="video-info"><div class="video-title">Why $100K+ Investors Are Quietly Moving Into Bitcoin</div><div class="video-module">B1-M1 · Foundations</div></div></div>
+      <div class="video-card"><div class="video-num">5</div><div class="video-info"><div class="video-title">3 Months in Digital Assets = 3 Years in Traditional Finance. Here's Why.</div><div class="video-module">B1-M1 · Foundations</div></div></div>
+    </div>
+
+    <div class="video-source">From B2-M8 + A2-M7 (Sell Strategy)</div>
+    <div class="video-grid">
+      <div class="video-card"><div class="video-num">6</div><div class="video-info"><div class="video-title">The #1 Mistake That Destroys Digital Asset Portfolios (No Exit Strategy)</div><div class="video-module">B2-M8 · Sell Strategy</div></div></div>
+      <div class="video-card"><div class="video-num">7</div><div class="video-info"><div class="video-title">How to Build a Sell Strategy Before the Next Bull Run</div><div class="video-module">B2-M8 · Sell Strategy</div></div></div>
+      <div class="video-card"><div class="video-num">8</div><div class="video-info"><div class="video-title">I've Never Met Anyone Who Took Profits and Regretted It</div><div class="video-module">B2-M8 · Sell Strategy</div></div></div>
+    </div>
+
+    <div class="video-source">Bear Market Specific</div>
+    <div class="video-grid">
+      <div class="video-card"><div class="video-num">9</div><div class="video-info"><div class="video-title">Bear Markets Are Where Generational Wealth Is Built</div><div class="video-module">B1-M1 · Bear Market</div></div></div>
+      <div class="video-card"><div class="video-num">10</div><div class="video-info"><div class="video-title">The 5 Things Smart Investors Do When Prices Drop</div><div class="video-module">B1-M1 · Bear Market</div></div></div>
+    </div>
+
+    <!-- PILLAR 2: BUILD -->
+    <div style="display:flex; align-items:center; gap:0.75rem; margin:2.5rem 0 1.25rem; padding-bottom:0.75rem; border-bottom:2px solid var(--dark-card-border);">
+      <span style="font-size:1.5rem;">📚</span>
+      <h4 style="font-size:1.2rem; font-weight:700; color:var(--blue); margin:0;">PILLAR 2: BUILD — Shift OS Education</h4>
+    </div>
+
+    <div class="video-source">From B1-M2 (Bitcoin)</div>
+    <div class="video-grid">
+      <div class="video-card"><div class="video-num">11</div><div class="video-info"><div class="video-title">Two Different Games: Why Bitcoin and Altcoins Are NOT the Same</div><div class="video-module">B1-M2 · Bitcoin</div></div></div>
+      <div class="video-card"><div class="video-num">12</div><div class="video-info"><div class="video-title">How Much Bitcoin Should Be in Your Portfolio? (The Data)</div><div class="video-module">B1-M2 · Bitcoin</div></div></div>
+      <div class="video-card"><div class="video-num">13</div><div class="video-info"><div class="video-title">I Would Never Put My Retirement Into Digital Assets. Here's What I'd Do Instead.</div><div class="video-module">B1-M2 · Bitcoin</div></div></div>
+      <div class="video-card"><div class="video-num">14</div><div class="video-info"><div class="video-title">The 'I Will Buy at X' Framework: How to Invest Without Emotion</div><div class="video-module">B1-M2 · Bitcoin</div></div></div>
+      <div class="video-card"><div class="video-num">15</div><div class="video-info"><div class="video-title">Bitcoin Has Never Been Lower Than 4 Years Prior. Here's the Data.</div><div class="video-module">B1-M2 · Bitcoin</div></div></div>
+    </div>
+
+    <div class="video-source">From B1-M3 (Altcoins)</div>
+    <div class="video-grid">
+      <div class="video-card"><div class="video-num">16</div><div class="video-info"><div class="video-title">The Altcoin Trap: Why 98% of Digital Asset Projects Fail</div><div class="video-module">B1-M3 · Altcoins</div></div></div>
+      <div class="video-card"><div class="video-num">17</div><div class="video-info"><div class="video-title">Show Me the Usage, Not the Roadmap</div><div class="video-module">B1-M3 · Altcoins</div></div></div>
+      <div class="video-card"><div class="video-num">18</div><div class="video-info"><div class="video-title">HYPE vs Cardano: What Separates Winners from Losers</div><div class="video-module">B1-M3 · Altcoins</div></div></div>
+      <div class="video-card"><div class="video-num">19</div><div class="video-info"><div class="video-title">If You Can't Explain Why You Own It in One Sentence, Should You?</div><div class="video-module">B1-M3 · Altcoins</div></div></div>
+      <div class="video-card"><div class="video-num">20</div><div class="video-info"><div class="video-title">The 15% Inflation Trap: What Tokenomics Means for Your Investment</div><div class="video-module">B1-M3 · Altcoins</div></div></div>
+    </div>
+
+    <div class="video-source">From B1-M4 (Principles)</div>
+    <div class="video-grid">
+      <div class="video-card"><div class="video-num">21</div><div class="video-info"><div class="video-title">The 50% Rule: How Much Digital Assets You Should Actually Own</div><div class="video-module">B1-M4 · Principles</div></div></div>
+      <div class="video-card"><div class="video-num">22</div><div class="video-info"><div class="video-title">Your Feed Is Not Your Financial Advisor</div><div class="video-module">B1-M4 · Principles</div></div></div>
+      <div class="video-card"><div class="video-num">23</div><div class="video-info"><div class="video-title">I've Been in Digital Assets 9 Years. Here Are the 5 Things That Actually Matter.</div><div class="video-module">B1-M4 · Principles</div></div></div>
+    </div>
+
+    <div class="video-source">From the 8-Step Process (B3)</div>
+    <div class="video-grid">
+      <div class="video-card"><div class="video-num">24</div><div class="video-info"><div class="video-title">The 7-Step System I Use to Invest in Digital Assets (No Signals, No Hype)</div><div class="video-module">B3 · 8-Step Process</div></div></div>
+      <div class="video-card"><div class="video-num">25</div><div class="video-info"><div class="video-title">How to Build a Complete Digital Asset Strategy in 8 Steps</div><div class="video-module">B3 · 8-Step Process</div></div></div>
+    </div>
+
+    <!-- PILLAR 3: YIELD -->
+    <div style="display:flex; align-items:center; gap:0.75rem; margin:2.5rem 0 1.25rem; padding-bottom:0.75rem; border-bottom:2px solid var(--dark-card-border);">
+      <span style="font-size:1.5rem;">💰</span>
+      <h4 style="font-size:1.2rem; font-weight:700; color:var(--orange); margin:0;">PILLAR 3: YIELD — Income &amp; DeFi Education</h4>
+    </div>
+
+    <div class="video-source">From A2-M5 (Yield &amp; Staking)</div>
+    <div class="video-grid">
+      <div class="video-card"><div class="video-num">26</div><div class="video-info"><div class="video-title">Stablecoin Yields: The Best Kept Secret in Digital Assets (Earn 5-18% on USD)</div><div class="video-module">A2-M5 · Yield &amp; Staking</div></div></div>
+      <div class="video-card"><div class="video-num">27</div><div class="video-info"><div class="video-title">Where Does the Yield Come From? The Only Question That Matters</div><div class="video-module">A2-M5 · Yield &amp; Staking</div></div></div>
+      <div class="video-card"><div class="video-num">28</div><div class="video-info"><div class="video-title">Is Staking Free Money? The Honest Answer</div><div class="video-module">A2-M5 · Yield &amp; Staking</div></div></div>
+      <div class="video-card"><div class="video-num">29</div><div class="video-info"><div class="video-title">How We Earn Yield on 33% of Our Portfolio (syrupUSDC Explained)</div><div class="video-module">A2-M5 · Yield &amp; Staking</div></div></div>
+    </div>
+
+    <div class="video-source">From A2-M8 (Borrowing)</div>
+    <div class="video-grid">
+      <div class="video-card"><div class="video-num">30</div><div class="video-info"><div class="video-title">Why Selling Bitcoin to Access Cash Is a Mistake (And What to Do Instead)</div><div class="video-module">A2-M8 · Borrowing</div></div></div>
+      <div class="video-card"><div class="video-num">31</div><div class="video-info"><div class="video-title">Bitcoin-Backed Loans Explained: Ledn, Unchained, and DeFi</div><div class="video-module">A2-M8 · Borrowing</div></div></div>
+    </div>
+
+    <!-- PILLAR 4: PROOF -->
+    <div style="display:flex; align-items:center; gap:0.75rem; margin:2.5rem 0 1.25rem; padding-bottom:0.75rem; border-bottom:2px solid var(--dark-card-border);">
+      <span style="font-size:1.5rem;">📊</span>
+      <h4 style="font-size:1.2rem; font-weight:700; color:var(--teal); margin:0;">PILLAR 4: PROOF — Authority &amp; Transparency</h4>
+    </div>
+
+    <div class="video-source">Monthly Series</div>
+    <div class="video-grid">
+      <div class="video-card"><div class="video-num">32</div><div class="video-info"><div class="video-title">My Exact Digital Asset Portfolio (Monthly Update)</div><div class="video-module">Proof · Portfolio</div></div></div>
+      <div class="video-card"><div class="video-num">33</div><div class="video-info"><div class="video-title">What I'm Buying, Selling, and Watching This Month</div><div class="video-module">Proof · Market Update</div></div></div>
+    </div>
+
+    <div class="video-source">Member Stories</div>
+    <div class="video-grid">
+      <div class="video-card"><div class="video-num">34</div><div class="video-info"><div class="video-title">How One Member Went From Losing 2/3 of His Portfolio to Getting It All Back</div><div class="video-module">Proof · Member Story</div></div></div>
+      <div class="video-card"><div class="video-num">35</div><div class="video-info"><div class="video-title">From Certain Loss to 250% Up: How a Framework Changed Everything</div><div class="video-module">Proof · Member Story</div></div></div>
+      <div class="video-card"><div class="video-num">36</div><div class="video-info"><div class="video-title">He Paid Off His Mortgage with Digital Assets — Here's How</div><div class="video-module">Proof · Member Story</div></div></div>
+      <div class="video-card"><div class="video-num">37</div><div class="video-info"><div class="video-title">$120K From One Trade — And It Paid for Years of Membership</div><div class="video-module">Proof · Member Story</div></div></div>
+    </div>
+
+    <div class="video-source">Authority</div>
+    <div class="video-grid">
+      <div class="video-card"><div class="video-num">38</div><div class="video-info"><div class="video-title">116% Average Return Per Year: How We Do It (And Why)</div><div class="video-module">Proof · Authority</div></div></div>
+      <div class="video-card"><div class="video-num">39</div><div class="video-info"><div class="video-title">What $15,000 Gets You Inside Collective Shift Platinum (Full Tour)</div><div class="video-module">Proof · Authority</div></div></div>
+      <div class="video-card"><div class="video-num">40</div><div class="video-info"><div class="video-title">No Affiliates. No Shilling. No Signals. Here's Why.</div><div class="video-module">Proof · Authority</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 12-Week Calendar (light section) -->
+<section id="yt-calendar" class="light-section">
+  <div class="container">
+    <div class="section-label">Publishing Schedule</div>
+    <h3 class="sub-heading" style="margin-top:0;">12-Week Content Calendar</h3>
+    <p style="color:#555; margin-bottom:1.5rem;">April – June 2026 · Two videos per week (Tuesday &amp; Thursday)</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Week</th><th>Video 1 — Tuesday</th><th>Video 2 — Thursday</th><th>OS Modules</th></tr>
+        </thead>
+        <tbody>
+          <tr><td style="font-weight:800; color:var(--orange);">1</td><td>Is Bitcoin a Hedge Against Inflation?</td><td>My Portfolio (March Update)</td><td style="font-size:0.78rem; color:var(--teal); font-weight:600;">B1-M1, Proof</td></tr>
+          <tr><td style="font-weight:800; color:var(--orange);">2</td><td>The #1 Mistake That Destroys Portfolios</td><td>What BlackRock Knows About Bitcoin</td><td style="font-size:0.78rem; color:var(--teal); font-weight:600;">B2-M8, B1-M2</td></tr>
+          <tr><td style="font-weight:800; color:var(--orange);">3</td><td>Bitcoin at $70K: Opportunity or Trap?</td><td>Stablecoin Yields: Earn 5-18% on USD</td><td style="font-size:0.78rem; color:var(--teal); font-weight:600;">B1-M1, A2-M5</td></tr>
+          <tr><td style="font-weight:800; color:var(--orange);">4</td><td>The Real Estate Correction Coming</td><td>The 7-Step System I Use</td><td style="font-size:0.78rem; color:var(--teal); font-weight:600;">B1-M1, B3</td></tr>
+          <tr><td style="font-weight:800; color:var(--orange);">5</td><td>Two Different Games: BTC vs Alts</td><td>My Portfolio (April Update)</td><td style="font-size:0.78rem; color:var(--teal); font-weight:600;">B1-M2, Proof</td></tr>
+          <tr><td style="font-weight:800; color:var(--orange);">6</td><td>98% of Digital Asset Projects Fail — Find the 2%</td><td>The 50% Rule: How Much to Own</td><td style="font-size:0.78rem; color:var(--teal); font-weight:600;">B1-M3, B1-M4</td></tr>
+          <tr><td style="font-weight:800; color:var(--orange);">7</td><td>Bear Markets = Generational Wealth</td><td>How to Build a Sell Strategy</td><td style="font-size:0.78rem; color:var(--teal); font-weight:600;">B1-M1, B2-M8</td></tr>
+          <tr><td style="font-weight:800; color:var(--orange);">8</td><td>I Lost Everything. Here's What I Learned.</td><td>Where Does the Yield Come From?</td><td style="font-size:0.78rem; color:var(--teal); font-weight:600;">Proof, A2-M5</td></tr>
+          <tr><td style="font-weight:800; color:var(--orange);">9</td><td>HYPE vs Cardano: Winners vs Losers</td><td>My Portfolio (May Update)</td><td style="font-size:0.78rem; color:var(--teal); font-weight:600;">B1-M3, Proof</td></tr>
+          <tr><td style="font-weight:800; color:var(--orange);">10</td><td>The 15% Inflation Trap</td><td>The 'I Will Buy at X' Framework</td><td style="font-size:0.78rem; color:var(--teal); font-weight:600;">B1-M3, B1-M2</td></tr>
+          <tr><td style="font-weight:800; color:var(--orange);">11</td><td>5 Things Smart Investors Do in Bear Markets</td><td>Your Feed Is Not Your Advisor</td><td style="font-size:0.78rem; color:var(--teal); font-weight:600;">B1-M4, B1-M4</td></tr>
+          <tr><td style="font-weight:800; color:var(--orange);">12</td><td>$120K From One Trade (Member Story)</td><td>No Affiliates. No Shilling. Here's Why.</td><td style="font-size:0.78rem; color:var(--teal); font-weight:600;">Proof, Proof</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Bridge Script + ICP + Competitors -->
+<section id="yt-bridge" class="grid-bg">
+  <div class="container">
+    <!-- Bridge Script -->
+    <div class="section-label">Conversion Engine</div>
+    <h3 class="sub-heading" style="margin-top:0;">The Bridge Script</h3>
+    <p style="color:var(--white-60); font-size:0.9rem; margin-bottom:0.75rem;">Every video's last 60 seconds — the consistent CTA that converts viewers into consultation applicants.</p>
+    <div class="quote-block">
+      "Everything I've shared today is the kind of strategic education we provide inside Collective Shift Platinum. I've given you the WHAT — the frameworks, the data, the levels. Inside Platinum, our members get the HOW — weekly implementation calls, 8 private analyst sessions, our live audited portfolio, and a community of 350+ serious investors.<br><br>
+      If you're a successful professional who wants a professional framework for digital assets, not tips, not signals — a real system — check the link below to apply for a consultation. It's by application only."
+    </div>
+
+    <!-- YouTube ICP -->
+    <h3 class="sub-heading">YouTube Target Audience</h3>
+    <div class="card" style="max-width:700px;">
+      <h4 style="color:var(--orange); margin-top:0; font-size:1.1rem;">🎯 Strategic Wealth Builder</h4>
+      <div style="display:grid; gap:0.5rem; margin-top:1rem;">
+        <div style="display:flex; gap:1rem; padding:0.5rem 0; border-bottom:1px solid var(--dark-card-border); font-size:0.88rem;">
+          <span style="font-weight:700; color:var(--white-80); min-width:90px;">Age</span>
+          <span style="color:var(--white-60);">35–55</span>
+        </div>
+        <div style="display:flex; gap:1rem; padding:0.5rem 0; border-bottom:1px solid var(--dark-card-border); font-size:0.88rem;">
+          <span style="font-weight:700; color:var(--white-80); min-width:90px;">Net Worth</span>
+          <span style="color:var(--white-60);">$1M+</span>
+        </div>
+        <div style="display:flex; gap:1rem; padding:0.5rem 0; border-bottom:1px solid var(--dark-card-border); font-size:0.88rem;">
+          <span style="font-weight:700; color:var(--white-80); min-width:90px;">Profile</span>
+          <span style="color:var(--white-60);">Business owner, executive, FIFO worker, or professional</span>
+        </div>
+        <div style="display:flex; gap:1rem; padding:0.5rem 0; border-bottom:1px solid var(--dark-card-border); font-size:0.88rem;">
+          <span style="font-weight:700; color:var(--white-80); min-width:90px;">Pain</span>
+          <span style="color:var(--white-60);">Inflation eroding wealth, real estate plateauing, noise/scams in digital assets</span>
+        </div>
+        <div style="display:flex; gap:1rem; padding:0.5rem 0; border-bottom:1px solid var(--dark-card-border); font-size:0.88rem;">
+          <span style="font-weight:700; color:var(--white-80); min-width:90px;">Want</span>
+          <span style="color:var(--white-60);">Professional framework, not tips or signals</span>
+        </div>
+        <div style="display:flex; gap:1rem; padding:0.5rem 0; font-size:0.88rem;">
+          <span style="font-weight:700; color:var(--white-80); min-width:90px;">Trigger</span>
+          <span style="color:var(--white-60);">Fear of missing the opportunity + fear of doing it wrong</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Competitor Landscape -->
+    <h3 class="sub-heading">Competitor Landscape</h3>
+    <p style="color:var(--white-60); font-size:0.9rem; margin-bottom:1rem;">Where Collective Shift fits — and why we win.</p>
+    <div class="comp-grid">
+      <div class="comp-card">
+        <h4>Mark Moss</h4>
+        <p>"Retire Off Bitcoin" — similar ICP, more aggressive BTC maxi positioning</p>
+      </div>
+      <div class="comp-card">
+        <h4>Raoul Pal</h4>
+        <p>Macro + digital assets, institutional lens, skews older audience demographic</p>
+      </div>
+      <div class="comp-card">
+        <h4>Anthony Pompliano</h4>
+        <p>Broad Bitcoin education, mainstream bridging, high volume content</p>
+      </div>
+      <div class="comp-card cs-diff">
+        <h4>✦ Collective Shift Differentiator</h4>
+        <p>Education system (not signals) · Audited returns (116% avg) · 9 years track record · No affiliates · No shilling · Application-only membership</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 4: INSTAGRAM STRATEGY
+     ═══════════════════════════════════════════════════ -->
+<section id="instagram" class="grid-bg" style="padding-top:5rem;">
+  <div class="container">
+    <div class="section-label">Instagram Strategy</div>
+    <h2 class="section-title">📸 Instagram Strategy</h2>
+    <p class="section-subtitle" style="margin-bottom:1.5rem;">@bensimpsonau — the primary acquisition channel for Platinum membership.</p>
+
+    <div class="stat-cards">
+      <div class="stat-card">
+        <div class="stat-value">68K</div>
+        <div class="stat-label">Followers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">519</div>
+        <div class="stat-label">Posts</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">$15K</div>
+        <div class="stat-label">Platinum Price</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">25–50%</div>
+        <div class="stat-label">Of All Acquisitions</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Revenue Model:</strong> DMs → Team Call → Platinum ($15K). Instagram = 25–50% of all Platinum acquisitions.
+    </div>
+
+    <!-- 5 Content Pillars -->
+    <h3 class="sub-heading" id="ig-pillars">5 Content Pillars</h3>
+    <div class="ig-pillar">
+      <div class="ig-pct">40%</div>
+      <div>
+        <div class="ig-name">1. Conviction Builders</div>
+        <div class="ig-desc">Data-backed posts making ICP believe digital assets belong in their portfolio</div>
+      </div>
+    </div>
+    <div class="ig-pillar">
+      <div class="ig-pct">25%</div>
+      <div>
+        <div class="ig-name">2. Framework Teasers</div>
+        <div class="ig-desc">Show Shift OS system (90/10 rule) — give the WHAT, hold the HOW</div>
+      </div>
+    </div>
+    <div class="ig-pillar">
+      <div class="ig-pct">20%</div>
+      <div>
+        <div class="ig-name">3. Proof &amp; Transparency</div>
+        <div class="ig-desc">Portfolio updates, member stories, 116% average return stat</div>
+      </div>
+    </div>
+    <div class="ig-pillar">
+      <div class="ig-pct">10%</div>
+      <div>
+        <div class="ig-name">4. DM Magnets</div>
+        <div class="ig-desc">Direct CTA with keyword triggers — drive conversations</div>
+      </div>
+    </div>
+    <div class="ig-pillar">
+      <div class="ig-pct">5%</div>
+      <div>
+        <div class="ig-name">5. Ben the Human</div>
+        <div class="ig-desc">Personal/lifestyle content — builds parasocial trust</div>
+      </div>
+    </div>
+
+    <!-- Content Mix -->
+    <h3 class="sub-heading">Content Mix</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Format</th><th>Frequency</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:700;">Reels</td><td>4–5/week</td><td>60–90 sec educational — the workhorse</td></tr>
+          <tr><td style="font-weight:700;">Carousels</td><td>2–3/week</td><td>Save magnets — high-value educational content</td></tr>
+          <tr><td style="font-weight:700;">Stories</td><td>5–8/day</td><td>Morning market, midday education, evening proof + CTA</td></tr>
+          <tr><td style="font-weight:700;">Static Posts</td><td>1/week</td><td>Authority statements — bold, shareable</td></tr>
+          <tr><td style="font-weight:700;">Lives</td><td>1–2/month</td><td>Deep dives, Q&amp;A, community engagement</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Daily Story Framework -->
+    <h3 class="sub-heading">Daily Story Framework</h3>
+    <div class="card-grid card-grid-3">
+      <div class="card" style="border-top:3px solid var(--orange);">
+        <h4 style="color:var(--orange); margin-top:0; font-size:0.95rem;">☀️ Morning (7–8am)</h4>
+        <p style="color:var(--white-60); font-size:0.85rem;">Coffee + market thought, chart screenshot, quick take</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--blue);">
+        <h4 style="color:var(--blue); margin-top:0; font-size:0.95rem;">📚 Midday (12–1pm)</h4>
+        <p style="color:var(--white-60); font-size:0.85rem;">Educational insight, poll/question sticker, framework teaser</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--teal);">
+        <h4 style="color:var(--teal); margin-top:0; font-size:0.95rem;">🌙 Evening (7–9pm)</h4>
+        <p style="color:var(--white-60); font-size:0.85rem;">Proof, CTA story, personal moment — drive DMs</p>
+      </div>
+    </div>
+
+    <!-- Story Highlights -->
+    <h3 class="sub-heading">Story Highlights</h3>
+    <div style="display:flex; flex-wrap:wrap; gap:0.75rem; margin-top:0.5rem;">
+      <span style="background:var(--orange-dim); border:1px solid rgba(247,147,26,0.3); padding:0.4rem 1rem; border-radius:100px; font-size:0.82rem; font-weight:600; color:var(--orange);">START HERE</span>
+      <span style="background:var(--teal-dim); border:1px solid rgba(0,212,170,0.3); padding:0.4rem 1rem; border-radius:100px; font-size:0.82rem; font-weight:600; color:var(--teal);">PROOF</span>
+      <span style="background:var(--blue-dim); border:1px solid rgba(52,152,219,0.3); padding:0.4rem 1rem; border-radius:100px; font-size:0.82rem; font-weight:600; color:var(--blue);">THE SYSTEM</span>
+      <span style="background:var(--teal-dim); border:1px solid rgba(0,212,170,0.3); padding:0.4rem 1rem; border-radius:100px; font-size:0.82rem; font-weight:600; color:var(--teal);">MEMBERS</span>
+      <span style="background:var(--orange-dim); border:1px solid rgba(247,147,26,0.3); padding:0.4rem 1rem; border-radius:100px; font-size:0.82rem; font-weight:600; color:var(--orange);">DM INVEST</span>
+      <span style="background:var(--dark-card); border:1px solid var(--dark-card-border); padding:0.4rem 1rem; border-radius:100px; font-size:0.82rem; font-weight:600; color:var(--white-60);">PODCAST</span>
+    </div>
+
+    <!-- DM Keywords -->
+    <h3 class="sub-heading">DM Keywords</h3>
+    <div class="card-grid card-grid-2">
+      <div class="keyword-card"><span class="kw">INVEST</span><div class="kw-desc">Primary CTA — "DM me INVEST to learn how I help HNW investors build wealth with digital assets"</div></div>
+      <div class="keyword-card"><span class="kw">STRATEGY</span><div class="kw-desc">For strategy-focused content — "DM STRATEGY to see the framework our members use"</div></div>
+      <div class="keyword-card"><span class="kw">ALLOCATE</span><div class="kw-desc">For portfolio/allocation content — "DM ALLOCATE for our portfolio breakdown"</div></div>
+      <div class="keyword-card"><span class="kw">THESIS</span><div class="kw-desc">For Bitcoin/altcoin thesis posts — "DM THESIS for our full investment thesis"</div></div>
+      <div class="keyword-card"><span class="kw">BLUEPRINT</span><div class="kw-desc">For system/framework reveals — "DM BLUEPRINT for the 8-step process overview"</div></div>
+      <div class="keyword-card"><span class="kw">QUIZ</span><div class="kw-desc">For engagement — "DM QUIZ to find your investor type and get a personalised starting point"</div></div>
+    </div>
+
+    <!-- Reel Hook Templates -->
+    <h3 class="sub-heading">Reel Hook Templates</h3>
+    <div class="card-grid card-grid-2">
+      <div class="card" style="padding:1rem 1.25rem;">
+        <h4 style="color:var(--orange); margin-top:0; font-size:0.9rem;">🔥 Contrarian</h4>
+        <p style="color:var(--white-60); font-size:0.83rem;">"Everyone's telling you to buy X. Here's why I'm not."</p>
+      </div>
+      <div class="card" style="padding:1rem 1.25rem;">
+        <h4 style="color:var(--orange); margin-top:0; font-size:0.9rem;">💣 Data Bomb</h4>
+        <p style="color:var(--white-60); font-size:0.83rem;">"98% of digital asset projects will fail. Here's how to find the 2%."</p>
+      </div>
+      <div class="card" style="padding:1rem 1.25rem;">
+        <h4 style="color:var(--orange); margin-top:0; font-size:0.9rem;">😰 Fear-Based</h4>
+        <p style="color:var(--white-60); font-size:0.83rem;">"If you don't have a sell strategy, you're going to lose money."</p>
+      </div>
+      <div class="card" style="padding:1rem 1.25rem;">
+        <h4 style="color:var(--orange); margin-top:0; font-size:0.9rem;">📖 Story</h4>
+        <p style="color:var(--white-60); font-size:0.83rem;">"One of our members just made $120K from a single trade…"</p>
+      </div>
+      <div class="card" style="padding:1rem 1.25rem;">
+        <h4 style="color:var(--orange); margin-top:0; font-size:0.9rem;">💪 Bold Claim</h4>
+        <p style="color:var(--white-60); font-size:0.83rem;">"116% average return per year. Audited. Here's how."</p>
+      </div>
+      <div class="card" style="padding:1rem 1.25rem;">
+        <h4 style="color:var(--orange); margin-top:0; font-size:0.9rem;">❓ Question</h4>
+        <p style="color:var(--white-60); font-size:0.83rem;">"How much Bitcoin should be in your portfolio? Most people get this wrong."</p>
+      </div>
+      <div class="card" style="padding:1rem 1.25rem;">
+        <h4 style="color:var(--orange); margin-top:0; font-size:0.9rem;">⚡ Pattern Interrupt</h4>
+        <p style="color:var(--white-60); font-size:0.83rem;">"Stop scrolling. If you have $100K+ invested, you need to hear this."</p>
+      </div>
+    </div>
+
+    <!-- Weekly Reel Calendar -->
+    <h3 class="sub-heading">Weekly Reel Calendar</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Day</th><th>Pillar</th><th>Focus</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:700;">Monday</td><td style="color:var(--orange);">Conviction Builder</td><td>Data-backed post — make ICP believe digital assets belong in portfolio</td></tr>
+          <tr><td style="font-weight:700;">Tuesday</td><td style="color:var(--blue);">Framework Teaser</td><td>Shift OS system reveal — give the WHAT, bridge to Platinum</td></tr>
+          <tr><td style="font-weight:700;">Wednesday</td><td style="color:var(--teal);">Proof</td><td>Portfolio update, member story, results — show don't tell</td></tr>
+          <tr><td style="font-weight:700;">Thursday</td><td style="color:var(--orange);">Conviction Builder</td><td>Another data-driven post — reinforce the thesis</td></tr>
+          <tr><td style="font-weight:700;">Friday</td><td style="color:var(--red);">DM Magnet</td><td>Direct CTA — drive DM conversations with keyword trigger</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- KPIs -->
+    <h3 class="sub-heading">KPIs &amp; Targets</h3>
+    <div class="stat-cards">
+      <div class="stat-card">
+        <div class="stat-value">20+</div>
+        <div class="stat-label">DMs / Week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">50+</div>
+        <div class="stat-label">Saves / Post</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">20+</div>
+        <div class="stat-label">Shares / Post</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">500+</div>
+        <div class="stat-label">Profile Visits / Week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">30%+</div>
+        <div class="stat-label">DM → Call Rate</div>
+      </div>
+    </div>
+
+    <!-- Bio Optimization -->
+    <h3 class="sub-heading">Bio Optimization</h3>
+    <div class="bio-block">
+      💰 Helping HNW investors build &amp; protect wealth with digital assets<br>
+      📈 116% avg return/yr — verified | Founder @collectiveshifthq<br>
+      🎧 Host @wealthshiftpodcast<br>
+      ⬇️ DM "INVEST" to start
+    </div>
+
+    <!-- What NOT to do -->
+    <h3 class="sub-heading">What NOT to Do ⛔</h3>
+    <div class="persona-grid">
+      <div class="persona-card not-card">
+        <h4>No Memes</h4>
+        <p>We're not a meme page — stay premium, stay authoritative</p>
+      </div>
+      <div class="persona-card not-card">
+        <h4>No Price Predictions</h4>
+        <p>We teach frameworks, not fortune-telling</p>
+      </div>
+      <div class="persona-card not-card">
+        <h4>No Trending Sounds</h4>
+        <p>Original voice only — builds Ben's authority, not algorithm dependency</p>
+      </div>
+      <div class="persona-card not-card">
+        <h4>No Jargon Hooks</h4>
+        <p>Speak to business owners, not degens</p>
+      </div>
+      <div class="persona-card not-card">
+        <h4>No Affiliates</h4>
+        <p>Zero affiliate links — protects trust and integrity</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 5: OPERATING SYSTEM MANUAL
+     ═══════════════════════════════════════════════════ -->
+<section id="os" class="grid-bg" style="padding-top:5rem;">
+  <div class="container">
+    <div class="section-label">Operating System Manual</div>
+    <h2 class="section-title">📘 The Shift Operating System</h2>
+    <p class="section-subtitle" style="margin-bottom:0.75rem;">"We teach you how to think. Not what to think."</p>
+    <p style="color:var(--white-60); font-size:0.95rem; max-width:700px;">Collective Shift's end-to-end education framework for Bitcoin and digital asset investors. From first principles to a complete, written investment strategy.</p>
+
+    <!-- Four Pillars -->
+    <h3 class="sub-heading">The Four Pillars</h3>
+    <div class="card-grid card-grid-4">
+      <div class="card" style="text-align:center;">
+        <span style="font-size:2rem; display:block; margin-bottom:0.5rem;">📚</span>
+        <h4 style="color:var(--white); margin-top:0; font-size:1rem;">Education</h4>
+        <p style="color:var(--white-60); font-size:0.82rem;">Modules, courses, live calls — the knowledge layer</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <span style="font-size:2rem; display:block; margin-bottom:0.5rem;">📊</span>
+        <h4 style="color:var(--white); margin-top:0; font-size:1rem;">Research</h4>
+        <p style="color:var(--white-60); font-size:0.82rem;">Weekly updates, CS portfolio transparency, research library</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <span style="font-size:2rem; display:block; margin-bottom:0.5rem;">👥</span>
+        <h4 style="color:var(--white); margin-top:0; font-size:1rem;">Community</h4>
+        <p style="color:var(--white-60); font-size:0.82rem;">Circle platform, masterminds, peer support</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <span style="font-size:2rem; display:block; margin-bottom:0.5rem;">🎯</span>
+        <h4 style="color:var(--white); margin-top:0; font-size:1rem;">Coaching</h4>
+        <p style="color:var(--white-60); font-size:0.82rem;">1:1 analyst sessions bookable on any module</p>
+      </div>
+    </div>
+
+    <!-- Three Investor Types -->
+    <h3 class="sub-heading">Three Investor Types</h3>
+    <p style="color:var(--white-60); font-size:0.9rem; margin-bottom:1rem;">Every member falls into one of three categories. The Shift OS tailors frameworks, worked examples, and allocation guidance to each:</p>
+    <div class="card-grid card-grid-3">
+      <div class="card investor-card gen">
+        <h4 style="margin-top:0;">💰 Wealth Generation</h4>
+        <p style="color:var(--white-60); font-size:0.88rem;">Growing capital significantly. Higher risk tolerance. Longer time horizon. Larger altcoin allocation as satellite positions around a Bitcoin core.</p>
+      </div>
+      <div class="card investor-card prot">
+        <h4 style="margin-top:0;">🛡️ Wealth Protection</h4>
+        <p style="color:var(--white-60); font-size:0.88rem;">Protecting existing wealth. Bitcoin-dominant (70–80%). Lower amounts per DCA. Focus on long-term thesis over price action.</p>
+      </div>
+      <div class="card investor-card inc">
+        <h4 style="margin-top:0;">📈 Income Creation</h4>
+        <p style="color:var(--white-60); font-size:0.88rem;">Generating yield on holdings. Stablecoin and DeFi strategies. Systematic withdrawal schedules. Yield strategies in Advanced track.</p>
+      </div>
+    </div>
+
+    <!-- System Overview -->
+    <h3 class="sub-heading">System Overview — Two-Track Structure</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Track</th><th>Level</th><th>Who It's For</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Beginner (Level 1)</strong></td><td>Foundation</td><td>New to digital assets, or experienced but without a system. CEX only. No DeFi, yield, staking, or borrowing.</td></tr>
+          <tr><td><strong>Advanced (Level 2)</strong></td><td>Advanced</td><td>Completed all 8 Beginner steps. Adds yield, staking, DeFi, borrowing, advanced tax, multi-entity strategies.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Progression Flow -->
+    <h3 class="sub-heading">Level Progression</h3>
+    <div class="progress-flow">
+      <div class="progress-node track">🚀 Pro Accelerator</div>
+      <span class="progress-arrow">→</span>
+      <div class="progress-node track">📗 Level 1 — Beginner</div>
+      <span class="progress-arrow">→</span>
+      <div class="progress-node gate">🔒 GATE<br>Complete 8 Steps</div>
+      <span class="progress-arrow">→</span>
+      <div class="progress-node track">📘 Level 2 — Advanced</div>
+      <span class="progress-arrow">→</span>
+      <div class="progress-node gate">⏳ TIME GATE<br>Year 2+</div>
+      <span class="progress-arrow">→</span>
+      <div class="progress-node track">👑 Level 3 — Elite</div>
+    </div>
+
+    <div class="quote-block">"A strategy in your head is not a strategy. It's a vague intention."</div>
+  </div>
+</section>
+
+<!-- OS Level 1 -->
+<section id="os-l1" class="light-section">
+  <div class="container">
+    <div class="section-label">Level 1</div>
+    <h3 class="sub-heading" style="margin-top:0;">Level 1 — Beginner Track</h3>
+    <p style="margin-bottom:2rem;">The complete foundation: from understanding why digital assets exist to a written investment strategy with buy targets, allocation, and sell plan.</p>
+
+    <h4 class="sub-sub">Foundations Session (B1: Modules 1–4)</h4>
+    <p style="margin-bottom:1.5rem;">A one-off, 2-hour live session (40–50 slides) covering the foundational framework every investor needs before allocating a dollar.</p>
+
+    <!-- B1-M1 -->
+    <div class="card module-card" style="margin-bottom:1.25rem;">
+      <span class="mod-badge">B1-M1</span>
+      <h4 style="color:var(--light-text); margin-top:0.5rem; font-size:1.1rem;">Foundations</h4>
+      <p>Why digital assets exist, why they matter, and where we are in the cycle. The macro lens every investor needs.</p>
+      <ul class="objectives-list" style="color:#444;">
+        <li style="color:#444;">Understand what makes Bitcoin fundamentally different from traditional assets</li>
+        <li style="color:#444;">Identify where we are in the market cycle using simple signals</li>
+        <li style="color:#444;">Understand why most people lose money (emotional decisions, no framework)</li>
+        <li style="color:#444;">Articulate a one-sentence market view</li>
+      </ul>
+      <p style="color:var(--orange); font-weight:600; font-size:0.85rem; margin-top:10px;">Key Deliverable: Written answers to: (1) Why did you join CS? (2) What's your #1 goal?</p>
+    </div>
+
+    <!-- B1-M2 -->
+    <div class="card module-card" style="margin-bottom:1.25rem;">
+      <span class="mod-badge">B1-M2</span>
+      <h4 style="color:var(--light-text); margin-top:0.5rem; font-size:1.1rem;">Bitcoin</h4>
+      <p>Why Bitcoin is fundamentally different from every other digital asset — and how to build conviction before the fear hits.</p>
+      <ul class="objectives-list" style="color:#444;">
+        <li style="color:#444;">Understand Bitcoin's core value: fixed supply, decentralised, no counterparty</li>
+        <li style="color:#444;">Distinguish Bitcoin from altcoins as two separate asset classes</li>
+        <li style="color:#444;">Build a personal "I will buy at X" conviction framework</li>
+        <li style="color:#444;">Define a BTC allocation target and DCA approach</li>
+      </ul>
+      <p style="color:var(--orange); font-weight:600; font-size:0.85rem; margin-top:10px;">Key Deliverable: Written BTC allocation target (%), buy prices, DCA plan, conviction level (1–10).</p>
+    </div>
+
+    <!-- B1-M3 -->
+    <div class="card module-card" style="margin-bottom:1.25rem;">
+      <span class="mod-badge">B1-M3</span>
+      <h4 style="color:var(--light-text); margin-top:0.5rem; font-size:1.1rem;">Altcoins</h4>
+      <p>Understanding altcoins as a higher-risk asset class — and how to filter the 98% you should never invest in.</p>
+      <ul class="objectives-list" style="color:#444;">
+        <li style="color:#444;">Understand why altcoins are venture bets, not monetary assets</li>
+        <li style="color:#444;">Learn how narrative cycles work and why most fail</li>
+        <li style="color:#444;">Apply the CS filter framework to evaluate any altcoin</li>
+        <li style="color:#444;">Understand tokenomics and the supply trap</li>
+      </ul>
+      <p style="color:var(--orange); font-weight:600; font-size:0.85rem; margin-top:10px;">Key Deliverable: Per-altcoin assessment — which you hold, why, filter score, max position size, exit criteria.</p>
+    </div>
+
+    <!-- B1-M4 -->
+    <div class="card module-card" style="margin-bottom:1.25rem;">
+      <span class="mod-badge">B1-M4</span>
+      <h4 style="color:var(--light-text); margin-top:0.5rem; font-size:1.1rem;">How We Invest / Principles</h4>
+      <p>The CS investment philosophy — frameworks over predictions, risk-first, education not advice.</p>
+      <ul class="objectives-list" style="color:#444;">
+        <li style="color:#444;">Understand CS philosophy: frameworks &gt; predictions</li>
+        <li style="color:#444;">Identify the four types of investment risk (market, security, liquidity, emotional)</li>
+        <li style="color:#444;">Apply the 50% rule to personal position sizing</li>
+        <li style="color:#444;">Recognise the emotional cycle and cognitive biases</li>
+      </ul>
+      <p style="color:var(--orange); font-weight:600; font-size:0.85rem; margin-top:10px;">Key Deliverable: Master action — Goals + BTC plan + altcoin framework + setup plan + sell strategy = investment thesis.</p>
+    </div>
+
+    <h4 class="sub-sub">Practical How-To's (B2: Modules 5–8)</h4>
+    <p style="margin-bottom:1.5rem;">B2 modules rotate through the weekly Beginner Coaching Call. 15–25 slides per module. Interactive coaching format.</p>
+
+    <div class="card-grid card-grid-2">
+      <div class="card module-card">
+        <span class="mod-badge">B2-M5</span>
+        <h4 style="color:var(--light-text); margin-top:0.5rem; font-size:1rem;">How to Buy &amp; Sell</h4>
+        <p>The practical mechanics of buying and selling on a centralised exchange — by country, step by step. Exchange selection, market vs limit orders, OTC for larger amounts.</p>
+      </div>
+      <div class="card module-card">
+        <span class="mod-badge">B2-M6</span>
+        <h4 style="color:var(--light-text); margin-top:0.5rem; font-size:1rem;">Send, Receive &amp; Store Safely</h4>
+        <p>Moving digital assets safely, understanding addresses and networks, and setting up self-custody with a hardware wallet. "24 words. Handwritten. Two locations. Never digital."</p>
+      </div>
+      <div class="card module-card">
+        <span class="mod-badge">B2-M7</span>
+        <h4 style="color:var(--light-text); margin-top:0.5rem; font-size:1rem;">Tax Basics</h4>
+        <p>Country-specific tax basics (AU, NZ, US, CA), transaction tracking with Koinly/CryptoTaxCalculator, and finding a specialist accountant.</p>
+      </div>
+      <div class="card module-card">
+        <span class="mod-badge">B2-M8</span>
+        <h4 style="color:var(--light-text); margin-top:0.5rem; font-size:1rem;">Sell Strategy Basics</h4>
+        <p>The most important module. Building a written sell strategy before you need it — by goal type. Scale-out frameworks for each investor type.</p>
+      </div>
+    </div>
+
+    <!-- 8-Step Process -->
+    <h4 class="sub-sub">The 8-Step Strategy Process (B3)</h4>
+    <p style="margin-bottom:1rem;">Runs through the weekly Strategy Call — one step per call. The workbook is completed in parallel.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Step</th><th>Name</th><th>Key Deliverable</th></tr></thead>
+        <tbody>
+          <tr><td><strong>S1</strong></td><td>Define Your Goals</td><td>Written goal statement: target $, time horizon, how digital assets fit broader picture</td></tr>
+          <tr><td><strong>S2</strong></td><td>Risk Profile &amp; Emotional Triggers</td><td>Risk score (1–10) + dominant bias + personal trigger map + circuit breaker</td></tr>
+          <tr><td><strong>S3</strong></td><td>Build Your Investment Thesis</td><td>Per-position thesis: why you own it, what changes conviction</td></tr>
+          <tr><td><strong>S4</strong></td><td>Portfolio Allocation</td><td>% targets per asset: BTC core, growth alts, stablecoins/cash</td></tr>
+          <tr><td><strong>S5</strong></td><td>Buy Strategy</td><td>DCA vs lump sum vs hybrid, specific prices, amounts, timing</td></tr>
+          <tr><td><strong>S6</strong></td><td>Tax &amp; Record Keeping</td><td>Tax tracking active, accountant identified, structure defined</td></tr>
+          <tr><td><strong>S7</strong></td><td>Wallet &amp; Security</td><td>Hardware wallet tested, seed phrase secured, estate contact named</td></tr>
+          <tr><td><strong>S8</strong></td><td>Sell Strategy</td><td>Per-position sell ladder with price triggers, %, on-chain signals</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Allocation Templates -->
+    <h4 class="sub-sub">Worked Example Allocation Templates</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Investor Type</th><th>BTC</th><th>Growth Alts</th><th>Stablecoins</th></tr></thead>
+        <tbody>
+          <tr><td><strong style="color:var(--teal);">Wealth Generation</strong></td><td>50%</td><td>30% (ETH 15%, SOL 10%, HYPE 5%)</td><td>20%</td></tr>
+          <tr><td><strong style="color:var(--blue);">Wealth Protection</strong></td><td>80%</td><td>10% (ETH)</td><td>10%</td></tr>
+          <tr><td><strong style="color:var(--orange);">Income Creation</strong></td><td>40%</td><td>20% (ETH)</td><td>40% (yield in Adv track)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- OS Level 2 -->
+<section id="os-l2" class="grid-bg">
+  <div class="container">
+    <div class="section-label">Level 2</div>
+    <h3 class="sub-heading" style="margin-top:0;">Level 2 — Advanced Track</h3>
+    <p style="color:var(--white-60); margin-bottom:2rem;">For members who've completed all 8 Beginner steps. Adds yield, staking, DeFi, borrowing, advanced tax, and multi-entity strategies.</p>
+
+    <h4 class="sub-sub">What Advanced Adds Beyond Beginner</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Module</th><th>Advanced Additions</th></tr></thead>
+        <tbody>
+          <tr><td><strong>A1-M1: Advanced Foundations</strong></td><td>Full on-chain signal suite (NUPL, MVRV, STH cost basis). Global liquidity cycles. Institutional allocation models. Three macro scenarios. AI/blockchain convergence.</td></tr>
+          <tr><td><strong>A1-M2: Advanced Bitcoin</strong></td><td>ETF demand structure, corporate treasury adoption (MicroStrategy model), SMSF frameworks (AU) + Roth IRA (US). Multi-sig for positions &gt;$500K. Estate planning.</td></tr>
+          <tr><td><strong>A1-M3: Advanced Altcoins</strong></td><td>On-chain metrics tools (Artemis, DeFiLlama, Token Terminal, Dune). DeFi protocol analysis: TVL, revenue, P/F ratios. HYPE case study ($1.2B revenue).</td></tr>
+          <tr><td><strong>A1-M4: Advanced Principles</strong></td><td>Portfolio correlation analysis. Multi-entity strategies (personal + SMSF + trust + company). Cognitive bias taxonomy. Systematic hedging.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- A2 Key Modules -->
+    <h4 class="sub-sub">Advanced How-To's (A2: Modules 5–8)</h4>
+
+    <!-- A2-M5 Yield -->
+    <div class="card module-card" style="margin-bottom:1.25rem;">
+      <span class="mod-badge">A2-M5</span>
+      <h4 style="color:var(--white); margin-top:0.5rem; font-size:1.1rem;">Yield &amp; Staking</h4>
+      <p style="color:var(--white-60);">The full yield landscape — stablecoins, staking, liquid staking, DeFi — and how to build income without excessive risk.</p>
+      <div class="yield-tiers" style="margin-top:1rem;">
+        <div class="yield-tier t1">
+          <div class="yield-tier-bar"></div>
+          <div class="yield-tier-content">
+            <strong>Tier 1</strong> <span class="range">2–5%</span><br>
+            <span class="desc">USDC on Coinbase, traditional money market — Lowest risk, treasury-backed</span>
+          </div>
+        </div>
+        <div class="yield-tier t2">
+          <div class="yield-tier-bar"></div>
+          <div class="yield-tier-content">
+            <strong>Tier 2</strong> <span class="range">5–9%</span><br>
+            <span class="desc">Aave, Compound on major stablecoins — DeFi blue-chip</span>
+          </div>
+        </div>
+        <div class="yield-tier t3">
+          <div class="yield-tier-bar"></div>
+          <div class="yield-tier-content">
+            <strong>Tier 3</strong> <span class="range">9–18%</span><br>
+            <span class="desc">Maple Finance, syrupUSDC, Morpho — <strong>CS sits here</strong> — Higher-yield DeFi, institutional lending</span>
+          </div>
+        </div>
+        <div class="yield-tier t4">
+          <div class="yield-tier-bar"></div>
+          <div class="yield-tier-content">
+            <strong>Tier 4</strong> <span class="range">18%+</span><br>
+            <span class="desc">Algorithm-backed, newer protocols, incentive emissions — Highest risk</span>
+          </div>
+        </div>
+      </div>
+      <p style="color:var(--white-60); font-size:0.88rem; margin-top:1rem;"><strong style="color:var(--white);">CS Position:</strong> syrupUSDC at 33.4% via Maple Finance — institutional lending to verified borrowers, real yield from lending fees (not token emissions).</p>
+      <div class="quote-block">"Where does the yield come from? That's the only question that matters."</div>
+    </div>
+
+    <!-- A2-M6 -->
+    <div class="card module-card" style="margin-bottom:1.25rem;">
+      <span class="mod-badge">A2-M6</span>
+      <h4 style="color:var(--white); margin-top:0.5rem; font-size:1.1rem;">Advanced Tax &amp; Structure</h4>
+      <p style="color:var(--white-60);">Multi-entity structures, DeFi tax complexity, CGT optimisation, and engaging advisors effectively.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Structure</th><th>Key Details</th></tr></thead>
+          <tbody>
+            <tr><td><strong>SMSF (AU)</strong></td><td>Contributions taxed at 15%. CGT at 10% with 12-month discount. Most powerful AU structure.</td></tr>
+            <tr><td><strong>Discretionary Trust</strong></td><td>Income splitting, asset protection, CGT discount preservation.</td></tr>
+            <tr><td><strong>Company</strong></td><td>25–30% flat rate. No CGT discount. Better for trading activity.</td></tr>
+            <tr><td><strong>Roth IRA (US)</strong></td><td>Most powerful US structure — tax-free growth.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- A2-M7 -->
+    <div class="card module-card" style="margin-bottom:1.25rem;">
+      <span class="mod-badge">A2-M7</span>
+      <h4 style="color:var(--white); margin-top:0.5rem; font-size:1.1rem;">Advanced Sell Strategy</h4>
+      <p style="color:var(--white-60);">Multi-entity selling, tax-optimal sequences, large-position exit mechanics, and hedging. Full on-chain signal suite (NUPL, MVRV, STH/LTH cost basis, reserve risk, SOPR). OTC for exits &gt;$100K. Hedging with put options. Estate and legacy planning.</p>
+      <div class="quote-block">"Generational wealth is built intentionally, not by accident."</div>
+    </div>
+
+    <!-- A2-M8 -->
+    <div class="card module-card" style="margin-bottom:1.25rem;">
+      <span class="mod-badge">A2-M8</span>
+      <h4 style="color:var(--white); margin-top:0.5rem; font-size:1.1rem;">Borrowing Against Digital Assets</h4>
+      <p style="color:var(--white-60);">How digital asset-backed lending works — mechanics, platforms, liquidation risk, and who it's appropriate for.</p>
+      <div class="card-grid card-grid-2" style="margin-top:1rem;">
+        <div class="card" style="text-align:center; border-color:var(--dark-card-border);">
+          <span style="font-size:0.7rem; padding:2px 8px; border-radius:4px; font-weight:700; background:rgba(74,158,255,0.15); color:#4A9EFF;">CeFi</span>
+          <h4 style="color:var(--white); margin-top:0.5rem; font-size:1rem;">Ledn</h4>
+          <p style="font-size:0.82rem; color:var(--white-60);">Proof-of-reserves, no rehypothecation. Best for centralised convenience with transparency.</p>
+        </div>
+        <div class="card" style="text-align:center; border-color:var(--dark-card-border);">
+          <span style="font-size:0.7rem; padding:2px 8px; border-radius:4px; font-weight:700; background:rgba(74,158,255,0.15); color:#4A9EFF;">CeFi</span>
+          <h4 style="color:var(--white); margin-top:0.5rem; font-size:1rem;">Unchained</h4>
+          <p style="font-size:0.82rem; color:var(--white-60);">2-of-3 multisig (you hold 2 keys). Best for large positions prioritising security.</p>
+        </div>
+        <div class="card" style="text-align:center; border-color:var(--dark-card-border);">
+          <span style="font-size:0.7rem; padding:2px 8px; border-radius:4px; font-weight:700; background:var(--teal-dim); color:var(--teal);">DeFi</span>
+          <h4 style="color:var(--white); margin-top:0.5rem; font-size:1rem;">Coinbase / Morpho</h4>
+          <p style="font-size:0.82rem; color:var(--white-60);">Smart contract governed, lower rates. For DeFi-comfortable members.</p>
+        </div>
+        <div class="card" style="text-align:center; border-color:var(--dark-card-border);">
+          <span style="font-size:0.7rem; padding:2px 8px; border-radius:4px; font-weight:700; background:var(--teal-dim); color:var(--teal);">DeFi</span>
+          <h4 style="color:var(--white); margin-top:0.5rem; font-size:1rem;">Aave</h4>
+          <p style="font-size:0.82rem; color:var(--white-60);">No KYC, algorithmic rates. For advanced DeFi users.</p>
+        </div>
+      </div>
+      <p style="color:var(--white-60); font-size:0.88rem; margin-top:1rem;"><strong style="color:var(--white);">Conservative Buffer Framework:</strong> Borrow at 30–35% LTV maximum, not the 50% ceiling. A 40% BTC drawdown should not threaten collateral.</p>
+      <div class="quote-block">"If you don't understand the liquidation mechanics, you shouldn't be borrowing."</div>
+    </div>
+
+    <!-- A3 Process -->
+    <h4 class="sub-sub">Advanced 8-Step Strategy Process (A3)</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Step</th><th>A3 Addition vs B3</th></tr></thead>
+        <tbody>
+          <tr><td><strong>S1 Goals</strong></td><td>Multi-entity goals, generational wealth, legacy planning</td></tr>
+          <tr><td><strong>S2 Risk</strong></td><td>Cross-entity risk, leverage risk overlay, DeFi platform risk</td></tr>
+          <tr><td><strong>S3 Thesis</strong></td><td>DeFi protocols, LP positions, yield strategies integrated into thesis</td></tr>
+          <tr><td><strong>S4 Allocation</strong></td><td>Multi-entity allocation across personal / SMSF / trust / company</td></tr>
+          <tr><td><strong>S5 Buy Strategy</strong></td><td>OTC execution, TWAP, limit laddering, DeFi protocol entries</td></tr>
+          <tr><td><strong>S6 Tax</strong></td><td>Multi-entity record keeping, DeFi tax, CGT optimisation, structures</td></tr>
+          <tr><td><strong>S7 Security</strong></td><td>Multi-sig setup, institutional custody, estate planning</td></tr>
+          <tr><td><strong>S8 Sell Strategy</strong></td><td>Multi-entity sell sequences, tax-optimal ordering, hedging</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- OS Level 3 -->
+<section id="os-l3" class="light-section">
+  <div class="container">
+    <div class="section-label">Level 3</div>
+    <h3 class="sub-heading" style="margin-top:0;">Level 3 — Platinum Elite 👑</h3>
+    <p style="margin-bottom:1.5rem;">Time-gated: available only to year 2+ renewals. It cannot be purchased outright — it's earned through sustained membership.</p>
+    <div class="card-grid card-grid-2">
+      <div class="card" style="border-left:3px solid var(--orange);">
+        <h4 style="color:var(--orange); margin-top:0;">🎙️ Monthly Bonus Sessions</h4>
+        <p>Direct sessions with Ben Simpson. Advanced strategy discussions beyond the standard A1–A3 curriculum.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--orange);">
+        <h4 style="color:var(--orange); margin-top:0;">🏛️ Elite Community Access</h4>
+        <p>Separate from L1/L2. Direct peer network of the most committed, long-term CS members.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--orange);">
+        <h4 style="color:var(--orange); margin-top:0;">🚀 Priority Access</h4>
+        <p>First access to new features, content, and tools before they reach the wider membership.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--orange);">
+        <h4 style="color:var(--orange); margin-top:0;">🧠 Advanced Discussions</h4>
+        <p>Topics beyond the standard curriculum — deeper macro, institutional strategy, and edge cases.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OS Call Schedule -->
+<section id="os-calls" class="grid-bg">
+  <div class="container">
+    <div class="section-label">Weekly Schedule</div>
+    <h3 class="sub-heading" style="margin-top:0;">Weekly Call Schedule</h3>
+    <p style="color:var(--white-60); margin-bottom:1.5rem;">Every live session has an equivalent self-paced pre-recorded course on Circle.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Call</th><th>Track</th><th>Content</th><th>Rotation</th></tr></thead>
+        <tbody>
+          <tr><td><strong>L1 Coaching Call</strong></td><td>Beginner</td><td>B2 modules</td><td>Rotates M5 → M6 → M7 → M8</td></tr>
+          <tr><td><strong>L2 Coaching Call</strong></td><td>Advanced</td><td>A2 modules</td><td>Rotates M5 → M6 → M7 → M8</td></tr>
+          <tr><td><strong>L1 Strategy Call</strong></td><td>Beginner</td><td>B3 steps</td><td>One step per call (S1 → S8)</td></tr>
+          <tr><td><strong>L2 Strategy Call</strong></td><td>Advanced</td><td>A3 steps</td><td>One step per call (S1 → S8)</td></tr>
+          <tr><td><strong>Ben's Monthly Session</strong></td><td>All members</td><td>Strategy, market context, Q&amp;A</td><td>Monthly</td></tr>
+          <tr><td><strong>PE Monthly Bonus</strong></td><td>Platinum Elite only</td><td>Advanced topics with Ben</td><td>Monthly</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- OS Content Delivery Matrix -->
+<section id="os-delivery" class="light-section">
+  <div class="container">
+    <div class="section-label">Delivery Matrix</div>
+    <h3 class="sub-heading" style="margin-top:0;">Content Delivery Matrix</h3>
+    <p style="margin-bottom:1.5rem;">Every module is delivered through multiple channels — live decks, self-paced courses, workbook integration, and 1:1 coaching.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Module</th><th>Live Deck</th><th>Circle Course</th><th>Workbook</th><th>1:1 Coaching</th></tr></thead>
+        <tbody>
+          <tr><td>B1-M1 Foundations</td><td><span class="check">✅</span></td><td><span class="check">✅</span></td><td>Intro</td><td><span class="check">✅</span></td></tr>
+          <tr><td>B1-M2 Bitcoin</td><td><span class="check">✅</span></td><td><span class="check">✅</span></td><td>S3, S5 inputs</td><td><span class="check">✅</span></td></tr>
+          <tr><td>B1-M3 Altcoins</td><td><span class="check">✅</span></td><td><span class="check">✅</span></td><td>S3 inputs</td><td><span class="check">✅</span></td></tr>
+          <tr><td>B1-M4 Principles</td><td><span class="check">✅</span></td><td><span class="check">✅</span></td><td>S2 inputs</td><td><span class="check">✅</span></td></tr>
+          <tr><td>B2-M5 Buy &amp; Sell</td><td><span class="check">✅</span></td><td><span class="check">✅</span></td><td>S5</td><td><span class="check">✅</span></td></tr>
+          <tr><td>B2-M6 Send &amp; Store</td><td><span class="check">✅</span></td><td><span class="check">✅</span></td><td>S7</td><td><span class="check">✅</span></td></tr>
+          <tr><td>B2-M7 Tax Basics</td><td><span class="check">✅</span></td><td><span class="check">✅</span></td><td>S6</td><td><span class="check">✅</span></td></tr>
+          <tr><td>B2-M8 Sell Strategy</td><td><span class="check">✅</span></td><td><span class="check">✅</span></td><td>S8</td><td><span class="check">✅</span></td></tr>
+          <tr><td>A1-M1 Adv Foundations</td><td><span class="check">✅</span></td><td><span class="check">✅</span></td><td>Intro</td><td><span class="check">✅</span></td></tr>
+          <tr><td>A1-M2 Adv Bitcoin</td><td><span class="check">✅</span></td><td><span class="check">✅</span></td><td>S3, S5 inputs</td><td><span class="check">✅</span></td></tr>
+          <tr><td>A1-M3 Adv Altcoins</td><td><span class="check">✅</span></td><td><span class="check">✅</span></td><td>S3 inputs</td><td><span class="check">✅</span></td></tr>
+          <tr><td>A1-M4 Adv Principles</td><td><span class="check">✅</span></td><td><span class="check">✅</span></td><td>S2 inputs</td><td><span class="check">✅</span></td></tr>
+          <tr><td>A2-M5 Yield &amp; Staking</td><td><span class="check">✅</span></td><td><span class="check">✅</span></td><td>S4, S8 inputs</td><td><span class="check">✅</span></td></tr>
+          <tr><td>A2-M6 Adv Tax</td><td><span class="check">✅</span></td><td><span class="check">✅</span></td><td>S6</td><td><span class="check">✅</span></td></tr>
+          <tr><td>A2-M7 Adv Sell</td><td><span class="check">✅</span></td><td><span class="check">✅</span></td><td>S8</td><td><span class="check">✅</span></td></tr>
+          <tr><td>A2-M8 Borrowing</td><td><span class="check">✅</span></td><td><span class="check">✅</span></td><td>S5, S8</td><td><span class="check">✅</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- OS Key Quotes -->
+<section id="os-quotes" class="grid-bg">
+  <div class="container">
+    <div class="section-label">Philosophy</div>
+    <h3 class="sub-heading" style="margin-top:0;">💬 Key Quotes Reference</h3>
+    <p style="color:var(--white-60); margin-bottom:1.5rem;">The philosophy that runs through every module, call, and conversation at Collective Shift.</p>
+    <div class="quote-wall">
+      <div class="quote-block">"We teach you how to think. Not what to think."</div>
+      <div class="quote-block">"Before you allocate a single dollar, understand the game you're playing."</div>
+      <div class="quote-block">"Bitcoin is the same asset today as it was at $120K — nothing changed except what someone's willing to pay."</div>
+      <div class="quote-block">"Collective Shift is the resource I wish I had when I started."</div>
+      <div class="quote-block">"Altcoins are a good time, not a long time."</div>
+      <div class="quote-block">"Show me the usage, not the roadmap."</div>
+      <div class="quote-block">"Only allocate what you're comfortable watching drop 50% without changing strategy."</div>
+      <div class="quote-block">"A strategy in your head is not a strategy. It's a vague intention."</div>
+      <div class="quote-block">"The best time to write your sell strategy is today. The worst is when it's already up 500%."</div>
+      <div class="quote-block">"I've never met anyone who took significant profits and had deep regrets."</div>
+      <div class="quote-block">"If you've won, stop playing."</div>
+      <div class="quote-block">"Bear markets are where generational wealth is built."</div>
+      <div class="quote-block">"24 words. Handwritten. Two locations. Never digital. That's the rule."</div>
+      <div class="quote-block">"Not your keys, not your coins."</div>
+      <div class="quote-block">"Where does the yield come from? That's the only question that matters."</div>
+      <div class="quote-block">"If you don't understand the liquidation mechanics, you shouldn't be borrowing."</div>
+      <div class="quote-block">"We are an education company. Not advisors."</div>
+      <div class="quote-block">"I don't react to the market. I have a plan."</div>
+      <div class="quote-block">"I don't make money when you buy. I make money the same way you do — when the strategy works."</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════════════ -->
+<footer class="footer">
+  <p><strong>Collective Shift</strong> · Strategy Hub · Internal Document · March 2026</p>
+  <p style="margin-top:0.5rem;">Prepared for the CS team · All strategies in one place</p>
+  <p style="margin-top:0.75rem; font-size:0.72rem; color:#555;">This document is an educational reference. It is not financial advice. All investment decisions are your own.</p>
+</footer>
+
+<!-- Back to Top Button -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// Back to top visibility
+const btn = document.getElementById('backToTop');
+window.addEventListener('scroll', () => {
+  btn.classList.toggle('visible', window.scrollY > 600);
+});
+
+// Active nav highlighting
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-inner a:not(.nav-logo)');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 120) current = s.getAttribute('id');
+  });
+  navLinks.forEach(a => {
+    a.classList.remove('active');
+    if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>
