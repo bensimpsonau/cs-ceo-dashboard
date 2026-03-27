@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<title>Collective Shift — Team Hub</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cs: {
+          orange: '#FC5C03',
+          'orange-light': '#FC8C4E',
+          'orange-bg': '#FEDECC',
+          'orange-hover': '#FEEEE5',
+          green: '#08C394',
+          purple: '#654FFC',
+          border: '#E8E8EA',
+          text: '#1B1925',
+          secondary: '#4D4C55',
+          muted: '#807F86',
+        }
+      },
+      fontFamily: {
+        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+        barlow: ['Barlow', 'sans-serif'],
+        mono: ['Source Code Pro', 'monospace'],
+      },
+      borderRadius: {
+        pill: '100px',
+      }
+    }
+  }
+}
+</script>
+<style>
+  * { box-sizing: border-box; }
+  body { background: #FFFFFF; color: #1B1925; font-family: 'Barlow', sans-serif; margin: 0; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #FFFFFF; }
+  ::-webkit-scrollbar-thumb { background: #33313F; border-radius: 3px; }
+
+  /* Top nav */
+  :root {
+    --csn-h: 56px;
+    --csn-bg: #FFFFFF;
+    --csn-border: #E8E8EA;
+    --csn-text: #1B1925;
+    --csn-muted: #4D4C55;
+    --csn-orange: #FC5C03;
+    --csn-orange-bg: #FEEEE5;
+    --csn-z: 9000;
+  }
+  .csn-bar {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--csn-h);
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    display: flex; align-items: center;
+    padding: 0 24px; z-index: var(--csn-z);
+    font-family: 'Plus Jakarta Sans', 'Barlow', sans-serif;
+  }
+  .csn-logo {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700; font-size: 15px;
+    color: var(--csn-orange);
+    text-decoration: none; letter-spacing: 0.06em;
+    text-transform: uppercase; white-space: nowrap;
+    margin-right: 32px; flex-shrink: 0;
+  }
+  body { padding-top: var(--csn-h) !important; }
+
+  /* Tabs */
+  .tab-btn {
+    padding: 12px 24px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600; font-size: 14px;
+    color: #807F86; background: none; border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer; transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: #1B1925; }
+  .tab-btn.active { color: #FC5C03; border-bottom-color: #FC5C03; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Cards */
+  .hub-card {
+    background: #FFFFFF;
+    border: 1px solid #E8E8EA;
+    border-radius: 16px;
+    padding: 24px;
+    transition: all 0.15s ease;
+  }
+  .hub-card:hover { border-color: #4D4C55; }
+  .hub-card h3 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700; font-size: 16px;
+    margin: 0 0 12px; color: #1B1925;
+  }
+  .hub-card p, .hub-card li {
+    font-size: 14px; color: #4D4C55; line-height: 1.6;
+  }
+
+  .section-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700; font-size: 22px;
+    color: #1B1925; margin-bottom: 8px;
+  }
+  .section-sub {
+    font-size: 14px; color: #807F86; margin-bottom: 24px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .badge-orange { background: #FEEEE5; color: #FC5C03; }
+  .badge-green { background: #E6F9F3; color: #08C394; }
+  .badge-purple { background: #EEECFF; color: #654FFC; }
+
+  .link-card {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; border-radius: 12px;
+    border: 1px solid #E8E8EA;
+    text-decoration: none; color: #1B1925;
+    font-size: 14px; font-weight: 500;
+    transition: all 0.15s ease;
+  }
+  .link-card:hover { background: #FEEEE5; border-color: #FC5C03; color: #FC5C03; }
+  .link-icon { font-size: 18px; color: #FC5C03; flex-shrink: 0; width: 24px; text-align: center; }
+
+  .tier-card {
+    border-radius: 16px; padding: 28px;
+    border: 2px solid #E8E8EA;
+    transition: all 0.2s ease;
+  }
+  .tier-card:hover { border-color: #FC5C03; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(252,92,3,0.1); }
+  .tier-price {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700; font-size: 28px; color: #FC5C03;
+  }
+  .tier-name {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700; font-size: 18px; color: #1B1925;
+  }
+
+  .schedule-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid #F2F2F2;
+  }
+  .schedule-row:last-child { border-bottom: none; }
+  .schedule-day {
+    font-weight: 600; font-size: 13px; color: #1B1925;
+    min-width: 100px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .schedule-time {
+    font-size: 13px; color: #807F86;
+    font-family: 'Source Code Pro', monospace;
+    min-width: 160px;
+  }
+  .schedule-label { font-size: 13px; color: #4D4C55; }
+
+  @media (max-width: 768px) {
+    .tab-btn { padding: 10px 14px; font-size: 13px; }
+    .grid-2 { grid-template-columns: 1fr !important; }
+    .grid-3 { grid-template-columns: 1fr !important; }
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- Top Bar -->
+<nav class="csn-bar" role="navigation">
+  <a href="/team/" class="csn-logo">Collective Shift</a>
+  <span style="font-size:13px;font-weight:500;color:#807F86;font-family:'Plus Jakarta Sans',sans-serif;">Team Hub</span>
+</nav>
+
+<!-- Main Content -->
+<div style="max-width:1200px;margin:0 auto;padding:32px 24px;">
+
+  <!-- Header -->
+  <div style="margin-bottom:32px;">
+    <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:28px;color:#1B1925;margin:0 0 6px;">
+      Collective Shift — Team Hub
+    </h1>
+    <p style="font-size:15px;color:#807F86;margin:0;">Education system, product details, and social media strategy — all in one place.</p>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div style="display:flex;gap:0;border-bottom:1px solid #E8E8EA;margin-bottom:32px;overflow-x:auto;">
+    <button class="tab-btn active" onclick="switchTab('education')">📚 Education System</button>
+    <button class="tab-btn" onclick="switchTab('product')">🎯 Product</button>
+    <button class="tab-btn" onclick="switchTab('social')">📱 Social Media</button>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TAB 1: EDUCATION SYSTEM                -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="tab-education" class="tab-panel active">
+
+    <!-- Shift OS Overview -->
+    <div class="section-title">The Shift Operating System</div>
+    <p class="section-sub">Our 8-step, two-level education framework that takes members from zero to confident crypto investor in 90 days.</p>
+
+    <!-- Key Links -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px;" class="grid-2">
+      <a href="/cs-education-system-overview.html" class="link-card">
+        <span class="link-icon">📊</span>
+        <div><strong>Education System Overview</strong><br><span style="font-size:12px;color:#807F86;">Full presentation deck</span></div>
+      </a>
+      <a href="/os/index.html" class="link-card">
+        <span class="link-icon">🗂️</span>
+        <div><strong>Shift OS Module Index</strong><br><span style="font-size:12px;color:#807F86;">All 16 module pages</span></div>
+      </a>
+    </div>
+
+    <!-- Two-Track System -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:32px;" class="grid-2">
+      <div class="hub-card">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+          <span class="badge badge-green">LEVEL 1</span>
+          <h3 style="margin:0;">Beginner Track</h3>
+        </div>
+        <p style="margin-bottom:12px;">For members new to crypto. 8 steps from foundations to sell strategy.</p>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <a href="/hub/l1/m1-beginner-foundations.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">1️⃣</span> Foundations</a>
+          <a href="/hub/l1/m2-beginner-bitcoin.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">2️⃣</span> Bitcoin</a>
+          <a href="/hub/l1/m3-beginner-altcoins.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">3️⃣</span> Altcoins</a>
+          <a href="/hub/l1/m4-beginner-how-we-invest.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">4️⃣</span> How We Invest</a>
+          <a href="/hub/l1/m5-beginner-buy-sell.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">5️⃣</span> Buy &amp; Sell</a>
+          <a href="/hub/l1/m6-beginner-send-store.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">6️⃣</span> Send &amp; Store</a>
+          <a href="/hub/l1/m7-beginner-tax.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">7️⃣</span> Tax</a>
+          <a href="/hub/l1/m8-beginner-sell-strategy.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">8️⃣</span> Sell Strategy</a>
+        </div>
+      </div>
+      <div class="hub-card">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+          <span class="badge badge-purple">LEVEL 2</span>
+          <h3 style="margin:0;">Advanced Track</h3>
+        </div>
+        <p style="margin-bottom:12px;">For members who completed L1. Deeper analysis, advanced strategies.</p>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <a href="/hub/l2/m1-advanced-foundations.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">1️⃣</span> Advanced Foundations</a>
+          <a href="/hub/l2/m2-advanced-bitcoin.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">2️⃣</span> Advanced Bitcoin</a>
+          <a href="/hub/l2/m3-advanced-altcoins.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">3️⃣</span> Advanced Altcoins</a>
+          <a href="/hub/l2/m4-advanced-how-we-invest.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">4️⃣</span> Advanced How We Invest</a>
+          <a href="/hub/l2/m5-advanced-buy-sell.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">5️⃣</span> Advanced Buy &amp; Sell</a>
+          <a href="/hub/l2/m6-advanced-send-store.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">6️⃣</span> Advanced Send &amp; Store</a>
+          <a href="/hub/l2/m7-advanced-tax.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">7️⃣</span> Advanced Tax</a>
+          <a href="/hub/l2/m8-advanced-sell-strategy.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">8️⃣</span> Advanced Sell Strategy</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 90-Day Journey -->
+    <div class="hub-card" style="margin-bottom:32px;">
+      <h3>🗓️ The 90-Day Member Journey</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;" class="grid-3">
+        <div style="padding:16px;background:#F9F9F9;border-radius:12px;">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:#FC5C03;margin-bottom:6px;">Days 1–30: Foundation</div>
+          <p style="font-size:13px;color:#4D4C55;margin:0;">Complete L1 Steps 1–4. Attend weekly Foundation calls. Book 1:1 onboarding session. Set up exchange + wallet.</p>
+        </div>
+        <div style="padding:16px;background:#F9F9F9;border-radius:12px;">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:#08C394;margin-bottom:6px;">Days 31–60: Build</div>
+          <p style="font-size:13px;color:#4D4C55;margin:0;">Complete L1 Steps 5–8. Start portfolio allocation. Attend strategy calls. Begin L2 if confident.</p>
+        </div>
+        <div style="padding:16px;background:#F9F9F9;border-radius:12px;">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:#654FFC;margin-bottom:6px;">Days 61–90: Advance</div>
+          <p style="font-size:13px;color:#4D4C55;margin:0;">Complete L2 track. Refine strategy with 1:1 coaching. Use 8-Step Strategy Workbook. Full investment confidence.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Weekly Call Schedule -->
+    <div class="hub-card" style="margin-bottom:32px;">
+      <h3>📞 Weekly Call Schedule</h3>
+      <div style="margin-bottom:16px;">
+        <div class="schedule-row">
+          <span class="schedule-day">Tuesday</span>
+          <span class="schedule-time">8:00 PM AEST / 5:00 AM EST</span>
+          <span class="schedule-label"><strong>Weekly Strategy Call</strong> — Market analysis, portfolio positioning, member Q&amp;A</span>
+        </div>
+        <div class="schedule-row">
+          <span class="schedule-day">Wednesday</span>
+          <span class="schedule-time">8:00 PM AEST / 5:00 AM EST</span>
+          <span class="schedule-label"><strong>Foundation Call</strong> — Education walkthrough for new members (L1 focus)</span>
+        </div>
+        <div class="schedule-row">
+          <span class="schedule-day">Thursday</span>
+          <span class="schedule-time">8:00 PM AEST / 5:00 AM EST</span>
+          <span class="schedule-label"><strong>Deep Dive Call</strong> — Advanced topics, altcoin research, DeFi strategies</span>
+        </div>
+      </div>
+      <div style="padding:16px;background:#FEEEE5;border-radius:12px;">
+        <p style="font-size:13px;color:#4D4C55;margin:0;">
+          <strong style="color:#FC5C03;">Foundation Sessions:</strong> Additional beginner-focused sessions run alongside the Wednesday call. These cover L1 content step-by-step and are designed for members in their first 30 days.
+        </p>
+      </div>
+    </div>
+
+    <!-- 1:1 Booking -->
+    <div class="hub-card">
+      <h3>👤 1:1 Coaching — Booking Info</h3>
+      <p style="margin-bottom:16px;">Members can book 1:1 coaching sessions Monday–Friday with the following team members:</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;" class="grid-3">
+        <div style="padding:16px;background:#F9F9F9;border-radius:12px;text-align:center;">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:#1B1925;margin-bottom:4px;">San</div>
+          <div style="font-size:12px;color:#807F86;">Mon – Fri</div>
+          <span class="badge badge-orange" style="margin-top:8px;">Coach</span>
+        </div>
+        <div style="padding:16px;background:#F9F9F9;border-radius:12px;text-align:center;">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:#1B1925;margin-bottom:4px;">Simon</div>
+          <div style="font-size:12px;color:#807F86;">Mon – Fri</div>
+          <span class="badge badge-orange" style="margin-top:8px;">Coach</span>
+        </div>
+        <div style="padding:16px;background:#F9F9F9;border-radius:12px;text-align:center;">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:#1B1925;margin-bottom:4px;">Matt</div>
+          <div style="font-size:12px;color:#807F86;">Mon – Fri</div>
+          <span class="badge badge-orange" style="margin-top:8px;">Coach</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Extra links -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px;" class="grid-2">
+      <a href="/8-step-strategy-workbook.html" class="link-card">
+        <span class="link-icon">📝</span>
+        <div><strong>8-Step Strategy Workbook</strong><br><span style="font-size:12px;color:#807F86;">Interactive workbook</span></div>
+      </a>
+      <a href="/portfolio-calculator.html" class="link-card">
+        <span class="link-icon">🧮</span>
+        <div><strong>Portfolio Allocation Calculator</strong><br><span style="font-size:12px;color:#807F86;">Allocation tool</span></div>
+      </a>
+      <a href="/8-step-strategy-workbook-L1.html" class="link-card">
+        <span class="link-icon">📗</span>
+        <div><strong>Level 1 Workbook</strong><br><span style="font-size:12px;color:#807F86;">Beginner exercises</span></div>
+      </a>
+      <a href="/8-step-strategy-workbook-L2.html" class="link-card">
+        <span class="link-icon">📘</span>
+        <div><strong>Level 2 Workbook</strong><br><span style="font-size:12px;color:#807F86;">Advanced exercises</span></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TAB 2: PRODUCT                         -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="tab-product" class="tab-panel">
+
+    <div class="section-title">Membership Tiers</div>
+    <p class="section-sub">Three tiers designed for different stages of the investment journey. All tiers include access to the Shift OS education system.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-bottom:32px;" class="grid-3">
+      <!-- Accelerator -->
+      <div class="tier-card" style="background:#FFFFFF;">
+        <span class="badge badge-green" style="margin-bottom:16px;">ENTRY</span>
+        <div class="tier-name" style="margin-bottom:4px;">Accelerator</div>
+        <div class="tier-price" style="margin-bottom:16px;">A$5,000<span style="font-size:14px;font-weight:400;color:#807F86;">/yr</span></div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;">
+          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
+            <span style="color:#08C394;font-weight:bold;">✓</span> Full Shift OS (L1 + L2) access
+          </li>
+          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
+            <span style="color:#08C394;font-weight:bold;">✓</span> Weekly strategy &amp; foundation calls
+          </li>
+          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
+            <span style="color:#08C394;font-weight:bold;">✓</span> Community access (Discord / Slack)
+          </li>
+          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
+            <span style="color:#08C394;font-weight:bold;">✓</span> Monthly market reports
+          </li>
+          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
+            <span style="color:#08C394;font-weight:bold;">✓</span> 8-Step Strategy Workbook
+          </li>
+          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
+            <span style="color:#08C394;font-weight:bold;">✓</span> Portfolio Allocation Calculator
+          </li>
+        </ul>
+      </div>
+      <!-- Platinum -->
+      <div class="tier-card" style="background:#FFFFFF;border-color:#FC5C03;">
+        <span class="badge badge-orange" style="margin-bottom:16px;">POPULAR</span>
+        <div class="tier-name" style="margin-bottom:4px;">Platinum</div>
+        <div class="tier-price" style="margin-bottom:16px;">A$15,000<span style="font-size:14px;font-weight:400;color:#807F86;">/yr</span></div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;">
+          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
+            <span style="color:#08C394;font-weight:bold;">✓</span> Everything in Accelerator
+          </li>
+          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
+            <span style="color:#FC5C03;font-weight:bold;">★</span> 1:1 coaching sessions (Mon–Fri)
+          </li>
+          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
+            <span style="color:#FC5C03;font-weight:bold;">★</span> Personalised portfolio review
+          </li>
+          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
+            <span style="color:#FC5C03;font-weight:bold;">★</span> Priority Q&amp;A on calls
+          </li>
+          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
+            <span style="color:#FC5C03;font-weight:bold;">★</span> Advanced altcoin research reports
+          </li>
+          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
+            <span style="color:#FC5C03;font-weight:bold;">★</span> Direct message access to coaches
+          </li>
+        </ul>
+      </div>
+      <!-- Black Tier -->
+      <div class="tier-card" style="background:#1A1A2E;border-color:#1A1A2E;">
+        <span class="badge" style="background:rgba(252,92,3,0.2);color:#FC8C4E;margin-bottom:16px;">ELITE</span>
+        <div class="tier-name" style="color:#FFFFFF;margin-bottom:4px;">Black Tier</div>
+        <div class="tier-price" style="margin-bottom:16px;">A$33,000<span style="font-size:14px;font-weight:400;color:#807F86;">/yr</span></div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;">
+          <li style="font-size:13px;color:#B0B0B8;display:flex;align-items:start;gap:8px;">
+            <span style="color:#08C394;font-weight:bold;">✓</span> Everything in Platinum
+          </li>
+          <li style="font-size:13px;color:#B0B0B8;display:flex;align-items:start;gap:8px;">
+            <span style="color:#FC8C4E;font-weight:bold;">◆</span> Direct access to Ben Simpson
+          </li>
+          <li style="font-size:13px;color:#B0B0B8;display:flex;align-items:start;gap:8px;">
+            <span style="color:#FC8C4E;font-weight:bold;">◆</span> Quarterly strategy sessions with Ben
+          </li>
+          <li style="font-size:13px;color:#B0B0B8;display:flex;align-items:start;gap:8px;">
+            <span style="color:#FC8C4E;font-weight:bold;">◆</span> Bespoke investment strategy
+          </li>
+          <li style="font-size:13px;color:#B0B0B8;display:flex;align-items:start;gap:8px;">
+            <span style="color:#FC8C4E;font-weight:bold;">◆</span> VIP event invitations
+          </li>
+          <li style="font-size:13px;color:#B0B0B8;display:flex;align-items:start;gap:8px;">
+            <span style="color:#FC8C4E;font-weight:bold;">◆</span> Early access to new research &amp; tools
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- What's in each tier — comparison -->
+    <div class="hub-card">
+      <h3>📋 Tier Comparison at a Glance</h3>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead>
+            <tr style="border-bottom:2px solid #E8E8EA;">
+              <th style="text-align:left;padding:10px 12px;color:#807F86;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:1px;">Feature</th>
+              <th style="text-align:center;padding:10px 12px;color:#08C394;font-weight:600;">Accelerator</th>
+              <th style="text-align:center;padding:10px 12px;color:#FC5C03;font-weight:600;">Platinum</th>
+              <th style="text-align:center;padding:10px 12px;color:#FC8C4E;font-weight:600;">Black Tier</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #F2F2F2;">
+              <td style="padding:10px 12px;color:#4D4C55;">Shift OS Education (L1 + L2)</td>
+              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
+              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
+              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
+            </tr>
+            <tr style="border-bottom:1px solid #F2F2F2;">
+              <td style="padding:10px 12px;color:#4D4C55;">Weekly Calls (Strategy + Foundation + Deep Dive)</td>
+              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
+              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
+              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
+            </tr>
+            <tr style="border-bottom:1px solid #F2F2F2;">
+              <td style="padding:10px 12px;color:#4D4C55;">Community Access</td>
+              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
+              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
+              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
+            </tr>
+            <tr style="border-bottom:1px solid #F2F2F2;">
+              <td style="padding:10px 12px;color:#4D4C55;">1:1 Coaching Sessions</td>
+              <td style="text-align:center;color:#E8E8EA;">—</td>
+              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
+              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
+            </tr>
+            <tr style="border-bottom:1px solid #F2F2F2;">
+              <td style="padding:10px 12px;color:#4D4C55;">Personalised Portfolio Review</td>
+              <td style="text-align:center;color:#E8E8EA;">—</td>
+              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
+              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
+            </tr>
+            <tr style="border-bottom:1px solid #F2F2F2;">
+              <td style="padding:10px 12px;color:#4D4C55;">Advanced Research Reports</td>
+              <td style="text-align:center;color:#E8E8EA;">—</td>
+              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
+              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
+            </tr>
+            <tr style="border-bottom:1px solid #F2F2F2;">
+              <td style="padding:10px 12px;color:#4D4C55;">Direct Access to Ben</td>
+              <td style="text-align:center;color:#E8E8EA;">—</td>
+              <td style="text-align:center;color:#E8E8EA;">—</td>
+              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 12px;color:#4D4C55;">Bespoke Strategy + VIP Events</td>
+              <td style="text-align:center;color:#E8E8EA;">—</td>
+              <td style="text-align:center;color:#E8E8EA;">—</td>
+              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Product sub-pages -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px;" class="grid-2">
+      <a href="/hub/products.html" class="link-card">
+        <span class="link-icon">📦</span>
+        <div><strong>Full Product Details</strong><br><span style="font-size:12px;color:#807F86;">Detailed product page</span></div>
+      </a>
+      <a href="/hub/beginner-journey.html" class="link-card">
+        <span class="link-icon">🚀</span>
+        <div><strong>Beginner's Journey</strong><br><span style="font-size:12px;color:#807F86;">Onboarding flow</span></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TAB 3: SOCIAL MEDIA                    -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="tab-social" class="tab-panel">
+
+    <div class="section-title">Social Media Strategy</div>
+    <p class="section-sub">Our content strategy, brand voice, and platform-specific playbooks.</p>
+
+    <!-- YouTube Strategy -->
+    <div class="hub-card" style="margin-bottom:24px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+        <span style="font-size:24px;">▶️</span>
+        <h3 style="margin:0;">YouTube Strategy — Jeremy Haynes 90/10</h3>
+      </div>
+      <p style="margin-bottom:16px;">Our YouTube content follows the <strong>Jeremy Haynes 90/10 framework</strong>:</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;" class="grid-2">
+        <div style="padding:16px;background:#FEEEE5;border-radius:12px;">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:32px;color:#FC5C03;margin-bottom:4px;">90%</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:14px;color:#1B1925;margin-bottom:4px;">Value-First Content</div>
+          <p style="font-size:13px;color:#4D4C55;margin:0;">Education, market analysis, tutorials, how-to guides. Build trust and authority. Every video should teach something actionable.</p>
+        </div>
+        <div style="padding:16px;background:#F9F9F9;border-radius:12px;">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:32px;color:#654FFC;margin-bottom:4px;">10%</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:14px;color:#1B1925;margin-bottom:4px;">Promotional Content</div>
+          <p style="font-size:13px;color:#4D4C55;margin:0;">Membership CTAs, testimonials, product announcements. Soft sell — always wrapped in value. Never hard-pitch.</p>
+        </div>
+      </div>
+      <a href="/hub/youtube-strategy.html" class="link-card" style="display:inline-flex;">
+        <span class="link-icon">📄</span> Full YouTube Strategy Doc
+      </a>
+    </div>
+
+    <!-- Content Pillars -->
+    <div class="hub-card" style="margin-bottom:24px;">
+      <h3>📌 Content Pillars</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;" class="grid-3">
+        <div style="padding:16px;background:#F9F9F9;border-radius:12px;text-align:center;">
+          <div style="font-size:24px;margin-bottom:8px;">₿</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;color:#1B1925;">Bitcoin &amp; Macro</div>
+          <p style="font-size:12px;color:#807F86;margin:4px 0 0;">Market cycles, macro trends, BTC analysis</p>
+        </div>
+        <div style="padding:16px;background:#F9F9F9;border-radius:12px;text-align:center;">
+          <div style="font-size:24px;margin-bottom:8px;">🎓</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;color:#1B1925;">Education</div>
+          <p style="font-size:12px;color:#807F86;margin:4px 0 0;">How-to, step-by-step, beginner guides</p>
+        </div>
+        <div style="padding:16px;background:#F9F9F9;border-radius:12px;text-align:center;">
+          <div style="font-size:24px;margin-bottom:8px;">🔍</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;color:#1B1925;">Research</div>
+          <p style="font-size:12px;color:#807F86;margin:4px 0 0;">Altcoin deep dives, project analysis</p>
+        </div>
+        <div style="padding:16px;background:#F9F9F9;border-radius:12px;text-align:center;">
+          <div style="font-size:24px;margin-bottom:8px;">💡</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;color:#1B1925;">Strategy</div>
+          <p style="font-size:12px;color:#807F86;margin:4px 0 0;">Portfolio, risk management, DCA</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Posting Cadence -->
+    <div class="hub-card" style="margin-bottom:24px;">
+      <h3>📅 Posting Cadence</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="grid-2">
+        <div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;color:#FC5C03;margin-bottom:8px;">YouTube</div>
+          <div class="schedule-row">
+            <span class="schedule-day">Long-form</span>
+            <span class="schedule-label">2–3x per week (10–20 min)</span>
+          </div>
+          <div class="schedule-row">
+            <span class="schedule-day">Shorts</span>
+            <span class="schedule-label">3–5x per week (30–60 sec)</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;color:#654FFC;margin-bottom:8px;">Other Platforms</div>
+          <div class="schedule-row">
+            <span class="schedule-day">X / Twitter</span>
+            <span class="schedule-label">Daily threads + engagement</span>
+          </div>
+          <div class="schedule-row">
+            <span class="schedule-day">Instagram</span>
+            <span class="schedule-label">3–5 Reels/week + Stories daily</span>
+          </div>
+          <div class="schedule-row">
+            <span class="schedule-day">LinkedIn</span>
+            <span class="schedule-label">2–3 posts/week (thought leadership)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Brand Voice Rules -->
+    <div class="hub-card" style="margin-bottom:24px;">
+      <h3>🗣️ Brand Voice Rules</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;" class="grid-2">
+        <div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:14px;color:#08C394;margin-bottom:12px;">✅ We ARE</div>
+          <ul style="padding-left:18px;margin:0;display:flex;flex-direction:column;gap:6px;">
+            <li style="font-size:13px;color:#4D4C55;">Educator-first — teach, don't sell</li>
+            <li style="font-size:13px;color:#4D4C55;">Data-driven — back claims with evidence</li>
+            <li style="font-size:13px;color:#4D4C55;">Honest about risk — crypto is volatile</li>
+            <li style="font-size:13px;color:#4D4C55;">Long-term focused — no day trading hype</li>
+            <li style="font-size:13px;color:#4D4C55;">Professional but approachable</li>
+            <li style="font-size:13px;color:#4D4C55;">Bitcoin-native with altcoin awareness</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:14px;color:#E53E3E;margin-bottom:12px;">❌ We are NOT</div>
+          <ul style="padding-left:18px;margin:0;display:flex;flex-direction:column;gap:6px;">
+            <li style="font-size:13px;color:#4D4C55;">Moon boys — no "to the moon" hype</li>
+            <li style="font-size:13px;color:#4D4C55;">Financial advisors — education only</li>
+            <li style="font-size:13px;color:#4D4C55;">Shilling specific coins for clout</li>
+            <li style="font-size:13px;color:#4D4C55;">Doom-and-gloom FUD spreaders</li>
+            <li style="font-size:13px;color:#4D4C55;">Get-rich-quick promoters</li>
+            <li style="font-size:13px;color:#4D4C55;">Trading signal groups</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Strategy Links -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;" class="grid-3">
+      <a href="/hub/youtube-strategy.html" class="link-card">
+        <span class="link-icon">▶️</span>
+        <div><strong>YouTube Strategy</strong><br><span style="font-size:12px;color:#807F86;">Full playbook</span></div>
+      </a>
+      <a href="/hub/social-strategy.html" class="link-card">
+        <span class="link-icon">📱</span>
+        <div><strong>Social Strategy</strong><br><span style="font-size:12px;color:#807F86;">Cross-platform plan</span></div>
+      </a>
+      <a href="/hub/instagram-strategy.html" class="link-card">
+        <span class="link-icon">📸</span>
+        <div><strong>Instagram Strategy</strong><br><span style="font-size:12px;color:#807F86;">Reels &amp; Stories</span></div>
+      </a>
+      <a href="/hub/brand.html" class="link-card">
+        <span class="link-icon">🎨</span>
+        <div><strong>Brand &amp; Voice</strong><br><span style="font-size:12px;color:#807F86;">Voice guidelines</span></div>
+      </a>
+      <a href="/hub/positioning.html" class="link-card">
+        <span class="link-icon">🎯</span>
+        <div><strong>Positioning &amp; ICP</strong><br><span style="font-size:12px;color:#807F86;">Ideal customer profile</span></div>
+      </a>
+      <a href="/hub/competitors.html" class="link-card">
+        <span class="link-icon">⚔️</span>
+        <div><strong>Competitors</strong><br><span style="font-size:12px;color:#807F86;">Competitive landscape</span></div>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div style="text-align:center;padding:32px 24px;border-top:1px solid #E8E8EA;margin-top:48px;">
+  <p style="font-size:12px;color:#807F86;margin:0;">Collective Shift — Team Hub &nbsp;·&nbsp; Internal Use Only</p>
+</div>
+
+<script>
+function switchTab(tab) {
+  // Hide all panels
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  // Deactivate all buttons
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  // Show selected panel
+  document.getElementById('tab-' + tab).classList.add('active');
+  // Activate clicked button
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
