@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Team Cost Tracker — Collective Shift CEO Command Centre</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cs: {
+          orange: '#FC5C03',
+          'orange-light': '#FC8C4E',
+          'orange-bg': '#FEDECC',
+          'orange-hover': '#FEEEE5',
+          green: '#08C394',
+          purple: '#654FFC',
+          border: '#E8E8EA',
+          text: '#1B1925',
+          secondary: '#4D4C55',
+          muted: '#807F86',
+        }
+      },
+      fontFamily: {
+        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+        barlow: ['Barlow', 'sans-serif'],
+        mono: ['Source Code Pro', 'monospace'],
+      }
+    }
+  }
+}
+</script>
+<style>
+  * { box-sizing: border-box; }
+  body { background: #FFFFFF; color: #1B1925; font-family: 'Barlow', sans-serif; padding-top: 56px !important; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #FFFFFF; }
+  ::-webkit-scrollbar-thumb { background: #33313F; border-radius: 3px; }
+
+  /* ── Top Nav (cloned from index.html) ── */
+  :root {
+    --csn-h: 56px; --csn-bg: #FFFFFF; --csn-border: #E8E8EA;
+    --csn-text: #1B1925; --csn-muted: #4D4C55; --csn-orange: #FC5C03;
+    --csn-orange-bg: #FEEEE5; --csn-dd-bg: #FFFFFF;
+    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    --csn-z: 9000;
+  }
+  .csn-bar { position:fixed;top:0;left:0;right:0;height:var(--csn-h);background:var(--csn-bg);border-bottom:1px solid var(--csn-border);display:flex;align-items:center;padding:0 24px;z-index:var(--csn-z);font-family:'Plus Jakarta Sans','Barlow',sans-serif; }
+  .csn-logo { font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:var(--csn-orange);text-decoration:none;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;margin-right:32px;flex-shrink:0; }
+  .csn-nav { display:flex;align-items:center;gap:2px;flex:1; }
+  .csn-item { position:relative; }
+  .csn-link { display:flex;align-items:center;gap:5px;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--csn-muted);text-decoration:none;white-space:nowrap;transition:color 0.15s,background 0.15s;cursor:pointer; }
+  .csn-link:hover { color:var(--csn-orange);background:var(--csn-orange-bg); }
+  .csn-item.active > .csn-link { color:var(--csn-orange);font-weight:600; }
+  .csn-chevron { transition:transform 0.2s;flex-shrink:0; }
+  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform:rotate(180deg); }
+  .csn-dropdown { display:none;position:absolute;top:calc(100% + 6px);left:0;min-width:240px;background:var(--csn-dd-bg);border:1px solid var(--csn-border);border-radius:12px;box-shadow:var(--csn-dd-shadow);padding:6px;z-index:calc(var(--csn-z) + 1); }
+  .csn-item.csn-has-dd { position:relative; }
+  .csn-item.csn-has-dd::after { content:"";position:absolute;top:100%;left:0;width:100%;height:12px; }
+  .csn-item.csn-has-dd:hover > .csn-dropdown { display:block; }
+  .csn-dd-item { display:block;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--csn-muted);text-decoration:none;transition:color 0.12s,background 0.12s;white-space:nowrap; }
+  .csn-dd-item:hover { color:var(--csn-orange);background:var(--csn-orange-bg); }
+  .csn-divider { height:1px;background:var(--csn-border);margin:4px 8px; }
+  .csn-hamburger { display:none;background:none;border:none;cursor:pointer;color:var(--csn-muted);padding:4px;margin-left:auto; }
+  .csn-mobile-menu { display:none;position:fixed;top:var(--csn-h);left:0;right:0;background:var(--csn-bg);border-bottom:1px solid var(--csn-border);padding:8px 16px 16px;z-index:calc(var(--csn-z) - 1);max-height:calc(100vh - var(--csn-h));overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,0.08); }
+  .csn-mobile-menu.open { display:block; }
+  .csn-mob-link { display:block;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--csn-muted);text-decoration:none;transition:color 0.12s,background 0.12s; }
+  .csn-mob-link:hover { color:var(--csn-orange);background:var(--csn-orange-bg); }
+  .csn-mob-top { font-weight:600;color:var(--csn-text);margin-top:4px; }
+  @media (max-width:1023px) { .csn-nav{display:none;} .csn-hamburger{display:block;} }
+  @media (max-width:640px) { .csn-logo{font-size:13px;margin-right:16px;} }
+
+  /* ── KPI Cards ── */
+  .kpi-card { backdrop-filter:blur(8px);transition:transform 0.15s ease,border-color 0.15s ease; }
+  .kpi-card:hover { transform:translateY(-2px);border-color:#4D4C55; }
+
+  /* ── Live Ticker ── */
+  .ticker-value {
+    font-family: 'Source Code Pro', monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  .ticker-glow {
+    text-shadow: 0 0 40px rgba(252,92,3,0.25), 0 0 80px rgba(252,92,3,0.10);
+  }
+
+  /* Smooth number transitions */
+  .cost-cell {
+    font-variant-numeric: tabular-nums;
+    font-family: 'Source Code Pro', monospace;
+    transition: color 0.3s ease;
+  }
+
+  /* ── Org Chart Departments ── */
+  .dept-card {
+    border: 1px solid #E8E8EA;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+  }
+  .dept-card:hover { border-color: #4D4C55; }
+  .dept-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .dept-header:hover { background: #FAFAFA; }
+  .dept-body { border-top: 1px solid #E8E8EA; }
+
+  .member-row {
+    display: grid;
+    grid-template-columns: 40px 1fr 100px 90px 90px 56px 120px;
+    align-items: center;
+    padding: 12px 20px;
+    gap: 12px;
+    border-bottom: 1px solid #F5F5F5;
+    transition: background 0.12s ease;
+  }
+  .member-row:last-child { border-bottom: none; }
+  .member-row:hover { background: #FAFAFA; }
+  .member-row.ben-row { background: linear-gradient(90deg, #FEEEE5 0%, #FFFFFF 60%); }
+  .member-row.ben-row:hover { background: linear-gradient(90deg, #FEDECC 0%, #FAFAFA 60%); }
+
+  /* Toggle switch */
+  .toggle-track {
+    width: 40px; height: 22px; border-radius: 11px;
+    background: #E8E8EA; position: relative; cursor: pointer;
+    transition: background 0.25s ease;
+  }
+  .toggle-track.on { background: #FC5C03; }
+  .toggle-knob {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #FFFFFF; position: absolute; top: 2px; left: 2px;
+    transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+  .toggle-track.on .toggle-knob { transform: translateX(18px); }
+
+  /* Ben callout */
+  .ben-callout {
+    background: linear-gradient(135deg, #1A1A2E 0%, #2D1810 100%);
+    border: 1px solid #FC5C03;
+    border-radius: 12px;
+    padding: 16px 24px;
+    color: #FFFFFF;
+    display: none;
+    animation: fadeSlideIn 0.4s ease;
+  }
+  .ben-callout.visible { display: flex; }
+
+  /* Session log */
+  .session-row {
+    display: grid;
+    grid-template-columns: 1fr 120px 100px 80px;
+    align-items: center;
+    padding: 8px 16px;
+    font-size: 12px;
+    border-bottom: 1px solid #F5F5F5;
+  }
+  .session-row:last-child { border-bottom: none; }
+
+  /* After hours badge */
+  .after-hours-badge {
+    background: linear-gradient(135deg, #1A1A2E, #2D1B4E);
+    color: #A78BFA;
+    border: 1px solid #5B21B6;
+  }
+  .working-hours-badge {
+    background: linear-gradient(135deg, #064E3B, #065F46);
+    color: #6EE7B7;
+    border: 1px solid #059669;
+  }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse-glow { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+  .pulse { animation: pulse-glow 2s ease-in-out infinite; }
+  .badge-dot { width:8px;height:8px;border-radius:50%;display:inline-block; }
+
+  /* Responsive: stack member rows on mobile */
+  @media (max-width: 768px) {
+    .member-row {
+      grid-template-columns: 40px 1fr;
+      grid-template-rows: auto auto;
+      gap: 4px 12px;
+      padding: 12px 16px;
+    }
+    .member-row > *:nth-child(n+3) { grid-column: 2; font-size: 11px; }
+    .mob-hide { display: none; }
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- ═══ TOP NAV ═══ -->
+<nav class="csn-bar" role="navigation" aria-label="Main navigation">
+  <a href="index.html" class="csn-logo">Collective Shift</a>
+  <div class="csn-nav">
+    <div class="csn-item"><a href="index.html" class="csn-link">CEO Dashboard</a></div>
+    <div class="csn-item active"><a href="team-cost.html" class="csn-link">Team Cost</a></div>
+    <div class="csn-item csn-has-dd">
+      <a href="hub/operating-system.html" class="csn-link">Operating System
+        <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="csn-dropdown">
+        <a href="hub/operating-system.html" class="csn-dd-item">Operating System Overview</a>
+        <div class="csn-divider"></div>
+        <a href="hub/l1/m1-beginner-foundations.html" class="csn-dd-item">Level 1 — Beginner</a>
+        <a href="hub/l2/m1-advanced-foundations.html" class="csn-dd-item">Level 2 — Advanced</a>
+      </div>
+    </div>
+    <div class="csn-item csn-has-dd">
+      <a href="hub/products.html" class="csn-link">Product
+        <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="csn-dropdown"><a href="hub/products.html#platinum" class="csn-dd-item">Platinum</a><a href="hub/products.html#accelerator" class="csn-dd-item">Accelerator</a></div>
+    </div>
+    <div class="csn-item csn-has-dd">
+      <a href="travis-briefing-2026-03-27.html" class="csn-link">Documents
+        <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="csn-dropdown"><a href="travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a><a href="cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a></div>
+    </div>
+  </div>
+  <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+<div id="csnMobileMenu" class="csn-mobile-menu">
+  <a href="index.html" class="csn-mob-link csn-mob-top">CEO Dashboard</a>
+  <a href="team-cost.html" class="csn-mob-link csn-mob-top">Team Cost Tracker</a>
+  <a href="hub/operating-system.html" class="csn-mob-link csn-mob-top">Operating System</a>
+  <a href="hub/products.html" class="csn-mob-link csn-mob-top">Product</a>
+  <a href="travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-top">Documents</a>
+</div>
+<!-- ═══ END TOP NAV ═══ -->
+
+<!-- HEADER BAR -->
+<header class="sticky top-[56px] z-50 bg-white/95 backdrop-blur-md border-b border-[#E8E8EA]">
+  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <h1 class="font-jakarta text-lg sm:text-xl font-700 tracking-wide uppercase">
+        <span class="text-cs-orange">₿</span>
+        <span class="text-[#1B1925] ml-1">Team Cost Tracker</span>
+      </h1>
+      <span class="text-[10px] font-mono text-[#4D4C55] bg-[#F5F5F5] px-2 py-0.5 rounded">LIVE</span>
+    </div>
+    <div class="flex items-center gap-4 sm:gap-6">
+      <div id="clock" class="text-[#807F86] text-sm font-mono hidden sm:block"></div>
+      <div id="hours-badge" class="text-[10px] font-mono font-semibold px-3 py-1 rounded-full"></div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN CONTENT -->
+<main class="max-w-[1400px] mx-auto px-4 sm:px-6 py-5 space-y-6">
+
+  <!-- ═══ SECTION 1: KPI SUMMARY CARDS ═══ -->
+  <section>
+    <div class="text-[10px] uppercase tracking-widest text-[#807F86] font-mono font-semibold mb-3">Total Team Cost — All 16 Staff (Loaded Rates)</div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3" id="kpi-cards"></div>
+  </section>
+
+  <!-- ═══ SECTION 2: LIVE TICKER ═══ -->
+  <section>
+    <div class="bg-[#1A1A2E] rounded-2xl p-6 sm:p-8 relative overflow-hidden">
+      <!-- Decorative gradient -->
+      <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#FC5C03]/10 to-transparent rounded-full -translate-y-1/2 translate-x-1/4"></div>
+      <div class="relative z-10">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-4">
+          <div>
+            <div class="text-[10px] uppercase tracking-widest text-[#807F86] font-mono font-semibold mb-1">Live Cost — Today</div>
+            <div class="ticker-value ticker-glow text-5xl sm:text-6xl lg:text-7xl font-800 text-white leading-none" id="main-ticker">$0.00</div>
+            <div class="text-xs text-[#807F86] font-mono mt-2" id="ticker-subtitle">Auto-runs 8am–5pm AEST · Full team ticking</div>
+          </div>
+          <div class="flex flex-col items-start sm:items-end gap-2">
+            <div class="flex items-center gap-3">
+              <span class="text-xs text-[#807F86]">Auto-run</span>
+              <div class="toggle-track" id="autoToggle" onclick="toggleAutoRun()">
+                <div class="toggle-knob"></div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <button onclick="resetDay()" class="text-[11px] text-[#807F86] hover:text-white border border-[#333] hover:border-[#555] rounded-lg px-3 py-1.5 transition-all">Reset Day</button>
+              <button onclick="manualToggle()" id="manualBtn" class="text-[11px] bg-[#FC5C03] hover:bg-[#E05503] text-white rounded-lg px-4 py-1.5 font-semibold transition-all">▶ Start</button>
+            </div>
+            <div class="flex items-center gap-4 text-[11px] font-mono mt-1">
+              <span class="text-[#808080]">Rate: <span class="text-[#FC5C03]" id="perSecRate">$0.00</span>/sec</span>
+              <span class="text-[#808080]">Active: <span class="text-white" id="activeCount">0</span>/16</span>
+              <span class="text-[#808080]">Elapsed: <span class="text-white" id="elapsedTime">00:00:00</span></span>
+            </div>
+          </div>
+        </div>
+        <!-- Per-minute / per-hour bar -->
+        <div class="flex gap-4 text-xs font-mono">
+          <div class="bg-white/5 rounded-lg px-4 py-2 flex-1 text-center">
+            <div class="text-[#807F86] text-[10px] uppercase tracking-wider mb-0.5">Per Minute</div>
+            <div class="text-white font-semibold" id="perMinRate">$0.00</div>
+          </div>
+          <div class="bg-white/5 rounded-lg px-4 py-2 flex-1 text-center">
+            <div class="text-[#807F86] text-[10px] uppercase tracking-wider mb-0.5">Per Hour</div>
+            <div class="text-white font-semibold" id="perHourRate">$0.00</div>
+          </div>
+          <div class="bg-white/5 rounded-lg px-4 py-2 flex-1 text-center">
+            <div class="text-[#807F86] text-[10px] uppercase tracking-wider mb-0.5">Tracked Sessions</div>
+            <div class="text-white font-semibold" id="sessionCost">$0.00</div>
+          </div>
+          <div class="bg-white/5 rounded-lg px-4 py-2 flex-1 text-center">
+            <div class="text-[#807F86] text-[10px] uppercase tracking-wider mb-0.5">Daily Budget</div>
+            <div class="font-semibold" id="budgetPct" style="color:#08C394;">0%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ BEN CALLOUT ═══ -->
+  <div class="ben-callout" id="benCallout">
+    <div class="flex items-center gap-4 flex-1">
+      <div class="w-12 h-12 rounded-full bg-[#FC5C03]/20 flex items-center justify-center flex-shrink-0">
+        <span class="text-[#FC5C03] font-bold text-lg">₿</span>
+      </div>
+      <div>
+        <div class="text-sm font-semibold text-white">YOU are currently costing <span id="benCostPerMin" class="text-[#FC5C03]">$0.00</span>/min</div>
+        <div class="text-xs text-[#A0A0A0] mt-0.5">Is this the best use of your time right now?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 3: ORG CHART — DEPARTMENTS ═══ -->
+  <section id="org-chart"></section>
+
+  <!-- ═══ SECTION 4: SESSION LOG ═══ -->
+  <section>
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="font-jakarta text-base uppercase tracking-wider text-[#807F86] font-semibold flex items-center gap-2">
+        <span class="text-cs-orange">▎</span>Session Log
+        <span class="text-[10px] font-mono text-[#4D4C55] bg-[#F5F5F5] px-2 py-0.5 rounded" id="sessionCount">0 sessions</span>
+      </h2>
+      <button onclick="clearSessions()" class="text-[11px] text-[#807F86] hover:text-red-400 transition-colors">Clear Log</button>
+    </div>
+    <div class="bg-white border border-[#E8E8EA] rounded-lg overflow-hidden">
+      <div class="session-row font-semibold text-[10px] uppercase tracking-wider text-[#807F86] bg-[#FAFAFA]">
+        <div>People</div><div>Duration</div><div>Cost</div><div>Time</div>
+      </div>
+      <div id="sessionLog">
+        <div class="text-center text-xs text-[#807F86] py-6">No sessions logged yet. Toggle team members on to start tracking.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 5: DAILY SUMMARY ═══ -->
+  <section class="pb-8">
+    <h2 class="font-jakarta text-base uppercase tracking-wider text-[#807F86] font-semibold flex items-center gap-2 mb-3">
+      <span class="text-cs-green">▎</span>Daily Summary
+    </h2>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div class="kpi-card bg-white border border-[#E8E8EA] rounded-lg p-4">
+        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Full-Day Team Cost (8hrs)</div>
+        <div class="text-2xl font-jakarta font-700 text-[#1B1925]" id="summaryDayTotal">$0.00</div>
+        <div class="text-xs text-[#4D4C55] mt-1">All 16 staff, loaded rates</div>
+      </div>
+      <div class="kpi-card bg-white border border-[#E8E8EA] rounded-lg p-4">
+        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Total Tracked Interaction Cost</div>
+        <div class="text-2xl font-jakarta font-700 text-cs-orange" id="summaryTrackedTotal">$0.00</div>
+        <div class="text-xs text-[#4D4C55] mt-1">From toggled sessions today</div>
+      </div>
+      <div class="kpi-card bg-white border border-[#E8E8EA] rounded-lg p-4">
+        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Sessions Completed</div>
+        <div class="text-2xl font-jakarta font-700 text-cs-purple" id="summarySessionCount">0</div>
+        <div class="text-xs text-[#4D4C55] mt-1">Meetings &amp; tracked tasks</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+// ═══════════════════════════════════════════
+//  DATA — Team members with salary info
+// ═══════════════════════════════════════════
+const TEAM = [
+  { id:'ben',      name:'Ben',       role:'CEO',              dept:'Executive',       weeklyGross:6730.77, isBen:true },
+  { id:'travis',   name:'Travis',    role:'CTO',              dept:'Executive',       weeklyGross:5769.23 },
+  { id:'bec',      name:'Bec',       role:'Sales',            dept:'Sales',           weeklyGross:2211.54 },
+  { id:'reece',    name:'Reece',     role:'Sales',            dept:'Sales',           weeklyGross:2307.69 },
+  { id:'zen',      name:'Zen',       role:'Sales',            dept:'Sales',           weeklyGross:1153.84 },
+  { id:'matt',     name:'Matt',      role:'Product/Analyst',  dept:'Product/Analysts',weeklyGross:2692.31 },
+  { id:'sarn',     name:'Sarn',      role:'Product/Analyst',  dept:'Product/Analysts',weeklyGross:2211.54 },
+  { id:'simon',    name:'Simon',     role:'Product/Analyst',  dept:'Product/Analysts',weeklyGross:2307.69 },
+  { id:'pat',      name:'Pat',       role:'Marketing',        dept:'Marketing',       weeklyGross:1923.08 },
+  { id:'aaron',    name:'Aaron',     role:'Operations',       dept:'Operations',      weeklyGross:5769.23 },
+  { id:'alice',    name:'Alice',     role:'Operations',       dept:'Operations',      weeklyGross:2692.31 },
+  { id:'tims',     name:'Tim S',     role:'Operations',       dept:'Operations',      weeklyGross:2692.31 },
+  { id:'timothyb', name:'Timothy B', role:'Operations',       dept:'Operations',      weeklyGross:2211.54 },
+  { id:'david',    name:'David',     role:'Operations (NL)',   dept:'Operations',      weeklyGross:2500.00 },
+  { id:'alicia',   name:'Alicia',    role:'Support',          dept:'Support',         weeklyGross:1826.92 },
+  { id:'josh',     name:'Josh',      role:'Support',          dept:'Support',         weeklyGross:1923.08 },
+];
+
+// Compute rates
+TEAM.forEach(m => {
+  m.annual    = m.weeklyGross * 52;
+  m.hourly    = m.annual / 2000;
+  m.loaded    = m.hourly * 1.7;
+  m.perSecond = m.loaded / 3600;
+  m.perMinute = m.loaded / 60;
+  // Runtime state
+  m.active      = false;
+  m.sessionStart= null;
+  m.accumulated = 0;      // accumulated cost from completed sessions today
+  m.currentCost = 0;      // current live session cost
+});
+
+// Department definitions (order matters)
+const DEPARTMENTS = [
+  { key:'Executive',        icon:'👔', color:'#FC5C03', label:'Executive Leadership' },
+  { key:'Sales',            icon:'📈', color:'#654FFC', label:'Sales' },
+  { key:'Product/Analysts', icon:'🔬', color:'#08C394', label:'Product & Analysts' },
+  { key:'Marketing',        icon:'📣', color:'#F59E0B', label:'Marketing' },
+  { key:'Operations',       icon:'⚙️', color:'#3B82F6', label:'Operations' },
+  { key:'Support',          icon:'🎧', color:'#EC4899', label:'Support' },
+];
+
+// ═══════════════════════════════════════════
+//  CALCULATIONS
+// ═══════════════════════════════════════════
+const totalLoadedHourly = TEAM.reduce((s,m) => s + m.loaded, 0);
+const totalLoadedDaily  = totalLoadedHourly * 8;
+const totalLoadedWeekly = totalLoadedDaily * 5;
+const totalLoadedMonthly= totalLoadedWeekly * 4.33;
+
+// YTD: months from Jan 1 to today
+const now0 = new Date();
+const startOfYear = new Date(2026, 0, 1);
+const msElapsed = now0 - startOfYear;
+const monthsElapsed = msElapsed / (1000 * 60 * 60 * 24 * 30.44);
+const totalLoadedYTD = totalLoadedMonthly * monthsElapsed;
+
+// Sessions log
+let sessions = [];
+let autoRun = true;
+let manualRunning = false;
+let tickerRunning = false;
+let tickerStartTime = null;
+let tickerAccumulated = 0; // from auto-run or manual carry-over
+
+// ═══════════════════════════════════════════
+//  RENDER: KPI CARDS
+// ═══════════════════════════════════════════
+function renderKPIs() {
+  const fmt = v => '$' + v.toLocaleString('en-AU', {minimumFractionDigits:0, maximumFractionDigits:0});
+  const cards = [
+    { label:'Daily Cost (8hrs)',  value: fmt(totalLoadedDaily),   sub:'All 16 staff loaded', accent:'#FC5C03' },
+    { label:'Weekly Cost (5 days)', value: fmt(totalLoadedWeekly), sub:'Mon–Fri working week', accent:'#654FFC' },
+    { label:'Monthly Cost',       value: fmt(totalLoadedMonthly), sub:'Weekly × 4.33',        accent:'#08C394' },
+    { label:'YTD Cost (2026)',    value: fmt(totalLoadedYTD),     sub: monthsElapsed.toFixed(1) + ' months elapsed', accent:'#3B82F6' },
+  ];
+  document.getElementById('kpi-cards').innerHTML = cards.map(c => `
+    <div class="kpi-card bg-white border border-[#E8E8EA] rounded-lg p-4" style="border-left:3px solid ${c.accent};">
+      <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">${c.label}</div>
+      <div class="text-2xl font-jakarta font-700 text-[#1B1925]">${c.value}</div>
+      <div class="text-xs text-[#4D4C55] mt-1">${c.sub}</div>
+    </div>
+  `).join('');
+  document.getElementById('summaryDayTotal').textContent = fmt(totalLoadedDaily);
+}
+
+// ═══════════════════════════════════════════
+//  RENDER: ORG CHART
+// ═══════════════════════════════════════════
+function renderOrgChart() {
+  const container = document.getElementById('org-chart');
+  container.innerHTML = DEPARTMENTS.map(dept => {
+    const members = TEAM.filter(m => m.dept === dept.key)
+                        .sort((a,b) => b.loaded - a.loaded);
+    const deptTotalLoaded = members.reduce((s,m) => s + m.loaded, 0);
+    const deptDailyCost   = deptTotalLoaded * 8;
+
+    return `
+    <div class="dept-card mb-4">
+      <div class="dept-header" onclick="toggleDept('${dept.key}')">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center text-lg" style="background:${dept.color}15;">
+            ${dept.icon}
+          </div>
+          <div>
+            <div class="font-jakarta font-700 text-sm text-[#1B1925]">${dept.label}</div>
+            <div class="text-[10px] font-mono text-[#807F86]">${members.length} ${members.length===1?'person':'people'} · $${deptTotalLoaded.toFixed(0)}/hr loaded · $${deptDailyCost.toFixed(0)}/day</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="text-right">
+            <div class="text-xs font-mono font-semibold cost-cell" style="color:${dept.color};" id="dept-cost-${dept.key}">$0.00</div>
+            <div class="text-[9px] text-[#807F86]">live cost</div>
+          </div>
+          <button onclick="toggleAllDept('${dept.key}', event)" class="text-[10px] font-semibold px-3 py-1 rounded-full border transition-all hover:opacity-80"
+            style="color:${dept.color};border-color:${dept.color}40;background:${dept.color}10;"
+            id="dept-toggle-${dept.key}">
+            Toggle All
+          </button>
+          <svg class="w-4 h-4 text-[#807F86] transition-transform" id="dept-chev-${dept.key}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </div>
+      </div>
+      <div class="dept-body" id="dept-body-${dept.key}">
+        <!-- Column Headers -->
+        <div class="hidden sm:grid" style="grid-template-columns:40px 1fr 100px 90px 90px 56px 120px;padding:8px 20px;gap:12px;background:#FAFAFA;border-bottom:1px solid #E8E8EA;">
+          <div></div>
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-semibold">Name</div>
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-semibold">Annual</div>
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-semibold">Hourly</div>
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-semibold">Loaded</div>
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-semibold">Track</div>
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-semibold">Live Cost</div>
+        </div>
+        ${members.map(m => renderMemberRow(m, dept.color)).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderMemberRow(m, color) {
+  const initials = m.name.split(' ').map(w=>w[0]).join('').toUpperCase();
+  const bgClass = m.isBen ? 'ben-row' : '';
+  return `
+    <div class="member-row ${bgClass}" id="row-${m.id}">
+      <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold"
+           style="background:${color}15;color:${color};">
+        ${initials}
+      </div>
+      <div class="min-w-0">
+        <div class="text-sm font-semibold text-[#1B1925] flex items-center gap-2">
+          ${m.name}
+          ${m.isBen ? '<span class="text-[9px] font-mono bg-[#FC5C03] text-white px-1.5 py-0.5 rounded">CEO</span>' : ''}
+        </div>
+        <div class="text-[11px] text-[#807F86]">${m.role}</div>
+      </div>
+      <div class="text-xs font-mono text-[#4D4C55] mob-hide">$${Math.round(m.annual).toLocaleString()}</div>
+      <div class="text-xs font-mono text-[#4D4C55] mob-hide">$${m.hourly.toFixed(2)}</div>
+      <div class="text-xs font-mono font-semibold text-[#1B1925] mob-hide">$${m.loaded.toFixed(2)}</div>
+      <div>
+        <div class="toggle-track ${m.active?'on':''}" id="toggle-${m.id}" onclick="toggleMember('${m.id}')">
+          <div class="toggle-knob"></div>
+        </div>
+      </div>
+      <div>
+        <div class="cost-cell text-sm font-semibold" id="cost-${m.id}" style="color:#807F86;">$0.00</div>
+        <div class="text-[9px] font-mono text-[#A0A0A0]" id="timer-${m.id}"></div>
+      </div>
+    </div>`;
+}
+
+function toggleDept(key) {
+  const body = document.getElementById('dept-body-' + key);
+  const chev = document.getElementById('dept-chev-' + key);
+  if (body.style.display === 'none') {
+    body.style.display = '';
+    chev.style.transform = '';
+  } else {
+    body.style.display = 'none';
+    chev.style.transform = 'rotate(180deg)';
+  }
+}
+
+function toggleAllDept(key, e) {
+  e.stopPropagation();
+  const members = TEAM.filter(m => m.dept === key);
+  const allOn = members.every(m => m.active);
+  members.forEach(m => {
+    if (allOn) { if (m.active) toggleMember(m.id); }
+    else       { if (!m.active) toggleMember(m.id); }
+  });
+}
+
+// ═══════════════════════════════════════════
+//  TOGGLE MEMBER ON/OFF
+// ═══════════════════════════════════════════
+function toggleMember(id) {
+  const m = TEAM.find(t => t.id === id);
+  if (!m) return;
+
+  if (m.active) {
+    // Turning OFF — log session
+    m.active = false;
+    const elapsed = (Date.now() - m.sessionStart) / 1000;
+    const cost = elapsed * m.perSecond;
+    m.accumulated += cost;
+    m.currentCost = 0;
+    logSession(m.name, elapsed, cost);
+    m.sessionStart = null;
+  } else {
+    // Turning ON
+    m.active = true;
+    m.sessionStart = Date.now();
+    m.currentCost = 0;
+  }
+
+  // Update toggle visual
+  const toggle = document.getElementById('toggle-' + id);
+  if (toggle) toggle.classList.toggle('on', m.active);
+
+  // Ben callout
+  if (m.isBen) {
+    document.getElementById('benCallout').classList.toggle('visible', m.active);
+  }
+}
+
+function logSession(name, elapsed, cost) {
+  const now = new Date();
+  sessions.push({ name, elapsed, cost, time: now.toLocaleTimeString('en-AU', { hour:'2-digit', minute:'2-digit', timeZone:'Australia/Melbourne' }) });
+  renderSessionLog();
+}
+
+function renderSessionLog() {
+  const el = document.getElementById('sessionLog');
+  document.getElementById('sessionCount').textContent = sessions.length + ' session' + (sessions.length!==1?'s':'');
+  if (sessions.length === 0) {
+    el.innerHTML = '<div class="text-center text-xs text-[#807F86] py-6">No sessions logged yet. Toggle team members on to start tracking.</div>';
+    return;
+  }
+  el.innerHTML = sessions.slice().reverse().map(s => {
+    const mins = Math.floor(s.elapsed / 60);
+    const secs = Math.floor(s.elapsed % 60);
+    const dur = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+    return `<div class="session-row">
+      <div class="text-sm text-[#1B1925]">${s.name}</div>
+      <div class="font-mono text-[#4D4C55]">${dur}</div>
+      <div class="font-mono font-semibold text-cs-orange">$${s.cost.toFixed(2)}</div>
+      <div class="font-mono text-[#807F86]">${s.time}</div>
+    </div>`;
+  }).join('');
+
+  // Update summary
+  const totalCost = sessions.reduce((s,x) => s + x.cost, 0);
+  document.getElementById('summaryTrackedTotal').textContent = '$' + totalCost.toFixed(2);
+  document.getElementById('summarySessionCount').textContent = sessions.length;
+}
+
+function clearSessions() {
+  sessions = [];
+  renderSessionLog();
+}
+
+// ═══════════════════════════════════════════
+//  MAIN TICK LOOP (60fps-ish via requestAnimationFrame)
+// ═══════════════════════════════════════════
+let lastFrame = 0;
+
+function tick(timestamp) {
+  if (timestamp - lastFrame < 50) { requestAnimationFrame(tick); return; } // ~20fps is enough
+  lastFrame = timestamp;
+
+  const now = Date.now();
+  let totalActiveCost = 0;
+  let activeCount = 0;
+  let totalPerSecond = 0;
+  const deptCosts = {};
+
+  TEAM.forEach(m => {
+    if (m.active) {
+      activeCount++;
+      const elapsed = (now - m.sessionStart) / 1000;
+      m.currentCost = elapsed * m.perSecond;
+      totalPerSecond += m.perSecond;
+    }
+    const totalMemberCost = m.accumulated + m.currentCost;
+    totalActiveCost += totalMemberCost;
+
+    // Update individual cost display
+    const costEl = document.getElementById('cost-' + m.id);
+    const timerEl = document.getElementById('timer-' + m.id);
+    if (costEl) {
+      if (totalMemberCost > 0 || m.active) {
+        costEl.textContent = '$' + totalMemberCost.toFixed(2);
+        costEl.style.color = m.active ? '#FC5C03' : '#1B1925';
+      } else {
+        costEl.textContent = '$0.00';
+        costEl.style.color = '#807F86';
+      }
+    }
+    if (timerEl && m.active) {
+      const el = (now - m.sessionStart) / 1000;
+      const mm = String(Math.floor(el/60)).padStart(2,'0');
+      const ss = String(Math.floor(el%60)).padStart(2,'0');
+      timerEl.textContent = mm + ':' + ss;
+    } else if (timerEl) {
+      timerEl.textContent = '';
+    }
+
+    // Accumulate dept costs
+    if (!deptCosts[m.dept]) deptCosts[m.dept] = 0;
+    deptCosts[m.dept] += totalMemberCost;
+  });
+
+  // Update department totals
+  DEPARTMENTS.forEach(d => {
+    const el = document.getElementById('dept-cost-' + d.key);
+    if (el) {
+      const c = deptCosts[d.key] || 0;
+      el.textContent = '$' + c.toFixed(2);
+      el.style.color = c > 0 ? d.color : '#807F86';
+    }
+  });
+
+  // Main ticker — add full-team auto-run cost + tracked cost
+  let mainCost = tickerAccumulated;
+  if (tickerRunning && tickerStartTime) {
+    const tickerElapsed = (now - tickerStartTime) / 1000;
+    const fullTeamPerSec = TEAM.reduce((s,m) => s + m.perSecond, 0);
+    mainCost += tickerElapsed * fullTeamPerSec;
+  }
+  document.getElementById('main-ticker').textContent = '$' + mainCost.toFixed(2);
+
+  // Rates
+  const activePerSec = totalPerSecond;
+  const fullTeamPerSec = TEAM.reduce((s,m) => s + m.perSecond, 0);
+  const displayPerSec = tickerRunning ? fullTeamPerSec : activePerSec;
+  document.getElementById('perSecRate').textContent  = '$' + displayPerSec.toFixed(3);
+  document.getElementById('perMinRate').textContent  = '$' + (displayPerSec * 60).toFixed(2);
+  document.getElementById('perHourRate').textContent = '$' + (displayPerSec * 3600).toFixed(2);
+  document.getElementById('activeCount').textContent = activeCount;
+  document.getElementById('sessionCost').textContent = '$' + sessions.reduce((s,x) => s + x.cost, 0).toFixed(2);
+
+  // Elapsed time
+  if (tickerRunning && tickerStartTime) {
+    const el = (now - tickerStartTime) / 1000;
+    const hh = String(Math.floor(el/3600)).padStart(2,'0');
+    const mm = String(Math.floor((el%3600)/60)).padStart(2,'0');
+    const ss = String(Math.floor(el%60)).padStart(2,'0');
+    document.getElementById('elapsedTime').textContent = hh+':'+mm+':'+ss;
+  }
+
+  // Budget % (main ticker vs full day)
+  const pct = totalLoadedDaily > 0 ? (mainCost / totalLoadedDaily * 100) : 0;
+  const pctEl = document.getElementById('budgetPct');
+  pctEl.textContent = pct.toFixed(1) + '%';
+  pctEl.style.color = pct < 50 ? '#08C394' : pct < 80 ? '#F59E0B' : '#EF4444';
+
+  // Ben callout rate
+  const ben = TEAM.find(m => m.isBen);
+  if (ben && ben.active) {
+    document.getElementById('benCostPerMin').textContent = '$' + ben.perMinute.toFixed(2);
+  }
+
+  requestAnimationFrame(tick);
+}
+
+// ═══════════════════════════════════════════
+//  AUTO-RUN LOGIC (8am–5pm AEST)
+// ═══════════════════════════════════════════
+function checkWorkingHours() {
+  const mel = new Date().toLocaleString('en-AU', { timeZone:'Australia/Melbourne', hour:'numeric', hour12:false });
+  const hour = parseInt(mel);
+  return hour >= 8 && hour < 17;
+}
+
+function updateHoursBadge() {
+  const badge = document.getElementById('hours-badge');
+  if (checkWorkingHours()) {
+    badge.className = 'text-[10px] font-mono font-semibold px-3 py-1 rounded-full working-hours-badge';
+    badge.textContent = '● WORKING HOURS';
+  } else {
+    badge.className = 'text-[10px] font-mono font-semibold px-3 py-1 rounded-full after-hours-badge';
+    badge.textContent = '● AFTER HOURS';
+  }
+}
+
+function toggleAutoRun() {
+  autoRun = !autoRun;
+  document.getElementById('autoToggle').classList.toggle('on', autoRun);
+  evaluateTickerState();
+}
+
+function manualToggle() {
+  manualRunning = !manualRunning;
+  const btn = document.getElementById('manualBtn');
+  btn.textContent = manualRunning ? '⏸ Pause' : '▶ Start';
+  evaluateTickerState();
+}
+
+function evaluateTickerState() {
+  const shouldRun = manualRunning || (autoRun && checkWorkingHours());
+  if (shouldRun && !tickerRunning) {
+    tickerRunning = true;
+    tickerStartTime = Date.now();
+    document.getElementById('ticker-subtitle').textContent = 'Live — full team cost accumulating';
+  } else if (!shouldRun && tickerRunning) {
+    // Save accumulated
+    if (tickerStartTime) {
+      const fullTeamPerSec = TEAM.reduce((s,m) => s + m.perSecond, 0);
+      tickerAccumulated += ((Date.now() - tickerStartTime) / 1000) * fullTeamPerSec;
+    }
+    tickerRunning = false;
+    tickerStartTime = null;
+    document.getElementById('ticker-subtitle').textContent = autoRun ? 'Paused — outside working hours (8am–5pm AEST)' : 'Paused — auto-run disabled';
+  }
+}
+
+function resetDay() {
+  tickerAccumulated = 0;
+  tickerStartTime = tickerRunning ? Date.now() : null;
+  TEAM.forEach(m => { m.accumulated = 0; m.currentCost = 0; });
+  sessions = [];
+  renderSessionLog();
+}
+
+// ═══════════════════════════════════════════
+//  CLOCK
+// ═══════════════════════════════════════════
+function updateClock() {
+  const now = new Date();
+  const opts = { timeZone:'Australia/Melbourne', weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false };
+  document.getElementById('clock').textContent = now.toLocaleString('en-AU', opts);
+  updateHoursBadge();
+  // Re-evaluate auto-run every minute
+  if (autoRun) evaluateTickerState();
+}
+
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+renderKPIs();
+renderOrgChart();
+renderSessionLog();
+updateClock();
+setInterval(updateClock, 1000);
+
+// Start auto-run check
+document.getElementById('autoToggle').classList.add('on');
+evaluateTickerState();
+
+// Start animation loop
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>
