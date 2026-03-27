@@ -583,21 +583,48 @@
 
   /* ——— PRINT STYLES ——— */
   @media print {
-    body { background: #fff; font-size: 11pt; }
+    @page { margin: 18mm 15mm 20mm 15mm; size: A4; }
+    body { background: #fff; font-size: 10.5pt; line-height: 1.55; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .print-bar { display: none !important; }
-    .document { max-width: 100%; padding: 0; box-shadow: none; }
-    .section { page-break-inside: avoid; }
+    .document { max-width: 100%; padding: 0; margin: 0; box-shadow: none; }
+
+    /* Allow sections to break across pages — only force breaks BETWEEN major sections */
+    .section { page-break-inside: auto; margin-bottom: 12pt; }
     .section-header { page-break-after: avoid; }
-    h2, h3, h4 { page-break-after: avoid; }
+    h2, h3, h4 { page-break-after: avoid; orphans: 3; widows: 3; }
+    p, li { orphans: 3; widows: 3; }
+
+    /* Force page breaks before major sections */
     .page-break { page-break-before: always; }
-    .card { page-break-inside: avoid; border: 1pt solid #ddd; }
-    .comp-card { page-break-inside: avoid; }
+
+    /* Cards and tables CAN break if needed — prevents overflow */
+    .card { page-break-inside: auto; border: 1pt solid #ddd; margin-bottom: 8pt; }
+    .comp-card { page-break-inside: auto; }
+    table { page-break-inside: auto; font-size: 9.5pt; }
+    thead { display: table-header-group; }
+    tr { page-break-inside: avoid; }
+
+    /* Quote blocks should stay together */
+    blockquote, .quote-block { page-break-inside: avoid; }
+
+    /* Grids: single column for print to prevent overlap */
+    .two-col { grid-template-columns: 1fr; gap: 8pt; }
+    .steps-grid { grid-template-columns: repeat(4, 1fr); gap: 6pt; }
+
+    /* Links */
     a { color: var(--purple) !important; }
     .toc a::after { content: none; }
-    .steps-grid { grid-template-columns: repeat(4, 1fr); }
-    table { page-break-inside: avoid; }
-    .two-col { grid-template-columns: 1fr 1fr; }
+
+    /* Cover page */
     .confidential-banner { border-radius: 0; }
+    .doc-header { page-break-after: always; }
+
+    /* TOC on its own page */
+    .toc { page-break-after: always; }
+
+    /* Reduce spacing for print density */
+    .section { padding: 16pt 0; }
+    .card { padding: 12pt 16pt; }
   }
 </style>
 </head>
