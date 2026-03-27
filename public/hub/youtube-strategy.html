@@ -4,730 +4,2476 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>YouTube Strategy — Collective Shift Strategy Hub</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
-<script>
-tailwind.config={theme:{extend:{colors:{cs:{bg:'#1B1925',card:'#242232',border:'#2E2C3E',orange:'#FC5C03',green:'#08C394',text:'#F9F9F9',muted:'#9B99A9'}},fontFamily:{heading:['Oswald','sans-serif'],body:['Barlow','sans-serif'],mono:['Source Code Pro','monospace']}}}}
-</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
 <style>
-body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-serif}.label-tag{font-family:'Source Code Pro',monospace}.sidebar{transition:transform .3s ease}@media(max-width:1023px){.sidebar{transform:translateX(-100%);position:fixed;z-index:50;top:0;left:0;height:100vh}.sidebar.open{transform:translateX(0)}}.nav-link{transition:all .15s}.nav-link:hover,.nav-link.active{background:rgba(252,92,3,.12);color:#FC5C03;border-left-color:#FC5C03}
-.video-card{transition:border-color .2s}.video-card:hover{border-color:rgba(252,92,3,.4)}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #FFFFFF;
+    --bg-off: #F9F9F9;
+    --bg-section: #F2F2F2;
+    --text: #1B1925;
+    --text-secondary: #4D4C55;
+    --text-muted: #807F86;
+    --orange: #FC5C03;
+    --orange-light: #FC8C4E;
+    --orange-bg: #FEDECC;
+    --orange-hover: #FEEEE5;
+    --green: #08C394;
+    --purple: #654FFC;
+    --red: #FF0A00;
+    --border: #E8E8EA;
+    --border-light: #D9D8DA;
+    --card-bg: #FFFFFF;
+    --card-shadow: 0 2px 4px rgba(0,0,0,0.04), 0 1px 5.5px rgba(0,0,0,0.03);
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* ───── SIDEBAR ───── */
+  .sidebar {
+    width: 256px;
+    min-height: 100vh;
+    background: var(--bg);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar-logo {
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-logo a {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--orange);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    display: block;
+  }
+
+  .sidebar-logo span {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    display: block;
+    margin-top: 2px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .sidebar nav {
+    flex: 1;
+    padding: 12px;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    border-left: 2px solid transparent;
+    margin-bottom: 2px;
+    transition: all 0.15s;
+  }
+
+  .nav-link:hover {
+    background: var(--orange-hover);
+    color: var(--orange);
+  }
+
+  .nav-link.active {
+    background: var(--orange-hover);
+    color: var(--orange);
+    border-left-color: var(--orange);
+    font-weight: 600;
+  }
+
+  .nav-link .nav-icon {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .sidebar-footer {
+    padding: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .sidebar-footer p {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* ───── MOBILE HEADER ───── */
+  .mobile-header {
+    display: none;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .mobile-header .logo-text {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--orange);
+    letter-spacing: 0.08em;
+  }
+
+  .hamburger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 4px;
+  }
+
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 40;
+  }
+
+  @media (max-width: 1023px) {
+    body { flex-direction: column; }
+    .mobile-header { display: flex; }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 50;
+      transform: translateX(-100%);
+    }
+    .sidebar.open { transform: translateX(0); }
+    .overlay.open { display: block; }
+    main { width: 100%; }
+  }
+
+  /* ───── MAIN CONTENT ───── */
+  main {
+    flex: 1;
+    overflow-x: hidden;
+  }
+
+  .breadcrumb {
+    padding: 12px 40px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .breadcrumb a {
+    color: var(--orange);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover { text-decoration: underline; }
+
+  /* ───── SECTIONS ───── */
+  .section-white { background: var(--bg); padding: 64px 40px; }
+  .section-off { background: var(--bg-off); padding: 64px 40px; }
+
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+
+  /* ───── HERO ───── */
+  .hero {
+    background: var(--bg-off);
+    padding: 72px 40px 64px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 2px;
+    background: var(--orange);
+    border-radius: 2px;
+  }
+
+  .hero h1 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: clamp(40px, 6vw, 72px);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+
+  .hero-subtitle {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-width: 700px;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  .hero-meta {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+  }
+
+  .hero-stat-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .hero-pill {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: var(--card-shadow);
+  }
+
+  .hero-pill .pill-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .hero-pill .pill-value {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .hero-pill .pill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--orange);
+    flex-shrink: 0;
+  }
+
+  /* ───── NORTH STAR BANNER ───── */
+  .north-star {
+    background: var(--orange-bg);
+    border-radius: 16px;
+    padding: 32px 40px;
+    margin-top: 40px;
+    border-left: 4px solid var(--orange);
+  }
+
+  .north-star .ns-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 10px;
+  }
+
+  .north-star blockquote {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(16px, 2.2vw, 22px);
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.45;
+  }
+
+  /* ───── SECTION HEADINGS ───── */
+  .section-heading {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: clamp(28px, 4vw, 44px);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .section-subheading {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+
+  /* ───── CARDS ───── */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    padding: 24px;
+  }
+
+  .card-lg {
+    padding: 32px;
+  }
+
+  /* ───── TARGET AUDIENCE ───── */
+  .icp-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 32px;
+  }
+
+  .icp-card .icp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--orange-hover);
+    border: 1px solid var(--orange-bg);
+    border-radius: 8px;
+    padding: 5px 12px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    color: var(--orange);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .icp-card h3 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .icp-story {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: var(--bg-off);
+    border-radius: 8px;
+    border-left: 3px solid var(--orange);
+  }
+
+  .demo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .demo-item {
+    background: var(--bg-off);
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  .demo-item .demo-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+
+  .demo-item .demo-value {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .psycho-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .psycho-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+
+  .psycho-item .psycho-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .psycho-item .psycho-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .psycho-item .psycho-title {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* ───── LANGUAGE TABLE ───── */
+  .lang-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .lang-table thead tr {
+    background: var(--bg-off);
+  }
+
+  .lang-table th {
+    padding: 12px 20px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .lang-table th:first-child { color: var(--red); }
+  .lang-table th:last-child { color: var(--green); }
+
+  .lang-table td {
+    padding: 10px 20px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .lang-table tbody tr:last-child td { border-bottom: none; }
+
+  .lang-table tbody tr:nth-child(even) td { background: var(--bg-off); }
+
+  .lang-bad {
+    color: var(--red);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .lang-good {
+    color: var(--green);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ───── POSITIONING CARDS ───── */
+  .ppg-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .ppg-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: var(--card-shadow);
+    text-align: center;
+  }
+
+  .ppg-card .ppg-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 24px;
+  }
+
+  .ppg-card .ppg-icon.orange { background: var(--orange-hover); color: var(--orange); }
+  .ppg-card .ppg-icon.green { background: rgba(8,195,148,0.1); color: var(--green); }
+  .ppg-card .ppg-icon.purple { background: rgba(101,79,252,0.1); color: var(--purple); }
+
+  .ppg-card h4 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .ppg-card p {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .not-saying-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .not-saying-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: rgba(255,10,0,0.04);
+    border: 1px solid rgba(255,10,0,0.12);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .not-saying-item .x-icon {
+    color: var(--red);
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .why-ben-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .why-ben-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: var(--card-shadow);
+  }
+
+  .why-ben-item .wb-number {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--orange);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .why-ben-item p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* ───── CONTENT PILLARS ───── */
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+  }
+
+  .pillar-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: var(--card-shadow);
+    border-left: 4px solid var(--orange);
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+
+  .pillar-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+
+  .pillar-card .pillar-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .pillar-card .pillar-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--orange-hover);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--orange);
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .pillar-card h3 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text);
+    margin-bottom: 2px;
+    line-height: 1.3;
+  }
+
+  .pillar-card .pillar-num {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .pillar-card .pillar-desc {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  .pillar-examples-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .pillar-examples {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .pillar-examples li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+
+  .pillar-examples li::before {
+    content: '→';
+    color: var(--orange);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .pillar-icp {
+    margin-top: 14px;
+    padding: 10px 14px;
+    background: var(--bg-off);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  /* ───── 90/10 SYSTEM ───── */
+  .system-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  @media (max-width: 640px) {
+    .system-split { grid-template-columns: 1fr; }
+  }
+
+  .system-side {
+    border-radius: 12px;
+    padding: 32px;
+  }
+
+  .system-side.free {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    box-shadow: var(--card-shadow);
+  }
+
+  .system-side.paid {
+    background: var(--orange);
+    color: white;
+  }
+
+  .system-side .sys-pct {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 56px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+
+  .system-side.free .sys-pct { color: var(--text); }
+  .system-side.paid .sys-pct { color: white; }
+
+  .system-side .sys-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .system-side.free .sys-label { color: var(--text-muted); }
+  .system-side.paid .sys-label { color: rgba(255,255,255,0.7); }
+
+  .system-side .sys-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .system-side.free .sys-title { color: var(--text); }
+  .system-side.paid .sys-title { color: white; }
+
+  .sys-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sys-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+
+  .system-side.free .sys-list li { color: var(--text-secondary); }
+  .system-side.paid .sys-list li { color: rgba(255,255,255,0.9); }
+
+  .sys-list li::before {
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .system-side.free .sys-list li::before { content: '✓'; color: var(--green); font-weight: 700; }
+  .system-side.paid .sys-list li::before { content: '✓'; color: rgba(255,255,255,0.7); font-weight: 700; }
+
+  .what-not-how {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: var(--card-shadow);
+  }
+
+  .what-not-how h4 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .wnh-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  @media (max-width: 640px) {
+    .wnh-row { grid-template-columns: 1fr; }
+  }
+
+  .wnh-item {
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+
+  .wnh-item.good {
+    background: rgba(8,195,148,0.08);
+    border: 1px solid rgba(8,195,148,0.2);
+    color: var(--text-secondary);
+  }
+
+  .wnh-item.bad {
+    background: rgba(255,10,0,0.05);
+    border: 1px solid rgba(255,10,0,0.12);
+    color: var(--text-muted);
+    text-decoration: line-through;
+  }
+
+  .wnh-item .wnh-prefix {
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .wnh-item.good .wnh-prefix { color: var(--green); }
+  .wnh-item.bad .wnh-prefix { color: var(--red); }
+
+  /* ───── VIDEO IDEAS ───── */
+  .videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .video-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+
+  .video-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+
+  .video-card-header {
+    padding: 20px 20px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .video-card-header:hover { background: var(--bg-off); }
+
+  .video-num {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    color: var(--orange);
+    line-height: 1;
+    flex-shrink: 0;
+    min-width: 32px;
+  }
+
+  .video-card-meta { flex: 1; }
+
+  .video-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+
+  .video-pillar-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .tag-strategy { background: rgba(252,92,3,0.12); color: var(--orange); }
+  .tag-preservation { background: rgba(8,195,148,0.12); color: var(--green); }
+  .tag-intelligence { background: rgba(101,79,252,0.1); color: var(--purple); }
+  .tag-transparency { background: rgba(0,0,0,0.06); color: var(--text-secondary); }
+  .tag-education { background: rgba(252,140,78,0.15); color: #C44A00; }
+
+  .video-expand-icon {
+    color: var(--text-muted);
+    font-size: 18px;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+    margin-top: 2px;
+  }
+
+  .video-card.expanded .video-expand-icon {
+    transform: rotate(180deg);
+  }
+
+  .video-prompts {
+    display: none;
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--border);
+    margin-top: 0;
+  }
+
+  .video-card.expanded .video-prompts { display: block; }
+
+  .video-prompts-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 14px 0 10px;
+  }
+
+  .video-prompts ol {
+    padding-left: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .video-prompts ol li {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    padding-left: 20px;
+    position: relative;
+  }
+
+  .video-prompts ol li::before {
+    content: counter(item) '.';
+    counter-increment: item;
+    position: absolute;
+    left: 0;
+    color: var(--orange);
+    font-weight: 700;
+    font-size: 11px;
+  }
+
+  .video-prompts ol { counter-reset: item; }
+
+  /* ───── TITLE & THUMBNAIL ───── */
+  .title-patterns {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .title-pattern {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    box-shadow: var(--card-shadow);
+  }
+
+  .title-pattern .tp-pattern {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 12px;
+    color: var(--orange);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .title-pattern .tp-example {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .thumb-rules {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+  }
+
+  .thumb-rule {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: var(--card-shadow);
+  }
+
+  .thumb-rule .tr-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .thumb-rule h5 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .thumb-rule p {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* ───── CTA STRATEGY ───── */
+  .bridge-script {
+    background: var(--orange-bg);
+    border-left: 4px solid var(--orange);
+    border-radius: 0 12px 12px 0;
+    padding: 28px 32px;
+    margin-bottom: 32px;
+  }
+
+  .bridge-script .bs-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 12px;
+  }
+
+  .bridge-script blockquote {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.75;
+    font-style: italic;
+  }
+
+  .cta-flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  .cta-flow-step {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    text-align: center;
+    flex: 1;
+    min-width: 130px;
+    box-shadow: var(--card-shadow);
+  }
+
+  .cta-flow-step .cfs-pct {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--orange);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .cta-flow-step h5 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .cta-flow-step p {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .flow-arrow {
+    color: var(--border-light);
+    font-size: 20px;
+    flex-shrink: 0;
+    padding: 0 8px;
+  }
+
+  .cta-placements {
+    display: grid;
+    gap: 10px;
+  }
+
+  .cta-placement {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 20px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: var(--card-shadow);
+  }
+
+  .cta-placement .cp-badge {
+    background: var(--orange);
+    color: white;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .cta-placement .cp-text {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* ───── COMPETITORS ───── */
+  .competitors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+
+  .competitor-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--card-shadow);
+  }
+
+  .competitor-card h4 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .comp-section-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .comp-section-label.strength { color: var(--green); }
+  .comp-section-label.weakness { color: var(--red); }
+  .comp-section-label.gap { color: var(--purple); }
+
+  .comp-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 14px;
+  }
+
+  .comp-list li {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .comp-list.strength li::before { content: '+'; color: var(--green); font-weight: 700; position: absolute; left: 0; }
+  .comp-list.weakness li::before { content: '−'; color: var(--red); font-weight: 700; position: absolute; left: 0; }
+  .comp-list.gap li::before { content: '▶'; color: var(--purple); font-size: 8px; position: absolute; left: 0; top: 3px; }
+
+  .dee-reasons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .dee-reason {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .dee-reason .dr-num {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--orange);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .dee-reason p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* ───── TYPOGRAPHY HELPERS ───── */
+  .subsection-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--text);
+    margin-bottom: 16px;
+    margin-top: 40px;
+  }
+
+  .subsection-title:first-of-type { margin-top: 0; }
+
+  .eyebrow {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  /* ───── SPACING ───── */
+  .mt-8 { margin-top: 8px; }
+  .mt-16 { margin-top: 16px; }
+  .mt-24 { margin-top: 24px; }
+  .mt-32 { margin-top: 32px; }
+  .mb-8 { margin-bottom: 8px; }
+  .mb-16 { margin-bottom: 16px; }
+  .mb-24 { margin-bottom: 24px; }
+  .mb-32 { margin-bottom: 32px; }
+
+  /* ───── RESPONSIVE ───── */
+  @media (max-width: 768px) {
+    .section-white, .section-off, .hero { padding-left: 20px; padding-right: 20px; }
+    .breadcrumb { padding-left: 20px; padding-right: 20px; }
+    .ppg-grid { grid-template-columns: 1fr; }
+    .videos-grid { grid-template-columns: 1fr; }
+    .cta-flow { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+  }
 </style>
 </head>
-<body class="bg-cs-bg text-cs-text min-h-screen">
+<body>
 
-<div class="lg:hidden flex items-center justify-between px-4 py-3 bg-cs-card border-b border-cs-border sticky top-0 z-40">
-  <span class="font-heading text-cs-orange text-lg font-bold tracking-wide">COLLECTIVE SHIFT</span>
-  <button onclick="document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('hidden')" class="text-cs-muted hover:text-cs-orange">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+<!-- Overlay for mobile sidebar -->
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- Mobile Top Bar -->
+<div class="mobile-header">
+  <span class="logo-text">COLLECTIVE SHIFT</span>
+  <button class="hamburger" onclick="openSidebar()" aria-label="Open menu">
+    <i class="ph ph-list" style="font-size:22px"></i>
   </button>
 </div>
-<div id="overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="document.getElementById('sidebar').classList.remove('open');this.classList.add('hidden')"></div>
 
-<div class="flex">
-  <aside id="sidebar" class="sidebar w-64 min-h-screen bg-cs-card border-r border-cs-border flex-shrink-0 flex flex-col">
-    <div class="p-5 border-b border-cs-border">
-      <a href="index.html" class="font-heading text-cs-orange text-xl font-bold tracking-wider">COLLECTIVE SHIFT</a>
-      <p class="text-cs-muted text-xs mt-1 font-mono">STRATEGY HUB</p>
-    </div>
-    <nav class="flex-1 py-4 px-3 space-y-1">
-      <a href="/" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>📊</span> Dashboard</a>
-      <a href="index.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🏠</span> Home</a>
-      <a href="positioning.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🎯</span> Positioning & ICP</a>
-      <a href="operating-system.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>⚙️</span> Operating System</a>
-      <a href="products.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>💎</span> Products</a>
-      <a href="social-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>📱</span> Social & Content</a>
-      <a href="youtube-strategy.html" class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium border-l-2 border-transparent"><span>🎬</span> YouTube Strategy</a>
-      <a href="competitors.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🏆</span> Competitive Intel</a>
-      <a href="brand.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🎨</span> Brand & Voice</a>
-      <a href="beginner-journey.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🧭</span> Beginner Journey</a>
-    </nav>
-    <div class="p-4 border-t border-cs-border"><p class="text-cs-muted text-xs font-mono">v2.1 · March 2026</p></div>
-  </aside>
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <a href="index.html">COLLECTIVE SHIFT</a>
+    <span>Strategy Hub</span>
+  </div>
+  <nav>
+    <a href="/" class="nav-link"><span class="nav-icon"><i class="ph ph-chart-bar"></i></span> Dashboard</a>
+    <a href="index.html" class="nav-link"><span class="nav-icon"><i class="ph ph-house"></i></span> Home</a>
+    <a href="positioning.html" class="nav-link"><span class="nav-icon"><i class="ph ph-crosshair"></i></span> Positioning &amp; ICP</a>
+    <a href="operating-system.html" class="nav-link"><span class="nav-icon"><i class="ph ph-gear"></i></span> Operating System</a>
+    <a href="products.html" class="nav-link"><span class="nav-icon"><i class="ph ph-diamond"></i></span> Products</a>
+    <a href="social-strategy.html" class="nav-link"><span class="nav-icon"><i class="ph ph-device-mobile"></i></span> Social &amp; Content</a>
+    <a href="youtube-strategy.html" class="nav-link active"><span class="nav-icon"><i class="ph ph-youtube-logo"></i></span> YouTube Strategy</a>
+    <a href="competitors.html" class="nav-link"><span class="nav-icon"><i class="ph ph-trophy"></i></span> Competitive Intel</a>
+    <a href="brand.html" class="nav-link"><span class="nav-icon"><i class="ph ph-paint-brush"></i></span> Brand &amp; Voice</a>
+    <a href="beginner-journey.html" class="nav-link"><span class="nav-icon"><i class="ph ph-compass"></i></span> Beginner Journey</a>
+  </nav>
+  <div class="sidebar-footer">
+    <p>v2.1 · March 2026</p>
+  </div>
+</aside>
 
-  <main class="flex-1 min-h-screen">
-    <!-- Breadcrumb -->
-    <div class="px-6 lg:px-10 py-3 border-b border-cs-border bg-cs-card/50">
-      <div class="flex items-center gap-2 text-xs font-mono text-cs-muted">
-        <a href="index.html" class="text-cs-orange hover:underline">Strategy Hub</a><span>/</span><span>YouTube Strategy</span>
-      </div>
-    </div>
+<!-- Main Content -->
+<main>
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="index.html">Strategy Hub</a>
+    <i class="ph ph-caret-right" style="font-size:10px"></i>
+    <span>YouTube Strategy</span>
+  </div>
 
-    <div class="px-6 lg:px-10 py-8 max-w-6xl">
+  <!-- ═══════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Acquisition Engine</div>
+      <h1>YouTube Strategy</h1>
+      <p class="hero-subtitle">The primary acquisition channel for HNW digital asset investors. Education-first. Authenticity wins.</p>
+      <p class="hero-meta">Updated March 27, 2026 — validated from real member acquisition data (Dee call) + Jeremy Haynes 90/10 framework</p>
 
-      <!-- Header -->
-      <p class="label-tag text-cs-orange text-xs font-semibold tracking-widest uppercase mb-2">Acquisition Engine</p>
-      <h1 class="text-4xl font-bold tracking-tight mb-3">YouTube Strategy</h1>
-      <p class="text-cs-muted text-lg mb-2 max-w-2xl">The primary acquisition channel for HNW beginners. Education-first. Authenticity wins. "Bloomberg for Digital Assets."</p>
-      <p class="text-cs-muted text-sm mb-8 max-w-2xl">Updated March 27, 2026 — validated from real member acquisition data (Dee call) + Jeremy Haynes 90/10 framework.</p>
-
-      <!-- Channel Overview Stats -->
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-10">
-        <div class="bg-cs-card border border-cs-border rounded-xl p-4 text-center">
-          <div class="text-2xl font-heading font-bold text-cs-orange">2×</div>
-          <div class="text-cs-muted text-xs font-mono mt-1">Videos / Week</div>
-        </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-4 text-center">
-          <div class="text-2xl font-heading font-bold text-cs-orange">15–25</div>
-          <div class="text-cs-muted text-xs font-mono mt-1">Minutes / Video</div>
-        </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-4 text-center">
-          <div class="text-2xl font-heading font-bold text-cs-green">#1</div>
-          <div class="text-cs-muted text-xs font-mono mt-1">Acquisition Channel</div>
-        </div>
-      </div>
-
-      <!-- Big Topic Banner -->
-      <div class="bg-cs-orange/10 border border-cs-orange/30 rounded-xl p-6 text-center mb-10">
-        <p class="label-tag text-cs-orange text-xs font-semibold tracking-widest uppercase mb-2">Big Topic — North Star</p>
-        <h3 class="text-xl font-bold leading-relaxed">"How Successful People Are Using Digital Assets to Protect, Preserve, and Build Generational Wealth — Without the Noise"</h3>
-        <p class="text-cs-muted text-sm mt-2">Every video maps to this theme. Every CTA bridges to Platinum.</p>
-      </div>
-
-      <!-- Positioning -->
-      <h2 class="text-2xl font-bold mb-4">Positioning</h2>
-      <div class="grid md:grid-cols-2 gap-4 mb-10">
-        <div class="bg-cs-card border border-cs-orange/30 rounded-xl p-5">
-          <p class="label-tag text-cs-orange text-xs font-semibold tracking-widest uppercase mb-2">We Are</p>
-          <p class="text-xl font-heading font-bold text-cs-orange mb-3">"Bloomberg for Digital Assets"</p>
-          <p class="text-cs-muted text-sm">Institutional-grade intelligence for HNW wealth builders. Data-driven, framework-based, no hype, no affiliates. The channel serious investors find when they outgrow the noise.</p>
-        </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
-          <p class="label-tag text-cs-muted text-xs font-semibold tracking-widest uppercase mb-3">Core Message Framework</p>
-          <div class="space-y-2">
-            <div class="flex items-center gap-3">
-              <span class="bg-cs-orange text-cs-bg text-xs font-bold px-2 py-1 rounded font-mono">PROTECT</span>
-              <p class="text-sm text-cs-muted">Guard existing wealth from inflation & systemic risk</p>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="bg-cs-orange text-cs-bg text-xs font-bold px-2 py-1 rounded font-mono">PRESERVE</span>
-              <p class="text-sm text-cs-muted">Systematic framework — no catastrophic mistakes</p>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="bg-cs-green text-cs-bg text-xs font-bold px-2 py-1 rounded font-mono">GROW</span>
-              <p class="text-sm text-cs-muted">Build generational wealth over 5–10 years</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Validated ICP -->
-      <h2 class="text-2xl font-bold mb-4">Target Audience — Validated ICP</h2>
-      <div class="bg-cs-card border border-cs-border rounded-xl p-5 mb-4">
-        <div class="flex items-start gap-4">
-          <div class="bg-cs-green/20 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 text-xl">✅</div>
+      <div class="hero-stat-pills">
+        <div class="hero-pill">
+          <div class="pill-dot"></div>
           <div>
-            <p class="font-bold text-sm mb-1">Real member validation — Dee (March 2026)</p>
-            <p class="text-cs-muted text-sm">Canadian HNW woman. Traditional wealth (property, stocks). Felt "a big shift happening" — the world is changing under her. Wants <strong class="text-cs-text">preservation + growth</strong>, NOT speculation. Chose CS because Ben is sincere, young, education-first. <strong class="text-cs-text">Authenticity won.</strong></p>
+            <div class="pill-label">Positioning</div>
+            <div class="pill-value">Bloomberg for Digital Assets</div>
+          </div>
+        </div>
+        <div class="hero-pill">
+          <div class="pill-dot"></div>
+          <div>
+            <div class="pill-label">Cadence</div>
+            <div class="pill-value">2× / week (Tue &amp; Thu)</div>
+          </div>
+        </div>
+        <div class="hero-pill">
+          <div class="pill-dot"></div>
+          <div>
+            <div class="pill-label">Target</div>
+            <div class="pill-value">40–59 HNW Professionals</div>
+          </div>
+        </div>
+        <div class="hero-pill">
+          <div class="pill-dot"></div>
+          <div>
+            <div class="pill-label">Format</div>
+            <div class="pill-value">15–25 min long-form</div>
           </div>
         </div>
       </div>
-      <div class="bg-cs-orange/10 border border-cs-orange/20 rounded-xl p-4 mb-4">
-        <p class="label-tag text-cs-orange text-xs font-semibold tracking-widest uppercase mb-2">Validated Acquisition Path</p>
-        <div class="flex flex-wrap items-center gap-2 text-sm">
-          <span class="bg-cs-card border border-cs-border rounded-lg px-3 py-1.5 font-semibold">HNW gets curious</span>
-          <span class="text-cs-muted">→</span>
-          <span class="bg-cs-card border border-cs-border rounded-lg px-3 py-1.5 font-semibold">Searches YouTube</span>
-          <span class="text-cs-muted">→</span>
-          <span class="bg-cs-card border border-cs-border rounded-lg px-3 py-1.5 font-semibold">Finds competitors</span>
-          <span class="text-cs-muted">→</span>
-          <span class="bg-cs-orange text-cs-bg rounded-lg px-3 py-1.5 font-semibold">Finds Ben's content</span>
-          <span class="text-cs-muted">→</span>
-          <span class="bg-cs-green text-cs-bg rounded-lg px-3 py-1.5 font-semibold">Authenticity wins → Platinum</span>
-        </div>
-        <p class="text-cs-muted text-xs mt-2 font-mono">YouTube is THE acquisition channel for HNW beginners.</p>
+
+      <div class="north-star">
+        <div class="ns-label">Big Topic — North Star</div>
+        <blockquote>"How Successful People Are Using Digital Assets to Protect, Preserve, and Build Generational Wealth — Without the Noise"</blockquote>
       </div>
-      <div class="grid md:grid-cols-3 gap-4 mb-10">
-        <div class="bg-cs-card border border-cs-border rounded-xl p-4">
-          <p class="text-cs-muted text-xs font-mono uppercase tracking-widest mb-1">Demographics</p>
-          <ul class="text-sm space-y-1">
-            <li>Age 40–59 (primary)</li>
-            <li>Net worth $500K–$2M+</li>
-            <li>Australia, USA, UK/Canada</li>
-            <li>Business owners, execs, FIFO</li>
-          </ul>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       TARGET AUDIENCE
+  ═══════════════════════════════════════ -->
+  <section class="section-white">
+    <div class="section-inner">
+      <span class="eyebrow">ICP — Ideal Customer Profile</span>
+      <h2 class="section-heading">Target Audience</h2>
+      <p class="section-subheading">Validated from real member acquisition data — Dee call, March 2026. This is the archetype that converts to Platinum.</p>
+
+      <div class="icp-card">
+        <div class="icp-badge"><i class="ph ph-user-circle"></i>&nbsp; Validated Archetype</div>
+        <h3>The Strategic Wealth Builder</h3>
+        <div class="icp-story">
+          Real member (Dee, March 2026): Canadian HNW woman, traditional wealth in property and stocks. Felt "a big shift happening" — the world is changing underneath her. Wants <strong>preservation + growth</strong>, NOT speculation. Chose CS because Ben is sincere, young, and education-first — <em>authenticity wins</em>. Acquisition path: <strong>YouTube → competitors → found Ben → converted to Platinum</strong>.
         </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-4">
-          <p class="text-cs-muted text-xs font-mono uppercase tracking-widest mb-1">Primary Fear</p>
-          <p class="text-sm text-cs-orange font-semibold mb-1">Making a catastrophic mistake</p>
-          <p class="text-cs-muted text-xs">Not FOMO. They have wealth. They're scared of losing it.</p>
+
+        <span class="eyebrow">Demographics</span>
+        <div class="demo-grid">
+          <div class="demo-item">
+            <div class="demo-label">Age Range</div>
+            <div class="demo-value">40–59 (primary)<br><small style="font-weight:400;color:var(--text-muted)">60+ secondary</small></div>
+          </div>
+          <div class="demo-item">
+            <div class="demo-label">Location</div>
+            <div class="demo-value">AU, USA<br><small style="font-weight:400;color:var(--text-muted)">UK/Canada emerging</small></div>
+          </div>
+          <div class="demo-item">
+            <div class="demo-label">Net Worth</div>
+            <div class="demo-value">$500K–$2M+</div>
+          </div>
+          <div class="demo-item">
+            <div class="demo-label">Digital Asset Ready</div>
+            <div class="demo-value">$25K–$250K</div>
+          </div>
+          <div class="demo-item">
+            <div class="demo-label">Professions</div>
+            <div class="demo-value">Business owners, execs, FIFO/mining, property investors, pre-retirees</div>
+          </div>
         </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-4">
-          <p class="text-cs-muted text-xs font-mono uppercase tracking-widest mb-1">Why They Trust Ben</p>
-          <ul class="text-sm space-y-1 text-cs-muted">
-            <li>✅ Sincere, no agenda</li>
-            <li>✅ 9 years in the space</li>
-            <li>✅ No affiliates ever</li>
-            <li>✅ Education-first always</li>
-          </ul>
+
+        <div class="mt-32">
+          <span class="eyebrow">Psychographics</span>
+          <div class="psycho-grid">
+            <div class="psycho-item">
+              <div class="psycho-icon"><i class="ph ph-warning-circle" style="color:var(--red)"></i></div>
+              <div class="psycho-text">
+                <span class="psycho-title">Primary Fear</span>
+                Making a catastrophic mistake — NOT FOMO
+              </div>
+            </div>
+            <div class="psycho-item">
+              <div class="psycho-icon"><i class="ph ph-trend-up" style="color:var(--green)"></i></div>
+              <div class="psycho-text">
+                <span class="psycho-title">Primary Goal</span>
+                Generational wealth + preservation of existing wealth
+              </div>
+            </div>
+            <div class="psycho-item">
+              <div class="psycho-icon"><i class="ph ph-brain" style="color:var(--purple)"></i></div>
+              <div class="psycho-text">
+                <span class="psycho-title">Core Pain</span>
+                No exit strategy, information overload, feeling isolated in decisions
+              </div>
+            </div>
+            <div class="psycho-item">
+              <div class="psycho-icon"><i class="ph ph-shield-check" style="color:var(--orange)"></i></div>
+              <div class="psycho-text">
+                <span class="psycho-title">Trust Signals</span>
+                No affiliates, no signals, education-first, personal story
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-32">
+          <span class="eyebrow">Language Guide</span>
+          <table class="lang-table">
+            <thead>
+              <tr>
+                <th>❌ Never Say</th>
+                <th>✅ Always Say</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="lang-bad"><i class="ph ph-x-circle"></i> Crypto</span></td>
+                <td><span class="lang-good"><i class="ph ph-check-circle"></i> Digital assets</span></td>
+              </tr>
+              <tr>
+                <td><span class="lang-bad"><i class="ph ph-x-circle"></i> Crypto investing</span></td>
+                <td><span class="lang-good"><i class="ph ph-check-circle"></i> Digital asset investing</span></td>
+              </tr>
+              <tr>
+                <td><span class="lang-bad"><i class="ph ph-x-circle"></i> Crypto market</span></td>
+                <td><span class="lang-good"><i class="ph ph-check-circle"></i> Digital asset market</span></td>
+              </tr>
+              <tr>
+                <td><span class="lang-bad"><i class="ph ph-x-circle"></i> Returns, gains, moon</span></td>
+                <td><span class="lang-good"><i class="ph ph-check-circle"></i> Protection, preservation, growth</span></td>
+              </tr>
+              <tr>
+                <td colspan="2" style="font-size:12px;color:var(--text-muted);font-style:italic;padding:10px 20px;">
+                  Exception: <strong>Bitcoin</strong> stays as Bitcoin — it's fine and credible. Use it.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       POSITIONING
+  ═══════════════════════════════════════ -->
+  <section class="section-off">
+    <div class="section-inner">
+      <span class="eyebrow">Brand Positioning</span>
+      <h2 class="section-heading">"Bloomberg for Digital Assets"</h2>
+      <p class="section-subheading">Institutional-grade intelligence for HNW investors. Data-driven, framework-based, no hype, no affiliates. The channel serious investors find when they outgrow the noise.</p>
+
+      <div class="ppg-grid">
+        <div class="ppg-card">
+          <div class="ppg-icon orange"><i class="ph ph-shield"></i></div>
+          <h4>Protection</h4>
+          <p>Guard your existing wealth against inflation, currency debasement, and systemic risk. This is your first line of defence.</p>
+        </div>
+        <div class="ppg-card">
+          <div class="ppg-icon green"><i class="ph ph-vault"></i></div>
+          <h4>Preservation</h4>
+          <p>Don't make a catastrophic mistake. Systematic, not emotional. Protect what you've built over decades.</p>
+        </div>
+        <div class="ppg-card">
+          <div class="ppg-icon purple"><i class="ph ph-plant"></i></div>
+          <h4>Growth</h4>
+          <p>Build generational wealth over 5–10 years, not overnight. This is the long game — played with discipline.</p>
         </div>
       </div>
 
-      <!-- 5 Content Pillars -->
-      <h2 class="text-2xl font-bold mb-2">5 Content Pillars</h2>
-      <p class="text-cs-muted text-sm mb-6 max-w-2xl">The TOPICS the channel covers that attract the ICP. Each pillar has a clear reason why it drives HNW viewers toward Platinum.</p>
-      <div class="space-y-4 mb-10">
+      <div class="card card-lg mb-32">
+        <h3 class="subsection-title" style="margin-top:0">What We Are <em>NOT</em> Saying</h3>
+        <div class="not-saying-list">
+          <div class="not-saying-item">
+            <i class="ph ph-x-circle x-icon"></i>
+            <span>"Returns" / "gains" / "profits" — too transactional, triggers speculative framing</span>
+          </div>
+          <div class="not-saying-item">
+            <i class="ph ph-x-circle x-icon"></i>
+            <span>"Moon" / "bull run" — speculative, repels the HNW ICP we're targeting</span>
+          </div>
+          <div class="not-saying-item">
+            <i class="ph ph-x-circle x-icon"></i>
+            <span>"Get in early" — FOMO play, the opposite of our positioning</span>
+          </div>
+          <div class="not-saying-item">
+            <i class="ph ph-x-circle x-icon"></i>
+            <span>"The next 100x" — degenerate framing, destroys HNW trust instantly</span>
+          </div>
+        </div>
+      </div>
 
+      <h3 class="subsection-title">Why Ben Wins</h3>
+      <div class="why-ben-grid">
+        <div class="why-ben-item">
+          <div class="wb-number">1</div>
+          <p>9 years in the space — experienced the chaos, built the system. Young enough to be relatable, experienced enough to be credible.</p>
+        </div>
+        <div class="why-ben-item">
+          <div class="wb-number">2</div>
+          <p>Sincere, education-first, no agenda. No affiliates — ever. This is the single biggest trust signal in a space full of shills.</p>
+        </div>
+        <div class="why-ben-item">
+          <div class="wb-number">3</div>
+          <p>Speaks as a peer investor, not a guru. HNW people don't want to be talked down to — they want a fellow serious investor.</p>
+        </div>
+        <div class="why-ben-item">
+          <div class="wb-number">4</div>
+          <p>Founded CS to create the resource he wished he had. Authentic origin story that resonates deeply with the ICP.</p>
+        </div>
+      </div>
+
+      <div class="card card-lg mt-32" style="border-left: 4px solid var(--green);">
+        <span class="eyebrow">Bear Market Positioning</span>
+        <p style="font-size:15px;color:var(--text-secondary);line-height:1.7;">Bear markets are <strong style="color:var(--text)">NOT a threat</strong>. They are the best time to build positions. The ICP who hesitates because the price is down is the one who missed the opportunity. Smart wealth builders accumulate during fear. This is the message that resonates — and converts.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       CONTENT PILLARS
+  ═══════════════════════════════════════ -->
+  <section class="section-white">
+    <div class="section-inner">
+      <span class="eyebrow">Content Strategy</span>
+      <h2 class="section-heading">Content Pillars</h2>
+      <p class="section-subheading">5 pillars covering the full spectrum of HNW digital asset education. Every video maps to a pillar. Every pillar bridges to Platinum.</p>
+
+      <div class="pillars-grid">
         <!-- Pillar 1 -->
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 border-l-4 border-l-cs-orange">
-          <div class="flex items-center gap-3 mb-2">
-            <span class="bg-cs-orange text-cs-bg text-xs font-bold px-2 py-1 rounded font-mono">01</span>
-            <h3 class="font-bold text-base">Bitcoin & Digital Asset Strategy</h3>
+        <div class="pillar-card">
+          <div class="pillar-header">
+            <div class="pillar-icon"><i class="ph ph-strategy"></i></div>
+            <div>
+              <div class="pillar-num">Pillar 01</div>
+              <h3>Bitcoin &amp; Digital Asset Strategy</h3>
+            </div>
           </div>
-          <p class="text-cs-muted text-sm mb-3">Portfolio allocation, entry/exit frameworks, DCA strategies, sell strategies, market cycle positioning. The systematic approach to investing in digital assets — not speculation, strategy.</p>
-          <p class="text-xs text-cs-orange font-mono font-semibold mb-1">WHY IT ATTRACTS THE ICP</p>
-          <p class="text-cs-muted text-xs mb-3">HNW investors don't want tips. They want a system. This pillar shows them real frameworks exist — and positions Platinum as where the implementation lives.</p>
-          <p class="text-xs text-cs-muted font-mono">Example videos: Portfolio allocation models · How to build a sell strategy · Bitcoin vs. altcoins · The #1 exit strategy mistake</p>
+          <p class="pillar-desc">The systematic, framework-driven approach to investing in digital assets. Not speculation — strategy. Portfolio mechanics with discipline.</p>
+          <div class="pillar-examples-label">Example Videos</div>
+          <ul class="pillar-examples">
+            <li>How Much of Your Portfolio Should Be in Digital Assets? (The Data)</li>
+            <li>How to Build a Sell Strategy Before the Next Bull Run</li>
+            <li>Two Different Games: Why Bitcoin and Altcoins Are NOT the Same Investment</li>
+            <li>The #1 Mistake That Destroys Digital Asset Portfolios (No Exit Strategy)</li>
+          </ul>
+          <div class="pillar-icp">ICP connection: HNW investors don't want tips — they want a system. This pillar shows them real frameworks exist and positions Platinum as where implementation lives.</div>
         </div>
 
         <!-- Pillar 2 -->
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 border-l-4 border-l-blue-400">
-          <div class="flex items-center gap-3 mb-2">
-            <span class="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded font-mono">02</span>
-            <h3 class="font-bold text-base">Wealth Preservation & Protection</h3>
+        <div class="pillar-card" style="border-left-color: var(--green)">
+          <div class="pillar-header">
+            <div class="pillar-icon" style="background:rgba(8,195,148,0.1);color:var(--green)"><i class="ph ph-vault"></i></div>
+            <div>
+              <div class="pillar-num">Pillar 02</div>
+              <h3>Wealth Preservation &amp; Protection</h3>
+            </div>
           </div>
-          <p class="text-cs-muted text-sm mb-3">Inflation hedging, real estate vs. digital assets, traditional portfolio risks, why existing wealth needs digital asset exposure, generational wealth building. Preservation-first, not speculation-first.</p>
-          <p class="text-xs text-cs-orange font-mono font-semibold mb-1">WHY IT ATTRACTS THE ICP</p>
-          <p class="text-cs-muted text-xs mb-3">Our audience has worked hard to build wealth. Their primary fear is losing it. This pillar validates that fear and positions digital assets as a protection mechanism.</p>
-          <p class="text-xs text-cs-muted font-mono">Example videos: Bitcoin as inflation hedge · Real estate correction risks · Bear markets & generational wealth · Retirement portfolio allocation</p>
+          <p class="pillar-desc">Why existing wealth needs digital asset exposure — and how to think about it from a preservation-first lens. Inflation hedging, real estate risks, generational wealth.</p>
+          <div class="pillar-examples-label">Example Videos</div>
+          <ul class="pillar-examples">
+            <li>Is Bitcoin Actually a Hedge Against Inflation? The Honest Answer</li>
+            <li>The Real Estate Correction No One's Talking About</li>
+            <li>I Would Never Put My Entire Retirement Into Digital Assets</li>
+            <li>Bear Markets Are Where Generational Wealth Is Built</li>
+          </ul>
+          <div class="pillar-icp">ICP connection: Our audience's primary fear is losing what they've built. This pillar validates that fear and positions digital assets as a protection mechanism — not a gamble.</div>
         </div>
 
         <!-- Pillar 3 -->
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 border-l-4 border-l-purple-400">
-          <div class="flex items-center gap-3 mb-2">
-            <span class="bg-purple-500 text-white text-xs font-bold px-2 py-1 rounded font-mono">03</span>
-            <h3 class="font-bold text-base">Market Intelligence & Research</h3>
+        <div class="pillar-card" style="border-left-color: var(--purple)">
+          <div class="pillar-header">
+            <div class="pillar-icon" style="background:rgba(101,79,252,0.1);color:var(--purple)"><i class="ph ph-chart-line-up"></i></div>
+            <div>
+              <div class="pillar-num">Pillar 03</div>
+              <h3>Market Intelligence &amp; Research</h3>
+            </div>
           </div>
-          <p class="text-cs-muted text-sm mb-3">Institutional adoption (BlackRock, Fidelity, nation states), macro trends, what the data actually shows. Cutting through noise and hype — filtered through a wealth-builder's lens.</p>
-          <p class="text-xs text-cs-orange font-mono font-semibold mb-1">WHY IT ATTRACTS THE ICP</p>
-          <p class="text-cs-muted text-xs mb-3">Serious investors follow serious data. This pillar signals that CS does the research so members don't have to. It builds credibility and positions Ben as the Bloomberg of digital assets.</p>
-          <p class="text-xs text-cs-muted font-mono">Example videos: What BlackRock knows · The institutional shift · Stablecoin yields · 5 things smart investors do when prices drop</p>
+          <p class="pillar-desc">Institutional adoption, macro trends, on-chain data, and what the evidence actually shows. BlackRock, Fidelity, nation states, regulatory shifts — filtered through a wealth-builder's lens.</p>
+          <div class="pillar-examples-label">Example Videos</div>
+          <ul class="pillar-examples">
+            <li>What BlackRock Knows About Bitcoin That Most People Don't</li>
+            <li>What the Institutional Shift Actually Means for Your Wealth</li>
+            <li>Stablecoin Yields: Earning 5–18% on USD Without Holding Bitcoin</li>
+            <li>The 5 Things Smart Investors Do When Prices Drop</li>
+          </ul>
+          <div class="pillar-icp">ICP connection: Serious investors follow serious data. This pillar signals that CS does the research — so members don't have to wade through noise.</div>
         </div>
 
         <!-- Pillar 4 -->
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 border-l-4 border-l-cs-green">
-          <div class="flex items-center gap-3 mb-2">
-            <span class="bg-cs-green text-cs-bg text-xs font-bold px-2 py-1 rounded font-mono">04</span>
-            <h3 class="font-bold text-base">Real Talk & Transparency</h3>
+        <div class="pillar-card" style="border-left-color: #4D4C55">
+          <div class="pillar-header">
+            <div class="pillar-icon" style="background:rgba(0,0,0,0.05);color:var(--text-secondary)"><i class="ph ph-eye"></i></div>
+            <div>
+              <div class="pillar-num">Pillar 04</div>
+              <h3>Real Talk &amp; Transparency</h3>
+            </div>
           </div>
-          <p class="text-cs-muted text-sm mb-3">Ben's personal portfolio updates, honest mistake stories, no-affiliate commitment, inside look at what real members achieve, myth-busting. No polish, no agenda — just truth.</p>
-          <p class="text-xs text-cs-orange font-mono font-semibold mb-1">WHY IT ATTRACTS THE ICP</p>
-          <p class="text-cs-muted text-xs mb-3">HNW investors have been burned by gurus. Transparency is the differentiator. When Ben shows his actual portfolio and owns his mistakes, it creates the parasocial trust that converts viewers to Platinum.</p>
-          <p class="text-xs text-cs-muted font-mono">Example videos: Monthly portfolio update · No affiliates, no signals · Member success story · 9 years — what actually matters</p>
+          <p class="pillar-desc">Personal portfolio updates, honest stories about mistakes, no-affiliate commitment, member results, myth-busting. No polish, no agenda — just truth.</p>
+          <div class="pillar-examples-label">Example Videos</div>
+          <ul class="pillar-examples">
+            <li>My Exact Digital Asset Portfolio — Monthly Update</li>
+            <li>No Affiliates. No Signals. No Shilling. Here's Why That Matters.</li>
+            <li>How One Member Went From Losing 2/3 of His Portfolio to Getting It All Back</li>
+            <li>I've Been in Digital Assets 9 Years. Here's What Actually Matters.</li>
+          </ul>
+          <div class="pillar-icp">ICP connection: HNW investors have been burned by "gurus." Transparency creates the parasocial trust that converts viewers to Platinum members.</div>
         </div>
 
         <!-- Pillar 5 -->
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 border-l-4 border-l-yellow-400">
-          <div class="flex items-center gap-3 mb-2">
-            <span class="bg-yellow-500 text-cs-bg text-xs font-bold px-2 py-1 rounded font-mono">05</span>
-            <h3 class="font-bold text-base">The Digital Asset Education Gap</h3>
+        <div class="pillar-card" style="border-left-color: #FC8C4E">
+          <div class="pillar-header">
+            <div class="pillar-icon" style="background:rgba(252,140,78,0.15);color:#C44A00"><i class="ph ph-graduation-cap"></i></div>
+            <div>
+              <div class="pillar-num">Pillar 05</div>
+              <h3>The Digital Asset Education Gap</h3>
+            </div>
           </div>
-          <p class="text-cs-muted text-sm mb-3">Why most "crypto" content is garbage. How sophisticated investors are being underserved. What a real framework looks like vs. tips, signals, and shilling. This pillar positions CS against the entire low-quality content ecosystem.</p>
-          <p class="text-xs text-cs-orange font-mono font-semibold mb-1">WHY IT ATTRACTS THE ICP</p>
-          <p class="text-cs-muted text-xs mb-3">Our ICP has already tried the other stuff — and knows it's not right for them. This pillar validates their frustration and positions Ben as the antidote. Strong click-through from high-intent viewers actively looking for something better.</p>
-          <p class="text-xs text-cs-muted font-mono">Example videos: Your feed is not your financial advisor · The altcoin trap · Why I'm buying in a bear market · Full Platinum tour</p>
-        </div>
-
-      </div>
-
-      <!-- 90/10 System -->
-      <h2 class="text-2xl font-bold mb-4">The 90/10 System</h2>
-      <p class="text-cs-muted text-sm mb-4 max-w-2xl">Give the <strong class="text-cs-orange">WHAT</strong> (10% strategic overview on YouTube). Hold the <strong class="text-cs-green">HOW</strong> (90% implementation inside Platinum). Your 10% must still be more valuable than what competitors charge for.</p>
-      <div class="flex rounded-xl overflow-hidden h-12 max-w-lg mb-4">
-        <div class="bg-cs-orange flex items-center justify-center font-bold text-sm text-cs-bg font-heading" style="width:10%">10%</div>
-        <div class="bg-cs-card border-y border-r border-cs-border flex items-center px-4 text-cs-muted text-sm flex-1">90% — Inside Platinum</div>
-      </div>
-      <div class="grid md:grid-cols-2 gap-4 mb-4">
-        <div class="bg-cs-orange/5 border border-cs-orange/20 rounded-xl p-4">
-          <p class="text-cs-orange font-bold text-xs font-mono uppercase tracking-widest mb-2">10% Free (YouTube)</p>
-          <ul class="text-sm text-cs-muted space-y-1">
-            <li>• Frameworks and mental models</li>
-            <li>• WHAT to look for (not HOW)</li>
-            <li>• Data, levels, market context</li>
-            <li>• Emotional cycle education</li>
-            <li>• Sell strategy TYPES (not specifics)</li>
-            <li>• Why bear markets = opportunity</li>
+          <p class="pillar-desc">Why most "crypto" content is garbage. How sophisticated investors are being underserved. What a real framework looks like vs. tips, signals, and shilling.</p>
+          <div class="pillar-examples-label">Example Videos</div>
+          <ul class="pillar-examples">
+            <li>Your Feed Is Not Your Financial Advisor</li>
+            <li>The Altcoin Trap: Why 98% of Digital Asset Projects Fail</li>
+            <li>Why I'm Buying Digital Assets in a Bear Market</li>
+            <li>What $15,000 Gets You Inside Collective Shift Platinum (Full Tour)</li>
           </ul>
-        </div>
-        <div class="bg-cs-green/5 border border-cs-green/20 rounded-xl p-4">
-          <p class="text-cs-green font-bold text-xs font-mono uppercase tracking-widest mb-2">90% Paid (Platinum)</p>
-          <ul class="text-sm text-cs-muted space-y-1">
-            <li>• Specific entries/exits</li>
-            <li>• Portfolio alerts & announcements</li>
-            <li>• Exact allocation models</li>
-            <li>• 1:1 coaching & implementation</li>
-            <li>• Weekly live market calls</li>
-            <li>• Community of 350+ serious investors</li>
-          </ul>
+          <div class="pillar-icp">ICP connection: Our ICP has already tried the other stuff and knows it's not right. This pillar validates their frustration and positions Ben as the antidote.</div>
         </div>
       </div>
-      <div class="bg-cs-card border border-cs-border rounded-xl p-4 mb-10">
-        <p class="text-cs-muted text-xs font-mono mb-1 text-cs-orange">✅ RIGHT WAY:</p>
-        <p class="text-sm mb-2">"There are 3 types of sell strategies — here's what they are and why they matter."</p>
-        <p class="text-cs-muted text-xs font-mono mb-1 text-red-400">❌ WRONG WAY:</p>
-        <p class="text-sm text-cs-muted">"Here's the exact price level to sell your Bitcoin."</p>
-      </div>
-
-      <!-- Top 20 Video Ideas -->
-      <h2 class="text-2xl font-bold mb-2">Top 20 Video Ideas</h2>
-      <p class="text-cs-muted text-sm mb-6 max-w-2xl">Ranked by ICP relevance + conversion potential. Each video includes research prompt questions to paste into a content research tool. Language: "digital assets" — never "crypto."</p>
-      <div class="space-y-4 mb-10">
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">01</span>
-            <div>
-              <h3 class="font-bold text-sm">Is Bitcoin Actually a Hedge Against Inflation? The Honest Answer</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: Wealth Preservation · Hook: "Everyone says it is. Here's what the data shows."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What does the historical data show about Bitcoin's correlation with CPI over the last 5 years?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>Which institutional research reports support or debunk the inflation hedge thesis?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the strongest counter-arguments and how would I address them honestly?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>How does Bitcoin's inflation hedge narrative compare to gold's track record during high-inflation periods?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What real portfolio examples from our members can I reference to make this tangible?</li>
-          </ul>
-        </div>
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">02</span>
-            <div>
-              <h3 class="font-bold text-sm">Why I'm Buying Digital Assets in a Bear Market</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: Real Talk · Hook: "Most people sell in fear. Smart money builds positions."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What does on-chain data show about accumulation behaviour by long-term holders during bear markets?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What historical precedents exist for bear market accumulation leading to outsized returns in the next cycle?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What psychological barriers stop HNW investors from buying when prices fall — and how do I address them?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What is my personal framework for identifying entry opportunities during bear market phases?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What is the actual risk of NOT buying right now — and how do I frame that without sounding like FOMO?</li>
-          </ul>
-        </div>
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">03</span>
-            <div>
-              <h3 class="font-bold text-sm">The #1 Mistake That Destroys Digital Asset Portfolios (No Exit Strategy)</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: DA Strategy · Hook: "Entry plan ✅ Exit plan ❌. Here's why that's the #1 killer."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What percentage of retail investors have no defined exit strategy — and what data or research supports this?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the 3 most common exit strategy mistakes (holding too long, panic selling, no price targets)?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What does a framework-based exit strategy actually look like — what are the key decision points?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>How does having an exit strategy affect investor psychology during volatile markets?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What examples from our member base show the before/after of implementing an exit strategy?</li>
-          </ul>
-        </div>
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">04</span>
-            <div>
-              <h3 class="font-bold text-sm">My Exact Digital Asset Portfolio — Monthly Update</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: Real Talk · Hook: "I invest my own capital alongside members. Here's exactly what I hold."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the key portfolio metrics to share — allocation %, entry prices, position sizes relative to total portfolio?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What changed this month — what did I buy, sell, or hold — and what was my reasoning for each decision?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>How does my portfolio reflect the CS framework (Bitcoin-first, selective digital assets, stablecoin component)?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What questions from members should I address in this update?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What am I watching closely over the next 30 days and why?</li>
-          </ul>
-        </div>
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">05</span>
-            <div>
-              <h3 class="font-bold text-sm">What BlackRock Knows About Bitcoin That Most People Don't</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: Market Intelligence · Hook: "$20B+ bet. Here's the institutional thesis."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What is BlackRock's publicly stated thesis on Bitcoin — what have their research papers and executives said?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>How much have institutional investors (BlackRock, Fidelity, State Street) allocated to Bitcoin since spot ETF approval?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What does institutional adoption signal about Bitcoin's long-term risk profile vs. the retail "gambling" narrative?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the key differences between how institutional investors and retail investors think about Bitcoin?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>How would BlackRock's allocation framework translate to a HNW individual's personal portfolio?</li>
-          </ul>
-        </div>
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">06</span>
-            <div>
-              <h3 class="font-bold text-sm">The Real Estate Correction No One's Talking About</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: Wealth Preservation · Hook: "Property investors are ignoring a systemic risk that's building."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the current leading indicators of stress in the Australian (or global) residential property market?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>How exposed is the average HNW Australian to real estate — what percentage of their net worth is typically in property?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What historical corrections (2008 GFC, Australian 2017 correction) can I reference to show what a real correction looks like?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>How does digital asset exposure act as a hedge or diversifier against a property correction?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the strongest counter-arguments (property always recovers) and how do I address them honestly?</li>
-          </ul>
-        </div>
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">07</span>
-            <div>
-              <h3 class="font-bold text-sm">How to Build a Sell Strategy Before the Next Bull Run</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: DA Strategy · Hook: "Without an exit plan, you're gambling — not investing."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the main types of sell strategies (time-based DCA out, price-target ladders, on-chain indicators, portfolio % rules)?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What historical data shows what happens to investors without sell strategies during market tops (2021 case studies)?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What key on-chain or market indicators have historically signalled bull market peaks?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>How do I explain the difference between sell strategy (framework) vs. giving specific sell targets (Platinum territory)?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What is the right psychological approach to actually executing a sell strategy when prices are rising?</li>
-          </ul>
-        </div>
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">08</span>
-            <div>
-              <h3 class="font-bold text-sm">I've Been in Digital Assets 9 Years. Here's What Actually Matters.</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: Real Talk · Hook: "Not what everyone else teaches. The actual lessons from 9 years."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the 5 most important lessons from 9 years in digital assets — the ones no one talks about?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What did I get completely wrong in my early years, and how did that shape my framework?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What is the single biggest mistake I see new HNW investors make that I also made — and how do I address it?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>How has my thinking about digital assets evolved from 2015 to now — what has changed and what hasn't?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What would I tell my 2015 self — what would I do differently with what I know now?</li>
-          </ul>
-        </div>
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">09</span>
-            <div>
-              <h3 class="font-bold text-sm">Bear Markets Are Where Generational Wealth Is Built</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: Wealth Preservation · Hook: "Everyone's scared. That's exactly when you should be paying attention."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What does the historical data show about returns for investors who accumulated during Bitcoin bear markets (2018, 2020, 2022)?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What is the psychological mechanism that prevents most investors from buying during bear markets — and how do I counter it?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What does "building positions" actually mean in practical terms — DCA, lump sum, staged entries?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What macro conditions today make this bear market similar to or different from previous ones?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What do our most successful Platinum members have in common in terms of how they behaved during bear markets?</li>
-          </ul>
-        </div>
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">10</span>
-            <div>
-              <h3 class="font-bold text-sm">Two Different Games: Why Bitcoin and Altcoins Are NOT the Same Investment</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: DA Strategy · Hook: "Treating them the same is one of the most common (and costly) mistakes."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the fundamental structural differences between Bitcoin and altcoins (monetary policy, decentralisation, liquidity, use case)?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What data shows the performance divergence between Bitcoin and the broader altcoin market across multiple cycles?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What specific risks does altcoin investing carry that Bitcoin investing does not (project failure, regulatory risk, team risk)?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>How should a HNW investor think about portfolio allocation across Bitcoin vs. selective digital assets?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the most common altcoin traps — and how do I help viewers avoid them without telling them what to buy?</li>
-          </ul>
-        </div>
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">11</span>
-            <div>
-              <h3 class="font-bold text-sm">How Much of Your Portfolio Should Be in Digital Assets? (The Data)</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: DA Strategy · Hook: "Most people guess. Here's how we actually model it."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What does academic and institutional research say about optimal digital asset allocation in a diversified portfolio (Sharpe ratio, correlation data)?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What factors should influence the percentage — age, total wealth, risk tolerance, existing exposure, time horizon?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What allocation models do major institutions use (endowments, pension funds) when they allocate to digital assets?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>How does the answer change depending on whether someone has $500K, $1M, or $5M+ in investable assets?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What is the CS framework for thinking about allocation — what questions does a member work through to find their number?</li>
-          </ul>
-        </div>
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">12</span>
-            <div>
-              <h3 class="font-bold text-sm">The 5 Things Smart Investors Do When Prices Drop</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: Market Intelligence · Hook: "The reaction to a falling market separates long-term winners from losers."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What behaviours do long-term successful digital asset investors consistently exhibit during drawdowns?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the 5 specific actions — and what is the evidence or reasoning behind each one?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the 5 things emotional/reactive investors do instead — and what does that cost them?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>How does the media narrative during price drops actively work against the HNW investor?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What specific tools or frameworks help investors stay rational when prices are falling?</li>
-          </ul>
-        </div>
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">13</span>
-            <div>
-              <h3 class="font-bold text-sm">I Would Never Put My Entire Retirement Into Digital Assets. Here's What I'd Do Instead.</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: Wealth Preservation · Hook: "Context and allocation are everything. Here's my actual framework."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What is the appropriate role of digital assets within a broader retirement portfolio — what percentage range and why?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What traditional retirement assets should remain the foundation, and why?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What specific risks make 100% digital asset retirement exposure irresponsible — and how do I articulate these clearly?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What is the "intelligent allocation" model — how do I describe balance without giving personal financial advice?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What do our most financially sophisticated Platinum members' portfolios look like in terms of overall structure?</li>
-          </ul>
-        </div>
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">14</span>
-            <div>
-              <h3 class="font-bold text-sm">Stablecoin Yields: Earning 5–18% on USD Without Holding Bitcoin</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: Market Intelligence · Hook: "Most people don't know this exists. Here's how it works."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the main stablecoin yield mechanisms (lending protocols, money market funds, structured products) and how do they work?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What is the realistic risk profile of different stablecoin yield strategies — what can go wrong and how often has it?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>How do stablecoin yields compare to traditional savings accounts, term deposits, and money market funds?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What due diligence framework should a HNW investor apply before allocating to stablecoin yield strategies?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What regulatory landscape applies to stablecoin yield in Australia and the US — what should investors know?</li>
-          </ul>
-        </div>
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">15</span>
-            <div>
-              <h3 class="font-bold text-sm">What the Institutional Shift Actually Means for Your Wealth</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: Market Intelligence · Hook: "BlackRock. Fidelity. Nation states. This is bigger than you think."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What specific institutional milestones have occurred in the last 12 months (ETF flows, corporate treasury allocations, sovereign wealth fund moves)?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What does institutional adoption signal about the long-term legitimacy and risk profile of digital assets?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>How does the "institutional shift" change the investment thesis for a HNW individual who has been on the sidelines?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What is the historical precedent for this type of adoption changing an asset class (gold in the 1970s, emerging markets in the 90s)?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What does this mean practically for our ICP — is now still a good time to position, or has the window closed?</li>
-          </ul>
-        </div>
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">16</span>
-            <div>
-              <h3 class="font-bold text-sm">No Affiliates. No Signals. No Shilling. Here's Why That Matters.</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: Real Talk · Hook: "Every other educator has an agenda. Here's why we don't."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the most common undisclosed conflicts of interest in the digital asset education space (affiliate deals, project tokens, paid promotions)?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What is the financial incentive structure that drives most "crypto" educators — and why does it corrupt their advice?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What has it cost Collective Shift to maintain a no-affiliate policy — what have we said no to, and why?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>How does the no-affiliate commitment actually benefit our members — what decisions does it allow us to make freely?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What red flags should investors look for to identify biased educators vs. genuinely independent ones?</li>
-          </ul>
-        </div>
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">17</span>
-            <div>
-              <h3 class="font-bold text-sm">How One Member Went From Losing 2/3 of His Portfolio to Getting It All Back</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: Real Talk · Hook: "Real story. Real numbers. Real framework."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What was the member's situation before joining CS — what mistakes had they made and what was their emotional state?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What specific framework, mindset shift, or education within CS helped them turn things around?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What were the key decisions they made — and what did they avoid doing that most investors in their position get wrong?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What does their portfolio look like now — can I share meaningful before/after data without breaching privacy?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What is the single most important lesson from this story that applies to any HNW investor who has experienced a significant loss?</li>
-          </ul>
-        </div>
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">18</span>
-            <div>
-              <h3 class="font-bold text-sm">The Altcoin Trap: Why 98% of Digital Asset Projects Fail</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: Education Gap · Hook: "The market is full of noise. Here's how to filter it."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What does the data actually show about altcoin survival rates across market cycles (historical project mortality rates)?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the structural reasons why most altcoins fail — tokenomics, team incentives, no real use case, liquidity problems?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the warning signs that a project is likely to fail — what should investors look for before allocating?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>How do successful digital asset investors filter the noise — what is the CS framework for evaluating whether something is worth attention?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What is the opportunity cost of chasing altcoins vs. maintaining a disciplined, Bitcoin-first strategy over a full cycle?</li>
-          </ul>
-        </div>
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">19</span>
-            <div>
-              <h3 class="font-bold text-sm">Your Feed Is Not Your Financial Advisor</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: Education Gap · Hook: "Social media is engineered to make you feel FOMO. Here's the antidote."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the specific psychological mechanisms that social media uses to drive FOMO and impulsive financial decisions?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What research exists on the financial outcomes of investors who rely heavily on social media for investment decisions?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the most dangerous types of social media financial content — and what makes each one harmful?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>How do I build a genuine information diet as a serious digital asset investor — what sources are worth following and why?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What is the CS alternative to the social media feed — how does Platinum replace the noise with signal?</li>
-          </ul>
-        </div>
-
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 video-card">
-          <div class="flex items-start gap-3 mb-3">
-            <span class="text-cs-orange font-bold font-mono text-lg flex-shrink-0">20</span>
-            <div>
-              <h3 class="font-bold text-sm">What $15,000 Gets You Inside Collective Shift Platinum (Full Tour)</h3>
-              <p class="text-cs-muted text-xs font-mono mt-0.5">Pillar: Real Talk · Hook: "By application only. Here's exactly what's inside."</p>
-            </div>
-          </div>
-          <ul class="space-y-1.5 text-xs text-cs-muted ml-8">
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the core components of Platinum — and what is the specific value proposition of each one?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What does a typical member's first 30 days look like — what do they learn, implement, and gain access to?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What is the live audited portfolio — how does it work, what does it include, and why is it different from other services?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What are the most common questions or objections from applicants — and how do I address them honestly?</li>
-            <li class="flex gap-2"><span class="text-cs-orange flex-shrink-0">•</span>What kind of member gets the most out of Platinum — who is it for, and who is it NOT for?</li>
-          </ul>
-        </div>
-
-      </div>
-
-      <!-- Video Structure -->
-      <h2 class="text-2xl font-bold mb-4">Video Structure</h2>
-      <div class="bg-cs-card border border-cs-border rounded-xl p-5 mb-6">
-        <div class="space-y-2 text-sm">
-          <div class="flex items-start gap-3"><span class="bg-cs-orange text-cs-bg text-xs font-bold px-1.5 py-0.5 rounded font-mono flex-shrink-0 mt-0.5">0–30s</span><p class="text-cs-muted">Hook — deliver on the title promise immediately. Speak to new and returning viewers.</p></div>
-          <div class="flex items-start gap-3"><span class="bg-cs-orange/60 text-cs-bg text-xs font-bold px-1.5 py-0.5 rounded font-mono flex-shrink-0 mt-0.5">30s–2m</span><p class="text-cs-muted">Problem framing — why this matters for the HNW ICP. Make them feel the cost of NOT knowing this.</p></div>
-          <div class="flex items-start gap-3"><span class="bg-blue-500/40 text-white text-xs font-bold px-1.5 py-0.5 rounded font-mono flex-shrink-0 mt-0.5">2–20m</span><p class="text-cs-muted">Content — teach the WHAT. Use data, frameworks, real examples. No granular HOW (that's Platinum).</p></div>
-          <div class="flex items-start gap-3"><span class="bg-cs-green/60 text-cs-bg text-xs font-bold px-1.5 py-0.5 rounded font-mono flex-shrink-0 mt-0.5">Last 60s</span><p class="text-cs-muted">Bridge Script CTA — every video, every time.</p></div>
-        </div>
-      </div>
-
-      <!-- Bridge Script -->
-      <div class="border-l-4 border-cs-orange bg-cs-card rounded-r-xl p-5 mb-10">
-        <p class="label-tag text-cs-orange text-xs font-semibold tracking-widest uppercase mb-3">The Bridge Script — Last 60 Seconds (Every Video)</p>
-        <p class="text-cs-muted italic text-sm leading-relaxed">"Everything I've shared today is the kind of strategic education we deliver inside Collective Shift Platinum. I've given you the WHAT — the frameworks, the data, the context. Inside Platinum, our members get the HOW — weekly implementation calls, 8 private analyst sessions, our live audited portfolio, and a community of 350+ serious investors.<br><br>If you're a successful professional who wants a professional framework for digital assets — not tips, not signals — a real system — check the link below to apply for a consultation. It's by application only."</p>
-      </div>
-
-      <!-- Competitive Landscape -->
-      <h2 class="text-2xl font-bold mb-4">Competitive Landscape</h2>
-      <div class="grid md:grid-cols-3 gap-4 mb-10">
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
-          <p class="font-bold text-base mb-1">Invest Diva</p>
-          <p class="text-cs-muted text-xs font-mono mb-3">(Kiana Danial)</p>
-          <div class="space-y-2 text-xs">
-            <div>
-              <p class="text-cs-green font-semibold mb-0.5">✅ Strengths</p>
-              <p class="text-cs-muted">Good UX, clear graduation model, female-friendly framing</p>
-            </div>
-            <div>
-              <p class="text-red-400 font-semibold mb-0.5">❌ Weakness</p>
-              <p class="text-cs-muted">Less Bitcoin-native, lifestyle-focused, less HNW-specific</p>
-            </div>
-            <div>
-              <p class="text-cs-orange font-semibold mb-0.5">🎯 Our Gap</p>
-              <p class="text-cs-muted">Deeper digital asset expertise, no-affiliate trust signal, ICP-specific</p>
-            </div>
-          </div>
-        </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
-          <p class="font-bold text-base mb-1">Decentralized Masters</p>
-          <p class="text-cs-muted text-xs font-mono mb-3">(Dubai-based)</p>
-          <div class="space-y-2 text-xs">
-            <div>
-              <p class="text-cs-green font-semibold mb-0.5">✅ Strengths</p>
-              <p class="text-cs-muted">Premium positioning, Dubai credibility, HNW targeting</p>
-            </div>
-            <div>
-              <p class="text-red-400 font-semibold mb-0.5">❌ Weakness</p>
-              <p class="text-cs-muted">Claims 10–12% monthly returns — mathematically nonsensical. Destroys trust with sophisticated investors.</p>
-            </div>
-            <div>
-              <p class="text-cs-orange font-semibold mb-0.5">🎯 Our Gap</p>
-              <p class="text-cs-muted">We NEVER make performance claims. Their ICP eventually sees through it — and finds Ben.</p>
-            </div>
-          </div>
-        </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
-          <p class="font-bold text-base mb-1">Generic "Crypto YouTube"</p>
-          <p class="text-cs-muted text-xs font-mono mb-3">(Mass market channels)</p>
-          <div class="space-y-2 text-xs">
-            <div>
-              <p class="text-cs-green font-semibold mb-0.5">✅ Strengths</p>
-              <p class="text-cs-muted">High sub counts, early-mover advantage, broad reach</p>
-            </div>
-            <div>
-              <p class="text-red-400 font-semibold mb-0.5">❌ Weakness</p>
-              <p class="text-cs-muted">Target young/speculative/degen audience — NOT our ICP</p>
-            </div>
-            <div>
-              <p class="text-cs-orange font-semibold mb-0.5">🎯 Our Gap</p>
-              <p class="text-cs-muted">Blue ocean. No major channel targets 40–59 HNW wealth builders. This is our positioning.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="bg-cs-green/10 border border-cs-green/20 rounded-xl p-4 mb-10">
-        <p class="text-cs-green font-bold text-sm mb-1">Why people like Dee choose CS over competitors:</p>
-        <div class="flex flex-wrap gap-2 text-xs">
-          <span class="bg-cs-card border border-cs-border px-3 py-1 rounded-full">Ben is sincere — not performative</span>
-          <span class="bg-cs-card border border-cs-border px-3 py-1 rounded-full">Education-first — not "follow my signals"</span>
-          <span class="bg-cs-card border border-cs-border px-3 py-1 rounded-full">Personal story — relatable, not guru</span>
-          <span class="bg-cs-card border border-cs-border px-3 py-1 rounded-full">No affiliates — no agenda</span>
-          <span class="bg-cs-card border border-cs-border px-3 py-1 rounded-full">Preservation + growth, not speculation</span>
-        </div>
-      </div>
-
-      <!-- Language Rule -->
-      <div class="bg-cs-card border border-cs-orange/30 rounded-xl p-5 mb-6">
-        <p class="label-tag text-cs-orange text-xs font-semibold tracking-widest uppercase mb-3">Language Rules — Always Enforce</p>
-        <div class="grid md:grid-cols-2 gap-4 text-sm">
-          <div>
-            <p class="text-red-400 font-semibold mb-2">❌ Never Say</p>
-            <ul class="text-cs-muted space-y-1 text-xs">
-              <li>• "Crypto" — always "digital assets"</li>
-              <li>• "Returns" / "gains" / "moon"</li>
-              <li>• "Get in early" / "bull run" (speculative framing)</li>
-              <li>• "The next 100x"</li>
-            </ul>
-          </div>
-          <div>
-            <p class="text-cs-green font-semibold mb-2">✅ Always Say</p>
-            <ul class="text-cs-muted space-y-1 text-xs">
-              <li>• "Digital assets" (everywhere)</li>
-              <li>• "Bitcoin" (always Bitcoin — proper noun)</li>
-              <li>• "Protection, Preservation, Growth"</li>
-              <li>• "Framework" / "strategy" / "system"</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
     </div>
-  </main>
-</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       90/10 SYSTEM
+  ═══════════════════════════════════════ -->
+  <section class="section-off">
+    <div class="section-inner">
+      <span class="eyebrow">Jeremy Haynes Framework — Adapted for Digital Assets</span>
+      <h2 class="section-heading">The 90/10 System</h2>
+      <p class="section-subheading">The gap between free and paid is the conversion engine. Viewers think: <em>"If this is what he gives away for free, what's inside Platinum?"</em></p>
+
+      <div class="system-split">
+        <div class="system-side free">
+          <div class="sys-pct">10%</div>
+          <div class="sys-label">Free — YouTube Public</div>
+          <div class="sys-title">The WHAT</div>
+          <ul class="sys-list">
+            <li>Frameworks and mental models</li>
+            <li>What to look for in data/levels</li>
+            <li>The emotional cycle of markets</li>
+            <li>Sell strategy <em>types</em> (not specifics)</li>
+            <li>Why bear markets matter</li>
+            <li>Positioning and mindset</li>
+          </ul>
+        </div>
+        <div class="system-side paid">
+          <div class="sys-pct">90%</div>
+          <div class="sys-label">Paid — Platinum Members</div>
+          <div class="sys-title">The HOW</div>
+          <ul class="sys-list">
+            <li>Specific entries and exits</li>
+            <li>Portfolio alerts and live positions</li>
+            <li>Exact allocation models</li>
+            <li>1:1 coaching sessions</li>
+            <li>Implementation guides</li>
+            <li>350+ member community &amp; weekly calls</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="what-not-how">
+        <h4>What, Not How — The Golden Rule</h4>
+        <div class="wnh-row">
+          <div class="wnh-item good">
+            <span class="wnh-prefix">✓ Do This (Free)</span>
+            "There are 3 types of sell strategies — here's what they are and why they matter"
+          </div>
+          <div class="wnh-item bad">
+            <span class="wnh-prefix">✗ Never This (Paid Only)</span>
+            "Here's the exact price level to sell your Bitcoin"
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       TOP 20 VIDEO IDEAS
+  ═══════════════════════════════════════ -->
+  <section class="section-white">
+    <div class="section-inner">
+      <span class="eyebrow">Content Pipeline</span>
+      <h2 class="section-heading">Top 20 Video Ideas</h2>
+      <p class="section-subheading">Ranked by ICP relevance and conversion potential. Click any card to reveal the 5 research prompt questions for content development.</p>
+
+      <div class="videos-grid" id="videosGrid">
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">01</div>
+            <div class="video-card-meta">
+              <div class="video-title">Is Bitcoin Actually a Hedge Against Inflation? The Honest Answer</div>
+              <span class="video-pillar-tag tag-preservation">Wealth Preservation</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What does the historical data show about Bitcoin's correlation with CPI over the last 5 years?</li>
+              <li>Which institutional research reports support or debunk the inflation hedge thesis?</li>
+              <li>What are the strongest counter-arguments to Bitcoin as an inflation hedge, and how would I address them?</li>
+              <li>How does Bitcoin's inflation hedge narrative compare to gold's track record during high-inflation periods?</li>
+              <li>What real portfolio examples from our members can I reference to make this tangible?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">02</div>
+            <div class="video-card-meta">
+              <div class="video-title">Why I'm Buying Digital Assets in a Bear Market</div>
+              <span class="video-pillar-tag tag-transparency">Real Talk</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What does on-chain data show about accumulation behaviour by long-term holders during bear markets?</li>
+              <li>What historical precedents exist for bear market accumulation leading to outsized returns in the next cycle?</li>
+              <li>What specific psychological barriers stop HNW investors from buying when prices fall, and how do I address them?</li>
+              <li>What is my personal framework for identifying entry opportunities during bear market phases?</li>
+              <li>What would I say to someone who is scared to buy right now — what's the actual risk of NOT buying?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">03</div>
+            <div class="video-card-meta">
+              <div class="video-title">The #1 Mistake That Destroys Digital Asset Portfolios (No Exit Strategy)</div>
+              <span class="video-pillar-tag tag-strategy">Strategy</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What percentage of retail investors have no defined exit strategy, and what data supports this?</li>
+              <li>What are the 3 most common exit strategy mistakes (holding too long, panic selling, no targets)?</li>
+              <li>What does a framework-based exit strategy actually look like — what are the key decision points?</li>
+              <li>How does having an exit strategy affect investor psychology during volatile markets?</li>
+              <li>What examples from our member base show the before/after of implementing an exit strategy?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">04</div>
+            <div class="video-card-meta">
+              <div class="video-title">My Exact Digital Asset Portfolio — Monthly Update</div>
+              <span class="video-pillar-tag tag-transparency">Real Talk</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What are the key portfolio metrics I should share (allocation %, entry prices, position sizes relative to total portfolio)?</li>
+              <li>What changed in my portfolio this month — what did I buy, sell, or hold — and what was my reasoning?</li>
+              <li>How does my portfolio reflect the CS framework (Bitcoin-first, selective digital assets, stablecoin component)?</li>
+              <li>What questions from members should I address in this update?</li>
+              <li>What am I watching closely over the next 30 days and why?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">05</div>
+            <div class="video-card-meta">
+              <div class="video-title">What BlackRock Knows About Bitcoin That Most People Don't</div>
+              <span class="video-pillar-tag tag-intelligence">Market Intel</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What is BlackRock's publicly stated thesis on Bitcoin — what have their research papers and executives said?</li>
+              <li>How much have institutional investors (BlackRock, Fidelity, State Street) allocated to Bitcoin products since spot ETF approval?</li>
+              <li>What does institutional adoption signal about Bitcoin's long-term risk profile vs. the retail "gambling" narrative?</li>
+              <li>What are the key differences between how institutional investors think about Bitcoin vs. retail investors?</li>
+              <li>What would BlackRock's allocation framework look like for a HNW individual — how does it translate to a personal portfolio?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">06</div>
+            <div class="video-card-meta">
+              <div class="video-title">The Real Estate Correction No One's Talking About</div>
+              <span class="video-pillar-tag tag-preservation">Wealth Preservation</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What are the current leading indicators of stress in the Australian (or global) residential property market?</li>
+              <li>How exposed is the average HNW Australian to real estate — what percentage of their net worth is typically in property?</li>
+              <li>What historical corrections (2008 GFC, Australian 2017) can I reference to show what a real correction looks like?</li>
+              <li>How does digital asset exposure act as a hedge or diversifier against a property correction?</li>
+              <li>What are the strongest counter-arguments (property always recovers, etc.) and how do I address them honestly?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">07</div>
+            <div class="video-card-meta">
+              <div class="video-title">How to Build a Sell Strategy Before the Next Bull Run</div>
+              <span class="video-pillar-tag tag-strategy">Strategy</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What are the main types of sell strategies (time-based DCA out, price-target ladders, on-chain indicators, portfolio % rules)?</li>
+              <li>What historical data shows what happens to investors without sell strategies during market tops (2021 case studies)?</li>
+              <li>What are the key on-chain or market indicators that have historically signalled bull market peaks?</li>
+              <li>How do I explain the difference between selling strategy (framework) vs. giving specific sell targets (Platinum territory)?</li>
+              <li>What is the right psychological approach to actually executing a sell strategy when prices are rising?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">08</div>
+            <div class="video-card-meta">
+              <div class="video-title">I've Been in Digital Assets 9 Years. Here's What Actually Matters.</div>
+              <span class="video-pillar-tag tag-transparency">Real Talk</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What are the 5 most important lessons I've learned from 9 years in digital assets — the ones no one talks about?</li>
+              <li>What did I get completely wrong in my early years, and how did that shape my framework?</li>
+              <li>What is the single biggest mistake I see new HNW investors make that I made too — and how do I address it?</li>
+              <li>How has my thinking about digital assets evolved from 2015 to now — what has changed and what hasn't?</li>
+              <li>What would I tell my 2015 self if I could go back — what would I do differently?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">09</div>
+            <div class="video-card-meta">
+              <div class="video-title">Bear Markets Are Where Generational Wealth Is Built</div>
+              <span class="video-pillar-tag tag-preservation">Wealth Preservation</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What does the historical data show about returns for investors who accumulated during Bitcoin bear markets (2018, 2020, 2022)?</li>
+              <li>What is the psychological mechanism that prevents most investors from buying during bear markets — and how do I counter it?</li>
+              <li>What does "building positions" actually mean in practical terms — DCA, lump sum, staged entries?</li>
+              <li>What macro conditions today make this bear market similar to or different from previous ones?</li>
+              <li>What do our most successful members have in common in terms of how they behaved during bear markets?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">10</div>
+            <div class="video-card-meta">
+              <div class="video-title">Two Different Games: Why Bitcoin and Altcoins Are NOT the Same Investment</div>
+              <span class="video-pillar-tag tag-strategy">Strategy</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What are the fundamental structural differences between Bitcoin and altcoins (monetary policy, decentralisation, use case, liquidity)?</li>
+              <li>What data shows the performance divergence between Bitcoin and the broader altcoin market across multiple cycles?</li>
+              <li>What specific risks does altcoin investing carry that Bitcoin investing does not (project failure, regulatory risk, team risk)?</li>
+              <li>How should a HNW investor think about portfolio allocation across Bitcoin vs. selective digital assets — what's the CS framework?</li>
+              <li>What are the most common altcoin traps and how do I help viewers avoid them without telling them what to buy?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">11</div>
+            <div class="video-card-meta">
+              <div class="video-title">How Much of Your Portfolio Should Be in Digital Assets? (The Data)</div>
+              <span class="video-pillar-tag tag-strategy">Strategy</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What does academic and institutional research say about optimal digital asset allocation in a diversified portfolio (Sharpe ratio, correlation data)?</li>
+              <li>What factors should influence the percentage — age, total wealth, risk tolerance, existing exposure, time horizon?</li>
+              <li>What allocation models do major institutions use (endowments, pension funds) when they allocate to digital assets?</li>
+              <li>How does the answer change depending on whether someone has $500K, $1M, or $5M+ in investable assets?</li>
+              <li>What is the CS framework for thinking about allocation — what questions does a member work through to find their number?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">12</div>
+            <div class="video-card-meta">
+              <div class="video-title">The 5 Things Smart Investors Do When Prices Drop</div>
+              <span class="video-pillar-tag tag-intelligence">Market Intel</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What behaviours do long-term successful digital asset investors consistently exhibit during drawdowns (data/research)?</li>
+              <li>What are the 5 specific actions — and what is the evidence or reasoning behind each one?</li>
+              <li>What are the 5 things emotional/reactive investors do instead — and what does that cost them?</li>
+              <li>How does the media narrative during price drops actively work against the HNW investor — and how do I cut through it?</li>
+              <li>What specific tools or frameworks help investors stay rational when prices are falling?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">13</div>
+            <div class="video-card-meta">
+              <div class="video-title">I Would Never Put My Entire Retirement Into Digital Assets. Here's What I'd Do Instead.</div>
+              <span class="video-pillar-tag tag-preservation">Wealth Preservation</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What is the appropriate role of digital assets within a broader retirement portfolio — what percentage range and why?</li>
+              <li>What traditional retirement assets (property, super, equities, bonds) should remain the foundation, and why?</li>
+              <li>What specific risks make 100% digital asset retirement exposure irresponsible — and how do I articulate these clearly?</li>
+              <li>What is the "intelligent allocation" model — how do I describe a balanced approach without giving personal financial advice?</li>
+              <li>What do our most financially sophisticated Platinum members' portfolios look like in terms of overall structure?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">14</div>
+            <div class="video-card-meta">
+              <div class="video-title">Stablecoin Yields: Earning 5–18% on USD Without Holding Bitcoin</div>
+              <span class="video-pillar-tag tag-intelligence">Market Intel</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What are the main stablecoin yield mechanisms (lending protocols, money market funds, structured products) and how do they work?</li>
+              <li>What is the realistic risk profile of different stablecoin yield strategies — what can go wrong and how often has it?</li>
+              <li>How do stablecoin yields compare to traditional savings accounts, term deposits, and money market funds?</li>
+              <li>What due diligence framework should a HNW investor apply before allocating to stablecoin yield strategies?</li>
+              <li>What regulatory landscape applies to stablecoin yield in Australia and the US — what should investors know?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">15</div>
+            <div class="video-card-meta">
+              <div class="video-title">What the Institutional Shift Actually Means for Your Wealth</div>
+              <span class="video-pillar-tag tag-intelligence">Market Intel</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What specific institutional milestones have occurred in the last 12 months (ETF flows, corporate treasury allocations, sovereign wealth fund moves)?</li>
+              <li>What does institutional adoption signal about the long-term legitimacy and risk profile of digital assets?</li>
+              <li>How does the "institutional shift" change the investment thesis for a HNW individual who has been on the sidelines?</li>
+              <li>What is the historical precedent for this type of institutional adoption changing an asset class (gold in the 1970s, emerging markets in the 90s)?</li>
+              <li>What does this mean practically for our ICP — is now still a good time to position, or has the window closed?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">16</div>
+            <div class="video-card-meta">
+              <div class="video-title">No Affiliates. No Signals. No Shilling. Here's Why That Matters.</div>
+              <span class="video-pillar-tag tag-transparency">Real Talk</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What are the most common undisclosed conflicts of interest in the digital asset education space (affiliate deals, project tokens, paid promotions)?</li>
+              <li>What is the financial incentive structure that drives most "crypto" educators — and why does it corrupt their advice?</li>
+              <li>What has it cost Collective Shift to maintain a no-affiliate policy — what have we said no to, and why?</li>
+              <li>How does the no-affiliate commitment actually benefit our members — what decisions does it allow us to make freely?</li>
+              <li>What are the red flags investors should look for to identify biased educators vs. genuinely independent ones?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">17</div>
+            <div class="video-card-meta">
+              <div class="video-title">How One Member Went From Losing 2/3 of His Portfolio to Getting It All Back</div>
+              <span class="video-pillar-tag tag-transparency">Real Talk</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What was the member's situation before joining CS — what mistakes had they made and what was their emotional state?</li>
+              <li>What specific framework, mindset shift, or education within CS helped them turn things around?</li>
+              <li>What were the key decisions they made — and what did they avoid doing that most investors in their position get wrong?</li>
+              <li>What does their portfolio look like now — can I share meaningful before/after data without breaching privacy?</li>
+              <li>What is the single most important lesson from this story that applies to any HNW investor who has experienced a significant loss?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">18</div>
+            <div class="video-card-meta">
+              <div class="video-title">The Altcoin Trap: Why 98% of Digital Asset Projects Fail</div>
+              <span class="video-pillar-tag tag-education">Education Gap</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What does the data actually show about altcoin survival rates across market cycles (historical project mortality rates)?</li>
+              <li>What are the structural reasons why most altcoins fail — tokenomics, team incentives, no real use case, liquidity problems?</li>
+              <li>What are the warning signs that a project is likely to fail — what should investors look for before allocating?</li>
+              <li>How do successful digital asset investors filter the noise — what is the CS framework for evaluating whether something is worth attention?</li>
+              <li>What is the opportunity cost of chasing altcoins vs. maintaining a disciplined, Bitcoin-first strategy over a full cycle?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">19</div>
+            <div class="video-card-meta">
+              <div class="video-title">Your Feed Is Not Your Financial Advisor</div>
+              <span class="video-pillar-tag tag-education">Education Gap</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What are the specific psychological mechanisms that social media uses to drive FOMO and impulsive financial decisions?</li>
+              <li>What research exists on the financial outcomes of investors who rely heavily on social media for investment decisions?</li>
+              <li>What are the most dangerous types of social media financial content — and what makes each one harmful?</li>
+              <li>How do I build a genuine information diet as a serious digital asset investor — what sources are worth following and why?</li>
+              <li>What is the CS alternative to the social media feed — how does Platinum replace the noise with signal?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="toggleVideo(this)">
+          <div class="video-card-header">
+            <div class="video-num">20</div>
+            <div class="video-card-meta">
+              <div class="video-title">What $15,000 Gets You Inside Collective Shift Platinum (Full Tour)</div>
+              <span class="video-pillar-tag tag-transparency">Real Talk</span>
+            </div>
+            <i class="ph ph-caret-down video-expand-icon"></i>
+          </div>
+          <div class="video-prompts">
+            <div class="video-prompts-label">Research Prompts</div>
+            <ol>
+              <li>What are the core components of Platinum — and what is the specific value proposition of each one?</li>
+              <li>What does a typical member's first 30 days look like — what do they learn, implement, and gain access to?</li>
+              <li>What is the live audited portfolio — how does it work, what does it include, and why is it different from other services?</li>
+              <li>What are the most common questions or objections from applicants — and how do I address them honestly?</li>
+              <li>What kind of member gets the most out of Platinum — who is it for, and who is it NOT for?</li>
+            </ol>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       TITLE & THUMBNAIL STRATEGY
+  ═══════════════════════════════════════ -->
+  <section class="section-off">
+    <div class="section-inner">
+      <span class="eyebrow">Conversion Optimisation</span>
+      <h2 class="section-heading">Title &amp; Thumbnail Strategy</h2>
+      <p class="section-subheading">The right title converts HNW searchers into viewers. These patterns are proven to resonate with the 40–59 serious wealth builder archetype.</p>
+
+      <h3 class="subsection-title">Title Patterns That Convert</h3>
+      <div class="title-patterns">
+        <div class="title-pattern">
+          <div class="tp-pattern">Pattern 1 — The Honest Answer</div>
+          <div class="tp-example">"Is [Topic] Actually [Common Belief]? The Honest Answer" → e.g., <em>Is Bitcoin Actually a Hedge Against Inflation? The Honest Answer</em></div>
+        </div>
+        <div class="title-pattern">
+          <div class="tp-pattern">Pattern 2 — The Contrarian</div>
+          <div class="tp-example">"Why I'm [Contrarian Position] in a [Market Condition]" → e.g., <em>Why I'm Buying Digital Assets in a Bear Market</em></div>
+        </div>
+        <div class="title-pattern">
+          <div class="tp-pattern">Pattern 3 — The Smart Investor List</div>
+          <div class="tp-example">"The [#] Things [Smart/Successful] Investors Do When [Situation]" → e.g., <em>The 5 Things Smart Investors Do When Prices Drop</em></div>
+        </div>
+        <div class="title-pattern">
+          <div class="tp-pattern">Pattern 4 — The Experience Frame</div>
+          <div class="tp-example">"I've Been in Digital Assets [# Years]. Here's What Actually Matters." → builds credibility through lived experience</div>
+        </div>
+        <div class="title-pattern">
+          <div class="tp-pattern">Pattern 5 — The System Frame</div>
+          <div class="tp-example">"The [Exact System/Framework] I Use to [Outcome]" → positions Ben as having a superior methodology</div>
+        </div>
+        <div class="title-pattern">
+          <div class="tp-pattern">Pattern 6 — The Authority Endorsement</div>
+          <div class="tp-example">"Why [Famous/Credible Entity] Is Quietly [Action]" → e.g., <em>What BlackRock Knows About Bitcoin That Most People Don't</em></div>
+        </div>
+        <div class="title-pattern">
+          <div class="tp-pattern">Pattern 7 — The Macro Implication</div>
+          <div class="tp-example">"What [Big Event/Trend] Means for Your [Wealth/Portfolio]" → makes macro relevant to personal wealth</div>
+        </div>
+      </div>
+
+      <div style="background:rgba(255,10,0,0.05);border:1px solid rgba(255,10,0,0.15);border-radius:10px;padding:16px 20px;margin-bottom:32px;">
+        <span style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--red);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:8px;">Title Language — NEVER USE</span>
+        <p style="font-size:13.5px;color:var(--text-secondary);">"crypto" · "moon" · "gains" · "returns" · "bull run" (in speculative context) · "100x" · "get rich"</p>
+      </div>
+
+      <h3 class="subsection-title">Thumbnail Strategy</h3>
+      <div class="thumb-rules">
+        <div class="thumb-rule">
+          <div class="tr-icon"><i class="ph ph-user-circle" style="color:var(--orange)"></i></div>
+          <h5>Ben's Face</h5>
+          <p>Always include Ben's face with clear expression. Pair with dollar amounts or bold statement text.</p>
+        </div>
+        <div class="thumb-rule">
+          <div class="tr-icon"><i class="ph ph-test-tube" style="color:var(--purple)"></i></div>
+          <h5>A/B Test at 72hrs</h5>
+          <p>If CTR underperforms at the 72-hour mark, update the thumbnail immediately. Test every upload.</p>
+        </div>
+        <div class="thumb-rule">
+          <div class="tr-icon"><i class="ph ph-star" style="color:var(--green)"></i></div>
+          <h5>Premium Aesthetic</h5>
+          <p>Clean, premium look. NOT clickbait. NOT crypto-bro. Dark backgrounds, orange/white text — CS brand.</p>
+        </div>
+        <div class="thumb-rule">
+          <div class="tr-icon"><i class="ph ph-prohibit" style="color:var(--red)"></i></div>
+          <h5>No Hype Signals</h5>
+          <p>No "$$$" stacks. No rocket emojis. No shocked faces. Repels HNW ICP immediately.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       CTA STRATEGY
+  ═══════════════════════════════════════ -->
+  <section class="section-white">
+    <div class="section-inner">
+      <span class="eyebrow">Conversion Architecture</span>
+      <h2 class="section-heading">CTA Strategy</h2>
+      <p class="section-subheading">Every video ends with The Bridge Script. Content first, always. The CTA earns its place by delivering value first.</p>
+
+      <div class="bridge-script">
+        <div class="bs-label">The Bridge Script — Final 60 Seconds of Every Video</div>
+        <blockquote>"Everything I've shared today is the kind of strategic education we deliver inside Collective Shift Platinum. I've given you the WHAT — the frameworks, the data, the context. Inside Platinum, our members get the HOW — weekly implementation calls, 8 private analyst sessions, our live audited portfolio, and a community of 350+ serious investors. If you're a successful professional who wants a professional framework for digital assets — not tips, not signals — a real system — check the link below to apply for a consultation. It's by application only."</blockquote>
+      </div>
+
+      <h3 class="subsection-title">CTA Distribution</h3>
+      <div class="cta-flow">
+        <div class="cta-flow-step">
+          <div class="cfs-pct">70%</div>
+          <h5>Education First</h5>
+          <p>Pure value content, no pitch</p>
+        </div>
+        <div class="flow-arrow"><i class="ph ph-arrow-right"></i></div>
+        <div class="cta-flow-step">
+          <div class="cfs-pct">~55%</div>
+          <h5>Soft Mention</h5>
+          <p>One natural Platinum reference at mid-video</p>
+        </div>
+        <div class="flow-arrow"><i class="ph ph-arrow-right"></i></div>
+        <div class="cta-flow-step">
+          <div class="cfs-pct">End</div>
+          <h5>Bridge Script</h5>
+          <p>Full 60-sec CTA — consistent every video</p>
+        </div>
+        <div class="flow-arrow"><i class="ph ph-arrow-right"></i></div>
+        <div class="cta-flow-step">
+          <div class="cfs-pct">+</div>
+          <h5>Binge Loop</h5>
+          <p>End screens to related videos — keeps session alive</p>
+        </div>
+      </div>
+
+      <h3 class="subsection-title">CTA Placement Rules</h3>
+      <div class="cta-placements">
+        <div class="cta-placement">
+          <div class="cp-badge">PRIMARY</div>
+          <div class="cp-text">Apply for Platinum consultation (link in description). Recurring membership over one-off Accelerator — recurring revenue priority.</div>
+        </div>
+        <div class="cta-placement">
+          <div class="cp-badge">SECONDARY</div>
+          <div class="cp-text">Subscribe + turn on notifications. Grow the audience that will eventually convert.</div>
+        </div>
+        <div class="cta-placement">
+          <div class="cp-badge">TERTIARY</div>
+          <div class="cp-text">Comment with a question. Boosts engagement signals to the algorithm, increases organic reach.</div>
+        </div>
+        <div class="cta-placement" style="border-color:rgba(255,10,0,0.2);background:rgba(255,10,0,0.03)">
+          <div class="cp-badge" style="background:var(--red)">NEVER</div>
+          <div class="cp-text">Front-load the CTA. Content first, always. Viewers who haven't received value will not convert.</div>
+        </div>
+      </div>
+
+      <div class="card card-lg mt-32" style="background:var(--bg-off)">
+        <span class="eyebrow">2026 Algorithm Note</span>
+        <p style="font-size:14.5px;color:var(--text-secondary);line-height:1.7;">YouTube's algorithm now <strong style="color:var(--text)">penalises content that ends user sessions</strong>. Use end screens to link to related videos — create a binge loop. Viewer satisfaction beats clickbait. Delivering on every title promise is now an algorithmic necessity, not just an ethical one. Long-form (15–25 min) builds the trust required for $15K+ decisions and is favoured for high-ticket conversions.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       COMPETITIVE DIFFERENTIATION
+  ═══════════════════════════════════════ -->
+  <section class="section-off">
+    <div class="section-inner">
+      <span class="eyebrow">Competitive Landscape</span>
+      <h2 class="section-heading">Competitive Differentiation</h2>
+      <p class="section-subheading">CS operates in a blue ocean. No major digital asset YouTube channel specifically targets the 40–59 HNW wealth builder. This is the positioning moat.</p>
+
+      <div class="competitors-grid">
+        <div class="competitor-card">
+          <h4><i class="ph ph-user" style="color:var(--purple);margin-right:6px"></i>Invest Diva (Kiana Danial)</h4>
+          <span class="comp-section-label strength">Strengths</span>
+          <ul class="comp-list strength">
+            <li>Good UX, clear graduation model (beginner → advanced)</li>
+            <li>Female-friendly framing, broad appeal</li>
+          </ul>
+          <span class="comp-section-label weakness">Weaknesses</span>
+          <ul class="comp-list weakness">
+            <li>More focused on general investing, less Bitcoin-native</li>
+            <li>More lifestyle-focused, less institutional credibility</li>
+          </ul>
+          <span class="comp-section-label gap">Our Gap</span>
+          <ul class="comp-list gap">
+            <li>Deeper digital asset expertise, ICP-specific (HNW wealth builders)</li>
+            <li>No-affiliate trust signal as primary differentiator</li>
+          </ul>
+        </div>
+
+        <div class="competitor-card">
+          <h4><i class="ph ph-buildings" style="color:var(--orange);margin-right:6px"></i>Decentralized Masters (Dubai)</h4>
+          <span class="comp-section-label strength">Strengths</span>
+          <ul class="comp-list strength">
+            <li>Premium positioning, Dubai credibility</li>
+            <li>HNW targeting, high-ticket offer structure</li>
+          </ul>
+          <span class="comp-section-label weakness">Weaknesses</span>
+          <ul class="comp-list weakness">
+            <li>Claims 10–12% monthly returns — mathematically nonsensical</li>
+            <li>Destroys trust with sophisticated investors who do the math</li>
+          </ul>
+          <span class="comp-section-label gap">Our Gap</span>
+          <ul class="comp-list gap">
+            <li>We NEVER make performance claims. Education-first = long-term trust.</li>
+            <li>Their ICP eventually sees through the nonsense and finds Ben.</li>
+          </ul>
+        </div>
+
+        <div class="competitor-card">
+          <h4><i class="ph ph-youtube-logo" style="color:var(--red);margin-right:6px"></i>Generic "Crypto YouTube"</h4>
+          <span class="comp-section-label strength">Strengths</span>
+          <ul class="comp-list strength">
+            <li>High subscriber counts, early-mover advantage</li>
+            <li>High production value and entertainment factor</li>
+          </ul>
+          <span class="comp-section-label weakness">Weaknesses</span>
+          <ul class="comp-list weakness">
+            <li>Targeting young/speculative/degen audience — NOT our ICP</li>
+            <li>FOMO-driven content erodes credibility with serious investors</li>
+          </ul>
+          <span class="comp-section-label gap">Our Gap</span>
+          <ul class="comp-list gap">
+            <li>Blue ocean — the 40–59 HNW segment is completely unserved</li>
+            <li>Our ICP actively searches for something better and finds Ben</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="subsection-title">Why Dee (and people like Dee) choose CS over competitors</h3>
+      <div class="dee-reasons">
+        <div class="dee-reason">
+          <div class="dr-num">1</div>
+          <p>Ben is sincere — not performative. Authenticity is the #1 conversion driver for HNW investors.</p>
+        </div>
+        <div class="dee-reason">
+          <div class="dr-num">2</div>
+          <p>Education-first — not "follow my signals." Serious investors know the difference instantly.</p>
+        </div>
+        <div class="dee-reason">
+          <div class="dr-num">3</div>
+          <p>Personal story — relatable, not aspirational guru. Dee saw herself in Ben's journey.</p>
+        </div>
+        <div class="dee-reason">
+          <div class="dr-num">4</div>
+          <p>No affiliates — no hidden agenda. This is a rare and powerful trust signal in a corrupt space.</p>
+        </div>
+        <div class="dee-reason">
+          <div class="dr-num">5</div>
+          <p>Speaks to preservation + growth, not speculation. Matches the HNW mindset perfectly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <div style="padding:32px 40px;border-top:1px solid var(--border);background:var(--bg-off);">
+    <div style="max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+      <p style="font-family:'Source Code Pro',monospace;font-size:11px;color:var(--text-muted);">YouTube Strategy · Updated March 27, 2026 · Collective Shift Strategy Hub</p>
+      <p style="font-family:'Source Code Pro',monospace;font-size:11px;color:var(--text-muted);">Language rule: "digital assets" everywhere. Bitcoin stays as Bitcoin. Never "crypto."</p>
+    </div>
+  </div>
+</main>
+
+<script>
+  function openSidebar() {
+    document.getElementById('sidebar').classList.add('open');
+    document.getElementById('overlay').classList.add('open');
+  }
+
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
+  }
+
+  function toggleVideo(card) {
+    const wasExpanded = card.classList.contains('expanded');
+    // Close all
+    document.querySelectorAll('.video-card.expanded').forEach(c => c.classList.remove('expanded'));
+    // Toggle clicked
+    if (!wasExpanded) {
+      card.classList.add('expanded');
+    }
+  }
+</script>
+
 </body>
 </html>
