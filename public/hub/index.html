@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strategy Hub — Collective Shift</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cs: { bg: '#1B1925', card: '#242232', border: '#2E2C3E', orange: '#FC5C03', green: '#08C394', text: '#F9F9F9', muted: '#9B99A9' },
+      },
+      fontFamily: {
+        heading: ['Oswald', 'sans-serif'],
+        body: ['Barlow', 'sans-serif'],
+        mono: ['Source Code Pro', 'monospace'],
+      }
+    }
+  }
+}
+</script>
+<style>
+  body { font-family: 'Barlow', sans-serif; }
+  h1, h2, h3, h4, h5 { font-family: 'Oswald', sans-serif; }
+  .label-tag { font-family: 'Source Code Pro', monospace; }
+  /* Sidebar */
+  .sidebar { transition: transform 0.3s ease; }
+  @media (max-width: 1023px) {
+    .sidebar { transform: translateX(-100%); position: fixed; z-index: 50; top: 0; left: 0; height: 100vh; }
+    .sidebar.open { transform: translateX(0); }
+  }
+  .nav-link { transition: all 0.15s; }
+  .nav-link:hover, .nav-link.active { background: rgba(252,92,3,0.12); color: #FC5C03; border-left-color: #FC5C03; }
+  .stat-card { transition: transform 0.2s, border-color 0.2s; }
+  .stat-card:hover { transform: translateY(-2px); border-color: #FC5C03; }
+  .section-card { transition: transform 0.2s, border-color 0.2s; }
+  .section-card:hover { transform: translateY(-3px); border-color: #FC5C03; }
+</style>
+</head>
+<body class="bg-cs-bg text-cs-text min-h-screen">
+
+<!-- Mobile Header -->
+<div class="lg:hidden flex items-center justify-between px-4 py-3 bg-cs-card border-b border-cs-border sticky top-0 z-40">
+  <span class="font-heading text-cs-orange text-lg font-bold tracking-wide">COLLECTIVE SHIFT</span>
+  <button onclick="document.getElementById('sidebar').classList.toggle('open')" class="text-cs-muted hover:text-cs-orange">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+</div>
+
+<!-- Overlay -->
+<div id="overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="document.getElementById('sidebar').classList.remove('open');this.classList.add('hidden')"></div>
+
+<div class="flex">
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar w-64 min-h-screen bg-cs-card border-r border-cs-border flex-shrink-0 flex flex-col">
+    <div class="p-5 border-b border-cs-border">
+      <a href="index.html" class="font-heading text-cs-orange text-xl font-bold tracking-wider">COLLECTIVE SHIFT</a>
+      <p class="text-cs-muted text-xs mt-1 font-mono">STRATEGY HUB</p>
+    </div>
+    <nav class="flex-1 py-4 px-3 space-y-1">
+      <a href="index.html" class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium border-l-2 border-transparent">
+        <span>🏠</span> Home
+      </a>
+      <a href="positioning.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent">
+        <span>🎯</span> Positioning & ICP
+      </a>
+      <a href="operating-system.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent">
+        <span>⚙️</span> Operating System
+      </a>
+      <a href="products.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent">
+        <span>💎</span> Products
+      </a>
+      <a href="social-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent">
+        <span>📱</span> Social & Content
+      </a>
+      <a href="competitors.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent">
+        <span>🏆</span> Competitive Intel
+      </a>
+      <a href="brand.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent">
+        <span>🎨</span> Brand & Voice
+      </a>
+    </nav>
+    <div class="p-4 border-t border-cs-border">
+      <p class="text-cs-muted text-xs font-mono">v2.0 · March 2026</p>
+      <p class="text-cs-muted text-xs">Internal use only</p>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 min-h-screen">
+    <!-- Breadcrumb -->
+    <div class="px-6 lg:px-10 py-3 border-b border-cs-border bg-cs-card/50">
+      <div class="flex items-center gap-2 text-xs font-mono text-cs-muted">
+        <span class="text-cs-orange">Strategy Hub</span>
+        <span>/</span>
+        <span>Home</span>
+      </div>
+    </div>
+
+    <div class="px-6 lg:px-10 py-8 max-w-6xl">
+      <!-- Hero -->
+      <div class="mb-10">
+        <p class="label-tag text-cs-orange text-xs font-semibold tracking-widest uppercase mb-2">Overview</p>
+        <h1 class="text-4xl lg:text-5xl font-bold tracking-tight mb-3">Strategy Hub</h1>
+        <p class="text-cs-muted text-lg max-w-2xl">To be the world's most trusted digital asset education company, empowering members to build generational wealth through a systematic, research-driven framework.</p>
+      </div>
+
+      <!-- Key Metrics -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+        <div class="stat-card bg-cs-card border border-cs-border rounded-xl p-5 text-center">
+          <div class="text-3xl font-heading font-bold text-cs-orange">1,163</div>
+          <div class="text-cs-muted text-xs uppercase tracking-wider mt-1 font-mono">Total Members</div>
+        </div>
+        <div class="stat-card bg-cs-card border border-cs-border rounded-xl p-5 text-center">
+          <div class="text-3xl font-heading font-bold text-cs-orange">402</div>
+          <div class="text-cs-muted text-xs uppercase tracking-wider mt-1 font-mono">Platinum Members</div>
+        </div>
+        <div class="stat-card bg-cs-card border border-cs-border rounded-xl p-5 text-center">
+          <div class="text-3xl font-heading font-bold text-cs-green">A$7.3M</div>
+          <div class="text-cs-muted text-xs uppercase tracking-wider mt-1 font-mono">ARR</div>
+        </div>
+        <div class="stat-card bg-cs-card border border-cs-border rounded-xl p-5 text-center">
+          <div class="text-3xl font-heading font-bold text-cs-green">203%</div>
+          <div class="text-cs-muted text-xs uppercase tracking-wider mt-1 font-mono">YoY Growth</div>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <h2 class="text-2xl font-bold mb-5 tracking-tight">Sections</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
+        <a href="positioning.html" class="section-card bg-cs-card border border-cs-border rounded-xl p-5 block">
+          <div class="text-2xl mb-2">🎯</div>
+          <h3 class="text-lg font-bold mb-1">Positioning & ICP</h3>
+          <p class="text-cs-muted text-sm">Who we are, who we're for, validated "Why", acquisition path, and language guide.</p>
+        </a>
+        <a href="operating-system.html" class="section-card bg-cs-card border border-cs-border rounded-xl p-5 block">
+          <div class="text-2xl mb-2">⚙️</div>
+          <h3 class="text-lg font-bold mb-1">Operating System</h3>
+          <p class="text-cs-muted text-sm">The 7-Step Shift OS, 2-track system, onboarding path, module deep-dives, and graduation model.</p>
+        </a>
+        <a href="products.html" class="section-card bg-cs-card border border-cs-border rounded-xl p-5 block">
+          <div class="text-2xl mb-2">💎</div>
+          <h3 class="text-lg font-bold mb-1">Products</h3>
+          <p class="text-cs-muted text-sm">Accelerator, Platinum, and Black Tier — pricing, features, tier comparison, and the four pillars.</p>
+        </a>
+        <a href="social-strategy.html" class="section-card bg-cs-card border border-cs-border rounded-xl p-5 block">
+          <div class="text-2xl mb-2">📱</div>
+          <h3 class="text-lg font-bold mb-1">Social & Content Strategy</h3>
+          <p class="text-cs-muted text-sm">YouTube strategy, Instagram playbook, 40 video ideas, 12-week calendar, and content pillars.</p>
+        </a>
+        <a href="competitors.html" class="section-card bg-cs-card border border-cs-border rounded-xl p-5 block">
+          <div class="text-2xl mb-2">🏆</div>
+          <h3 class="text-lg font-bold mb-1">Competitive Intel</h3>
+          <p class="text-cs-muted text-sm">Invest Diva, Decentralized Masters, Yieldschool — analysis, positioning matrix, and where we win.</p>
+        </a>
+        <a href="brand.html" class="section-card bg-cs-card border border-cs-border rounded-xl p-5 block">
+          <div class="text-2xl mb-2">🎨</div>
+          <h3 class="text-lg font-bold mb-1">Brand & Voice</h3>
+          <p class="text-cs-muted text-sm">Voice guide, language do/don't table, messaging framework, and outcome-based headline options.</p>
+        </a>
+      </div>
+
+      <!-- Latest Updates -->
+      <h2 class="text-2xl font-bold mb-5 tracking-tight">Latest Updates</h2>
+      <div class="bg-cs-card border border-cs-border rounded-xl p-6 space-y-4">
+        <div class="flex gap-4 items-start">
+          <span class="label-tag text-cs-green text-xs font-semibold bg-cs-green/10 px-2 py-1 rounded whitespace-nowrap">Mar 27</span>
+          <div>
+            <p class="font-semibold text-sm">Strategy Hub v2.0 launched</p>
+            <p class="text-cs-muted text-sm">Multi-page hub replaces single-page strategy dashboard. All content migrated and updated.</p>
+          </div>
+        </div>
+        <div class="flex gap-4 items-start">
+          <span class="label-tag text-cs-orange text-xs font-semibold bg-cs-orange/10 px-2 py-1 rounded whitespace-nowrap">Mar 27</span>
+          <div>
+            <p class="font-semibold text-sm">Language rule enforced: "digital assets" everywhere</p>
+            <p class="text-cs-muted text-sm">All content updated. "Bitcoin" stays as Bitcoin. Never use "crypto" in external-facing content.</p>
+          </div>
+        </div>
+        <div class="flex gap-4 items-start">
+          <span class="label-tag text-cs-muted text-xs font-semibold bg-cs-card px-2 py-1 rounded whitespace-nowrap">Mar 27</span>
+          <div>
+            <p class="font-semibold text-sm">ICP updated with validated "Why" from Dee call</p>
+            <p class="text-cs-muted text-sm">Six validated reasons HNW investors join. Acquisition path confirmed: YouTube → comparison → CS.</p>
+          </div>
+        </div>
+        <div class="flex gap-4 items-start">
+          <span class="label-tag text-cs-muted text-xs font-semibold bg-cs-card px-2 py-1 rounded whitespace-nowrap">Mar 26</span>
+          <div>
+            <p class="font-semibold text-sm">Key metrics updated</p>
+            <p class="text-cs-muted text-sm">1,163 total members · 402 Platinum · A$7.3M ARR · 203% YoY growth.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Core Identity -->
+      <div class="mt-10 bg-cs-card border border-cs-border rounded-xl p-6">
+        <h2 class="text-2xl font-bold mb-4 tracking-tight">Core Identity</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="text-sm font-mono text-cs-orange uppercase tracking-wider mb-2">What We Are</h3>
+            <ul class="space-y-2 text-sm">
+              <li class="flex gap-2"><span class="text-cs-green">✓</span> Framework-based education</li>
+              <li class="flex gap-2"><span class="text-cs-green">✓</span> 100% independent research</li>
+              <li class="flex gap-2"><span class="text-cs-green">✓</span> Systematic, research-driven</li>
+              <li class="flex gap-2"><span class="text-cs-green">✓</span> Win/Win — we invest alongside members</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-sm font-mono text-red-400 uppercase tracking-wider mb-2">What We Are Not</h3>
+            <ul class="space-y-2 text-sm text-cs-muted">
+              <li class="flex gap-2"><span class="text-red-400">✗</span> Signals group / speculative gambling</li>
+              <li class="flex gap-2"><span class="text-red-400">✗</span> Advertising-funded or token promoters</li>
+              <li class="flex gap-2"><span class="text-red-400">✗</span> Shortcuts or tips</li>
+              <li class="flex gap-2"><span class="text-red-400">✗</span> Affiliate-driven recommendations</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  // Mobile sidebar toggle
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  sidebar?.addEventListener('transitionend', () => {
+    if (sidebar.classList.contains('open')) overlay?.classList.remove('hidden');
+    else overlay?.classList.add('hidden');
+  });
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => { sidebar?.classList.remove('open'); overlay?.classList.add('hidden'); });
+  });
+</script>
+</body>
+</html>

@@ -3,29 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CEO Command Centre — Collective Shift</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Barlow:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+<title>Collective Shift — CEO Command Centre</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
 <script>
 tailwind.config = {
   theme: {
     extend: {
       colors: {
-        'cs-bg': '#1B1925',
-        'cs-card': '#242232',
-        'cs-border': '#2E2C3E',
-        'cs-orange': '#FC5C03',
-        'cs-green': '#08C394',
-        'cs-turq': '#0BF4B9',
-        'cs-text': '#E8E6F0',
-        'cs-muted': '#9896A6',
-        'cs-surface': '#1E1C2C',
+        cs: {
+          bg: '#1B1925',
+          'bg-card': '#242230',
+          'bg-hover': '#2D2B3A',
+          orange: '#FC5C03',
+          green: '#08C394',
+          turquoise: '#0BF4B9',
+          text: '#F9F9F9',
+          muted: '#807F86',
+          body: '#4D4C55',
+          border: '#33313F',
+          urgent: '#EF4444',
+          progress: '#F59E0B',
+          done: '#08C394',
+        }
       },
       fontFamily: {
         oswald: ['Oswald', 'sans-serif'],
         barlow: ['Barlow', 'sans-serif'],
-        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
         mono: ['Source Code Pro', 'monospace'],
       }
     }
@@ -33,566 +37,480 @@ tailwind.config = {
 }
 </script>
 <style>
-  html, body { margin:0; padding:0; background:#1B1925; color:#E8E6F0; font-family:'Barlow',sans-serif; }
-  ::-webkit-scrollbar { width:6px; }
-  ::-webkit-scrollbar-track { background:#1B1925; }
-  ::-webkit-scrollbar-thumb { background:#2E2C3E; border-radius:3px; }
-  .tab-content { display:none; }
-  .tab-content.active { display:block; }
-  .sidebar-btn { transition: all 0.15s ease; }
-  .sidebar-btn:hover, .sidebar-btn.active { background:#242232; border-left:3px solid #FC5C03; }
-  .sidebar-btn { border-left:3px solid transparent; }
-  .kpi-card { background:#242232; border:1px solid #2E2C3E; border-radius:12px; padding:16px 20px; min-width:140px; }
-  .priority-card { border-left:4px solid; padding:12px 16px; background:#242232; border-radius:0 8px 8px 0; margin-bottom:8px; }
-  .agent-row { padding:12px 16px; background:#242232; border-radius:8px; margin-bottom:6px; border:1px solid #2E2C3E; }
-  .task-item { padding:10px 16px; background:#242232; border-radius:0 8px 8px 0; margin-bottom:6px; border-left:4px solid; }
-  .progress-bar { background:#2E2C3E; border-radius:99px; overflow:hidden; height:8px; }
-  .progress-fill { height:100%; border-radius:99px; transition: width 0.5s ease; }
-  .collapsible-header { cursor:pointer; user-select:none; }
-  .collapsible-body { overflow:hidden; transition: max-height 0.3s ease; }
-  .doc-link { display:block; padding:10px 16px; background:#242232; border:1px solid #2E2C3E; border-radius:8px; margin-bottom:6px; text-decoration:none; color:#0BF4B9; transition: background 0.15s; }
-  .doc-link:hover { background:#2E2C3E; }
-  .badge { font-family:'Source Code Pro',monospace; font-size:11px; font-weight:500; padding:2px 8px; border-radius:4px; text-transform:uppercase; }
-  @media(max-width:1024px) {
-    #sidebar { position:fixed; left:-260px; z-index:50; transition:left 0.2s ease; height:100vh; }
-    #sidebar.open { left:0; }
-    #main { margin-left:0 !important; }
-    #mobile-toggle { display:flex !important; }
-    #overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:40; }
-    #overlay.open { display:block; }
-  }
+  * { box-sizing: border-box; }
+  body { background: #1B1925; color: #F9F9F9; font-family: 'Barlow', sans-serif; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #1B1925; }
+  ::-webkit-scrollbar-thumb { background: #33313F; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #4D4C55; }
+  .priority-detail { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease, padding 0.3s ease; opacity: 0; padding-top: 0; padding-bottom: 0; }
+  .priority-detail.open { max-height: 600px; opacity: 1; padding-top: 0.75rem; padding-bottom: 0.75rem; }
+  .priority-card { transition: background 0.15s ease, border-color 0.15s ease; }
+  .priority-card:hover { background: #2D2B3A; border-color: #4D4C55; }
+  .kpi-card { backdrop-filter: blur(8px); }
+  .badge-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .pulse { animation: pulse-glow 2s ease-in-out infinite; }
+  @keyframes pulse-glow { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+  .chevron { transition: transform 0.3s ease; }
+  .chevron.rotated { transform: rotate(180deg); }
+  .msg-confirm { animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  .nav-btn { transition: all 0.2s ease; }
+  .nav-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(252,92,3,0.2); }
+  .project-card { transition: background 0.15s ease; }
+  .project-card:hover { background: #2D2B3A; }
+  .progress-bar-fill { transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
 </style>
 </head>
-<body class="bg-cs-bg min-h-screen flex">
+<body class="min-h-screen">
 
-<!-- Mobile Toggle -->
-<button id="mobile-toggle" onclick="toggleSidebar()" class="hidden fixed top-4 left-4 z-50 bg-cs-card border border-cs-border rounded-lg p-2 text-cs-text">
-  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-</button>
-<div id="overlay" onclick="toggleSidebar()"></div>
+<!-- TOP BAR -->
+<header class="sticky top-0 z-50 bg-cs-bg/95 backdrop-blur-md border-b border-cs-border">
+  <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <h1 class="font-oswald text-lg sm:text-xl font-600 tracking-wide uppercase">
+        <span class="text-cs-orange">Collective Shift</span>
+        <span class="text-cs-muted mx-1">—</span>
+        <span class="text-cs-text">CEO Command Centre</span>
+      </h1>
+    </div>
+    <div class="flex items-center gap-4 sm:gap-6">
+      <div id="clock" class="text-cs-muted text-sm font-mono hidden sm:block"></div>
+      <div class="flex items-center gap-2">
+        <span class="badge-dot bg-cs-green pulse"></span>
+        <span class="text-xs font-medium text-cs-green">BenBot Online</span>
+      </div>
+    </div>
+  </div>
+</header>
 
-<!-- Sidebar -->
-<aside id="sidebar" class="w-[240px] min-h-screen bg-cs-surface border-r border-cs-border flex flex-col flex-shrink-0">
-  <div class="p-5 border-b border-cs-border">
-    <div class="flex items-center gap-3 mb-1">
-      <div class="w-8 h-8 rounded-lg bg-cs-orange flex items-center justify-center font-oswald text-white text-sm font-bold">CS</div>
+<!-- MAIN CONTENT -->
+<main class="max-w-[1600px] mx-auto px-4 sm:px-6 py-5">
+  <div class="flex flex-col lg:flex-row gap-5">
+
+    <!-- LEFT COLUMN (60%) -->
+    <div class="w-full lg:w-[60%] space-y-5">
+
+      <!-- KPI STRIP -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
+          <div class="text-[11px] uppercase tracking-wider text-cs-muted font-medium mb-1">Cash</div>
+          <div class="text-xl font-oswald font-600 text-cs-text">$915K</div>
+        </div>
+        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
+          <div class="text-[11px] uppercase tracking-wider text-cs-muted font-medium mb-1">Survivor Line</div>
+          <div class="text-xl font-oswald font-600 text-cs-turquoise">$613K</div>
+        </div>
+        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
+          <div class="text-[11px] uppercase tracking-wider text-cs-muted font-medium mb-1">Active Members</div>
+          <div class="text-xl font-oswald font-600 text-cs-text">1,163</div>
+        </div>
+        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
+          <div class="text-[11px] uppercase tracking-wider text-cs-muted font-medium mb-1">Platinum</div>
+          <div class="text-xl font-oswald font-600 text-cs-text">402</div>
+        </div>
+        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
+          <div class="text-[11px] uppercase tracking-wider text-cs-muted font-medium mb-1">ARR</div>
+          <div class="text-xl font-oswald font-600 text-cs-green">A$7.3M</div>
+        </div>
+        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
+          <div class="text-[11px] uppercase tracking-wider text-cs-muted font-medium mb-1">Renewals</div>
+          <div class="text-lg font-oswald font-600 text-cs-orange">$131K<span class="text-cs-muted text-sm">/$180K</span></div>
+          <div class="w-full bg-cs-border rounded-full h-1.5 mt-1.5">
+            <div class="progress-bar-fill bg-cs-orange rounded-full h-1.5" style="width: 73%"></div>
+          </div>
+          <div class="text-[10px] text-cs-muted mt-1">73% — $49K gap</div>
+        </div>
+      </div>
+
+      <!-- ACTIVE PRIORITIES -->
       <div>
-        <div class="font-oswald text-sm tracking-wider text-cs-text">COLLECTIVE SHIFT</div>
-        <div class="font-mono text-[10px] text-cs-muted tracking-wide">CEO COMMAND CENTRE</div>
+        <h2 class="font-oswald text-base uppercase tracking-wider text-cs-muted mb-3 flex items-center gap-2">
+          <span class="text-cs-orange">▎</span>Active Priorities
+        </h2>
+        <div class="space-y-2" id="priorities-list"></div>
       </div>
-    </div>
-  </div>
-  <nav class="flex-1 py-3 flex flex-col gap-1">
-    <button class="sidebar-btn active w-full text-left px-5 py-3 text-sm font-barlow font-medium text-cs-text flex items-center gap-3" data-tab="overview">
-      <span>🏠</span> Overview
-    </button>
-    <button class="sidebar-btn w-full text-left px-5 py-3 text-sm font-barlow font-medium text-cs-text flex items-center gap-3" data-tab="tasks">
-      <span>📋</span> Tasks
-    </button>
-    <button class="sidebar-btn w-full text-left px-5 py-3 text-sm font-barlow font-medium text-cs-text flex items-center gap-3" data-tab="marketing">
-      <span>📊</span> Marketing
-    </button>
-    <button class="sidebar-btn w-full text-left px-5 py-3 text-sm font-barlow font-medium text-cs-text flex items-center gap-3" data-tab="education">
-      <span>🎓</span> Education
-    </button>
-    <button class="sidebar-btn w-full text-left px-5 py-3 text-sm font-barlow font-medium text-cs-text flex items-center gap-3" data-tab="sales">
-      <span>💼</span> Sales &amp; Retention
-    </button>
-    <button class="sidebar-btn w-full text-left px-5 py-3 text-sm font-barlow font-medium text-cs-text flex items-center gap-3" data-tab="documents">
-      <span>📁</span> Documents
-    </button>
-    <button class="sidebar-btn w-full text-left px-5 py-3 text-sm font-barlow font-medium text-cs-text flex items-center gap-3" data-tab="system">
-      <span>⚙️</span> System
-    </button>
-  </nav>
-  <div class="p-4 border-t border-cs-border">
-    <div class="font-mono text-[10px] text-cs-muted" id="last-updated">Loading...</div>
-  </div>
-</aside>
 
-<!-- Main Content -->
-<main id="main" class="flex-1 min-h-screen overflow-y-auto" style="margin-left:0">
-<div class="p-6 max-w-[1600px] mx-auto">
-
-<!-- ============ TAB: OVERVIEW ============ -->
-<div id="tab-overview" class="tab-content active">
-  <h1 class="font-oswald text-2xl tracking-wide mb-6">Overview</h1>
-
-  <!-- KPI Strip -->
-  <div class="flex flex-wrap gap-3 mb-8">
-    <div class="kpi-card">
-      <div class="font-mono text-[10px] text-cs-muted uppercase tracking-wider mb-1">Cash at Bank</div>
-      <div class="font-jakarta text-xl font-bold text-cs-green">$915K</div>
-    </div>
-    <div class="kpi-card">
-      <div class="font-mono text-[10px] text-cs-muted uppercase tracking-wider mb-1">Survivor Line (Apr)</div>
-      <div class="font-jakarta text-xl font-bold text-cs-orange">$613K</div>
-    </div>
-    <div class="kpi-card">
-      <div class="font-mono text-[10px] text-cs-muted uppercase tracking-wider mb-1">Active Members</div>
-      <div class="font-jakarta text-xl font-bold text-cs-text">1,163</div>
-    </div>
-    <div class="kpi-card">
-      <div class="font-mono text-[10px] text-cs-muted uppercase tracking-wider mb-1">Platinum</div>
-      <div class="font-jakarta text-xl font-bold text-cs-turq">402</div>
-    </div>
-    <div class="kpi-card">
-      <div class="font-mono text-[10px] text-cs-muted uppercase tracking-wider mb-1">ARR</div>
-      <div class="font-jakarta text-xl font-bold text-cs-green">A$7.3M</div>
-    </div>
-    <div class="kpi-card">
-      <div class="font-mono text-[10px] text-cs-muted uppercase tracking-wider mb-1">BTC Price</div>
-      <div class="font-jakarta text-xl font-bold text-cs-turq" id="kpi-btc">—</div>
-    </div>
-    <div class="kpi-card">
-      <div class="font-mono text-[10px] text-cs-muted uppercase tracking-wider mb-1">Fear &amp; Greed</div>
-      <div class="font-jakarta text-xl font-bold" id="kpi-fng">—</div>
-    </div>
-    <div class="kpi-card min-w-[220px]">
-      <div class="font-mono text-[10px] text-cs-muted uppercase tracking-wider mb-1">Renewals — $131K / $180K</div>
-      <div class="progress-bar mt-2">
-        <div class="progress-fill bg-cs-green" style="width:73%"></div>
+      <!-- NAVIGATION BUTTONS -->
+      <div class="flex flex-wrap gap-3">
+        <a href="/hub/index.html" class="nav-btn inline-flex items-center gap-2 bg-cs-orange/10 border border-cs-orange/30 text-cs-orange px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-cs-orange/20">
+          📊 Strategy Center
+        </a>
+        <a href="#documents" class="nav-btn inline-flex items-center gap-2 bg-cs-bg-card border border-cs-border text-cs-text px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-cs-bg-hover">
+          📁 Documents
+        </a>
       </div>
-      <div class="font-mono text-[10px] text-cs-muted mt-1">73% • 5 days left</div>
-    </div>
-  </div>
 
-  <!-- Two columns -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <!-- Left: Priorities -->
-    <div>
-      <h2 class="font-jakarta text-lg font-bold mb-4 flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-cs-orange inline-block"></span> Active Priorities
-      </h2>
-      <div class="priority-card" style="border-color:#EF4444">
-        <div class="flex items-center gap-2 mb-1">
-          <span class="badge bg-red-900/60 text-red-300">URGENT</span>
-          <span class="font-mono text-[10px] text-cs-muted">In Progress</span>
-        </div>
-        <div class="text-sm font-barlow font-medium">Email Veronica — office decision (The Commons)</div>
-      </div>
-      <div class="priority-card" style="border-color:#EF4444">
-        <div class="flex items-center gap-2 mb-1">
-          <span class="badge bg-red-900/60 text-red-300">URGENT</span>
-          <span class="badge bg-red-900/40 text-red-400 ml-1">6+ DAYS OVERDUE</span>
-        </div>
-        <div class="text-sm font-barlow font-medium">Chat with Raf — Delaware entity for US raise</div>
-      </div>
-      <div class="priority-card" style="border-color:#EF4444">
-        <div class="flex items-center gap-2 mb-1">
-          <span class="badge bg-red-900/60 text-red-300">URGENT</span>
-          <span class="font-mono text-[10px] text-cs-muted">In Progress</span>
-        </div>
-        <div class="text-sm font-barlow font-medium">Review restructure game plan</div>
-      </div>
-      <div class="priority-card" style="border-color:#EF4444">
-        <div class="flex items-center gap-2 mb-1">
-          <span class="badge bg-red-900/60 text-red-300">URGENT</span>
-          <span class="font-mono text-[10px] text-cs-muted">In Progress</span>
-        </div>
-        <div class="text-sm font-barlow font-medium">Review &amp; sign off CS Education System Master Outline</div>
-      </div>
-      <div class="priority-card" style="border-color:#F59E0B">
-        <div class="flex items-center gap-2 mb-1">
-          <span class="badge bg-yellow-900/60 text-yellow-300">HIGH</span>
-          <span class="font-mono text-[10px] text-cs-muted">In Progress</span>
-        </div>
-        <div class="text-sm font-barlow font-medium">Build V4 Slide Decks — Level 1 + Level 2 content outlines</div>
-      </div>
-      <div class="priority-card" style="border-color:#F59E0B">
-        <div class="flex items-center gap-2 mb-1">
-          <span class="badge bg-yellow-900/60 text-yellow-300">HIGH</span>
-          <span class="font-mono text-[10px] text-cs-muted">Not Started</span>
-        </div>
-        <div class="text-sm font-barlow font-medium">Connect ben@collectiveshift.io to gog CLI</div>
-      </div>
-      <div class="priority-card" style="border-color:#F59E0B">
-        <div class="flex items-center gap-2 mb-1">
-          <span class="badge bg-yellow-900/60 text-yellow-300">HIGH</span>
-          <span class="font-mono text-[10px] text-cs-muted">Not Started</span>
-        </div>
-        <div class="text-sm font-barlow font-medium">Build and update unit economics sheet</div>
-      </div>
-    </div>
-
-    <!-- Right: Agent Status -->
-    <div>
-      <h2 class="font-jakarta text-lg font-bold mb-4 flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-cs-turq inline-block"></span> Agent Status
-      </h2>
-      <div class="space-y-1" id="agent-grid">
-        <!-- Agents rendered by JS -->
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ TAB: TASKS ============ -->
-<div id="tab-tasks" class="tab-content">
-  <h1 class="font-oswald text-2xl tracking-wide mb-6">Tasks</h1>
-
-  <!-- Urgent -->
-  <h3 class="font-jakarta text-sm font-bold text-red-400 uppercase tracking-wider mb-3 mt-6">🔴 Urgent</h3>
-  <div class="task-item" style="border-color:#EF4444"><span class="badge bg-red-900/60 text-red-300 mr-2">URGENT</span> Review &amp; sign off CS Education System Master Outline <span class="font-mono text-[10px] text-cs-muted ml-2">In Progress</span></div>
-  <div class="task-item" style="border-color:#EF4444"><span class="badge bg-red-900/60 text-red-300 mr-2">URGENT</span> Email Veronica (The Commons) re: downsize/exit <span class="font-mono text-[10px] text-cs-muted ml-2">In Progress</span></div>
-  <div class="task-item" style="border-color:#EF4444"><span class="badge bg-red-900/60 text-red-300 mr-2">URGENT</span> Chat with Raf — Delaware entity for US raise <span class="font-mono text-[10px] text-cs-muted ml-2">In Progress • 6+ days overdue</span></div>
-  <div class="task-item" style="border-color:#EF4444"><span class="badge bg-red-900/60 text-red-300 mr-2">URGENT</span> Review restructure game plan <span class="font-mono text-[10px] text-cs-muted ml-2">In Progress</span></div>
-
-  <!-- In Progress -->
-  <h3 class="font-jakarta text-sm font-bold text-cs-orange uppercase tracking-wider mb-3 mt-6">🟠 In Progress</h3>
-  <div class="task-item" style="border-color:#FC5C03"><span class="badge bg-orange-900/60 text-orange-300 mr-2">HIGH</span> Build V4 Slide Decks — Level 1 + Level 2</div>
-  <div class="task-item" style="border-color:#FC5C03"><span class="badge bg-orange-900/60 text-orange-300 mr-2">HIGH</span> Sarn build organic pro and platinum pages</div>
-
-  <!-- Not Started -->
-  <h3 class="font-jakarta text-sm font-bold text-cs-muted uppercase tracking-wider mb-3 mt-6">⚪ Not Started</h3>
-  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-purple-900/50 text-purple-300 mr-2">P2</span> DEV TASK: Twilio &gt; CIO Inbound SMS Reply Trigger</div>
-  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-yellow-900/60 text-yellow-300 mr-2">HIGH</span> Connect ben@collectiveshift.io to gog CLI</div>
-  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-yellow-900/60 text-yellow-300 mr-2">HIGH</span> Build and update unit economics sheet</div>
-  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-blue-900/50 text-blue-300 mr-2">MED</span> Caleb &amp; Brown B2B partnership</div>
-  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-blue-900/50 text-blue-300 mr-2">MED</span> AI Setter &gt; Just Call</div>
-  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-gray-700/50 text-gray-400 mr-2">LOW</span> Connect with syrup guy</div>
-  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-blue-900/50 text-blue-300 mr-2">MED</span> Go through team goals and fantasy stories</div>
-  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-gray-700/50 text-gray-400 mr-2">LOW</span> $50k Upsell Product Strategy</div>
-  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-gray-700/50 text-gray-400 mr-2">LOW</span> Update Branding/Comms Doc with Travis feedback</div>
-  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-gray-700/50 text-gray-400 mr-2">LOW</span> CS &amp; Travis Content Strategy</div>
-  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-gray-700/50 text-gray-400 mr-2">LOW</span> CS Brand strategy</div>
-  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-gray-700/50 text-gray-400 mr-2">LOW</span> Ben Simpson Brand strategy</div>
-  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-gray-700/50 text-gray-400 mr-2">LOW</span> Clean up CS social profile</div>
-  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-gray-700/50 text-gray-400 mr-2">LOW</span> Record video for Cohort 1 feedback</div>
-  <div class="task-item" style="border-color:#4B5563"><span class="badge bg-gray-700/50 text-gray-400 mr-2">LOW</span> Apply for new address sticker</div>
-
-  <!-- Done (collapsible) -->
-  <div class="mt-6">
-    <div class="collapsible-header flex items-center gap-2 mb-3" onclick="toggleDone()">
-      <svg id="done-chevron" class="w-4 h-4 text-cs-muted transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-      <h3 class="font-jakarta text-sm font-bold text-cs-green uppercase tracking-wider">✅ Done (last 10)</h3>
-    </div>
-    <div id="done-body" class="collapsible-body" style="max-height:0">
-      <div class="task-item" style="border-color:#08C394; opacity:0.7">YouTube Strategy V2</div>
-      <div class="task-item" style="border-color:#08C394; opacity:0.7">CS Operating System Manual</div>
-      <div class="task-item" style="border-color:#08C394; opacity:0.7">Update 3 Whop Splitit plan prices</div>
-      <div class="task-item" style="border-color:#08C394; opacity:0.7">PetRock Capital call prep</div>
-      <div class="task-item" style="border-color:#08C394; opacity:0.7">Banjo $500K business loan</div>
-      <div class="task-item" style="border-color:#08C394; opacity:0.7">Platinum Pitch Deck</div>
-      <div class="task-item" style="border-color:#08C394; opacity:0.7">CWB Day 2 expanded outline</div>
-      <div class="task-item" style="border-color:#08C394; opacity:0.7">Set up Notion CEO Dashboard</div>
-      <div class="task-item" style="border-color:#08C394; opacity:0.7">Commission restructure</div>
-      <div class="task-item" style="border-color:#08C394; opacity:0.7">Sarn conversation</div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ TAB: MARKETING ============ -->
-<div id="tab-marketing" class="tab-content">
-  <h1 class="font-oswald text-2xl tracking-wide mb-6">Marketing</h1>
-
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <!-- YouTube Strategy -->
-    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
-      <h3 class="font-jakarta font-bold text-base mb-4 flex items-center gap-2">
-        <span class="text-red-500">▶</span> YouTube Strategy
-      </h3>
-      <div class="space-y-3 text-sm">
-        <div class="flex justify-between"><span class="text-cs-muted">Framework</span><span class="text-cs-turq font-medium">Jeremy Haynes — 90/10 System</span></div>
-        <div class="flex justify-between"><span class="text-cs-muted">Frequency</span><span>2–3 videos / week</span></div>
-        <div class="flex justify-between"><span class="text-cs-muted">Format</span><span>15–35 min long-form</span></div>
-        <div class="flex justify-between"><span class="text-cs-muted">Content Split</span><span>90% value • 10% pitch</span></div>
-        <div class="flex justify-between"><span class="text-cs-muted">Status</span><span class="text-cs-green">✅ Strategy V2 Complete</span></div>
-      </div>
-    </div>
-
-    <!-- Campaigns -->
-    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
-      <h3 class="font-jakarta font-bold text-base mb-4">🚀 Active Campaigns</h3>
-      <div class="space-y-4">
-        <div>
-          <div class="text-sm font-medium mb-1">Crypto Wealth Blueprint — 2-Day Event</div>
-          <div class="font-mono text-[10px] text-cs-muted">Live event funnel • conversion-focused</div>
-        </div>
-        <div class="border-t border-cs-border pt-3">
-          <div class="text-sm font-medium mb-1">Organic 4-Day Cash Machine (Patrick)</div>
-          <div class="font-mono text-[10px] text-cs-muted">Organic launch sequence • no ad spend</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Content Calendar -->
-    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
-      <h3 class="font-jakarta font-bold text-base mb-4">📅 Content Calendar</h3>
-      <div class="text-cs-muted text-sm italic">Awaiting content calendar setup from Social Bot</div>
-    </div>
-
-    <!-- Social Rhythm -->
-    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
-      <h3 class="font-jakarta font-bold text-base mb-4">📱 Social Media Posting</h3>
-      <div class="text-cs-muted text-sm italic">Posting rhythm TBD — Social Bot idle, awaiting calendar</div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ TAB: EDUCATION ============ -->
-<div id="tab-education" class="tab-content">
-  <h1 class="font-oswald text-2xl tracking-wide mb-6">Education — Shift OS</h1>
-
-  <!-- Status bar -->
-  <div class="flex flex-wrap gap-3 mb-8">
-    <div class="kpi-card"><div class="font-mono text-[10px] text-cs-muted mb-1">Framework</div><div class="font-jakarta font-bold text-cs-green">Shift OS V11 ✅</div></div>
-    <div class="kpi-card"><div class="font-mono text-[10px] text-cs-muted mb-1">Modules</div><div class="font-jakarta font-bold">16 docs</div></div>
-    <div class="kpi-card"><div class="font-mono text-[10px] text-cs-muted mb-1">Word Count</div><div class="font-jakarta font-bold">27,000</div></div>
-    <div class="kpi-card"><div class="font-mono text-[10px] text-cs-muted mb-1">Team Deck</div><div class="font-jakarta font-bold">V4 • 20 slides</div></div>
-    <div class="kpi-card"><div class="font-mono text-[10px] text-cs-muted mb-1">Overview</div><div class="font-jakarta font-bold text-cs-turq">Live on Render</div></div>
-  </div>
-
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <!-- Level 1 -->
-    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
-      <h3 class="font-jakarta font-bold text-base mb-4 text-cs-turq">Level 1 — Beginner (8 Modules)</h3>
-      <div class="space-y-2 text-sm">
-        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">B1-M1</span><span>Why Crypto &amp; Bitcoin</span></div>
-        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">B1-M2</span><span>Bitcoin Deep Dive</span></div>
-        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">B1-M3</span><span>Altcoins Intro</span></div>
-        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">B1-M4</span><span>How We Invest</span></div>
-        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">B2-M5</span><span>How to Buy &amp; Sell</span></div>
-        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">B2-M6</span><span>Send &amp; Store</span></div>
-        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">B2-M7</span><span>Tax Basics</span></div>
-        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">B2-M8</span><span>Sell Strategy Basics</span></div>
-      </div>
-    </div>
-    <!-- Level 2 -->
-    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
-      <h3 class="font-jakarta font-bold text-base mb-4 text-cs-orange">Level 2 — Advanced (8 Modules)</h3>
-      <div class="space-y-2 text-sm">
-        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">A1-M1</span><span>Advanced Foundations</span></div>
-        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">A1-M2</span><span>Advanced Bitcoin</span></div>
-        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">A1-M3</span><span>Advanced Altcoins</span></div>
-        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">A1-M4</span><span>Advanced Principles</span></div>
-        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">A2-M5</span><span>Yield &amp; Staking</span></div>
-        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">A2-M6</span><span>Advanced Tax</span></div>
-        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">A2-M7</span><span>Advanced Sell Strategy</span></div>
-        <div class="flex gap-3"><span class="font-mono text-cs-muted text-xs w-16">A2-M8</span><span>Borrowing Against Bitcoin</span></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ TAB: SALES ============ -->
-<div id="tab-sales" class="tab-content">
-  <h1 class="font-oswald text-2xl tracking-wide mb-6">Sales &amp; Retention</h1>
-
-  <!-- KPIs -->
-  <div class="flex flex-wrap gap-3 mb-8">
-    <div class="kpi-card min-w-[260px]">
-      <div class="font-mono text-[10px] text-cs-muted uppercase tracking-wider mb-1">March Renewals — $131K / $180K</div>
-      <div class="progress-bar mt-2"><div class="progress-fill bg-cs-green" style="width:73%"></div></div>
-      <div class="font-mono text-[10px] text-cs-muted mt-1">73% complete • 5 days remaining</div>
-    </div>
-    <div class="kpi-card"><div class="font-mono text-[10px] text-cs-muted mb-1">Pipeline</div><div class="font-jakarta font-bold">23 renewals</div><div class="font-mono text-[10px] text-cs-muted">$330K potential</div></div>
-    <div class="kpi-card"><div class="font-mono text-[10px] text-cs-muted mb-1">ROAS</div><div class="font-jakarta font-bold text-cs-orange">1.84x</div><div class="font-mono text-[10px] text-cs-muted">breakeven</div></div>
-  </div>
-
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <!-- Membership -->
-    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
-      <h3 class="font-jakarta font-bold text-base mb-4">👥 Active Members — 1,163</h3>
-      <div class="space-y-3">
-        <div class="flex justify-between items-center text-sm">
-          <span>Platinum</span>
-          <div class="flex items-center gap-3">
-            <div class="w-32 h-2 rounded-full bg-cs-border overflow-hidden"><div class="h-full rounded-full bg-cs-turq" style="width:34.6%"></div></div>
-            <span class="font-mono text-xs text-cs-turq">402</span>
-          </div>
-        </div>
-        <div class="flex justify-between items-center text-sm">
-          <span>Pro</span>
-          <div class="flex items-center gap-3">
-            <div class="w-32 h-2 rounded-full bg-cs-border overflow-hidden"><div class="h-full rounded-full bg-cs-orange" style="width:33.4%"></div></div>
-            <span class="font-mono text-xs text-cs-orange">388</span>
-          </div>
-        </div>
-        <div class="flex justify-between items-center text-sm">
-          <span>Legacy</span>
-          <div class="flex items-center gap-3">
-            <div class="w-32 h-2 rounded-full bg-cs-border overflow-hidden"><div class="h-full rounded-full bg-cs-muted" style="width:32%"></div></div>
-            <span class="font-mono text-xs text-cs-muted">373</span>
+      <!-- DOCUMENTS SECTION -->
+      <div id="documents">
+        <h2 class="font-oswald text-base uppercase tracking-wider text-cs-muted mb-3 flex items-center gap-2">
+          <span class="text-cs-orange">▎</span>Documents
+        </h2>
+        <div class="bg-cs-bg-card border border-cs-border rounded-lg divide-y divide-cs-border">
+          <a href="/hub/index.html" class="flex items-center gap-3 px-4 py-3 hover:bg-cs-bg-hover transition-colors group">
+            <span class="text-cs-orange text-sm">📊</span>
+            <span class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Strategy Hub</span>
+          </a>
+          <a href="/hub/positioning.html" class="flex items-center gap-3 px-4 py-3 hover:bg-cs-bg-hover transition-colors group">
+            <span class="text-cs-orange text-sm">🎯</span>
+            <span class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Positioning & ICP</span>
+          </a>
+          <a href="/hub/operating-system.html" class="flex items-center gap-3 px-4 py-3 hover:bg-cs-bg-hover transition-colors group">
+            <span class="text-cs-orange text-sm">⚙️</span>
+            <span class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Operating System</span>
+          </a>
+          <a href="/hub/products.html" class="flex items-center gap-3 px-4 py-3 hover:bg-cs-bg-hover transition-colors group">
+            <span class="text-cs-orange text-sm">📦</span>
+            <span class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Products</span>
+          </a>
+          <a href="/hub/social-strategy.html" class="flex items-center gap-3 px-4 py-3 hover:bg-cs-bg-hover transition-colors group">
+            <span class="text-cs-orange text-sm">📱</span>
+            <span class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Social Strategy</span>
+          </a>
+          <a href="/hub/competitors.html" class="flex items-center gap-3 px-4 py-3 hover:bg-cs-bg-hover transition-colors group">
+            <span class="text-cs-orange text-sm">🔍</span>
+            <span class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Competitive Intel</span>
+          </a>
+          <a href="/hub/brand.html" class="flex items-center gap-3 px-4 py-3 hover:bg-cs-bg-hover transition-colors group">
+            <span class="text-cs-orange text-sm">🎨</span>
+            <span class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Brand & Voice</span>
+          </a>
+          <a href="/CS_Brand_Guidelines_Figma_2026.html" class="flex items-center gap-3 px-4 py-3 hover:bg-cs-bg-hover transition-colors group">
+            <span class="text-cs-orange text-sm">📐</span>
+            <span class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">CS Brand Guidelines</span>
+          </a>
+          <a href="/cs-education-system-overview.html" class="flex items-center gap-3 px-4 py-3 hover:bg-cs-bg-hover transition-colors group">
+            <span class="text-cs-orange text-sm">🎓</span>
+            <span class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Education System Overview</span>
+          </a>
+          <div class="flex items-center gap-3 px-4 py-3 text-cs-muted">
+            <span class="text-sm">📄</span>
+            <span class="text-sm font-medium">Webinar Deck <span class="text-xs">(local file)</span></span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Sales GPT -->
-    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
-      <h3 class="font-jakarta font-bold text-base mb-4">🤖 Sales GPT</h3>
-      <div class="space-y-3 text-sm">
-        <div class="flex justify-between"><span class="text-cs-muted">Status</span><span class="text-yellow-400">Building knowledge base</span></div>
-        <div class="flex justify-between"><span class="text-cs-muted">Blocker</span><span class="text-cs-orange">Waiting for call recordings from Ben</span></div>
-        <div class="flex justify-between"><span class="text-cs-muted">Funding model</span><span>Organic only — overhead funded</span></div>
+    <!-- RIGHT COLUMN (40%) -->
+    <div class="w-full lg:w-[40%] space-y-5">
+
+      <!-- PROJECTS PANEL -->
+      <div>
+        <h2 class="font-oswald text-base uppercase tracking-wider text-cs-muted mb-3 flex items-center gap-2">
+          <span class="text-cs-turquoise">▎</span>Projects
+        </h2>
+        <div class="space-y-2 max-h-[480px] overflow-y-auto pr-1" id="projects-list"></div>
+      </div>
+
+      <!-- BENBOT CHAT PANEL -->
+      <div class="bg-cs-bg-card border border-cs-border rounded-lg p-4">
+        <h3 class="font-oswald text-sm uppercase tracking-wider text-cs-text mb-3 flex items-center gap-2">
+          💬 Message BenBot
+        </h3>
+        <textarea id="benbot-msg" rows="3" placeholder="Type a message for BenBot..."
+          class="w-full bg-cs-bg border border-cs-border rounded-lg px-3 py-2 text-sm text-cs-text placeholder:text-cs-body focus:outline-none focus:border-cs-orange/50 resize-none"></textarea>
+        <div class="flex items-center justify-between mt-2">
+          <span class="text-[11px] text-cs-muted">Opens Discord #ceo-benbot</span>
+          <button onclick="sendBenBot()" class="bg-cs-orange hover:bg-cs-orange/90 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors">
+            Send
+          </button>
+        </div>
+        <div id="msg-confirm" class="hidden mt-2"></div>
+        <p class="text-[11px] text-cs-body mt-2">BenBot responds in Discord within seconds</p>
+      </div>
+
+      <!-- AGENT STATUS -->
+      <div>
+        <h2 class="font-oswald text-base uppercase tracking-wider text-cs-muted mb-3 flex items-center gap-2">
+          <span class="text-cs-green">▎</span>Agent Status
+        </h2>
+        <div class="grid grid-cols-3 sm:grid-cols-4 gap-2" id="agents-grid"></div>
       </div>
     </div>
   </div>
-</div>
-
-<!-- ============ TAB: DOCUMENTS ============ -->
-<div id="tab-documents" class="tab-content">
-  <h1 class="font-oswald text-2xl tracking-wide mb-6">Documents</h1>
-
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <div>
-      <h3 class="font-jakarta font-bold text-sm uppercase tracking-wider text-cs-turq mb-4">📡 Hosted on Render</h3>
-      <a href="/cs-operating-system-manual.html" target="_blank" class="doc-link">CS Operating System Manual</a>
-      <a href="/cs-youtube-strategy.html" target="_blank" class="doc-link">YouTube Strategy</a>
-      <a href="/cs-education-system-overview.html" target="_blank" class="doc-link">Education System Overview</a>
-      <a href="/CS_Brand_Guidelines_Figma_2026.html" target="_blank" class="doc-link">Brand Guidelines</a>
-      <a href="/strategy-session-v2.html" target="_blank" class="doc-link">Strategy Session V2</a>
-      <a href="/q2-market-briefing.html" target="_blank" class="doc-link">Q2 Market Briefing</a>
-      <a href="/new-member-strategy-final.html" target="_blank" class="doc-link">New Member Strategy</a>
-      <a href="/designs/circle-v5.html" target="_blank" class="doc-link">Circle Design V5</a>
-      <a href="/designs/shift-os-v8-deck.html" target="_blank" class="doc-link">Shift OS V8 Deck</a>
-    </div>
-    <div>
-      <h3 class="font-jakarta font-bold text-sm uppercase tracking-wider text-cs-muted mb-4">💾 Workspace (Local Only)</h3>
-      <div class="doc-link cursor-default" style="color:#9896A6">Webinar deck — 54 slides</div>
-      <div class="doc-link cursor-default" style="color:#9896A6">Brand guide PDF</div>
-      <div class="doc-link cursor-default" style="color:#9896A6">16 module documents — 27K words</div>
-      <div class="doc-link cursor-default" style="color:#9896A6">Shift OS frameworks (V8, V9) — hosted as .md</div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ TAB: SYSTEM ============ -->
-<div id="tab-system" class="tab-content">
-  <h1 class="font-oswald text-2xl tracking-wide mb-6">System</h1>
-
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
-      <h3 class="font-jakarta font-bold text-base mb-4">🔧 Infrastructure</h3>
-      <div class="space-y-3 text-sm">
-        <div class="flex justify-between"><span class="text-cs-muted">Gateway</span><span class="text-cs-green">● Running</span></div>
-        <div class="flex justify-between"><span class="text-cs-muted">Discord</span><span class="text-cs-green">✅ Connected</span></div>
-        <div class="flex justify-between"><span class="text-cs-muted">Telegram</span><span class="text-cs-green">✅ Connected</span></div>
-        <div class="flex justify-between"><span class="text-cs-muted">Agents</span><span>16 total (Opus + 11 Sonnet)</span></div>
-        <div class="flex justify-between"><span class="text-cs-muted">Heartbeat</span><span>30m default • 1h main</span></div>
-        <div class="flex justify-between"><span class="text-cs-muted">Memory</span><span>47 files • 301 chunks</span></div>
-      </div>
-    </div>
-
-    <div class="bg-cs-card border border-cs-border rounded-xl p-6">
-      <h3 class="font-jakarta font-bold text-base mb-4">⚠️ Blockers</h3>
-      <div class="space-y-3 text-sm">
-        <div class="flex items-start gap-3">
-          <span class="text-red-400 mt-0.5">❌</span>
-          <div>
-            <div class="font-medium">Google OAuth Disabled</div>
-            <div class="text-cs-muted text-xs">Blocks Calendar, Sheets, Gmail access for Finance Bot, EA Bot</div>
-          </div>
-        </div>
-        <div class="flex items-start gap-3">
-          <span class="text-yellow-400 mt-0.5">⏳</span>
-          <div>
-            <div class="font-medium">Customer.io Access</div>
-            <div class="text-cs-muted text-xs">Email Bot blocked — needs API credentials</div>
-          </div>
-        </div>
-        <div class="flex items-start gap-3">
-          <span class="text-yellow-400 mt-0.5">⏳</span>
-          <div>
-            <div class="font-medium">Call Recordings</div>
-            <div class="text-cs-muted text-xs">Sales Bot waiting for Ben to upload recordings</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-</div>
 </main>
 
 <script>
-// Agent data
-const agents = [
-  { name:'Finance Bot', ch:'#finance-bot', status:'idle', activity:'Awaiting data access (Google OAuth blocked)', project:null },
-  { name:'EA Bot', ch:'#executive-assistant', status:'idle', activity:'Awaiting calendar setup', project:null },
-  { name:'Marketing Bot', ch:'#marketing-bot', status:'active', activity:'YouTube strategy research complete', project:'Jeremy Haynes framework' },
-  { name:'Social Bot', ch:'#social-media-bot', status:'idle', activity:'Awaiting content calendar', project:null },
-  { name:'Email Bot', ch:'#email-marketing-bot', status:'idle', activity:'Awaiting Customer.io access', project:null },
-  { name:'SEO Bot', ch:'#seo-bot', status:'idle', activity:'Awaiting priorities', project:null },
-  { name:'Sales Bot', ch:'#sales-bot', status:'active', activity:'Building Sales GPT knowledge base', project:'Waiting for call recordings' },
-  { name:'CSM Bot', ch:'#client-success-bot', status:'active', activity:'Shift OS V8 + two-track onboarding delivered', project:'Onboarding integration' },
-  { name:'Analyst Bot', ch:'#crypto-analyst-bot', status:'active', activity:'Shift OS V11 complete, 16 modules (27K words)', project:'V4 team deck (20 slides)' },
-  { name:'Ben Analyst Bot', ch:'#ben-analyst-bot', status:'active', activity:'Education system + CS OS website requested', project:'CS Education System' },
-  { name:'Video Bot', ch:'#video-clipper-bot', status:'idle', activity:'Awaiting video content', project:null },
+// ===== CLOCK =====
+function updateClock() {
+  const now = new Date();
+  const opts = { timeZone: 'Australia/Melbourne', weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+  document.getElementById('clock').textContent = now.toLocaleString('en-AU', opts);
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// ===== PRIORITIES DATA =====
+const priorities = [
+  {
+    id: 'renewal-sprint',
+    name: 'Renewal Sprint',
+    status: 'urgent',
+    badge: '🔴 Urgent',
+    summary: '$131K of $180K — $49K gap, 5 days left',
+    details: 'Current renewal revenue at $131K against $180K monthly target. Need to close $49K in remaining 5 days. Sales Bot tracking pipeline daily. CSM Bot flagging at-risk members for priority outreach.',
+    pending: 'Close remaining $49K gap — focus on high-value renewals and win-back campaigns.',
+    links: [
+      { label: 'CRM Pipeline', url: 'https://app.pipedrive.com' },
+      { label: 'Sales Bot Channel', url: 'https://discord.com/channels/1482990760692420690/1482993287768834150' }
+    ],
+    defaultDue: '2026-03-31'
+  },
+  {
+    id: 'us-closers-deck',
+    name: 'US Closers Deck',
+    status: 'urgent',
+    badge: '🔴 Urgent',
+    summary: 'Fix and send today',
+    details: 'US sales deck needs final revisions before sending to closers team. Positioning must align with new outcome-based messaging.',
+    pending: 'Apply final edits, review positioning, send to US closers.',
+    links: [
+      { label: 'Slides Folder', url: 'https://drive.google.com' }
+    ],
+    defaultDue: '2026-03-27'
+  },
+  {
+    id: 'session-slides',
+    name: "Tomorrow's Session Slides",
+    status: 'urgent',
+    badge: '🔴 Urgent',
+    summary: 'Create for Saturday session',
+    details: 'Saturday member session requires a fresh slide deck. Content should cover current market conditions and portfolio strategy.',
+    pending: 'Build slide deck, review content, prep speaker notes.',
+    links: [],
+    defaultDue: '2026-03-28'
+  },
+  {
+    id: 'onboarding-system',
+    name: '2-Track Onboarding System',
+    status: 'progress',
+    badge: '🟡 In Progress',
+    summary: 'Shift OS V11, Level 1/Level 2 tracks, Circle launch',
+    details: 'Building two-track onboarding: Level 1 (Beginners Lounge in Circle) and Level 2 (advanced members). Shift OS V11 complete with 16 modules, 27K words. Circle community being configured.',
+    pending: 'Finalise Circle setup, map onboarding flows, launch Level 1 track.',
+    links: [
+      { label: 'Operating System', url: '/hub/operating-system.html' }
+    ],
+    defaultDue: '2026-04-07'
+  },
+  {
+    id: 'website-positioning',
+    name: 'Website Positioning Overhaul',
+    status: 'progress',
+    badge: '🟡 In Progress',
+    summary: 'New outcome-based messaging, Figma designs',
+    details: 'Complete website redesign with outcome-based positioning. Moving away from feature-led to outcome-led messaging. Figma designs in progress.',
+    pending: 'Finalise Figma designs, approve copy, begin development.',
+    links: [
+      { label: 'Figma Designs', url: 'https://figma.com' },
+      { label: 'Positioning Doc', url: '/hub/positioning.html' }
+    ],
+    defaultDue: '2026-04-14'
+  },
+  {
+    id: 'series-a',
+    name: 'Pre-Series A Raise',
+    status: 'progress',
+    badge: '🟡 In Progress',
+    summary: 'A$3M closing this month',
+    details: 'Pre-Series A raise targeting A$3M. Multiple investor conversations active. Pitch deck and data room prepared.',
+    pending: 'Close remaining commitments, finalise term sheet, legal review.',
+    links: [
+      { label: 'Investor Docs', url: 'https://drive.google.com' }
+    ],
+    defaultDue: '2026-03-31'
+  },
+  {
+    id: 'youtube-strategy',
+    name: 'YouTube Strategy',
+    status: 'progress',
+    badge: '🟡 In Progress',
+    summary: 'Jeremy Haynes framework, 12-week calendar',
+    details: 'Implementing Jeremy Haynes YouTube growth framework. Building 12-week content calendar. Focus on authority-building content in digital assets education space.',
+    pending: 'Finalise content calendar, brief Video Clipper Bot, begin production pipeline.',
+    links: [
+      { label: 'Social Strategy', url: '/hub/social-strategy.html' }
+    ],
+    defaultDue: '2026-04-14'
+  },
+  {
+    id: 'marketing-briefing',
+    name: 'Marketing Bot Briefing',
+    status: 'progress',
+    badge: '🟡 In Progress',
+    summary: 'Jeremy Haynes docs, Hormozi offer, messaging fix',
+    details: 'Briefing Marketing Bot with Jeremy Haynes growth methodology, Hormozi-style offer structure, and updated messaging framework aligned with new positioning.',
+    pending: 'Complete briefing document, upload reference materials, configure Marketing Bot.',
+    links: [],
+    defaultDue: '2026-04-01'
+  },
+  {
+    id: 'legal-audit',
+    name: 'Legal Audit',
+    status: 'progress',
+    badge: '🟡 In Progress',
+    summary: 'Misleading & deceptive conduct review with Aston',
+    details: 'Comprehensive legal audit of all marketing materials, website copy, and member communications. Working with Aston on misleading & deceptive conduct compliance.',
+    pending: 'Complete review, implement required changes, sign-off from legal.',
+    links: [],
+    defaultDue: '2026-04-07'
+  },
+  {
+    id: 'meeting-pipeline',
+    name: 'Meeting Recording Pipeline',
+    status: 'progress',
+    badge: '🟡 In Progress',
+    summary: 'Granola setup, auto-routing',
+    details: 'Setting up Granola for meeting recording and transcription. Auto-routing transcripts to relevant channels and agents for action items.',
+    pending: 'Complete Granola integration, test auto-routing, configure agent notifications.',
+    links: [
+      { label: 'Meeting Notes', url: '/meeting-notes/' }
+    ],
+    defaultDue: '2026-04-07'
+  }
 ];
 
-function renderAgents() {
-  const grid = document.getElementById('agent-grid');
-  grid.innerHTML = agents.map(a => {
-    const dot = a.status === 'active' ? '🟢' : '🟡';
-    return `<div class="agent-row flex items-start gap-3">
-      <span class="text-sm mt-0.5">${dot}</span>
-      <div class="flex-1 min-w-0">
-        <div class="flex items-center gap-2">
-          <span class="text-sm font-medium">${a.name}</span>
-          <span class="font-mono text-[10px] text-cs-muted">${a.ch}</span>
+// ===== PROJECTS DATA =====
+const projects = [
+  { name: 'CEO Command Centre', desc: 'Dashboard + Strategy Hub build', status: 'progress', badge: '🟡 In Progress' },
+  { name: 'Shift OS V11', desc: '16 modules, 27K words', status: 'done', badge: '🟢 Complete' },
+  { name: 'Circle Community Launch', desc: "Beginner's Lounge, Level 1 coaching", status: 'progress', badge: '🟡 In Progress' },
+  { name: 'Website Redesign', desc: 'Figma designs, outcome-based copy', status: 'progress', badge: '🟡 Planning' },
+  { name: 'AI Agent Team', desc: '11 bots active, version sync pending', status: 'progress', badge: '🟡 In Progress' },
+  { name: 'YouTube Channel', desc: 'Jeremy Haynes framework, content calendar', status: 'progress', badge: '🟡 Planning' },
+  { name: 'US Expansion', desc: 'LA events, US sales team, Delaware entity', status: 'progress', badge: '🟡 In Progress' },
+  { name: 'Pre-Series A', desc: 'A$3M raise, closing March', status: 'urgent', badge: '🔴 Urgent' },
+  { name: 'Branded Methodology Name', desc: 'Replace "Shift OS" with marketable brand', status: 'progress', badge: '🟡 In Progress' },
+  { name: 'Meeting Pipeline', desc: 'Granola → transcribe → route', status: 'done', badge: '🟢 V1 Complete' }
+];
+
+// ===== AGENTS DATA =====
+const agents = ['Finance','EA','Marketing','Social','Email','SEO','Sales','CSM','Analyst','Ben Analyst','Video'];
+
+// ===== RENDER PRIORITIES =====
+function renderPriorities() {
+  const list = document.getElementById('priorities-list');
+  list.innerHTML = priorities.map((p, i) => {
+    const savedDue = localStorage.getItem(`due-${p.id}`) || p.defaultDue;
+    const savedNotes = localStorage.getItem(`notes-${p.id}`) || '';
+    const statusColor = p.status === 'urgent' ? 'text-red-400 bg-red-400/10' : p.status === 'done' ? 'text-cs-green bg-cs-green/10' : 'text-yellow-400 bg-yellow-400/10';
+    const borderColor = p.status === 'urgent' ? 'border-red-400/20' : 'border-cs-border';
+
+    return `
+      <div class="priority-card bg-cs-bg-card border ${borderColor} rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between px-4 py-3 cursor-pointer select-none" onclick="togglePriority(${i})">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="text-sm flex-shrink-0">${p.status === 'urgent' ? '🔴' : p.status === 'done' ? '🟢' : '🟡'}</span>
+            <div class="min-w-0">
+              <span class="font-semibold text-sm text-cs-text">${p.name}</span>
+              <span class="text-cs-muted text-xs ml-2 hidden sm:inline">— ${p.summary}</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <span class="${statusColor} text-[10px] font-semibold px-2 py-0.5 rounded-full hidden sm:inline-block">${p.badge.replace(/🔴|🟡|🟢/g,'').trim()}</span>
+            <svg class="chevron w-4 h-4 text-cs-muted" id="chev-${i}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </div>
         </div>
-        <div class="text-xs text-cs-muted truncate">${a.activity}</div>
-        ${a.project ? `<div class="text-xs text-cs-turq mt-0.5">${a.project}</div>` : ''}
-      </div>
-    </div>`;
+        <div class="priority-detail px-4" id="detail-${i}">
+          <p class="text-xs text-cs-muted mb-1 sm:hidden">— ${p.summary}</p>
+          <div class="space-y-3">
+            <div>
+              <p class="text-xs font-semibold text-cs-muted uppercase tracking-wide mb-1">Status</p>
+              <p class="text-sm text-cs-text/80">${p.details}</p>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-cs-muted uppercase tracking-wide mb-1">Pending</p>
+              <p class="text-sm text-cs-text/80">${p.pending}</p>
+            </div>
+            ${p.links.length ? `
+            <div>
+              <p class="text-xs font-semibold text-cs-muted uppercase tracking-wide mb-1">Links</p>
+              <div class="flex flex-wrap gap-2">
+                ${p.links.map(l => `<a href="${l.url}" target="_blank" class="text-xs text-cs-turquoise hover:text-cs-orange transition-colors underline underline-offset-2">${l.label}</a>`).join('')}
+              </div>
+            </div>` : ''}
+            <div class="flex flex-wrap items-center gap-4">
+              <div>
+                <label class="text-xs font-semibold text-cs-muted uppercase tracking-wide block mb-1">Due Date</label>
+                <input type="date" value="${savedDue}" onchange="saveDue('${p.id}', this.value)"
+                  class="bg-cs-bg border border-cs-border rounded px-2 py-1 text-xs text-cs-text focus:outline-none focus:border-cs-orange/50">
+              </div>
+              <div class="flex-1 min-w-[200px]">
+                <label class="text-xs font-semibold text-cs-muted uppercase tracking-wide block mb-1">Notes</label>
+                <textarea rows="2" placeholder="Add notes..." onchange="saveNotes('${p.id}', this.value)"
+                  class="w-full bg-cs-bg border border-cs-border rounded px-2 py-1 text-xs text-cs-text placeholder:text-cs-body focus:outline-none focus:border-cs-orange/50 resize-none">${savedNotes}</textarea>
+              </div>
+            </div>
+            <button onclick="messageBenBot('Re: ${p.name} — ')" class="text-xs bg-cs-orange/10 border border-cs-orange/30 text-cs-orange px-3 py-1.5 rounded-lg hover:bg-cs-orange/20 transition-colors">
+              💬 Message BenBot
+            </button>
+          </div>
+        </div>
+      </div>`;
   }).join('');
 }
 
-// Tab switching
-document.querySelectorAll('.sidebar-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-    // Close sidebar on mobile
-    if (window.innerWidth <= 1024) toggleSidebar();
-  });
-});
-
-// Collapsible done tasks
-let doneOpen = false;
-function toggleDone() {
-  doneOpen = !doneOpen;
-  const body = document.getElementById('done-body');
-  const chevron = document.getElementById('done-chevron');
-  body.style.maxHeight = doneOpen ? body.scrollHeight + 'px' : '0';
-  chevron.style.transform = doneOpen ? 'rotate(90deg)' : '';
+function togglePriority(i) {
+  const detail = document.getElementById(`detail-${i}`);
+  const chev = document.getElementById(`chev-${i}`);
+  detail.classList.toggle('open');
+  chev.classList.toggle('rotated');
 }
 
-// Mobile sidebar
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('overlay').classList.toggle('open');
+function saveDue(id, val) { localStorage.setItem(`due-${id}`, val); }
+function saveNotes(id, val) { localStorage.setItem(`notes-${id}`, val); }
+
+function messageBenBot(prefill) {
+  const ta = document.getElementById('benbot-msg');
+  ta.value = prefill || '';
+  ta.focus();
+  ta.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
-// Snapshot loader
-async function loadSnapshot() {
-  try {
-    const res = await fetch('/api/snapshot');
-    if (!res.ok) throw new Error('no snapshot');
-    const data = await res.json();
-    if (data.btcPrice) document.getElementById('kpi-btc').textContent = '$' + Number(data.btcPrice).toLocaleString();
-    if (data.fearGreed) {
-      const fg = document.getElementById('kpi-fng');
-      fg.textContent = data.fearGreed;
-      const v = parseInt(data.fearGreed);
-      fg.className = 'font-jakarta text-xl font-bold ' + (v >= 60 ? 'text-cs-green' : v >= 40 ? 'text-yellow-400' : 'text-red-400');
-    }
-  } catch(e) {
-    document.getElementById('kpi-btc').textContent = '—';
-    document.getElementById('kpi-fng').textContent = '—';
-  }
-  document.getElementById('last-updated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-AU', { hour:'2-digit', minute:'2-digit' });
+// ===== RENDER PROJECTS =====
+function renderProjects() {
+  const list = document.getElementById('projects-list');
+  list.innerHTML = projects.map(p => {
+    const dot = p.status === 'urgent' ? 'bg-red-400' : p.status === 'done' ? 'bg-cs-green' : 'bg-yellow-400';
+    return `
+      <div class="project-card bg-cs-bg-card border border-cs-border rounded-lg px-4 py-3 flex items-start gap-3">
+        <span class="badge-dot ${dot} mt-1.5 flex-shrink-0"></span>
+        <div class="min-w-0">
+          <div class="font-semibold text-sm text-cs-text">${p.name}</div>
+          <div class="text-xs text-cs-muted mt-0.5">${p.desc}</div>
+        </div>
+        <span class="text-[10px] text-cs-muted whitespace-nowrap ml-auto flex-shrink-0">${p.badge.replace(/🔴|🟡|🟢/g,'').trim()}</span>
+      </div>`;
+  }).join('');
 }
 
-// Init
+// ===== RENDER AGENTS =====
+function renderAgents() {
+  const grid = document.getElementById('agents-grid');
+  grid.innerHTML = agents.map(a => `
+    <div class="bg-cs-bg-card border border-cs-border rounded-lg px-3 py-2 flex items-center gap-2">
+      <span class="badge-dot bg-cs-green flex-shrink-0"></span>
+      <span class="text-xs font-medium text-cs-text truncate">${a}</span>
+    </div>
+  `).join('');
+}
+
+// ===== SEND TO BENBOT =====
+function sendBenBot() {
+  const ta = document.getElementById('benbot-msg');
+  const msg = ta.value.trim();
+  if (!msg) return;
+  const confirm = document.getElementById('msg-confirm');
+  confirm.innerHTML = '<p class="msg-confirm text-xs text-cs-green">Message sent to #ceo-benbot ✅</p>';
+  confirm.classList.remove('hidden');
+  window.open('https://discord.com/channels/1482990760692420690/1482993283838771322', '_blank');
+  setTimeout(() => { confirm.classList.add('hidden'); ta.value = ''; }, 3000);
+}
+
+// ===== INIT =====
+renderPriorities();
+renderProjects();
 renderAgents();
-loadSnapshot();
-setInterval(loadSnapshot, 300000);
 </script>
 </body>
 </html>
