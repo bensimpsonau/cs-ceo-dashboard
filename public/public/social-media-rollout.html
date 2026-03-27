@@ -1,46 +1,1100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
-  <title>Social Media Rollout — Collective Shift</title>
-  <style>
-    body { padding-top: 0 !important; display: block; }
-    .public-header {
-      width: 100%; height: 56px;
-      background: #FFF; border-bottom: 1px solid #E8E8EA;
-      display: flex; align-items: center; gap: 18px;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Social Media Rollout — Collective Shift</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #FFFFFF;
+    --bg-off: #F9F9F9;
+    --text: #1B1925;
+    --text-secondary: #4D4C55;
+    --text-muted: #807F86;
+    --orange: #FC5C03;
+    --orange-bg: #FEDECC;
+    --orange-hover: #FEEEE5;
+    --green: #08C394;
+    --purple: #654FFC;
+    --border: #E8E8EA;
+    --dark: #1A1A2E;
+    --card-shadow: 0 2px 4px rgba(0,0,0,0.04), 0 1px 5.5px rgba(0,0,0,0.03);
+  }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  h1, h2, h3, h4, h5 { font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.3; }
+  code, .mono { font-family: 'Source Code Pro', monospace; }
+
+  /* ───── TOP NAV (shared) ───── */
+  .csn-bar {
+    position: fixed; top: 0; left: 0; right: 0; height: 56px;
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; padding: 0 24px; z-index: 9000;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .csn-logo { font-weight: 700; font-size: 15px; color: var(--orange); text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase; margin-right: 32px; }
+  .csn-nav { display: flex; align-items: center; gap: 2px; flex: 1; }
+  .csn-item { position: relative; }
+  .csn-link { display: flex; align-items: center; gap: 5px; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--text-muted); text-decoration: none; white-space: nowrap; transition: color 0.15s, background 0.15s; cursor: pointer; }
+  .csn-link:hover { color: var(--orange); background: var(--orange-hover); }
+  .csn-item.active > .csn-link { color: var(--orange); font-weight: 600; }
+  .csn-chevron { transition: transform 0.2s; }
+  .csn-dropdown { display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 240px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.10); padding: 6px; z-index: 9001; }
+  .csn-item.csn-has-dd::after { content: ""; position: absolute; top: 100%; left: 0; width: 100%; height: 12px; }
+  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
+  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
+  .csn-dd-item { display: block; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--text-muted); text-decoration: none; transition: color 0.12s, background 0.12s; white-space: nowrap; }
+  .csn-dd-item:hover { color: var(--orange); background: var(--orange-hover); }
+  .csn-divider { height: 1px; background: var(--border); margin: 4px 8px; }
+  .csn-hamburger { display: none; background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px; margin-left: auto; }
+  .csn-mobile-menu { display: none; position: fixed; top: 56px; left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 8px 16px 16px; z-index: 8999; max-height: calc(100vh - 56px); overflow-y: auto; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+  .csn-mobile-menu.open { display: block; }
+  .csn-mob-link { display: block; padding: 9px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--text-muted); text-decoration: none; }
+  .csn-mob-link:hover { color: var(--orange); background: var(--orange-hover); }
+  .csn-mob-top { font-weight: 600; color: var(--text); margin-top: 4px; }
+  .csn-mob-sub { font-size: 12px; padding-left: 20px; }
+  body { padding-top: 56px !important; }
+  @media (max-width: 1023px) { .csn-nav { display: none; } .csn-hamburger { display: block; } }
+
+  /* ───── PAGE LAYOUT ───── */
+  .page-container { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+  .page-header { margin-bottom: 48px; border-bottom: 1px solid var(--border); padding-bottom: 32px; }
+  .page-header h1 { font-size: 2rem; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+  .page-header .subtitle { font-size: 1.05rem; color: var(--text-secondary); max-width: 700px; }
+  .page-header .meta { margin-top: 12px; font-size: 0.8rem; color: var(--text-muted); font-family: 'Source Code Pro', monospace; }
+
+  /* ───── TOC ───── */
+  .toc { background: var(--bg-off); border: 1px solid var(--border); border-radius: 12px; padding: 24px 28px; margin-bottom: 48px; }
+  .toc h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 12px; }
+  .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 6px 24px; }
+  .toc a { font-size: 0.9rem; color: var(--text-secondary); text-decoration: none; padding: 4px 0; display: flex; align-items: center; gap: 8px; transition: color 0.15s; }
+  .toc a:hover { color: var(--orange); }
+  .toc a .num { font-family: 'Source Code Pro', monospace; font-size: 0.75rem; color: var(--orange); min-width: 24px; }
+
+  /* ───── SECTIONS ───── */
+  .section { margin-bottom: 56px; }
+  .section-title { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 6px; display: flex; align-items: center; gap: 12px; }
+  .section-title .icon { font-size: 1.4rem; }
+  .section-subtitle { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; }
+
+  /* ───── CARDS ───── */
+  .card { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: var(--card-shadow); }
+  .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .card-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+  .card h4 { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+  .card h5 { font-size: 0.9rem; font-weight: 700; color: var(--text); margin: 16px 0 8px; }
+  .card p, .card li { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.65; }
+  .card ul { padding-left: 20px; margin: 8px 0; }
+  .card li { margin-bottom: 4px; }
+
+  /* ───── COPYABLE BIO BOXES ───── */
+  .bio-box { background: var(--bg-off); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; margin: 12px 0; position: relative; cursor: pointer; transition: border-color 0.15s; }
+  .bio-box:hover { border-color: var(--orange); }
+  .bio-box::after { content: '📋 Click to copy'; position: absolute; top: 8px; right: 12px; font-size: 0.7rem; color: var(--text-muted); font-family: 'Source Code Pro', monospace; }
+  .bio-box.copied::after { content: '✅ Copied!'; color: var(--green); }
+  .bio-box p { font-size: 0.88rem; color: var(--text); line-height: 1.6; margin: 0; }
+
+  /* ───── TABLE ───── */
+  .data-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.88rem; }
+  .data-table th { background: var(--bg-off); font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); text-align: left; padding: 10px 14px; border-bottom: 2px solid var(--border); }
+  .data-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-secondary); vertical-align: top; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: var(--bg-off); }
+
+  /* ───── PILLS / TAGS ───── */
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 2px 4px 2px 0; }
+  .pill-orange { background: var(--orange-bg); color: var(--orange); }
+  .pill-green { background: #D1FAE5; color: #059669; }
+  .pill-purple { background: #EDE9FE; color: #7C3AED; }
+  .pill-dark { background: #E5E7EB; color: var(--text-secondary); }
+
+  /* ───── FRAMEWORK BOXES ───── */
+  .framework { border-left: 4px solid var(--orange); background: var(--bg-off); border-radius: 0 12px 12px 0; padding: 20px 24px; margin: 16px 0; }
+  .framework h5 { font-size: 0.95rem; font-weight: 700; color: var(--orange); margin: 0 0 8px; }
+  .framework p, .framework li { font-size: 0.88rem; }
+
+  /* ───── DESIGN BRIEF CARDS ───── */
+  .brief-card { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 24px; box-shadow: var(--card-shadow); }
+  .brief-header { background: var(--dark); color: #fff; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .brief-header h4 { font-size: 1.1rem; font-weight: 700; }
+  .brief-dims { font-family: 'Source Code Pro', monospace; font-size: 0.85rem; color: var(--orange); background: rgba(252,92,3,0.15); padding: 4px 12px; border-radius: 6px; }
+  .brief-body { padding: 24px; }
+  .brief-body h5 { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin: 16px 0 8px; }
+  .brief-body h5:first-child { margin-top: 0; }
+  .brief-body p, .brief-body li { font-size: 0.88rem; color: var(--text-secondary); }
+  .brief-body ul { padding-left: 20px; margin: 4px 0 12px; }
+  .brief-mockup { background: var(--bg-off); border: 1px dashed var(--border); border-radius: 8px; padding: 20px; margin: 16px 0; text-align: center; }
+  .brief-mockup .dims-label { font-family: 'Source Code Pro', monospace; font-size: 0.75rem; color: var(--text-muted); }
+
+  /* ───── SWATCH ROW ───── */
+  .swatch-row { display: flex; gap: 12px; margin: 12px 0; flex-wrap: wrap; }
+  .swatch { width: 60px; height: 40px; border-radius: 8px; display: flex; align-items: flex-end; justify-content: center; font-family: 'Source Code Pro', monospace; font-size: 0.6rem; color: #fff; padding-bottom: 4px; }
+
+  /* ───── CALENDAR ───── */
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin: 16px 0; }
+  .cal-cell { background: var(--bg-off); border: 1px solid var(--border); border-radius: 6px; padding: 10px 8px; min-height: 80px; font-size: 0.78rem; }
+  .cal-day { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 6px; }
+  .cal-item { background: var(--bg); border-radius: 4px; padding: 3px 6px; margin-bottom: 3px; font-size: 0.72rem; border-left: 3px solid transparent; }
+  .cal-yt { border-left-color: #FF0000; }
+  .cal-x { border-left-color: #000; }
+  .cal-ig { border-left-color: #E1306C; }
+  .cal-li { border-left-color: #0A66C2; }
+  .cal-tk { border-left-color: #000; }
+
+  /* ───── PRINT ───── */
+  @media print {
+    .csn-bar, .csn-mobile-menu, .toc { display: none; }
+    body { padding-top: 0 !important; }
+    .page-container { max-width: none; padding: 20px; }
+    .card, .brief-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+    .section { break-before: auto; }
+  }
+
+  /* ───── MOBILE ───── */
+  @media (max-width: 640px) {
+    .page-header h1 { font-size: 1.5rem; }
+    .cal-grid { grid-template-columns: 1fr; }
+    .brief-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  }
+
+    /* === PUBLIC PAGE: hide sidebar & nav, full-width main === */
+    .sidebar, aside.sidebar, nav.sidebar,
+    .csn-bar, .csn-mobile-menu, #csnMobileMenu,
+    .overlay, #overlay, .mobile-header,
+    .hamburger, [class*="hamburger"],
+    .breadcrumb, nav[role="navigation"] { display: none !important; }
+    
+    body { display: block !important; }
+    main, .main, .content, .page-content {
+      margin-left: 0 !important;
+      padding-left: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+    
+    .csn-mob-link, .csn-mob-top, .csn-mob-sub,
+    a[class*="csn-mob"] { display: none !important; }
+    
+    .public-header-bar {
+      background: #fff;
+      border-bottom: 1px solid #E8E8EA;
+      padding: 14px 32px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 9999;
+    }
+    .public-header-bar .ph-mark {
+      width: 26px; height: 26px;
+      background: #FC5C03;
+      border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: 13px;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 1rem; font-weight: 700;
-      letter-spacing: 0.07em; color: #FC5C03;
-      padding: 0 32px; z-index:1000;
     }
-    .public-header .logo {
-      font-weight: 700; font-size:1.08em; color: #FC5C03; text-decoration:none;
-      letter-spacing: 0.09em; text-transform: uppercase; margin-right:12px;
+    .public-header-bar .ph-name {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 600; font-size: 15px; color: #1B1925;
     }
-    .public-header .hub {
-      font-family: 'Plus Jakarta Sans', sans-serif; color: #222; font-size: 1em;
-      font-weight:500; letter-spacing:0.03em;
+    .public-header-bar .ph-sep {
+      width: 1px; height: 18px; background: #E8E8EA; margin: 0 2px;
     }
-    .csn-bar, .csn-mobile-menu, .csn-hamburger, nav[role="navigation"], #csnMobileMenu, .sidebar, aside.sidebar, .overlay, .mobile-header, .hamburger, #overlay { display:none!important; }
-    @media (max-width:640px){ .public-header{padding:0 12px;height:48px;font-size:0.99rem;} }
-  </style>
-  <!-- Inserted original CSS below -->
-  <!-- EXISTING PAGE CSS (from original) -->
-  <style>
-    /* Place original page content CSS here… [TRUNCATED: See original for details] */
-  </style>
+    .public-header-bar .ph-hub {
+      font-family: 'Barlow', sans-serif;
+      font-weight: 400; font-size: 13px; color: #807F86;
+    }
+    @media (max-width: 768px) {
+      .public-header-bar { padding: 12px 16px; }
+    }
+
+</style>
 </head>
 <body>
-  <div class="public-header">
-    <a class="logo" href="https://collectiveshift.co" target="_blank">Collective Shift</a>
-    <span class="hub">Strategy Hub</span>
+<div class="public-header-bar">
+  <div class="ph-mark">CS</div>
+  <span class="ph-name">Collective Shift</span>
+  <div class="ph-sep"></div>
+  <span class="ph-hub">Strategy Hub</span>
+</div>
+
+
+<!-- ═══ TOP NAV ═══ -->
+<nav class="csn-bar" role="navigation" aria-label="Main navigation">
+  <a href="../index.html" class="csn-logo">Collective Shift</a>
+  <div class="csn-nav">
+    <div class="csn-item"><a href="../index.html" class="csn-link"></a></div>
+    <div class="csn-item csn-has-dd">
+      <a href="operating-system.html" class="csn-link">Operating System
+        <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="csn-dropdown">
+        <a href="operating-system.html" class="csn-dd-item">Overview</a>
+        <a href="modules/m1-foundations.html" class="csn-dd-item">Module 1: Foundations</a>
+        <a href="modules/m2-bitcoin.html" class="csn-dd-item">Module 2: Bitcoin</a>
+        <a href="modules/m3-altcoins.html" class="csn-dd-item">Module 3: Digital Assets</a>
+        <a href="modules/m4-how-we-invest.html" class="csn-dd-item">Module 4: How We Invest</a>
+        <a href="modules/m5-buy-sell.html" class="csn-dd-item">Module 5: Buy & Sell</a>
+        <a href="modules/m6-send-store.html" class="csn-dd-item">Module 6: Send & Store</a>
+        <a href="modules/m7-tax.html" class="csn-dd-item">Module 7: Tax</a>
+        <a href="modules/m8-sell-strategy.html" class="csn-dd-item">Module 8: Exit Strategy</a>
+      </div>
+    </div>
+    <div class="csn-item csn-has-dd">
+      <a href="products.html" class="csn-link">Product
+        <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="csn-dropdown">
+        <a href="products.html#platinum" class="csn-dd-item">Platinum</a>
+        <a href="products.html#accelerator" class="csn-dd-item">Accelerator</a>
+        <a href="beginner-journey.html" class="csn-dd-item">Beginner's Journey</a>
+      </div>
+    </div>
+    <div class="csn-item csn-has-dd active">
+      <a href="youtube-strategy.html" class="csn-link">Social Media
+        <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="csn-dropdown">
+        <a href="youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a>
+        <a href="social-strategy.html" class="csn-dd-item">Social Strategy</a>
+        <a href="instagram-strategy.html" class="csn-dd-item">Instagram Strategy</a>
+        <a href="social-media-rollout.html" class="csn-dd-item" style="color:var(--orange);font-weight:600;">📱 Social Rollout</a>
+        <div class="csn-divider"></div>
+        <a href="brand.html" class="csn-dd-item">Brand & Voice</a>
+        <a href="positioning.html" class="csn-dd-item">Positioning & ICP</a>
+        <a href="competitors.html" class="csn-dd-item">Competitors</a>
+      </div>
+    </div>
+    <div class="csn-item csn-has-dd">
+      <a href="../travis-briefing-2026-03-27.html" class="csn-link">Documents
+        <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="csn-dropdown">
+        <a href="../travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a>
+        <a href="../cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a>
+      </div>
+    </div>
   </div>
-  <div class="page-container">
-    <!-- Full original main content starting from header/toc onward. Nav/sidebar/mobile removed. -->
-    <!-- ... All user strategy content preserved as in the original ... -->
+  <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+<div id="csnMobileMenu" class="csn-mobile-menu">
+  <a href="../index.html" class="csn-mob-link csn-mob-top"></a>
+  <a href="youtube-strategy.html" class="csn-mob-link csn-mob-top">Social Media</a>
+  <a href="youtube-strategy.html" class="csn-mob-link csn-mob-sub">YouTube Strategy</a>
+  <a href="social-strategy.html" class="csn-mob-link csn-mob-sub">Social Strategy</a>
+  <a href="social-media-rollout.html" class="csn-mob-link csn-mob-sub" style="color:var(--orange)">📱 Social Rollout</a>
+  <a href="brand.html" class="csn-mob-link csn-mob-sub">Brand & Voice</a>
+</div>
+
+<!-- ═══ PAGE CONTENT ═══ -->
+<div class="page-container">
+
+  <!-- HEADER -->
+  <header class="page-header">
+    <h1>📱 Social Media Rollout Package</h1>
+    <p class="subtitle">Complete messaging guide, channel strategies, design briefs, and content calendar for Collective Shift across YouTube, X, Instagram, LinkedIn, and TikTok.</p>
+    <p class="meta">v1.0 — March 2026 — Internal Use — Ben Simpson / Collective Shift</p>
+  </header>
+
+  <!-- TABLE OF CONTENTS -->
+  <div class="toc">
+    <h3>Contents</h3>
+    <div class="toc-grid">
+      <a href="#brand-messaging"><span class="num">01</span> Brand Messaging</a>
+      <a href="#youtube"><span class="num">02</span> YouTube Strategy</a>
+      <a href="#x-twitter"><span class="num">03</span> X / Twitter Strategy</a>
+      <a href="#instagram"><span class="num">04</span> Instagram Strategy</a>
+      <a href="#linkedin"><span class="num">05</span> LinkedIn Strategy</a>
+      <a href="#tiktok"><span class="num">06</span> TikTok Strategy</a>
+      <a href="#messaging-frameworks"><span class="num">07</span> Messaging Frameworks</a>
+      <a href="#language-guide"><span class="num">08</span> ICP Language Guide</a>
+      <a href="#voice-guidelines"><span class="num">09</span> Ben's Voice Guidelines</a>
+      <a href="#content-calendar"><span class="num">10</span> Content Calendar</a>
+      <a href="#design-briefs"><span class="num">11</span> Cover Image Design Briefs</a>
+      <a href="#brand-assets"><span class="num">12</span> Brand Asset Reference</a>
+    </div>
   </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 1: BRAND MESSAGING              -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section" id="brand-messaging">
+    <h2 class="section-title"><span class="icon">🎯</span> Brand Messaging</h2>
+    <p class="section-subtitle">Unified messaging across all channels — tagline, elevator pitch, and mission statement.</p>
+
+    <div class="card">
+      <h4>Tagline</h4>
+      <div class="bio-box" onclick="copyBio(this)">
+        <p><strong>Cut through the noise. Build generational wealth with digital assets.</strong></p>
+      </div>
+
+      <h5>Elevator Pitch (30-second)</h5>
+      <div class="bio-box" onclick="copyBio(this)">
+        <p>Collective Shift is the world's most trusted digital asset education company. We help high-net-worth investors build structured, research-driven digital asset portfolios — without the noise, hype, or speculation. Founded by Ben Simpson, who's been investing in digital assets for nearly a decade, we provide institutional-grade intelligence, systematic frameworks, and a private community of 350+ vetted investors managing $100K–$35M+ portfolios.</p>
+      </div>
+
+      <h5>Mission Statement</h5>
+      <div class="bio-box" onclick="copyBio(this)">
+        <p>To be the world's most trusted digital asset education company, empowering serious investors to build generational wealth through a systematic, research-driven framework — free from hype, affiliates, and conflicting interests.</p>
+      </div>
+
+      <h5>Positioning Statement</h5>
+      <div class="bio-box" onclick="copyBio(this)">
+        <p>Collective Shift is <em>Bloomberg for Digital Assets</em> — professional-grade intelligence, research, and education for investors who have already built real wealth and want to protect and grow it with a structured digital asset allocation.</p>
+      </div>
+
+      <h5>Key Value Propositions</h5>
+      <ul>
+        <li><strong>100% independent</strong> — no affiliates, no advertising, no token promotions</li>
+        <li><strong>Skin in the game</strong> — we invest our own capital alongside members</li>
+        <li><strong>Institutional-grade research</strong> — we do the heavy lifting so you don't have to</li>
+        <li><strong>Systematic frameworks</strong> — not tips, not signals — repeatable decision frameworks</li>
+        <li><strong>High-touch community</strong> — 350+ vetted HNW investors, 1-on-1 coaching, in-person events</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 2: YOUTUBE                      -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section" id="youtube">
+    <h2 class="section-title"><span class="icon">🔴</span> YouTube Strategy</h2>
+    <p class="section-subtitle">Primary acquisition channel. This is where our ICP discovers us.</p>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#FF000015;color:#FF0000;">▶</div>
+        <h4>@BenCollectiveShift</h4>
+      </div>
+
+      <h5>Channel Description (copy-paste)</h5>
+      <div class="bio-box" onclick="copyBio(this)">
+        <p>I'm Ben Simpson — founder of Collective Shift, the world's most trusted digital asset education company.</p>
+        <p style="margin-top:8px;">I help high-net-worth investors build structured digital asset portfolios without the noise, hype, or speculation. After nearly a decade of investing my own capital in this space, I created the resource I wish I had — institutional-grade research, systematic frameworks, and a private community of 350+ serious investors.</p>
+        <p style="margin-top:8px;">On this channel: Bitcoin analysis, portfolio strategy, digital asset research, and the frameworks used by sophisticated investors to protect and grow generational wealth.</p>
+        <p style="margin-top:8px;">🔗 Free training: collectiveshift.co/cryptoblueprint<br>🔗 Apply for Platinum: collectiveshift.co/platinum</p>
+      </div>
+
+      <h5>Content Pillars</h5>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px;">
+        <span class="pill pill-orange">Bitcoin & Macro</span>
+        <span class="pill pill-green">Portfolio Strategy</span>
+        <span class="pill pill-purple">Digital Asset Research</span>
+        <span class="pill pill-dark">Wealth Protection</span>
+      </div>
+
+      <table class="data-table">
+        <tr><th style="width:160px;">Attribute</th><th>Detail</th></tr>
+        <tr><td><strong>Posting Cadence</strong></td><td>2–3 long-form videos/week (10–25 min) + 2–3 Shorts/week</td></tr>
+        <tr><td><strong>Content Format</strong></td><td>Talking head + screen share, market analysis, framework walkthroughs, guest conversations</td></tr>
+        <tr><td><strong>Tone</strong></td><td>Authoritative yet approachable. Ben speaks as a peer investor, not a guru. Data-driven, conviction-based.</td></tr>
+        <tr><td><strong>CTA Strategy</strong></td><td>End-screen: "Free training in description" → collectiveshift.co/cryptoblueprint. Pinned comment with link. Never hard-sell in video body.</td></tr>
+        <tr><td><strong>Hashtag Strategy</strong></td><td>Title/description: #Bitcoin #DigitalAssets #WealthProtection #Investing — avoid #crypto (signals retail/speculative)</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 3: X / TWITTER                  -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section" id="x-twitter">
+    <h2 class="section-title"><span class="icon">𝕏</span> X / Twitter Strategy</h2>
+    <p class="section-subtitle">Thought leadership, real-time market commentary, and professional networking.</p>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#00000010;color:#000;">𝕏</div>
+        <h4>@bensimpsonau</h4>
+      </div>
+
+      <h5>Bio (160 characters)</h5>
+      <div class="bio-box" onclick="copyBio(this)">
+        <p>Founder @CollectiveShift_ · Helping HNW investors build structured digital asset portfolios · No affiliates, no hype — just frameworks · 🇦🇺</p>
+      </div>
+
+      <h5>Content Pillars</h5>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px;">
+        <span class="pill pill-orange">Market Commentary</span>
+        <span class="pill pill-green">Frameworks & Mental Models</span>
+        <span class="pill pill-purple">Institutional Adoption</span>
+        <span class="pill pill-dark">Behind the Scenes</span>
+      </div>
+
+      <table class="data-table">
+        <tr><th style="width:160px;">Attribute</th><th>Detail</th></tr>
+        <tr><td><strong>Posting Cadence</strong></td><td>1–2 tweets/day + 1 thread/week + retweet relevant news</td></tr>
+        <tr><td><strong>Content Format</strong></td><td>Short-form takes, threads (5–10 tweets), quote-tweets of macro/institutional news, image/chart posts</td></tr>
+        <tr><td><strong>Tone</strong></td><td>Sharp, direct, conviction-driven. Professional but not corporate. Think "Bloomberg analyst who also invests their own capital."</td></tr>
+        <tr><td><strong>CTA Strategy</strong></td><td>Thread endings: "I break this down in detail every week for Platinum members → link in bio." Pin best-performing thread or YouTube video.</td></tr>
+        <tr><td><strong>Hashtag Strategy</strong></td><td>Minimal — #Bitcoin only when relevant. No hashtag spam. Let the content speak.</td></tr>
+      </table>
+
+      <h5>Thread Templates</h5>
+      <div class="framework">
+        <h5>🧵 Framework Thread Template</h5>
+        <p><strong>Tweet 1:</strong> Hook — controversial or surprising take with data<br>
+        <strong>Tweets 2–8:</strong> Framework breakdown — numbered steps, one idea per tweet<br>
+        <strong>Tweet 9:</strong> Summary — "Here's what matters..."<br>
+        <strong>Tweet 10:</strong> Soft CTA — "I share frameworks like this every week with 350+ serious investors → [link]"</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 4: INSTAGRAM                    -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section" id="instagram">
+    <h2 class="section-title"><span class="icon">📸</span> Instagram Strategy</h2>
+    <p class="section-subtitle">Visual storytelling, community proof, and direct attribution (#1 referral channel for ICP).</p>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#E1306C15;color:#E1306C;">📸</div>
+        <h4>@bensimpsonau</h4>
+      </div>
+
+      <h5>Bio (150 characters)</h5>
+      <div class="bio-box" onclick="copyBio(this)">
+        <p>Founder of Collective Shift 🟠<br>Digital asset education for serious investors<br>No hype. No affiliates. Just frameworks.<br>👇 Free training</p>
+      </div>
+
+      <h5>Content Pillars</h5>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px;">
+        <span class="pill pill-orange">Educational Carousels</span>
+        <span class="pill pill-green">Reels (Short-form video)</span>
+        <span class="pill pill-purple">Community & Social Proof</span>
+        <span class="pill pill-dark">Behind the Scenes</span>
+      </div>
+
+      <table class="data-table">
+        <tr><th style="width:160px;">Attribute</th><th>Detail</th></tr>
+        <tr><td><strong>Posting Cadence</strong></td><td>4–5 posts/week: 2 carousels, 2–3 Reels. Daily Stories.</td></tr>
+        <tr><td><strong>Content Format</strong></td><td>Carousels (educational frameworks, market data), Reels (15–60s talking head), Stories (day-in-life, polls, Q&A)</td></tr>
+        <tr><td><strong>Tone</strong></td><td>Personal, relatable, aspirational (but grounded). Casual enough for Stories, professional for carousels. Never use crypto-bro language.</td></tr>
+        <tr><td><strong>CTA Strategy</strong></td><td>Carousel final slide: "Save this for later 🔖" + "Link in bio for the full framework." Bio link → Linktree or collectiveshift.co/cryptoblueprint.</td></tr>
+        <tr><td><strong>Hashtag Strategy</strong></td><td>15–20 per post, mix of: <br><span class="pill pill-orange" style="font-size:0.65rem;">#DigitalAssets</span> <span class="pill pill-green" style="font-size:0.65rem;">#WealthBuilding</span> <span class="pill pill-purple" style="font-size:0.65rem;">#BitcoinInvesting</span> <span class="pill pill-dark" style="font-size:0.65rem;">#FinancialFreedom</span> <span class="pill pill-dark" style="font-size:0.65rem;">#PortfolioStrategy</span> <span class="pill pill-dark" style="font-size:0.65rem;">#GenerationalWealth</span></td></tr>
+      </table>
+
+      <h5>Grid Aesthetic</h5>
+      <p>Clean, professional, on-brand. Every third post should be a Reel thumbnail with Ben speaking to camera. Carousels use the CS colour palette (white/orange/dark). Avoid cluttered or overly "crypto" visual language (no laser eyes, no moon emojis, no green candle charts).</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 5: LINKEDIN                     -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section" id="linkedin">
+    <h2 class="section-title"><span class="icon">💼</span> LinkedIn Strategy</h2>
+    <p class="section-subtitle">Professional credibility, B2B partnerships, and HNW investor discovery.</p>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#0A66C215;color:#0A66C2;">in</div>
+        <h4>Ben Simpson (Personal) + Collective Shift (Company)</h4>
+      </div>
+
+      <h5>Personal Profile Headline</h5>
+      <div class="bio-box" onclick="copyBio(this)">
+        <p>Founder & CEO, Collective Shift | Helping high-net-worth investors build structured digital asset portfolios | Bloomberg for Digital Assets | No affiliates, no hype — institutional-grade research</p>
+      </div>
+
+      <h5>Personal Profile About</h5>
+      <div class="bio-box" onclick="copyBio(this)">
+        <p>I founded Collective Shift after nearly a decade of investing in digital assets — and making every mistake along the way.</p>
+        <p style="margin-top:8px;">The problem? There was no professional, unbiased resource for serious investors. The space was dominated by hype, speculation, and conflicts of interest. So I built one.</p>
+        <p style="margin-top:8px;">Today, Collective Shift serves 350+ high-net-worth members managing $100K–$35M+ portfolios. We provide:</p>
+        <p style="margin-top:4px;">→ Institutional-grade research and market intelligence<br>→ Systematic portfolio frameworks (not tips or signals)<br>→ A vetted community of serious investors<br>→ 1-on-1 coaching and in-person masterminds (Sydney & Miami)</p>
+        <p style="margin-top:8px;">What makes us different: We invest our own capital alongside our members. No advertising. No affiliates. No token promotions. Our success is measured by our members' long-term success.</p>
+        <p style="margin-top:8px;">If you're a successful professional or business owner looking to build a structured digital asset allocation — without the noise — I'd love to connect.</p>
+        <p style="margin-top:8px;">🔗 collectiveshift.co</p>
+      </div>
+
+      <h5>Company Page Tagline</h5>
+      <div class="bio-box" onclick="copyBio(this)">
+        <p>Institutional-grade digital asset education for serious investors. 350+ HNW members. 100% independent research.</p>
+      </div>
+
+      <h5>Content Pillars</h5>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px;">
+        <span class="pill pill-orange">Thought Leadership</span>
+        <span class="pill pill-green">Market Intelligence</span>
+        <span class="pill pill-purple">Community & Events</span>
+      </div>
+
+      <table class="data-table">
+        <tr><th style="width:160px;">Attribute</th><th>Detail</th></tr>
+        <tr><td><strong>Posting Cadence</strong></td><td>3–4 posts/week on personal. 2/week on company page.</td></tr>
+        <tr><td><strong>Content Format</strong></td><td>Text posts (stories, insights), document carousels, video clips from YouTube, event recaps</td></tr>
+        <tr><td><strong>Tone</strong></td><td>Professional, founder-centric. Storytelling with data. Think McKinsey meets conviction investor. Never salesy.</td></tr>
+        <tr><td><strong>CTA Strategy</strong></td><td>"Follow for digital asset insights" / "If this resonates, we share frameworks like this every week → link to Platinum." Soft, value-first CTAs only.</td></tr>
+        <tr><td><strong>Hashtag Strategy</strong></td><td>3–5 max: <span class="pill pill-dark" style="font-size:0.65rem;">#DigitalAssets</span> <span class="pill pill-dark" style="font-size:0.65rem;">#Bitcoin</span> <span class="pill pill-dark" style="font-size:0.65rem;">#WealthManagement</span> <span class="pill pill-dark" style="font-size:0.65rem;">#Investing</span></td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 6: TIKTOK                       -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section" id="tiktok">
+    <h2 class="section-title"><span class="icon">🎵</span> TikTok Strategy</h2>
+    <p class="section-subtitle">Secondary discovery channel. Repurpose Reels/Shorts. Lower priority but growing ICP presence.</p>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#00000010;color:#000;">♪</div>
+        <h4>@bensimpsonau (recommended handle)</h4>
+      </div>
+
+      <h5>Bio</h5>
+      <div class="bio-box" onclick="copyBio(this)">
+        <p>Founder of Collective Shift 🟠<br>Digital assets explained for grown-ups<br>No hype. No memes. Real frameworks.<br>🔗 collectiveshift.co</p>
+      </div>
+
+      <h5>Content Pillars</h5>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px;">
+        <span class="pill pill-orange">Quick Market Takes</span>
+        <span class="pill pill-green">Framework Snippets</span>
+        <span class="pill pill-purple">Myth Busting</span>
+      </div>
+
+      <table class="data-table">
+        <tr><th style="width:160px;">Attribute</th><th>Detail</th></tr>
+        <tr><td><strong>Posting Cadence</strong></td><td>3–5/week (repurposed from IG Reels / YT Shorts)</td></tr>
+        <tr><td><strong>Content Format</strong></td><td>15–60s talking head, text overlay hooks, "stitch" trending finance content with CS perspective</td></tr>
+        <tr><td><strong>Tone</strong></td><td>Slightly more casual than IG. Direct, punchy, contrarian. "The adult in the room" energy — not trying to be Gen Z, just clear and confident.</td></tr>
+        <tr><td><strong>CTA Strategy</strong></td><td>"Full breakdown on YouTube" → drives to long-form. Bio link → training page.</td></tr>
+        <tr><td><strong>Hashtag Strategy</strong></td><td><span class="pill pill-dark" style="font-size:0.65rem;">#DigitalAssets</span> <span class="pill pill-dark" style="font-size:0.65rem;">#Bitcoin</span> <span class="pill pill-dark" style="font-size:0.65rem;">#InvestingTips</span> <span class="pill pill-dark" style="font-size:0.65rem;">#WealthBuilding</span> <span class="pill pill-dark" style="font-size:0.65rem;">#FinanceTok</span></td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 7: MESSAGING FRAMEWORKS         -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section" id="messaging-frameworks">
+    <h2 class="section-title"><span class="icon">🧠</span> Key Messaging Frameworks</h2>
+    <p class="section-subtitle">Strategic rules for what to share free vs. reserve for members.</p>
+
+    <div class="card">
+      <h4>The 90/10 Rule Applied to Social</h4>
+      <p style="margin-bottom:16px;">Give away 90% of the <em>what</em> and <em>why</em>. Reserve 10% — the <em>how</em>, the <em>when</em>, and the <em>personalised</em>.</p>
+
+      <table class="data-table">
+        <tr><th>Give Away Free (90%)</th><th>Reserve for Platinum (10%)</th></tr>
+        <tr>
+          <td>
+            <ul style="padding-left:16px;">
+              <li>Why digital assets matter (macro thesis)</li>
+              <li>Bitcoin as a treasury reserve asset</li>
+              <li>The institutional shift (BlackRock, Fidelity, etc.)</li>
+              <li>Why inflation erodes purchasing power</li>
+              <li>General portfolio allocation principles</li>
+              <li>The importance of an exit strategy</li>
+              <li>Frameworks for evaluating digital assets</li>
+              <li>Common mistakes investors make</li>
+              <li>Self-custody fundamentals</li>
+            </ul>
+          </td>
+          <td>
+            <ul style="padding-left:16px;">
+              <li>Specific allocation models & percentages</li>
+              <li>The Shift List (vetted assets)</li>
+              <li>Exact entry/exit triggers & timing</li>
+              <li>Portfolio alerts & trade announcements</li>
+              <li>1-on-1 coaching sessions</li>
+              <li>Live weekly market briefing calls</li>
+              <li>WhatsApp community access</li>
+              <li>In-person masterminds (Miami & Sydney)</li>
+              <li>Personalised portfolio reviews</li>
+            </ul>
+          </td>
+        </tr>
+      </table>
+
+      <div class="framework">
+        <h5>The "Open Kitchen" Principle</h5>
+        <p>Show your work. Share your thinking process publicly. Let people see HOW you analyse — but the complete, real-time, personalised output is for members. The free content should make people think: "If the free stuff is this good, what's behind the paywall?"</p>
+      </div>
+
+      <div class="framework">
+        <h5>Content Funnel Logic</h5>
+        <p><strong>YouTube (long-form)</strong> → Builds trust over weeks/months → Viewer thinks "this person understands my situation"<br>
+        <strong>Instagram / X</strong> → Maintains top-of-mind → Reinforces frameworks daily<br>
+        <strong>Event / Masterclass</strong> → Converts trust into action → "I need professional infrastructure"<br>
+        <strong>Team Call</strong> → Qualifies fit → "Is this person right for Platinum?"<br>
+        <strong>Platinum</strong> → Delivers the 10% that transforms outcomes</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 8: LANGUAGE GUIDE               -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section" id="language-guide">
+    <h2 class="section-title"><span class="icon">📝</span> ICP Language Guide</h2>
+    <p class="section-subtitle">Mandatory language rules for all external communications. Our ICP is 40–59 HNW professionals ($500K–$2M+ NW).</p>
+
+    <div class="card">
+      <h4>Word Swaps — Always Follow These</h4>
+      <table class="data-table">
+        <tr><th>❌ Never Say</th><th>✅ Always Say</th><th>Why</th></tr>
+        <tr><td>Crypto</td><td>Digital assets</td><td>Positions us as institutional, not speculative</td></tr>
+        <tr><td>Crypto investing</td><td>Digital asset investing / allocation</td><td>Our ICP allocates, they don't "invest in crypto"</td></tr>
+        <tr><td>Crypto portfolio</td><td>Digital asset portfolio / allocation</td><td>Language of wealth managers, not traders</td></tr>
+        <tr><td>Returns / gains</td><td>Protection, preservation, growth</td><td>Our ICP fears loss more than they chase gains</td></tr>
+        <tr><td>Moon / lambo / WAGMI</td><td>(Never reference)</td><td>Immediately signals retail/speculative culture</td></tr>
+        <tr><td>To the moon</td><td>Long-term wealth building</td><td>Our members think in decades, not days</td></tr>
+        <tr><td>FOMO / FUD</td><td>Opportunity window / market uncertainty</td><td>Professional language for professional investors</td></tr>
+        <tr><td>Crypto bro</td><td>(Don't reference at all)</td><td>Our brand is the antidote to this — don't even name it</td></tr>
+        <tr><td>Signals / tips</td><td>Frameworks / systematic intelligence</td><td>We teach thinking, not dependency</td></tr>
+        <tr><td>Get rich quick</td><td>Generational wealth / long-term strategy</td><td>5–10+ year horizon, not overnight</td></tr>
+      </table>
+
+      <div class="framework">
+        <h5>Exception: Bitcoin</h5>
+        <p>"Bitcoin" is always "Bitcoin" (proper noun, capital B). It's the only specific asset we name publicly. "Crypto" is acceptable ONLY when quoting a third party or in technical/legal contexts (e.g., "cryptocurrency tax obligations").</p>
+      </div>
+
+      <h5>ICP Emotional Triggers (use in content)</h5>
+      <table class="data-table">
+        <tr><th>Trigger</th><th>Messaging Angle</th><th>Example Hook</th></tr>
+        <tr><td>Fear of catastrophic mistake</td><td>Protection & structure</td><td>"The biggest risk isn't volatility — it's making decisions without a framework"</td></tr>
+        <tr><td>Information overload</td><td>Noise-cutting intelligence</td><td>"There are 20,000+ digital assets. We research them so you don't have to."</td></tr>
+        <tr><td>Inflation anxiety</td><td>Wealth preservation</td><td>"Your savings are a melting ice cube. Here's what the smartest money is doing."</td></tr>
+        <tr><td>Isolation in decisions</td><td>Community of peers</td><td>"350+ HNW investors, same stage as you, making these decisions together."</td></tr>
+        <tr><td>No exit strategy</td><td>Systematic frameworks</td><td>"The hardest part isn't buying. It's knowing when to sell."</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 9: BEN'S VOICE GUIDELINES       -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section" id="voice-guidelines">
+    <h2 class="section-title"><span class="icon">🎙️</span> Ben's Personal Brand Voice</h2>
+    <p class="section-subtitle">How Ben sounds across all platforms — the voice DNA.</p>
+
+    <div class="card">
+      <h4>Voice Attributes</h4>
+      <table class="data-table">
+        <tr><th>Attribute</th><th>What It Sounds Like</th><th>What It Doesn't Sound Like</th></tr>
+        <tr><td><strong>Conviction-driven</strong></td><td>"I believe Bitcoin is the best savings technology ever created."</td><td>"Bitcoin might be interesting to look into."</td></tr>
+        <tr><td><strong>Peer investor</strong></td><td>"I invest my own capital alongside every member."</td><td>"As an expert, I recommend..."</td></tr>
+        <tr><td><strong>Direct & honest</strong></td><td>"Most of the market is noise. We filter out 98% of it."</td><td>"There are many valid approaches..."</td></tr>
+        <tr><td><strong>Educator, not guru</strong></td><td>"I'll teach you how to think, not what to think."</td><td>"Follow my signals and you'll be fine."</td></tr>
+        <tr><td><strong>Empathetic</strong></td><td>"I've made every mistake — so you don't have to."</td><td>"If you'd just done your research..."</td></tr>
+        <tr><td><strong>Aspirational but grounded</strong></td><td>"Generational wealth is built systematically, not overnight."</td><td>"You could 100x your money this cycle!"</td></tr>
+      </table>
+
+      <div class="framework">
+        <h5>The "Ben Test" — Before Publishing, Ask:</h5>
+        <p>1. Would a successful 50-year-old business owner feel respected reading this?<br>
+        2. Does this sound like Bloomberg or like a Telegram group?<br>
+        3. Am I teaching a framework, or am I selling hype?<br>
+        4. Would I be comfortable if a potential investor member saw this?<br>
+        5. Does this build trust over weeks, or try to convert in seconds?</p>
+      </div>
+
+      <h5>Sentence Starters That Sound Like Ben</h5>
+      <ul>
+        <li>"Here's what most people get wrong about..."</li>
+        <li>"I've been investing in this space for nearly a decade, and..."</li>
+        <li>"The data is clear..."</li>
+        <li>"This is the framework I use to..."</li>
+        <li>"I created Collective Shift because..."</li>
+        <li>"The institutional shift is happening right now..."</li>
+        <li>"Your wealth deserves a strategy, not a guess."</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 10: CONTENT CALENDAR            -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section" id="content-calendar">
+    <h2 class="section-title"><span class="icon">📅</span> Weekly Content Calendar Template</h2>
+    <p class="section-subtitle">Standard weekly cadence across all channels. Adjust content themes weekly.</p>
+
+    <div class="card" style="overflow-x:auto;">
+      <div class="cal-grid">
+        <!-- Headers -->
+        <div class="cal-cell" style="background:var(--dark);border:none;min-height:auto;padding:8px;">
+          <div class="cal-day" style="color:#fff;margin:0;">Monday</div>
+        </div>
+        <div class="cal-cell" style="background:var(--dark);border:none;min-height:auto;padding:8px;">
+          <div class="cal-day" style="color:#fff;margin:0;">Tuesday</div>
+        </div>
+        <div class="cal-cell" style="background:var(--dark);border:none;min-height:auto;padding:8px;">
+          <div class="cal-day" style="color:#fff;margin:0;">Wednesday</div>
+        </div>
+        <div class="cal-cell" style="background:var(--dark);border:none;min-height:auto;padding:8px;">
+          <div class="cal-day" style="color:#fff;margin:0;">Thursday</div>
+        </div>
+        <div class="cal-cell" style="background:var(--dark);border:none;min-height:auto;padding:8px;">
+          <div class="cal-day" style="color:#fff;margin:0;">Friday</div>
+        </div>
+        <div class="cal-cell" style="background:var(--dark);border:none;min-height:auto;padding:8px;">
+          <div class="cal-day" style="color:#fff;margin:0;">Saturday</div>
+        </div>
+        <div class="cal-cell" style="background:var(--dark);border:none;min-height:auto;padding:8px;">
+          <div class="cal-day" style="color:#fff;margin:0;">Sunday</div>
+        </div>
+
+        <!-- Content cells -->
+        <div class="cal-cell">
+          <div class="cal-item cal-yt">🔴 YT Long-form</div>
+          <div class="cal-item cal-x">𝕏 Market take</div>
+          <div class="cal-item cal-ig">📸 IG Carousel</div>
+          <div class="cal-item cal-li">💼 LI Post</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-item cal-yt">🔴 YT Short</div>
+          <div class="cal-item cal-x">𝕏 Tweet</div>
+          <div class="cal-item cal-ig">📸 IG Reel</div>
+          <div class="cal-item cal-tk">🎵 TikTok</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-item cal-yt">🔴 YT Long-form</div>
+          <div class="cal-item cal-x">𝕏 Thread</div>
+          <div class="cal-item cal-ig">📸 IG Carousel</div>
+          <div class="cal-item cal-li">💼 LI Post</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-item cal-yt">🔴 YT Short</div>
+          <div class="cal-item cal-x">𝕏 Tweet</div>
+          <div class="cal-item cal-ig">📸 IG Reel</div>
+          <div class="cal-item cal-tk">🎵 TikTok</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-item cal-yt">🔴 YT Long-form</div>
+          <div class="cal-item cal-x">𝕏 Market take</div>
+          <div class="cal-item cal-ig">📸 IG Reel</div>
+          <div class="cal-item cal-li">💼 LI Post</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-item cal-x">𝕏 Tweet (optional)</div>
+          <div class="cal-item cal-ig">📸 IG Story</div>
+          <div class="cal-item cal-tk">🎵 TikTok</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-item cal-yt">🔴 YT Short</div>
+          <div class="cal-item cal-ig">📸 IG Story</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);padding:4px;">Batch prep week</div>
+        </div>
+      </div>
+
+      <h5 style="margin-top:20px;">Weekly Totals</h5>
+      <table class="data-table">
+        <tr><th>Platform</th><th>Posts/Week</th><th>Format Mix</th></tr>
+        <tr><td>🔴 YouTube</td><td>5–6</td><td>2–3 long-form (10–25 min) + 2–3 Shorts</td></tr>
+        <tr><td>𝕏 X / Twitter</td><td>7–10</td><td>5–7 tweets + 1 thread + 1–2 QTs</td></tr>
+        <tr><td>📸 Instagram</td><td>4–5 + daily Stories</td><td>2 carousels + 2–3 Reels + Stories</td></tr>
+        <tr><td>💼 LinkedIn</td><td>3–4</td><td>2–3 personal + 1 company page</td></tr>
+        <tr><td>🎵 TikTok</td><td>3–5</td><td>Repurposed Reels/Shorts</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 11: DESIGN BRIEFS               -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section" id="design-briefs">
+    <h2 class="section-title"><span class="icon">🎨</span> Cover Image Design Briefs</h2>
+    <p class="section-subtitle">Specifications and creative direction for each platform's banner/cover image.</p>
+
+    <!-- Brand Asset Reference (inline) -->
+    <div class="card" style="margin-bottom:32px;">
+      <h4>Brand Asset Reference</h4>
+      <h5>Colour Palette</h5>
+      <div class="swatch-row">
+        <div class="swatch" style="background:#FC5C03;">#FC5C03</div>
+        <div class="swatch" style="background:#1A1A2E;">#1A1A2E</div>
+        <div class="swatch" style="background:#FFFFFF;border:1px solid #E8E8EA;color:#807F86;">#FFFFFF</div>
+        <div class="swatch" style="background:#F9F9F9;border:1px solid #E8E8EA;color:#807F86;">#F9F9F9</div>
+        <div class="swatch" style="background:#08C394;">#08C394</div>
+      </div>
+      <p style="font-size:0.85rem;margin-top:8px;">Primary: Orange (#FC5C03) — energy, confidence, warmth. Secondary: Dark (#1A1A2E) — authority, sophistication. Base: White — clean, institutional. Green: data/positive accents only.</p>
+
+      <h5>Typography</h5>
+      <table class="data-table">
+        <tr><th>Use</th><th>Font</th><th>Weights</th></tr>
+        <tr><td>Headings / display</td><td>Plus Jakarta Sans</td><td>600, 700, 800</td></tr>
+        <tr><td>Body / UI copy</td><td>Barlow</td><td>400, 500, 600</td></tr>
+        <tr><td>Data / code / labels</td><td>Source Code Pro</td><td>400, 500</td></tr>
+      </table>
+
+      <h5>Photography Direction</h5>
+      <ul>
+        <li>Professional headshots of Ben — clean background, natural light preferred</li>
+        <li>No crypto iconography (no gold coins, no blockchain graphics, no trading charts)</li>
+        <li>Lifestyle: clean office/studio environment, professional settings, event photography</li>
+        <li>Style: editorial, modern, Bloomberg/institutional aesthetic</li>
+        <li>Avoid: heavy filters, neon, dark/moody crypto aesthetics, stock photos</li>
+      </ul>
+
+      <h5>Logo Usage</h5>
+      <ul>
+        <li>Collective Shift wordmark — preferred placement: top-left or bottom-left</li>
+        <li>Always on solid background (never on busy images without overlay)</li>
+        <li>Minimum clear space: 1× logo height on all sides</li>
+        <li>Orange logo on white/light backgrounds, white logo on dark backgrounds</li>
+      </ul>
+    </div>
+
+    <!-- BRIEF 1: YouTube -->
+    <div class="brief-card">
+      <div class="brief-header">
+        <h4>🔴 YouTube Channel Banner</h4>
+        <span class="brief-dims">2560 × 1440 px</span>
+      </div>
+      <div class="brief-body">
+        <h5>Safe Area</h5>
+        <p>Content must be centred within the <strong>1546 × 423 px</strong> safe area (visible on all devices). Critical text and logos must not extend beyond this zone.</p>
+
+        <div class="brief-mockup">
+          <div style="max-width:600px;margin:0 auto;background:var(--dark);border-radius:8px;padding:30px 40px;color:#fff;text-align:left;">
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.65rem;color:#FC5C03;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px;">COLLECTIVE SHIFT</div>
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:4px;">Cut Through the Noise.</div>
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:700;color:#FC5C03;">Build Generational Wealth.</div>
+            <div style="font-family:'Barlow',sans-serif;font-size:0.7rem;color:#807F86;margin-top:8px;">Institutional-grade digital asset education · No affiliates · No hype</div>
+          </div>
+          <p class="dims-label" style="margin-top:8px;">Concept mockup — safe area preview</p>
+        </div>
+
+        <h5>Visual Direction</h5>
+        <ul>
+          <li>Dark background (#1A1A2E) with subtle gradient or geometric texture — NOT solid black</li>
+          <li>Professional headshot of Ben on the right side (visible on desktop but can be cropped on mobile)</li>
+          <li>CS logo wordmark (white) top-left of safe area</li>
+          <li>Clean, editorial layout — "Bloomberg TV" aesthetic, not "YouTube crypto channel"</li>
+        </ul>
+
+        <h5>Required Text</h5>
+        <ul>
+          <li>Headline: "Cut Through the Noise. Build Generational Wealth."</li>
+          <li>Subline: "Institutional-grade digital asset education" or "Bloomberg for Digital Assets"</li>
+          <li>Trust badge text: "No affiliates · No hype · Independent research"</li>
+        </ul>
+
+        <h5>Colours</h5>
+        <p>Background: #1A1A2E / Headline: #FFFFFF / Accent: #FC5C03 / Subline: #807F86</p>
+
+        <h5>Do Not</h5>
+        <ul>
+          <li>Use chart graphics, candlestick patterns, or trading visuals</li>
+          <li>Use Bitcoin logos or cryptocurrency icons</li>
+          <li>Use neon, glitch effects, or "futuristic" styling</li>
+          <li>Clutter with social handles (these are in the YouTube "About" section)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- BRIEF 2: X/Twitter -->
+    <div class="brief-card">
+      <div class="brief-header">
+        <h4>𝕏 X / Twitter Header</h4>
+        <span class="brief-dims">1500 × 500 px</span>
+      </div>
+      <div class="brief-body">
+        <h5>Visual Direction</h5>
+        <ul>
+          <li>Clean, minimal layout — white or off-white background preferred (stands out vs. dark-themed crypto accounts)</li>
+          <li>CS wordmark (orange) left side</li>
+          <li>One-line tagline centred or right-aligned</li>
+          <li>Subtle orange gradient or accent line</li>
+          <li>Optional: small professional headshot or CS logo mark</li>
+        </ul>
+
+        <div class="brief-mockup">
+          <div style="max-width:500px;margin:0 auto;background:#FFFFFF;border:1px solid #E8E8EA;border-radius:8px;padding:20px 30px;text-align:left;display:flex;align-items:center;justify-content:space-between;">
+            <div>
+              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.7rem;color:#FC5C03;font-weight:700;letter-spacing:0.08em;">COLLECTIVE SHIFT</div>
+              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.85rem;font-weight:600;color:#1B1925;margin-top:4px;">Bloomberg for Digital Assets</div>
+              <div style="font-family:'Barlow',sans-serif;font-size:0.65rem;color:#807F86;margin-top:2px;">Independent research · No affiliates · Est. 2017</div>
+            </div>
+            <div style="width:50px;height:50px;border-radius:50%;background:#FC5C0320;display:flex;align-items:center;justify-content:center;color:#FC5C03;font-weight:700;font-size:0.8rem;">CS</div>
+          </div>
+          <p class="dims-label" style="margin-top:8px;">Concept mockup</p>
+        </div>
+
+        <h5>Required Text</h5>
+        <ul>
+          <li>"Bloomberg for Digital Assets" or "Cut Through the Noise"</li>
+          <li>"Independent research · No affiliates"</li>
+          <li>Optional: collectiveshift.co</li>
+        </ul>
+
+        <h5>Note</h5>
+        <p>Profile picture (circle, 400×400) is separate — use Ben's professional headshot. Header should complement, not duplicate info in bio.</p>
+      </div>
+    </div>
+
+    <!-- BRIEF 3: Instagram -->
+    <div class="brief-card">
+      <div class="brief-header">
+        <h4>📸 Instagram Profile Grid Aesthetic</h4>
+        <span class="brief-dims">1080 × 1080 px (per post)</span>
+      </div>
+      <div class="brief-body">
+        <h5>Grid Strategy</h5>
+        <p>Instagram doesn't have a cover image, but the grid IS the cover. Plan a 3-column visual rhythm:</p>
+
+        <div class="brief-mockup">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-width:300px;margin:0 auto;">
+            <div style="background:#FC5C0315;border-radius:4px;padding:12px;font-size:0.6rem;color:var(--text-muted);text-align:center;">📊 Carousel<br>(white bg)</div>
+            <div style="background:#1A1A2E;border-radius:4px;padding:12px;font-size:0.6rem;color:#fff;text-align:center;">🎬 Reel<br>(Ben to cam)</div>
+            <div style="background:#FC5C0315;border-radius:4px;padding:12px;font-size:0.6rem;color:var(--text-muted);text-align:center;">💬 Quote<br>(orange accent)</div>
+            <div style="background:#1A1A2E;border-radius:4px;padding:12px;font-size:0.6rem;color:#fff;text-align:center;">🎬 Reel<br>(Ben to cam)</div>
+            <div style="background:#FC5C0315;border-radius:4px;padding:12px;font-size:0.6rem;color:var(--text-muted);text-align:center;">📊 Carousel<br>(white bg)</div>
+            <div style="background:#1A1A2E;border-radius:4px;padding:12px;font-size:0.6rem;color:#fff;text-align:center;">🎬 Reel<br>(Ben to cam)</div>
+          </div>
+          <p class="dims-label" style="margin-top:8px;">Alternating rhythm: carousel / reel / quote</p>
+        </div>
+
+        <h5>Carousel Design Standards</h5>
+        <ul>
+          <li><strong>Slide 1 (Cover):</strong> Bold headline, orange accent, white background. Must work as a standalone thumbnail.</li>
+          <li><strong>Slides 2–9:</strong> One idea per slide. Large text, minimal design. CS brand colours.</li>
+          <li><strong>Final Slide:</strong> CTA — "Save this 🔖" / "Follow for more" / "Link in bio"</li>
+          <li>Fonts: Plus Jakarta Sans for headlines, Barlow for body</li>
+          <li>Background: White (#FFFFFF) or off-white (#F9F9F9)</li>
+          <li>Accent: Orange (#FC5C03) for highlights, underlines, icons</li>
+        </ul>
+
+        <h5>Reel Thumbnail Standards</h5>
+        <ul>
+          <li>Custom thumbnail with text overlay (not auto-generated)</li>
+          <li>Ben visible (face = higher CTR)</li>
+          <li>Bold hook text: 2–5 words max</li>
+          <li>Dark overlay (#1A1A2E at 60%) with white text</li>
+        </ul>
+
+        <h5>Story Highlights Covers</h5>
+        <ul>
+          <li>Consistent icon style: orange icons on dark (#1A1A2E) circles</li>
+          <li>Categories: Frameworks, Bitcoin, Portfolio, Events, Members, About</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- BRIEF 4: LinkedIn Personal -->
+    <div class="brief-card">
+      <div class="brief-header">
+        <h4>💼 LinkedIn Personal Banner</h4>
+        <span class="brief-dims">1584 × 396 px</span>
+      </div>
+      <div class="brief-body">
+        <h5>Visual Direction</h5>
+        <ul>
+          <li>Professional, understated — think "managing director at Goldman Sachs" not "startup founder at Web Summit"</li>
+          <li>White or light background with subtle orange accent element</li>
+          <li>Ben's headshot overlaps from profile picture — design right side with that in mind</li>
+          <li>Left-aligned text block, clean typography</li>
+        </ul>
+
+        <div class="brief-mockup">
+          <div style="max-width:500px;margin:0 auto;background:#FFFFFF;border:1px solid #E8E8EA;border-radius:8px;padding:16px 24px;text-align:left;border-left:4px solid #FC5C03;">
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.7rem;color:#FC5C03;font-weight:700;letter-spacing:0.08em;">COLLECTIVE SHIFT</div>
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.85rem;font-weight:600;color:#1B1925;margin-top:4px;">Helping high-net-worth investors build structured digital asset portfolios</div>
+            <div style="font-family:'Barlow',sans-serif;font-size:0.65rem;color:#807F86;margin-top:4px;">350+ members · $100K–$35M+ portfolios · 100% independent research</div>
+          </div>
+          <p class="dims-label" style="margin-top:8px;">Concept mockup</p>
+        </div>
+
+        <h5>Required Text</h5>
+        <ul>
+          <li>CS wordmark or "COLLECTIVE SHIFT" text</li>
+          <li>"Helping high-net-worth investors build structured digital asset portfolios"</li>
+          <li>Social proof: "350+ members · 100% independent research"</li>
+          <li>Optional: collectiveshift.co</li>
+        </ul>
+
+        <h5>Layout Notes</h5>
+        <ul>
+          <li>Profile photo overlaps bottom-left — keep that quadrant clean or use as negative space</li>
+          <li>Text should sit in the centre-right area</li>
+          <li>No busy backgrounds — our ICP's LinkedIn feed is already cluttered</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- BRIEF 5: LinkedIn Company -->
+    <div class="brief-card">
+      <div class="brief-header">
+        <h4>💼 LinkedIn Company Page Banner</h4>
+        <span class="brief-dims">1128 × 191 px</span>
+      </div>
+      <div class="brief-body">
+        <h5>Visual Direction</h5>
+        <ul>
+          <li>Wider aspect ratio — use as a "billboard" with minimal text</li>
+          <li>Dark background (#1A1A2E) preferred for company page (differentiates from Ben's personal white banner)</li>
+          <li>CS wordmark (white, left) + tagline (centre) + abstract geometric accent (right)</li>
+        </ul>
+
+        <div class="brief-mockup">
+          <div style="max-width:500px;margin:0 auto;background:#1A1A2E;border-radius:8px;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.65rem;color:#FC5C03;font-weight:700;letter-spacing:0.1em;">COLLECTIVE SHIFT</div>
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.7rem;font-weight:600;color:#FFFFFF;">Bloomberg for Digital Assets</div>
+            <div style="width:30px;height:30px;border:2px solid #FC5C0350;border-radius:50%;"></div>
+          </div>
+          <p class="dims-label" style="margin-top:8px;">Concept mockup</p>
+        </div>
+
+        <h5>Required Text</h5>
+        <ul>
+          <li>"COLLECTIVE SHIFT" wordmark</li>
+          <li>"Bloomberg for Digital Assets" or "Institutional-Grade Digital Asset Education"</li>
+        </ul>
+
+        <h5>Important</h5>
+        <p>This banner is very wide and short — text must be large enough to read at small sizes. Limit to 2 text elements maximum. Company logo (square) appears below-left, so keep that area uncluttered.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 12: BRAND ASSETS SUMMARY        -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section" id="brand-assets">
+    <h2 class="section-title"><span class="icon">📦</span> Quick Reference — All Handles & Links</h2>
+
+    <div class="card">
+      <table class="data-table">
+        <tr><th>Platform</th><th>Handle</th><th>Link</th><th>Type</th></tr>
+        <tr><td>🔴 YouTube</td><td>@BenCollectiveShift</td><td>youtube.com/@BenCollectiveShift</td><td>Personal channel</td></tr>
+        <tr><td>𝕏 X / Twitter</td><td>@bensimpsonau</td><td>x.com/bensimpsonau</td><td>Personal</td></tr>
+        <tr><td>📸 Instagram</td><td>@bensimpsonau</td><td>instagram.com/bensimpsonau</td><td>Personal</td></tr>
+        <tr><td>💼 LinkedIn</td><td>Ben Simpson</td><td>linkedin.com/in/bensimpsonau</td><td>Personal + Company page</td></tr>
+        <tr><td>🎵 TikTok</td><td>@bensimpsonau</td><td>tiktok.com/@bensimpsonau</td><td>To be created</td></tr>
+        <tr><td>🌐 Website</td><td>—</td><td>collectiveshift.co</td><td>Main site</td></tr>
+        <tr><td>🎓 Training</td><td>—</td><td>collectiveshift.co/cryptoblueprint</td><td>Free event funnel</td></tr>
+        <tr><td>💎 Platinum</td><td>—</td><td>collectiveshift.co/platinum</td><td>Application page</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="border-top:1px solid var(--border);padding-top:24px;margin-top:48px;text-align:center;">
+    <p style="font-size:0.8rem;color:var(--text-muted);">Collective Shift — Social Media Rollout Package v1.0 — March 2026</p>
+    <p style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;">Internal document. Not for external distribution.</p>
+  </footer>
+
+</div>
+
+<script>
+function copyBio(el) {
+  const text = el.querySelector('p') ? Array.from(el.querySelectorAll('p')).map(p => p.textContent).join('\n\n') : el.textContent;
+  navigator.clipboard.writeText(text.trim()).then(() => {
+    el.classList.add('copied');
+    setTimeout(() => el.classList.remove('copied'), 2000);
+  });
+}
+</script>
 </body>
 </html>
