@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+
+<title>Portfolio Allocation Calculator — Collective Shift</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cs: {
+          orange: '#FC5C03',
+          'orange-light': '#FC8C4E',
+          'orange-bg': '#FEDECC',
+          'orange-hover': '#FEEEE5',
+          green: '#08C394',
+          purple: '#654FFC',
+          border: '#E8E8EA',
+          text: '#1B1925',
+          secondary: '#4D4C55',
+          muted: '#807F86',
+        }
+      },
+      fontFamily: {
+        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+        barlow: ['Barlow', 'sans-serif'],
+        mono: ['Source Code Pro', 'monospace'],
+      },
+      borderRadius: {
+        pill: '100px',
+      }
+    }
+  }
+}
+</script>
+<style>
+  body { background: #FFFFFF; color: #1B1925; font-family: 'Barlow', sans-serif; }
+  input[type="range"] { -webkit-appearance: none; appearance: none; height: 6px; background: #2E2C3E; border-radius: 3px; outline: none; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%; background: #FC5C03; cursor: pointer; border: 2px solid #1B1925; }
+  input[type="range"]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: #FC5C03; cursor: pointer; border: 2px solid #1B1925; }
+  .radio-btn input:checked + span { background: #FC5C03; color: #1B1925; border-color: #FC5C03; }
+  .radio-btn span { transition: all 0.2s; }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239B99AE' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+  .pie-segment { transition: all 0.5s ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .result-card { animation: fadeUp 0.4s ease forwards; }
+  .result-card:nth-child(2) { animation-delay: 0.08s; }
+  .result-card:nth-child(3) { animation-delay: 0.16s; }
+  .result-card:nth-child(4) { animation-delay: 0.24s; }
+
+/* OS standalone overrides */
+.sidebar, aside.sidebar, nav.sidebar, .csn-bar, .csn-mobile-menu, #csnMobileMenu,
+.overlay, #overlay, .mobile-header, .hamburger, [class*="hamburger"], .breadcrumb,
+nav[role="navigation"], .csn-mob-link, .csn-mob-top, .csn-mob-sub, a[class*="csn-mob"] {
+  display: none !important;
+}
+body { display: block !important; }
+main, .main, .content, .page-content {
+  margin-left: 0 !important; padding-left: 0 !important;
+  width: 100% !important; max-width: 100% !important;
+}
+
+</style>
+</head>
+<body class="min-h-screen">
+<div class="os-header-bar" style="background:#fff;border-bottom:1px solid #E8E8EA;padding:14px 32px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:9999;">
+  <a href="/os/" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <div style="width:26px;height:26px;background:#FC5C03;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;">CS</div>
+    <span style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:15px;color:#1B1925;">Collective Shift</span>
+  </a>
+  <div style="width:1px;height:18px;background:#E8E8EA;margin:0 2px;"></div>
+  <span style="font-family:'Barlow',sans-serif;font-weight:400;font-size:13px;color:#807F86;">Operating System</span>
+</div>
+
+<!-- ═══ COLLECTIVE SHIFT TOP NAV ═══ -->
+<style>
+  :root {
+    --csn-h: 56px;
+    --csn-bg: #FFFFFF;
+    --csn-border: #E8E8EA;
+    --csn-text: #1B1925;
+    --csn-muted: #4D4C55;
+    --csn-orange: #FC5C03;
+    --csn-orange-bg: #FEEEE5;
+    --csn-dd-bg: #FFFFFF;
+    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    --csn-z: 9000;
+  }
+  .csn-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--csn-h);
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 0;
+    z-index: var(--csn-z);
+    font-family: 'Plus Jakarta Sans', 'Barlow', sans-serif;
+  }
+  .csn-logo {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--csn-orange);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin-right: 32px;
+    flex-shrink: 0;
+  }
+  .csn-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+  }
+  .csn-item {
+    position: relative;
+  }
+  .csn-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s, background 0.15s;
+    cursor: pointer;
+  }
+  .csn-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-item.active > .csn-link { color: var(--csn-orange); font-weight: 600; }
+  .csn-chevron { transition: transform 0.2s; flex-shrink: 0; }
+  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
+  /* Dropdown */
+  .csn-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 240px;
+    background: var(--csn-dd-bg);
+    border: 1px solid var(--csn-border);
+    border-radius: 12px;
+    box-shadow: var(--csn-dd-shadow);
+    padding: 6px;
+    z-index: calc(var(--csn-z) + 1);
+  }
+  .csn-item.csn-has-dd { position: relative; }
+  .csn-item.csn-has-dd::after { content: ""; position: absolute; top: 100%; left: 0; width: 100%; height: 12px; }
+  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
+  .csn-dd-item {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+    white-space: nowrap;
+  }
+  .csn-dd-item:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-divider { height: 1px; background: var(--csn-border); margin: 4px 8px; }
+  /* Mobile hamburger */
+  .csn-hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--csn-muted);
+    padding: 4px;
+    margin-left: auto;
+  }
+  /* Mobile drawer */
+  .csn-mobile-menu {
+    display: none;
+    position: fixed;
+    top: var(--csn-h);
+    left: 0; right: 0;
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    padding: 8px 16px 16px;
+    z-index: calc(var(--csn-z) - 1);
+    max-height: calc(100vh - var(--csn-h));
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .csn-mobile-menu.open { display: block; }
+  .csn-mob-link {
+    display: block;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+  }
+  .csn-mob-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-mob-top { font-weight: 600; color: var(--csn-text); margin-top: 4px; }
+  .csn-mob-sub { font-size: 12px; padding-left: 20px; }
+  /* Body offset */
+  body { padding-top: var(--csn-h) !important; }
+  @media (max-width: 1023px) {
+    .csn-nav { display: none; }
+    .csn-hamburger { display: block; }
+  }
+  @media (max-width: 640px) {
+    .csn-logo { font-size: 13px; margin-right: 16px; }
+  }
+</style>
+<nav class="csn-bar" role="navigation" aria-label="Main navigation">
+  <a href="index.html" class="csn-logo">Collective Shift</a>
+  <div class="csn-nav">
+      <div class="csn-item "><a href="index.html" class="csn-link"></a></div>
+      <div class="csn-item csn-has-dd active">
+        <a href="hub/operating-system.html" class="csn-link">The Collective Shift Operating System
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="hub/operating-system.html" class="csn-dd-item">Operating System Overview</a><a href="hub/modules/m1-foundations.html" class="csn-dd-item">Module 1: Foundations</a><a href="hub/modules/m2-bitcoin.html" class="csn-dd-item">Module 2: Bitcoin</a><a href="hub/modules/m3-altcoins.html" class="csn-dd-item">Module 3: Digital Assets</a><a href="hub/modules/m4-how-we-invest.html" class="csn-dd-item">Module 4: How We Invest</a><a href="hub/modules/m5-buy-sell.html" class="csn-dd-item">Module 5: Buy & Sell</a><a href="hub/modules/m6-send-store.html" class="csn-dd-item">Module 6: Send & Store</a><a href="hub/modules/m7-tax.html" class="csn-dd-item">Module 7: Tax</a><a href="hub/modules/m8-sell-strategy.html" class="csn-dd-item">Module 8: Exit Strategy</a><div class="csn-divider"></div><a href="8-step-strategy-workbook.html" class="csn-dd-item">8-Step Strategy Workbook</a><a href="8-step-strategy-workbook-L1.html" class="csn-dd-item">↳ Level 1 Workbook</a><a href="8-step-strategy-workbook-L2.html" class="csn-dd-item">↳ Level 2 Workbook</a><a href="portfolio-calculator.html" class="csn-dd-item">Portfolio Allocation Calculator</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="hub/products.html" class="csn-link">Product
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="hub/products.html#platinum" class="csn-dd-item">Platinum</a><a href="hub/products.html#accelerator" class="csn-dd-item">Accelerator</a><a href="hub/beginner-journey.html" class="csn-dd-item">Beginner's Journey</a><a href="hub/products.html#two-track" class="csn-dd-item">Two-Track System</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="hub/youtube-strategy.html" class="csn-link">Social Media
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="hub/youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a><a href="hub/social-strategy.html" class="csn-dd-item">Social Strategy</a><a href="hub/instagram-strategy.html" class="csn-dd-item">Instagram Strategy</a><div class="csn-divider"></div><a href="hub/brand.html" class="csn-dd-item">Brand & Voice</a><a href="hub/positioning.html" class="csn-dd-item">Positioning & ICP</a><a href="hub/competitors.html" class="csn-dd-item">Competitors</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="travis-briefing-2026-03-27.html" class="csn-link">Documents
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a><a href="cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a><a href="q2-market-briefing.html" class="csn-dd-item">Q2 Market Briefing</a><a href="webinar-q2-2026-is-now-the-time.html" class="csn-dd-item">Webinar: Is Now The Time?</a></div>
+      </div>
+  </div>
+  <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+<div id="csnMobileMenu" class="csn-mobile-menu">
+  <a href="index.html" class="csn-mob-link csn-mob-top"></a>
+<a href="hub/operating-system.html" class="csn-mob-link csn-mob-top">The Collective Shift Operating System</a>
+<a href="hub/operating-system.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Operating System Overview</a>
+<a href="hub/modules/m1-foundations.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 1: Foundations</a>
+<a href="hub/modules/m2-bitcoin.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 2: Bitcoin</a>
+<a href="hub/modules/m3-altcoins.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 3: Digital Assets</a>
+<a href="hub/modules/m4-how-we-invest.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 4: How We Invest</a>
+<a href="hub/modules/m5-buy-sell.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 5: Buy & Sell</a>
+<a href="hub/modules/m6-send-store.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 6: Send & Store</a>
+<a href="hub/modules/m7-tax.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 7: Tax</a>
+<a href="hub/modules/m8-sell-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 8: Exit Strategy</a>
+<a href="8-step-strategy-workbook.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;8-Step Strategy Workbook</a>
+<a href="8-step-strategy-workbook-L1.html" class="csn-mob-link csn-mob-sub">↳ Level 1 Workbook</a>
+<a href="8-step-strategy-workbook-L2.html" class="csn-mob-link csn-mob-sub">↳ Level 2 Workbook</a>
+<a href="portfolio-calculator.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Portfolio Allocation Calculator</a>
+<a href="hub/products.html" class="csn-mob-link csn-mob-top">Product</a>
+<a href="hub/products.html#platinum" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Platinum</a>
+<a href="hub/products.html#accelerator" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Accelerator</a>
+<a href="hub/beginner-journey.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Beginner's Journey</a>
+<a href="hub/products.html#two-track" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Two-Track System</a>
+<a href="hub/youtube-strategy.html" class="csn-mob-link csn-mob-top">Social Media</a>
+<a href="hub/youtube-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;YouTube Strategy</a>
+<a href="hub/social-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Social Strategy</a>
+<a href="hub/instagram-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Instagram Strategy</a>
+<a href="hub/brand.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Brand & Voice</a>
+<a href="hub/positioning.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Positioning & ICP</a>
+<a href="hub/competitors.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Competitors</a>
+<a href="travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-top">Documents</a>
+<a href="travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Travis CGO Briefing</a>
+<a href="cs-education-system-overview.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Education System Overview</a>
+<a href="q2-market-briefing.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Q2 Market Briefing</a>
+<a href="webinar-q2-2026-is-now-the-time.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Webinar: Is Now The Time?</a>
+</div>
+<!-- ═══ END TOP NAV ═══ -->
+
+
+<!-- Header -->
+<header class="border-b border-\[#E8E8EA\]">
+  <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded bg-cs-orange flex items-center justify-center font-oswald font-bold text-sm">CS</div>
+      <span class="font-oswald text-lg tracking-wide">COLLECTIVE SHIFT</span>
+    </div>
+    <a href="index.html" class="text-\[#807F86\] hover:text-cs-orange transition text-sm flex items-center gap-1">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      Dashboard
+    </a>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-4 py-8">
+  <!-- Title -->
+  <div class="mb-8">
+    <h1 class="font-oswald text-3xl md:text-4xl font-bold tracking-wide mb-2">Portfolio Allocation Calculator</h1>
+    <p class="text-\[#807F86\] text-sm">Determine your suggested allocation across Bitcoin, digital assets, and stablecoins based on your personal profile.</p>
+  </div>
+
+  <div class="grid lg:grid-cols-5 gap-8">
+    <!-- Left: Inputs -->
+    <div class="lg:col-span-3 space-y-6">
+
+      <!-- Capital + Currency -->
+      <div class="bg-white rounded-xl border border-\[#E8E8EA\] p-6">
+        <label class="block text-sm font-semibold text-\[#807F86\] uppercase tracking-wider mb-3">Total Capital to Deploy</label>
+        <div class="flex gap-3">
+          <div class="relative flex-1">
+            <span id="currencySymbol" class="absolute left-4 top-1/2 -translate-y-1/2 text-\[#807F86\] font-mono text-lg">$</span>
+            <input type="text" id="capital" inputmode="decimal" placeholder="50,000"
+              class="w-full bg-cs-input border border-\[#E8E8EA\] rounded-lg py-3 pl-10 pr-4 text-lg font-mono text-\[#1B1925\] focus:border-cs-orange focus:outline-none transition">
+          </div>
+          <div class="flex rounded-lg overflow-hidden border border-\[#E8E8EA\]">
+            <button id="btnAUD" onclick="setCurrency('AUD')" class="px-4 py-3 text-sm font-semibold bg-cs-orange text-white transition">AUD</button>
+            <button id="btnUSD" onclick="setCurrency('USD')" class="px-4 py-3 text-sm font-semibold bg-cs-input text-\[#807F86\] transition">USD</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Risk Tolerance -->
+      <div class="bg-white rounded-xl border border-\[#E8E8EA\] p-6">
+        <label class="block text-sm font-semibold text-\[#807F86\] uppercase tracking-wider mb-3">Risk Tolerance</label>
+        <input type="range" id="riskSlider" min="0" max="2" value="1" class="w-full mb-3">
+        <div class="flex justify-between text-sm">
+          <span id="riskLabel0" class="text-\[#807F86\]">Conservative</span>
+          <span id="riskLabel1" class="text-cs-orange font-semibold">Moderate</span>
+          <span id="riskLabel2" class="text-\[#807F86\]">Aggressive</span>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="bg-white rounded-xl border border-\[#E8E8EA\] p-6">
+        <label class="block text-sm font-semibold text-\[#807F86\] uppercase tracking-wider mb-3">Investment Timeline</label>
+        <select id="timeline" class="w-full bg-cs-input border border-\[#E8E8EA\] rounded-lg py-3 px-4 text-\[#1B1925\] appearance-none focus:border-cs-orange focus:outline-none transition">
+          <option value="short">1–2 years</option>
+          <option value="medium" selected>3–5 years</option>
+          <option value="long">5–10 years</option>
+          <option value="vlong">10+ years</option>
+        </select>
+      </div>
+
+      <!-- Experience -->
+      <div class="bg-white rounded-xl border border-\[#E8E8EA\] p-6">
+        <label class="block text-sm font-semibold text-\[#807F86\] uppercase tracking-wider mb-3">Experience Level</label>
+        <select id="experience" class="w-full bg-cs-input border border-\[#E8E8EA\] rounded-lg py-3 px-4 text-\[#1B1925\] appearance-none focus:border-cs-orange focus:outline-none transition">
+          <option value="beginner">Complete beginner</option>
+          <option value="some">Some experience</option>
+          <option value="intermediate" selected>Intermediate</option>
+          <option value="advanced">Advanced</option>
+        </select>
+      </div>
+
+      <!-- Current BTC holdings -->
+      <div class="bg-white rounded-xl border border-\[#E8E8EA\] p-6">
+        <label class="block text-sm font-semibold text-\[#807F86\] uppercase tracking-wider mb-3">Current Bitcoin Holdings</label>
+        <div class="flex gap-3 mb-3">
+          <label class="radio-btn flex-1 cursor-pointer">
+            <input type="radio" name="hasBtc" value="yes" class="hidden" checked>
+            <span class="block text-center py-3 rounded-lg border border-\[#E8E8EA\] text-\[#807F86\] font-semibold text-sm">Yes</span>
+          </label>
+          <label class="radio-btn flex-1 cursor-pointer">
+            <input type="radio" name="hasBtc" value="no" class="hidden">
+            <span class="block text-center py-3 rounded-lg border border-\[#E8E8EA\] text-\[#807F86\] font-semibold text-sm">No</span>
+          </label>
+        </div>
+        <div id="btcAmountRow">
+          <input type="text" id="btcAmount" inputmode="decimal" placeholder="Approximate value (e.g. 10,000)"
+            class="w-full bg-cs-input border border-\[#E8E8EA\] rounded-lg py-3 px-4 text-sm font-mono text-\[#1B1925\] focus:border-cs-orange focus:outline-none transition">
+        </div>
+      </div>
+
+      <!-- Goal -->
+      <div class="bg-white rounded-xl border border-\[#E8E8EA\] p-6">
+        <label class="block text-sm font-semibold text-\[#807F86\] uppercase tracking-wider mb-3">Primary Goal</label>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="radio-btn cursor-pointer">
+            <input type="radio" name="goal" value="preservation" class="hidden">
+            <span class="block text-center py-3 rounded-lg border border-\[#E8E8EA\] text-\[#807F86\] font-semibold text-sm">Wealth Preservation</span>
+          </label>
+          <label class="radio-btn cursor-pointer">
+            <input type="radio" name="goal" value="balanced" class="hidden" checked>
+            <span class="block text-center py-3 rounded-lg border border-\[#E8E8EA\] text-\[#807F86\] font-semibold text-sm">Balanced Growth</span>
+          </label>
+          <label class="radio-btn cursor-pointer">
+            <input type="radio" name="goal" value="maxgrowth" class="hidden">
+            <span class="block text-center py-3 rounded-lg border border-\[#E8E8EA\] text-\[#807F86\] font-semibold text-sm">Maximum Growth</span>
+          </label>
+          <label class="radio-btn cursor-pointer">
+            <input type="radio" name="goal" value="retirement" class="hidden">
+            <span class="block text-center py-3 rounded-lg border border-\[#E8E8EA\] text-\[#807F86\] font-semibold text-sm">Retirement Fund</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Calculate Button -->
+      <button onclick="calculate()" class="w-full bg-cs-orange hover:bg-orange-600 text-white font-oswald text-lg font-bold uppercase tracking-wider py-4 rounded-xl transition active:scale-[0.98]">
+        Calculate My Allocation
+      </button>
+    </div>
+
+    <!-- Right: Results -->
+    <div class="lg:col-span-2 space-y-6" id="resultsPanel">
+      <div class="bg-white rounded-xl border border-\[#E8E8EA\] p-6 text-center">
+        <div class="text-\[#807F86\] text-sm py-12">
+          <svg class="w-12 h-12 mx-auto mb-3 opacity-30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"/><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"/></svg>
+          Fill in your details and click<br><strong>Calculate My Allocation</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+let currency = 'AUD';
+
+function setCurrency(c) {
+  currency = c;
+  document.getElementById('btnAUD').className = c === 'AUD'
+    ? 'px-4 py-3 text-sm font-semibold bg-cs-orange text-white transition'
+    : 'px-4 py-3 text-sm font-semibold bg-cs-input text-\[#807F86\] transition';
+  document.getElementById('btnUSD').className = c === 'USD'
+    ? 'px-4 py-3 text-sm font-semibold bg-cs-orange text-white transition'
+    : 'px-4 py-3 text-sm font-semibold bg-cs-input text-\[#807F86\] transition';
+}
+
+// Risk slider label highlighting
+document.getElementById('riskSlider').addEventListener('input', function() {
+  const v = parseInt(this.value);
+  ['riskLabel0','riskLabel1','riskLabel2'].forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (i === v) { el.className = 'text-cs-orange font-semibold'; }
+    else { el.className = 'text-\[#807F86\]'; }
+  });
+});
+
+// Toggle BTC amount field
+document.querySelectorAll('input[name="hasBtc"]').forEach(r => {
+  r.addEventListener('change', () => {
+    document.getElementById('btcAmountRow').style.display = r.value === 'yes' && r.checked ? 'block' : (r.value === 'no' && r.checked ? 'none' : document.getElementById('btcAmountRow').style.display);
+  });
+});
+// Simpler toggle
+document.querySelectorAll('input[name="hasBtc"]').forEach(r => {
+  r.addEventListener('change', function() {
+    document.getElementById('btcAmountRow').style.display = document.querySelector('input[name="hasBtc"]:checked').value === 'yes' ? 'block' : 'none';
+  });
+});
+
+function parseNum(str) {
+  return parseFloat(String(str).replace(/[^0-9.]/g, '')) || 0;
+}
+
+function fmt(n) {
+  return n.toLocaleString('en-AU', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+function calculate() {
+  const capital = parseNum(document.getElementById('capital').value);
+  if (capital <= 0) {
+    alert('Please enter your total capital to deploy.');
+    return;
+  }
+
+  const risk = parseInt(document.getElementById('riskSlider').value); // 0=conservative,1=moderate,2=aggressive
+  const timeline = document.getElementById('timeline').value;
+  const experience = document.getElementById('experience').value;
+  const hasBtc = document.querySelector('input[name="hasBtc"]:checked').value === 'yes';
+  const goal = document.querySelector('input[name="goal"]:checked').value;
+
+  // Base allocations
+  let btc, stables, alts, cash;
+
+  // Start with goal + risk combos
+  if (risk === 0 && (experience === 'beginner') && goal === 'preservation') {
+    btc = 80; stables = 15; alts = 0; cash = 5;
+  } else if (risk === 0) {
+    // Conservative + any goal
+    btc = 70; stables = 20; alts = 5; cash = 5;
+  } else if (risk === 1 && goal === 'preservation') {
+    btc = 75; stables = 15; alts = 5; cash = 5;
+  } else if (risk === 1 && (goal === 'balanced' || goal === 'retirement')) {
+    btc = 60; stables = 15; alts = 20; cash = 5;
+  } else if (risk === 1 && goal === 'maxgrowth') {
+    btc = 55; stables = 10; alts = 30; cash = 5;
+  } else if (risk === 2 && goal === 'maxgrowth' && experience === 'advanced') {
+    btc = 50; stables = 10; alts = 35; cash = 5;
+  } else if (risk === 2 && goal === 'maxgrowth') {
+    btc = 50; stables = 10; alts = 35; cash = 5;
+  } else if (risk === 2 && goal === 'preservation') {
+    btc = 65; stables = 15; alts = 15; cash = 5;
+  } else if (risk === 2) {
+    btc = 55; stables = 10; alts = 30; cash = 5;
+  } else {
+    btc = 60; stables = 15; alts = 20; cash = 5;
+  }
+
+  // Timeline adjustments
+  if (timeline === 'short') {
+    stables += 10;
+    alts = Math.max(0, alts - 10);
+  } else if (timeline === 'vlong') {
+    btc += 10;
+    stables = Math.max(0, stables - 10);
+  }
+
+  // Beginner cap: alts max 10%
+  if (experience === 'beginner' && alts > 10) {
+    const excess = alts - 10;
+    alts = 10;
+    btc += excess; // push excess into BTC
+  }
+
+  // Normalise to 100%
+  const total = btc + stables + alts + cash;
+  if (total !== 100) {
+    const diff = 100 - total;
+    btc += diff; // absorb rounding into BTC
+  }
+
+  // Ensure no negatives
+  btc = Math.max(0, btc);
+  stables = Math.max(0, stables);
+  alts = Math.max(0, alts);
+  cash = Math.max(0, cash);
+
+  const sym = currency === 'AUD' ? 'A$' : 'US$';
+  const btcAmt = capital * btc / 100;
+  const stablesAmt = capital * stables / 100;
+  const altsAmt = capital * alts / 100;
+  const cashAmt = capital * cash / 100;
+  const monthly = capital / 6;
+
+  const noBtcNote = !hasBtc;
+  const riskLabels = ['Conservative', 'Moderate', 'Aggressive'];
+
+  // Build pie chart conic gradient
+  let s1 = btc;
+  let s2 = s1 + stables;
+  let s3 = s2 + alts;
+  const conicGrad = `conic-gradient(
+    #FC5C03 0% ${s1}%,
+    #08C394 ${s1}% ${s2}%,
+    #6366F1 ${s2}% ${s3}%,
+    #9B99AE ${s3}% 100%
+  )`;
+
+  const panel = document.getElementById('resultsPanel');
+  panel.innerHTML = `
+    <!-- Pie Chart -->
+    <div class="bg-white rounded-xl border border-\[#E8E8EA\] p-6 result-card">
+      <h3 class="font-oswald text-lg uppercase tracking-wider mb-4">Your Allocation</h3>
+      <div class="flex items-center gap-6">
+        <div class="w-32 h-32 rounded-full flex-shrink-0 relative" style="background: ${conicGrad};">
+          <div class="absolute inset-3 rounded-full bg-white flex items-center justify-center">
+            <span class="font-mono text-xs text-\[#807F86\]">${sym}${fmt(capital)}</span>
+          </div>
+        </div>
+        <div class="space-y-2 text-sm flex-1">
+          <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm flex-shrink-0" style="background:#FC5C03"></span><span class="text-\[#807F86\]">Bitcoin</span><span class="ml-auto font-mono font-semibold">${btc}%</span></div>
+          <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm flex-shrink-0" style="background:#08C394"></span><span class="text-\[#807F86\]">Stablecoins</span><span class="ml-auto font-mono font-semibold">${stables}%</span></div>
+          <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm flex-shrink-0" style="background:#6366F1"></span><span class="text-\[#807F86\]">Digital Assets</span><span class="ml-auto font-mono font-semibold">${alts}%</span></div>
+          <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm flex-shrink-0" style="background:#9B99AE"></span><span class="text-\[#807F86\]">Cash Reserve</span><span class="ml-auto font-mono font-semibold">${cash}%</span></div>
+        </div>
+      </div>
+      <div class="mt-3 text-xs text-\[#807F86\] text-center">${riskLabels[risk]} profile · ${document.getElementById('timeline').selectedOptions[0].text} horizon</div>
+    </div>
+
+    <!-- Breakdown -->
+    <div class="space-y-3">
+      <div class="bg-white rounded-xl border border-\[#E8E8EA\] p-5 result-card">
+        <div class="flex items-center justify-between mb-1">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-sm" style="background:#FC5C03"></span>
+            <span class="font-semibold">Bitcoin</span>
+          </div>
+          <span class="font-mono text-cs-orange font-bold text-lg">${btc}%</span>
+        </div>
+        <div class="font-mono text-sm text-\[#807F86\]">${sym}${fmt(btcAmt)}</div>
+        <div class="w-full bg-cs-border rounded-full h-1.5 mt-2"><div class="h-1.5 rounded-full" style="width:${btc}%;background:#FC5C03"></div></div>
+      </div>
+      <div class="bg-white rounded-xl border border-\[#E8E8EA\] p-5 result-card">
+        <div class="flex items-center justify-between mb-1">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-sm" style="background:#08C394"></span>
+            <span class="font-semibold">Stablecoins / Yield</span>
+          </div>
+          <span class="font-mono text-cs-green font-bold text-lg">${stables}%</span>
+        </div>
+        <div class="font-mono text-sm text-\[#807F86\]">${sym}${fmt(stablesAmt)}</div>
+        <div class="text-xs text-cs-green mt-1">≈ ${sym}${fmt(stablesAmt * 0.06)} /yr potential yield at ~6% APY</div>
+        <div class="w-full bg-cs-border rounded-full h-1.5 mt-2"><div class="h-1.5 rounded-full" style="width:${stables}%;background:#08C394"></div></div>
+      </div>
+      <div class="bg-white rounded-xl border border-\[#E8E8EA\] p-5 result-card">
+        <div class="flex items-center justify-between mb-1">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-sm" style="background:#6366F1"></span>
+            <span class="font-semibold">Digital Assets (Alts)</span>
+          </div>
+          <span class="font-mono font-bold text-lg" style="color:#6366F1">${alts}%</span>
+        </div>
+        <div class="font-mono text-sm text-\[#807F86\]">${sym}${fmt(altsAmt)}</div>
+        <div class="w-full bg-cs-border rounded-full h-1.5 mt-2"><div class="h-1.5 rounded-full" style="width:${alts}%;background:#6366F1"></div></div>
+      </div>
+      <div class="bg-white rounded-xl border border-\[#E8E8EA\] p-5 result-card">
+        <div class="flex items-center justify-between mb-1">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-sm" style="background:#9B99AE"></span>
+            <span class="font-semibold">Cash Reserve</span>
+          </div>
+          <span class="font-mono text-\[#807F86\] font-bold text-lg">${cash}%</span>
+        </div>
+        <div class="font-mono text-sm text-\[#807F86\]">${sym}${fmt(cashAmt)}</div>
+        <div class="w-full bg-cs-border rounded-full h-1.5 mt-2"><div class="h-1.5 rounded-full" style="width:${cash}%;background:#9B99AE"></div></div>
+      </div>
+    </div>
+
+    ${noBtcNote ? `
+    <div class="bg-cs-orange/10 border border-cs-orange/30 rounded-xl p-4 result-card">
+      <div class="flex gap-3 items-start">
+        <svg class="w-5 h-5 text-cs-orange flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+        <div>
+          <p class="font-semibold text-cs-orange text-sm">Priority: Acquire Your First Bitcoin Position</p>
+          <p class="text-xs text-\[#807F86\] mt-1">Before diversifying into other digital assets, consider establishing a core Bitcoin position. This is the foundation of any digital asset portfolio.</p>
+        </div>
+      </div>
+    </div>` : ''}
+
+    <!-- DCA Plan -->
+    <div class="bg-white rounded-xl border border-\[#E8E8EA\] p-6 result-card">
+      <h3 class="font-oswald text-lg uppercase tracking-wider mb-4">6-Month DCA Plan</h3>
+      <p class="text-xs text-\[#807F86\] mb-4">Dollar-cost average your capital over 6 months to reduce timing risk.</p>
+      <div class="space-y-2">
+        <div class="flex justify-between text-sm"><span class="text-\[#807F86\]">Monthly total</span><span class="font-mono font-semibold">${sym}${fmt(monthly)}</span></div>
+        <div class="border-t border-\[#E8E8EA\] my-2"></div>
+        <div class="flex justify-between text-sm"><span class="text-\[#807F86\]">Bitcoin</span><span class="font-mono">${sym}${fmt(monthly * btc / 100)}/mo</span></div>
+        <div class="flex justify-between text-sm"><span class="text-\[#807F86\]">Stablecoins</span><span class="font-mono">${sym}${fmt(monthly * stables / 100)}/mo</span></div>
+        <div class="flex justify-between text-sm"><span class="text-\[#807F86\]">Digital Assets</span><span class="font-mono">${sym}${fmt(monthly * alts / 100)}/mo</span></div>
+        <div class="flex justify-between text-sm"><span class="text-\[#807F86\]">Cash Reserve</span><span class="font-mono">${sym}${fmt(monthly * cash / 100)}/mo</span></div>
+      </div>
+    </div>
+
+    <!-- Quote -->
+    <div class="bg-white rounded-xl border border-\[#E8E8EA\] p-6 result-card">
+      <div class="flex gap-3">
+        <div class="text-cs-orange text-3xl font-oswald leading-none">"</div>
+        <div>
+          <p class="text-sm italic text-\[#1B1925\] leading-relaxed">I've never regretted dollar cost averaging.</p>
+          <p class="text-xs text-\[#807F86\] mt-2">— Simon, Collective Shift</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Disclaimers -->
+    <div class="bg-white rounded-xl border border-\[#E8E8EA\] p-5 result-card space-y-2">
+      <div class="flex gap-2 items-start"><span class="text-\[#807F86\] text-xs mt-0.5">⚠️</span><p class="text-xs text-\[#807F86\]">This is general education, not financial advice. Always do your own research and consult a licensed financial adviser.</p></div>
+      <div class="flex gap-2 items-start"><span class="text-\[#807F86\] text-xs mt-0.5">📊</span><p class="text-xs text-\[#807F86\]">CS Portfolio currently holds ~97% BTC, ~3% digital assets in a defensive posture.</p></div>
+      <div class="flex gap-2 items-start"><span class="text-\[#807F86\] text-xs mt-0.5">🔧</span><p class="text-xs text-\[#807F86\]">Adjust based on your personal circumstances, tax situation, and financial goals.</p></div>
+    </div>
+  `;
+
+  // Scroll to results on mobile
+  if (window.innerWidth < 1024) {
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+// Format capital input with commas
+document.getElementById('capital').addEventListener('input', function() {
+  const raw = this.value.replace(/[^0-9.]/g, '');
+  const parts = raw.split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  this.value = parts.join('.');
+});
+</script>
+
+</body>
+</html>

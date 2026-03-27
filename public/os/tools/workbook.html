@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+
+<title>8-Step Strategy Workbook — Collective Shift</title>
+
+<style>
+  :root {
+    --orange: #FC5C03;
+    --green: #08C394;
+    --purple: #6D28D9;
+    --dark: #1B1925;
+    --mid: #5A5770;
+    --light: #8F8DAA;
+    --border: #E8E8EA;
+    --surface: #FAFAFA;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: #fff;
+    color: var(--dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* NAV */
+  nav {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .cs-logo {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--dark);
+    text-decoration: none;
+  }
+  .cs-logo span { color: var(--orange); }
+  .nav-divider { color: var(--border); }
+  .nav-breadcrumb {
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    color: var(--light);
+  }
+
+  /* HERO */
+  .hero {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 64px 40px 48px;
+    text-align: center;
+  }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 5px 14px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    color: var(--mid);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .hero-tag .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--orange);
+  }
+  .hero-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 42px;
+    color: var(--dark);
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .hero-title span { color: var(--orange); }
+  .hero-desc {
+    font-family: 'Barlow', sans-serif;
+    font-size: 17px;
+    color: var(--mid);
+    max-width: 580px;
+    margin: 0 auto 48px;
+    line-height: 1.65;
+  }
+
+  /* PHASE BADGE */
+  .phase-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFF4EE;
+    border: 1px solid #FDDAC5;
+    border-radius: 10px;
+    padding: 10px 18px;
+    margin-bottom: 48px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    color: var(--mid);
+  }
+  .phase-badge strong {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    color: var(--orange);
+  }
+
+  /* STEPS PREVIEW */
+  .steps-preview {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    max-width: 800px;
+    margin: 0 auto 64px;
+    padding: 0 40px;
+  }
+  .step-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+  .step-pill-num {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    color: var(--orange);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 3px;
+  }
+  .step-pill-name {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    color: var(--dark);
+    line-height: 1.3;
+  }
+
+  /* WORKBOOK CARDS */
+  .workbook-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+  }
+  .workbook-card {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px 32px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(27,25,37,0.06);
+  }
+  .workbook-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(27,25,37,0.12);
+  }
+  .workbook-card.l1 { border-color: #B2F0DF; }
+  .workbook-card.l1:hover { border-color: var(--green); }
+  .workbook-card.l2 { border-color: #DDD6FE; }
+  .workbook-card.l2:hover { border-color: var(--purple); }
+
+  .card-level-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 100px;
+    padding: 4px 12px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    width: fit-content;
+  }
+  .card-level-badge.l1 { background: #EDFAF5; color: var(--green); }
+  .card-level-badge.l2 { background: #EDE9FE; color: var(--purple); }
+
+  .card-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--dark);
+    margin-bottom: 6px;
+  }
+  .card-subtitle {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 12px;
+    color: var(--light);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .card-desc {
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    color: var(--mid);
+    line-height: 1.6;
+    margin-bottom: 24px;
+    flex: 1;
+  }
+  .card-features {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 28px;
+  }
+  .card-feature {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    color: var(--mid);
+  }
+  .card-feature .feat-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .card-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 24px;
+    border-radius: 100px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.15s;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .card-cta.l1 { background: var(--green); color: #fff; }
+  .card-cta.l1:hover { background: #06A87E; }
+  .card-cta.l2 { background: var(--purple); color: #fff; }
+  .card-cta.l2:hover { background: #5B21B6; }
+
+  /* WHAT IS THIS */
+  .what-section {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 48px 40px;
+  }
+  .what-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .what-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--orange);
+    margin-bottom: 12px;
+  }
+  .what-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--dark);
+    line-height: 1.3;
+  }
+  .what-body p {
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    color: var(--mid);
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+  .phase-steps {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .phase-step {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    color: var(--mid);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .phase-step.active { border-color: var(--orange); color: var(--orange); background: #FFF4EE; }
+  .phase-step.active .phase-num { background: var(--orange); }
+  .phase-num {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 10px;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 40px;
+    text-align: center;
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    color: var(--light);
+    margin-top: auto;
+  }
+
+  @media (max-width: 640px) {
+    nav { padding: 16px 20px; }
+    .hero { padding: 40px 20px 32px; }
+    .hero-title { font-size: 28px; }
+    .steps-preview { grid-template-columns: repeat(2,1fr); padding: 0 20px; }
+    .workbook-cards { grid-template-columns: 1fr; padding: 0 20px 48px; }
+    .what-inner { grid-template-columns: 1fr; }
+    .what-section { padding: 40px 20px; }
+  }
+
+/* OS standalone overrides */
+.sidebar, aside.sidebar, nav.sidebar, .csn-bar, .csn-mobile-menu, #csnMobileMenu,
+.overlay, #overlay, .mobile-header, .hamburger, [class*="hamburger"], .breadcrumb,
+nav[role="navigation"], .csn-mob-link, .csn-mob-top, .csn-mob-sub, a[class*="csn-mob"] {
+  display: none !important;
+}
+body { display: block !important; }
+main, .main, .content, .page-content {
+  margin-left: 0 !important; padding-left: 0 !important;
+  width: 100% !important; max-width: 100% !important;
+}
+
+</style>
+</head>
+<body>
+<div class="os-header-bar" style="background:#fff;border-bottom:1px solid #E8E8EA;padding:14px 32px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:9999;">
+  <a href="/os/" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <div style="width:26px;height:26px;background:#FC5C03;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;">CS</div>
+    <span style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:15px;color:#1B1925;">Collective Shift</span>
+  </a>
+  <div style="width:1px;height:18px;background:#E8E8EA;margin:0 2px;"></div>
+  <span style="font-family:'Barlow',sans-serif;font-weight:400;font-size:13px;color:#807F86;">Operating System</span>
+</div>
+
+<!-- ═══ COLLECTIVE SHIFT TOP NAV ═══ -->
+<style>
+  :root {
+    --csn-h: 56px;
+    --csn-bg: #FFFFFF;
+    --csn-border: #E8E8EA;
+    --csn-text: #1B1925;
+    --csn-muted: #4D4C55;
+    --csn-orange: #FC5C03;
+    --csn-orange-bg: #FEEEE5;
+    --csn-dd-bg: #FFFFFF;
+    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    --csn-z: 9000;
+  }
+  .csn-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--csn-h);
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 0;
+    z-index: var(--csn-z);
+    font-family: 'Plus Jakarta Sans', 'Barlow', sans-serif;
+  }
+  .csn-logo {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--csn-orange);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin-right: 32px;
+    flex-shrink: 0;
+  }
+  .csn-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+  }
+  .csn-item {
+    position: relative;
+  }
+  .csn-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s, background 0.15s;
+    cursor: pointer;
+  }
+  .csn-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-item.active > .csn-link { color: var(--csn-orange); font-weight: 600; }
+  .csn-chevron { transition: transform 0.2s; flex-shrink: 0; }
+  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
+  /* Dropdown */
+  .csn-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 240px;
+    background: var(--csn-dd-bg);
+    border: 1px solid var(--csn-border);
+    border-radius: 12px;
+    box-shadow: var(--csn-dd-shadow);
+    padding: 6px;
+    z-index: calc(var(--csn-z) + 1);
+  }
+  .csn-item.csn-has-dd { position: relative; }
+  .csn-item.csn-has-dd::after { content: ""; position: absolute; top: 100%; left: 0; width: 100%; height: 12px; }
+  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
+  .csn-dd-item {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+    white-space: nowrap;
+  }
+  .csn-dd-item:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-divider { height: 1px; background: var(--csn-border); margin: 4px 8px; }
+  /* Mobile hamburger */
+  .csn-hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--csn-muted);
+    padding: 4px;
+    margin-left: auto;
+  }
+  /* Mobile drawer */
+  .csn-mobile-menu {
+    display: none;
+    position: fixed;
+    top: var(--csn-h);
+    left: 0; right: 0;
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    padding: 8px 16px 16px;
+    z-index: calc(var(--csn-z) - 1);
+    max-height: calc(100vh - var(--csn-h));
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .csn-mobile-menu.open { display: block; }
+  .csn-mob-link {
+    display: block;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+  }
+  .csn-mob-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-mob-top { font-weight: 600; color: var(--csn-text); margin-top: 4px; }
+  .csn-mob-sub { font-size: 12px; padding-left: 20px; }
+  /* Body offset */
+  body { padding-top: var(--csn-h) !important; }
+  @media (max-width: 1023px) {
+    .csn-nav { display: none; }
+    .csn-hamburger { display: block; }
+  }
+  @media (max-width: 640px) {
+    .csn-logo { font-size: 13px; margin-right: 16px; }
+  }
+</style>
+<nav class="csn-bar" role="navigation" aria-label="Main navigation">
+  <a href="index.html" class="csn-logo">Collective Shift</a>
+  <div class="csn-nav">
+      <div class="csn-item "><a href="index.html" class="csn-link"></a></div>
+      <div class="csn-item csn-has-dd active">
+        <a href="hub/operating-system.html" class="csn-link">The Collective Shift Operating System
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="hub/operating-system.html" class="csn-dd-item">Operating System Overview</a><a href="hub/modules/m1-foundations.html" class="csn-dd-item">Module 1: Foundations</a><a href="hub/modules/m2-bitcoin.html" class="csn-dd-item">Module 2: Bitcoin</a><a href="hub/modules/m3-altcoins.html" class="csn-dd-item">Module 3: Digital Assets</a><a href="hub/modules/m4-how-we-invest.html" class="csn-dd-item">Module 4: How We Invest</a><a href="hub/modules/m5-buy-sell.html" class="csn-dd-item">Module 5: Buy & Sell</a><a href="hub/modules/m6-send-store.html" class="csn-dd-item">Module 6: Send & Store</a><a href="hub/modules/m7-tax.html" class="csn-dd-item">Module 7: Tax</a><a href="hub/modules/m8-sell-strategy.html" class="csn-dd-item">Module 8: Exit Strategy</a><div class="csn-divider"></div><a href="8-step-strategy-workbook.html" class="csn-dd-item">8-Step Strategy Workbook</a><a href="8-step-strategy-workbook-L1.html" class="csn-dd-item">↳ Level 1 Workbook</a><a href="8-step-strategy-workbook-L2.html" class="csn-dd-item">↳ Level 2 Workbook</a><a href="portfolio-calculator.html" class="csn-dd-item">Portfolio Allocation Calculator</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="hub/products.html" class="csn-link">Product
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="hub/products.html#platinum" class="csn-dd-item">Platinum</a><a href="hub/products.html#accelerator" class="csn-dd-item">Accelerator</a><a href="hub/beginner-journey.html" class="csn-dd-item">Beginner's Journey</a><a href="hub/products.html#two-track" class="csn-dd-item">Two-Track System</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="hub/youtube-strategy.html" class="csn-link">Social Media
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="hub/youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a><a href="hub/social-strategy.html" class="csn-dd-item">Social Strategy</a><a href="hub/instagram-strategy.html" class="csn-dd-item">Instagram Strategy</a><div class="csn-divider"></div><a href="hub/brand.html" class="csn-dd-item">Brand & Voice</a><a href="hub/positioning.html" class="csn-dd-item">Positioning & ICP</a><a href="hub/competitors.html" class="csn-dd-item">Competitors</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="travis-briefing-2026-03-27.html" class="csn-link">Documents
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a><a href="cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a><a href="q2-market-briefing.html" class="csn-dd-item">Q2 Market Briefing</a><a href="webinar-q2-2026-is-now-the-time.html" class="csn-dd-item">Webinar: Is Now The Time?</a></div>
+      </div>
+  </div>
+  <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+<div id="csnMobileMenu" class="csn-mobile-menu">
+  <a href="index.html" class="csn-mob-link csn-mob-top"></a>
+<a href="hub/operating-system.html" class="csn-mob-link csn-mob-top">The Collective Shift Operating System</a>
+<a href="hub/operating-system.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Operating System Overview</a>
+<a href="hub/modules/m1-foundations.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 1: Foundations</a>
+<a href="hub/modules/m2-bitcoin.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 2: Bitcoin</a>
+<a href="hub/modules/m3-altcoins.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 3: Digital Assets</a>
+<a href="hub/modules/m4-how-we-invest.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 4: How We Invest</a>
+<a href="hub/modules/m5-buy-sell.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 5: Buy & Sell</a>
+<a href="hub/modules/m6-send-store.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 6: Send & Store</a>
+<a href="hub/modules/m7-tax.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 7: Tax</a>
+<a href="hub/modules/m8-sell-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 8: Exit Strategy</a>
+<a href="8-step-strategy-workbook.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;8-Step Strategy Workbook</a>
+<a href="8-step-strategy-workbook-L1.html" class="csn-mob-link csn-mob-sub">↳ Level 1 Workbook</a>
+<a href="8-step-strategy-workbook-L2.html" class="csn-mob-link csn-mob-sub">↳ Level 2 Workbook</a>
+<a href="portfolio-calculator.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Portfolio Allocation Calculator</a>
+<a href="hub/products.html" class="csn-mob-link csn-mob-top">Product</a>
+<a href="hub/products.html#platinum" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Platinum</a>
+<a href="hub/products.html#accelerator" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Accelerator</a>
+<a href="hub/beginner-journey.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Beginner's Journey</a>
+<a href="hub/products.html#two-track" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Two-Track System</a>
+<a href="hub/youtube-strategy.html" class="csn-mob-link csn-mob-top">Social Media</a>
+<a href="hub/youtube-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;YouTube Strategy</a>
+<a href="hub/social-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Social Strategy</a>
+<a href="hub/instagram-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Instagram Strategy</a>
+<a href="hub/brand.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Brand & Voice</a>
+<a href="hub/positioning.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Positioning & ICP</a>
+<a href="hub/competitors.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Competitors</a>
+<a href="travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-top">Documents</a>
+<a href="travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Travis CGO Briefing</a>
+<a href="cs-education-system-overview.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Education System Overview</a>
+<a href="q2-market-briefing.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Q2 Market Briefing</a>
+<a href="webinar-q2-2026-is-now-the-time.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Webinar: Is Now The Time?</a>
+</div>
+<!-- ═══ END TOP NAV ═══ -->
+
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="cs-logo">Collective<span>Shift</span></a>
+  <span class="nav-divider">/</span>
+  <span class="nav-breadcrumb">8-Step Strategy Workbook</span>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag"><span class="dot"></span> Phase 3 · Strategy Builder</div>
+  <h1 class="hero-title">Your Personal<br><span>8-Step Strategy</span> Workbook</h1>
+  <p class="hero-desc">This is where you build <em>your</em> strategy. Not a generic template — a personalised plan that covers your goals, risk profile, conviction, allocation, buying process, tax approach, security, and exit strategy.</p>
+
+  <div class="phase-badge">
+    <strong>Phase 3</strong> of the Collective Shift Education System — complete after learning the modules
+  </div>
+</div>
+
+<!-- STEPS PREVIEW -->
+<div class="steps-preview">
+  <div class="step-pill">
+    <div class="step-pill-num">Step 01</div>
+    <div class="step-pill-name">Define Your Goals</div>
+  </div>
+  <div class="step-pill">
+    <div class="step-pill-num">Step 02</div>
+    <div class="step-pill-name">Assess Risk Profile</div>
+  </div>
+  <div class="step-pill">
+    <div class="step-pill-num">Step 03</div>
+    <div class="step-pill-name">Investment Thesis</div>
+  </div>
+  <div class="step-pill">
+    <div class="step-pill-num">Step 04</div>
+    <div class="step-pill-name">Portfolio Allocation</div>
+  </div>
+  <div class="step-pill">
+    <div class="step-pill-num">Step 05</div>
+    <div class="step-pill-name">Buy Strategy</div>
+  </div>
+  <div class="step-pill">
+    <div class="step-pill-num">Step 06</div>
+    <div class="step-pill-name">Tax Approach</div>
+  </div>
+  <div class="step-pill">
+    <div class="step-pill-num">Step 07</div>
+    <div class="step-pill-name">Secure Your Assets</div>
+  </div>
+  <div class="step-pill">
+    <div class="step-pill-num">Step 08</div>
+    <div class="step-pill-name">Sell Strategy</div>
+  </div>
+</div>
+
+<!-- WORKBOOK CARDS -->
+<div class="workbook-cards">
+
+  <!-- L1 CARD -->
+  <a href="8-step-strategy-workbook-L1.html" class="workbook-card l1">
+    <div class="card-level-badge l1">⬤ Level 1</div>
+    <div class="card-title">Beginner Workbook</div>
+    <div class="card-subtitle">For new digital asset investors</div>
+    <p class="card-desc">Approachable, clear, and focused on getting you set up on a centralised exchange (CEX) with a simple but effective strategy.</p>
+    <div class="card-features">
+      <div class="card-feature"><span class="feat-dot" style="background:var(--green)"></span>Simple goal-setting and risk profile</div>
+      <div class="card-feature"><span class="feat-dot" style="background:var(--green)"></span>Basic DCA plan and exchange selection</div>
+      <div class="card-feature"><span class="feat-dot" style="background:var(--green)"></span>Beginner security setup (2FA, hardware wallet)</div>
+      <div class="card-feature"><span class="feat-dot" style="background:var(--green)"></span>Simple Bitcoin sell target table</div>
+      <div class="card-feature"><span class="feat-dot" style="background:var(--green)"></span>Auto-saves to your browser</div>
+    </div>
+    <span class="card-cta l1">Open Level 1 Workbook →</span>
+  </a>
+
+  <!-- L2 CARD -->
+  <a href="8-step-strategy-workbook-L2.html" class="workbook-card l2">
+    <div class="card-level-badge l2">⬤ Level 2</div>
+    <div class="card-title">Advanced Workbook</div>
+    <div class="card-subtitle">For experienced digital asset investors</div>
+    <p class="card-desc">Institutional-grade depth. Multi-tier allocation, on-chain exit signals, tax structure strategy, multi-sig custody, and advanced re-entry frameworks.</p>
+    <div class="card-features">
+      <div class="card-feature"><span class="feat-dot" style="background:var(--purple)"></span>Macro thesis and invalidation criteria</div>
+      <div class="card-feature"><span class="feat-dot" style="background:var(--purple)"></span>Core / Satellite / Speculative tier framework</div>
+      <div class="card-feature"><span class="feat-dot" style="background:var(--purple)"></span>Multi-sig, Shamir's, inheritance planning</div>
+      <div class="card-feature"><span class="feat-dot" style="background:var(--purple)"></span>On-chain exit signals (MVRV, NUPL, Pi Cycle)</div>
+      <div class="card-feature"><span class="feat-dot" style="background:var(--purple)"></span>Tax-loss harvesting + entity structures</div>
+    </div>
+    <span class="card-cta l2">Open Level 2 Workbook →</span>
+  </a>
+
+</div>
+
+<!-- WHAT IS THIS SECTION -->
+<div class="what-section">
+  <div class="what-inner">
+    <div>
+      <div class="what-label">Context</div>
+      <div class="what-title">Where does this fit in the education system?</div>
+    </div>
+    <div class="what-body">
+      <p>The Collective Shift education system is built in three phases: <strong>Learn</strong> (understand digital assets and markets), <strong>Research</strong> (evaluate specific assets), and <strong>Strategy</strong> (build and execute your personal plan).</p>
+      <p>This workbook is <strong>Phase 3 — Strategy</strong>. It's where everything comes together. You've learned the frameworks, you understand your options — now you commit your approach to paper so you have something to return to when markets test you.</p>
+      <div class="phase-steps">
+        <div class="phase-step"><span class="phase-num">1</span> Learn</div>
+        <div class="phase-step"><span class="phase-num">2</span> Research</div>
+        <div class="phase-step active"><span class="phase-num">3</span> Strategy ← You are here</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  © Collective Shift · 8-Step Strategy Workbook · Your answers are saved locally to your browser only.
+</footer>
+
+</body>
+</html>

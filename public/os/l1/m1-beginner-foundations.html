@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Beginner Foundations — Level 1 Module 1 | Collective Shift</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cs: {
+          orange: '#FC5C03',
+          'orange-light': '#FC8C4E',
+          'orange-bg': '#FEDECC',
+          'orange-hover': '#FEEEE5',
+          green: '#08C394',
+          purple: '#654FFC',
+          border: '#E8E8EA',
+          text: '#1B1925',
+          secondary: '#4D4C55',
+          muted: '#807F86',
+        }
+      },
+      fontFamily: {
+        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+        barlow: ['Barlow', 'sans-serif'],
+        mono: ['Source Code Pro', 'monospace'],
+      }
+    }
+  }
+}
+</script>
+<style>
+body{font-family:'Barlow',sans-serif}
+h1,h2,h3,h4,h5{font-family:'Plus Jakarta Sans',sans-serif}
+.label-tag{font-family:'Source Code Pro',monospace}
+.sidebar-l1{transition:transform .3s ease}
+@media(max-width:1023px){.sidebar-l1{transform:translateX(-100%);position:fixed;z-index:50;top:56px;left:0;height:calc(100vh - 56px)}.sidebar-l1.open{transform:translateX(0)}}
+.nav-link{transition:all .15s}
+.nav-link:hover,.nav-link.active{background:rgba(252,92,3,.12);color:#FC5C03;border-left-color:#FC5C03}
+.framework-quote{border-left:4px solid #FC5C03;background:#FFFAF7;border-radius:0 12px 12px 0;padding:20px 24px;margin:16px 0}
+.member-evidence{background:#F5F5F5;border:1px solid #E8E8EA;border-radius:12px;padding:16px 20px;margin:12px 0}
+.topic-card{background:#FFFFFF;border:1px solid #E8E8EA;border-radius:16px;padding:24px;margin-bottom:16px;transition:all .2s}
+.topic-card:hover{border-color:rgba(252,92,3,0.3);box-shadow:0 4px 16px rgba(0,0,0,0.04)}
+.question-list li{padding:6px 0;border-bottom:1px solid #F0F0F0}
+.question-list li:last-child{border-bottom:none}
+.ben-quote{background:linear-gradient(135deg,#1A1A2E 0%,#2D1B3D 100%);border-radius:16px;padding:28px 32px;margin:20px 0;position:relative;overflow:hidden}
+.ben-quote::before{content:'\201C';position:absolute;top:-10px;left:16px;font-size:120px;color:rgba(252,92,3,0.15);font-family:Georgia,serif;line-height:1}
+.ben-quote p{color:#fff;font-size:15px;font-style:italic;line-height:1.7;position:relative;z-index:1}
+.ben-quote .attribution{color:#FC5C03;font-size:12px;font-family:'Source Code Pro',monospace;margin-top:12px;font-style:normal}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0}
+.stat-card{background:#FAFAFA;border:1px solid #E8E8EA;border-radius:12px;padding:16px;text-align:center}
+.stat-card .stat-value{font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:700;color:#FC5C03}
+.stat-card .stat-label{font-size:12px;color:#807F86;margin-top:4px}
+@media print{.sidebar-l1,.csn-bar{display:none!important}body{padding-top:0!important}.print-break{page-break-before:always}}
+
+/* OS standalone overrides */
+.sidebar, aside.sidebar, nav.sidebar, .csn-bar, .csn-mobile-menu, #csnMobileMenu,
+.overlay, #overlay, .mobile-header, .hamburger, [class*="hamburger"], .breadcrumb,
+nav[role="navigation"], .csn-mob-link, .csn-mob-top, .csn-mob-sub, a[class*="csn-mob"] {
+  display: none !important;
+}
+body { display: block !important; }
+main, .main, .content, .page-content {
+  margin-left: 0 !important; padding-left: 0 !important;
+  width: 100% !important; max-width: 100% !important;
+}
+
+</style>
+</head>
+<body class="bg-white text-[#1B1925] min-h-screen">
+<div class="os-header-bar" style="background:#fff;border-bottom:1px solid #E8E8EA;padding:14px 32px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:9999;">
+  <a href="/os/" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <div style="width:26px;height:26px;background:#FC5C03;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;">CS</div>
+    <span style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:15px;color:#1B1925;">Collective Shift</span>
+  </a>
+  <div style="width:1px;height:18px;background:#E8E8EA;margin:0 2px;"></div>
+  <span style="font-family:'Barlow',sans-serif;font-weight:400;font-size:13px;color:#807F86;">Operating System</span>
+</div>
+
+
+<!-- ═══ TOP NAV ═══ -->
+<style>
+:root{--csn-h:56px;--csn-bg:#FFF;--csn-border:#E8E8EA;--csn-text:#1B1925;--csn-muted:#4D4C55;--csn-orange:#FC5C03;--csn-orange-bg:#FEEEE5;--csn-dd-bg:#FFF;--csn-dd-shadow:0 8px 24px rgba(0,0,0,.10),0 2px 8px rgba(0,0,0,.06);--csn-z:9000}
+.csn-bar{position:fixed;top:0;left:0;right:0;height:var(--csn-h);background:var(--csn-bg);border-bottom:1px solid var(--csn-border);display:flex;align-items:center;padding:0 24px;z-index:var(--csn-z);font-family:'Plus Jakarta Sans',sans-serif}
+.csn-logo{font-weight:700;font-size:15px;color:var(--csn-orange);text-decoration:none;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;margin-right:32px}
+.csn-nav{display:flex;align-items:center;gap:2px;flex:1}
+.csn-link{display:flex;align-items:center;gap:5px;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--csn-muted);text-decoration:none;white-space:nowrap;transition:color .15s,background .15s}
+.csn-link:hover{color:var(--csn-orange);background:var(--csn-orange-bg)}
+.csn-item.active>.csn-link{color:var(--csn-orange);font-weight:600}
+.csn-chevron{transition:transform .2s}
+.csn-dropdown{display:none;position:absolute;top:calc(100% + 6px);left:0;min-width:240px;background:var(--csn-dd-bg);border:1px solid var(--csn-border);border-radius:12px;box-shadow:var(--csn-dd-shadow);padding:6px;z-index:calc(var(--csn-z)+1)}
+.csn-item.csn-has-dd{position:relative}
+.csn-item.csn-has-dd::after{content:"";position:absolute;top:100%;left:0;width:100%;height:12px}
+.csn-item.csn-has-dd:hover>.csn-dropdown{display:block}
+.csn-dd-item{display:block;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--csn-muted);text-decoration:none;transition:color .12s,background .12s;white-space:nowrap}
+.csn-dd-item:hover{color:var(--csn-orange);background:var(--csn-orange-bg)}
+.csn-divider{height:1px;background:var(--csn-border);margin:4px 8px}
+.csn-hamburger{display:none;background:none;border:none;cursor:pointer;color:var(--csn-muted);padding:4px;margin-left:auto}
+body{padding-top:var(--csn-h)!important}
+@media(max-width:1023px){.csn-nav{display:none}.csn-hamburger{display:block}}
+</style>
+<nav class="csn-bar" role="navigation">
+  <a href="../../index.html" class="csn-logo">Collective Shift</a>
+  <div class="csn-nav">
+    <div class="csn-item"><a href="../../index.html" class="csn-link"></a></div>
+    <div class="csn-item csn-has-dd active">
+      <a href="../operating-system.html" class="csn-link">Operating System <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></a>
+      <div class="csn-dropdown">
+        <a href="../operating-system.html" class="csn-dd-item">OS Overview</a>
+        <div class="csn-divider"></div>
+        <a href="m1-beginner-foundations.html" class="csn-dd-item" style="color:#FC5C03">L1: Beginner Foundations</a>
+        <a href="m2-beginner-bitcoin.html" class="csn-dd-item">L1: Beginner Bitcoin</a>
+        <a href="m3-beginner-altcoins.html" class="csn-dd-item">L1: Beginner Altcoins</a>
+        <a href="m4-beginner-how-we-invest.html" class="csn-dd-item">L1: Beginner How We Invest</a>
+        <a href="m5-beginner-buy-sell.html" class="csn-dd-item">L1: Beginner Buy &amp; Sell</a>
+        <a href="m6-beginner-send-store.html" class="csn-dd-item">L1: Beginner Send &amp; Store</a>
+        <a href="m7-beginner-tax.html" class="csn-dd-item">L1: Beginner Tax</a>
+        <a href="m8-beginner-sell-strategy.html" class="csn-dd-item">L1: Beginner Sell Strategy</a>
+        <div class="csn-divider"></div>
+        <a href="../l2/m1-advanced-foundations.html" class="csn-dd-item">L2: Advanced Foundations</a>
+        <a href="../l2/m2-advanced-bitcoin.html" class="csn-dd-item">L2: Advanced Bitcoin</a>
+        <a href="../l2/m3-advanced-altcoins.html" class="csn-dd-item">L2: Advanced Altcoins</a>
+        <a href="../l2/m4-advanced-how-we-invest.html" class="csn-dd-item">L2: Advanced How We Invest</a>
+        <a href="../l2/m5-advanced-buy-sell.html" class="csn-dd-item">L2: Advanced Buy &amp; Sell</a>
+        <a href="../l2/m6-advanced-send-store.html" class="csn-dd-item">L2: Advanced Send &amp; Store</a>
+        <a href="../l2/m7-advanced-tax.html" class="csn-dd-item">L2: Advanced Tax</a>
+        <a href="../l2/m8-advanced-sell-strategy.html" class="csn-dd-item">L2: Advanced Sell Strategy</a>
+      </div>
+    </div>
+    <div class="csn-item"><a href="../products.html" class="csn-link">Product</a></div>
+    <div class="csn-item"><a href="../brand.html" class="csn-link">Brand</a></div>
+  </div>
+  <button class="csn-hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')" aria-label="Menu">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+
+<div class="flex">
+  <!-- L1 Sidebar -->
+  <aside id="sidebar" class="sidebar-l1 w-64 min-h-screen bg-white border-r border-[#E8E8EA] flex-shrink-0 flex flex-col fixed top-[56px] left-0 h-[calc(100vh-56px)] overflow-y-auto">
+    <div class="p-5 border-b border-[#E8E8EA]">
+      <p class="text-xs font-mono text-cs-muted uppercase tracking-widest">Level 1 — Beginner</p>
+      <p class="text-lg font-bold text-cs-green mt-1">OS Bible</p>
+    </div>
+    <nav class="flex-1 py-4 px-3 space-y-1">
+      <a href="m1-beginner-foundations.html" class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium border-l-2 border-transparent">
+        <span class="text-xs font-mono font-bold bg-cs-green/20 text-cs-green rounded px-1.5 py-0.5">01</span> Beginner Foundations
+      </a>
+      <a href="m2-beginner-bitcoin.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent">
+        <span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">02</span> Beginner Bitcoin
+      </a>
+      <a href="m3-beginner-altcoins.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent">
+        <span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">03</span> Beginner Altcoins
+      </a>
+      <a href="m4-beginner-how-we-invest.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent">
+        <span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">04</span> Beginner How We Invest
+      </a>
+      <a href="m5-beginner-buy-sell.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent">
+        <span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">05</span> Beginner Buy &amp; Sell
+      </a>
+      <a href="m6-beginner-send-store.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent">
+        <span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">06</span> Beginner Send &amp; Store
+      </a>
+      <a href="m7-beginner-tax.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent">
+        <span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">07</span> Beginner Tax
+      </a>
+      <a href="m8-beginner-sell-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent">
+        <span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">08</span> Beginner Sell Strategy
+      </a>
+      <div class="border-t border-[#E8E8EA] my-3"></div>
+      <a href="../operating-system.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent">
+        <span>←</span> Back to OS Overview
+      </a>
+    </nav>
+    <div class="p-4 border-t border-[#E8E8EA]">
+      <p class="text-[#807F86] text-xs font-mono">L1 Bible · v9.0 · Internal Only</p>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 min-h-screen ml-64 max-lg:ml-0">
+    <div class="px-6 lg:px-10 py-3 border-b border-[#E8E8EA] bg-white/50">
+      <div class="flex items-center gap-2 text-xs font-mono text-[#807F86]">
+        <a href="../operating-system.html" class="text-cs-orange hover:underline">Operating System</a>
+        <span>/</span>
+        <a href="m1-beginner-foundations.html" class="text-cs-green hover:underline">Level 1</a>
+        <span>/</span>
+        <span>Beginner Foundations</span>
+      </div>
+    </div>
+
+    <div class="px-6 lg:px-10 py-8 max-w-4xl">
+
+      <!-- Module Header -->
+      <div class="mb-8">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono px-3 py-1 rounded-full uppercase tracking-wide">Level 1</span>
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono px-3 py-1 rounded-full uppercase tracking-wide">B1 — Foundations Session</span>
+          <span class="bg-[#F5F5F5] text-[#807F86] text-xs font-mono px-3 py-1 rounded-full">Step 01</span>
+        </div>
+        <h1 class="text-4xl font-bold tracking-tight mb-3">Beginner Foundations</h1>
+        <p class="text-[#807F86] text-lg max-w-2xl">Welcome to Collective Shift. This is where it all starts. We'll walk you through Ben's story, why digital assets matter, how we think about investing, and the step-by-step system that will guide your entire journey. No jargon. No assumptions. Just a clear path forward.</p>
+      </div>
+
+      <!-- Prerequisites -->
+      <div class="bg-green-50 border border-green-200 rounded-xl p-5 mb-6">
+        <h3 class="text-sm font-bold text-green-700 mb-2">📋 Prerequisites</h3>
+        <ul class="text-sm text-green-800 space-y-1">
+          <li>✅ <strong>None.</strong> This is the very first module — your starting point</li>
+          <li>✅ No prior digital asset or Bitcoin knowledge needed</li>
+          <li>✅ No technical background required — we explain everything from scratch</li>
+        </ul>
+      </div>
+
+      <!-- Delivery Notes -->
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-6">
+        <h3 class="text-sm font-bold text-blue-600 mb-2">📋 Delivery Notes</h3>
+        <div class="text-sm text-blue-800 space-y-2">
+          <p><strong>Format:</strong> B1 — Live 2-hour session. The entry point for every single member. Week 1 of your journey.</p>
+          <p><strong>Flow:</strong> Ben's Story → The World Right Now → Our Philosophy → Foundations Content (Market Cycles, Ecosystems)</p>
+          <p><strong>Audience:</strong> Complete beginners. May have heard of Bitcoin but never invested. Might feel overwhelmed or unsure. That's completely normal.</p>
+          <p><strong>Tone:</strong> Warm, reassuring, step-by-step. "We're going to break this down together."</p>
+          <p><strong>Key rule:</strong> 🚫 CEX only. No yield, no staking, no DeFi, no borrowing in Level 1. Keep it simple.</p>
+        </div>
+      </div>
+
+      <!-- What You'll Learn -->
+      <div class="bg-cs-orange/5 border border-cs-orange/20 rounded-xl p-5 mb-8">
+        <h3 class="text-sm font-bold text-cs-orange mb-2">📚 What You'll Learn in This Module</h3>
+        <div class="flex flex-wrap gap-2">
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Who Ben Is & Why CS Exists</span>
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Why Digital Assets Matter</span>
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">What's Happening in the World</span>
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Our Investment Philosophy</span>
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">How Market Cycles Work</span>
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Different Blockchains Explained</span>
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Your 8-Step Roadmap</span>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════ -->
+      <!-- SECTION 1: OPENING & BEN'S STORY -->
+      <!-- ═══════════════════════════════════════════════ -->
+
+      <div class="mb-3">
+        <h2 class="text-2xl font-bold text-[#1A1A2E] flex items-center gap-3">
+          <span class="bg-[#1A1A2E] text-white text-xs font-mono font-bold px-3 py-1.5 rounded-lg">SECTION 1</span>
+          Welcome &amp; Ben's Story
+        </h2>
+        <p class="text-[#807F86] text-sm mt-2 ml-[88px]">~10 minutes · Setting the scene — who Ben is, why this exists, and what you can expect tonight</p>
+      </div>
+
+      <!-- Welcome to Collective Shift -->
+      <div class="topic-card">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-[#1A1A2E]/10 text-[#1A1A2E] text-xs font-bold font-mono rounded-lg px-3 py-1">1.1</span>
+          <h2 class="text-xl font-bold">Welcome — "I Run These Sessions Personally"</h2>
+        </div>
+        <p class="text-[#807F86] mb-4">Ben opens every foundations session himself. This isn't a recording or a handoff — it's a personal session designed to make sure you feel confident and clear from day one.</p>
+
+        <h4 class="font-bold text-sm mb-3 text-cs-orange">Talking Points:</h4>
+        <ul class="text-sm text-[#4D4C55] space-y-2 mb-4">
+          <li>• "I run these personally because the first few months are the most important of your membership."</li>
+          <li>• There's a lot of noise out there — Bitcoin, digital assets, things moving fast. It can feel overwhelming. That's normal.</li>
+          <li>• "My job tonight is to cut through the noise and give you a clear starting point."</li>
+          <li>• Two hours. We're going to break everything down step by step. No rush.</li>
+          <li>• "By the end of tonight, you'll have a clear roadmap — not just a bunch of information."</li>
+          <li>• This is not a sales session. There's nothing to buy. We're just here to get you started on the right foot.</li>
+        </ul>
+
+        <div class="ben-quote">
+          <p>"By the end of tonight, you'll have a clear roadmap — not just a bunch of information."</p>
+          <p class="attribution">— Ben Simpson, Opening</p>
+        </div>
+      </div>
+
+      <!-- Ben's Story -->
+      <div class="topic-card">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-[#1A1A2E]/10 text-[#1A1A2E] text-xs font-bold font-mono rounded-lg px-3 py-1">1.2</span>
+          <h2 class="text-xl font-bold">Ben's Story — "I Built the Resource I Wished I Had"</h2>
+        </div>
+        <p class="text-[#807F86] mb-4">Ben discovered Bitcoin about 9 years ago. Back then, there was no trusted guide, no roadmap, no system. He made mistakes — not because he wasn't smart, but because there was nothing to show him the way. So he built Collective Shift.</p>
+
+        <h4 class="font-bold text-sm mb-3 text-cs-orange">Talking Points:</h4>
+        <ul class="text-sm text-[#4D4C55] space-y-2 mb-4">
+          <li>• Discovered Bitcoin about 9 years ago. Had no one to guide him through it.</li>
+          <li>• Made expensive mistakes early on — not because he wasn't trying, but because there was no system to follow</li>
+          <li>• Watched smart, successful people lose money simply because they didn't have the right tools</li>
+          <li>• Built a digital asset media company from the ground up — scaled it from $10K to $430K in monthly revenue</li>
+          <li>• "The resource I needed didn't exist. So I built it. That's Collective Shift."</li>
+          <li>• Invests his own money alongside members. No sponsors. No affiliates. 100% independent.</li>
+          <li>• Community Leader of the Year — Blockies 2025</li>
+        </ul>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-value">~9 Years</div>
+            <div class="stat-label">Learning & Investing in Bitcoin</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">$10K → $430K</div>
+            <div class="stat-label">Monthly Revenue — Built from Scratch</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">100%</div>
+            <div class="stat-label">Independent — No Sponsors or Affiliates</div>
+          </div>
+        </div>
+
+        <div class="ben-quote">
+          <p>"Collective Shift is the resource I wish I had when I started. That's not a marketing line. That's genuinely why I built it."</p>
+          <p class="attribution">— Ben Simpson</p>
+        </div>
+      </div>
+
+      <!-- The Conviction -->
+      <div class="topic-card">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-[#1A1A2E]/10 text-[#1A1A2E] text-xs font-bold font-mono rounded-lg px-3 py-1">1.3</span>
+          <h2 class="text-xl font-bold">Why I Believe in This — "More Convinced Than Ever"</h2>
+        </div>
+        <p class="text-[#807F86] mb-4">After almost a decade in this space, Ben's belief in Bitcoin and digital assets is stronger — not weaker. He's seen every market crash, every panic, every recovery. And every time, it came back stronger.</p>
+
+        <h4 class="font-bold text-sm mb-3 text-cs-orange">Talking Points:</h4>
+        <ul class="text-sm text-[#4D4C55] space-y-2 mb-4">
+          <li>• After 9 years, the conviction is stronger — not weaker</li>
+          <li>• Bitcoin is something completely new — a way to store value that no government or bank can control</li>
+          <li>• Every cycle has felt like the end. None of them were.</li>
+          <li>• "I'm not here to convince you to buy Bitcoin. You've already made the decision to learn. I'm here to help you do it right."</li>
+          <li>• There will only ever be 21 million Bitcoin. That limit can never be changed. In a world where more and more money is being printed, that matters.</li>
+        </ul>
+
+        <div class="ben-quote">
+          <p>"I'm not here to convince you to buy Bitcoin. You've already made the decision to learn. I'm here to help you do it right."</p>
+          <p class="attribution">— Ben Simpson</p>
+        </div>
+      </div>
+
+      <!-- You're in the Right Place -->
+      <div class="topic-card">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-[#1A1A2E]/10 text-[#1A1A2E] text-xs font-bold font-mono rounded-lg px-3 py-1">1.4</span>
+          <h2 class="text-xl font-bold">You're in the Right Place — "Everyone Starts Somewhere"</h2>
+        </div>
+        <p class="text-[#807F86] mb-4">Wherever you are right now — whether you've never bought Bitcoin or you've dabbled but feel lost — you're in the right place. This session is designed for you.</p>
+
+        <h4 class="font-bold text-sm mb-3 text-cs-orange">Talking Points:</h4>
+        <ul class="text-sm text-[#4D4C55] space-y-2 mb-4">
+          <li>• You might be completely new to digital assets — that's perfectly fine. That's what this is for.</li>
+          <li>• You might have already bought some Bitcoin or heard about it from a friend — great, we're going to build on that.</li>
+          <li>• It's normal to feel a bit overwhelmed. There's a lot of information out there and most of it is confusing on purpose.</li>
+          <li>• "You're not here for tips or hot takes. You're here for a system — a clear path you can follow. That's exactly what we're going to build tonight."</li>
+          <li>• There are no silly questions. Everyone in this room started exactly where you are.</li>
+        </ul>
+
+        <div class="ben-quote">
+          <p>"You're not here for tips or hot takes. You're here for a system. That's exactly what we're going to build tonight."</p>
+          <p class="attribution">— Ben Simpson</p>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════ -->
+      <!-- SECTION 2: THE WORLD RIGHT NOW -->
+      <!-- ═══════════════════════════════════════════════ -->
+
+      <div class="mb-3 mt-10">
+        <h2 class="text-2xl font-bold text-[#1A1A2E] flex items-center gap-3">
+          <span class="bg-[#1A1A2E] text-white text-xs font-mono font-bold px-3 py-1.5 rounded-lg">SECTION 2</span>
+          The World Right Now
+        </h2>
+        <p class="text-[#807F86] text-sm mt-2 ml-[88px]">~15 minutes · Why this matters — what's happening with money, the economy, and why digital assets are part of the answer</p>
+      </div>
+
+      <!-- Inflation Explained Simply -->
+      <div class="topic-card">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono rounded-lg px-3 py-1">2.1</span>
+          <h2 class="text-xl font-bold">Your Money Is Losing Value — "The Melting Ice Cube"</h2>
+        </div>
+        <p class="text-[#807F86] mb-4">Here's the simple version: the money sitting in your bank account is worth less every year. That's called inflation. It's slow enough that you don't notice it day to day — but over 10 or 20 years, it adds up enormously.</p>
+
+        <h4 class="font-bold text-sm mb-3 text-cs-orange">Talking Points:</h4>
+        <ul class="text-sm text-[#4D4C55] space-y-2 mb-4">
+          <li>• <strong>What is inflation?</strong> Simply put — prices go up, so the same amount of money buys less over time. Your coffee costs more. Your groceries cost more. Your rent costs more.</li>
+          <li>• <strong>Why is it happening?</strong> Governments around the world printed an enormous amount of new money, especially since 2020. When there's more money chasing the same stuff, prices rise.</li>
+          <li>• Over <strong>80% of all US dollars in existence</strong> were created since 2020. That's a staggering number.</li>
+          <li>• "If your savings are sitting in cash earning 3-4% interest, but inflation is running at 5-6%… you're going backwards."</li>
+          <li>• This isn't about politics. It's just maths. And it's the reason millions of people around the world are looking for alternatives.</li>
+          <li>• "This is why digital assets matter. It's not about getting rich quick. It's about protecting what you've already earned."</li>
+        </ul>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-value">80%+</div>
+            <div class="stat-label">of all US dollars printed since 2020</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">Every Year</div>
+            <div class="stat-label">Your savings lose real purchasing power</div>
+          </div>
+        </div>
+
+        <div class="ben-quote">
+          <p>"This isn't about politics. It's just maths. Your money in the bank is losing value every single year."</p>
+          <p class="attribution">— Ben Simpson</p>
+        </div>
+      </div>
+
+      <!-- Why Bitcoin Matters -->
+      <div class="topic-card">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono rounded-lg px-3 py-1">2.2</span>
+          <h2 class="text-xl font-bold">Why Bitcoin Matters — "There Will Only Ever Be 21 Million"</h2>
+        </div>
+        <p class="text-[#807F86] mb-4">Here's the key idea: while governments can print unlimited money, nobody can create more Bitcoin. There will only ever be 21 million — and that number is locked in forever. In a world of unlimited money printing, that scarcity is incredibly powerful.</p>
+
+        <h4 class="font-bold text-sm mb-3 text-cs-orange">Talking Points:</h4>
+        <ul class="text-sm text-[#4D4C55] space-y-2 mb-4">
+          <li>• Bitcoin has a <strong>fixed supply of 21 million coins</strong>. No one — no government, no company, no individual — can change that number.</li>
+          <li>• Think of it like digital gold — except it's easier to send, easier to store, and there's a guaranteed limit.</li>
+          <li>• Bitcoin has been the <strong>best-performing asset of the last decade</strong>. Not the best digital asset — the best asset, full stop.</li>
+          <li>• From about $300 in 2015 to over $100,000 in 2025. Even with big dips along the way, long-term holders did very well.</li>
+          <li>• "You don't need to put everything into Bitcoin. Even a small amount — 1 to 5% of your savings — gives you exposure to that upside while keeping your risk low."</li>
+          <li>• If it goes to zero, your loss is small. If it continues on its historical path, that small amount becomes very meaningful.</li>
+        </ul>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-value">21M</div>
+            <div class="stat-label">Total Bitcoin — ever. Fixed forever.</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">30,000%+</div>
+            <div class="stat-label">10-year growth</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">1–5%</div>
+            <div class="stat-label">Starting allocation — small but meaningful</div>
+          </div>
+        </div>
+
+        <div class="ben-quote">
+          <p>"Most people aren't overexposed to digital assets. They're underexposed. Even a small allocation can make a real difference over time."</p>
+          <p class="attribution">— Ben Simpson</p>
+        </div>
+      </div>
+
+      <!-- It's Not Just for Tech People Anymore -->
+      <div class="topic-card">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono rounded-lg px-3 py-1">2.3</span>
+          <h2 class="text-xl font-bold">It's Going Mainstream — "The Big Players Have Arrived"</h2>
+        </div>
+        <p class="text-[#807F86] mb-4">This isn't just for tech people or internet communities anymore. The biggest, most conservative financial companies in the world — BlackRock, Fidelity, State Street — have all launched Bitcoin investment products. That's a massive signal.</p>
+
+        <h4 class="font-bold text-sm mb-3 text-cs-orange">Talking Points:</h4>
+        <ul class="text-sm text-[#4D4C55] space-y-2 mb-4">
+          <li>• <strong>BlackRock</strong> — the world's largest asset manager — launched a Bitcoin ETF. It became one of the fastest-growing investment products in history.</li>
+          <li>• <strong>Fidelity</strong> and <strong>State Street</strong> followed. These are some of the most risk-averse companies on the planet.</li>
+          <li>• "These companies didn't do this on a whim. They spent years doing research. They only moved when they were certain."</li>
+          <li>• Major companies are now holding Bitcoin on their balance sheets — just like they hold cash or bonds.</li>
+          <li>• "You're not early to some weird experiment. You're early to what's becoming a standard part of modern investing."</li>
+        </ul>
+
+        <div class="ben-quote">
+          <p>"The world's biggest and most careful financial companies did the research. They moved. That should tell you something."</p>
+          <p class="attribution">— Ben Simpson</p>
+        </div>
+      </div>
+
+      <!-- The Opportunity -->
+      <div class="topic-card">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono rounded-lg px-3 py-1">2.4</span>
+          <h2 class="text-xl font-bold">The Opportunity — "You're Here at the Right Time"</h2>
+        </div>
+        <p class="text-[#807F86] mb-4">Right now, something exciting is happening. Bitcoin, artificial intelligence, and blockchain technology are all growing at the same time. This doesn't happen often — and it creates a real opportunity for people who are paying attention.</p>
+
+        <h4 class="font-bold text-sm mb-3 text-cs-orange">Talking Points:</h4>
+        <ul class="text-sm text-[#4D4C55] space-y-2 mb-4">
+          <li>• <strong>Bitcoin</strong> is becoming a globally recognised store of value — like digital gold</li>
+          <li>• <strong>AI (Artificial Intelligence)</strong> is transforming every industry. AI systems will need ways to send money to each other — and digital assets are the natural fit for that.</li>
+          <li>• <strong>Blockchain</strong> — the technology behind Bitcoin — is being adopted by stock exchanges, banks, and governments around the world</li>
+          <li>• "This isn't a future prediction. It's happening right now. Companies like NASDAQ and the New York Stock Exchange are building on this technology today."</li>
+          <li>• "I haven't been this excited since I first discovered Bitcoin. And I don't want you watching from the sidelines."</li>
+        </ul>
+
+        <div class="ben-quote">
+          <p>"I haven't been this excited since I first discovered Bitcoin. This is a real moment — and I want to make sure you're part of it."</p>
+          <p class="attribution">— Ben Simpson</p>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════ -->
+      <!-- SECTION 3: OUR PHILOSOPHY & APPROACH -->
+      <!-- ═══════════════════════════════════════════════ -->
+
+      <div class="mb-3 mt-10">
+        <h2 class="text-2xl font-bold text-[#1A1A2E] flex items-center gap-3">
+          <span class="bg-[#1A1A2E] text-white text-xs font-mono font-bold px-3 py-1.5 rounded-lg">SECTION 3</span>
+          How We Think &amp; What Makes Us Different
+        </h2>
+        <p class="text-[#807F86] text-sm mt-2 ml-[88px]">~10 minutes · Our philosophy, how we operate, and why we're different from everything else out there</p>
+      </div>
+
+      <!-- Education First -->
+      <div class="topic-card">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-cs-purple/20 text-cs-purple text-xs font-bold font-mono rounded-lg px-3 py-1">3.1</span>
+          <h2 class="text-xl font-bold">We Teach You How to Think — Not What to Think</h2>
+        </div>
+        <p class="text-[#807F86] mb-4">Collective Shift is an education company. We're not financial advisors. We don't tell you what to buy or when to sell. Instead, we give you the knowledge and frameworks so you can make those decisions yourself — with confidence.</p>
+
+        <h4 class="font-bold text-sm mb-3 text-cs-orange">Talking Points:</h4>
+        <ul class="text-sm text-[#4D4C55] space-y-2 mb-4">
+          <li>• "We are an education company. We teach you how to think — not what to think."</li>
+          <li>• No affiliates. No sponsored content. No one pays us to recommend anything. Ever.</li>
+          <li>• Ben invests his own money in the same things he talks about — completely transparent.</li>
+          <li>• We share our research portfolio so you can see exactly what we hold and at what prices — but it's a reference point, not instructions.</li>
+          <li>• "By the end of this journey, you won't need to ask anyone what to do. You'll know how to figure it out yourself. That's the goal."</li>
+          <li>• This is not a sales session. There's nothing to buy tonight. Just frameworks to build on.</li>
+        </ul>
+
+        <div class="framework-quote">
+          <p class="text-sm italic text-[#4D4C55]">"We are Collective Shift, a digital asset and Bitcoin education company. We educate you about the space. We're not an advisory firm, we're not financial advisors, we're not telling you what to do."</p>
+          <p class="text-xs text-cs-orange font-mono mt-2">Core Positioning — Shift OS Philosophy</p>
+        </div>
+      </div>
+
+      <!-- The Shift OS -->
+      <div class="topic-card">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-cs-purple/20 text-cs-purple text-xs font-bold font-mono rounded-lg px-3 py-1">3.2</span>
+          <h2 class="text-xl font-bold">Your Roadmap — The 8-Step Shift OS</h2>
+        </div>
+        <p class="text-[#807F86] mb-4">Think of the Shift OS as your personal guide through this space. It's not a course you watch and forget. It's an operating system — 8 clear steps that take you from "I don't know where to start" to "I've got this."</p>
+
+        <h4 class="font-bold text-sm mb-3 text-cs-orange">The 8 Steps:</h4>
+        <div class="overflow-x-auto mb-4">
+          <table class="w-full text-sm border-collapse">
+            <thead>
+              <tr class="border-b-2 border-cs-orange/30">
+                <th class="text-left py-2 px-3 font-bold text-cs-orange">Step</th>
+                <th class="text-left py-2 px-3 font-bold">What You'll Learn</th>
+                <th class="text-left py-2 px-3 font-bold">What You'll Walk Away With</th>
+              </tr>
+            </thead>
+            <tbody class="text-[#4D4C55]">
+              <tr class="border-b border-[#F0F0F0]"><td class="py-2 px-3 font-mono font-bold text-cs-orange">01</td><td class="py-2 px-3">Foundations</td><td class="py-2 px-3">Understanding of why digital assets exist and where we are in the cycle</td></tr>
+              <tr class="border-b border-[#F0F0F0]"><td class="py-2 px-3 font-mono font-bold text-cs-orange">02</td><td class="py-2 px-3">Bitcoin</td><td class="py-2 px-3">Real conviction in Bitcoin and a plan to start building your position</td></tr>
+              <tr class="border-b border-[#F0F0F0]"><td class="py-2 px-3 font-mono font-bold text-cs-orange">03</td><td class="py-2 px-3">Altcoins</td><td class="py-2 px-3">How to evaluate other digital assets (and avoid the bad ones)</td></tr>
+              <tr class="border-b border-[#F0F0F0]"><td class="py-2 px-3 font-mono font-bold text-cs-orange">04</td><td class="py-2 px-3">How We Invest</td><td class="py-2 px-3">A personal investment strategy matched to your goals and risk level</td></tr>
+              <tr class="border-b border-[#F0F0F0]"><td class="py-2 px-3 font-mono font-bold text-cs-orange">05</td><td class="py-2 px-3">Buy &amp; Sell</td><td class="py-2 px-3">Your first purchase made — account set up, money in, Bitcoin bought</td></tr>
+              <tr class="border-b border-[#F0F0F0]"><td class="py-2 px-3 font-mono font-bold text-cs-orange">06</td><td class="py-2 px-3">Send &amp; Store</td><td class="py-2 px-3">Your digital assets stored safely — hardware wallet set up and tested</td></tr>
+              <tr class="border-b border-[#F0F0F0]"><td class="py-2 px-3 font-mono font-bold text-cs-orange">07</td><td class="py-2 px-3">Tax</td><td class="py-2 px-3">Tax records sorted and tracking software connected</td></tr>
+              <tr><td class="py-2 px-3 font-mono font-bold text-cs-orange">08</td><td class="py-2 px-3">Sell Strategy</td><td class="py-2 px-3">A written plan for when and how to take profits</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="ben-quote">
+          <p>"This is the system I wish I'd had when I started. Tonight we're going through every single step — not just what it is, but how you'll build yours."</p>
+          <p class="attribution">— Ben Simpson</p>
+        </div>
+      </div>
+
+      <!-- What Makes Us Different -->
+      <div class="topic-card">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-cs-purple/20 text-cs-purple text-xs font-bold font-mono rounded-lg px-3 py-1">3.3</span>
+          <h2 class="text-xl font-bold">Why We're Different — "Not YouTube. Not Twitter. Not a Signal Group."</h2>
+        </div>
+        <p class="text-[#807F86] mb-4">There's a lot of digital asset content on the internet. Most of it is hype, clickbait, or trying to sell you something. Collective Shift is different — and it's worth understanding why.</p>
+
+        <div class="space-y-3 mb-4">
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <div class="flex items-start gap-3">
+              <span class="text-cs-orange font-bold text-lg">✦</span>
+              <div>
+                <h5 class="font-bold text-sm mb-1">100% Independent</h5>
+                <p class="text-sm text-[#807F86]">Zero sponsors. Zero affiliates. Nobody pays us to recommend anything. Ben invests his own money alongside every member.</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <div class="flex items-start gap-3">
+              <span class="text-cs-orange font-bold text-lg">✦</span>
+              <div>
+                <h5 class="font-bold text-sm mb-1">Built for Real People, Not "Crypto Bros"</h5>
+                <p class="text-sm text-[#807F86]">Our members are professionals, business owners, parents, retirees. People with real lives who don't have time to watch charts all day. We speak your language.</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <div class="flex items-start gap-3">
+              <span class="text-cs-orange font-bold text-lg">✦</span>
+              <div>
+                <h5 class="font-bold text-sm mb-1">Frameworks, Not Tips</h5>
+                <p class="text-sm text-[#807F86]">We don't tell you "buy this coin now." We teach you how to evaluate, decide, and act for yourself. Daily research, weekly outlook, and a clear system.</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <div class="flex items-start gap-3">
+              <span class="text-cs-orange font-bold text-lg">✦</span>
+              <div>
+                <h5 class="font-bold text-sm mb-1">Real Results from Real Members</h5>
+                <p class="text-sm text-[#807F86]">Jason: "Moved from a loss to 2.5x — the sell strategy was the game changer." Joe: "Only 4 months in, I'm a lot more confident now."</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════ -->
+      <!-- SECTION 4: FOUNDATIONS CONTENT -->
+      <!-- ═══════════════════════════════════════════════ -->
+
+      <div class="mb-3 mt-10">
+        <h2 class="text-2xl font-bold text-[#1A1A2E] flex items-center gap-3">
+          <span class="bg-[#1A1A2E] text-white text-xs font-mono font-bold px-3 py-1.5 rounded-lg">SECTION 4</span>
+          Foundations — Understanding the Basics
+        </h2>
+        <p class="text-[#807F86] text-sm mt-2 ml-[88px]">~20 minutes · What digital assets are, how market cycles work, and why there are different blockchains</p>
+      </div>
+
+      <!-- What Are Digital Assets -->
+      <div class="topic-card">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg px-3 py-1">4.1</span>
+          <h2 class="text-xl font-bold">What Are Digital Assets? — Starting from the Very Beginning</h2>
+        </div>
+        <p class="text-[#807F86] mb-4">Let's start with the basics. Digital assets (sometimes called "crypto") are a new type of money and technology that lives on the internet. Bitcoin is the most well-known, but there are thousands of others. Here's what you need to know.</p>
+
+        <h4 class="font-bold text-sm mb-3 text-cs-orange">Talking Points:</h4>
+        <ul class="text-sm text-[#4D4C55] space-y-2 mb-4">
+          <li>• <strong>Digital assets</strong> are things like Bitcoin and Ethereum — digital money that lives on a network called a blockchain</li>
+          <li>• <strong>What's a blockchain?</strong> Think of it like a shared spreadsheet that everyone can see, but nobody can cheat on. Every transaction is recorded permanently.</li>
+          <li>• <strong>Bitcoin</strong> is the original and most important. It's like digital gold — scarce, secure, and not controlled by any government.</li>
+          <li>• <strong>Why "digital assets" not "crypto"?</strong> — "Crypto" carries a lot of baggage. We use "digital assets" because that's what they are — real assets with real value.</li>
+          <li>• You don't need to understand all the technology to get started. You just need to understand why it matters and how to get involved safely.</li>
+          <li>• "We're going to break this down step by step. No jargon. No assumptions."</li>
+        </ul>
+
+        <div class="framework-quote">
+          <p class="text-sm italic text-[#4D4C55]">"You don't need to understand how the engine works to drive the car. But you do need to understand the road rules. That's what we're teaching you."</p>
+          <p class="text-xs text-cs-orange font-mono mt-2">Beginner Foundations — Analogy</p>
+        </div>
+      </div>
+
+      <!-- Market Cycles -->
+      <div class="topic-card">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg px-3 py-1">4.2</span>
+          <h2 class="text-xl font-bold">Market Cycles — "The Market Goes Up and Down. That's Normal."</h2>
+        </div>
+        <p class="text-[#807F86] mb-4">One of the most important things to understand about digital assets: the market moves in cycles. It goes up (sometimes a lot), and it comes down (sometimes a lot). This has happened every time — and every time, it recovered and went higher.</p>
+
+        <h4 class="font-bold text-sm mb-3 text-cs-orange">The Four Phases (Simplified):</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4 text-center">
+            <div class="text-2xl mb-2">🌱</div>
+            <h5 class="font-bold text-sm mb-1">1. Accumulation</h5>
+            <p class="text-xs text-[#807F86]">After a crash. Prices are low. Sentiment is negative. This is actually the best time to buy — but it doesn't feel like it.</p>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4 text-center">
+            <div class="text-2xl mb-2">📈</div>
+            <h5 class="font-bold text-sm mb-1">2. Growth</h5>
+            <p class="text-xs text-[#807F86]">Prices start rising. More people notice. Confidence grows. The news starts talking about Bitcoin again.</p>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4 text-center">
+            <div class="text-2xl mb-2">🎉</div>
+            <h5 class="font-bold text-sm mb-1">3. Euphoria</h5>
+            <p class="text-xs text-[#807F86]">Everyone's excited. Prices hit new highs. Your taxi driver mentions Bitcoin. This is when most beginners buy — and it's usually near the top.</p>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4 text-center">
+            <div class="text-2xl mb-2">📉</div>
+            <h5 class="font-bold text-sm mb-1">4. Correction</h5>
+            <p class="text-xs text-[#807F86]">Prices drop — sometimes 50-80%. People panic and sell. But this is where the cycle resets and the next opportunity begins.</p>
+          </div>
+        </div>
+
+        <h4 class="font-bold text-sm mb-3 text-cs-orange">Talking Points:</h4>
+        <ul class="text-sm text-[#4D4C55] space-y-2 mb-4">
+          <li>• This pattern has repeated in 2014, 2018, 2022 — and every single time, Bitcoin recovered and made new highs</li>
+          <li>• "Drops of 40-50% are completely normal in this market. If you understand that going in, you won't panic when it happens."</li>
+          <li>• The people who do best are those who buy during the quiet, boring times — not during the hype</li>
+          <li>• Bitcoin halving events (roughly every 4 years) have historically kicked off new growth cycles</li>
+          <li>• "This is a multi-cycle journey. No one builds real wealth in a single cycle."</li>
+        </ul>
+
+        <div class="ben-quote">
+          <p>"No one makes it in a single cycle. Stick it out. The people who understand this are the ones who build real wealth."</p>
+          <p class="attribution">— Ben Simpson</p>
+        </div>
+
+        <div class="member-evidence">
+          <p class="text-xs font-bold text-[#807F86] uppercase tracking-wide mb-2">👥 Member Evidence</p>
+          <p class="text-sm text-[#807F86]">New members (Nigel, Stacey, Greg) have zero reference for bear/bull transitions. They've never experienced a full market cycle. This section sets realistic expectations from day one — it's critical for preventing panic and churn during drawdowns.</p>
+        </div>
+      </div>
+
+      <!-- Blockchain Ecosystems -->
+      <div class="topic-card">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg px-3 py-1">4.3</span>
+          <h2 class="text-xl font-bold">Different Blockchains — "They're Not All the Same Thing"</h2>
+        </div>
+        <p class="text-[#807F86] mb-4">Here's something that confuses almost everyone at the start: Bitcoin, Ethereum, and Solana are not the same thing. They're completely different systems — like different countries with different currencies. Understanding this is essential before you invest.</p>
+
+        <h4 class="font-bold text-sm mb-3 text-cs-orange">The Simple Breakdown:</h4>
+        <div class="space-y-3 mb-4">
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <div class="flex items-start gap-3">
+              <span class="text-2xl">🟠</span>
+              <div>
+                <h5 class="font-bold text-sm mb-1">Bitcoin</h5>
+                <p class="text-sm text-[#807F86]">The original. Think of it as digital gold. Its main purpose is to store value safely. Fixed supply of 21 million. The most secure and decentralised blockchain.</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <div class="flex items-start gap-3">
+              <span class="text-2xl">🔷</span>
+              <div>
+                <h5 class="font-bold text-sm mb-1">Ethereum</h5>
+                <p class="text-sm text-[#807F86]">Think of it as a global computer. It lets people build apps and services on top of it. Most digital asset projects are built on Ethereum.</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <div class="flex items-start gap-3">
+              <span class="text-2xl">🟣</span>
+              <div>
+                <h5 class="font-bold text-sm mb-1">Solana (and Others)</h5>
+                <p class="text-sm text-[#807F86]">Newer blockchains built to be faster and cheaper. Like tech startups competing with each other. Some will succeed, some won't — and that's important to understand.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="font-bold text-sm mb-3 text-cs-orange">Talking Points:</h4>
+        <ul class="text-sm text-[#4D4C55] space-y-2 mb-4">
+          <li>• <strong>Key mental model:</strong> Think of each blockchain as a separate ecosystem — like Apple vs Android. Different technology, different strengths, different communities.</li>
+          <li>• Bitcoin is in a category of its own. It's the store of value. Everything else is different.</li>
+          <li>• "When someone says 'I bought crypto' — that's like saying 'I bought shares.' Which one? It matters."</li>
+          <li>• You don't need to understand all of them right now. Start with Bitcoin. We'll cover the others in Step 3 (Altcoins).</li>
+        </ul>
+
+        <h4 class="font-bold text-sm mb-3">📝 Key Questions Answered:</h4>
+        <ul class="question-list text-sm text-[#807F86] mb-5">
+          <li>"What's the difference between Bitcoin and Ethereum?"</li>
+          <li>"Why are there so many different ones?"</li>
+          <li>"Which one should I buy first?"</li>
+          <li>"Are they all as safe as Bitcoin?"</li>
+        </ul>
+
+        <div class="member-evidence">
+          <p class="text-xs font-bold text-[#807F86] uppercase tracking-wide mb-2">👥 Member Evidence</p>
+          <p class="text-sm text-[#807F86]">Members consistently don't understand that Bitcoin, Solana, and Ethereum are separate ecosystems. They treat all digital assets as "the same thing." This section plants the critical mental model that everything else builds on — especially Step 3 (Altcoins).</p>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════ -->
+      <!-- SECTION 5: MEMBER OUTCOMES & FRAMEWORKS -->
+      <!-- ═══════════════════════════════════════════════ -->
+
+      <div class="mb-3 mt-10">
+        <h2 class="text-2xl font-bold text-[#1A1A2E] flex items-center gap-3">
+          <span class="bg-[#1A1A2E] text-white text-xs font-mono font-bold px-3 py-1.5 rounded-lg">SECTION 5</span>
+          Member Outcomes &amp; What's Next
+        </h2>
+        <p class="text-[#807F86] text-sm mt-2 ml-[88px]">What you'll walk away with and how the rest of your journey unfolds.</p>
+      </div>
+
+      <!-- Member Outcomes -->
+      <div class="bg-cs-green/5 border border-cs-green/20 rounded-xl p-6 mb-6">
+        <h3 class="text-lg font-bold text-cs-green mb-3">✅ Member Outcomes — After Completing This Module</h3>
+        <ul class="space-y-2 text-sm">
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Know Ben's story, why Collective Shift exists, and why you can trust the process</li>
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Understand why your money is losing value (inflation) and why digital assets are part of the solution</li>
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Know that the biggest financial companies in the world are now investing in Bitcoin</li>
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Understand Bitcoin's fixed supply of 21 million and why that matters</li>
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Know the CS philosophy: education-first, independent, framework-based</li>
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Have the 8-step Shift OS roadmap as your clear path forward</li>
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Understand what digital assets and blockchain are (in simple terms)</li>
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Know how market cycles work — and that big dips are normal, not the end</li>
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Understand that Bitcoin, Ethereum, and Solana are different ecosystems (not "all the same")</li>
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Have realistic expectations — this is a multi-cycle journey, not a get-rich-quick scheme</li>
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Feel confident and clear — not overwhelmed</li>
+        </ul>
+      </div>
+
+      <!-- Teaching Frameworks Used -->
+      <div class="bg-white border border-[#E8E8EA] rounded-xl p-6 mb-6">
+        <h3 class="text-lg font-bold mb-3">🎯 Teaching Frameworks Used in This Module</h3>
+        <div class="space-y-3">
+          <div class="flex items-start gap-3">
+            <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono font-bold px-2 py-1 rounded flex-shrink-0">#7</span>
+            <div>
+              <p class="font-bold text-sm">"One Cycle Is Not Enough"</p>
+              <p class="text-sm text-[#807F86]">"No one makes it in a single cycle. Stick it out." — Applied throughout to set expectations. Reduces panic during drawdowns. Members who internalise this stay longer and do better.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono font-bold px-2 py-1 rounded flex-shrink-0">#4</span>
+            <div>
+              <p class="font-bold text-sm">"The Price You Deserve"</p>
+              <p class="text-sm text-[#807F86]">"Everyone gets Bitcoin at the price they deserve. That's the cost of entry." — Removes regret about not buying earlier. Empowers action now rather than wishing for the past.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono font-bold px-2 py-1 rounded flex-shrink-0">#8</span>
+            <div>
+              <p class="font-bold text-sm">"High Risk = Both Directions"</p>
+              <p class="text-sm text-[#807F86]">"People say 'high risk' but they only hear the upside." — Even at L1, it's important to set this expectation. Digital assets can go down significantly. That's normal. Knowing this upfront prevents bad decisions later.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- The Four Questions -->
+      <div class="bg-[#1A1A2E] rounded-xl p-6 mb-6">
+        <h3 class="text-lg font-bold text-white mb-4">🎯 Four Questions to Think About</h3>
+        <p class="text-sm text-white/60 mb-4">"You don't need to answer these tonight. But start thinking about them — they'll shape everything."</p>
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <span class="bg-cs-orange text-white text-sm font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">1</span>
+            <div>
+              <p class="text-white font-bold text-sm">How much am I comfortable starting with?</p>
+              <p class="text-white/60 text-xs">There's no minimum. Even $50/week is a great starting point. Start with an amount that lets you sleep at night.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="bg-cs-orange text-white text-sm font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">2</span>
+            <div>
+              <p class="text-white font-bold text-sm">How long am I willing to hold?</p>
+              <p class="text-white/60 text-xs">This isn't day trading. The best results come from holding for years, not weeks. What timeframe works for you?</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="bg-cs-orange text-white text-sm font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">3</span>
+            <div>
+              <p class="text-white font-bold text-sm">How would I feel if it dropped 50%?</p>
+              <p class="text-white/60 text-xs">Big dips are normal in this market. Only invest an amount where a 50% drop wouldn't change your daily life or cause you to panic sell.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="bg-cs-orange text-white text-sm font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">4</span>
+            <div>
+              <p class="text-white font-bold text-sm">What does success look like for me?</p>
+              <p class="text-white/60 text-xs">Is it protecting your savings from inflation? Growing wealth over 5+ years? Having a plan you actually understand? All valid answers.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Instructor Notes -->
+      <div class="bg-[#F9F9FB] border border-[#E8E8EA] rounded-xl p-6 mb-6">
+        <h3 class="text-lg font-bold mb-3">📋 Instructor Delivery Notes</h3>
+        <div class="space-y-3 text-sm text-[#4D4C55]">
+          <p><strong>Session format:</strong> First section of the 2-hour B1 Foundations Session (~30 mins). Covers the opening context before diving into Steps 2–4 content.</p>
+          <p><strong>Audience:</strong> Complete beginners. Zero assumptions about prior knowledge. Many will be anxious — they've heard about digital assets but feel overwhelmed.</p>
+          <p><strong>Tone:</strong> Warm, reassuring, patient. "We're going to break this down together." Slow down for key concepts. Check for understanding.</p>
+          <p><strong>Key pivot point:</strong> The ecosystems section plants the "different chains = different ecosystems" mental model. This must land — it's the foundation for Step 3 (Altcoins).</p>
+          <p><strong>CEX only rule:</strong> 🚫 No yield, no staking, no DeFi, no borrowing in Level 1. If a member asks, acknowledge it and say "that's covered in Level 2 — let's get the foundations right first."</p>
+          <p><strong>Language:</strong> Use "digital assets" not "crypto." Bitcoin stays as "Bitcoin." Community is on Circle (not WhatsApp).</p>
+          <p><strong>Common anxieties to address:</strong> "Am I too late?" (No — you're early.) "Is this a scam?" (The biggest companies in the world are investing.) "I don't understand the technology." (You don't need to — we'll give you what you need.)</p>
+        </div>
+      </div>
+
+      <!-- Closing Quote -->
+      <div class="ben-quote mb-8">
+        <p>"Welcome to Collective Shift. You've taken the first step — and that's the hardest one. From here, we're going to walk through this together, step by step. You have a system now. You have a team. And you have a clear path forward. Let's build."</p>
+        <p class="attribution">— Ben Simpson, Closing Statement</p>
+      </div>
+
+      <!-- Navigation -->
+      <div class="flex items-center justify-between pt-6 border-t border-[#E8E8EA]">
+        <a href="../operating-system.html" class="text-[#807F86] hover:text-cs-orange text-sm font-medium transition-colors">← Back to OS Overview</a>
+        <a href="m2-beginner-bitcoin.html" class="bg-cs-orange text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-cs-orange/90 transition-colors">Next: Beginner Bitcoin →</a>
+      </div>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

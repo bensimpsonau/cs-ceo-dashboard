@@ -1,0 +1,1943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+
+<title>8-Step Strategy Workbook — Level 2</title>
+
+<style>
+  :root {
+    --orange: #FC5C03;
+    --green: #08C394;
+    --dark: #1B1925;
+    --mid: #5A5770;
+    --light: #8F8DAA;
+    --border: #E8E8EA;
+    --bg: #FFFFFF;
+    --surface: #FAFAFA;
+    --l2-badge: #6D28D9;
+    --l2-light: #EDE9FE;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(27,25,37,0.07);
+    --shadow-md: 0 4px 24px rgba(27,25,37,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; }
+  body {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 400;
+    background: #fff;
+    color: var(--dark);
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  .workbook-header {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 24px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .cs-logo { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 18px; color: var(--dark); text-decoration: none; }
+  .cs-logo span { color: var(--orange); }
+  .level-badge {
+    background: var(--l2-badge);
+    color: #fff;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: 100px;
+    text-transform: uppercase;
+  }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .btn-print {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 8px 20px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--dark);
+    cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    transition: all 0.15s;
+  }
+  .btn-print:hover { border-color: var(--orange); color: var(--orange); }
+  .btn-save-indicator {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    color: var(--light);
+  }
+  .btn-save-indicator.saved { color: var(--green); }
+
+  /* PROGRESS */
+  .progress-bar-wrap {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+  }
+  .progress-track {
+    height: 3px;
+    background: var(--border);
+    border-radius: 10px;
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--l2-badge), #A855F7);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .step-dots {
+    display: flex;
+    gap: 0;
+    justify-content: space-between;
+    padding: 12px 0;
+  }
+  .step-dot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    flex: 1;
+  }
+  .step-dot-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    color: var(--light);
+    transition: all 0.2s;
+  }
+  .step-dot.active .step-dot-circle { border-color: var(--l2-badge); background: var(--l2-badge); color: #fff; }
+  .step-dot.complete .step-dot-circle { border-color: var(--green); background: var(--green); color: #fff; }
+  .step-dot-label {
+    font-family: 'Barlow', sans-serif;
+    font-size: 10px;
+    color: var(--light);
+    text-align: center;
+    max-width: 70px;
+    line-height: 1.3;
+  }
+  .step-dot.active .step-dot-label { color: var(--l2-badge); font-weight: 500; }
+  .step-dot.complete .step-dot-label { color: var(--green); }
+
+  /* MAIN CONTENT */
+  .workbook-body {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 40px 80px;
+  }
+
+  /* STEP SECTIONS */
+  .step-section { display: none; animation: fadeIn 0.3s ease; }
+  .step-section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .step-header { margin-bottom: 32px; }
+  .step-number {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 12px;
+    color: var(--l2-badge);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .step-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 28px;
+    color: var(--dark);
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  .step-description {
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    color: var(--mid);
+    max-width: 620px;
+  }
+
+  /* ADVANCED BADGE */
+  .advanced-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--l2-light);
+    color: var(--l2-badge);
+    border-radius: 100px;
+    padding: 4px 12px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    margin-bottom: 20px;
+  }
+
+  /* CARDS */
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .card.advanced-card { border-color: #DDD6FE; }
+  .card-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--dark);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .icon { font-size: 16px; }
+  .card-title .adv-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    background: var(--l2-light);
+    color: var(--l2-badge);
+    border-radius: 100px;
+    padding: 2px 8px;
+  }
+
+  /* FORM ELEMENTS */
+  .field-group { margin-bottom: 20px; }
+  .field-group:last-child { margin-bottom: 0; }
+  .field-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--mid);
+    margin-bottom: 8px;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .field-input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 13px;
+    color: var(--dark);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .field-input:focus { border-color: var(--l2-badge); background: #fff; }
+  .field-textarea {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 13px;
+    color: var(--dark);
+    background: var(--surface);
+    outline: none;
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.15s;
+    line-height: 1.6;
+  }
+  .field-textarea:focus { border-color: var(--l2-badge); background: #fff; }
+  [contenteditable] {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 13px;
+    color: var(--dark);
+    background: var(--surface);
+    outline: none;
+    min-height: 80px;
+    width: 100%;
+    line-height: 1.6;
+    transition: border-color 0.15s;
+  }
+  [contenteditable]:focus { border-color: var(--l2-badge); background: #fff; }
+  [contenteditable]:empty:before {
+    content: attr(data-placeholder);
+    color: var(--light);
+    pointer-events: none;
+  }
+
+  /* CHIPS */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 7px 16px;
+    border-radius: 100px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--mid);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .chip:hover { border-color: var(--orange); color: var(--orange); }
+  .chip.selected { border-color: var(--orange); background: var(--orange); color: #fff; }
+  .chip.selected-purple { border-color: var(--l2-badge); background: var(--l2-badge); color: #fff; }
+
+  /* RISK PROFILE */
+  .risk-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .risk-card {
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .risk-card:hover { border-color: var(--l2-badge); }
+  .risk-card.selected { border-color: var(--l2-badge); background: var(--l2-light); }
+  .risk-card-icon { font-size: 24px; margin-bottom: 8px; }
+  .risk-card-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 14px; color: var(--dark); margin-bottom: 4px; }
+  .risk-card-desc { font-family: 'Barlow', sans-serif; font-size: 12px; color: var(--mid); }
+
+  /* SLIDER */
+  .slider-wrap { padding: 4px 0; }
+  .slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 10px;
+    background: var(--border);
+    outline: none;
+    margin: 8px 0;
+  }
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--l2-badge);
+    cursor: pointer;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(109,40,217,0.3);
+  }
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    color: var(--light);
+  }
+  .slider-value {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--l2-badge);
+    text-align: center;
+    margin-bottom: 4px;
+  }
+
+  /* 3-TIER ALLOCATION */
+  .tier-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 16px; }
+  .tier-block {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .tier-block-title {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--mid);
+    margin-bottom: 8px;
+  }
+  .tier-block-desc {
+    font-family: 'Barlow', sans-serif;
+    font-size: 12px;
+    color: var(--light);
+    margin-bottom: 10px;
+  }
+
+  /* ALLOCATION GRID */
+  .allocation-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .alloc-item {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .alloc-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    color: var(--mid);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .alloc-label .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .alloc-input {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    color: var(--dark);
+    border: none;
+    background: transparent;
+    width: 80%;
+    outline: none;
+  }
+  .alloc-input::-webkit-outer-spin-button,
+  .alloc-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .alloc-total {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .alloc-total.valid { background: #EDFAF5; color: var(--green); }
+  .alloc-total.invalid { background: #FFF0EB; color: #E84040; }
+
+  /* REBALANCING TABLE */
+  .matrix-table { width: 100%; border-collapse: collapse; }
+  .matrix-table th, .matrix-table td {
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 12px;
+  }
+  .matrix-table th {
+    background: var(--surface);
+    font-weight: 500;
+    color: var(--mid);
+    text-align: left;
+  }
+  .matrix-table input {
+    border: none;
+    background: transparent;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 12px;
+    width: 100%;
+    outline: none;
+    color: var(--dark);
+  }
+
+  /* SELL TABLE */
+  .sell-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .sell-table th {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--light);
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .sell-table td { padding: 6px 4px; }
+  .sell-table input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 12px;
+    background: var(--surface);
+    color: var(--dark);
+    outline: none;
+  }
+  .sell-table input:focus { border-color: var(--l2-badge); background: #fff; }
+  .btn-add-row {
+    margin-top: 8px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    color: var(--l2-badge);
+    background: none;
+    border: 1px dashed var(--l2-badge);
+    border-radius: 8px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-add-row:hover { background: var(--l2-light); }
+
+  /* CHECKLIST */
+  .checklist { display: flex; flex-direction: column; gap: 10px; }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .check-item:hover { border-color: var(--green); }
+  .check-item.checked { border-color: var(--green); background: #EDFAF5; }
+  .check-box {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    font-size: 11px;
+  }
+  .check-item.checked .check-box { border-color: var(--green); background: var(--green); color: #fff; }
+  .check-label { font-family: 'Barlow', sans-serif; font-size: 14px; color: var(--dark); }
+
+  /* NAVIGATION */
+  .step-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+  .btn-prev, .btn-next, .btn-complete {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px 28px;
+    border-radius: 100px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-prev { background: #fff; border: 1px solid var(--border); color: var(--mid); }
+  .btn-prev:hover { border-color: var(--dark); color: var(--dark); }
+  .btn-next { background: var(--l2-badge); color: #fff; box-shadow: 0 4px 16px rgba(109,40,217,0.25); }
+  .btn-next:hover { background: #5B21B6; transform: translateY(-1px); }
+  .btn-complete { background: var(--green); color: #fff; box-shadow: 0 4px 16px rgba(8,195,148,0.25); }
+  .btn-complete:hover { background: #06A87E; }
+
+  /* INFO CALLOUT */
+  .info-callout {
+    background: #F5F3FF;
+    border: 1px solid #DDD6FE;
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  .info-callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .info-callout-text { font-family: 'Barlow', sans-serif; font-size: 13px; color: var(--mid); line-height: 1.5; }
+
+  /* WARNING CALLOUT */
+  .warn-callout {
+    background: #FFF8F4;
+    border: 1px solid #FDDAC5;
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  /* SIGNATURE */
+  .signature-area {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 16px;
+    align-items: end;
+  }
+  .sig-divider { font-size: 14px; color: var(--light); padding-bottom: 10px; }
+
+  /* COMPLETION SCREEN */
+  .completion-screen { display: none; text-align: center; padding: 60px 40px; }
+  .completion-screen.active { display: block; }
+  .completion-icon { font-size: 64px; margin-bottom: 24px; }
+  .completion-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 32px; color: var(--dark); margin-bottom: 12px; }
+  .completion-desc { font-family: 'Barlow', sans-serif; font-size: 16px; color: var(--mid); max-width: 500px; margin: 0 auto 32px; }
+
+  /* HORIZON / OPTION SELECTORS */
+  .option-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+  .option-item {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .option-item:hover { border-color: var(--l2-badge); }
+  .option-item.selected { border-color: var(--l2-badge); background: var(--l2-light); }
+  .option-item-val { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 13px; color: var(--dark); }
+  .option-item-desc { font-family: 'Barlow', sans-serif; font-size: 11px; color: var(--light); margin-top: 3px; }
+
+  /* PRINT */
+  @media print {
+    .workbook-header, .progress-bar-wrap, .step-nav, .btn-print { display: none !important; }
+    .step-section { display: block !important; page-break-after: always; }
+    .step-section:last-of-type { page-break-after: avoid; }
+    body { font-size: 12px; }
+    .step-title { font-size: 20px; }
+    .card { box-shadow: none; border: 1px solid #ddd; }
+    @page { size: A4; margin: 20mm; }
+  }
+
+  @media (max-width: 640px) {
+    .workbook-header { padding: 16px 20px; }
+    .workbook-body { padding: 24px 20px 60px; }
+    .progress-bar-wrap { padding: 0 20px; }
+    .risk-cards, .tier-grid, .option-grid { grid-template-columns: 1fr; }
+    .allocation-grid { grid-template-columns: 1fr; }
+    .step-dot-label { display: none; }
+  }
+
+/* OS standalone overrides */
+.sidebar, aside.sidebar, nav.sidebar, .csn-bar, .csn-mobile-menu, #csnMobileMenu,
+.overlay, #overlay, .mobile-header, .hamburger, [class*="hamburger"], .breadcrumb,
+nav[role="navigation"], .csn-mob-link, .csn-mob-top, .csn-mob-sub, a[class*="csn-mob"] {
+  display: none !important;
+}
+body { display: block !important; }
+main, .main, .content, .page-content {
+  margin-left: 0 !important; padding-left: 0 !important;
+  width: 100% !important; max-width: 100% !important;
+}
+
+</style>
+</head>
+<body>
+<div class="os-header-bar" style="background:#fff;border-bottom:1px solid #E8E8EA;padding:14px 32px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:9999;">
+  <a href="/os/" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <div style="width:26px;height:26px;background:#FC5C03;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;">CS</div>
+    <span style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:15px;color:#1B1925;">Collective Shift</span>
+  </a>
+  <div style="width:1px;height:18px;background:#E8E8EA;margin:0 2px;"></div>
+  <span style="font-family:'Barlow',sans-serif;font-weight:400;font-size:13px;color:#807F86;">Operating System</span>
+</div>
+
+<!-- ═══ COLLECTIVE SHIFT TOP NAV ═══ -->
+<style>
+  :root {
+    --csn-h: 56px;
+    --csn-bg: #FFFFFF;
+    --csn-border: #E8E8EA;
+    --csn-text: #1B1925;
+    --csn-muted: #4D4C55;
+    --csn-orange: #FC5C03;
+    --csn-orange-bg: #FEEEE5;
+    --csn-dd-bg: #FFFFFF;
+    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    --csn-z: 9000;
+  }
+  .csn-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--csn-h);
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 0;
+    z-index: var(--csn-z);
+    font-family: 'Plus Jakarta Sans', 'Barlow', sans-serif;
+  }
+  .csn-logo {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--csn-orange);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin-right: 32px;
+    flex-shrink: 0;
+  }
+  .csn-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+  }
+  .csn-item {
+    position: relative;
+  }
+  .csn-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s, background 0.15s;
+    cursor: pointer;
+  }
+  .csn-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-item.active > .csn-link { color: var(--csn-orange); font-weight: 600; }
+  .csn-chevron { transition: transform 0.2s; flex-shrink: 0; }
+  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
+  /* Dropdown */
+  .csn-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 240px;
+    background: var(--csn-dd-bg);
+    border: 1px solid var(--csn-border);
+    border-radius: 12px;
+    box-shadow: var(--csn-dd-shadow);
+    padding: 6px;
+    z-index: calc(var(--csn-z) + 1);
+  }
+  .csn-item.csn-has-dd { position: relative; }
+  .csn-item.csn-has-dd::after { content: ""; position: absolute; top: 100%; left: 0; width: 100%; height: 12px; }
+  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
+  .csn-dd-item {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+    white-space: nowrap;
+  }
+  .csn-dd-item:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-divider { height: 1px; background: var(--csn-border); margin: 4px 8px; }
+  /* Mobile hamburger */
+  .csn-hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--csn-muted);
+    padding: 4px;
+    margin-left: auto;
+  }
+  /* Mobile drawer */
+  .csn-mobile-menu {
+    display: none;
+    position: fixed;
+    top: var(--csn-h);
+    left: 0; right: 0;
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    padding: 8px 16px 16px;
+    z-index: calc(var(--csn-z) - 1);
+    max-height: calc(100vh - var(--csn-h));
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .csn-mobile-menu.open { display: block; }
+  .csn-mob-link {
+    display: block;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+  }
+  .csn-mob-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-mob-top { font-weight: 600; color: var(--csn-text); margin-top: 4px; }
+  .csn-mob-sub { font-size: 12px; padding-left: 20px; }
+  /* Body offset */
+  body { padding-top: var(--csn-h) !important; }
+  @media (max-width: 1023px) {
+    .csn-nav { display: none; }
+    .csn-hamburger { display: block; }
+  }
+  @media (max-width: 640px) {
+    .csn-logo { font-size: 13px; margin-right: 16px; }
+  }
+</style>
+<nav class="csn-bar" role="navigation" aria-label="Main navigation">
+  <a href="index.html" class="csn-logo">Collective Shift</a>
+  <div class="csn-nav">
+      <div class="csn-item "><a href="index.html" class="csn-link"></a></div>
+      <div class="csn-item csn-has-dd active">
+        <a href="hub/operating-system.html" class="csn-link">The Collective Shift Operating System
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="hub/operating-system.html" class="csn-dd-item">Operating System Overview</a><a href="hub/modules/m1-foundations.html" class="csn-dd-item">Module 1: Foundations</a><a href="hub/modules/m2-bitcoin.html" class="csn-dd-item">Module 2: Bitcoin</a><a href="hub/modules/m3-altcoins.html" class="csn-dd-item">Module 3: Digital Assets</a><a href="hub/modules/m4-how-we-invest.html" class="csn-dd-item">Module 4: How We Invest</a><a href="hub/modules/m5-buy-sell.html" class="csn-dd-item">Module 5: Buy & Sell</a><a href="hub/modules/m6-send-store.html" class="csn-dd-item">Module 6: Send & Store</a><a href="hub/modules/m7-tax.html" class="csn-dd-item">Module 7: Tax</a><a href="hub/modules/m8-sell-strategy.html" class="csn-dd-item">Module 8: Exit Strategy</a><div class="csn-divider"></div><a href="8-step-strategy-workbook.html" class="csn-dd-item">8-Step Strategy Workbook</a><a href="8-step-strategy-workbook-L1.html" class="csn-dd-item">↳ Level 1 Workbook</a><a href="8-step-strategy-workbook-L2.html" class="csn-dd-item">↳ Level 2 Workbook</a><a href="portfolio-calculator.html" class="csn-dd-item">Portfolio Allocation Calculator</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="hub/products.html" class="csn-link">Product
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="hub/products.html#platinum" class="csn-dd-item">Platinum</a><a href="hub/products.html#accelerator" class="csn-dd-item">Accelerator</a><a href="hub/beginner-journey.html" class="csn-dd-item">Beginner's Journey</a><a href="hub/products.html#two-track" class="csn-dd-item">Two-Track System</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="hub/youtube-strategy.html" class="csn-link">Social Media
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="hub/youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a><a href="hub/social-strategy.html" class="csn-dd-item">Social Strategy</a><a href="hub/instagram-strategy.html" class="csn-dd-item">Instagram Strategy</a><div class="csn-divider"></div><a href="hub/brand.html" class="csn-dd-item">Brand & Voice</a><a href="hub/positioning.html" class="csn-dd-item">Positioning & ICP</a><a href="hub/competitors.html" class="csn-dd-item">Competitors</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="travis-briefing-2026-03-27.html" class="csn-link">Documents
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a><a href="cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a><a href="q2-market-briefing.html" class="csn-dd-item">Q2 Market Briefing</a><a href="webinar-q2-2026-is-now-the-time.html" class="csn-dd-item">Webinar: Is Now The Time?</a></div>
+      </div>
+  </div>
+  <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+<div id="csnMobileMenu" class="csn-mobile-menu">
+  <a href="index.html" class="csn-mob-link csn-mob-top"></a>
+<a href="hub/operating-system.html" class="csn-mob-link csn-mob-top">The Collective Shift Operating System</a>
+<a href="hub/operating-system.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Operating System Overview</a>
+<a href="hub/modules/m1-foundations.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 1: Foundations</a>
+<a href="hub/modules/m2-bitcoin.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 2: Bitcoin</a>
+<a href="hub/modules/m3-altcoins.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 3: Digital Assets</a>
+<a href="hub/modules/m4-how-we-invest.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 4: How We Invest</a>
+<a href="hub/modules/m5-buy-sell.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 5: Buy & Sell</a>
+<a href="hub/modules/m6-send-store.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 6: Send & Store</a>
+<a href="hub/modules/m7-tax.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 7: Tax</a>
+<a href="hub/modules/m8-sell-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 8: Exit Strategy</a>
+<a href="8-step-strategy-workbook.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;8-Step Strategy Workbook</a>
+<a href="8-step-strategy-workbook-L1.html" class="csn-mob-link csn-mob-sub">↳ Level 1 Workbook</a>
+<a href="8-step-strategy-workbook-L2.html" class="csn-mob-link csn-mob-sub">↳ Level 2 Workbook</a>
+<a href="portfolio-calculator.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Portfolio Allocation Calculator</a>
+<a href="hub/products.html" class="csn-mob-link csn-mob-top">Product</a>
+<a href="hub/products.html#platinum" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Platinum</a>
+<a href="hub/products.html#accelerator" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Accelerator</a>
+<a href="hub/beginner-journey.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Beginner's Journey</a>
+<a href="hub/products.html#two-track" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Two-Track System</a>
+<a href="hub/youtube-strategy.html" class="csn-mob-link csn-mob-top">Social Media</a>
+<a href="hub/youtube-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;YouTube Strategy</a>
+<a href="hub/social-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Social Strategy</a>
+<a href="hub/instagram-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Instagram Strategy</a>
+<a href="hub/brand.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Brand & Voice</a>
+<a href="hub/positioning.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Positioning & ICP</a>
+<a href="hub/competitors.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Competitors</a>
+<a href="travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-top">Documents</a>
+<a href="travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Travis CGO Briefing</a>
+<a href="cs-education-system-overview.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Education System Overview</a>
+<a href="q2-market-briefing.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Q2 Market Briefing</a>
+<a href="webinar-q2-2026-is-now-the-time.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Webinar: Is Now The Time?</a>
+</div>
+<!-- ═══ END TOP NAV ═══ -->
+
+
+<!-- HEADER -->
+<header class="workbook-header">
+  <div class="header-left">
+    <a href="8-step-strategy-workbook.html" class="cs-logo">Collective<span>Shift</span></a>
+    <span class="level-badge">Level 2</span>
+    <span style="font-family:'Barlow',sans-serif;font-size:14px;color:var(--mid);">8-Step Strategy Workbook — Advanced</span>
+  </div>
+  <div class="header-right">
+    <span class="btn-save-indicator" id="saveIndicator">Auto-saving...</span>
+    <button class="btn-print" onclick="window.print()">
+      <span>🖨</span> Print / PDF
+    </button>
+  </div>
+</header>
+
+<!-- PROGRESS -->
+<div class="progress-bar-wrap">
+  <div class="step-dots" id="stepDots">
+    <div class="step-dot active" onclick="goToStep(0)" id="dot-0">
+      <div class="step-dot-circle">1</div>
+      <div class="step-dot-label">Goals</div>
+    </div>
+    <div class="step-dot" onclick="goToStep(1)" id="dot-1">
+      <div class="step-dot-circle">2</div>
+      <div class="step-dot-label">Risk</div>
+    </div>
+    <div class="step-dot" onclick="goToStep(2)" id="dot-2">
+      <div class="step-dot-circle">3</div>
+      <div class="step-dot-label">Thesis</div>
+    </div>
+    <div class="step-dot" onclick="goToStep(3)" id="dot-3">
+      <div class="step-dot-circle">4</div>
+      <div class="step-dot-label">Allocation</div>
+    </div>
+    <div class="step-dot" onclick="goToStep(4)" id="dot-4">
+      <div class="step-dot-circle">5</div>
+      <div class="step-dot-label">Buy Strategy</div>
+    </div>
+    <div class="step-dot" onclick="goToStep(5)" id="dot-5">
+      <div class="step-dot-circle">6</div>
+      <div class="step-dot-label">Tax</div>
+    </div>
+    <div class="step-dot" onclick="goToStep(6)" id="dot-6">
+      <div class="step-dot-circle">7</div>
+      <div class="step-dot-label">Security</div>
+    </div>
+    <div class="step-dot" onclick="goToStep(7)" id="dot-7">
+      <div class="step-dot-circle">8</div>
+      <div class="step-dot-label">Sell Strategy</div>
+    </div>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<!-- BODY -->
+<div class="workbook-body">
+
+  <!-- DISCLAIMER BANNER -->
+  <div style="background:#FFF8F0;border:2px solid #FC5C03;border-radius:12px;padding:20px 24px;margin:0 auto 32px;max-width:900px;">
+    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:14px;color:#FC5C03;margin-bottom:8px;">⚠️ IMPORTANT — Educational Purposes Only</div>
+    <div style="font-family:'Barlow',sans-serif;font-size:14px;line-height:1.6;color:#1B1925;">
+      This workbook is for <strong>educational purposes only</strong>. It does not constitute financial advice, investment advice, or any other kind of professional advice. Collective Shift is an education company, not a financial advisor. <strong>Always consult a qualified financial advisor before making investment decisions.</strong> Past performance is not indicative of future results. Digital assets are volatile and you may lose some or all of your investment. All calculators and tools are for educational illustration only.
+    </div>
+  </div>
+
+  <!-- STEP 1: DEFINE YOUR GOALS -->
+  <section class="step-section active" id="step-0">
+    <div class="step-header">
+      <div class="step-number">Step 01 of 08</div>
+      <h1 class="step-title">Define Your Goals</h1>
+      <p class="step-description">Advanced investors think beyond "number go up." Define institutional-grade goals with specific targets, timelines, and success metrics.</p>
+    </div>
+    <div class="advanced-badge">⚡ Advanced Framework — Level 2</div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🎯</span> Primary Investment Objectives</div>
+      <div class="field-group">
+        <label class="field-label">My primary objective with digital assets:</label>
+        <div class="chips">
+          <span class="chip" data-group="l2_objectives" data-val="wealth-preservation">Wealth preservation</span>
+          <span class="chip" data-group="l2_objectives" data-val="growth">Long-term growth</span>
+          <span class="chip" data-group="l2_objectives" data-val="retirement">Retirement funding</span>
+          <span class="chip" data-group="l2_objectives" data-val="gen-wealth">Intergenerational wealth</span>
+          <span class="chip" data-group="l2_objectives" data-val="tax-opt">Tax optimisation</span>
+          <span class="chip" data-group="l2_objectives" data-val="decoupling">Portfolio decoupling from fiat</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">💰</span> Specific Dollar Targets</div>
+      <div class="field-group">
+        <label class="field-label">My 1-year portfolio target (USD/AUD):</label>
+        <input type="text" class="field-input" data-key="s1_target_1yr" placeholder="e.g. $250,000">
+      </div>
+      <div class="field-group">
+        <label class="field-label">My 3-year portfolio target:</label>
+        <input type="text" class="field-input" data-key="s1_target_3yr" placeholder="e.g. $1,000,000">
+      </div>
+      <div class="field-group">
+        <label class="field-label">My 5-year portfolio target:</label>
+        <input type="text" class="field-input" data-key="s1_target_5yr" placeholder="e.g. $5,000,000">
+      </div>
+      <div class="field-group">
+        <label class="field-label">My life-changing number (financial freedom threshold):</label>
+        <input type="text" class="field-input" data-key="s1_lcn" placeholder="e.g. $3,000,000 — enough to live off yield">
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">🏛️</span> Intergenerational Wealth Transfer <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">Do I have intergenerational wealth transfer objectives?</label>
+        <div class="chips">
+          <span class="chip chip-radio" data-val="yes" onclick="selectChipRadio(this,'s1_gen_wealth')">Yes</span>
+          <span class="chip chip-radio" data-val="no" onclick="selectChipRadio(this,'s1_gen_wealth')">Not yet</span>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">My intergenerational strategy (trust, entity, inheritance plan):</label>
+        <div contenteditable="true" data-key="s1_gen_strategy" data-placeholder="e.g. Set up a family trust to hold Bitcoin holdings. Ensure beneficiaries have access documentation..."></div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">🧾</span> Tax Optimisation Objectives <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">My tax optimisation goals for this strategy:</label>
+        <div contenteditable="true" data-key="s1_tax_goals" data-placeholder="e.g. Hold positions >12 months for CGT discount, use a company structure to cap tax at 25%, consider Ledn loan instead of selling..."></div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <div></div>
+      <button class="btn-next" onclick="nextStep()">Next: Risk Profile →</button>
+    </div>
+  </section>
+
+  <!-- STEP 2: RISK PROFILE -->
+  <section class="step-section" id="step-1">
+    <div class="step-header">
+      <div class="step-number">Step 02 of 08</div>
+      <h1 class="step-title">Assess Your Risk Profile</h1>
+      <p class="step-description">Advanced risk assessment goes beyond gut feel — stress-test your portfolio against worst-case scenarios before you're in one.</p>
+    </div>
+    <div class="advanced-badge">⚡ Advanced Framework — Level 2</div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🛡️</span> Investor Profile</div>
+      <div class="risk-cards">
+        <div class="risk-card" data-val="conservative" onclick="selectRiskCard(this)">
+          <div class="risk-card-icon">🏔️</div>
+          <div class="risk-card-title">Conservative</div>
+          <div class="risk-card-desc">Capital preservation first. &lt;5% allocation, Sharpe ratio sensitivity high.</div>
+        </div>
+        <div class="risk-card" data-val="moderate" onclick="selectRiskCard(this)">
+          <div class="risk-card-icon">⚖️</div>
+          <div class="risk-card-title">Moderate</div>
+          <div class="risk-card-desc">Balanced growth. 5–15% allocation. Accepts volatility for alpha.</div>
+        </div>
+        <div class="risk-card" data-val="aggressive" onclick="selectRiskCard(this)">
+          <div class="risk-card-icon">🚀</div>
+          <div class="risk-card-title">Aggressive</div>
+          <div class="risk-card-desc">Maximum asymmetric upside. 15–40%+ allocation. Full cycle investor.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">📊</span> Quantitative Risk Parameters <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">My maximum drawdown tolerance (% from peak):</label>
+        <input type="text" class="field-input" data-key="s2_max_drawdown" placeholder="e.g. 70% (I can stomach a full bear market)">
+      </div>
+      <div class="field-group">
+        <label class="field-label">My digital asset allocation as % of total investable net worth:</label>
+        <div class="slider-wrap">
+          <div class="slider-value" id="networthVal">15%</div>
+          <input type="range" class="slider" min="1" max="50" value="15" data-key="s2_net_worth_pct"
+            oninput="document.getElementById('networthVal').textContent = this.value + '%'; saveField(this)">
+          <div class="slider-labels"><span>1%</span><span>50%</span></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Correlation strategy with traditional portfolio (shares, property, bonds):</label>
+        <div contenteditable="true" data-key="s2_correlation" data-placeholder="e.g. I hold Bitcoin as a non-correlated hedge to my traditional equities portfolio. Target 0–0.3 correlation..."></div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">💥</span> Stress Test Scenarios <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">If Bitcoin drops 80% from current price, my plan is:</label>
+        <div contenteditable="true" data-key="s2_stress_80" data-placeholder="e.g. Continue DCA, no panic selling. This has happened twice before — Bitcoin always recovered. I would increase my monthly DCA by..."></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">If altcoins drop 95%, my plan is:</label>
+        <div contenteditable="true" data-key="s2_stress_95" data-placeholder="e.g. Accept the loss as part of high-risk speculative allocation. Rotate survivors into Bitcoin..."></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">If there's a regulatory crackdown in my jurisdiction, my plan is:</label>
+        <div contenteditable="true" data-key="s2_stress_reg" data-placeholder="e.g. Self-custody all assets immediately. Review entity structure with solicitor..."></div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-prev" onclick="prevStep()">← Back</button>
+      <button class="btn-next" onclick="nextStep()">Next: Investment Thesis →</button>
+    </div>
+  </section>
+
+  <!-- STEP 3: INVESTMENT THESIS -->
+  <section class="step-section" id="step-2">
+    <div class="step-header">
+      <div class="step-number">Step 03 of 08</div>
+      <h1 class="step-title">Build Your Investment Thesis</h1>
+      <p class="step-description">A robust thesis includes macro drivers, invalidation criteria, and a clear catalyst timeline — not just conviction.</p>
+    </div>
+    <div class="advanced-badge">⚡ Advanced Framework — Level 2</div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">₿</span> Bitcoin Thesis</div>
+      <div class="field-group">
+        <label class="field-label">My Bitcoin thesis (first principles):</label>
+        <div contenteditable="true" data-key="s3_btc_thesis" data-placeholder="e.g. Bitcoin is the only credibly neutral, scarce, decentralised monetary network. In a world of expanding money supply..."></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">My conviction level in Bitcoin:</label>
+        <div class="slider-wrap">
+          <div class="slider-value" id="btcConvVal">8/10</div>
+          <input type="range" class="slider" min="1" max="10" value="8" data-key="s3_btc_conviction"
+            oninput="document.getElementById('btcConvVal').textContent = this.value + '/10'; saveField(this)">
+          <div class="slider-labels"><span>1 (curious)</span><span>10 (absolute conviction)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">🌍</span> Macro Thesis <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">Monetary policy thesis (why fiat is broken):</label>
+        <div contenteditable="true" data-key="s3_macro_monetary" data-placeholder="e.g. Global debt-to-GDP at all-time highs, central banks have no path to normalising rates without sovereign debt crisis..."></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Nation-state adoption thesis:</label>
+        <div contenteditable="true" data-key="s3_macro_nation" data-placeholder="e.g. El Salvador, UAE sovereign wealth funds, US Bitcoin reserve — institutional validation accelerating..."></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Debasement protection thesis:</label>
+        <div contenteditable="true" data-key="s3_macro_debase" data-placeholder="e.g. Bitcoin has a fixed supply of 21 million — unlike gold, truly capped. CPI understates real inflation..."></div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">🌐</span> Altcoin Theses <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">My sector-specific thesis for each altcoin category:</label>
+        <div contenteditable="true" data-key="s3_alt_theses" data-placeholder="e.g. Layer 1 (ETH): settlement layer for tokenised assets and DeFi. RWA: $600T in tradeable assets, tokenisation unlocks 24/7 settlement..."></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Catalyst timeline — when do I expect these theses to play out?</label>
+        <div contenteditable="true" data-key="s3_catalysts" data-placeholder="e.g. Q3 2025: ETH ETF flows increase. 2026: RWA tokenisation mainstream via BlackRock..."></div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">🚪</span> Invalidation Criteria <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">I will exit Bitcoin if... (what would break my thesis?):</label>
+        <div contenteditable="true" data-key="s3_btc_invalid" data-placeholder="e.g. Protocol gets compromised, >51% attack, quantum computing breaks SHA-256 encryption, government forces CEXs to delist globally..."></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">I will exit my altcoin positions if...:</label>
+        <div contenteditable="true" data-key="s3_alt_invalid" data-placeholder="e.g. Team abandons project, smart contract exploit &gt;20% of TVL, regulatory action, competitor protocol dominates..."></div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-prev" onclick="prevStep()">← Back</button>
+      <button class="btn-next" onclick="nextStep()">Next: Portfolio Allocation →</button>
+    </div>
+  </section>
+
+  <!-- STEP 4: PORTFOLIO ALLOCATION -->
+  <section class="step-section" id="step-3">
+    <div class="step-header">
+      <div class="step-number">Step 04 of 08</div>
+      <h1 class="step-title">Your Portfolio Allocation</h1>
+      <p class="step-description">Advanced allocation uses a tiered structure: core positions, satellite exposure, and speculative positions — each with distinct rules.</p>
+    </div>
+    <div class="advanced-badge">⚡ Advanced Framework — Level 2</div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">🏗️</span> Multi-Tier Allocation Framework <span class="adv-label">ADVANCED</span></div>
+      <div class="tier-grid">
+        <div class="tier-block">
+          <div class="tier-block-title">🔵 Core (40–70%)</div>
+          <div class="tier-block-desc">Bitcoin. Long-term hold. No tactical trades.</div>
+          <input type="text" class="field-input" data-key="s4_tier_core" placeholder="e.g. 60% BTC" style="font-size:12px;padding:8px 10px;">
+        </div>
+        <div class="tier-block">
+          <div class="tier-block-title">🟡 Satellite (20–40%)</div>
+          <div class="tier-block-desc">Quality large-caps. ETH, other L1s. Cycle-aware.</div>
+          <input type="text" class="field-input" data-key="s4_tier_satellite" placeholder="e.g. 25% ETH/SOL" style="font-size:12px;padding:8px 10px;">
+        </div>
+        <div class="tier-block">
+          <div class="tier-block-title">🔴 Speculative (5–15%)</div>
+          <div class="tier-block-desc">High-risk/high-reward. Small caps, new sectors.</div>
+          <input type="text" class="field-input" data-key="s4_tier_spec" placeholder="e.g. 10% small caps" style="font-size:12px;padding:8px 10px;">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🥧</span> Asset Allocation Grid</div>
+      <div class="allocation-grid">
+        <div class="alloc-item">
+          <div class="alloc-label"><span class="dot" style="background:#F7931A"></span>Bitcoin (BTC)</div>
+          <input type="number" class="alloc-input" id="alloc-btc" data-key="s4_alloc_btc" placeholder="0" min="0" max="100" oninput="updateAllocTotal(); saveField(this)"> <span style="font-size:14px;color:var(--mid)">%</span>
+        </div>
+        <div class="alloc-item">
+          <div class="alloc-label"><span class="dot" style="background:#627EEA"></span>Ethereum</div>
+          <input type="number" class="alloc-input" id="alloc-eth" data-key="s4_alloc_eth" placeholder="0" min="0" max="100" oninput="updateAllocTotal(); saveField(this)"> <span style="font-size:14px;color:var(--mid)">%</span>
+        </div>
+        <div class="alloc-item">
+          <div class="alloc-label"><span class="dot" style="background:#8B5CF6"></span>Altcoins</div>
+          <input type="number" class="alloc-input" id="alloc-alts" data-key="s4_alloc_alts" placeholder="0" min="0" max="100" oninput="updateAllocTotal(); saveField(this)"> <span style="font-size:14px;color:var(--mid)">%</span>
+        </div>
+        <div class="alloc-item">
+          <div class="alloc-label"><span class="dot" style="background:var(--green)"></span>Stablecoins</div>
+          <input type="number" class="alloc-input" id="alloc-stable" data-key="s4_alloc_stable" placeholder="0" min="0" max="100" oninput="updateAllocTotal(); saveField(this)"> <span style="font-size:14px;color:var(--mid)">%</span>
+        </div>
+        <div class="alloc-item">
+          <div class="alloc-label"><span class="dot" style="background:#FCA5A5"></span>Yield-bearing</div>
+          <input type="number" class="alloc-input" id="alloc-yield" data-key="s4_alloc_yield" placeholder="0" min="0" max="100" oninput="updateAllocTotal(); saveField(this)"> <span style="font-size:14px;color:var(--mid)">%</span>
+        </div>
+        <div class="alloc-item">
+          <div class="alloc-label"><span class="dot" style="background:#94A3B8"></span>Cash (fiat)</div>
+          <input type="number" class="alloc-input" id="alloc-cash" data-key="s4_alloc_cash" placeholder="0" min="0" max="100" oninput="updateAllocTotal(); saveField(this)"> <span style="font-size:14px;color:var(--mid)">%</span>
+        </div>
+      </div>
+      <div class="alloc-total" id="allocTotal">
+        <span>Total</span><span id="allocTotalVal">0% / 100%</span>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">🪙</span> Stablecoin Strategy <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">Which stablecoins I'll use and why:</label>
+        <div class="chips">
+          <span class="chip" data-group="stables" data-val="usdc">USDC</span>
+          <span class="chip" data-group="stables" data-val="usdt">USDT</span>
+          <span class="chip" data-group="stables" data-val="dai">DAI</span>
+          <span class="chip" data-group="stables" data-val="usdsg">USDSG / fiat</span>
+          <span class="chip" data-group="stables" data-val="audd">AUDD (AUD)</span>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">My yield strategy for stablecoins (platforms, rates, risks):</label>
+        <div contenteditable="true" data-key="s4_stable_yield" data-placeholder="e.g. 50% in Aave (3–4% APY), 50% in Coinbase Earn. Avoid algorithmic stablecoins..."></div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">⚖️</span> Rebalancing Rules <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">Rebalancing trigger type:</label>
+        <div class="chips">
+          <span class="chip" data-group="rebalance_type" data-val="time">Time-based (quarterly)</span>
+          <span class="chip" data-group="rebalance_type" data-val="threshold">Threshold (±10%)</span>
+          <span class="chip" data-group="rebalance_type" data-val="hybrid">Hybrid (time + threshold)</span>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Rebalancing rules:</label>
+        <div contenteditable="true" data-key="s4_rebalance_rules" data-placeholder="e.g. If BTC drops below 50% of portfolio, don't force rebalance — reassess thesis. If any single alt exceeds 8%, trim to 5%..."></div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-prev" onclick="prevStep()">← Back</button>
+      <button class="btn-next" onclick="nextStep()">Next: Buy Strategy →</button>
+    </div>
+  </section>
+
+  <!-- STEP 5: BUY STRATEGY -->
+  <section class="step-section" id="step-4">
+    <div class="step-header">
+      <div class="step-number">Step 05 of 08</div>
+      <h1 class="step-title">Create Your Buy Strategy</h1>
+      <p class="step-description">Advanced buy strategies layer DCA with limit orders, accumulation zones, and cycle-aware timing to optimise entry price over time.</p>
+    </div>
+    <div class="advanced-badge">⚡ Advanced Framework — Level 2</div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📅</span> Core DCA Plan</div>
+      <div class="field-group">
+        <label class="field-label">Base DCA amount per week/month:</label>
+        <input type="text" class="field-input" data-key="s5_dca_amount" placeholder="e.g. $1,000/week">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Frequency:</label>
+        <div class="chips">
+          <span class="chip chip-radio" data-val="weekly" onclick="selectChipRadio(this,'s5_dca_freq')">Weekly</span>
+          <span class="chip chip-radio" data-val="fortnightly" onclick="selectChipRadio(this,'s5_dca_freq')">Fortnightly</span>
+          <span class="chip chip-radio" data-val="monthly" onclick="selectChipRadio(this,'s5_dca_freq')">Monthly</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">🎯</span> Limit Order Strategy <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">My limit order approach (Coinbase Advanced, Kraken Pro, etc.):</label>
+        <div contenteditable="true" data-key="s5_limit_strategy" data-placeholder="e.g. Place 3 limit buy orders: 10% below spot, 20% below spot, 30% below spot. Ladder in on weakness..."></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Exchanges I use for limit orders:</label>
+        <div class="chips">
+          <span class="chip" data-group="adv_exchange" data-val="coinbase-adv">Coinbase Advanced</span>
+          <span class="chip" data-group="adv_exchange" data-val="kraken-pro">Kraken Pro</span>
+          <span class="chip" data-group="adv_exchange" data-val="binance">Binance</span>
+          <span class="chip" data-group="adv_exchange" data-val="bybit">Bybit</span>
+          <span class="chip" data-group="adv_exchange" data-val="other">Other</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">📉</span> Accumulation Zones <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">Based on market cycle, my primary accumulation zone for Bitcoin is:</label>
+        <div contenteditable="true" data-key="s5_accum_zones" data-placeholder="e.g. $40K–$60K range (post-halving consolidation). Increase DCA 2x if BTC drops below 200-day MA..."></div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">🤝</span> OTC & DeFi Entry <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">OTC strategy for large buys (if applicable):</label>
+        <div contenteditable="true" data-key="s5_otc" data-placeholder="e.g. For buys >$50K, use OTC desk (Independent Reserve, Galaxy Digital) to avoid slippage..."></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">DeFi entry strategy (if applicable):</label>
+        <div contenteditable="true" data-key="s5_defi_entry" data-placeholder="e.g. Use Uniswap TWAP orders for altcoin entry. Avoid DEX for BTC purchases..."></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">✅</span> Setup Checklist</div>
+      <div class="checklist">
+        <div class="check-item" onclick="toggleCheck(this)" data-key="s5_check_adv_account">
+          <div class="check-box">✓</div>
+          <span class="check-label">Advanced/Pro exchange account verified and funded</span>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)" data-key="s5_check_limits">
+          <div class="check-box">✓</div>
+          <span class="check-label">Limit buy orders placed at key levels</span>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)" data-key="s5_check_multiex">
+          <div class="check-box">✓</div>
+          <span class="check-label">Multiple exchange accounts set up (counter-party risk management)</span>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)" data-key="s5_check_alerts">
+          <div class="check-box">✓</div>
+          <span class="check-label">Price alerts set at accumulation zone levels</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-prev" onclick="prevStep()">← Back</button>
+      <button class="btn-next" onclick="nextStep()">Next: Tax Approach →</button>
+    </div>
+  </section>
+
+  <!-- STEP 6: TAX APPROACH -->
+  <section class="step-section" id="step-5">
+    <div class="step-header">
+      <div class="step-number">Step 06 of 08</div>
+      <h1 class="step-title">Plan Your Tax Approach</h1>
+      <p class="step-description">Advanced tax planning includes entity structures, multi-jurisdiction strategy, and borrowing-against instead of selling to minimise CGT events.</p>
+    </div>
+    <div class="advanced-badge">⚡ Advanced Framework — Level 2</div>
+
+    <div class="warn-callout">
+      <span class="info-callout-icon">⚠️</span>
+      <div class="info-callout-text">This is a planning exercise only. Advanced tax strategies require qualified legal and tax advice. Nothing here constitutes financial or legal advice.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🌏</span> Jurisdiction & Reporting</div>
+      <div class="field-group">
+        <label class="field-label">Primary jurisdiction:</label>
+        <input type="text" class="field-input" data-key="s6_jurisdiction" placeholder="e.g. Australia">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Financial year end:</label>
+        <input type="date" class="field-input" data-key="s6_fy_end">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Tax tracking software:</label>
+        <div class="chips">
+          <span class="chip" data-group="taxtrack" data-val="ctc">CryptoTaxCalculator</span>
+          <span class="chip" data-group="taxtrack" data-val="koinly">Koinly</span>
+          <span class="chip" data-group="taxtrack" data-val="accountant">Specialist Accountant</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">🏢</span> Entity & Trust Structures <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">My current holding structure:</label>
+        <div class="chips">
+          <span class="chip" data-group="entity" data-val="personal">Personal name</span>
+          <span class="chip" data-group="entity" data-val="company">Company / Pty Ltd</span>
+          <span class="chip" data-group="entity" data-val="trust">Family / Discretionary Trust</span>
+          <span class="chip" data-group="entity" data-val="smsf">SMSF</span>
+          <span class="chip" data-group="entity" data-val="multiple">Multiple structures</span>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">My entity strategy rationale:</label>
+        <div contenteditable="true" data-key="s6_entity_rationale" data-placeholder="e.g. Holdings in family trust for distribution flexibility. BTC in SMSF for tax-free growth in pension phase..."></div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">✂️</span> Tax-Loss Harvesting <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">My tax-loss harvesting strategy:</label>
+        <div contenteditable="true" data-key="s6_tlh" data-placeholder="e.g. In December, review positions. Realise losses on underperforming alts to offset gains from BTC/ETH..."></div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">🏦</span> Borrowing Against Instead of Selling <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">Do I plan to borrow against my Bitcoin rather than sell?</label>
+        <div class="chips">
+          <span class="chip chip-radio" data-val="yes" onclick="selectChipRadio(this,'s6_borrow')">Yes</span>
+          <span class="chip chip-radio" data-val="no" onclick="selectChipRadio(this,'s6_borrow')">No</span>
+          <span class="chip chip-radio" data-val="considering" onclick="selectChipRadio(this,'s6_borrow')">Considering it</span>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Platforms I'm considering (Ledn, Block Earner, etc.) and my strategy:</label>
+        <div contenteditable="true" data-key="s6_borrow_plan" data-placeholder="e.g. Use Ledn to borrow 30% LTV against BTC for property deposit. Avoid liquidation risk by keeping LTV &lt;40%..."></div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">💰</span> CGT Optimisation <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">My capital gains optimisation strategy:</label>
+        <div contenteditable="true" data-key="s6_cgt" data-placeholder="e.g. Hold BTC &gt;12 months for 50% CGT discount (AUS). Use trust to distribute gains to low-income beneficiaries. Review cost base methods with accountant..."></div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-prev" onclick="prevStep()">← Back</button>
+      <button class="btn-next" onclick="nextStep()">Next: Secure Your Assets →</button>
+    </div>
+  </section>
+
+  <!-- STEP 7: SECURE YOUR ASSETS -->
+  <section class="step-section" id="step-6">
+    <div class="step-header">
+      <div class="step-number">Step 07 of 08</div>
+      <h1 class="step-title">Secure Your Assets</h1>
+      <p class="step-description">At scale, security means multi-sig, geographic distribution, inheritance planning, and institutional-grade custodial options.</p>
+    </div>
+    <div class="advanced-badge">⚡ Advanced Framework — Level 2</div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🔐</span> Tiered Security by Asset Value</div>
+      <div class="field-group">
+        <label class="field-label">Security tier structure (e.g. by AUD value):</label>
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th>Tier</th>
+              <th>Value Range</th>
+              <th>Custody Solution</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Tier 1</td>
+              <td><input type="text" data-key="s7_tier1_range" placeholder="e.g. $0–$10K"></td>
+              <td><input type="text" data-key="s7_tier1_custody" placeholder="e.g. Exchange only"></td>
+            </tr>
+            <tr>
+              <td>Tier 2</td>
+              <td><input type="text" data-key="s7_tier2_range" placeholder="e.g. $10K–$100K"></td>
+              <td><input type="text" data-key="s7_tier2_custody" placeholder="e.g. Hardware wallet"></td>
+            </tr>
+            <tr>
+              <td>Tier 3</td>
+              <td><input type="text" data-key="s7_tier3_range" placeholder="e.g. $100K+"></td>
+              <td><input type="text" data-key="s7_tier3_custody" placeholder="e.g. Multi-sig vault"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">🔑</span> Multi-Signature Setup <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">Multi-sig configuration (e.g. 2-of-3 or 3-of-5):</label>
+        <input type="text" class="field-input" data-key="s7_multisig_config" placeholder="e.g. 2-of-3 using Coldcard + SeedSigner + Ledger">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Keys held by / stored at:</label>
+        <div contenteditable="true" data-key="s7_multisig_keys" data-placeholder="e.g. Key 1: Coldcard in home safe. Key 2: Trezor at solicitor's office. Key 3: SeedSigner at parents' property..."></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Multi-sig coordinator software:</label>
+        <div class="chips">
+          <span class="chip" data-group="multisig_sw" data-val="sparrow">Sparrow Wallet</span>
+          <span class="chip" data-group="multisig_sw" data-val="specter">Specter Desktop</span>
+          <span class="chip" data-group="multisig_sw" data-val="casa">Casa</span>
+          <span class="chip" data-group="multisig_sw" data-val="unchained">Unchained Capital</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">🌏</span> Geographic Distribution <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">Seed phrase / key backup locations (geographically distributed):</label>
+        <div contenteditable="true" data-key="s7_geo_distrib" data-placeholder="e.g. Location 1: Home safe (fireproof). Location 2: Safety deposit box, ANZ Bank. Location 3: Family member overseas..."></div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">🪓</span> Shamir's Secret Sharing <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">Do I use Shamir's Secret Sharing (SLIP-39) for seed splitting?</label>
+        <div class="chips">
+          <span class="chip chip-radio" data-val="yes" onclick="selectChipRadio(this,'s7_shamir')">Yes</span>
+          <span class="chip chip-radio" data-val="no" onclick="selectChipRadio(this,'s7_shamir')">No — standard seed phrase</span>
+          <span class="chip chip-radio" data-val="considering" onclick="selectChipRadio(this,'s7_shamir')">Considering</span>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">My Shamir configuration (if applicable):</label>
+        <div contenteditable="true" data-key="s7_shamir_config" data-placeholder="e.g. 3-of-5 shares. Share 1: Self. Share 2: Partner. Share 3: Solicitor. Share 4: Safe deposit box. Share 5: Encrypted cloud backup..."></div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">📜</span> Inheritance & Estate Planning <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">My digital asset inheritance plan:</label>
+        <div contenteditable="true" data-key="s7_inheritance" data-placeholder="e.g. Letter of instruction held by solicitor. Step-by-step guide for beneficiaries. Will updated to include digital assets..."></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Solicitor / estate planner name:</label>
+        <input type="text" class="field-input" data-key="s7_solicitor" placeholder="Name and firm">
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-prev" onclick="prevStep()">← Back</button>
+      <button class="btn-next" onclick="nextStep()">Next: Sell Strategy →</button>
+    </div>
+  </section>
+
+  <!-- STEP 8: SELL STRATEGY -->
+  <section class="step-section" id="step-7">
+    <div class="step-header">
+      <div class="step-number">Step 08 of 08</div>
+      <h1 class="step-title">Write Your Sell Strategy</h1>
+      <p class="step-description">An advanced exit strategy has multiple tiers, on-chain signals, stablecoin rotation, and a disciplined re-entry framework. Write it now — before euphoria clouds your judgement.</p>
+    </div>
+    <div class="advanced-badge">⚡ Advanced Framework — Level 2</div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📤</span> Exit Strategy Type</div>
+      <div class="field-group">
+        <label class="field-label">My primary exit approach:</label>
+        <div class="chips">
+          <span class="chip" data-group="selltype" data-val="target-ladder">Multi-tier target ladder</span>
+          <span class="chip" data-group="selltype" data-val="dca-out">DCA-out (time-based)</span>
+          <span class="chip" data-group="selltype" data-val="on-chain">On-chain signal driven</span>
+          <span class="chip" data-group="selltype" data-val="hybrid">Hybrid</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">📊</span> Multi-Tier Bitcoin Exit Ladder <span class="adv-label">ADVANCED</span></div>
+      <div class="info-callout">
+        <span class="info-callout-icon">💡</span>
+        <div class="info-callout-text">Advanced investors sell in tranches — typically 10–25% at each target. Avoid selling more than 50% at any single level. Always have a "never sell" tranche.</div>
+      </div>
+      <div class="field-group">
+        <table class="sell-table" id="sellTable">
+          <thead>
+            <tr>
+              <th>Price Target</th>
+              <th>% to Sell</th>
+              <th>Rotate Into</th>
+              <th>Trigger Type</th>
+            </tr>
+          </thead>
+          <tbody id="sellTableBody">
+            <tr>
+              <td><input type="text" data-key="s8_sell_price_1" placeholder="e.g. $150K"></td>
+              <td><input type="text" data-key="s8_sell_pct_1" placeholder="10%"></td>
+              <td><input type="text" data-key="s8_sell_into_1" placeholder="USDC"></td>
+              <td><input type="text" data-key="s8_sell_trigger_1" placeholder="Price target"></td>
+            </tr>
+            <tr>
+              <td><input type="text" data-key="s8_sell_price_2" placeholder="e.g. $200K"></td>
+              <td><input type="text" data-key="s8_sell_pct_2" placeholder="15%"></td>
+              <td><input type="text" data-key="s8_sell_into_2" placeholder="Property/Shares"></td>
+              <td><input type="text" data-key="s8_sell_trigger_2" placeholder="MVRV &gt; 3.5"></td>
+            </tr>
+            <tr>
+              <td><input type="text" data-key="s8_sell_price_3" placeholder="e.g. $300K"></td>
+              <td><input type="text" data-key="s8_sell_pct_3" placeholder="20%"></td>
+              <td><input type="text" data-key="s8_sell_into_3" placeholder="Cash / Re-deploy"></td>
+              <td><input type="text" data-key="s8_sell_trigger_3" placeholder="NUPL euphoria zone"></td>
+            </tr>
+            <tr>
+              <td><input type="text" data-key="s8_sell_price_4" placeholder="e.g. $500K"></td>
+              <td><input type="text" data-key="s8_sell_pct_4" placeholder="25%"></td>
+              <td><input type="text" data-key="s8_sell_into_4" placeholder="Hard assets"></td>
+              <td><input type="text" data-key="s8_sell_trigger_4" placeholder="Pi cycle top"></td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="btn-add-row" onclick="addSellRow()">+ Add Tier</button>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">📡</span> On-Chain Metrics for Timing <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">On-chain signals I'll monitor:</label>
+        <div class="chips">
+          <span class="chip" data-group="onchain" data-val="mvrv">MVRV Z-Score</span>
+          <span class="chip" data-group="onchain" data-val="nupl">NUPL</span>
+          <span class="chip" data-group="onchain" data-val="picycle">Pi Cycle Top</span>
+          <span class="chip" data-group="onchain" data-val="puell">Puell Multiple</span>
+          <span class="chip" data-group="onchain" data-val="sopr">SOPR</span>
+          <span class="chip" data-group="onchain" data-val="exchange-flows">Exchange Flows</span>
+          <span class="chip" data-group="onchain" data-val="dormancy">Dormancy Flow</span>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">My primary on-chain sell signal(s):</label>
+        <div contenteditable="true" data-key="s8_onchain_signals" data-placeholder="e.g. When MVRV Z-Score enters red zone (&gt;7) AND NUPL shows euphoria, begin exit ladder regardless of price..."></div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">🪙</span> Stablecoin Rotation Strategy <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">When I sell, I rotate proceeds into:</label>
+        <div contenteditable="true" data-key="s8_stable_rotation" data-placeholder="e.g. 50% USDC (Aave for yield), 30% AUD fiat (for property purchase), 20% gold/commodities. Avoid single-point custody failure..."></div>
+      </div>
+    </div>
+
+    <div class="card advanced-card">
+      <div class="card-title"><span class="icon">🔄</span> Advanced Re-Entry Framework <span class="adv-label">ADVANCED</span></div>
+      <div class="field-group">
+        <label class="field-label">My re-entry signals (on-chain + technical):</label>
+        <div contenteditable="true" data-key="s8_reentry_signals" data-placeholder="e.g. MVRV &lt; 1 (undervalued zone). Hash ribbon recovery. 12-month MA breakout. Begin 12-month DCA back in..."></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Re-entry execution plan (DCA + limit orders):</label>
+        <div contenteditable="true" data-key="s8_reentry_execution" data-placeholder="e.g. Month 1–6: $X DCA weekly. Place laddered limit orders at each 10% below spot. Redeploy 100% of stables within 12 months of confirmed cycle bottom..."></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🧠</span> Emotional Management Plan</div>
+      <div class="field-group">
+        <label class="field-label">Triggers I commit to managing:</label>
+        <div class="checklist">
+          <div class="check-item" onclick="toggleCheck(this)" data-key="s8_emo_fomo">
+            <div class="check-box">✓</div>
+            <span class="check-label">FOMO — chasing pumps outside my strategy</span>
+          </div>
+          <div class="check-item" onclick="toggleCheck(this)" data-key="s8_emo_greed">
+            <div class="check-box">✓</div>
+            <span class="check-label">Greed — overriding sell triggers ("just one more pump")</span>
+          </div>
+          <div class="check-item" onclick="toggleCheck(this)" data-key="s8_emo_panic">
+            <div class="check-box">✓</div>
+            <span class="check-label">Panic selling during corrections before thesis is broken</span>
+          </div>
+          <div class="check-item" onclick="toggleCheck(this)" data-key="s8_emo_oversize">
+            <div class="check-box">✓</div>
+            <span class="check-label">Oversizing positions relative to my stated risk rules</span>
+          </div>
+          <div class="check-item" onclick="toggleCheck(this)" data-key="s8_emo_revenge">
+            <div class="check-box">✓</div>
+            <span class="check-label">Revenge trading — trying to recover losses quickly</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🤝</span> Commitment & Review Cadence</div>
+      <div class="field-group">
+        <p style="font-family:'Barlow',sans-serif;font-size:15px;color:var(--dark);margin-bottom:16px;">I have documented my advanced strategy. I commit to following this framework and reviewing it every <input type="number" class="field-input" data-key="s8_review_months" style="display:inline;width:70px;padding:6px 10px;font-size:13px;" placeholder="3"> months, or when a material market event occurs.</p>
+      </div>
+      <div class="signature-area">
+        <div class="field-group" style="margin:0">
+          <label class="field-label">Full Name</label>
+          <input type="text" class="field-input" data-key="s8_signature" placeholder="Your full name">
+        </div>
+        <div class="sig-divider">—</div>
+        <div class="field-group" style="margin:0">
+          <label class="field-label">Date</label>
+          <input type="date" class="field-input" data-key="s8_date">
+        </div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-prev" onclick="prevStep()">← Back</button>
+      <button class="btn-complete" onclick="completeWorkbook()">🎉 Complete My Strategy</button>
+    </div>
+  </section>
+
+  <!-- COMPLETION SCREEN -->
+  <div class="completion-screen" id="completionScreen">
+    <div class="completion-icon">🏆</div>
+    <h2 class="completion-title">Advanced Strategy Complete.</h2>
+    <p class="completion-desc">You've documented an institutional-grade digital asset strategy. Return to this document whenever the market tests your conviction — your future self will thank you.</p>
+    <!-- FOOTER DISCLAIMER -->
+    <div style="background:#FFF8F0;border:2px solid #FC5C03;border-radius:12px;padding:16px 20px;margin:24px auto;max-width:700px;text-align:center;">
+      <div style="font-family:'Barlow',sans-serif;font-size:13px;line-height:1.5;color:#807F86;">
+        ⚠️ This workbook is for <strong>educational purposes only</strong> and does not constitute financial advice. Always consult a qualified financial advisor. Past performance ≠ future results. Digital assets are volatile — you may lose some or all of your investment. Tax information is general only — consult a qualified tax professional for your jurisdiction.
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn-next" onclick="window.print()">🖨 Print My Strategy</button>
+      <button class="btn-prev" onclick="resetWorkbook()">← Start Over</button>
+      <a href="8-step-strategy-workbook.html" style="text-decoration:none;">
+        <button style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:14px;padding:12px 28px;border-radius:100px;border:1px solid var(--border);background:#fff;color:var(--mid);cursor:pointer;">← Back to Workbook Hub</button>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const STORAGE_KEY = 'cs_workbook_l2';
+let currentStep = 0;
+const totalSteps = 8;
+const completedSteps = new Set();
+
+function loadSaved() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    document.querySelectorAll('[data-key]').forEach(el => {
+      const key = el.dataset.key;
+      if (saved[key] === undefined) return;
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.value = saved[key];
+      } else if (el.hasAttribute('contenteditable')) {
+        el.textContent = saved[key];
+      }
+    });
+    // Sliders
+    const nwSlider = document.querySelector('[data-key="s2_net_worth_pct"]');
+    if (nwSlider && saved['s2_net_worth_pct']) {
+      nwSlider.value = saved['s2_net_worth_pct'];
+      document.getElementById('networthVal').textContent = saved['s2_net_worth_pct'] + '%';
+    }
+    const btcSlider = document.querySelector('[data-key="s3_btc_conviction"]');
+    if (btcSlider && saved['s3_btc_conviction']) {
+      btcSlider.value = saved['s3_btc_conviction'];
+      document.getElementById('btcConvVal').textContent = saved['s3_btc_conviction'] + '/10';
+    }
+    // Chips
+    document.querySelectorAll('.chip[data-group]').forEach(chip => {
+      const group = chip.dataset.group;
+      const val = chip.dataset.val;
+      if (saved['chips_' + group] && saved['chips_' + group].includes(val)) {
+        chip.classList.add('selected');
+      }
+    });
+    // Risk cards
+    if (saved['s2_investor_type']) {
+      document.querySelectorAll('.risk-card').forEach(c => {
+        if (c.dataset.val === saved['s2_investor_type']) c.classList.add('selected');
+      });
+    }
+    // Checklists
+    document.querySelectorAll('.check-item').forEach(ci => {
+      if (saved[ci.dataset.key]) ci.classList.add('checked');
+    });
+    updateAllocTotal();
+    if (saved['completedSteps']) {
+      saved['completedSteps'].forEach(s => completedSteps.add(s));
+      updateDots();
+    }
+    showSaved();
+  } catch(e) {}
+}
+
+function saveField(el) {
+  const key = el.dataset.key || el.getAttribute('data-key');
+  if (!key) return;
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    saved[key] = el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' ? el.value : el.textContent;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+    showSaved();
+  } catch(e) {}
+}
+
+function saveChips(group, values) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    saved['chips_' + group] = values;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+    showSaved();
+  } catch(e) {}
+}
+
+function saveVal(key, val) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    saved[key] = val;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+    showSaved();
+  } catch(e) {}
+}
+
+function showSaved() {
+  const el = document.getElementById('saveIndicator');
+  el.textContent = 'Saved ✓';
+  el.classList.add('saved');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => {
+    el.textContent = 'Auto-saving...';
+    el.classList.remove('saved');
+  }, 2000);
+}
+
+document.querySelectorAll('[contenteditable]').forEach(el => {
+  el.addEventListener('input', () => saveField(el));
+});
+document.querySelectorAll('input[data-key], textarea[data-key]').forEach(el => {
+  el.addEventListener('input', () => saveField(el));
+});
+
+document.querySelectorAll('.chip[data-group]').forEach(chip => {
+  chip.addEventListener('click', function() {
+    this.classList.toggle('selected');
+    const group = this.dataset.group;
+    const selected = [...document.querySelectorAll(`.chip[data-group="${group}"].selected`)].map(c => c.dataset.val);
+    saveChips(group, selected);
+  });
+});
+
+function selectChipRadio(el, key) {
+  const parent = el.closest('.chips');
+  parent.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  saveVal(key, el.dataset.val);
+}
+
+function selectRiskCard(el) {
+  document.querySelectorAll('.risk-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  saveVal('s2_investor_type', el.dataset.val);
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  saveVal(el.dataset.key, el.classList.contains('checked'));
+}
+
+function updateAllocTotal() {
+  const ids = ['alloc-btc','alloc-eth','alloc-alts','alloc-stable','alloc-yield','alloc-cash'];
+  const vals = ids.map(id => {
+    const el = document.getElementById(id);
+    return el ? (parseFloat(el.value) || 0) : 0;
+  });
+  const total = vals.reduce((a,b) => a+b, 0);
+  const el = document.getElementById('allocTotal');
+  const valEl = document.getElementById('allocTotalVal');
+  valEl.textContent = total + '% / 100%';
+  el.className = 'alloc-total ' + (total === 100 ? 'valid' : (total > 0 ? 'invalid' : ''));
+}
+
+let sellRowCount = 4;
+function addSellRow() {
+  sellRowCount++;
+  const tbody = document.getElementById('sellTableBody');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" data-key="s8_sell_price_${sellRowCount}" placeholder="e.g. $X"></td>
+    <td><input type="text" data-key="s8_sell_pct_${sellRowCount}" placeholder="%"></td>
+    <td><input type="text" data-key="s8_sell_into_${sellRowCount}" placeholder="Into"></td>
+    <td><input type="text" data-key="s8_sell_trigger_${sellRowCount}" placeholder="Trigger"></td>
+  `;
+  tbody.appendChild(tr);
+  tr.querySelectorAll('input').forEach(inp => {
+    inp.addEventListener('input', () => saveField(inp));
+  });
+}
+
+function goToStep(n) {
+  document.getElementById('step-' + currentStep).classList.remove('active');
+  currentStep = n;
+  document.getElementById('step-' + currentStep).classList.add('active');
+  updateDots();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function nextStep() {
+  if (currentStep < totalSteps - 1) {
+    completedSteps.add(currentStep);
+    saveVal('completedSteps', [...completedSteps]);
+    goToStep(currentStep + 1);
+  }
+}
+
+function prevStep() {
+  if (currentStep > 0) goToStep(currentStep - 1);
+}
+
+function updateDots() {
+  for (let i = 0; i < totalSteps; i++) {
+    const dot = document.getElementById('dot-' + i);
+    dot.classList.remove('active', 'complete');
+    if (i === currentStep) dot.classList.add('active');
+    else if (completedSteps.has(i)) dot.classList.add('complete');
+  }
+  const pct = (completedSteps.size / totalSteps) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function completeWorkbook() {
+  completedSteps.add(7);
+  saveVal('completedSteps', [...completedSteps]);
+  document.getElementById('step-7').classList.remove('active');
+  document.getElementById('completionScreen').classList.add('active');
+  document.getElementById('progressFill').style.width = '100%';
+  for (let i = 0; i < totalSteps; i++) {
+    const dot = document.getElementById('dot-' + i);
+    dot.classList.remove('active');
+    dot.classList.add('complete');
+  }
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function resetWorkbook() {
+  if (confirm('Reset workbook? Your saved answers will be cleared.')) {
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  }
+}
+
+const dateInput = document.querySelector('[data-key="s8_date"]');
+if (dateInput && !dateInput.value) {
+  dateInput.value = new Date().toISOString().split('T')[0];
+}
+
+loadSaved();
+updateDots();
+</script>
+</body>
+</html>

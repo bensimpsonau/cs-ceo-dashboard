@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Advanced Sell Strategy — Level 2 Module 8 | Collective Shift</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{cs:{orange:'#FC5C03','orange-bg':'#FEDECC','orange-hover':'#FEEEE5',green:'#08C394',purple:'#654FFC',border:'#E8E8EA',text:'#1B1925',secondary:'#4D4C55',muted:'#807F86'}},fontFamily:{jakarta:['Plus Jakarta Sans','sans-serif'],barlow:['Barlow','sans-serif'],mono:['Source Code Pro','monospace']}}}}</script>
+<style>
+body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Plus Jakarta Sans',sans-serif}
+.sidebar-l2{transition:transform .3s ease}@media(max-width:1023px){.sidebar-l2{transform:translateX(-100%);position:fixed;z-index:50;top:56px;left:0;height:calc(100vh - 56px)}.sidebar-l2.open{transform:translateX(0)}}
+.nav-link{transition:all .15s}.nav-link:hover,.nav-link.active{background:rgba(252,92,3,.12);color:#FC5C03;border-left-color:#FC5C03}
+.framework-quote{border-left:4px solid #FC5C03;background:#FFFAF7;border-radius:0 12px 12px 0;padding:20px 24px;margin:16px 0}
+.member-evidence{background:#F5F5F5;border:1px solid #E8E8EA;border-radius:12px;padding:16px 20px;margin:12px 0}
+.topic-card{background:#FFF;border:1px solid #E8E8EA;border-radius:16px;padding:24px;margin-bottom:16px;transition:all .2s}.topic-card:hover{border-color:rgba(252,92,3,0.3)}
+.question-list li{padding:6px 0;border-bottom:1px solid #F0F0F0}.question-list li:last-child{border-bottom:none}
+@media print{.sidebar-l2,.csn-bar{display:none!important}body{padding-top:0!important}}
+:root{--csn-h:56px;--csn-bg:#FFF;--csn-border:#E8E8EA;--csn-muted:#4D4C55;--csn-orange:#FC5C03;--csn-orange-bg:#FEEEE5;--csn-z:9000}
+.csn-bar{position:fixed;top:0;left:0;right:0;height:var(--csn-h);background:var(--csn-bg);border-bottom:1px solid var(--csn-border);display:flex;align-items:center;padding:0 24px;z-index:var(--csn-z);font-family:'Plus Jakarta Sans',sans-serif}
+.csn-logo{font-weight:700;font-size:15px;color:var(--csn-orange);text-decoration:none;letter-spacing:.06em;text-transform:uppercase;margin-right:32px}
+.csn-nav{display:flex;align-items:center;gap:2px;flex:1}
+.csn-link{display:flex;align-items:center;gap:5px;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--csn-muted);text-decoration:none;transition:color .15s,background .15s}.csn-link:hover{color:var(--csn-orange);background:var(--csn-orange-bg)}
+.csn-item.active>.csn-link{color:var(--csn-orange);font-weight:600}
+.csn-dropdown{display:none;position:absolute;top:calc(100% + 6px);left:0;min-width:240px;background:#FFF;border:1px solid var(--csn-border);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.10);padding:6px;z-index:calc(var(--csn-z)+1)}
+.csn-item.csn-has-dd{position:relative}.csn-item.csn-has-dd::after{content:"";position:absolute;top:100%;left:0;width:100%;height:12px}.csn-item.csn-has-dd:hover>.csn-dropdown{display:block}
+.csn-dd-item{display:block;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--csn-muted);text-decoration:none}.csn-dd-item:hover{color:var(--csn-orange);background:var(--csn-orange-bg)}
+.csn-divider{height:1px;background:var(--csn-border);margin:4px 8px}
+.csn-hamburger{display:none;background:none;border:none;cursor:pointer;color:var(--csn-muted);padding:4px;margin-left:auto}
+body{padding-top:var(--csn-h)!important}@media(max-width:1023px){.csn-nav{display:none}.csn-hamburger{display:block}}
+
+/* OS standalone overrides */
+.sidebar, aside.sidebar, nav.sidebar, .csn-bar, .csn-mobile-menu, #csnMobileMenu,
+.overlay, #overlay, .mobile-header, .hamburger, [class*="hamburger"], .breadcrumb,
+nav[role="navigation"], .csn-mob-link, .csn-mob-top, .csn-mob-sub, a[class*="csn-mob"] {
+  display: none !important;
+}
+body { display: block !important; }
+main, .main, .content, .page-content {
+  margin-left: 0 !important; padding-left: 0 !important;
+  width: 100% !important; max-width: 100% !important;
+}
+
+</style>
+</head>
+<body class="bg-white text-[#1B1925] min-h-screen">
+<div class="os-header-bar" style="background:#fff;border-bottom:1px solid #E8E8EA;padding:14px 32px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:9999;">
+  <a href="/os/" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <div style="width:26px;height:26px;background:#FC5C03;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;">CS</div>
+    <span style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:15px;color:#1B1925;">Collective Shift</span>
+  </a>
+  <div style="width:1px;height:18px;background:#E8E8EA;margin:0 2px;"></div>
+  <span style="font-family:'Barlow',sans-serif;font-weight:400;font-size:13px;color:#807F86;">Operating System</span>
+</div>
+
+<nav class="csn-bar"><a href="../../index.html" class="csn-logo">Collective Shift</a>
+<div class="csn-nav"><div class="csn-item"><a href="../../index.html" class="csn-link"></a></div>
+<div class="csn-item csn-has-dd active"><a href="../operating-system.html" class="csn-link">Operating System <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></a>
+<div class="csn-dropdown"><a href="../operating-system.html" class="csn-dd-item">OS Overview</a><div class="csn-divider"></div>
+<a href="m1-advanced-foundations.html" class="csn-dd-item">L2: Advanced Foundations</a><a href="m2-advanced-bitcoin.html" class="csn-dd-item">L2: Advanced Bitcoin</a>
+<a href="m3-advanced-altcoins.html" class="csn-dd-item">L2: Advanced Altcoins</a><a href="m4-advanced-how-we-invest.html" class="csn-dd-item">L2: Advanced How We Invest</a>
+<a href="m5-advanced-buy-sell.html" class="csn-dd-item">L2: Advanced Buy &amp; Sell</a><a href="m6-advanced-send-store.html" class="csn-dd-item">L2: Advanced Send &amp; Store</a>
+<a href="m7-advanced-tax.html" class="csn-dd-item">L2: Advanced Tax</a><a href="m8-advanced-sell-strategy.html" class="csn-dd-item" style="color:#FC5C03">L2: Advanced Sell Strategy</a></div></div></div>
+<button class="csn-hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button></nav>
+
+<div class="flex">
+<aside id="sidebar" class="sidebar-l2 w-64 min-h-screen bg-white border-r border-[#E8E8EA] flex-shrink-0 flex flex-col fixed top-[56px] left-0 h-[calc(100vh-56px)] overflow-y-auto">
+<div class="p-5 border-b border-[#E8E8EA]"><p class="text-xs font-mono text-[#807F86] uppercase tracking-widest">Level 2 — Advanced</p><p class="text-lg font-bold text-blue-500 mt-1">OS Bible</p></div>
+<nav class="flex-1 py-4 px-3 space-y-1">
+<a href="m1-advanced-foundations.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent"><span class="text-xs font-mono font-bold bg-blue-500/20 text-blue-500 rounded px-1.5 py-0.5">01</span> Advanced Foundations</a>
+<a href="m2-advanced-bitcoin.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent"><span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">02</span> Advanced Bitcoin</a>
+<a href="m3-advanced-altcoins.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent"><span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">03</span> Advanced Altcoins</a>
+<a href="m4-advanced-how-we-invest.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent"><span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">04</span> Advanced How We Invest</a>
+<a href="m5-advanced-buy-sell.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent"><span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">05</span> Advanced Buy &amp; Sell</a>
+<a href="m6-advanced-send-store.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent"><span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">06</span> Advanced Send &amp; Store</a>
+<a href="m7-advanced-tax.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent"><span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">07</span> Advanced Tax</a>
+<a href="m8-advanced-sell-strategy.html" class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium border-l-2 border-transparent"><span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">08</span> Advanced Sell Strategy</a>
+<div class="border-t border-[#E8E8EA] my-3"></div>
+<a href="../operating-system.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent"><span>←</span> Back to OS Overview</a>
+</nav><div class="p-4 border-t border-[#E8E8EA]"><p class="text-[#807F86] text-xs font-mono">L2 Bible · v9.0</p></div></aside>
+
+<main class="flex-1 min-h-screen ml-64 max-lg:ml-0">
+<div class="px-6 lg:px-10 py-3 border-b border-[#E8E8EA] bg-white/50">
+<div class="flex items-center gap-2 text-xs font-mono text-[#807F86]"><a href="../operating-system.html" class="text-cs-orange hover:underline">Operating System</a><span>/</span><a href="m1-advanced-foundations.html" class="text-blue-500 hover:underline">Level 2</a><span>/</span><span>Advanced Sell Strategy</span></div></div>
+
+<div class="px-6 lg:px-10 py-8 max-w-4xl">
+
+<div class="mb-8">
+<div class="flex items-center gap-3 mb-3">
+<span class="bg-blue-500/20 text-blue-500 text-xs font-bold font-mono px-3 py-1 rounded-full uppercase">Level 2</span>
+<span class="bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono px-3 py-1 rounded-full uppercase">A2 — Advanced How-Tos</span>
+<span class="bg-red-500/20 text-red-500 text-xs font-bold font-mono px-3 py-1 rounded-full uppercase">⭐ Flagship Module</span>
+<span class="bg-[#F5F5F5] text-[#807F86] text-xs font-mono px-3 py-1 rounded-full">Step 08</span>
+</div>
+<h1 class="text-4xl font-bold tracking-tight mb-3">Advanced Sell Strategy</h1>
+<p class="text-[#807F86] text-lg max-w-2xl">Multi-tier exit ladders, opportunity cost framework, cycle-aware exits using on-chain data, portfolio rebalancing, stablecoin rotation, and borrowing against holdings instead of selling. The most important advanced module — this is where the money is made or lost.</p>
+</div>
+
+<div class="bg-red-50 border border-red-200 rounded-xl p-5 mb-6">
+<h3 class="text-sm font-bold text-red-600 mb-2">⚠️ Prerequisites</h3>
+<ul class="text-sm text-red-700 space-y-1">
+<li>✅ L1 Step 8: Sell Strategy — has a written sell plan with targets and triggers</li>
+<li>✅ Understands the 3 types of sell strategy (target-based, DCA-out, trailing stops)</li>
+<li>✅ Has cut at least one losing position (or knows why they should)</li>
+<li>✅ L2 Module 1 (Advanced Foundations) — on-chain metrics for cycle positioning</li>
+</ul>
+</div>
+
+<div class="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-6">
+<h3 class="text-sm font-bold text-blue-600 mb-2">📋 Delivery Notes</h3>
+<p class="text-sm text-blue-800"><strong>Format:</strong> A2 — L2 Weekly Coaching Call (1–2 sessions, ~45 mins each). Advanced sell strategy workbook template provided in A3. Members complete borrowing risk questionnaire before deploying any loan strategy.</p>
+<p class="text-sm text-blue-800 mt-2"><strong>This is the #1 module.</strong> L1 Sell Strategy solves the ICP's biggest pain point. L2 Sell Strategy gives them professional-grade tools. If members only remember one L2 module, it should be this one.</p>
+</div>
+
+<div class="bg-cs-orange/5 border border-cs-orange/20 rounded-xl p-5 mb-8">
+<h3 class="text-sm font-bold text-cs-orange mb-2">🔓 What's Unlocked at Level 2</h3>
+<div class="flex flex-wrap gap-2">
+<span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Multi-Tier Exit Ladders</span>
+<span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Opportunity Cost Framework</span>
+<span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Cycle-Aware Exits</span>
+<span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Tax-Loss Harvesting in Sells</span>
+<span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Stablecoin Rotation</span>
+<span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Borrowing vs Selling</span>
+<span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Liquidation Risk</span>
+</div>
+</div>
+
+<!-- TOPIC 1: Advanced Exit Frameworks -->
+<div class="topic-card">
+<div class="flex items-center gap-3 mb-4">
+<span class="bg-blue-500/20 text-blue-500 text-xs font-bold font-mono rounded-lg px-3 py-1">TOPIC 1</span>
+<h2 class="text-xl font-bold">Advanced Exit Frameworks — Beyond Targets and DCA-Out</h2>
+</div>
+
+<div class="space-y-3 mb-5">
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+<h5 class="font-bold text-sm mb-1">Multi-Tier Exit Ladders</h5>
+<p class="text-sm text-[#807F86]">Sell 20-25% of a position at each price target across multiple levels. Example for an altcoin position: Tier 1 (2x from entry): sell 25%. Tier 2 (3x): sell 25%. Tier 3 (5x): sell 25%. Tier 4 (moonshot): let the final 25% ride with a trailing stop. Why laddering works: you never sell "too early" or "too late" — you sell systematically. Applied across entire portfolio, not just per-position.</p>
+</div>
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+<h5 class="font-bold text-sm mb-1">Structuring Exits Across an Entire Portfolio</h5>
+<p class="text-sm text-[#807F86]">Portfolio-level exit planning: different assets have different rules. Bitcoin: very long timeframe, small trims only in extreme overheating. Altcoins: aggressive laddering — "good time, not a long time." Stablecoins: increase stablecoin allocation as cycle matures (build war chest for re-entry). How to create a portfolio-level exit matrix: asset × tier × target × action.</p>
+</div>
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+<h5 class="font-bold text-sm mb-1">Stablecoin Rotation Strategy</h5>
+<p class="text-sm text-[#807F86]">Sell into stablecoins instead of fiat — stays in the ecosystem, ready for re-deployment. Deploy stablecoins for yield while waiting for re-entry (connects to Module 5: 4-Tier Yield Spectrum). The cycle: sell altcoins → stablecoins → earn yield → wait for correction → re-enter. Tax note: selling into stablecoins IS a CGT event (same as selling to fiat).</p>
+</div>
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+<h5 class="font-bold text-sm mb-1">Options and Futures for Hedging (Awareness Only)</h5>
+<p class="text-sm text-[#807F86]">Brief overview: buying put options to protect downside on a large Bitcoin position. Not a how-to — awareness level only. Where this exists: Deribit, CME futures. Why most members shouldn't use these: complexity, margin risk, cost of premiums. When it might make sense: $500K+ Bitcoin positions where hedging cost is justified.</p>
+</div>
+</div>
+
+<h4 class="font-bold text-sm mb-3">📝 Key Questions Answered:</h4>
+<ul class="question-list text-sm text-[#807F86] mb-5">
+<li>"Should I sell all at once or ladder out?"</li>
+<li>"What do professional investors do differently?"</li>
+<li>"What do I do with the money after I sell?"</li>
+</ul>
+</div>
+
+<!-- TOPIC 2: Portfolio Rebalancing -->
+<div class="topic-card">
+<div class="flex items-center gap-3 mb-4">
+<span class="bg-blue-500/20 text-blue-500 text-xs font-bold font-mono rounded-lg px-3 py-1">TOPIC 2</span>
+<h2 class="text-xl font-bold">Portfolio Rebalancing — Systematic Portfolio Management</h2>
+</div>
+
+<div class="space-y-3 mb-5">
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+<h5 class="font-bold text-sm mb-1">When to Rebalance</h5>
+<p class="text-sm text-[#807F86]">Time-based: quarterly review. Threshold-based: when any position drifts >10% from target allocation. Event-based: after a major market move (50%+ pump or dump). How CS portfolio rebalancing decisions work in practice — real case studies of what triggered moves and what happened after.</p>
+</div>
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+<h5 class="font-bold text-sm mb-1">Tax-Loss Harvesting Within Rebalancing</h5>
+<p class="text-sm text-[#807F86]">Combine rebalancing with tax-loss harvesting: sell underperformers (crystallise loss), use proceeds to increase positions in winners. Net result: better portfolio AND lower tax bill. Timing: align rebalancing with EOFY for maximum tax benefit.</p>
+</div>
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+<h5 class="font-bold text-sm mb-1">Sector Rotation Within Digital Assets</h5>
+<p class="text-sm text-[#807F86]">Early cycle: higher altcoin exposure, L1/L2 plays, emerging narratives. Mid cycle: shift toward established winners, reduce speculative positions. Late cycle: rotate to Bitcoin, increase stablecoins, reduce altcoin exposure. Bear market: maximum Bitcoin dominance, stablecoins for yield, minimal altcoin exposure.</p>
+</div>
+</div>
+</div>
+
+<!-- TOPIC 3: Opportunity Cost -->
+<div class="topic-card">
+<div class="flex items-center gap-3 mb-4">
+<span class="bg-blue-500/20 text-blue-500 text-xs font-bold font-mono rounded-lg px-3 py-1">TOPIC 3</span>
+<h2 class="text-xl font-bold">Opportunity Cost Framework — The Real Cost of Holding</h2>
+</div>
+
+<div class="space-y-3 mb-5">
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+<h5 class="font-bold text-sm mb-1">How to Calculate Opportunity Cost</h5>
+<p class="text-sm text-[#807F86]">"What else could this capital be doing?" If you're holding $10K in an altcoin that's down 40% with no catalyst — what would that $6K do if deployed into Bitcoin or a yield-bearing stablecoin? The calculation: current value of position × expected return of alternative = opportunity cost of holding.</p>
+</div>
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+<h5 class="font-bold text-sm mb-1">Objective Criteria for Cut vs Hold Decisions</h5>
+<p class="text-sm text-[#807F86]">Has the thesis changed? (If yes → cut). Is there a clear catalyst in the next 3 months? (If no → cut). Would you buy this position today at current price? (If no → why are you holding?). Is it underperforming Bitcoin over 6 months? (If yes → reassess). The quarterly portfolio review: go through every position with these questions.</p>
+</div>
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+<h5 class="font-bold text-sm mb-1">Systematic Portfolio Review Process</h5>
+<p class="text-sm text-[#807F86]">Quarterly review cadence. For each position: thesis check, performance vs Bitcoin, catalyst check, opportunity cost calculation. Output: hold, trim, add, or cut. Document the decision and rationale (for future reference). This process should be habitual — not emotional.</p>
+</div>
+</div>
+
+<div class="framework-quote">
+<p class="text-sm italic text-[#4D4C55]">"My best investment decision wasn't Solana at 10x. It was getting out of Polygon before I lost 70-80%."</p>
+<p class="text-xs text-cs-orange font-mono mt-2">Teaching Framework #3 — "The Best Trade Was a Loss" · The intellectual foundation for the opportunity cost framework</p>
+</div>
+
+<h4 class="font-bold text-sm mb-3">📝 Key Questions Answered:</h4>
+<ul class="question-list text-sm text-[#807F86] mb-5">
+<li>"Should I hold this loser or sell and redeploy?"</li>
+<li>"What's the opportunity cost of holding?"</li>
+<li>"How do I decide which positions to cut?"</li>
+</ul>
+</div>
+
+<!-- TOPIC 4: Borrowing -->
+<div class="topic-card">
+<div class="flex items-center gap-3 mb-4">
+<span class="bg-red-500/20 text-red-500 text-xs font-bold font-mono rounded-lg px-3 py-1">⚠️ TOPIC 4</span>
+<h2 class="text-xl font-bold">Borrowing Against Holdings Instead of Selling — Advanced Strategy</h2>
+</div>
+
+<p class="text-[#807F86] mb-4">The most advanced and potentially dangerous strategy in the OS. Powerful when used correctly — devastating when used without understanding liquidation risk. This topic requires extra care in delivery.</p>
+
+<div class="space-y-3 mb-5">
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+<h5 class="font-bold text-sm mb-1">How Collateralised Lending Works</h5>
+<p class="text-sm text-[#807F86]">Deposit digital assets as collateral → receive a loan in fiat or stablecoins. You keep your Bitcoin (no sell = no CGT event). You get liquidity to use for other purposes. You pay interest on the loan. Example: deposit $100K BTC → borrow $50K USDC at 50% LTV.</p>
+</div>
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+<h5 class="font-bold text-sm mb-1">Loan-to-Value (LTV) Ratios and Interest Rates</h5>
+<p class="text-sm text-[#807F86]">LTV = loan amount ÷ collateral value. Conservative LTV: 25-30% (recommended). Moderate LTV: 40-50%. Aggressive LTV: 60%+ (dangerous). Interest rates: typically 5-12% APR depending on platform and LTV. Platform comparison: Ledn, Block Earner — how they work, fees, risks.</p>
+</div>
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+<h5 class="font-bold text-sm mb-1">Tax Advantage: Borrowing Is Not a CGT Event</h5>
+<p class="text-sm text-[#807F86]">Key insight: selling Bitcoin = CGT event (potentially 23.5% tax on gains). Borrowing against Bitcoin = NOT a CGT event. You keep the asset, avoid the tax, and get liquidity. The interest cost of the loan may be less than the tax cost of selling. When the math works: long-term holders with large unrealised gains where the tax bill would be significant.</p>
+</div>
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4 border-red-200 bg-red-50">
+<h5 class="font-bold text-sm mb-1 text-red-600">🚨 Margin Call and Liquidation Risk — The Danger Nobody Talks About</h5>
+<p class="text-sm text-red-800">If the value of your collateral drops (Bitcoin price falls), your LTV increases. If LTV exceeds the liquidation threshold (typically 70-85%), the platform SELLS your collateral to repay the loan — without your permission. Example: borrow $50K against $100K BTC (50% LTV). BTC drops 40% → your collateral is now $60K → LTV is now 83% → LIQUIDATION. You lose your Bitcoin AND still owe any remaining balance. Stress-test scenario: what happens if BTC drops 30%, 50%, 70% while you have a loan?</p>
+</div>
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+<h5 class="font-bold text-sm mb-1">When Borrowing Makes Sense vs When Selling Is Better</h5>
+<p class="text-sm text-[#807F86]">Borrowing makes sense: large unrealised gains (high tax cost to sell), strong conviction BTC will continue rising, conservative LTV (25-30%), ability to add collateral if price drops, short-term liquidity need. Selling is better: uncertain about price direction, can't afford to add collateral, need the money permanently, LTV would be >50%. The rule: if you don't understand liquidation, you shouldn't be borrowing.</p>
+</div>
+</div>
+
+<div class="framework-quote">
+<p class="text-sm italic text-[#4D4C55]">"If you don't understand liquidation, you shouldn't be borrowing."</p>
+<p class="text-xs text-cs-orange font-mono mt-2">Core L2 Teaching Principle — The Borrowing Litmus Test</p>
+</div>
+
+<h4 class="font-bold text-sm mb-3">📝 Key Questions Answered:</h4>
+<ul class="question-list text-sm text-[#807F86] mb-5">
+<li>"Can I borrow against my Bitcoin?"</li>
+<li>"What happens if BTC drops 50% while I have a loan?"</li>
+<li>"Is borrowing cheaper than selling and paying tax?"</li>
+<li>"What LTV is safe?"</li>
+<li>"Which platforms offer Bitcoin-backed loans?"</li>
+</ul>
+
+<div class="member-evidence">
+<p class="text-xs font-bold text-[#807F86] uppercase tracking-wide mb-2">👥 Member Evidence</p>
+<p class="text-sm text-[#807F86]">Growing member interest in borrowing but zero understanding of liquidation mechanics. This is the most dangerous knowledge gap in the L2 curriculum. Members hear "borrow against your Bitcoin instead of selling" on Twitter/YouTube without understanding that a 50% price drop = losing everything. The risk questionnaire before deployment is essential.</p>
+</div>
+</div>
+
+<!-- TOPIC 5: Market Cycle Exit Positioning -->
+<div class="topic-card">
+<div class="flex items-center gap-3 mb-4">
+<span class="bg-blue-500/20 text-blue-500 text-xs font-bold font-mono rounded-lg px-3 py-1">TOPIC 5</span>
+<h2 class="text-xl font-bold">Market Cycle Exit Positioning — Selling at the Right Point</h2>
+</div>
+
+<div class="space-y-3 mb-5">
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+<h5 class="font-bold text-sm mb-1">Historical Bitcoin Halving Cycle Data</h5>
+<p class="text-sm text-[#807F86]">2012 halving → 2013 peak: ~100x gain, peak ~12 months after halving. 2016 halving → 2017 peak: ~30x gain, peak ~18 months after halving. 2020 halving → 2021 peak: ~8x gain, peak ~18 months after halving. 2024 halving → 2025/26 peak: historically would suggest peak Q4 2025-Q2 2026. Diminishing returns pattern: each cycle's multiple is smaller. Not a prediction — a probability framework.</p>
+</div>
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+<h5 class="font-bold text-sm mb-1">On-Chain Metrics for Cycle Positioning</h5>
+<p class="text-sm text-[#807F86]">NUPL (Net Unrealised Profit/Loss): when aggregate holders are in extreme profit → historically signals late cycle. MVRV (Market Value to Realised Value): above 3.5 = historically overheated. Puell Multiple: miner revenue relative to average — extreme highs signal cycle tops. How to read these charts and what levels to watch. Where to access: Glassnode, LookIntoBitcoin, CryptoQuant.</p>
+</div>
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+<h5 class="font-bold text-sm mb-1">Ben's Framework for Identifying Cycle Peaks</h5>
+<p class="text-sm text-[#807F86]">Not exact timing — probability-based assessment. Multiple metrics must align (no single indicator is reliable). The "cluster of signals" approach: when 3+ metrics are in extreme territory simultaneously, probability of top increases. The CS approach: start trimming when metrics are elevated, increase selling as more signals align, never try to sell the exact top.</p>
+</div>
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+<h5 class="font-bold text-sm mb-1">How to Build Cycle-Aware Sell Triggers</h5>
+<p class="text-sm text-[#807F86]">Written, objective, pre-committed rules. Example trigger set: "When NUPL > 0.75 AND MVRV > 3.0, begin selling 10% of altcoin positions per week." "When BTC is 18+ months post-halving AND showing extreme greed, trim 20% of BTC position." These triggers are set BEFORE the market reaches those levels — clear-headed planning, not emotional reaction.</p>
+</div>
+<div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+<h5 class="font-bold text-sm mb-1">CS Portfolio De-Risk Decisions as Case Studies</h5>
+<p class="text-sm text-[#807F86]">What triggered CS portfolio de-risk decisions in previous cycles. What on-chain data was showing at the time. What the team did and what happened after. Transparency: show the good calls AND the bad calls. The lesson: you don't need to be perfect — you need to be systematic and pre-committed.</p>
+</div>
+</div>
+
+<h4 class="font-bold text-sm mb-3">📝 Key Questions Answered:</h4>
+<ul class="question-list text-sm text-[#807F86] mb-5">
+<li>"How do I know when the bull run is ending?"</li>
+<li>"When should I take profits?"</li>
+<li>"What on-chain metrics should I watch?"</li>
+<li>"Is this cycle different?"</li>
+<li>"How does CS decide when to de-risk?"</li>
+</ul>
+
+<div class="member-evidence">
+<p class="text-xs font-bold text-[#807F86] uppercase tracking-wide mb-2">👥 Member Evidence</p>
+<p class="text-sm text-[#807F86]">John/Johannes wanted clear de-risk triggers — said "patience" wasn't sufficient as an answer. This module gives him the objective, data-driven framework he was asking for. Members who've completed L1 want more sophisticated tools than simple price targets. The cycle-aware framework connects Module 1 (on-chain analytics) to Module 8 (sell decisions) — full circle.</p>
+</div>
+</div>
+
+<!-- Outcomes -->
+<div class="bg-cs-green/5 border border-cs-green/20 rounded-xl p-6 mb-6">
+<h3 class="text-lg font-bold text-cs-green mb-3">✅ Member Outcomes</h3>
+<ul class="space-y-2 text-sm">
+<li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Can structure multi-tier exit ladders across an entire portfolio</li>
+<li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Can apply the opportunity cost framework to any holding decision</li>
+<li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Understand cycle-aware exit positioning using on-chain data</li>
+<li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Can use stablecoin rotation to maintain capital in the ecosystem</li>
+<li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Fully understand margin call and liquidation risk before considering borrowing</li>
+<li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Have an advanced sell plan with portfolio-level thinking (not just per-asset)</li>
+<li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Know when borrowing makes sense vs when selling is the right move</li>
+</ul>
+</div>
+
+<!-- Teaching Frameworks -->
+<div class="bg-white border border-[#E8E8EA] rounded-xl p-6 mb-6">
+<h3 class="text-lg font-bold mb-3">🎯 Teaching Frameworks Used</h3>
+<div class="space-y-3">
+<div class="flex items-start gap-3">
+<span class="bg-cs-orange/20 text-cs-orange text-xs font-mono font-bold px-2 py-1 rounded flex-shrink-0">#3</span>
+<div><p class="font-bold text-sm">"The Best Trade Was a Loss"</p><p class="text-sm text-[#807F86]">"My best investment decision was getting out of Polygon before I lost 70-80%." Foundation for the opportunity cost framework.</p></div>
+</div>
+<div class="flex items-start gap-3">
+<span class="bg-cs-orange/20 text-cs-orange text-xs font-mono font-bold px-2 py-1 rounded flex-shrink-0">NEW</span>
+<div><p class="font-bold text-sm">"The Borrowing Litmus Test"</p><p class="text-sm text-[#807F86]">"If you don't understand liquidation, you shouldn't be borrowing." New L2-specific framework.</p></div>
+</div>
+<div class="flex items-start gap-3">
+<span class="bg-cs-orange/20 text-cs-orange text-xs font-mono font-bold px-2 py-1 rounded flex-shrink-0">#7</span>
+<div><p class="font-bold text-sm">"One Cycle Is Not Enough"</p><p class="text-sm text-[#807F86]">Applied with historical cycle data: the evidence for multi-cycle commitment.</p></div>
+</div>
+</div>
+</div>
+
+<!-- Final Quote -->
+<div class="framework-quote mb-6">
+<p class="text-sm italic text-[#4D4C55]">"A strategy in your head is not a strategy. It's a vague intention."</p>
+<p class="text-xs text-cs-orange font-mono mt-2">Shift OS Philosophy — The foundation of everything in Module 8</p>
+</div>
+
+<div class="flex items-center justify-between pt-6 border-t border-[#E8E8EA]">
+<a href="m7-advanced-tax.html" class="text-[#807F86] hover:text-cs-orange text-sm font-medium">← Advanced Tax</a>
+<a href="../operating-system.html" class="bg-cs-orange text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-cs-orange/90">Back to OS Overview →</a>
+</div>
+</div>
+</main>
+</div>
+</body>
+</html>
