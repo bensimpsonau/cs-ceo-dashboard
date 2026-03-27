@@ -3,550 +3,402 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CGO Intelligence Briefing — March 27, 2026 | Collective Shift</title>
+<title>Product & Market Intelligence Briefing — March 27, 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  /* ===================== RESET & BASE ===================== */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  
   :root {
     --orange: #FC5C03;
     --green: #08C394;
     --dark: #1B1925;
     --purple: #654FFC;
     --border: #E8E8EA;
-    --bg: #ffffff;
-    --bg-subtle: #F8F8FA;
-    --text-muted: #6B6B7A;
-    --text-light: #9B9BAA;
-    --font-head: 'Plus Jakarta Sans', sans-serif;
-    --font-body: 'Barlow', sans-serif;
-    --font-mono: 'Source Code Pro', monospace;
+    --bg-card: #FFFFFF;
+    --bg-page: #F7F7F8;
+    --text-muted: #6B6B7B;
+    --radius: 12px;
   }
 
-  html { font-size: 14px; }
-  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
   body {
-    font-family: var(--font-body);
+    font-family: 'Barlow', sans-serif;
     font-weight: 400;
-    color: var(--dark);
-    background: var(--bg);
+    font-size: 14px;
     line-height: 1.65;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+    color: var(--dark);
+    background: var(--bg-page);
+    counter-reset: page-counter;
   }
 
-  /* ===================== PAGE COUNTER ===================== */
-  @page {
-    size: A4;
-    margin: 18mm 18mm 22mm 18mm;
-    @bottom-center {
-      content: counter(page);
-      font-family: 'Source Code Pro', monospace;
-      font-size: 9px;
-      color: #9B9BAA;
-    }
+  h1, h2, h3, h4, h5 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    color: var(--dark);
   }
 
-  body { counter-reset: page; }
-
-  /* ===================== PRINT BUTTON ===================== */
-  .print-bar {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 1000;
-    background: var(--dark);
-    padding: 10px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .print-bar-label {
-    font-family: var(--font-mono);
+  .label {
+    font-family: 'Source Code Pro', monospace;
+    font-weight: 400;
     font-size: 11px;
-    color: rgba(255,255,255,0.5);
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
   }
+
+  /* ——— PRINT BUTTON ——— */
+  .print-bar {
+    background: var(--dark);
+    padding: 10px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
   .print-btn {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
     background: var(--orange);
     color: #fff;
     border: none;
-    border-radius: 100px;
-    padding: 8px 22px;
-    font-family: var(--font-head);
-    font-size: 12px;
-    font-weight: 600;
+    border-radius: 8px;
+    padding: 8px 20px;
     cursor: pointer;
-    letter-spacing: 0.02em;
-    transition: opacity 0.15s;
-  }
-  .print-btn:hover { opacity: 0.88; }
-
-  @media print {
-    .print-bar { display: none !important; }
-    body { padding-top: 0 !important; }
-  }
-
-  /* ===================== LAYOUT ===================== */
-  .page-wrap {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 80px 40px 60px;
-  }
-  @media print {
-    .page-wrap { max-width: 100%; padding: 0; }
-  }
-
-  /* ===================== CONFID BANNER ===================== */
-  .confid-banner {
     display: flex;
     align-items: center;
-    gap: 10px;
-    background: #FFF3EE;
-    border: 1.5px solid var(--orange);
-    border-radius: 8px;
-    padding: 10px 18px;
+    gap: 6px;
+  }
+  .print-btn:hover { background: #e04d00; }
+
+  /* ——— DOCUMENT WRAPPER ——— */
+  .document {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 40px 80px;
+    background: #fff;
+    min-height: 100vh;
+  }
+
+  /* ——— CONFIDENTIAL BANNER ——— */
+  .confidential-banner {
+    background: var(--dark);
+    color: #fff;
+    text-align: center;
+    padding: 7px 0;
+    letter-spacing: 0.12em;
+    font-size: 11px;
+    font-family: 'Source Code Pro', monospace;
+    border-radius: var(--radius) var(--radius) 0 0;
+    margin-bottom: 0;
+  }
+
+  /* ——— HEADER ——— */
+  .doc-header {
+    border: 1.5px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    padding: 32px 36px 28px;
+    margin-bottom: 36px;
+  }
+  .doc-header-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 32px;
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .doc-header-meta strong { color: var(--dark); }
+  .doc-title {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+  .doc-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: 'Source Code Pro', monospace;
+  }
+  .orange-rule {
+    height: 3px;
+    background: var(--orange);
+    border-radius: 2px;
+    margin: 20px 0 0;
+  }
+
+  /* ——— TABLE OF CONTENTS ——— */
+  .toc {
+    background: var(--bg-page);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
     margin-bottom: 40px;
   }
-  .confid-dot {
+  .toc h3 {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+    font-family: 'Source Code Pro', monospace;
+    font-weight: 500;
+  }
+  .toc ol { list-style: none; counter-reset: toc-counter; padding: 0; }
+  .toc ol li {
+    counter-increment: toc-counter;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 5px 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  .toc ol li:last-child { border-bottom: none; }
+  .toc ol li::before {
+    content: "0" counter(toc-counter);
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    color: var(--orange);
+    flex-shrink: 0;
+    width: 24px;
+  }
+  .toc ol li a {
+    color: var(--purple);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .toc ol li a:hover { text-decoration: underline; }
+
+  /* ——— SECTIONS ——— */
+  .section {
+    margin-bottom: 52px;
+    page-break-inside: avoid;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-number {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    color: #fff;
+    background: var(--orange);
+    border-radius: 6px;
+    padding: 3px 9px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 19px;
+    font-weight: 700;
+  }
+
+  /* ——— CARDS ——— */
+  .card {
+    background: var(--bg-card);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .dot {
     width: 8px; height: 8px;
     border-radius: 50%;
     background: var(--orange);
     flex-shrink: 0;
   }
-  .confid-text {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--orange);
-  }
+  .card-title .dot-green { background: var(--green); }
+  .card-title .dot-purple { background: var(--purple); }
 
-  /* ===================== COVER PAGE ===================== */
-  .cover-page {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 60px 0 40px;
-    page-break-after: always;
-  }
-  @media print {
-    .cover-page { min-height: 270mm; padding: 40px 0 30px; }
-  }
-
-  .cover-logo-area {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 80px;
-  }
-  .cover-logo-mark {
-    width: 44px; height: 44px;
-    background: var(--dark);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .cover-logo-mark svg { width: 24px; height: 24px; }
-  .cover-logo-name {
-    font-family: var(--font-head);
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--dark);
-    letter-spacing: -0.01em;
-  }
-  .cover-logo-sub {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    color: var(--text-muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-top: 2px;
-  }
-
-  .cover-main { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-
-  .cover-eyebrow {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--orange);
-    margin-bottom: 20px;
-  }
-
-  .cover-title {
-    font-family: var(--font-head);
-    font-size: 42px;
-    font-weight: 700;
-    color: var(--dark);
-    line-height: 1.12;
-    letter-spacing: -0.02em;
-    margin-bottom: 18px;
-  }
-  @media print {
-    .cover-title { font-size: 34px; }
-  }
-
-  .cover-subtitle {
-    font-family: var(--font-body);
-    font-size: 17px;
-    color: var(--text-muted);
-    font-weight: 400;
-    margin-bottom: 50px;
-    max-width: 560px;
-  }
-
-  .cover-divider {
-    width: 60px;
-    height: 3px;
-    background: var(--orange);
-    border-radius: 2px;
-    margin-bottom: 40px;
-  }
-
-  .cover-meta-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 0;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    max-width: 620px;
-  }
-  .cover-meta-cell {
-    padding: 18px 22px;
-    border-right: 1px solid var(--border);
-  }
-  .cover-meta-cell:last-child { border-right: none; }
-  .cover-meta-label {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-light);
-    margin-bottom: 6px;
-  }
-  .cover-meta-value {
-    font-family: var(--font-head);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--dark);
-  }
-  .cover-meta-sub {
-    font-family: var(--font-body);
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 2px;
-  }
-
-  .cover-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 30px;
-    border-top: 1px solid var(--border);
-    margin-top: 60px;
-  }
-  .cover-footer-left {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    color: var(--text-light);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-  .cover-footer-right {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    color: var(--text-light);
-    letter-spacing: 0.05em;
-  }
-
-  /* ===================== TOC ===================== */
-  .toc-page {
-    page-break-after: always;
-    padding: 40px 0;
-  }
-  .section-label {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--orange);
-    margin-bottom: 10px;
-  }
-  .toc-title {
-    font-family: var(--font-head);
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--dark);
-    letter-spacing: -0.015em;
-    margin-bottom: 36px;
-  }
-  .toc-list { list-style: none; }
-  .toc-list li { margin-bottom: 4px; }
-  .toc-item {
-    display: flex;
-    align-items: baseline;
-    gap: 0;
-    text-decoration: none;
-    color: var(--dark);
-    padding: 10px 14px;
-    border-radius: 8px;
-    transition: background 0.12s;
-  }
-  .toc-item:hover { background: var(--bg-subtle); }
-  .toc-num {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: var(--text-light);
-    min-width: 44px;
-    flex-shrink: 0;
-  }
-  .toc-name {
-    font-family: var(--font-body);
-    font-size: 14px;
-    font-weight: 500;
-    flex: 1;
-  }
-  .toc-name.toc-part {
-    font-family: var(--font-head);
-    font-weight: 600;
-    font-size: 14px;
-    color: var(--dark);
-  }
-  .toc-sub {
-    font-family: var(--font-body);
-    font-size: 12.5px;
-    color: var(--text-muted);
-    font-weight: 400;
-    padding-left: 44px;
-  }
-  .toc-dots {
-    flex: 1;
-    border-bottom: 1px dotted var(--border);
-    margin: 0 8px 4px;
-  }
-  .toc-group { margin-bottom: 12px; }
-  .toc-group-label {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-light);
-    padding: 14px 14px 4px;
-    border-top: 1px solid var(--border);
-    margin-top: 8px;
-  }
-
-  /* ===================== SECTION STRUCTURE ===================== */
-  .doc-section {
-    page-break-before: always;
-    padding: 40px 0 20px;
-  }
-  .doc-section:first-of-type { page-break-before: auto; }
-
-  .part-header {
-    margin-bottom: 36px;
-    padding-bottom: 24px;
-    border-bottom: 2px solid var(--border);
-  }
-  .part-eyebrow {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--orange);
-    margin-bottom: 10px;
-  }
-  .part-title {
-    font-family: var(--font-head);
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--dark);
-    letter-spacing: -0.015em;
-    line-height: 1.2;
-  }
-  .part-desc {
-    font-family: var(--font-body);
-    font-size: 14px;
-    color: var(--text-muted);
-    margin-top: 8px;
-    max-width: 600px;
-  }
-
-  h2.sub-head {
-    font-family: var(--font-head);
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--dark);
-    margin: 36px 0 14px;
-    letter-spacing: -0.01em;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  h2.sub-head .sub-num {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    background: var(--bg-subtle);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 2px 8px;
-    color: var(--text-muted);
-  }
-  h3.sub-sub-head {
-    font-family: var(--font-head);
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--dark);
-    margin: 24px 0 10px;
-    letter-spacing: -0.005em;
-  }
-
-  p {
-    font-family: var(--font-body);
+  /* ——— CALLOUT BOXES ——— */
+  .callout {
+    border-left: 3px solid var(--orange);
+    background: #FFF8F5;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 14px 0;
     font-size: 13.5px;
-    color: var(--dark);
-    margin-bottom: 12px;
-    line-height: 1.7;
+    font-style: italic;
+    color: #3A2010;
   }
-
-  /* ===================== CARDS ===================== */
-  .card {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 22px 24px;
-    margin-bottom: 16px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  .callout-green {
+    border-left-color: var(--green);
+    background: #F0FDF9;
+    color: #0A2E24;
   }
-  .card-orange { border-left: 3px solid var(--orange); }
-  .card-green { border-left: 3px solid var(--green); }
-  .card-purple { border-left: 3px solid var(--purple); }
-  .card-dark { background: var(--dark); color: #fff; }
-
-  .card-title {
-    font-family: var(--font-head);
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    letter-spacing: -0.005em;
+  .callout-purple {
+    border-left-color: var(--purple);
+    background: #F5F3FF;
+    color: #1E1550;
   }
-  .card-body {
-    font-family: var(--font-body);
-    font-size: 13px;
+  .callout cite {
+    display: block;
+    font-style: normal;
+    font-size: 11px;
+    font-family: 'Source Code Pro', monospace;
     color: var(--text-muted);
-    line-height: 1.65;
-  }
-  .card-dark .card-body { color: rgba(255,255,255,0.7); }
-
-  /* ===================== GRID ===================== */
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-  @media (max-width: 700px), print {
-    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    margin-top: 6px;
   }
 
-  /* ===================== TABLES ===================== */
-  .data-table {
+  /* ——— TABLES ——— */
+  table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0 28px;
-    font-family: var(--font-body);
-    font-size: 12.5px;
+    font-size: 13px;
+    margin: 14px 0;
   }
-  .data-table thead tr {
-    background: var(--bg-subtle);
-    border-bottom: 2px solid var(--border);
+  thead tr { background: var(--dark); color: #fff; }
+  thead th {
+    padding: 10px 14px;
+    text-align: left;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.03em;
   }
-  .data-table th {
-    font-family: var(--font-mono);
-    font-size: 9px;
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:nth-child(even) { background: #FAFAFA; }
+  tbody td { padding: 10px 14px; vertical-align: top; line-height: 1.5; }
+  tbody td:first-child { font-weight: 500; }
+
+  /* ——— RANKED LIST (questions) ——— */
+  .ranked-list { list-style: none; padding: 0; }
+  .ranked-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .ranked-list li:last-child { border-bottom: none; }
+  .rank-num {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 12px;
+    color: #fff;
+    background: var(--dark);
+    border-radius: 5px;
+    padding: 2px 8px;
+    flex-shrink: 0;
+    min-width: 32px;
+    text-align: center;
+    margin-top: 2px;
+  }
+  .rank-1 { background: var(--orange); }
+  .rank-2 { background: #B8430A; }
+  .rank-3 { background: #7A3B1E; }
+  .rank-body { flex: 1; }
+  .rank-q { font-weight: 600; font-size: 13.5px; margin-bottom: 3px; }
+  .rank-context { font-size: 12.5px; color: var(--text-muted); }
+  .freq-bar {
+    display: inline-flex;
+    gap: 3px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .freq-bar span {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: var(--orange);
+    border-radius: 2px;
+    opacity: 0.3;
+  }
+  .freq-bar span.filled { opacity: 1; }
+
+  /* ——— PILL TAGS ——— */
+  .tag {
+    display: inline-block;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--border);
+    color: var(--dark);
+    margin: 2px;
+  }
+  .tag-orange { background: #FFF0E8; color: var(--orange); border: 1px solid #FFDCC7; }
+  .tag-green { background: #E6FAF5; color: #065F46; border: 1px solid #A7F3D0; }
+  .tag-purple { background: #F0EDFF; color: var(--purple); border: 1px solid #C4B8FD; }
+  .tag-red { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; }
+
+  /* ——— GRID LAYOUTS ——— */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+  /* ——— TRACK VISUAL ——— */
+  .track-flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 20px 0;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .track-box {
+    flex: 1;
+    padding: 16px 18px;
+    text-align: center;
+  }
+  .track-box .track-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--text-muted);
-    padding: 10px 14px;
-    text-align: left;
-    font-weight: 500;
+    margin-bottom: 6px;
   }
-  .data-table td {
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: top;
-    color: var(--dark);
-    line-height: 1.55;
+  .track-box .track-name {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
   }
-  .data-table tr:last-child td { border-bottom: none; }
-  .data-table tr:nth-child(even) td { background: #FAFAFA; }
+  .track-box .track-sub {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .track-l1 { background: #FFF8F5; border-right: 1.5px solid var(--border); }
+  .track-gate {
+    background: var(--dark);
+    color: #fff;
+    flex: 0 0 100px;
+    border-left: none;
+    border-right: 1.5px solid var(--border);
+  }
+  .track-gate .track-label { color: rgba(255,255,255,0.5); }
+  .track-gate .track-name { color: var(--orange); }
+  .track-l2 { background: #F0FDF9; }
 
-  /* ===================== BULLETS & LISTS ===================== */
-  ul.doc-list {
-    list-style: none;
-    margin: 10px 0 18px;
-    padding: 0;
-  }
-  ul.doc-list li {
-    font-family: var(--font-body);
-    font-size: 13.5px;
-    padding: 6px 0 6px 24px;
-    position: relative;
-    border-bottom: 1px solid var(--border);
-    color: var(--dark);
-    line-height: 1.6;
-  }
-  ul.doc-list li:last-child { border-bottom: none; }
-  ul.doc-list li::before {
-    content: '';
-    width: 5px; height: 5px;
-    background: var(--orange);
-    border-radius: 50%;
-    position: absolute;
-    left: 6px;
-    top: 14px;
-  }
-  ul.plain-list {
-    list-style: none;
-    padding: 0;
-    margin: 8px 0 16px 0;
-  }
-  ul.plain-list li {
-    font-family: var(--font-body);
-    font-size: 13px;
-    padding: 4px 0 4px 20px;
-    position: relative;
-    color: var(--dark);
-    line-height: 1.6;
-  }
-  ul.plain-list li::before {
-    content: '—';
-    position: absolute;
-    left: 0;
-    color: var(--text-light);
-    font-size: 11px;
-  }
-
-  /* ===================== STEPS VISUAL ===================== */
+  /* ——— 8-STEP GRID ——— */
   .steps-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 12px;
-    margin: 20px 0 28px;
-  }
-  @media print {
-    .steps-grid { grid-template-columns: repeat(4, 1fr); }
+    margin: 20px 0;
   }
   .step-card {
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px;
-    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
     position: relative;
     overflow: hidden;
   }
@@ -558,2038 +410,1063 @@
     background: var(--orange);
   }
   .step-num {
-    font-family: var(--font-mono);
+    font-family: 'Source Code Pro', monospace;
     font-size: 10px;
     color: var(--orange);
-    letter-spacing: 0.06em;
     margin-bottom: 6px;
-    font-weight: 600;
   }
   .step-name {
-    font-family: var(--font-head);
-    font-size: 13px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     font-weight: 600;
-    color: var(--dark);
-    margin-bottom: 6px;
+    font-size: 13px;
     line-height: 1.3;
   }
-  .step-desc {
-    font-family: var(--font-body);
+  .step-note {
     font-size: 11px;
     color: var(--text-muted);
-    line-height: 1.5;
+    margin-top: 5px;
   }
 
-  /* ===================== LEVEL TRACK ===================== */
-  .level-track {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    margin: 24px 0 32px;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-  .level-node {
-    background: var(--bg-subtle);
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-family: var(--font-head);
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--dark);
-    text-align: center;
-  }
-  .level-node.active-orange { background: var(--orange); color: #fff; border-color: var(--orange); }
-  .level-node.active-green { background: var(--green); color: #fff; border-color: var(--green); }
-  .level-node.active-purple { background: var(--purple); color: #fff; border-color: var(--purple); }
-  .level-node.gate {
-    background: #FFF3EE;
-    border-color: var(--orange);
-    color: var(--orange);
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 8px 12px;
-  }
-  .level-arrow {
-    font-size: 16px;
-    color: var(--text-light);
-    margin: 0 4px;
-    flex-shrink: 0;
-  }
-
-  /* ===================== PHASE DIAGRAM ===================== */
-  .phase-row {
+  /* ——— PROFILE BLOCK ——— */
+  .profile-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12px;
-    margin: 16px 0 24px;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 24px;
+    margin: 14px 0;
   }
-  .phase-card {
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  .phase-header {
-    background: var(--bg-subtle);
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border);
-  }
-  .phase-tag {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-  }
-  .phase-title {
-    font-family: var(--font-head);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--dark);
-  }
-  .phase-body {
-    padding: 14px 16px;
-  }
-  .phase-body p {
-    font-size: 12px;
-    margin-bottom: 6px;
-    color: var(--text-muted);
-  }
-  .phase-badge {
-    display: inline-block;
-    background: #EEF3FF;
-    color: var(--purple);
-    font-family: var(--font-mono);
-    font-size: 9px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-top: 6px;
-  }
-  .phase-badge.orange { background: #FFF3EE; color: var(--orange); }
-  .phase-badge.green { background: #EEFAF6; color: var(--green); }
-
-  /* ===================== QUOTE CARDS ===================== */
-  .quote-card {
-    background: var(--bg-subtle);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--orange);
-    border-radius: 0 12px 12px 0;
-    padding: 20px 24px;
-    margin: 16px 0;
-  }
-  .quote-text {
-    font-family: var(--font-body);
-    font-size: 15px;
-    font-style: italic;
-    color: var(--dark);
-    line-height: 1.65;
-    margin-bottom: 10px;
-  }
-  .quote-attr {
-    font-family: var(--font-mono);
+  .profile-item .pkey {
+    font-family: 'Source Code Pro', monospace;
     font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
     color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    margin-bottom: 2px;
   }
-  .quote-card.green { border-left-color: var(--green); }
-  .quote-card.purple { border-left-color: var(--purple); }
-
-  /* ===================== TAGS & BADGES ===================== */
-  .badge {
-    display: inline-block;
-    font-family: var(--font-mono);
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 3px 10px;
-    border-radius: 100px;
-    font-weight: 600;
-  }
-  .badge-orange { background: #FFF3EE; color: var(--orange); border: 1px solid rgba(252,92,3,0.2); }
-  .badge-green { background: #EEFAF6; color: var(--green); border: 1px solid rgba(8,195,148,0.2); }
-  .badge-purple { background: #F0EEFF; color: var(--purple); border: 1px solid rgba(101,79,252,0.2); }
-  .badge-dark { background: var(--dark); color: #fff; border: 1px solid var(--dark); }
-  .badge-red { background: #FEF0F0; color: #D94040; border: 1px solid rgba(217,64,64,0.2); }
-
-  /* ===================== INSIGHT BOXES ===================== */
-  .insight-box {
-    background: #FFF8F5;
-    border: 1px solid rgba(252,92,3,0.2);
-    border-radius: 12px;
-    padding: 18px 22px;
-    margin: 20px 0;
-  }
-  .insight-box-label {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--orange);
-    margin-bottom: 8px;
-  }
-  .insight-box p {
-    font-size: 13px;
+  .profile-item .pval {
+    font-size: 13.5px;
+    font-weight: 500;
     color: var(--dark);
-    margin-bottom: 0;
-  }
-  .insight-box.green-box {
-    background: #F0FBF8;
-    border-color: rgba(8,195,148,0.25);
-  }
-  .insight-box.green-box .insight-box-label { color: var(--green); }
-  .insight-box.purple-box {
-    background: #F5F3FF;
-    border-color: rgba(101,79,252,0.2);
-  }
-  .insight-box.purple-box .insight-box-label { color: var(--purple); }
-
-  /* ===================== STAT TILES ===================== */
-  .stat-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    margin: 20px 0 28px;
-  }
-  .stat-tile {
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px 20px;
-    text-align: center;
-  }
-  .stat-num {
-    font-family: var(--font-head);
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--dark);
-    letter-spacing: -0.02em;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-  .stat-num.orange { color: var(--orange); }
-  .stat-num.green { color: var(--green); }
-  .stat-label {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
   }
 
-  /* ===================== PRIORITY ITEMS ===================== */
-  .priority-item {
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--border);
+  /* ——— COMPETITOR CARDS ——— */
+  .comp-card {
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 16px;
   }
-  .priority-item:last-child { border-bottom: none; }
-  .priority-num {
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    background: var(--orange);
-    color: #fff;
-    font-family: var(--font-head);
-    font-size: 12px;
-    font-weight: 700;
+  .comp-header {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 14px;
+    padding: 14px 20px;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .comp-verdict {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-left: auto;
+  }
+  .verdict-study { background: #E6FAF5; color: #065F46; }
+  .verdict-avoid { background: #FEF2F2; color: #B91C1C; }
+  .comp-body { padding: 18px 20px; }
+  .comp-name {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .comp-tagline { font-size: 12px; color: var(--text-muted); }
+
+  /* ——— PILLAR CARDS ——— */
+  .pillar-list { display: flex; flex-direction: column; gap: 10px; }
+  .pillar-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+  }
+  .pillar-num {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 5px;
+    padding: 2px 7px;
     flex-shrink: 0;
     margin-top: 1px;
   }
-  .priority-num.green { background: var(--green); }
-  .priority-num.purple { background: var(--purple); }
-  .priority-num.dark { background: var(--dark); }
-  .priority-content {}
-  .priority-title {
-    font-family: var(--font-head);
-    font-size: 13.5px;
-    font-weight: 600;
-    color: var(--dark);
-    margin-bottom: 4px;
-  }
-  .priority-body {
-    font-family: var(--font-body);
-    font-size: 12.5px;
-    color: var(--text-muted);
-    line-height: 1.6;
-  }
+  .pillar-name { font-weight: 600; font-size: 13.5px; }
+  .pillar-desc { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
 
-  /* ===================== MEMBER PROFILE CARDS ===================== */
-  .profile-card {
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px 20px;
-    margin-bottom: 12px;
-  }
-  .profile-name {
-    font-family: var(--font-head);
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--dark);
-    margin-bottom: 4px;
-  }
-  .profile-tags { margin-bottom: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
-  .profile-insight {
-    font-family: var(--font-body);
-    font-size: 12.5px;
-    color: var(--text-muted);
-    border-top: 1px solid var(--border);
-    padding-top: 10px;
-    margin-top: 10px;
-  }
-  .profile-insight strong { color: var(--dark); }
-
-  /* ===================== ACQUISITION FLOW ===================== */
-  .acq-flow {
+  /* ——— SENTIMENT METER ——— */
+  .sentiment-row {
     display: flex;
     align-items: center;
-    gap: 0;
-    margin: 20px 0 28px;
-    flex-wrap: wrap;
-    gap: 6px;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
   }
-  .acq-step {
-    background: var(--bg-subtle);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 18px;
-    text-align: center;
-    min-width: 100px;
-  }
-  .acq-step.highlight {
-    background: var(--dark);
-    border-color: var(--dark);
-    color: #fff;
-  }
-  .acq-step.highlight .acq-title { color: #fff; }
-  .acq-step.highlight .acq-sub { color: rgba(255,255,255,0.6); }
-  .acq-step.orange {
-    background: var(--orange);
-    border-color: var(--orange);
-  }
-  .acq-step.orange .acq-title { color: #fff; }
-  .acq-step.orange .acq-sub { color: rgba(255,255,255,0.75); }
-  .acq-title {
-    font-family: var(--font-head);
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--dark);
-    margin-bottom: 2px;
-  }
-  .acq-sub {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    color: var(--text-muted);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  .acq-arrow {
-    font-size: 18px;
-    color: var(--text-light);
-    flex-shrink: 0;
-  }
+  .sentiment-row:last-child { border-bottom: none; }
+  .sentiment-label { font-size: 13px; font-weight: 500; flex: 0 0 180px; }
+  .sentiment-bar-wrap { flex: 1; background: #F0F0F2; border-radius: 4px; height: 8px; }
+  .sentiment-bar { height: 8px; border-radius: 4px; }
+  .s-high { background: var(--green); width: 85%; }
+  .s-med { background: var(--orange); width: 55%; }
+  .s-low { background: #EF4444; width: 25%; }
+  .sentiment-note { font-size: 11.5px; color: var(--text-muted); flex: 0 0 160px; text-align: right; }
 
-  /* ===================== FRAMEWORK PILLS ===================== */
-  .framework-list { list-style: none; padding: 0; margin: 0; }
-  .framework-item {
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 18px;
-    margin-bottom: 10px;
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-  }
-  .framework-icon {
-    width: 32px; height: 32px;
-    background: var(--bg-subtle);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    flex-shrink: 0;
-  }
-  .framework-content {}
-  .framework-title {
-    font-family: var(--font-head);
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--dark);
-    margin-bottom: 4px;
-  }
-  .framework-quote {
-    font-family: var(--font-body);
-    font-size: 12px;
-    color: var(--text-muted);
-    font-style: italic;
-    line-height: 1.55;
-  }
-
-  /* ===================== CONTENT PILLARS ===================== */
-  .pillar-card {
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px 20px;
+  /* ——— MISC ——— */
+  ul.checklist { list-style: none; padding: 0; }
+  ul.checklist li {
+    padding: 5px 0 5px 22px;
     position: relative;
-    overflow: hidden;
+    font-size: 13.5px;
   }
-  .pillar-num {
-    font-family: var(--font-mono);
-    font-size: 32px;
-    font-weight: 600;
-    color: var(--border);
-    position: absolute;
-    top: 10px;
-    right: 16px;
-    line-height: 1;
-  }
-  .pillar-title {
-    font-family: var(--font-head);
-    font-size: 13px;
+  ul.checklist li::before {
+    content: "✓";
+    position: absolute; left: 0;
+    color: var(--green);
     font-weight: 700;
-    color: var(--dark);
-    margin-bottom: 8px;
-    padding-right: 40px;
   }
-  .pillar-body {
-    font-family: var(--font-body);
-    font-size: 12px;
-    color: var(--text-muted);
-    line-height: 1.6;
+  ul.redlist { list-style: none; padding: 0; }
+  ul.redlist li {
+    padding: 5px 0 5px 22px;
+    position: relative;
+    font-size: 13.5px;
   }
-
-  /* ===================== FREQ INDICATOR ===================== */
-  .freq-high { color: var(--orange); font-weight: 600; }
-  .freq-med { color: #E0900A; }
-  .freq-low { color: var(--text-muted); }
-
-  /* ===================== PAGE BREAK CONTROL ===================== */
-  @media print {
-    .doc-section { page-break-before: always; padding-top: 20px; }
-    .no-break { page-break-inside: avoid; }
-    .break-before { page-break-before: always; }
-    h2.sub-head { page-break-after: avoid; }
-    h3.sub-sub-head { page-break-after: avoid; }
-    .card, .phase-card, .profile-card, .quote-card, .step-card { page-break-inside: avoid; }
-    table { page-break-inside: avoid; }
-    .steps-grid { page-break-inside: avoid; }
-    .phase-row { page-break-inside: avoid; }
+  ul.redlist li::before {
+    content: "✗";
+    position: absolute; left: 0;
+    color: #EF4444;
+    font-weight: 700;
   }
-
-  /* ===================== MISC ===================== */
-  a { color: var(--purple); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  strong { font-weight: 600; color: var(--dark); }
-  em { font-style: italic; }
-  .text-orange { color: var(--orange); }
-  .text-green { color: var(--green); }
-  .text-purple { color: var(--purple); }
-  .text-muted { color: var(--text-muted); }
-  .mt-0 { margin-top: 0; }
-  .mb-0 { margin-bottom: 0; }
-  .mb-4 { margin-bottom: 4px; }
-  .mb-8 { margin-bottom: 8px; }
-  .mb-16 { margin-bottom: 16px; }
-  .mb-24 { margin-bottom: 24px; }
-  .mb-32 { margin-bottom: 32px; }
-
-  hr.divider {
+  .page-divider {
     border: none;
-    border-top: 1px solid var(--border);
-    margin: 28px 0;
+    border-top: 1px dashed var(--border);
+    margin: 48px 0;
   }
-
-  .rule-box {
-    background: var(--bg-subtle);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+  .vsl-box {
+    background: var(--dark);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    color: #fff;
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin: 12px 0;
+    gap: 16px;
+    margin-top: 16px;
   }
-  .rule-box-icon { font-size: 14px; }
+  .vsl-box .vsl-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+  .vsl-box a { color: var(--orange); word-break: break-all; font-size: 13px; }
+  .vsl-label { font-size: 11px; color: rgba(255,255,255,0.5); font-family: 'Source Code Pro', monospace; margin-bottom: 4px; }
+  .vsl-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+
+  /* ——— PAGE NUMBERS (print) ——— */
+  @page {
+    margin: 18mm 16mm;
+    @bottom-right {
+      content: counter(page) " / " counter(pages);
+      font-family: 'Source Code Pro', monospace;
+      font-size: 9pt;
+      color: #999;
+    }
+  }
+
+  /* ——— PRINT STYLES ——— */
+  @media print {
+    body { background: #fff; font-size: 11pt; }
+    .print-bar { display: none !important; }
+    .document { max-width: 100%; padding: 0; box-shadow: none; }
+    .section { page-break-inside: avoid; }
+    .section-header { page-break-after: avoid; }
+    h2, h3, h4 { page-break-after: avoid; }
+    .page-break { page-break-before: always; }
+    .card { page-break-inside: avoid; border: 1pt solid #ddd; }
+    .comp-card { page-break-inside: avoid; }
+    a { color: var(--purple) !important; }
+    .toc a::after { content: none; }
+    .steps-grid { grid-template-columns: repeat(4, 1fr); }
+    table { page-break-inside: avoid; }
+    .two-col { grid-template-columns: 1fr 1fr; }
+    .confidential-banner { border-radius: 0; }
+  }
 </style>
 </head>
 <body>
 
-<!-- PRINT BAR -->
+<!-- STICKY PRINT BAR -->
 <div class="print-bar">
-  <span class="print-bar-label">Collective Shift — CGO Briefing // March 27, 2026</span>
-  <button class="print-btn" onclick="window.print()">⬇ Print / Save as PDF</button>
+  <button class="print-btn" onclick="window.print()">
+    🖨️ Print / Save as PDF
+  </button>
 </div>
 
-<div class="page-wrap" style="padding-top:56px;">
+<div class="document">
 
-<!-- ============================================================
-     COVER PAGE
-     ============================================================ -->
-<div class="cover-page">
-  <div class="confid-banner">
-    <div class="confid-dot"></div>
-    <span class="confid-text">Confidential — Internal Use Only · Not for Distribution</span>
-  </div>
+  <!-- CONFIDENTIAL HEADER -->
+  <div class="confidential-banner label">⚠ CONFIDENTIAL — INTERNAL USE ONLY — DO NOT DISTRIBUTE</div>
 
-  <div class="cover-logo-area">
-    <div class="cover-logo-mark">
-      <!-- CS logo mark -->
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 3L20 7.5V16.5L12 21L4 16.5V7.5L12 3Z" stroke="#FC5C03" stroke-width="1.5" stroke-linejoin="round"/>
-        <path d="M12 8V16M8.5 10L12 8L15.5 10M8.5 14L12 16L15.5 14" stroke="#FC5C03" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-    <div>
-      <div class="cover-logo-name">Collective Shift</div>
-      <div class="cover-logo-sub">Digital Asset Education</div>
+  <!-- DOCUMENT HEADER -->
+  <div class="doc-header">
+    <div class="doc-subtitle label">Collective Shift Internal Briefing</div>
+    <div class="doc-title">Product &amp; Market Intelligence Briefing</div>
+    <div class="orange-rule"></div>
+    <div class="doc-header-meta">
+      <div><span class="label" style="color:var(--text-muted)">Date</span><br><strong>March 27, 2026</strong></div>
+      <div><span class="label" style="color:var(--text-muted)">Document Type</span><br><strong>Intelligence Briefing</strong></div>
+      <div><span class="label" style="color:var(--text-muted)">From</span><br><strong>Ben Simpson — CEO &amp; CMO</strong></div>
+      <div><span class="label" style="color:var(--text-muted)">To</span><br><strong>Travis — CGO</strong></div>
     </div>
   </div>
 
-  <div class="cover-main">
-    <div class="cover-eyebrow">CGO Intelligence Briefing · Confidential</div>
-    <h1 class="cover-title">Product, Strategy &amp;<br>Market Intelligence<br>Briefing</h1>
-    <p class="cover-subtitle">Shift OS V9 · 2-Track Education System · Member Intelligence · Competitive Analysis · Growth Strategy</p>
-    <div class="cover-divider"></div>
-
-    <div class="cover-meta-grid">
-      <div class="cover-meta-cell">
-        <div class="cover-meta-label">Date</div>
-        <div class="cover-meta-value">March 27, 2026</div>
-      </div>
-      <div class="cover-meta-cell">
-        <div class="cover-meta-label">From</div>
-        <div class="cover-meta-value">Ben Simpson</div>
-        <div class="cover-meta-sub">CEO &amp; CMO</div>
-      </div>
-      <div class="cover-meta-cell">
-        <div class="cover-meta-label">To</div>
-        <div class="cover-meta-value">Travis</div>
-        <div class="cover-meta-sub">Chief Growth Officer</div>
-      </div>
-    </div>
+  <!-- TABLE OF CONTENTS -->
+  <div class="toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#section-1">The 2-Track System &amp; 8-Step Strategy Process</a></li>
+      <li><a href="#section-2">Education Call Analysis — 30+ Member Calls</a></li>
+      <li><a href="#section-3">Dee 1-on-1 Call Intelligence</a></li>
+      <li><a href="#section-4">Competitive Landscape</a></li>
+      <li><a href="#section-5">YouTube &amp; Social Strategy</a></li>
+    </ol>
   </div>
 
-  <div class="cover-footer">
-    <div class="cover-footer-left">Collective Shift Pty Ltd · Internal Only</div>
-    <div class="cover-footer-right">9 Sections + Appendix · March 2026</div>
-  </div>
-</div>
-
-<!-- ============================================================
-     TABLE OF CONTENTS
-     ============================================================ -->
-<div class="toc-page" id="toc">
-  <div class="section-label">Navigation</div>
-  <h2 class="toc-title">Table of Contents</h2>
-
-  <div class="toc-group-label">Overview</div>
-  <ul class="toc-list">
-    <li>
-      <a href="#part1" class="toc-item">
-        <span class="toc-num">Part 1</span>
-        <span class="toc-name toc-part">Executive Summary</span>
-      </a>
-    </li>
-  </ul>
-
-  <div class="toc-group-label">Education System</div>
-  <ul class="toc-list">
-    <li>
-      <a href="#part2" class="toc-item">
-        <span class="toc-num">Part 2</span>
-        <span class="toc-name toc-part">The New Education System — Shift OS V9</span>
-      </a>
-    </li>
-    <li>
-      <a href="#sec2-1" class="toc-item">
-        <span class="toc-num">2.1</span>
-        <span class="toc-name toc-sub">Why We're Restructuring</span>
-      </a>
-    </li>
-    <li>
-      <a href="#sec2-2" class="toc-item">
-        <span class="toc-num">2.2</span>
-        <span class="toc-name toc-sub">The 8-Step Shift OS</span>
-      </a>
-    </li>
-    <li>
-      <a href="#sec2-3" class="toc-item">
-        <span class="toc-num">2.3</span>
-        <span class="toc-name toc-sub">The 2-Track System (Level 1 → Level 2)</span>
-      </a>
-    </li>
-    <li>
-      <a href="#sec2-4" class="toc-item">
-        <span class="toc-num">2.4</span>
-        <span class="toc-name toc-sub">The 8-Step Strategy Process (Phase 3)</span>
-      </a>
-    </li>
-    <li>
-      <a href="#sec2-5" class="toc-item">
-        <span class="toc-num">2.5</span>
-        <span class="toc-name toc-sub">Product Changes &amp; Tier Updates</span>
-      </a>
-    </li>
-  </ul>
-
-  <div class="toc-group-label">Intelligence</div>
-  <ul class="toc-list">
-    <li>
-      <a href="#part3" class="toc-item">
-        <span class="toc-num">Part 3</span>
-        <span class="toc-name toc-part">Member Intelligence — Education Call Analysis</span>
-      </a>
-    </li>
-    <li>
-      <a href="#part4" class="toc-item">
-        <span class="toc-num">Part 4</span>
-        <span class="toc-name toc-part">Dee 1-on-1 Call Intelligence</span>
-      </a>
-    </li>
-    <li>
-      <a href="#part5" class="toc-item">
-        <span class="toc-num">Part 5</span>
-        <span class="toc-name toc-part">Competitive Intelligence</span>
-      </a>
-    </li>
-  </ul>
-
-  <div class="toc-group-label">Growth Strategy</div>
-  <ul class="toc-list">
-    <li>
-      <a href="#part6" class="toc-item">
-        <span class="toc-num">Part 6</span>
-        <span class="toc-name toc-part">YouTube Strategy Overview</span>
-      </a>
-    </li>
-    <li>
-      <a href="#part7" class="toc-item">
-        <span class="toc-num">Part 7</span>
-        <span class="toc-name toc-part">Key Member Profiles</span>
-      </a>
-    </li>
-    <li>
-      <a href="#part8" class="toc-item">
-        <span class="toc-num">Part 8</span>
-        <span class="toc-name toc-part">Recommendations &amp; Action Items</span>
-      </a>
-    </li>
-  </ul>
-
-  <div class="toc-group-label">Reference</div>
-  <ul class="toc-list">
-    <li>
-      <a href="#part9" class="toc-item">
-        <span class="toc-num">Part 9</span>
-        <span class="toc-name toc-part">Key Quotes</span>
-      </a>
-    </li>
-    <li>
-      <a href="#appendix" class="toc-item">
-        <span class="toc-num">App.</span>
-        <span class="toc-name toc-part">Simon's 10 Teaching Frameworks</span>
-      </a>
-    </li>
-  </ul>
-</div>
-
-<!-- ============================================================
-     PART 1: EXECUTIVE SUMMARY
-     ============================================================ -->
-<div class="doc-section" id="part1">
-  <div class="part-header">
-    <div class="part-eyebrow">Part 1 · Executive Summary</div>
-    <h1 class="part-title">The Big Picture</h1>
-    <p class="part-desc">What this document covers, decisions made today, and the three most urgent actions.</p>
-  </div>
-
-  <div class="stat-grid">
-    <div class="stat-tile">
-      <div class="stat-num orange">12</div>
-      <div class="stat-label">Education Calls Analysed</div>
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- SECTION 1: THE 2-TRACK SYSTEM -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="section" id="section-1">
+    <div class="section-header">
+      <span class="section-number">01</span>
+      <h2 class="section-title">The 2-Track System &amp; 8-Step Strategy Process</h2>
     </div>
-    <div class="stat-tile">
-      <div class="stat-num green">30+</div>
-      <div class="stat-label">Member Sessions</div>
-    </div>
-    <div class="stat-tile">
-      <div class="stat-num">200K+</div>
-      <div class="stat-label">Words Transcribed</div>
-    </div>
-  </div>
 
-  <h2 class="sub-head"><span class="sub-num">1.1</span> What This Document Covers</h2>
-  <ul class="doc-list">
-    <li><strong>Shift OS V9</strong> — The fully rebuilt 8-step education system. Every module, both levels, all phases. This is the curriculum Travis needs to understand to lead growth against it.</li>
-    <li><strong>2-Track Education System</strong> — The Level 1 → Level 2 progression model with gating requirements, phase structure, and delivery format for weekly coaching.</li>
-    <li><strong>Member Intelligence</strong> — Synthesised insights from 30+ 1-on-1 education calls. Top 10 questions, critical knowledge gaps, what members love, what they're missing, and churn risks.</li>
-    <li><strong>Dee 1-on-1 Call</strong> — Today's call with a Canadian HNW Platinum member. Validated acquisition path (YouTube → Platinum), product feedback, and competitive intel on Invest Diva and Decentralized Masters.</li>
-    <li><strong>Competitive Intelligence</strong> — Deep profile of Invest Diva (model for us to study) and Decentralized Masters (dangerous comparison to avoid).</li>
-    <li><strong>YouTube Strategy</strong> — The validated "Bloomberg for Digital Assets" positioning. Five content pillars, messaging framework, and 90/10 content system targeting 40–59 HNW professionals.</li>
-  </ul>
-
-  <h2 class="sub-head"><span class="sub-num">1.2</span> Key Decisions Made Today</h2>
-  <div class="grid-2">
-    <div class="card card-orange">
-      <div class="card-title">✅ Pro/Accelerator = 90-Day Access</div>
-      <div class="card-body">New rule: Accelerator members are cut off after 90 days. Creates structured urgency to upgrade to Platinum. Natural funnel pressure built into the product itself.</div>
-    </div>
-    <div class="card card-green">
-      <div class="card-title">✅ Circle Replaces WhatsApp</div>
-      <div class="card-body">Community moving from WhatsApp to Circle. Launching in 1–2 weeks. Beginner's Lounge is a dedicated safe space on Circle — addresses the community intimidation gap identified in calls.</div>
-    </div>
-    <div class="card card-purple">
-      <div class="card-title">✅ Shift OS V9 Locked</div>
-      <div class="card-body">8-step system confirmed. 2-track Level 1/Level 2 structure confirmed. Phase 3 (B3/A3) is pre-recorded + coaching integration. CEX-only for Level 1.</div>
-    </div>
+    <!-- How we got here -->
     <div class="card">
-      <div class="card-title">✅ Weekly Level 1 Coaching Calls Launching</div>
-      <div class="card-body">Dedicated Level 1 coaching calls launching alongside Circle. Separate from the main forum. Dee validated the small group format — less intimidating, more progress.</div>
+      <div class="card-title"><span class="dot"></span> How We Got Here</div>
+      <p>The 2-track system wasn't designed in a boardroom — it was reverse-engineered from member reality. Over the past three months we have:</p>
+      <br>
+      <div class="three-col">
+        <div style="text-align:center; padding: 14px; background: #FFF8F5; border-radius: 8px; border: 1px solid #FFDCC7;">
+          <div style="font-size: 28px; font-weight: 700; color: var(--orange); font-family: 'Plus Jakarta Sans', sans-serif;">30+</div>
+          <div style="font-size: 12px; color: var(--text-muted);">member education calls analysed</div>
+        </div>
+        <div style="text-align:center; padding: 14px; background: #F5F3FF; border-radius: 8px; border: 1px solid #C4B8FD;">
+          <div style="font-size: 28px; font-weight: 700; color: var(--purple); font-family: 'Plus Jakarta Sans', sans-serif;">343K+</div>
+          <div style="font-size: 12px; color: var(--text-muted);">words of transcript reviewed</div>
+        </div>
+        <div style="text-align:center; padding: 14px; background: #F0FDF9; border-radius: 8px; border: 1px solid #A7F3D0;">
+          <div style="font-size: 28px; font-weight: 700; color: var(--green); font-family: 'Plus Jakarta Sans', sans-serif;">4</div>
+          <div style="font-size: 12px; color: var(--text-muted);">education call files (edu_0–edu_3)</div>
+        </div>
+      </div>
+      <br>
+      <p>The recurring pattern: beginners and advanced members have fundamentally different needs, questions, and emotional states. Running them through the same content at the same pace was the core product failure the 2-track system solves.</p>
     </div>
-  </div>
 
-  <h2 class="sub-head"><span class="sub-num">1.3</span> Top 3 Urgent Actions</h2>
-  <div class="card card-orange" style="margin-bottom:10px;">
-    <div style="display:flex;gap:14px;align-items:flex-start;">
-      <div style="background:var(--orange);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-weight:700;font-size:12px;flex-shrink:0;">1</div>
-      <div>
-        <div class="card-title">🎬 Build the How-To Video Library</div>
-        <div class="card-body">Short 5–10 min recordings needed immediately: 2FA setup, Coinbase recurring buys, limit orders, USDC yield, security basics, hardware wallet setup. Dee asked for these today. Multiple other members have the same need. This is the #1 unmet product gap for Level 1 members.</div>
+    <!-- The 2-Track Visual -->
+    <div style="margin-bottom: 6px; margin-top: 20px;">
+      <span class="label" style="color: var(--text-muted);">Member Journey Overview</span>
+    </div>
+    <div class="track-flow">
+      <div class="track-box track-l1">
+        <div class="track-label">Level 1 · 90 Days</div>
+        <div class="track-name" style="color: var(--orange);">Beginner Track</div>
+        <div class="track-sub">CEX only · No yield · No DeFi<br>B1 → B2 → B3 (sequential)</div>
+      </div>
+      <div class="track-box track-gate">
+        <div class="track-label">Gating Requirement</div>
+        <div class="track-name">GATE</div>
+        <div class="track-sub" style="color: rgba(255,255,255,0.5); font-size: 11px;">All 8 modules + workbook<br>+ 1:1 analyst session</div>
+      </div>
+      <div class="track-box track-l2">
+        <div class="track-label">Level 2 · Advanced</div>
+        <div class="track-name" style="color: var(--green);">Advanced Track</div>
+        <div class="track-sub">Yield · Staking · DeFi · Borrowing<br>A1 → A2 + A3 (concurrent)</div>
       </div>
     </div>
-  </div>
-  <div class="card card-green" style="margin-bottom:10px;">
-    <div style="display:flex;gap:14px;align-items:flex-start;">
-      <div style="background:var(--green);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-weight:700;font-size:12px;flex-shrink:0;">2</div>
-      <div>
-        <div class="card-title">🔔 Fix the Calendar Timezone Bug</div>
-        <div class="card-body">Weekly Forum showing at 10pm instead of 5pm ET for Canadian/US members. Dee flagged this. Others have reported the same issue. Members are missing live calls because of a display bug. Urgent fix before Circle launch.</div>
+
+    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 24px; text-align: center;">
+      Go Pro → Accelerator → <strong>Level 1</strong> → [Gate] → <strong>Level 2</strong> → [Gate] → <strong>Level 3: Elevate</strong>
+    </p>
+
+    <!-- The 8-Step Strategy Process -->
+    <div style="margin-bottom: 12px;">
+      <span class="label" style="color: var(--text-muted);">Phase 3 · B3 &amp; A3 — The Core Deliverable</span>
+      <h3 style="font-size: 16px; margin-top: 4px;">The 8-Step Strategy Process</h3>
+      <p style="margin-top: 6px; font-size: 13.5px; color: var(--text-muted);">Pre-recorded course, self-paced, integrated into weekly coaching calls. Members complete one step per call and build their full written strategy. Culminates in a 1:1 analyst session. This is the product's core intellectual value proposition.</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">STEP 01</div>
+        <div class="step-name">Define Your Goals</div>
+        <div class="step-note">Wealth generation, protection, or income?</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">STEP 02</div>
+        <div class="step-name">Assess Your Risk Profile</div>
+        <div class="step-note">Both directions — upside AND downside</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">STEP 03</div>
+        <div class="step-name">Build Your Investment Thesis</div>
+        <div class="step-note">Your conviction — not ours to follow blindly</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">STEP 04</div>
+        <div class="step-name">Your Portfolio Allocation</div>
+        <div class="step-note">BTC core / digital asset satellites / cash reserve</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">STEP 05</div>
+        <div class="step-name">Create Your Buy Strategy</div>
+        <div class="step-note">DCA mechanics, automation, entry framework</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">STEP 06</div>
+        <div class="step-name">Plan Your Tax Approach</div>
+        <div class="step-note">CGT events, record-keeping, entity structure</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">STEP 07</div>
+        <div class="step-name">Secure Your Assets</div>
+        <div class="step-note">Self-custody pathway, hardware wallet, estate</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">STEP 08</div>
+        <div class="step-name">Write Your Sell Strategy</div>
+        <div class="step-note">Pre-committed, written — not a vague intention</div>
       </div>
     </div>
-  </div>
-  <div class="card card-purple" style="margin-bottom:0;">
-    <div style="display:flex;gap:14px;align-items:flex-start;">
-      <div style="background:var(--purple);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-weight:700;font-size:12px;flex-shrink:0;">3</div>
-      <div>
-        <div class="card-title">🇨🇦 Explore Toronto Event</div>
-        <div class="card-body">Dee volunteered to help organise a Toronto event. Toronto is Canada's financial centre — ideal for HNW beginners. She is an advocate member willing to promote. If we're targeting the HNW Canadian market (Dee's profile is the perfect ICP), this is a high-leverage move.</div>
-      </div>
+
+    <div class="callout-purple callout">
+      <strong>"A strategy in your head is not a strategy. It's a vague intention."</strong>
+      <cite>— Shift OS Core Philosophy</cite>
+    </div>
+
+    <!-- Why we designed it this way -->
+    <div class="card" style="margin-top: 20px;">
+      <div class="card-title"><span class="dot dot-purple"></span> Why We Designed It This Way — Evidence from Member Calls</div>
+      <table>
+        <thead>
+          <tr><th>Member Pattern</th><th>The Problem It Revealed</th><th>How the System Addresses It</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Nigel — joined Dec 2025, $200K to deploy</td>
+            <td>Complete novice overwhelmed by content pitched at intermediate members</td>
+            <td>L1 sequential track — foundations before anything advanced</td>
+          </tr>
+          <tr>
+            <td>Greg — $180K → $80K, "headless chooks"</td>
+            <td>No sell strategy. Held through catastrophic loss with no framework.</td>
+            <td>Step 8 (Sell Strategy) is mandatory before gate to L2</td>
+          </tr>
+          <tr>
+            <td>John/Johannes — sold at $80K BTC break</td>
+            <td>"Patience" wasn't sufficient. No clear trigger for when to act.</td>
+            <td>Written buy/sell strategy with objective triggers in workbook</td>
+          </tr>
+          <tr>
+            <td>Harry — 50% net worth in digital assets</td>
+            <td>Portfolio structuring without a defined goal or allocation thesis</td>
+            <td>Steps 1–4 force goal/thesis BEFORE allocation decisions</td>
+          </tr>
+          <tr>
+            <td>Ryan — $300K, wants 50/50 BTC/altcoin</td>
+            <td>Allocation decision made on feel, not matched to risk profile</td>
+            <td>Step 2 (Risk Profile) gates Step 4 (Allocation)</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
-</div>
 
-<!-- ============================================================
-     PART 2: EDUCATION SYSTEM
-     ============================================================ -->
-<div class="doc-section" id="part2">
-  <div class="part-header">
-    <div class="part-eyebrow">Part 2 · Education System</div>
-    <h1 class="part-title">The New Education System — Shift OS V9</h1>
-    <p class="part-desc">The complete rebuilt curriculum. Eight modules, two tracks, three investor types, and a systematic progression from beginner to advanced.</p>
-  </div>
+  <hr class="page-divider">
 
-  <!-- 2.1 Why We're Restructuring -->
-  <h2 class="sub-head" id="sec2-1"><span class="sub-num">2.1</span> Why We're Restructuring</h2>
-  <p>This is not a tweak. Shift OS V9 is a ground-up rebuild driven by data from 30+ member education calls across January–March 2026. The findings were unambiguous:</p>
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- SECTION 2: EDUCATION CALL ANALYSIS -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="section page-break" id="section-2">
+    <div class="section-header">
+      <span class="section-number">02</span>
+      <h2 class="section-title">Education Call Analysis</h2>
+    </div>
 
-  <div class="grid-2">
-    <div class="card card-orange">
-      <div class="card-title">📊 The Research Basis</div>
-      <div class="card-body">
-        <ul class="plain-list">
-          <li>12 education calls analysed (4 source files)</li>
-          <li>200K+ words of member transcripts</li>
-          <li>30+ individual member sessions</li>
-          <li>1-on-1 member interviews (Dee call today)</li>
-          <li>Analysts: Simon Amery, Tim Barnes, Sarn Elliott</li>
+    <p style="margin-bottom: 20px;">Source: 4 education call log files (edu_0–edu_3), Jan–Mar 2026. Period context: Bitcoin corrected $120K+ → ~$75–80K, altcoin bloodbath. This downturn dominates every single call.</p>
+
+    <!-- TOP 10 MEMBER QUESTIONS -->
+    <h3 style="font-size: 15px; margin-bottom: 14px;">Top 10 Member Questions — Ranked by Frequency</h3>
+    <div class="card" style="padding: 8px 16px;">
+      <ul class="ranked-list">
+        <li>
+          <span class="rank-num rank-1">#1</span>
+          <div class="rank-body">
+            <div class="rank-q">"Should I buy now or wait?" / Market timing
+              <span class="freq-bar">
+                <span class="filled"></span><span class="filled"></span><span class="filled"></span><span class="filled"></span><span class="filled"></span>
+              </span>
+            </div>
+            <div class="rank-context">Asked in <em>virtually every single call</em>. "Do I start buying a thousand dollars of Bitcoin each week, or do I wait another month?" — Nigel</div>
+          </div>
+        </li>
+        <li>
+          <span class="rank-num rank-2">#2</span>
+          <div class="rank-body">
+            <div class="rank-q">"What should I do with my altcoins?" — sell vs hold in a downturn
+              <span class="freq-bar">
+                <span class="filled"></span><span class="filled"></span><span class="filled"></span><span class="filled"></span><span class="filled"></span>
+              </span>
+            </div>
+            <div class="rank-context">80%+ of calls. "Do I basically sell out a portion of XRP, take a $2,000 hit on Solana, and come out net?" — Sunit</div>
+          </div>
+        </li>
+        <li>
+          <span class="rank-num rank-3">#3</span>
+          <div class="rank-body">
+            <div class="rank-q">"How much should I allocate to Bitcoin vs altcoins?"
+              <span class="freq-bar">
+                <span class="filled"></span><span class="filled"></span><span class="filled"></span><span class="filled"></span><span></span>
+              </span>
+            </div>
+            <div class="rank-context">Nearly every portfolio call. "My mentality is 50% higher risk and 50% Bitcoin" — Ryan (Simon recalibrates)</div>
+          </div>
+        </li>
+        <li>
+          <span class="rank-num">#4</span>
+          <div class="rank-body">
+            <div class="rank-q">"How do I learn self-custody / cold wallets?"
+              <span class="freq-bar">
+                <span class="filled"></span><span class="filled"></span><span class="filled"></span><span class="filled"></span><span></span>
+              </span>
+            </div>
+            <div class="rank-context">~50% of calls, especially new members. Harry: "SwiftX is blocking withdrawals of my BTC to my cold wallet"</div>
+          </div>
+        </li>
+        <li>
+          <span class="rank-num">#5</span>
+          <div class="rank-body">
+            <div class="rank-q">"What about stablecoin yields / DeFi / passive income?"
+              <span class="freq-bar">
+                <span class="filled"></span><span class="filled"></span><span class="filled"></span><span></span><span></span>
+              </span>
+            </div>
+            <div class="rank-context">~40% of calls. Nigel: "I didn't even know the terminology... the USDC where they put money in and get a return"</div>
+          </div>
+        </li>
+        <li>
+          <span class="rank-num">#6</span>
+          <div class="rank-body">
+            <div class="rank-q">"Is XRP a good investment?"
+              <span class="freq-bar">
+                <span class="filled"></span><span class="filled"></span><span class="filled"></span><span></span><span></span>
+              </span>
+            </div>
+            <div class="rank-context">~60% of calls. Almost every member holds XRP and is questioning it. The #1 gateway question.</div>
+          </div>
+        </li>
+        <li>
+          <span class="rank-num">#7</span>
+          <div class="rank-body">
+            <div class="rank-q">"What about Hyperliquid / HYPE?"
+              <span class="freq-bar">
+                <span class="filled"></span><span class="filled"></span><span></span><span></span><span></span>
+              </span>
+            </div>
+            <div class="rank-context">Growing topic. Simon consistently flags HYPE as standout — real product-market fit, real revenue, bucking the trend.</div>
+          </div>
+        </li>
+        <li>
+          <span class="rank-num">#8</span>
+          <div class="rank-body">
+            <div class="rank-q">"How do I deal with banks blocking transfers?"
+              <span class="freq-bar">
+                <span class="filled"></span><span class="filled"></span><span></span><span></span><span></span>
+              </span>
+            </div>
+            <div class="rank-context">~30% of calls. Simon: "I've had my accounts frozen by Commonwealth Bank." Universal outside Dubai.</div>
+          </div>
+        </li>
+        <li>
+          <span class="rank-num">#9</span>
+          <div class="rank-body">
+            <div class="rank-q">"Should I sell Bitcoin? Does CS ever sell Bitcoin?"
+              <span class="freq-bar">
+                <span class="filled"></span><span class="filled"></span><span></span><span></span><span></span>
+              </span>
+            </div>
+            <div class="rank-context">Harry: "Do you actually ever sell your Bitcoin?" Answer: "Our general strategy is not selling Bitcoin. We very rarely sell Bitcoin."</div>
+          </div>
+        </li>
+        <li>
+          <span class="rank-num">#10</span>
+          <div class="rank-body">
+            <div class="rank-q">"Can I earn yield on Bitcoin?"
+              <span class="freq-bar">
+                <span class="filled"></span><span></span><span></span><span></span><span></span>
+              </span>
+            </div>
+            <div class="rank-context">Harry: "I wanna explore some earning potential through owning it." Simon: "You cannot earn a yield on Bitcoin. It's not a yielding product."</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- CRITICAL KNOWLEDGE GAPS -->
+    <h3 style="font-size: 15px; margin: 28px 0 14px;">Critical Knowledge Gaps</h3>
+    <table>
+      <thead>
+        <tr><th>Knowledge Gap</th><th>Member Evidence</th><th>Product Implication</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-red">HIGH</span><br>Altcoins ≠ Stocks</td>
+          <td>80%+ of members treat altcoins like equities. No understanding of equity ownership absence, vetting process, or mortality rates.</td>
+          <td>Step 3 (Altcoins) — the "Tech Startups, Not Stocks" reframe is the highest-leverage teaching moment in the product</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-red">HIGH</span><br>Self-custody fundamentals</td>
+          <td>Nigel, Harry, Dina: terrified of seed phrases, don't understand hot vs cold wallets, 100% exchange-exposed. Harry: exchange blocking BTC withdrawals.</td>
+          <td>Step 7 (Secure Your Assets) — the self-custody pathway from L1 is the #1 unmet educational need</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-red">HIGH</span><br>DeFi &amp; yield basics</td>
+          <td>Members hear "6% on USDC" but have zero understanding of mechanics, counterparty risk, or how to access</td>
+          <td>L2 content only — gate must hold. This misunderstanding is dangerous if members try before they're ready</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-orange">MED</span><br>DCA execution gap</td>
+          <td>Members understand DCA intellectually but don't execute. Emotional barriers prevent action despite understanding the logic.</td>
+          <td>Step 5 (Buy Strategy) — automation setup is the fix. Remove the decision entirely.</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-orange">MED</span><br>Bank friction / on-ramping</td>
+          <td>Every new member hits this wall. Banks freeze accounts, block transfers. Members don't know how to handle it.</td>
+          <td>Pre-recorded how-to is sufficient. This is table stakes onboarding content.</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-orange">MED</span><br>When to act vs "be patient"</td>
+          <td>John/Johannes explicitly said the "patience" advice from Circle "wasn't sufficient." Members hear "wait" but don't know what the trigger to act looks like.</td>
+          <td>Step 8 (Sell Strategy) + written buy triggers in the workbook. Patience needs objective conditions attached.</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-green">LOW</span><br>Market cycles</td>
+          <td>New members have zero reference for bear/bull transitions. Stacey, Nigel, Greg needed historical context to avoid panic.</td>
+          <td>Step 1 (Foundations) covers this — low urgency for product, high urgency for content</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- WHAT MEMBERS LOVE / WHAT'S MISSING -->
+    <div class="two-col" style="margin-top: 28px;">
+      <div class="card">
+        <div class="card-title"><span class="dot dot-green"></span> What Members Love ✅</div>
+        <ul class="checklist">
+          <li><strong>Weekly forums/roundtable</strong> — Simon + Matt dynamic praised repeatedly. "I like your bullshit approach."</li>
+          <li><strong>1-on-1 calls</strong> — Perceived as massive value. Members feel heard and get personalised frameworks.</li>
+          <li><strong>Analyst honesty</strong> — Direct about losses, risks, and uncertainties. Explicitly cited as differentiator.</li>
+          <li><strong>Dashboard</strong> — Members use and update it before calls. Functional and referenced.</li>
+          <li><strong>Educational philosophy</strong> — Long-term, patient, Bitcoin-first. Resonates strongly with target demographic.</li>
+          <li><strong>Simon's 2026 Outlook post</strong> — Referenced in multiple calls. Members want a written, reasoned thesis with price targets.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot"></span> What's Missing / Could Improve 🔧</div>
+        <ul class="redlist">
+          <li><strong>Beginner onboarding gap</strong> — Nigel: "I'm a dead set novice." The gap between joining and competence is large and unstructured.</li>
+          <li><strong>Self-custody pathway</strong> — Interest but overwhelmed. No clear step-by-step guided path exists today.</li>
+          <li><strong>Community intimidation</strong> — Nigel: "I feel like an idiot just being new and posting." New members afraid to ask questions in Circle.</li>
+          <li><strong>Platform content discovery</strong> — Simon: "A lot of members don't jump onto the platform." Content exists but isn't being found.</li>
+          <li><strong>Re-entry framework</strong> — John asked directly. No structured framework — it's ad hoc advice per call today.</li>
+          <li><strong>Pre-recorded how-tos</strong> — Dee confirmed: members want self-paced video modules for practical setup steps.</li>
         </ul>
       </div>
     </div>
+
+    <!-- MEMBER SENTIMENT -->
+    <h3 style="font-size: 15px; margin: 28px 0 14px;">Member Sentiment</h3>
     <div class="card">
-      <div class="card-title">👥 Member Context (Jan–Mar 2026)</div>
-      <div class="card-body">All calls occurred during a significant Bitcoin correction ($120K+ → ~$75–80K) and altcoin bloodbath. Member psychology was under maximum stress — exactly when real education gaps become visible.</div>
-    </div>
-  </div>
-
-  <h3 class="sub-sub-head">Key Findings That Drove the Restructure</h3>
-  <div class="grid-2">
-    <div class="card card-orange no-break">
-      <div class="card-title">😰 Members overwhelmed by content volume</div>
-      <div class="card-body">Members aren't regularly checking the platform. Simon: <em>"I know a lot of members don't jump onto the platform all the time."</em> Content is being created but discovery and engagement are low.</div>
-    </div>
-    <div class="card card-orange no-break">
-      <div class="card-title">🧭 Beginners feel lost without a clear path</div>
-      <div class="card-body">Nigel: <em>"I'm a dead set novice."</em> The gap between joining and competence is large. New members needed a meeting with Sam just to get basic setup done — that's a product failure.</div>
-    </div>
-    <div class="card card-orange no-break">
-      <div class="card-title">📤 Exit strategy is the #1 knowledge gap</div>
-      <div class="card-body">The "Round-Tripper" is the dominant member archetype. Greg went from $180K → $80K and didn't cut. Multiple members exhibit the same pattern. No one had a written exit plan.</div>
-    </div>
-    <div class="card card-orange no-break">
-      <div class="card-title">😶 Community intimidation is real</div>
-      <div class="card-body">Nigel: <em>"I feel like an idiot just being new and posting some guide that I follow."</em> Dee: <em>"I just don't want to drag other people down that are way ahead of me."</em> Silent churn risk.</div>
-    </div>
-    <div class="card no-break">
-      <div class="card-title">📉 No structured beginner → advanced progression</div>
-      <div class="card-body">Experienced and beginner members were on the same calls. No clear milestones. No graduation gates. No reason to stay engaged as you progress.</div>
-    </div>
-    <div class="card no-break">
-      <div class="card-title">🔄 "Round-Tripper" is the dominant prospect type</div>
-      <div class="card-body">Many prospects found CS after experiencing significant losses (Greg, Ryan, John). They had the conviction but lacked the framework. The OS is designed specifically for this profile.</div>
-    </div>
-  </div>
-
-  <!-- 2.2 The 8-Step Shift OS -->
-  <h2 class="sub-head" id="sec2-2"><span class="sub-num">2.2</span> The 8-Step Shift OS</h2>
-  <p>Eight steps. Eight modules. Every module covers both Level 1 and Level 2 content — Level 1 content first, then Level 2 unlocked after the full Level 1 track is completed. The steps ARE the curriculum.</p>
-
-  <div class="steps-grid">
-    <div class="step-card">
-      <div class="step-num">Step 01</div>
-      <div class="step-name">Foundations</div>
-      <div class="step-desc">Why digital assets exist, market cycles, blockchain ecosystems, macro analysis</div>
-    </div>
-    <div class="step-card">
-      <div class="step-num">Step 02</div>
-      <div class="step-name">Bitcoin</div>
-      <div class="step-desc">Bitcoin conviction, DCA strategy, mining economics, advanced accumulation</div>
-    </div>
-    <div class="step-card">
-      <div class="step-num">Step 03</div>
-      <div class="step-name">Altcoins</div>
-      <div class="step-desc">Tech startup framework, fundamental analysis, tokenomics, RWA, XRP reality</div>
-    </div>
-    <div class="step-card">
-      <div class="step-num">Step 04</div>
-      <div class="step-name">How We Invest</div>
-      <div class="step-desc">Risk-to-reward, investment principles, portfolio allocation, advanced risk structures</div>
-    </div>
-    <div class="step-card">
-      <div class="step-num">Step 05</div>
-      <div class="step-name">Buy &amp; Sell</div>
-      <div class="step-desc">Getting on exchanges, DCA setup, bank friction, yield &amp; staking (advanced)</div>
-    </div>
-    <div class="step-card">
-      <div class="step-num">Step 06</div>
-      <div class="step-name">Send &amp; Store</div>
-      <div class="step-desc">Self-custody, hardware wallets, security scaling, multi-sig (advanced)</div>
-    </div>
-    <div class="step-card">
-      <div class="step-num">Step 07</div>
-      <div class="step-name">Tax</div>
-      <div class="step-desc">CGT basics, record keeping, tax optimisation, entity structures</div>
-    </div>
-    <div class="step-card">
-      <div class="step-num">Step 08</div>
-      <div class="step-name">Sell Strategy</div>
-      <div class="step-desc">Exit planning, loss-cutting, re-entry frameworks, cycle-aware exits, borrowing</div>
-    </div>
-  </div>
-
-  <div class="insight-box">
-    <div class="insight-box-label">⚡ Note on Investment Principles</div>
-    <p>Investment Principles content lives inside <strong>Step 4: How We Invest</strong>. It is not a separate step — it is the intellectual foundation for everything in that module. The CS philosophy (self-sovereignty, your own strategy, education over advice) lives here.</p>
-  </div>
-
-  <div class="insight-box green-box">
-    <div class="insight-box-label">📐 Three Investor Types</div>
-    <p>The Shift OS tailors frameworks to each type: <strong>Wealth Generation</strong> (Ryan, Harry — higher risk, larger altcoin allocation), <strong>Wealth Protection</strong> (Stacey, Dina, Nigel — Bitcoin-dominant, preservation focus), <strong>Income Creation</strong> (Level 2 only — yield, DeFi, stablecoin strategies).</p>
-  </div>
-
-  <!-- 2.3 The 2-Track System -->
-  <h2 class="sub-head" id="sec2-3"><span class="sub-num">2.3</span> The 2-Track System</h2>
-  <p>The full member journey from entry to mastery. Every member enters at Go Pro or Accelerator and progresses sequentially through gated levels.</p>
-
-  <div class="level-track">
-    <div class="level-node active-orange">Go Pro<br><span style="font-size:10px;font-weight:400;font-family:var(--font-mono);">Entry</span></div>
-    <div class="level-arrow">→</div>
-    <div class="level-node active-orange">Accelerator<br><span style="font-size:10px;font-weight:400;font-family:var(--font-mono);">90 Days</span></div>
-    <div class="level-arrow">→</div>
-    <div class="level-node active-green">Level 1<br><span style="font-size:10px;font-weight:400;font-family:var(--font-mono);">Beginner</span></div>
-    <div class="level-arrow">→</div>
-    <div class="level-node gate">Gate</div>
-    <div class="level-arrow">→</div>
-    <div class="level-node active-purple">Level 2<br><span style="font-size:10px;font-weight:400;font-family:var(--font-mono);">Advanced</span></div>
-    <div class="level-arrow">→</div>
-    <div class="level-node gate">Gate</div>
-    <div class="level-arrow">→</div>
-    <div class="level-node" style="background:var(--dark);color:#fff;border-color:var(--dark);">L3: Elevate<br><span style="font-size:10px;font-weight:400;font-family:var(--font-mono);color:rgba(255,255,255,0.6);">1yr+</span></div>
-  </div>
-
-  <h3 class="sub-sub-head">Level 1: Beginner Track — 3 Phases</h3>
-  <p style="margin-bottom:14px;"><strong>Scope:</strong> CEX only. No DeFi, yield, staking, or borrowing. Members new to digital assets or experienced but without a system.</p>
-
-  <div class="phase-row">
-    <div class="phase-card no-break">
-      <div class="phase-header">
-        <div class="phase-tag">Phase 1 · B1</div>
-        <div class="phase-title">Beginner Foundations</div>
+      <div class="sentiment-row">
+        <span class="sentiment-label">Overall Satisfaction</span>
+        <div class="sentiment-bar-wrap"><div class="sentiment-bar s-high"></div></div>
+        <span class="sentiment-note" style="color: var(--green); font-weight: 600;">HIGH — genuine gratitude &amp; trust</span>
       </div>
-      <div class="phase-body">
-        <p><strong>Format:</strong> One-off 2-hour live session, 40–50 slides.</p>
-        <p><strong>Covers:</strong> Steps 1–4 (Foundations, Bitcoin, Altcoins, How We Invest)</p>
-        <p><strong>Delivery:</strong> ~30 mins per step. Entry point for all members.</p>
-        <span class="phase-badge orange">Live Session</span>
+      <div class="sentiment-row">
+        <span class="sentiment-label">Patience Fatigue</span>
+        <div class="sentiment-bar-wrap"><div class="sentiment-bar s-med"></div></div>
+        <span class="sentiment-note">Moderate — emotionally hard to hold</span>
+      </div>
+      <div class="sentiment-row">
+        <span class="sentiment-label">Altcoin Pain</span>
+        <div class="sentiment-bar-wrap"><div class="sentiment-bar s-med" style="background:#F97316; width:70%"></div></div>
+        <span class="sentiment-note">High — 50–80% losses on some positions</span>
+      </div>
+      <div class="sentiment-row">
+        <span class="sentiment-label">Churn Risk</span>
+        <div class="sentiment-bar-wrap"><div class="sentiment-bar" style="background:#EF4444; width:40%"></div></div>
+        <span class="sentiment-note">⚠ Oct–Dec 2025 joiners in drawdown</span>
       </div>
     </div>
-    <div class="phase-card no-break">
-      <div class="phase-header">
-        <div class="phase-tag">Phase 2 · B2</div>
-        <div class="phase-title">Practical How-Tos</div>
-      </div>
-      <div class="phase-body">
-        <p><strong>Format:</strong> Weekly L1 coaching calls, 15–25 slides/module.</p>
-        <p><strong>Covers:</strong> Steps 5–8 (Buy/Sell, Send/Store, Tax, Sell Strategy)</p>
-        <p><strong>Delivery:</strong> One module per week across the 90-day program.</p>
-        <span class="phase-badge">Weekly Coaching</span>
-      </div>
+
+    <!-- Key frustrations -->
+    <div class="callout">
+      "Like the curse — as soon as we sign up for a crypto thing, we lose all our money."
+      <cite>— Greg, joined January 2026. This is the churn signal. Members who joined in the last 90 days are sitting in significant drawdowns. Their renewal decision will correlate with market recovery.</cite>
     </div>
-    <div class="phase-card no-break">
-      <div class="phase-header">
-        <div class="phase-tag">Phase 3 · B3</div>
-        <div class="phase-title">8-Step Strategy Process</div>
-      </div>
-      <div class="phase-body">
-        <p><strong>Format:</strong> Pre-recorded course (self-paced) + integrated into weekly coaching calls.</p>
-        <p><strong>Delivers:</strong> Complete written strategy. Culminates in 1:1 analyst session.</p>
-        <p><strong>Note:</strong> B3 starts AFTER completing B1 + B2. Not parallel.</p>
-        <span class="phase-badge green">Pre-Recorded + Live</span>
+
+    <div class="card" style="margin-top: 16px;">
+      <div class="card-title"><span class="dot"></span> Key Frustrations (Verbatim)</div>
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 6px;">
+        <div><span class="tag tag-orange">Patience fatigue</span> Members understand the logic of waiting but emotionally struggle. John/Johannes took matters into his own hands and sold aggressively rather than wait.</div>
+        <div><span class="tag tag-orange">Losses since joining</span> Late-2025 cohort is in significant drawdown. The bear market context colours every interaction.</div>
+        <div><span class="tag tag-orange">Altcoin pain</span> Portfolio values dropping 50–80% on altcoin positions. Members feel stuck between crystallising a loss or holding a loser indefinitely.</div>
+        <div><span class="tag tag-orange">Learning curve</span> Self-custody, DeFi, multiple chains — the technical barrier is real. Members feel overwhelmed without a guided pathway.</div>
       </div>
     </div>
   </div>
 
-  <div class="rule-box">
-    <span class="rule-box-icon">🚫</span>
-    <span><strong>Level 1 Rule:</strong> CEX ONLY. No yield. No staking. No DeFi. No borrowing. Members must complete all of Level 1 before these topics are introduced.</span>
-  </div>
+  <hr class="page-divider">
 
-  <p><strong>Gate to Level 2:</strong> Must complete ALL Phase 1 + Phase 2 modules + Phase 3 workbook + 1:1 analyst session on completion.</p>
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- SECTION 3: DEE 1-ON-1 CALL INTELLIGENCE -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="section page-break" id="section-3">
+    <div class="section-header">
+      <span class="section-number">03</span>
+      <h2 class="section-title">Dee 1-on-1 Call Intelligence</h2>
+    </div>
 
-  <h3 class="sub-sub-head">Level 2: Advanced Track — 3 Phases</h3>
-  <p style="margin-bottom:14px;"><strong>Prerequisite:</strong> Completed all Level 1 phases. <strong>Unlocks:</strong> Yield, staking, DeFi, borrowing, advanced tax, multi-entity structures.</p>
+    <p style="margin-bottom: 20px;">Call: Ben × Dee — March 27, 2026 — 52 minutes — Platinum Beginner 1-on-1. This call is a rich ICP validation data point. Dee represents exactly who we're building for.</p>
 
-  <div class="phase-row">
-    <div class="phase-card no-break">
-      <div class="phase-header">
-        <div class="phase-tag">Phase 1 · A1</div>
-        <div class="phase-title">Advanced Foundations</div>
-      </div>
-      <div class="phase-body">
-        <p><strong>Format:</strong> One-off live session, 45–55 slides.</p>
-        <p><strong>Covers:</strong> Advanced content for Steps 1–4 (macro correlations, ecosystem analysis, tokenomics, advanced risk)</p>
-        <span class="phase-badge orange">Live Session</span>
+    <!-- Member Profile -->
+    <div class="card">
+      <div class="card-title"><span class="dot dot-purple"></span> Member Profile</div>
+      <div class="profile-grid">
+        <div class="profile-item">
+          <div class="pkey">Name</div>
+          <div class="pval">Dee</div>
+        </div>
+        <div class="profile-item">
+          <div class="pkey">Location</div>
+          <div class="pval">Toronto, Canada</div>
+        </div>
+        <div class="profile-item">
+          <div class="pkey">Membership Tier</div>
+          <div class="pval">Platinum (Beginner, L1)</div>
+        </div>
+        <div class="profile-item">
+          <div class="pkey">Digital Asset Holdings</div>
+          <div class="pval">~$20K (mostly BTC, ~$100K entry)</div>
+        </div>
+        <div class="profile-item">
+          <div class="pkey">Cash Ready to Deploy</div>
+          <div class="pval">$100K (wants USDC 3.5% yield while DCA'ing)</div>
+        </div>
+        <div class="profile-item">
+          <div class="pkey">Traditional Wealth</div>
+          <div class="pval">HNW — multiple real estate properties, stocks, private wealth managers</div>
+        </div>
+        <div class="profile-item">
+          <div class="pkey">Experience Level</div>
+          <div class="pval">Complete beginner in digital assets (~1 year research)</div>
+        </div>
+        <div class="profile-item">
+          <div class="pkey">Target Allocation (Ben's guidance)</div>
+          <div class="pval">10% of net worth in BTC. 25% cash reserve always maintained.</div>
+        </div>
+        <div class="profile-item">
+          <div class="pkey">Also Follows</div>
+          <div class="pval">Invest Diva (paid member), evaluated Decentralized Masters (didn't buy)</div>
+        </div>
+        <div class="profile-item">
+          <div class="pkey">Preferred Learning Style</div>
+          <div class="pval">Small group + 1-on-1. Not large forum calls.</div>
+        </div>
       </div>
     </div>
-    <div class="phase-card no-break">
-      <div class="phase-header">
-        <div class="phase-tag">Phase 2 · A2</div>
-        <div class="phase-title">Advanced How-Tos</div>
+
+    <!-- Acquisition Path -->
+    <div class="card" style="margin-top: 16px;">
+      <div class="card-title"><span class="dot dot-green"></span> Acquisition Path — This Is the Funnel Working</div>
+      <div style="display: flex; align-items: center; gap: 0; margin: 14px 0; flex-wrap: wrap; gap: 4px;">
+        <div style="background: #F7F7F8; border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; font-size: 12.5px; text-align: center;">
+          <div style="font-size: 10px; color: var(--text-muted); font-family: 'Source Code Pro', monospace; margin-bottom: 4px;">DISCOVERY</div>
+          <strong>YouTube Search</strong><br>
+          <span style="font-size: 11px; color: var(--text-muted);">Looking for digital<br>asset education</span>
+        </div>
+        <div style="color: var(--orange); font-size: 18px; padding: 0 8px;">→</div>
+        <div style="background: #F7F7F8; border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; font-size: 12.5px; text-align: center;">
+          <div style="font-size: 10px; color: var(--text-muted); font-family: 'Source Code Pro', monospace; margin-bottom: 4px;">COMPARISON</div>
+          <strong>Finds Competitors</strong><br>
+          <span style="font-size: 11px; color: var(--text-muted);">Invest Diva,<br>Decentralized Masters</span>
+        </div>
+        <div style="color: var(--orange); font-size: 18px; padding: 0 8px;">→</div>
+        <div style="background: #F7F7F8; border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; font-size: 12.5px; text-align: center;">
+          <div style="font-size: 10px; color: var(--text-muted); font-family: 'Source Code Pro', monospace; margin-bottom: 4px;">DISCOVERY</div>
+          <strong>Discovers Ben</strong><br>
+          <span style="font-size: 11px; color: var(--text-muted);">Authenticity &amp;<br>no-affiliate stance wins</span>
+        </div>
+        <div style="color: var(--orange); font-size: 18px; padding: 0 8px;">→</div>
+        <div style="background: #FFF8F5; border: 1.5px solid var(--orange); border-radius: 8px; padding: 10px 16px; font-size: 12.5px; text-align: center;">
+          <div style="font-size: 10px; color: var(--orange); font-family: 'Source Code Pro', monospace; margin-bottom: 4px;">CONVERSION</div>
+          <strong>Converts to Platinum</strong><br>
+          <span style="font-size: 11px; color: var(--text-muted);">Education-first<br>philosophy seals it</span>
+        </div>
       </div>
-      <div class="phase-body">
-        <p><strong>Format:</strong> L2 weekly coaching calls, 15–25 slides/module.</p>
-        <p><strong>Covers:</strong> Advanced Steps 5–8 (DeFi yields, staking, multi-sig, tax optimisation, advanced exits)</p>
-        <span class="phase-badge">Weekly Coaching</span>
-      </div>
+      <p style="font-size: 12.5px; color: var(--text-muted);">This is direct validation of the YouTube → VSL → Platinum funnel. Dee is the ICP in the flesh: HNW, 40–59, traditional wealth, searching for a framework not tips, won over by sincerity not performance claims.</p>
     </div>
-    <div class="phase-card no-break">
-      <div class="phase-header">
-        <div class="phase-tag">Phase 3 · A3</div>
-        <div class="phase-title">Advanced 8-Step Strategy</div>
-      </div>
-      <div class="phase-body">
-        <p><strong>Format:</strong> Pre-recorded course (advanced version) + integrated into L2 coaching calls.</p>
-        <p><strong>Covers:</strong> Multi-entity structures, DeFi strategies, advanced sell planning, borrowing frameworks.</p>
-        <span class="phase-badge green">Pre-Recorded + Live</span>
-      </div>
+
+    <!-- Key Quotes -->
+    <h3 style="font-size: 15px; margin: 24px 0 12px;">Key Quotes</h3>
+    <div class="callout">
+      "I feel a big shift is happening in the world right now. And I feel everything that I've felt comfortable with my whole life is disappearing underneath me."
+      <cite>— Dee — her core motivation. This is why she's here. Protection, not speculation.</cite>
     </div>
-  </div>
+    <div class="callout">
+      "I'm so glad I got to talk to you personally. I've wanted to ask so many questions during the meetings but I just don't want to drag other people down that are way ahead of me."
+      <cite>— Dee — the community intimidation problem stated plainly. The Beginner's Lounge in Circle solves this directly.</cite>
+    </div>
+    <div class="callout">
+      "Protection, preservation and growth."
+      <cite>— Dee — describing her own investment philosophy. This is our messaging, validated back to us from the member's own mouth.</cite>
+    </div>
+    <div class="callout">
+      "You come across as being pretty sincere... the fact that you're young too and in this industry."
+      <cite>— Dee — on why she chose Ben/CS over competitors. Authenticity is the differentiator, not production value or credentials.</cite>
+    </div>
 
-  <p><strong>Gate to Level 3:</strong> Must complete ALL Phase 1 + Phase 2 + Phase 3 in Level 2 + 1:1 analyst session.</p>
-
-  <!-- 2.4 The 8-Step Strategy Process -->
-  <h2 class="sub-head" id="sec2-4"><span class="sub-num">2.4</span> The 8-Step Strategy Process (Phase 3)</h2>
-  <p>This is the culminating exercise for both Level 1 and Level 2. Members complete a written strategy document across 8 steps — one per coaching call. <em>"A strategy in your head is not a strategy. It's a vague intention."</em></p>
-
-  <table class="data-table no-break">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Step</th>
-        <th>What the Member Defines</th>
-        <th>L1 Scope</th>
-        <th>L2 Scope</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="badge badge-orange">01</span></td>
-        <td><strong>Define Your Goals</strong></td>
-        <td>Time horizon, capital targets, life goals tied to portfolio</td>
-        <td>Retirement, property, income targets</td>
-        <td>Multi-entity goals, generational wealth</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-orange">02</span></td>
-        <td><strong>Assess Your Risk Profile</strong></td>
-        <td>Wealth Generation, Protection, or Income Creation</td>
-        <td>Basic risk tolerance & capital sizing</td>
-        <td>Drawdown budgeting, portfolio-level risk</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-orange">03</span></td>
-        <td><strong>Build Your Investment Thesis</strong></td>
-        <td>Why you hold each asset — written, first-principles</td>
-        <td>Bitcoin conviction + selective digital assets</td>
-        <td>Full thesis including DeFi, RWA, altcoin categories</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-orange">04</span></td>
-        <td><strong>Your Portfolio Allocation</strong></td>
-        <td>BTC / altcoin / stablecoin split with rationale</td>
-        <td>CEX-only. Portfolio Allocation Calculator tool.</td>
-        <td>Advanced split including DeFi, yield, multi-entity</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-orange">05</span></td>
-        <td><strong>Create Your Buy Strategy</strong></td>
-        <td>DCA amounts, frequency, automation setup</td>
-        <td>Exchange DCA + lump sum decision framework</td>
-        <td>Advanced entries including DCA-back-in after selling</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-orange">06</span></td>
-        <td><strong>Plan Your Tax Approach</strong></td>
-        <td>Record keeping, software, accountant briefing</td>
-        <td>CGT basics, Koinly/CTC setup, 12-month rule</td>
-        <td>Entity structures, tax-loss harvesting, DeFi events</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-orange">07</span></td>
-        <td><strong>Secure Your Assets</strong></td>
-        <td>Security tier matched to portfolio size</td>
-        <td>Hardware wallet + seed phrase backup</td>
-        <td>Multi-sig, passphrase, estate planning</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-orange">08</span></td>
-        <td><strong>Write Your Sell Strategy</strong></td>
-        <td>Written, pre-committed exit rules — targets, triggers, types</td>
-        <td>Target-based / DCA-out / trailing stops</td>
-        <td>Multi-tier ladders, cycle-aware exits, borrowing alternative</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="insight-box green-box">
-    <div class="insight-box-label">🎯 Why Step 8 Matters Most for Growth</div>
-    <p>Exit strategy is the ICP's #1 pain point. The Round-Tripper is the dominant prospect type. Step 8 is the most emotionally resonant module — and the most powerful marketing hook. Content built around Step 8 (sell strategy) converts the highest-intent prospects.</p>
-  </div>
-
-  <!-- 2.5 Product Changes -->
-  <h2 class="sub-head" id="sec2-5"><span class="sub-num">2.5</span> Product Changes &amp; Tier Updates</h2>
-
-  <table class="data-table no-break">
-    <thead>
-      <tr>
-        <th>Tier</th>
-        <th>Price</th>
-        <th>Access</th>
-        <th>Key Change</th>
-        <th>Strategic Purpose</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Accelerator (Go Pro)</strong></td>
-        <td>$5,000/yr</td>
-        <td>Self-paced</td>
-        <td><span class="badge badge-orange">NEW: 90-Day Cutoff</span></td>
-        <td>Creates upgrade urgency to Platinum. Natural funnel pressure.</td>
-      </tr>
-      <tr>
-        <td><strong>Platinum</strong></td>
-        <td>$14,999–$19,999/yr</td>
-        <td>High-touch, 1:1 calls</td>
-        <td>New: Circle community, weekly L1 coaching, Beginner's Lounge</td>
-        <td>Core revenue driver (331 active members, 56% organic margin).</td>
-      </tr>
-      <tr>
-        <td><strong>Black Tier</strong></td>
-        <td>~$33K/yr (invitation)</td>
-        <td>Dedicated team, Ben DM access</td>
-        <td>No change</td>
-        <td>Elite tier. ~$22K net margin per upsell.</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h3 class="sub-sub-head">Additional Product Changes</h3>
-  <div class="grid-2">
-    <div class="card no-break">
-      <div class="card-title">💬 Circle Replaces WhatsApp (Launching 1–2 weeks)</div>
-      <div class="card-body">
-        <ul class="plain-list">
-          <li>Structured, searchable community</li>
-          <li>Beginner's Lounge — safe space for new members</li>
-          <li>Localised communities (Canadian members, etc.)</li>
-          <li>Weekly Level 1 coaching calls delivered via Circle</li>
+    <!-- Product Feedback -->
+    <h3 style="font-size: 15px; margin: 24px 0 12px;">Product Feedback — What Dee Told Us</h3>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title"><span class="dot dot-green"></span> What's Working</div>
+        <ul class="checklist">
+          <li><strong>Small group format</strong> — "Less intimidating than large forums." Dee confirmed Level 1 weekly coaching call structure is exactly right for her.</li>
+          <li><strong>1-on-1 calls</strong> — The call itself is the product proof point. She had been waiting to ask questions she couldn't ask in the forum.</li>
+          <li><strong>Circle Beginner's Lounge</strong> — Dee confirmed this is exactly what she needs. She will use it once it exists.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot"></span> What Needs Building</div>
+        <ul class="redlist">
+          <li><strong>Pre-recorded how-to modules</strong> — 5–10 min videos on: 2FA setup, Coinbase recurring buys, limit orders, USDC yield setup, security basics. Dee wants to watch at her own pace.</li>
+          <li><strong>Calendar timezone bug</strong> — Weekly Forum showing at wrong time (10pm instead of 5pm ET). Others have reported the same issue. Fix urgently.</li>
+          <li><strong>Onboarding clarity</strong> — Dee felt overwhelmed by L2 content being visible before she's ready. "I don't want to drag other people down that are way ahead of me."</li>
         </ul>
       </div>
     </div>
-    <div class="card no-break">
-      <div class="card-title">🎥 How-To Video Library (Needed Urgently)</div>
-      <div class="card-body">
-        <ul class="plain-list">
-          <li>Setting up 2FA (Authy, Google Authenticator)</li>
-          <li>Coinbase recurring buys + limit orders</li>
-          <li>USDC yield setup on Coinbase</li>
-          <li>Security basics (seed phrase, recovery)</li>
-          <li>Hardware wallet first transfer</li>
-          <li>DCA automation on CoinSpot/Swyftx</li>
-        </ul>
+
+    <!-- Toronto Event Flag -->
+    <div class="callout-green callout">
+      <strong>🇨🇦 Toronto Event Opportunity:</strong> Dee volunteered to help organise. "Do it. I'll do it for you, Dean. Bring those damn yanks across the border." Toronto = financial centre, best for Canadian HNW market. Dee is a warm contact and potential advocate.
+    </div>
+  </div>
+
+  <hr class="page-divider">
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- SECTION 4: COMPETITIVE LANDSCAPE -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="section page-break" id="section-4">
+    <div class="section-header">
+      <span class="section-number">04</span>
+      <h2 class="section-title">Competitive Landscape</h2>
+    </div>
+
+    <p style="margin-bottom: 20px;">Two competitors surfaced in Dee's onboarding call with direct member feedback on both. One to study closely. One to avoid entirely.</p>
+
+    <!-- Invest Diva -->
+    <div class="comp-card">
+      <div class="comp-header">
+        <div>
+          <div class="comp-name">Invest Diva — Kiana Danial</div>
+          <div class="comp-tagline">Traditional investing + some digital assets · Education-first · HNW-adjacent</div>
+        </div>
+        <div class="comp-verdict verdict-study">📚 STUDY — Model the platform structure</div>
+      </div>
+      <div class="comp-body">
+        <div class="callout-green callout" style="margin-top: 0; margin-bottom: 16px;">
+          "Her platform would be a really good one for you guys to model on."
+          <cite>— Dee, directly recommending CS study Invest Diva's platform structure</cite>
+        </div>
+        <div class="two-col">
+          <div>
+            <h4 style="font-size: 13px; margin-bottom: 8px; color: var(--text-muted);">What She Does Well</h4>
+            <ul class="checklist" style="font-size: 13px;">
+              <li><strong>Full class calendar</strong> — 2–3 lessons every day, highly structured</li>
+              <li><strong>Multiple paths within investment stream</strong> — 3–4 categories members choose between</li>
+              <li><strong>Graduation model</strong> — Requires 10–25 stock analyses to advance. Module completion as certification.</li>
+              <li><strong>Streams beyond investing</strong> — Business, writing books — keeps members engaged beyond core content</li>
+              <li><strong>Platform UX</strong> — Dee liked the calendar and event booking experience</li>
+            </ul>
+          </div>
+          <div>
+            <h4 style="font-size: 13px; margin-bottom: 8px; color: var(--text-muted);">Our Gap vs Invest Diva</h4>
+            <ul style="font-size: 13px; padding-left: 18px; line-height: 2;">
+              <li>Deeper digital asset expertise — she's not Bitcoin-native</li>
+              <li>ICP-specific: HNW wealth <em>builders</em>, not general investors</li>
+              <li>No-affiliate trust signal — she has traditional finance ties</li>
+              <li>More suited to 40–59 professional wealth profile</li>
+            </ul>
+            <br>
+            <h4 style="font-size: 13px; margin-bottom: 8px; color: var(--text-muted);">What CS Should Adopt</h4>
+            <ul class="checklist" style="font-size: 13px;">
+              <li>Structured calendar (not just "when we can")</li>
+              <li>Clear graduation checkpoints between levels</li>
+              <li>Multiple learning paths within L1 (matching investor type)</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- ============================================================
-     PART 3: MEMBER INTELLIGENCE
-     ============================================================ -->
-<div class="doc-section" id="part3">
-  <div class="part-header">
-    <div class="part-eyebrow">Part 3 · Member Intelligence</div>
-    <h1 class="part-title">Education Call Analysis</h1>
-    <p class="part-desc">Synthesised from 30+ 1-on-1 member education calls, Jan–Mar 2026. All calls occurred during the Bitcoin correction ($120K+ → ~$75–80K).</p>
-  </div>
-
-  <!-- 3.1 Top 10 Questions -->
-  <h2 class="sub-head"><span class="sub-num">3.1</span> Top 10 Member Questions — Ranked by Frequency</h2>
-
-  <table class="data-table">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Question</th>
-        <th>Freq</th>
-        <th>Simon's Consistent Answer</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="badge badge-orange">1</span></td>
-        <td><strong>"Should I buy now or wait?"</strong><br><span style="font-size:11px;color:var(--text-muted);">"Do I start buying $1K of Bitcoin each week, or do I wait another month?" — Nigel</span></td>
-        <td><span class="freq-high">Every call</span></td>
-        <td>Dollar cost average into Bitcoin. Don't try to time the bottom. <em>"I've never regretted dollar cost averaging."</em></td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-orange">2</span></td>
-        <td><strong>"What should I do with my altcoins?"</strong><br><span style="font-size:11px;color:var(--text-muted);">Sell vs hold in a downturn. ~80% of all calls.</span></td>
-        <td><span class="freq-high">~80% calls</span></td>
-        <td><em>"Altcoins = tech startups. Good time, not a long time."</em> Most don't recover to ATHs. Calculate opportunity cost.</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-orange">3</span></td>
-        <td><strong>"How much in Bitcoin vs altcoins?"</strong><br><span style="font-size:11px;color:var(--text-muted);">"My mentality is 50% higher risk and 50% Bitcoin." — Ryan</span></td>
-        <td><span class="freq-high">~75% calls</span></td>
-        <td>More defensive = more Bitcoin. Go to altcoins only when risk-to-reward is skewed in your favour. CS currently ~3% altcoins.</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-dark">4</span></td>
-        <td><strong>"How do I learn self-custody / cold wallets?"</strong><br><span style="font-size:11px;color:var(--text-muted);">Multiple members terrified of seed phrases. — Nigel, Harry</span></td>
-        <td><span class="freq-med">~50% calls</span></td>
-        <td>Security paranoia should match portfolio size. Hardware wallet walkthrough — one step at a time. Module 6 (Send & Store) covers this systematically.</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-dark">5</span></td>
-        <td><strong>"What about stablecoin yields / DeFi / passive income?"</strong><br><span style="font-size:11px;color:var(--text-muted);">"I didn't even know the terminology... USDC getting 6%" — Nigel</span></td>
-        <td><span class="freq-med">~40% calls</span></td>
-        <td>Learn self-custody first. DeFi is Level 2 content. USDC on Coinbase (3.5%) is a Level 1 safe option. <em>"If you can't explain where the yield comes from, you don't understand the risk."</em></td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-dark">6</span></td>
-        <td><strong>"Is XRP a good investment?"</strong><br><span style="font-size:11px;color:var(--text-muted);">"When are CS going to have interest in XRP?" — Nigel</span></td>
-        <td><span class="freq-med">~60% calls</span></td>
-        <td>Good marketing, flawed business model. 8+ years of poor returns vs Bitcoin. Show the data. <em>"XRP Reality Check"</em> is a core module in Step 3.</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-dark">7</span></td>
-        <td><strong>"What about Hyperliquid / HYPE?"</strong><br><span style="font-size:11px;color:var(--text-muted);">Growing topic — members want early project access.</span></td>
-        <td><span class="freq-med">Growing</span></td>
-        <td>HYPE = standout project. Real product-market fit, real revenue, real users. Gold standard case study for evaluating altcoins. Used as the Level 2 tokenomics teaching example.</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-purple">8</span></td>
-        <td><strong>"My bank blocked my transfer — what do I do?"</strong><br><span style="font-size:11px;color:var(--text-muted);">Universal pain point. Harry, Nigel, Stacey all flagged this.</span></td>
-        <td><span class="freq-med">~30% calls</span></td>
-        <td><em>"Everyone hits this wall. Here's exactly how to get through it."</em> Normalise it. Give alternative on-ramp methods. Step 5 (Buy & Sell) covers bank friction specifically.</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-purple">9</span></td>
-        <td><strong>"Does CS ever sell Bitcoin?"</strong><br><span style="font-size:11px;color:var(--text-muted);">"Do you actually ever sell your Bitcoin?" — Harry</span></td>
-        <td><span class="freq-low">~25% calls</span></td>
-        <td><em>"Our general strategy is not selling Bitcoin. We very rarely sell Bitcoin."</em> Bitcoin is a hold asset. The sell strategy in Step 8 mainly applies to altcoins.</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-purple">10</span></td>
-        <td><strong>"Can I earn yield on Bitcoin?"</strong><br><span style="font-size:11px;color:var(--text-muted);">"I wanna explore earning potential through owning it." — Harry</span></td>
-        <td><span class="freq-low">~20% calls</span></td>
-        <td><em>"You cannot earn a yield on Bitcoin. It's not a yielding product."</em> Borrowing against it (Ledn, Block Earner) is different — Level 2 Step 8 content.</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- 3.2 Critical Knowledge Gaps -->
-  <h2 class="sub-head"><span class="sub-num">3.2</span> Critical Knowledge Gaps</h2>
-
-  <table class="data-table">
-    <thead>
-      <tr>
-        <th>Knowledge Gap</th>
-        <th>Evidence</th>
-        <th>Implication</th>
-        <th>OS Module</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Altcoins ≠ Stocks</strong></td>
-        <td>80%+ of members treat altcoins like equities. No concept of no equity ownership, no vetting, most fail.</td>
-        <td>Members make catastrophic allocation decisions. Hold losers like stock positions.</td>
-        <td>Step 03: Altcoins</td>
-      </tr>
-      <tr>
-        <td><strong>Self-Custody Fundamentals</strong></td>
-        <td>Multiple members terrified of seed phrases. Harry had SwiftX blocking BTC withdrawals to cold wallet.</td>
-        <td>#1 unmet educational need. Members leaving assets on exchanges long-term = unnecessary risk.</td>
-        <td>Step 06: Send &amp; Store</td>
-      </tr>
-      <tr>
-        <td><strong>DeFi / Yield Basics</strong></td>
-        <td>Members hear "6% on USDC" but don't understand mechanics, risks, or how to access.</td>
-        <td>Members either avoid all yield (leaving money behind) or rush in without understanding risk.</td>
-        <td>Step 05 (L2): Buy &amp; Sell</td>
-      </tr>
-      <tr>
-        <td><strong>Exit Strategy (The Round-Tripper)</strong></td>
-        <td>Greg: $180K → $80K. Ryan: near-$1M → substantial loss. Multiple members round-tripped bull runs.</td>
-        <td>The dominant member archetype has no written sell plan. Step 8 is the antidote and the top marketing hook.</td>
-        <td>Step 08: Sell Strategy</td>
-      </tr>
-      <tr>
-        <td><strong>Bank Friction / On-Ramping</strong></td>
-        <td>Every new member hits this wall. Accounts frozen, transfers blocked. Universal across all countries except Dubai.</td>
-        <td>Causes friction at the exact moment of highest intent. If not resolved, prospects give up.</td>
-        <td>Step 05: Buy &amp; Sell</td>
-      </tr>
-      <tr>
-        <td><strong>Market Cycle Context</strong></td>
-        <td>Nigel, Stacey, Greg have zero reference for bear/bull transitions. The current drawdown feels permanent.</td>
-        <td>Members make panic decisions without historical context. Step 1 Foundations sets the framework.</td>
-        <td>Step 01: Foundations</td>
-      </tr>
-      <tr>
-        <td><strong>XRP Reality Check</strong></td>
-        <td>~60% of members hold XRP and are questioning it. Gateway question for prospects.</td>
-        <td>Massive content marketing opportunity. Every XRP holder is a potential prospect seeking straight talk.</td>
-        <td>Step 03: Altcoins</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- 3.3 What Members Love -->
-  <h2 class="sub-head"><span class="sub-num">3.3</span> What Members Love</h2>
-  <div class="grid-2">
-    <div class="card card-green no-break">
-      <div class="card-title">🏆 Weekly Forums / Roundtable</div>
-      <div class="card-body">Consistently praised. Members enjoy the Simon + Matt dynamic. <em>"I like your bullshit approach"</em> — direct feedback on the no-nonsense style.</div>
-    </div>
-    <div class="card card-green no-break">
-      <div class="card-title">📞 The 1-on-1 Calls</div>
-      <div class="card-body">Massive perceived value. Members feel heard and get personalised advice. This is the retention moat. <em>"These calls are different to anything else out there."</em></div>
-    </div>
-    <div class="card card-green no-break">
-      <div class="card-title">📊 Analyst Honesty</div>
-      <div class="card-body">Members explicitly praise the team for being direct about losses, risks, and uncertainties. <em>"A lot of your values is what I believe in."</em> — Nigel. Trust is the core asset.</div>
-    </div>
-    <div class="card card-green no-break">
-      <div class="card-title">🖥️ Dashboard + Research Platform</div>
-      <div class="card-body">Members use and update their dashboards before calls. Simon's 2026 Outlook post referenced in multiple calls — members want written thesis with price targets and reasoning.</div>
-    </div>
-    <div class="card card-green no-break">
-      <div class="card-title">🧠 Educational Philosophy</div>
-      <div class="card-body">Long-term, patient, Bitcoin-first approach resonates strongly. <em>"I believe educating myself is the key to de-risking."</em> — Harry. CS is where serious investors go.</div>
-    </div>
-    <div class="card card-green no-break">
-      <div class="card-title">💬 Community Access</div>
-      <div class="card-body">Members read the community actively even when they're intimidated to post. The community validates their thinking and keeps them anchored during drawdowns.</div>
-    </div>
-  </div>
-
-  <!-- 3.4 What's Missing -->
-  <h2 class="sub-head"><span class="sub-num">3.4</span> What's Missing / Could Improve</h2>
-  <div class="grid-2">
-    <div class="card card-orange no-break">
-      <div class="card-title">🚧 Beginner Onboarding Gap</div>
-      <div class="card-body">Nigel said <em>"I'm a dead set novice"</em> and needed a meeting with Sam for basic setup. The gap between joining and competence is large. The Beginner's Lounge on Circle + Level 1 coaching calls are the fix.</div>
-    </div>
-    <div class="card card-orange no-break">
-      <div class="card-title">🏦 Self-Custody Pathway</div>
-      <div class="card-body">Multiple members express interest but feel overwhelmed. No clear step-by-step learning path exists. Harry had SwiftX blocking withdrawals — needed real-time support. Step 6 (Send & Store) + how-to videos solve this.</div>
-    </div>
-    <div class="card card-orange no-break">
-      <div class="card-title">😶 Community Intimidation</div>
-      <div class="card-body">Nigel: <em>"I feel like an idiot just being new and posting."</em> Dee: <em>"I don't want to drag other people down."</em> New members are afraid to ask questions in front of experienced members. Silent churn risk. Beginner's Lounge is the direct fix.</div>
-    </div>
-    <div class="card card-orange no-break">
-      <div class="card-title">🔍 Platform Discovery</div>
-      <div class="card-body">Simon had to walk Stacey through finding his 2026 Outlook post: <em>"Go to Research tab, scroll down..."</em> Content is being created but members aren't finding it. Needs better discoverability — email digests, push notifications, or dashboard widgets.</div>
-    </div>
-    <div class="card no-break">
-      <div class="card-title">🔁 Re-Entry Framework</div>
-      <div class="card-body">John/Johannes specifically asked for a clear re-entry strategy. <em>"Patience"</em> wasn't sufficient. No structured framework exists beyond ad hoc advice per call. This needs to be a formal module in Step 8.</div>
-    </div>
-    <div class="card no-break">
-      <div class="card-title">🚦 "What to Do Now" Clarity</div>
-      <div class="card-body">John said the WhatsApp "patience" advice wasn't sufficient to justify holding. Members understand "buy" but sell triggers and action triggers are vague. A simple dashboard traffic light (🟢 Deploy / 🟡 Wait / 🔴 De-risk) would solve this.</div>
-    </div>
-  </div>
-
-  <!-- 3.5 Member Sentiment -->
-  <h2 class="sub-head"><span class="sub-num">3.5</span> Member Sentiment</h2>
-  <div class="grid-3">
-    <div class="card card-green no-break" style="text-align:center;">
-      <div style="font-size:28px;margin-bottom:8px;">🟢</div>
-      <div class="card-title">Overall Satisfaction</div>
-      <div class="card-body">HIGH. Members express trust, gratitude, and perceived value. CS is the anchor keeping them grounded during drawdowns.</div>
-    </div>
-    <div class="card card-orange no-break" style="text-align:center;">
-      <div style="font-size:28px;margin-bottom:8px;">🟡</div>
-      <div class="card-title">Frustrations</div>
-      <div class="card-body">"Patience fatigue" — altcoin losses — bear market psychology. Losses since joining for Oct–Dec 2025 cohort. Greg: <em>"Like the curse."</em></div>
-    </div>
-    <div class="card card-orange no-break" style="text-align:center;">
-      <div style="font-size:28px;margin-bottom:8px;">🔴</div>
-      <div class="card-title">Churn Risk</div>
-      <div class="card-body">Oct–Dec 2025 joiners are in significant drawdowns. Renewal decisions will correlate with market recovery. Proactive CSM outreach needed before renewal dates.</div>
-    </div>
-  </div>
-
-  <div class="insight-box">
-    <div class="insight-box-label">📊 Composite Emotional State of Member Base</div>
-    <p>Fear, uncertainty, and patience fatigue — but with underlying conviction. Biggest emotional risks: (1) Panic selling at the worst time, (2) FOMO buying altcoins on any relief rally, (3) Disengaging and churning. CS team is the anchor. 1-on-1 calls are the intervention point.</p>
-  </div>
-</div>
-
-<!-- ============================================================
-     PART 4: DEE 1-ON-1
-     ============================================================ -->
-<div class="doc-section" id="part4">
-  <div class="part-header">
-    <div class="part-eyebrow">Part 4 · Member Intelligence — Today's Call</div>
-    <h1 class="part-title">Dee 1-on-1 Call Intelligence</h1>
-    <p class="part-desc">March 27, 2026 · 52-minute call with Ben Simpson. Canadian HNW Platinum member. Rich source of product feedback, acquisition intelligence, and competitive insight.</p>
-  </div>
-
-  <!-- 4.1 Member Profile -->
-  <h2 class="sub-head"><span class="sub-num">4.1</span> Member Profile</h2>
-  <div class="grid-2">
-    <div class="card no-break">
-      <div class="card-title">👤 Dee — Platinum Member</div>
-      <div class="card-body">
-        <table style="width:100%;font-size:12px;font-family:var(--font-body);">
-          <tr><td style="color:var(--text-muted);padding:3px 0;width:35%;">Location</td><td><strong>Toronto, Canada</strong></td></tr>
-          <tr><td style="color:var(--text-muted);padding:3px 0;">Digital Assets</td><td><strong>~$20K (mostly BTC, ~$100K entry)</strong></td></tr>
-          <tr><td style="color:var(--text-muted);padding:3px 0;">Cash Ready</td><td><strong>$100K ready to deploy</strong></td></tr>
-          <tr><td style="color:var(--text-muted);padding:3px 0;">Net Worth</td><td><strong>High — multiple real estate, stocks, private WM</strong></td></tr>
-          <tr><td style="color:var(--text-muted);padding:3px 0;">Experience</td><td><strong>Complete beginner in digital assets</strong></td></tr>
-          <tr><td style="color:var(--text-muted);padding:3px 0;">Research Time</td><td><strong>~1 year of self-directed research</strong></td></tr>
-          <tr><td style="color:var(--text-muted);padding:3px 0;">Entry Point</td><td><strong>YouTube → found Ben's videos</strong></td></tr>
-          <tr><td style="color:var(--text-muted);padding:3px 0;">Also Follows</td><td><strong>Invest Diva (paid), Decentralized Masters (didn't buy)</strong></td></tr>
-          <tr><td style="color:var(--text-muted);padding:3px 0;">Learning Pref</td><td><strong>Small groups + 1-on-1 (NOT large calls)</strong></td></tr>
-          <tr><td style="color:var(--text-muted);padding:3px 0;">Motivation</td><td><strong>Protection, preservation, growth</strong></td></tr>
-        </table>
+    <!-- Decentralized Masters -->
+    <div class="comp-card">
+      <div class="comp-header">
+        <div>
+          <div class="comp-name">Decentralized Masters</div>
+          <div class="comp-tagline">Dubai-based · Premium positioning · Claims 10–12% monthly returns · DEX-focused</div>
+        </div>
+        <div class="comp-verdict verdict-avoid">⚠ AVOID — Predatory model</div>
       </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="insight-box green-box no-break" style="margin:0;">
-        <div class="insight-box-label">✅ Perfect ICP Validation</div>
-        <p>Dee is the textbook ICP: HNW, traditional wealth background, 1 year of research, found us via YouTube, chose CS over competitors because of Ben's sincerity and education-first approach. Every element of the CS positioning worked exactly as intended.</p>
-      </div>
-      <div class="card no-break">
-        <div class="card-title">🎯 Ben's Strategy Shared with Dee</div>
-        <div class="card-body">
-          <ul class="plain-list">
-            <li>Target: 10% of net worth in Bitcoin</li>
-            <li>DCA: Split $100K, deploy 5–10% per week over 8–10 weeks</li>
-            <li>Always keep 25% cash reserve for further downside</li>
-            <li>USDC on Coinbase: 3.5% yield while waiting to deploy</li>
-            <li>Limit orders via Coinbase Advanced for target price entries</li>
-            <li>Current drawdown (45–48%) = good accumulation zone</li>
-          </ul>
+      <div class="comp-body">
+        <div class="two-col">
+          <div>
+            <h4 style="font-size: 13px; margin-bottom: 8px; color: var(--text-muted);">What They Do / Claim</h4>
+            <ul style="font-size: 13px; padding-left: 18px; line-height: 2;">
+              <li>Based in Dubai — uses UAE jurisdiction as credibility signal</li>
+              <li>Sells "native markets" (DeFi/DEX access) as their secret sauce</li>
+              <li>Claims <strong>10–12% monthly returns</strong> (Ben: "nonsense")</li>
+              <li>$20–25K USD for premium level — high price, low substance</li>
+              <li>ABN method: Bitcoin → L1s → "native market"</li>
+              <li>Same success story videos recycled repeatedly</li>
+            </ul>
+          </div>
+          <div>
+            <h4 style="font-size: 13px; margin-bottom: 8px; color: var(--text-muted);">Why It Matters for CS</h4>
+            <div class="callout" style="margin-top: 0; font-size: 13px;">
+              "I don't like that guy at all."
+              <cite>— Dee's husband on Decentralized Masters</cite>
+            </div>
+            <p style="font-size: 13px; margin-top: 8px;">Ben's assessment: <em>"Basically selling access to DEXes. 99.9% of tokens worthless."</em></p>
+            <br>
+            <p style="font-size: 13px;"><strong>Our opportunity:</strong> Their ICP eventually sees through the nonsense. When they do, they look for the authentic alternative. Ben is that alternative. Dee is proof — she evaluated them and chose CS.</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 4.2 Acquisition Path -->
-  <h2 class="sub-head"><span class="sub-num">4.2</span> Acquisition Path — Validated</h2>
-  <p>This is the actual sequence Dee followed from discovering digital assets to joining Collective Shift Platinum. This is the funnel we're building against.</p>
+  <hr class="page-divider">
 
-  <div class="acq-flow">
-    <div class="acq-step">
-      <div class="acq-title">Awareness</div>
-      <div class="acq-sub">World changing</div>
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- SECTION 5: YOUTUBE / SOCIAL STRATEGY -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="section page-break" id="section-5">
+    <div class="section-header">
+      <span class="section-number">05</span>
+      <h2 class="section-title">YouTube &amp; Social Strategy Update</h2>
     </div>
-    <div class="acq-arrow">→</div>
-    <div class="acq-step highlight">
-      <div class="acq-title">YouTube</div>
-      <div class="acq-sub">Found Ben's videos</div>
-    </div>
-    <div class="acq-arrow">→</div>
-    <div class="acq-step">
-      <div class="acq-title">Invest Diva</div>
-      <div class="acq-sub">Paid member</div>
-    </div>
-    <div class="acq-arrow">→</div>
-    <div class="acq-step">
-      <div class="acq-title">Dec. Masters</div>
-      <div class="acq-sub">Looked, didn't buy</div>
-    </div>
-    <div class="acq-arrow">→</div>
-    <div class="acq-step highlight">
-      <div class="acq-title">Ben's Content</div>
-      <div class="acq-sub">Sincerity wins</div>
-    </div>
-    <div class="acq-arrow">→</div>
-    <div class="acq-step orange">
-      <div class="acq-title">Platinum</div>
-      <div class="acq-sub">$14,999–19,999</div>
-    </div>
-  </div>
 
-  <div class="insight-box">
-    <div class="insight-box-label">🔑 Key Insight for Growth</div>
-    <p>Dee did not convert directly from YouTube. She researched competitors first — Invest Diva, Decentralized Masters — and returned to Ben because of his sincerity and education-first positioning. This means our YouTube content must work as a long-game trust-builder, not just a direct-response funnel. The 90/10 content system is designed for exactly this pathway.</p>
-  </div>
-
-  <!-- 4.3 Key Quotes -->
-  <h2 class="sub-head"><span class="sub-num">4.3</span> Key Quotes from Dee</h2>
-
-  <div class="quote-card">
-    <div class="quote-text">"I feel a big shift is happening in the world right now. And I feel everything that I've felt comfortable with my whole life is disappearing underneath me."</div>
-    <div class="quote-attr">Dee · Canadian Platinum Member · March 27, 2026</div>
-  </div>
-  <div class="quote-card green">
-    <div class="quote-text">"I'm so glad I got to talk to you personally. I've wanted to ask so many questions during the meetings but I just don't want to drag other people down that are way ahead of me."</div>
-    <div class="quote-attr">Dee · Community Intimidation — Directly Validates the Beginner's Lounge Need</div>
-  </div>
-  <div class="quote-card purple">
-    <div class="quote-text">"Protection, preservation and growth." <em>[pause]</em> "That's exactly it."</div>
-    <div class="quote-attr">Dee · When asked what she wants from her digital asset portfolio</div>
-  </div>
-  <div class="quote-card">
-    <div class="quote-text">"You come across as being pretty sincere... the fact that you're young too and in this industry."</div>
-    <div class="quote-attr">Dee · On why she chose CS over competitors — sincerity and lived experience win</div>
-  </div>
-
-  <!-- 4.4 Product Feedback -->
-  <h2 class="sub-head"><span class="sub-num">4.4</span> Product Feedback from Dee</h2>
-  <div class="grid-2">
-    <div class="card card-green no-break">
-      <div class="card-title">✅ Small Groups &gt; Large Calls</div>
-      <div class="card-body">Dee confirmed the small group format is ideal. Less intimidating than large forums. Validated the decision to run separate Level 1 coaching calls rather than merging with the main forum.</div>
+    <!-- Positioning -->
+    <div class="card">
+      <div class="card-title"><span class="dot"></span> Core Positioning</div>
+      <div style="font-size: 22px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; color: var(--dark); margin: 8px 0;">"Bloomberg for Digital Assets"</div>
+      <p style="font-size: 13.5px;">Institutional-grade intelligence for HNW investors. Not a digital asset channel. Not a trading channel. The resource serious wealth builders need — and that doesn't exist anywhere else.</p>
     </div>
-    <div class="card card-green no-break">
-      <div class="card-title">✅ Pre-Recorded How-Tos Needed</div>
-      <div class="card-body">She wants to watch on her own time, absorb at her pace, then bring questions to live sessions. This validates the Phase 3 (B3) pre-recorded course model and the how-to video library request.</div>
-    </div>
-    <div class="card card-green no-break">
-      <div class="card-title">✅ Circle Beginner's Lounge = Exactly Right</div>
-      <div class="card-body"><em>"I just don't want to drag other people down that are way ahead of me."</em> Dee said this before she even knew about the Beginner's Lounge. When Ben described it, she immediately validated it.</div>
-    </div>
-    <div class="card card-green no-break">
-      <div class="card-title">✅ Graduation / Module Tick-Off Model</div>
-      <div class="card-body">Dee liked Invest Diva's certification/graduation model. She agreed that module completion tick-offs are better than homework assignments or tests. Simpler. More motivating.</div>
-    </div>
-    <div class="card card-orange no-break">
-      <div class="card-title">🐛 Calendar Timezone Bug (Urgent)</div>
-      <div class="card-body">Weekly Forum showing at 10pm instead of 5pm ET for Canadian members. Others have reported the same issue. Members are missing live calls. Fix required before Circle launch.</div>
-    </div>
-    <div class="card card-orange no-break">
-      <div class="card-title">🔐 Security Setup Gap</div>
-      <div class="card-body">Dee doesn't have 2FA on Coinbase. Doesn't fully understand wallets vs exchanges. This is a real security risk today. Ben committed to sending links: Authy setup, 2FA guide, Coinbase security centre. Highlights the how-to video library urgency.</div>
-    </div>
-  </div>
-</div>
 
-<!-- ============================================================
-     PART 5: COMPETITIVE INTELLIGENCE
-     ============================================================ -->
-<div class="doc-section" id="part5">
-  <div class="part-header">
-    <div class="part-eyebrow">Part 5 · Competitive Intelligence</div>
-    <h1 class="part-title">The Competitive Landscape</h1>
-    <p class="part-desc">Two competitors identified by Dee today. One is a platform to study. One is a comparison to actively avoid.</p>
-  </div>
+    <!-- Target -->
+    <div class="card" style="margin-top: 16px;">
+      <div class="card-title"><span class="dot dot-purple"></span> Target Audience — Validated ICP</div>
+      <div class="profile-grid">
+        <div class="profile-item">
+          <div class="pkey">Age Range</div>
+          <div class="pval">40–59 primary · 60+ secondary</div>
+        </div>
+        <div class="profile-item">
+          <div class="pkey">Net Worth</div>
+          <div class="pval">$500K–$2M+ across property, super, traditional investments</div>
+        </div>
+        <div class="profile-item">
+          <div class="pkey">Digital Asset Allocation Ready</div>
+          <div class="pval">$25K–$250K to deploy</div>
+        </div>
+        <div class="profile-item">
+          <div class="pkey">Geographies</div>
+          <div class="pval">Australia (primary) · USA · UK / Canada emerging</div>
+        </div>
+        <div class="profile-item">
+          <div class="pkey">Primary Fear</div>
+          <div class="pval">Making a catastrophic mistake — NOT FOMO</div>
+        </div>
+        <div class="profile-item">
+          <div class="pkey">Trust Signals</div>
+          <div class="pval">No affiliates · No signals · Education-first · Personal story</div>
+        </div>
+      </div>
+      <p style="margin-top: 12px; font-size: 12.5px; color: var(--text-muted);">Validated by Dee (March 2026): HNW Canadian woman, traditional wealth, acquisition path YouTube → competitors → Ben → Platinum. She described her philosophy as "protection, preservation, and growth" — our exact messaging — unprompted.</p>
+    </div>
 
-  <!-- 5.1 Invest Diva -->
-  <h2 class="sub-head"><span class="sub-num">5.1</span> Invest Diva — <span class="badge badge-green">STUDY THIS PLATFORM</span></h2>
+    <!-- Messaging Framework -->
+    <div class="card" style="margin-top: 16px;">
+      <div class="card-title"><span class="dot dot-orange"></span> Core Messaging — Protection, Preservation, Growth</div>
+      <div class="two-col" style="margin-top: 12px;">
+        <div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-family: 'Source Code Pro', monospace; text-transform: uppercase; letter-spacing: 0.07em;">❌ Never Say</div>
+          <ul class="redlist" style="font-size: 13px;">
+            <li>"Crypto" — always "digital assets"</li>
+            <li>"Crypto market" — "digital asset market"</li>
+            <li>"Returns" / "gains" / "profits"</li>
+            <li>"Moon" / "bull run" (speculative framing)</li>
+            <li>"Get in early" — FOMO play</li>
+            <li>"The next 100x" — degenerate framing</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-family: 'Source Code Pro', monospace; text-transform: uppercase; letter-spacing: 0.07em;">✅ Always Say</div>
+          <ul class="checklist" style="font-size: 13px;">
+            <li>"Digital assets" — always</li>
+            <li>"Digital asset market / investing"</li>
+            <li>"Protection, preservation, growth"</li>
+            <li>"Strategy" / "framework" / "system"</li>
+            <li>"Generational wealth" / "wealth building"</li>
+            <li>"Bitcoin" — stays as Bitcoin, always</li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
-  <div class="quote-card green">
-    <div class="quote-text">"Her platform would be a really good one for you guys to model on."</div>
-    <div class="quote-attr">Dee · Canadian Platinum Member · March 27, 2026</div>
-  </div>
+    <!-- 5 Content Pillars -->
+    <h3 style="font-size: 15px; margin: 24px 0 12px;">5 Content Pillars</h3>
+    <div class="pillar-list">
+      <div class="pillar-item">
+        <span class="pillar-num">P1</span>
+        <div>
+          <div class="pillar-name">Bitcoin &amp; Digital Asset Strategy</div>
+          <div class="pillar-desc">The systematic, framework-driven approach to investing. Not speculation — strategy. Covers mechanics of building and managing a digital asset portfolio with discipline. HNW investors don't want tips — they want a system.</div>
+        </div>
+      </div>
+      <div class="pillar-item">
+        <span class="pillar-num">P2</span>
+        <div>
+          <div class="pillar-name">Wealth Preservation &amp; Protection</div>
+          <div class="pillar-desc">Why existing wealth needs digital asset exposure — from a preservation-first lens. Inflation hedging, real estate risks, traditional portfolio vulnerabilities, generational wealth. Primary fear of the ICP: losing what they've built.</div>
+        </div>
+      </div>
+      <div class="pillar-item">
+        <span class="pillar-num">P3</span>
+        <div>
+          <div class="pillar-name">Market Intelligence &amp; Research</div>
+          <div class="pillar-desc">Institutional adoption, macro trends, on-chain data, what the evidence shows. BlackRock, Fidelity, nation states, regulatory shifts — filtered through a wealth-builder's lens, not hype. CS does the research so members don't have to wade through noise.</div>
+        </div>
+      </div>
+      <div class="pillar-item">
+        <span class="pillar-num">P4</span>
+        <div>
+          <div class="pillar-name">Real Talk &amp; Transparency</div>
+          <div class="pillar-desc">Ben's personal portfolio updates, honest stories about mistakes, no-affiliate commitment, member results, myth-busting. No polish, no agenda — just truth. When Ben shows his actual portfolio and owns his mistakes, it creates the parasocial trust that converts viewers to Platinum.</div>
+        </div>
+      </div>
+      <div class="pillar-item">
+        <span class="pillar-num">P5</span>
+        <div>
+          <div class="pillar-name">The Digital Asset Education Gap</div>
+          <div class="pillar-desc">Why most "crypto" content is garbage. How sophisticated investors are being underserved. What a real framework looks like vs tips, signals, and shilling. ICP has already tried the other stuff — this pillar validates their frustration and positions Ben as the antidote.</div>
+        </div>
+      </div>
+    </div>
 
-  <div class="grid-2">
-    <div class="card no-break">
-      <div class="card-title">📋 Platform Structure</div>
-      <div class="card-body">
-        <ul class="plain-list">
-          <li>Full class calendar — 2–3 lessons every day</li>
-          <li>Multiple streams: investment, business, writing books</li>
-          <li>Investment stream has 3–4 categories / paths within it</li>
-          <li>Clear graduation model: beginner → advanced</li>
-          <li>Requires 10–25 stock analyses to "graduate" to next level</li>
-          <li>Teaches a "triple compounding strategy"</li>
-          <li>Not digital asset-focused — more traditional investing with some digital asset content</li>
+    <!-- VSL CTA -->
+    <h3 style="font-size: 15px; margin: 24px 0 12px;">VSL CTA — Every Video Description</h3>
+    <p style="font-size: 13.5px; margin-bottom: 12px;">Primary call-to-action across all YouTube content. Link to free training video in every description:</p>
+
+    <div class="vsl-box">
+      <div class="vsl-icon">🎯</div>
+      <div>
+        <div class="vsl-label">VSL Link — All YouTube Videos</div>
+        <div class="vsl-title">Free Training: How High Net Worth Investors Are Protecting and Growing Generational Wealth With Digital Assets</div>
+        <a href="https://collectiveshift.net/trainingvslv5?utm_source=youtube&utm_medium=organic_post&utm_campaign=vslv5&el=youtube">
+          https://collectiveshift.net/trainingvslv5?utm_source=youtube&utm_medium=organic_post&utm_campaign=vslv5&el=youtube
+        </a>
+      </div>
+    </div>
+
+    <!-- The Bridge Script -->
+    <div class="card" style="margin-top: 20px;">
+      <div class="card-title"><span class="dot dot-green"></span> The Bridge Script — Last 60 Seconds of Every Video</div>
+      <div class="callout-purple callout" style="margin-top: 10px;">
+        "Everything I've shared today is the kind of strategic education we deliver inside Collective Shift Platinum. I've given you the WHAT — the frameworks, the data, the context. Inside Platinum, our members get the HOW — weekly implementation calls, 8 private analyst sessions, our live audited portfolio, and a community of 350+ serious investors. If you want to see how high net worth investors are protecting and growing generational wealth with digital assets, click the link in the description below to watch our free training."
+      </div>
+    </div>
+
+    <!-- 90/10 System -->
+    <div class="card" style="margin-top: 16px;">
+      <div class="card-title"><span class="dot"></span> The 90/10 System (Jeremy Haynes, adapted for digital assets)</div>
+      <table style="margin-top: 10px;">
+        <thead>
+          <tr><th>Layer</th><th>Content Type</th><th>Where</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag tag-orange">10% Free</span></td>
+            <td>Frameworks, WHAT to look for, data/levels, emotional cycle context, sell strategy types, why bear markets matter</td>
+            <td>YouTube (public)</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-purple">90% Paid</span></td>
+            <td>Specific entries/exits, portfolio alerts, exact allocation models, 1:1 coaching, implementation, community, weekly live calls</td>
+            <td>Platinum membership</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 10px;">The gap this creates: viewers think "If this is what he gives away for free, what's inside Platinum?" The 10% is still more valuable than what competitors charge for. This is the conversion engine.</p>
+    </div>
+
+    <!-- Video Cadence -->
+    <div class="two-col" style="margin-top: 16px;">
+      <div class="card">
+        <div class="card-title"><span class="dot dot-purple"></span> Format &amp; Cadence</div>
+        <ul style="font-size: 13px; padding-left: 18px; line-height: 2.2;">
+          <li><strong>2 videos/week</strong> — Tuesday &amp; Thursday</li>
+          <li><strong>Length:</strong> 15–25 minutes (long-form builds trust for $15K+ decisions)</li>
+          <li><strong>Equipment:</strong> iPad — authenticity wins over production</li>
+          <li><strong>Film when inspired</strong> — not rigidly scheduled</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot dot-green"></span> Video Structure</div>
+        <ul style="font-size: 13px; padding-left: 18px; line-height: 2.2;">
+          <li><strong>Hook (0–30s):</strong> Deliver on title promise immediately</li>
+          <li><strong>Problem frame (30s–2min):</strong> Why this matters for HNW ICP</li>
+          <li><strong>Content (2–20min):</strong> Teach the WHAT — frameworks, data, examples</li>
+          <li><strong>Bridge CTA (last 60s):</strong> The Bridge Script — every video</li>
         </ul>
       </div>
     </div>
-    <div class="card no-break">
-      <div class="card-title">✅ What We Should Study</div>
-      <div class="card-body">
-        <ul class="plain-list">
-          <li><strong>Calendar UX</strong> — Dee specifically likes how it displays classes and lets her plan ahead</li>
-          <li><strong>Multiple learning paths</strong> — Different entry points based on investor type or goal</li>
-          <li><strong>Graduation model</strong> — Module completion = progression. Simple, motivating.</li>
-          <li><strong>Content cadence</strong> — Regular, structured lessons creates habit and engagement</li>
-          <li><strong>Women-friendly framing</strong> — CS can apply this for the HNW female demographic</li>
-        </ul>
-      </div>
+  </div>
+
+  <!-- ——— FOOTER ——— -->
+  <div style="margin-top: 60px; padding-top: 20px; border-top: 2px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; font-size: 11px; color: var(--text-muted); font-family: 'Source Code Pro', monospace;">
+    <div>
+      <div>COLLECTIVE SHIFT — INTERNAL ONLY</div>
+      <div>Product &amp; Market Intelligence Briefing | March 27, 2026</div>
+    </div>
+    <div style="text-align: right;">
+      <div>From: Ben Simpson, CEO &amp; CMO</div>
+      <div>To: Travis, CGO</div>
     </div>
   </div>
 
-  <div class="insight-box green-box">
-    <div class="insight-box-label">🎯 CGO Action Item</div>
-    <p>Travis: Conduct a structured analysis of Invest Diva's platform — calendar UX, learning path structure, graduation model, and content cadence. These are all elements CS can adapt for the Circle platform launch and the 2-track education rollout. Dee is an active Invest Diva member — she's a live competitive intelligence source.</p>
-  </div>
+</div><!-- /.document -->
 
-  <!-- 5.2 Decentralized Masters -->
-  <h2 class="sub-head"><span class="sub-num">5.2</span> Decentralized Masters — <span class="badge badge-red">AVOID COMPARISON</span></h2>
-
-  <div class="quote-card">
-    <div class="quote-text">"I don't like that guy at all." <em>[Dee's husband]</em></div>
-    <div class="quote-attr">Dee · On Decentralized Masters founder · Prospect intelligence</div>
-  </div>
-
-  <div class="grid-2">
-    <div class="card card-orange no-break">
-      <div class="card-title">🚩 Red Flags</div>
-      <div class="card-body">
-        <ul class="plain-list">
-          <li>Dubai-based. Claims 10–12% <strong>monthly</strong> returns (mathematically nonsensical)</li>
-          <li>Sells access to "native markets" (DEX access) as their secret sauce</li>
-          <li>$20–25K USD for premium level</li>
-          <li>Same recycled success story videos</li>
-          <li>ABN method: Bitcoin → L1s → "native market"</li>
-          <li>99.9% of tokens in their "native market" are worthless</li>
-        </ul>
-      </div>
-    </div>
-    <div class="card no-break">
-      <div class="card-title">✅ Our Positioning Advantage</div>
-      <div class="card-body">
-        <ul class="plain-list">
-          <li>We <strong>never</strong> make monthly return claims</li>
-          <li>We are an education company — not selling access to markets</li>
-          <li>No affiliates, no shilling, no agenda</li>
-          <li>Sophisticated HNW investors see through claims like "10–12% monthly" — and then find Ben</li>
-          <li>Dee's husband rejected Decentralized Masters — she found CS. This is the funnel.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div class="insight-box purple-box">
-    <div class="insight-box-label">📌 Do Not Mention Decentralized Masters by Name in Content</div>
-    <p>Ben's assessment: <em>"Basically selling access to DEXes. 99.9% of tokens worthless."</em> Do not create content that compares CS to them — it elevates them. Instead, create general content about "how to spot red flags in digital asset education" that implicitly addresses this category without naming them.</p>
-  </div>
-</div>
-
-<!-- ============================================================
-     PART 6: YOUTUBE STRATEGY
-     ============================================================ -->
-<div class="doc-section" id="part6">
-  <div class="part-header">
-    <div class="part-eyebrow">Part 6 · Growth Strategy</div>
-    <h1 class="part-title">YouTube Strategy Overview</h1>
-    <p class="part-desc">Validated March 27, 2026 by Dee's acquisition story. YouTube is THE #1 acquisition channel for HNW beginners. The "Bloomberg for Digital Assets" positioning is live.</p>
-  </div>
-
-  <!-- 6.1 Positioning -->
-  <h2 class="sub-head"><span class="sub-num">6.1</span> Positioning</h2>
-  <div class="card card-dark">
-    <div style="font-family:var(--font-head);font-size:22px;font-weight:700;color:#fff;letter-spacing:-0.01em;margin-bottom:10px;">"Bloomberg for Digital Assets"</div>
-    <div class="card-body">Institutional-grade intelligence for HNW investors. Not a crypto channel. Not tips, signals, or hype. A strategic education resource for serious wealth builders. Competitors target young speculators. <strong style="color:#FC5C03;">CS owns the 40–59 HNW professional segment — blue ocean.</strong></div>
-  </div>
-
-  <div class="grid-2" style="margin-top:20px;">
-    <div class="card no-break">
-      <div class="card-title">📐 The Big Topic (North Star)</div>
-      <div class="card-body" style="font-style:italic;">"How Successful People Are Using Digital Assets to Protect, Preserve, and Build Generational Wealth — Without the Noise"</div>
-    </div>
-    <div class="card no-break">
-      <div class="card-title">🎯 Validated ICP (from Dee, March 2026)</div>
-      <div class="card-body">Age 40–59. $500K–$2M+ net worth. Business owners, executives, pre-retirees. Primary fear: making a catastrophic mistake. Primary goal: preservation + growth. Trust signal: no affiliates, education-first.</div>
-    </div>
-  </div>
-
-  <h3 class="sub-sub-head">Language Rules (Non-Negotiable)</h3>
-  <table class="data-table no-break" style="max-width:500px;">
-    <thead>
-      <tr><th>❌ Never Say</th><th>✅ Always Say</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>Crypto</td><td><strong>Digital assets</strong></td></tr>
-      <tr><td>Crypto investing</td><td><strong>Digital asset investing</strong></td></tr>
-      <tr><td>Returns, gains, moon</td><td><strong>Protection, preservation, growth</strong></td></tr>
-      <tr><td>Get in early</td><td><strong>Build a strategic position</strong></td></tr>
-      <tr><td>Bull run / next 100x</td><td><strong>Market cycle / strategic accumulation</strong></td></tr>
-      <tr><td colspan="2" style="font-size:11px;color:var(--text-muted);">Exception: Bitcoin stays as Bitcoin. ✅</td></tr>
-    </tbody>
-  </table>
-
-  <!-- 6.2 Content Pillars -->
-  <h2 class="sub-head"><span class="sub-num">6.2</span> The 5 Content Pillars</h2>
-  <div class="grid-2">
-    <div class="pillar-card no-break" style="margin-bottom:12px;">
-      <div class="pillar-num">01</div>
-      <div class="pillar-title">Bitcoin &amp; Digital Asset Strategy</div>
-      <div class="pillar-body">Systematic, framework-driven investing. Not speculation — strategy. Shows HNW investors that real frameworks exist. Positions Platinum as where the implementation lives.</div>
-    </div>
-    <div class="pillar-card no-break" style="margin-bottom:12px;">
-      <div class="pillar-num">02</div>
-      <div class="pillar-title">Wealth Preservation &amp; Protection</div>
-      <div class="pillar-body">Why existing wealth needs digital asset exposure — preservation-first lens. Inflation hedging, real estate risks, generational wealth building. Validates the ICP's primary fear (don't lose what I've built) and positions digital assets as a protection mechanism.</div>
-    </div>
-    <div class="pillar-card no-break" style="margin-bottom:12px;">
-      <div class="pillar-num">03</div>
-      <div class="pillar-title">Market Intelligence &amp; Research</div>
-      <div class="pillar-body">Institutional adoption, macro trends, on-chain data. BlackRock, Fidelity, nation states — filtered through a wealth-builder's lens. Signals that CS does the research so members don't have to. Builds credibility.</div>
-    </div>
-    <div class="pillar-card no-break" style="margin-bottom:12px;">
-      <div class="pillar-num">04</div>
-      <div class="pillar-title">Real Talk &amp; Transparency</div>
-      <div class="pillar-body">Ben's personal portfolio updates, honest mistakes, no-affiliate commitment, member results, myth-busting. No polish, no agenda. When Ben shows his actual portfolio and owns mistakes, it creates parasocial trust that converts to Platinum.</div>
-    </div>
-    <div class="pillar-card no-break" style="margin-bottom:12px;">
-      <div class="pillar-num">05</div>
-      <div class="pillar-title">The Digital Asset Education Gap</div>
-      <div class="pillar-body">Why most "crypto" content is garbage. Positions CS against the entire low-quality content ecosystem. Our ICP has already tried the other stuff and knows it's not right for them. This pillar validates their frustration and positions Ben as the antidote.</div>
-    </div>
-  </div>
-
-  <!-- 6.3 Messaging Framework -->
-  <h2 class="sub-head"><span class="sub-num">6.3</span> Messaging Framework</h2>
-  <div class="grid-3">
-    <div class="card" style="text-align:center;border-top:3px solid var(--orange);">
-      <div style="font-size:24px;margin-bottom:8px;">🛡️</div>
-      <div class="card-title">Protection</div>
-      <div class="card-body">Guard existing wealth against inflation, currency debasement, systemic risk. The ICP's primary fear driver.</div>
-    </div>
-    <div class="card" style="text-align:center;border-top:3px solid var(--green);">
-      <div style="font-size:24px;margin-bottom:8px;">🏦</div>
-      <div class="card-title">Preservation</div>
-      <div class="card-body">Don't make a catastrophic mistake. Systematic, not emotional. Education over speculation.</div>
-    </div>
-    <div class="card" style="text-align:center;border-top:3px solid var(--purple);">
-      <div style="font-size:24px;margin-bottom:8px;">📈</div>
-      <div class="card-title">Growth</div>
-      <div class="card-body">Build generational wealth over 5–10 years, not overnight. Long game. Framework-based.</div>
-    </div>
-  </div>
-
-  <h3 class="sub-sub-head">The 90/10 Content System</h3>
-  <table class="data-table no-break">
-    <thead>
-      <tr><th>Layer</th><th>Content Type</th><th>Destination</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="badge badge-orange">10% (Free)</span></td>
-        <td>Frameworks, WHAT to look for, data/levels, emotional cycle, sell strategy TYPES, why bear markets matter</td>
-        <td>YouTube (public). Creates "if this is free, what's inside Platinum?" effect.</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-green">90% (Paid)</span></td>
-        <td>Specific entries/exits, portfolio alerts, exact allocation models, 1-on-1 coaching, implementation support, community, weekly live calls</td>
-        <td>Platinum membership. The HOW to everything taught in the 10%.</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="insight-box">
-    <div class="insight-box-label">📺 Video Cadence</div>
-    <p><strong>2 videos/week</strong> (Tuesday &amp; Thursday). <strong>15–25 min long-form</strong> — builds the trust required for $15K+ decisions. Film when inspired, not on a rigid schedule. <strong>Format:</strong> Hook (0–30s) → Problem framing (30s–2min) → Content (2–20min) → Bridge CTA (final 60 seconds, every video).</p>
-  </div>
-</div>
-
-<!-- ============================================================
-     PART 7: KEY MEMBER PROFILES
-     ============================================================ -->
-<div class="doc-section" id="part7">
-  <div class="part-header">
-    <div class="part-eyebrow">Part 7 · Member Intelligence</div>
-    <h1 class="part-title">Key Member Profiles</h1>
-    <p class="part-desc">Seven representative archetypes drawn from education call analysis. Every growth decision should be filtered through these profiles.</p>
-  </div>
-
-  <table class="data-table">
-    <thead>
-      <tr>
-        <th>Member</th>
-        <th>Capital &amp; Profile</th>
-        <th>Type</th>
-        <th>Key Insight for Growth</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Dee</strong><br><span style="font-size:11px;color:var(--text-muted);">Canadian, Toronto</span></td>
-        <td>$20K digital assets + $100K cash. Multiple real estate, stocks, private wealth manager. Complete beginner.</td>
-        <td><span class="badge badge-green">Wealth Protection</span></td>
-        <td>Found CS via YouTube after 1 year of research. Validates the HNW acquisition funnel perfectly. The ideal prospect — sophisticated, high-intent, high-trust-required.</td>
-      </tr>
-      <tr>
-        <td><strong>Nigel</strong><br><span style="font-size:11px;color:var(--text-muted);">Australian, 56</span></td>
-        <td>~$200K liquid capital from property sale + $80K earmarked for CGT. First $5K in Oct 2025. Complete novice.</td>
-        <td><span class="badge badge-green">Wealth Protection</span></td>
-        <td><em>"I feel like an idiot just being new and posting."</em> Community intimidation is real and silent. His profile is the dominant beginner archetype — recently liquid, age 50s, retirement-focused.</td>
-      </tr>
-      <tr>
-        <td><strong>Stacey</strong><br><span style="font-size:11px;color:var(--text-muted);">Canadian, precious metals investor</span></td>
-        <td>~$100K+ in silver/gold. Transitioning portion to digital assets. Goals: buy 1 whole Bitcoin.</td>
-        <td><span class="badge badge-green">Wealth Protection</span></td>
-        <td>Precious metals → Bitcoin is a natural migration. They understand scarcity and store-of-value. CS should target this demographic — underserved, highly aligned with the Bitcoin thesis.</td>
-      </tr>
-      <tr>
-        <td><strong>Harry</strong><br><span style="font-size:11px;color:var(--text-muted);">Australian tradie, small business</span></td>
-        <td>~50% of net worth in digital assets (~$100K+ BTC). Found CS at CryptoCon Sydney. Goals: house, car, stack Bitcoin.</td>
-        <td><span class="badge badge-orange">Wealth Generation</span></td>
-        <td>Found CS at CryptoCon. High engagement, curious, wants advanced knowledge quickly. Event presence is a validated acquisition channel. CryptoCon cited multiple times.</td>
-      </tr>
-      <tr>
-        <td><strong>Greg</strong><br><span style="font-size:11px;color:var(--text-muted);">Australian couple</span></td>
-        <td>~$180K → ~$80K (portfolio decline). Joined Jan 2026. Self-described "headless chooks" before CS.</td>
-        <td><span class="badge badge-orange">Wealth Generation</span></td>
-        <td>The Round-Tripper archetype. Made it up, gave it all back. Joined CS seeking structure. <em>"Like the curse — as soon as we sign up, we lose all our money."</em> Highest churn risk during extended bear markets.</td>
-      </tr>
-      <tr>
-        <td><strong>Ryan</strong><br><span style="font-size:11px;color:var(--text-muted);">US-based, since 2015</span></td>
-        <td>~$300K invested, $80K USDC sideline. Had near-$1M portfolio before, lost significant value day trading.</td>
-        <td><span class="badge badge-orange">Wealth Generation</span></td>
-        <td>Experienced but undisciplined. 50/50 BTC/altcoin mentality. Simon had to recalibrate. Content about "why day trading fails" resonates strongly with this profile — they've lived it.</td>
-      </tr>
-      <tr>
-        <td><strong>John / Johannes</strong><br><span style="font-size:11px;color:var(--text-muted);">European (German/Dutch)</span></td>
-        <td>~$300K invested, sold most holdings when BTC broke $80K. Sought CS for re-entry strategy.</td>
-        <td><span class="badge badge-purple">Income Creation</span></td>
-        <td>Sophisticated investor who wanted clearer triggers than "be patient." Proactively took more aggressive action than CS guidance. Represents international HNW who need more quantitative frameworks.</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="insight-box">
-    <div class="insight-box-label">🎯 Key Archetype for Travis: The Round-Tripper</div>
-    <p>The dominant prospect type across all education calls. Experienced the 2021 bull run. Made significant gains. Had no sell strategy. Gave it all back in 2022 or 2023. Now in drawdown again. Joining CS seeking a framework they didn't have last time. <strong>Step 8 (Sell Strategy) is the entry hook for this entire archetype.</strong> It's the most powerful marketing message CS has.</p>
-  </div>
-</div>
-
-<!-- ============================================================
-     PART 8: RECOMMENDATIONS
-     ============================================================ -->
-<div class="doc-section" id="part8">
-  <div class="part-header">
-    <div class="part-eyebrow">Part 8 · Action Items</div>
-    <h1 class="part-title">Recommendations &amp; Action Items</h1>
-    <p class="part-desc">Prioritised across Product, Marketing, Sales, and CSM. Ranked by urgency and impact.</p>
-  </div>
-
-  <h2 class="sub-head"><span class="sub-num">8.1</span> Product</h2>
-
-  <div class="priority-item no-break">
-    <div class="priority-num">1</div>
-    <div class="priority-content">
-      <div class="priority-title">Build the How-To Video Library <span class="badge badge-orange">URGENT</span></div>
-      <div class="priority-body">Short 5–10 min recordings: 2FA setup, Coinbase recurring buys, limit orders via Coinbase Advanced, USDC yield setup, security basics (seed phrase, recovery), hardware wallet transfer. Dee asked for these today. Multiple other members have the same gap. This unlocks Level 1 self-service and reduces call load on analysts.</div>
-    </div>
-  </div>
-
-  <div class="priority-item no-break">
-    <div class="priority-num">2</div>
-    <div class="priority-content">
-      <div class="priority-title">Launch Circle Beginner's Lounge <span class="badge badge-orange">URGENT</span></div>
-      <div class="priority-body">Dedicated safe space on Circle for new Platinum members. Nigel: <em>"I feel like an idiot just being new and posting."</em> Dee: <em>"I don't want to drag others down."</em> This is a real churn risk — community intimidation causes disengagement. The Beginner's Lounge is the direct fix. Launch with Circle in 1–2 weeks.</div>
-    </div>
-  </div>
-
-  <div class="priority-item no-break">
-    <div class="priority-num">3</div>
-    <div class="priority-content">
-      <div class="priority-title">Fix Calendar Timezone Bug <span class="badge badge-orange">URGENT</span></div>
-      <div class="priority-body">Weekly Forum showing at 10pm instead of 5pm ET for Canadian/US members. Dee flagged it. Others have too. Members are missing live calls because of a display bug. Fix required before Circle launch — don't carry this bug into the new platform.</div>
-    </div>
-  </div>
-
-  <div class="priority-item no-break">
-    <div class="priority-num green">4</div>
-    <div class="priority-content">
-      <div class="priority-title">Build Beginner Journey Onboarding Flow</div>
-      <div class="priority-body">From signup → first BTC purchase → first self-custody transfer. Guided, step-by-step, with completion checkpoints. Current gap between joining and competence is the #1 churn risk for new members. The gap between joining and getting value is too wide without structure.</div>
-    </div>
-  </div>
-
-  <div class="priority-item no-break">
-    <div class="priority-num green">5</div>
-    <div class="priority-content">
-      <div class="priority-title">Build the Portfolio Allocation Calculator</div>
-      <div class="priority-body">Interactive tool: input risk tolerance, capital, and time horizon → output suggested BTC/altcoin/stablecoin split. Three investor types built in. Would reduce the most repetitive 1-on-1 call content and help members self-serve. Reduces Simon's call load significantly.</div>
-    </div>
-  </div>
-
-  <div class="priority-item no-break">
-    <div class="priority-num green">6</div>
-    <div class="priority-content">
-      <div class="priority-title">Improve Research Platform Discovery</div>
-      <div class="priority-body">Members aren't finding content. Simon had to walk Stacey through finding his 2026 Outlook post. Implement: email digest of new research posts, push notifications for major analyst updates, "Latest from Your Analyst" widget on dashboard. Content is being created but not being consumed.</div>
-    </div>
-  </div>
-
-  <h2 class="sub-head"><span class="sub-num">8.2</span> Marketing</h2>
-
-  <div class="priority-item no-break">
-    <div class="priority-num">7</div>
-    <div class="priority-content">
-      <div class="priority-title">"Bear Market = Best Entry" Campaign</div>
-      <div class="priority-body">Every single education call confirms new members are better positioned than those who joined at the top. Members who joined now (like Nigel) will look back at this as the best time to have entered. Turn this into the primary acquisition campaign — bear market is when serious investors start, not stop.</div>
-    </div>
-  </div>
-
-  <div class="priority-item no-break">
-    <div class="priority-num">8</div>
-    <div class="priority-content">
-      <div class="priority-title">XRP Counter-Narrative Content</div>
-      <div class="priority-body">~60% of members ask about XRP in their first calls. Every XRP holder who's frustrated is a high-intent prospect. Create content: "8 Years of XRP: The Data Doesn't Lie" — data-driven, respectful, honest. This is a massive funnel magnet. Simon has the perfect framework for it already.</div>
-    </div>
-  </div>
-
-  <div class="priority-item no-break">
-    <div class="priority-num purple">9</div>
-    <div class="priority-content">
-      <div class="priority-title">Target Precious Metals Investors on YouTube</div>
-      <div class="priority-body">Stacey represents an underserved but perfectly aligned ICP: precious metals holders curious about digital assets. They understand scarcity, store-of-value, and physical asset protection. They are natural Bitcoin converts. Create content specifically addressing this audience: "From Gold to Bitcoin: A Wealth Protector's Framework."</div>
-    </div>
-  </div>
-
-  <h2 class="sub-head"><span class="sub-num">8.3</span> Sales</h2>
-
-  <div class="priority-item no-break">
-    <div class="priority-num purple">10</div>
-    <div class="priority-content">
-      <div class="priority-title">Explore Toronto In-Person Event</div>
-      <div class="priority-body">Dee volunteered to help organise. Toronto = Canada's financial centre — ideal for HNW beginners. Montreal as an alternative (more international, less expensive). Dee is an advocate member willing to promote. Harry found CS at CryptoCon — event presence is a validated acquisition channel. Canada is an emerging market for CS.</div>
-    </div>
-  </div>
-
-  <div class="priority-item no-break">
-    <div class="priority-num dark">11</div>
-    <div class="priority-content">
-      <div class="priority-title">Protect 1-on-1 Call Capacity</div>
-      <div class="priority-body">The 1-on-1 calls are the retention moat. Members value them enormously. Consider whether members with $200K+ capital should get more frequent calls. Also: the Portfolio Allocation Calculator and how-to video library reduce call load, freeing analyst time for more strategic sessions.</div>
-    </div>
-  </div>
-
-  <h2 class="sub-head"><span class="sub-num">8.4</span> CSM</h2>
-
-  <div class="priority-item no-break">
-    <div class="priority-num dark">12</div>
-    <div class="priority-content">
-      <div class="priority-title">Proactive Outreach: Oct–Dec 2025 Cohort</div>
-      <div class="priority-body">Members who joined Oct–Dec 2025 are sitting in significant drawdowns. Their renewal decision will correlate with market recovery. Greg: <em>"Like the curse."</em> Proactive outreach before renewal dates. Reframe the bear market as exactly why they joined — and why they're better positioned than anyone who joined at the top.</div>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================
-     PART 9: KEY QUOTES
-     ============================================================ -->
-<div class="doc-section" id="part9">
-  <div class="part-header">
-    <div class="part-eyebrow">Part 9 · Reference</div>
-    <h1 class="part-title">Key Quotes</h1>
-    <p class="part-desc">The most powerful member and analyst quotes. Use these in content, training, and internal strategy.</p>
-  </div>
-
-  <div class="grid-2">
-    <div class="quote-card no-break">
-      <div class="quote-text">"I feel a big shift is happening in the world right now. And I feel everything that I've felt comfortable with my whole life is disappearing underneath me."</div>
-      <div class="quote-attr">Dee · Canadian Platinum Member — The Core ICP Fear</div>
-    </div>
-    <div class="quote-card green no-break">
-      <div class="quote-text">"A lot of your values and what you're talking about is what I believe in. That's why I'm here."</div>
-      <div class="quote-attr">Nigel · Australian Platinum Member — Why CS Wins on Trust</div>
-    </div>
-    <div class="quote-card purple no-break">
-      <div class="quote-text">"I feel like an idiot just being new and posting some guide that I follow."</div>
-      <div class="quote-attr">Nigel · Community Intimidation — The Silent Churn Risk</div>
-    </div>
-    <div class="quote-card no-break">
-      <div class="quote-text">"My best investment decision wasn't Solana at 10x. It was getting out of Polygon before I lost 70–80%."</div>
-      <div class="quote-attr">Simon Amery · Head of Education — Used in Step 8: Sell Strategy</div>
-    </div>
-    <div class="quote-card green no-break">
-      <div class="quote-text">"Dollar cost averaging — you catch some up there, you catch some down there, you take the emotion out of it. I've never regretted DCA."</div>
-      <div class="quote-attr">Simon Amery · Used in Step 2: Bitcoin and Step 5: Buy &amp; Sell</div>
-    </div>
-    <div class="quote-card purple no-break">
-      <div class="quote-text">"Her platform would be a really good one for you guys to model on."</div>
-      <div class="quote-attr">Dee · On Invest Diva — Competitive Intelligence for Product</div>
-    </div>
-    <div class="quote-card no-break">
-      <div class="quote-text">"A strategy in your head is not a strategy. It's a vague intention."</div>
-      <div class="quote-attr">Shift OS Philosophy · The Core Teaching of Step 8: Sell Strategy</div>
-    </div>
-    <div class="quote-card green no-break">
-      <div class="quote-text">"I've never met a single person who's ever said: buying and holding Bitcoin for long term was a bad idea. Everyone who's been in the space long enough says: buying and holding an altcoin for long term was a bad idea."</div>
-      <div class="quote-attr">Simon Amery · The CS Bitcoin Philosophy — Use in All Content</div>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================
-     APPENDIX: SIMON'S TEACHING FRAMEWORKS
-     ============================================================ -->
-<div class="doc-section" id="appendix">
-  <div class="part-header">
-    <div class="part-eyebrow">Appendix · Reference</div>
-    <h1 class="part-title">Simon's 10 Teaching Frameworks</h1>
-    <p class="part-desc">Battle-tested explanations from 30+ member education calls. Every analyst, content creator, and sales team member should use these consistently. They work because they're real, specific, and memorable.</p>
-  </div>
-
-  <div class="insight-box green-box">
-    <div class="insight-box-label">📌 Usage Instruction for Travis</div>
-    <p>These frameworks are the most effective content assets CS has. They are reusable across all channels: YouTube scripts, community posts, sales calls, CSM outreach, email sequences. Templatise them. Build a library. Use them everywhere.</p>
-  </div>
-
-  <ul class="framework-list">
-    <li class="framework-item no-break">
-      <div class="framework-icon">1</div>
-      <div class="framework-content">
-        <div class="framework-title">Altcoins = Tech Startups, Not Stocks</div>
-        <div class="framework-quote">"Altcoins should really be called tech startups. The only similarity with Bitcoin is they both use blockchain technology. That's where it ends."</div>
-        <div style="margin-top:6px;font-family:var(--font-mono);font-size:9px;color:var(--text-muted);">USE IN: Step 3 Altcoins, all content, onboarding calls · WHY: Immediately shifts the mental model. Members stop applying stock market logic to altcoins.</div>
-      </div>
-    </li>
-    <li class="framework-item no-break">
-      <div class="framework-icon">2</div>
-      <div class="framework-content">
-        <div class="framework-title">The DCA Certainty</div>
-        <div class="framework-quote">"Dollar cost averaging — you catch some up there, you catch some down there, you take the emotion out of it. I've never regretted DCA."</div>
-        <div style="margin-top:6px;font-family:var(--font-mono);font-size:9px;color:var(--text-muted);">USE IN: Step 2 Bitcoin, Step 5 Buy &amp; Sell · WHY: Removes timing anxiety. Members who hear this start executing instead of waiting.</div>
-      </div>
-    </li>
-    <li class="framework-item no-break">
-      <div class="framework-icon">3</div>
-      <div class="framework-content">
-        <div class="framework-title">The Best Trade Was a Loss</div>
-        <div class="framework-quote">"My best investment decision wasn't Solana at 10x. It was getting out of Polygon before I lost 70–80%."</div>
-        <div style="margin-top:6px;font-family:var(--font-mono);font-size:9px;color:var(--text-muted);">USE IN: Step 8 Sell Strategy · WHY: Counterintuitive, memorable. Reframes selling at a loss as a skill, not a failure. Directly addresses the Round-Tripper archetype.</div>
-      </div>
-    </li>
-    <li class="framework-item no-break">
-      <div class="framework-icon">4</div>
-      <div class="framework-content">
-        <div class="framework-title">The Price You Deserve</div>
-        <div class="framework-quote">"Everyone gets Bitcoin at the price they deserve. That's the cost of entry."</div>
-        <div style="margin-top:6px;font-family:var(--font-mono);font-size:9px;color:var(--text-muted);">USE IN: Step 2 Bitcoin, onboarding, bear market messaging · WHY: Removes regret about not buying earlier. Empowers action now.</div>
-      </div>
-    </li>
-    <li class="framework-item no-break">
-      <div class="framework-icon">5</div>
-      <div class="framework-content">
-        <div class="framework-title">Paranoia = Zeros</div>
-        <div class="framework-quote">"The level of paranoia should be equal to the number of zeros you're trying to protect."</div>
-        <div style="margin-top:6px;font-family:var(--font-mono);font-size:9px;color:var(--text-muted);">USE IN: Step 6 Send &amp; Store · WHY: Scales security advice proportionally. A $500 portfolio doesn't need the same setup as a $500K portfolio.</div>
-      </div>
-    </li>
-    <li class="framework-item no-break">
-      <div class="framework-icon">6</div>
-      <div class="framework-content">
-        <div class="framework-title">The 5-Year Gun-to-Head Test</div>
-        <div class="framework-quote">"If someone put a gun to my head — where's Bitcoin in 5–10 years? About $500,000. That's 6x from here. Still way better than the bank."</div>
-        <div style="margin-top:6px;font-family:var(--font-mono);font-size:9px;color:var(--text-muted);">USE IN: Step 2 Bitcoin, conviction building, bear market coaching · WHY: Forces long-term thinking. Makes the current price feel like an opportunity, not a risk.</div>
-      </div>
-    </li>
-    <li class="framework-item no-break">
-      <div class="framework-icon">7</div>
-      <div class="framework-content">
-        <div class="framework-title">One Cycle Is Not Enough</div>
-        <div class="framework-quote">"No one makes it in a single cycle. Stick it out."</div>
-        <div style="margin-top:6px;font-family:var(--font-mono);font-size:9px;color:var(--text-muted);">USE IN: Step 1 Foundations, market cycles content, retention messaging during drawdowns · WHY: Sets expectations. Reduces churn during drawdowns.</div>
-      </div>
-    </li>
-    <li class="framework-item no-break">
-      <div class="framework-icon">8</div>
-      <div class="framework-content">
-        <div class="framework-title">High Risk = Both Directions</div>
-        <div class="framework-quote">"People say 'high risk' but they only hear the upside. They hear '3x up' and ignore the '80% down' part."</div>
-        <div style="margin-top:6px;font-family:var(--font-mono);font-size:9px;color:var(--text-muted);">USE IN: Step 4 How We Invest, risk-to-reward pillar, portfolio allocation conversations · WHY: Forces members to internalise downside before allocating.</div>
-      </div>
-    </li>
-    <li class="framework-item no-break">
-      <div class="framework-icon">9</div>
-      <div class="framework-content">
-        <div class="framework-title">TA as Tool, Not Strategy</div>
-        <div class="framework-quote">"95% of people who try to be a day trader lose money. Use TA as a tool, not a strategy."</div>
-        <div style="margin-top:6px;font-family:var(--font-mono);font-size:9px;color:var(--text-muted);">USE IN: Step 4 How We Invest, any call where TA interest appears · WHY: Channels curiosity productively. Prevents members from falling into day trading.</div>
-      </div>
-    </li>
-    <li class="framework-item no-break">
-      <div class="framework-icon">10</div>
-      <div class="framework-content">
-        <div class="framework-title">Bitcoin: Hold. Altcoins: Trade.</div>
-        <div class="framework-quote">"I've never met a single person who's ever said: buying and holding Bitcoin for long term was a bad idea. Everyone who's been in the space long enough says: buying and holding an altcoin for long term was a bad idea."</div>
-        <div style="margin-top:6px;font-family:var(--font-mono);font-size:9px;color:var(--text-muted);">USE IN: Step 2 Bitcoin, Step 3 Altcoins, all content · WHY: The clearest articulation of the CS philosophy. Immediately differentiates Bitcoin from everything else.</div>
-      </div>
-    </li>
-  </ul>
-
-  <hr class="divider">
-
-  <div style="text-align:center;padding:40px 0 20px;">
-    <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-light);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">End of Document</div>
-    <div style="font-family:var(--font-head);font-size:14px;font-weight:600;color:var(--dark);margin-bottom:4px;">Collective Shift Pty Ltd</div>
-    <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);">Confidential — Internal Only · March 27, 2026</div>
-    <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);margin-top:4px;">Prepared by Ben Simpson, CEO &amp; CMO · For: Travis, Chief Growth Officer</div>
-  </div>
-</div>
-
-</div><!-- /.page-wrap -->
 </body>
 </html>
