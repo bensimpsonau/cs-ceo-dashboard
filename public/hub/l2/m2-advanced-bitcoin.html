@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Advanced Bitcoin — Level 2 Module 2 | Collective Shift</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cs: {
+          orange: '#FC5C03', 'orange-bg': '#FEDECC', 'orange-hover': '#FEEEE5',
+          green: '#08C394', purple: '#654FFC', border: '#E8E8EA',
+          text: '#1B1925', secondary: '#4D4C55', muted: '#807F86',
+        }
+      },
+      fontFamily: {
+        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+        barlow: ['Barlow', 'sans-serif'],
+        mono: ['Source Code Pro', 'monospace'],
+      }
+    }
+  }
+}
+</script>
+<style>
+body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Plus Jakarta Sans',sans-serif}.label-tag{font-family:'Source Code Pro',monospace}
+.sidebar-l2{transition:transform .3s ease}@media(max-width:1023px){.sidebar-l2{transform:translateX(-100%);position:fixed;z-index:50;top:56px;left:0;height:calc(100vh - 56px)}.sidebar-l2.open{transform:translateX(0)}}
+.nav-link{transition:all .15s}.nav-link:hover,.nav-link.active{background:rgba(252,92,3,.12);color:#FC5C03;border-left-color:#FC5C03}
+.framework-quote{border-left:4px solid #FC5C03;background:#FFFAF7;border-radius:0 12px 12px 0;padding:20px 24px;margin:16px 0}
+.member-evidence{background:#F5F5F5;border:1px solid #E8E8EA;border-radius:12px;padding:16px 20px;margin:12px 0}
+.topic-card{background:#FFF;border:1px solid #E8E8EA;border-radius:16px;padding:24px;margin-bottom:16px;transition:all .2s}.topic-card:hover{border-color:rgba(252,92,3,0.3);box-shadow:0 4px 16px rgba(0,0,0,0.04)}
+.question-list li{padding:6px 0;border-bottom:1px solid #F0F0F0}.question-list li:last-child{border-bottom:none}
+@media print{.sidebar-l2,.csn-bar{display:none!important}body{padding-top:0!important}.print-break{page-break-before:always}}
+:root{--csn-h:56px;--csn-bg:#FFF;--csn-border:#E8E8EA;--csn-muted:#4D4C55;--csn-orange:#FC5C03;--csn-orange-bg:#FEEEE5;--csn-z:9000}
+.csn-bar{position:fixed;top:0;left:0;right:0;height:var(--csn-h);background:var(--csn-bg);border-bottom:1px solid var(--csn-border);display:flex;align-items:center;padding:0 24px;z-index:var(--csn-z);font-family:'Plus Jakarta Sans',sans-serif}
+.csn-logo{font-weight:700;font-size:15px;color:var(--csn-orange);text-decoration:none;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;margin-right:32px}
+.csn-nav{display:flex;align-items:center;gap:2px;flex:1}
+.csn-link{display:flex;align-items:center;gap:5px;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--csn-muted);text-decoration:none;white-space:nowrap;transition:color .15s,background .15s}.csn-link:hover{color:var(--csn-orange);background:var(--csn-orange-bg)}
+.csn-item.active>.csn-link{color:var(--csn-orange);font-weight:600}
+.csn-chevron{transition:transform .2s}
+.csn-dropdown{display:none;position:absolute;top:calc(100% + 6px);left:0;min-width:240px;background:#FFF;border:1px solid var(--csn-border);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.10);padding:6px;z-index:calc(var(--csn-z)+1)}
+.csn-item.csn-has-dd{position:relative}.csn-item.csn-has-dd::after{content:"";position:absolute;top:100%;left:0;width:100%;height:12px}.csn-item.csn-has-dd:hover>.csn-dropdown{display:block}
+.csn-dd-item{display:block;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--csn-muted);text-decoration:none;transition:color .12s,background .12s;white-space:nowrap}.csn-dd-item:hover{color:var(--csn-orange);background:var(--csn-orange-bg)}
+.csn-divider{height:1px;background:var(--csn-border);margin:4px 8px}
+.csn-hamburger{display:none;background:none;border:none;cursor:pointer;color:var(--csn-muted);padding:4px;margin-left:auto}
+body{padding-top:var(--csn-h)!important}@media(max-width:1023px){.csn-nav{display:none}.csn-hamburger{display:block}}
+</style>
+</head>
+<body class="bg-white text-[#1B1925] min-h-screen">
+<nav class="csn-bar" role="navigation">
+  <a href="../../index.html" class="csn-logo">Collective Shift</a>
+  <div class="csn-nav">
+    <div class="csn-item"><a href="../../index.html" class="csn-link">CEO Dashboard</a></div>
+    <div class="csn-item csn-has-dd active">
+      <a href="../operating-system.html" class="csn-link">Operating System <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></a>
+      <div class="csn-dropdown">
+        <a href="../operating-system.html" class="csn-dd-item">OS Overview</a><div class="csn-divider"></div>
+        <a href="m1-advanced-foundations.html" class="csn-dd-item">L2: Advanced Foundations</a>
+        <a href="m2-advanced-bitcoin.html" class="csn-dd-item" style="color:#FC5C03">L2: Advanced Bitcoin</a>
+        <a href="m3-advanced-altcoins.html" class="csn-dd-item">L2: Advanced Altcoins</a>
+        <a href="m4-advanced-how-we-invest.html" class="csn-dd-item">L2: Advanced How We Invest</a>
+        <a href="m5-advanced-buy-sell.html" class="csn-dd-item">L2: Advanced Buy &amp; Sell</a>
+        <a href="m6-advanced-send-store.html" class="csn-dd-item">L2: Advanced Send &amp; Store</a>
+        <a href="m7-advanced-tax.html" class="csn-dd-item">L2: Advanced Tax</a>
+        <a href="m8-advanced-sell-strategy.html" class="csn-dd-item">L2: Advanced Sell Strategy</a>
+      </div>
+    </div>
+    <div class="csn-item"><a href="../products.html" class="csn-link">Product</a></div>
+  </div>
+  <button class="csn-hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+</nav>
+
+<div class="flex">
+  <aside id="sidebar" class="sidebar-l2 w-64 min-h-screen bg-white border-r border-[#E8E8EA] flex-shrink-0 flex flex-col fixed top-[56px] left-0 h-[calc(100vh-56px)] overflow-y-auto">
+    <div class="p-5 border-b border-[#E8E8EA]">
+      <p class="text-xs font-mono text-[#807F86] uppercase tracking-widest">Level 2 — Advanced</p>
+      <p class="text-lg font-bold text-blue-500 mt-1">OS Bible</p>
+    </div>
+    <nav class="flex-1 py-4 px-3 space-y-1">
+      <a href="m1-advanced-foundations.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent"><span class="text-xs font-mono font-bold bg-blue-500/20 text-blue-500 rounded px-1.5 py-0.5">01</span> Advanced Foundations</a>
+      <a href="m2-advanced-bitcoin.html" class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium border-l-2 border-transparent"><span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">02</span> Advanced Bitcoin</a>
+      <a href="m3-advanced-altcoins.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent"><span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">03</span> Advanced Altcoins</a>
+      <a href="m4-advanced-how-we-invest.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent"><span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">04</span> Advanced How We Invest</a>
+      <a href="m5-advanced-buy-sell.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent"><span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">05</span> Advanced Buy &amp; Sell</a>
+      <a href="m6-advanced-send-store.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent"><span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">06</span> Advanced Send &amp; Store</a>
+      <a href="m7-advanced-tax.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent"><span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">07</span> Advanced Tax</a>
+      <a href="m8-advanced-sell-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent"><span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">08</span> Advanced Sell Strategy</a>
+      <div class="border-t border-[#E8E8EA] my-3"></div>
+      <a href="../operating-system.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent"><span>←</span> Back to OS Overview</a>
+    </nav>
+    <div class="p-4 border-t border-[#E8E8EA]"><p class="text-[#807F86] text-xs font-mono">L2 Bible · v9.0 · Internal Only</p></div>
+  </aside>
+
+  <main class="flex-1 min-h-screen ml-64 max-lg:ml-0">
+    <div class="px-6 lg:px-10 py-3 border-b border-[#E8E8EA] bg-white/50">
+      <div class="flex items-center gap-2 text-xs font-mono text-[#807F86]">
+        <a href="../operating-system.html" class="text-cs-orange hover:underline">Operating System</a><span>/</span>
+        <a href="m1-advanced-foundations.html" class="text-blue-500 hover:underline">Level 2</a><span>/</span><span>Advanced Bitcoin</span>
+      </div>
+    </div>
+
+    <div class="px-6 lg:px-10 py-8 max-w-4xl">
+
+      <!-- Header -->
+      <div class="mb-8">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="bg-blue-500/20 text-blue-500 text-xs font-bold font-mono px-3 py-1 rounded-full uppercase">Level 2</span>
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono px-3 py-1 rounded-full uppercase">A1 — Advanced Foundations Session</span>
+          <span class="bg-[#F5F5F5] text-[#807F86] text-xs font-mono px-3 py-1 rounded-full">Step 02</span>
+        </div>
+        <h1 class="text-4xl font-bold tracking-tight mb-3">Advanced Bitcoin</h1>
+        <p class="text-[#807F86] text-lg max-w-2xl">Mining economics, production cost analysis, halving cycle dynamics, UTXO management, Lightning Network, and Bitcoin Layer 2 developments. The deep conviction module — backed by data, not faith.</p>
+      </div>
+
+      <!-- Prerequisites -->
+      <div class="bg-red-50 border border-red-200 rounded-xl p-5 mb-6">
+        <h3 class="text-sm font-bold text-red-600 mb-2">⚠️ Prerequisites</h3>
+        <ul class="text-sm text-red-700 space-y-1">
+          <li>✅ L1 Step 2: Bitcoin — thesis, DCA strategy, conviction building completed</li>
+          <li>✅ All Level 1 modules completed with 1:1 analyst sign-off</li>
+          <li>✅ Member already has active DCA and holds Bitcoin position</li>
+        </ul>
+      </div>
+
+      <!-- Delivery Notes -->
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-6">
+        <h3 class="text-sm font-bold text-blue-600 mb-2">📋 Delivery Notes</h3>
+        <p class="text-sm text-blue-800"><strong>Format:</strong> Part of the A1 Advanced Foundations live session (~30 mins). Members already have deep Bitcoin conviction from L1 — this module adds the economic and technical depth.</p>
+        <p class="text-sm text-blue-800 mt-2"><strong>Key shift:</strong> L1 asked "Why Bitcoin?" L2 asks "What drives Bitcoin's economics and what else can I do with it?"</p>
+      </div>
+
+      <!-- Unlocks -->
+      <div class="bg-cs-orange/5 border border-cs-orange/20 rounded-xl p-5 mb-8">
+        <h3 class="text-sm font-bold text-cs-orange mb-2">🔓 What's Unlocked at Level 2</h3>
+        <div class="flex flex-wrap gap-2">
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Mining Economics</span>
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Production Cost Analysis</span>
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Halving Cycle Dynamics</span>
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">UTXO Management</span>
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Lightning Network</span>
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Bitcoin L2s</span>
+        </div>
+      </div>
+
+      <!-- TOPIC 1 -->
+      <div class="topic-card">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-blue-500/20 text-blue-500 text-xs font-bold font-mono rounded-lg px-3 py-1">TOPIC 1</span>
+          <h2 class="text-xl font-bold">Bitcoin Mining Economics — Understanding Production Costs</h2>
+        </div>
+
+        <p class="text-[#807F86] mb-4">This topic bridges the gap between "Bitcoin is scarce" (L1) and "Here's the economic engine that secures the network and creates a price floor." Members learn to use mining economics as an analytical tool for timing and conviction.</p>
+
+        <h4 class="font-bold text-sm mb-3 text-cs-orange">Sub-Topics to Cover:</h4>
+        <div class="space-y-3 mb-5">
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <h5 class="font-bold text-sm mb-1">Hash Rate and Difficulty Adjustments Explained</h5>
+            <p class="text-sm text-[#807F86]">How hash rate measures network security. The difficulty adjustment mechanism (every ~2 weeks). Why hash rate at all-time highs = unprecedented security. What happens when hash rate drops (miner capitulation signal). How to read hash rate charts and what they mean for market positioning.</p>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <h5 class="font-bold text-sm mb-1">Miner Economics: Production Cost vs Market Price</h5>
+            <p class="text-sm text-[#807F86]">Current estimated production cost per Bitcoin (~$40K–$50K range depending on efficiency). What happens when market price drops below production cost — miner stress, capitulation, and forced selling. Why production cost acts as a soft price floor. Energy costs, hardware depreciation, and operational margins. The relationship between miner profitability and network health.</p>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <h5 class="font-bold text-sm mb-1">Halving Cycle Impact on Supply and Price Dynamics</h5>
+            <p class="text-sm text-[#807F86]">The halving mechanism: block reward cut in half every ~210,000 blocks (~4 years). Historical price action before and after halvings (2012, 2016, 2020, 2024). How the halving doubles production cost overnight. Supply shock dynamics: new supply cut by 50% while demand stays constant or grows. Why the halving is the most important recurring event in Bitcoin.</p>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <h5 class="font-bold text-sm mb-1">Miner Capitulation and Market Bottoms</h5>
+            <p class="text-sm text-[#807F86]">The Puell Multiple: ratio of daily mining revenue to its 365-day moving average. Hash Ribbons indicator: when 30-day hash rate crosses below 60-day hash rate. Historical correlation between miner capitulation and market bottoms. How to use these signals alongside other on-chain metrics (from Module 1).</p>
+          </div>
+        </div>
+
+        <h4 class="font-bold text-sm mb-3">📝 Key Questions Answered:</h4>
+        <ul class="question-list text-sm text-[#807F86] mb-5">
+          <li>"What's the cost to mine a Bitcoin?"</li>
+          <li>"What happens after the halving?"</li>
+          <li>"How does mining affect the price?"</li>
+          <li>"Is Bitcoin mining bad for the environment?" (briefly — energy mix discussion)</li>
+          <li>"What does hash rate tell us about market health?"</li>
+        </ul>
+
+        <div class="framework-quote">
+          <p class="text-sm italic text-[#4D4C55]">"If someone put a gun to my head — where's Bitcoin in 5-10 years? About $500,000. That's 6x from here. Still way better than the bank."</p>
+          <p class="text-xs text-cs-orange font-mono mt-2">Teaching Framework #6 — "The 5-Year Gun-to-Head Test" · Mining economics provides the data backing for this conviction</p>
+        </div>
+
+        <div class="member-evidence">
+          <p class="text-xs font-bold text-[#807F86] uppercase tracking-wide mb-2">👥 Member Evidence</p>
+          <p class="text-sm text-[#807F86]">John/Johannes asked specifically about production cost implications during the bear market. Multiple members wanted to understand "why Bitcoin can't go to zero" — mining economics answers this with hard data. Stacey (precious metals background) found the production cost analogy to gold mining particularly compelling.</p>
+        </div>
+      </div>
+
+      <!-- TOPIC 2 -->
+      <div class="topic-card print-break">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-blue-500/20 text-blue-500 text-xs font-bold font-mono rounded-lg px-3 py-1">TOPIC 2</span>
+          <h2 class="text-xl font-bold">Advanced Bitcoin Strategies — Beyond Buy and Hold</h2>
+        </div>
+
+        <p class="text-[#807F86] mb-4">L1 established "Bitcoin: Hold." L2 adds the technical depth for experienced holders managing larger positions. UTXO management, Lightning Network, and Bitcoin L2 developments that serious holders should understand.</p>
+
+        <h4 class="font-bold text-sm mb-3 text-cs-orange">Sub-Topics to Cover:</h4>
+        <div class="space-y-3 mb-5">
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <h5 class="font-bold text-sm mb-1">Bitcoin-Specific Accumulation Strategies for Larger Portfolios</h5>
+            <p class="text-sm text-[#807F86]">How accumulation strategy changes at $100K+ vs $10K portfolios. Consolidating UTXOs during low-fee periods. Exchange arbitrage for large buys. OTC desks for very large purchases ($500K+) — less slippage, better execution. Timing DCA with fee market conditions.</p>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <h5 class="font-bold text-sm mb-1">UTXO Management for Experienced Holders</h5>
+            <p class="text-sm text-[#807F86]">What UTXOs are: Unspent Transaction Outputs — the "coins" in your wallet. Why UTXO management matters: too many small UTXOs = high fees when spending. Consolidation strategies: combining UTXOs during low-fee periods. Privacy implications of UTXO management. Coin control features in wallets like Sparrow.</p>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <h5 class="font-bold text-sm mb-1">Lightning Network Basics and Use Cases</h5>
+            <p class="text-sm text-[#807F86]">What Lightning is: a payment channel network on top of Bitcoin. How it enables instant, near-free Bitcoin transactions. Real use cases: Strike, Wallet of Satoshi, merchant payments. Why Lightning matters for Bitcoin's long-term utility. Current limitations and what's being built.</p>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <h5 class="font-bold text-sm mb-1">Bitcoin Layer 2 Developments Worth Tracking</h5>
+            <p class="text-sm text-[#807F86]">Stacks (smart contracts on Bitcoin), Liquid Network (sidechain for traders/institutions), emerging L2 projects. The philosophical debate: should Bitcoin have smart contracts? Why to track these as an investor — potential new utility = potential new demand. Not a recommendation — an awareness exercise.</p>
+          </div>
+        </div>
+
+        <h4 class="font-bold text-sm mb-3">📝 Key Questions Answered:</h4>
+        <ul class="question-list text-sm text-[#807F86] mb-5">
+          <li>"Is there anything more I can do with my Bitcoin?"</li>
+          <li>"What about Lightning?"</li>
+          <li>"What are UTXOs and why should I care?"</li>
+          <li>"Should I be looking at Bitcoin L2 projects?"</li>
+          <li>"How do I manage a larger Bitcoin position efficiently?"</li>
+        </ul>
+
+        <div class="framework-quote">
+          <p class="text-sm italic text-[#4D4C55]">"I've never met a single person who's ever said to me: Simon, buying and holding Bitcoin for long term was a bad idea."</p>
+          <p class="text-xs text-cs-orange font-mono mt-2">Teaching Framework #10 — "Bitcoin: Hold. Altcoins: Trade." · L2 adds the tools for holding more effectively</p>
+        </div>
+
+        <div class="member-evidence">
+          <p class="text-xs font-bold text-[#807F86] uppercase tracking-wide mb-2">👥 Member Evidence</p>
+          <p class="text-sm text-[#807F86]">Harry wanted to understand "what else can I do with Bitcoin beyond holding." Stacey's goal is to own 1 whole Bitcoin — at that level, UTXO management and advanced custody become relevant. Members with $200K+ portfolios (Nigel) need OTC and UTXO awareness.</p>
+        </div>
+      </div>
+
+      <!-- Member Outcomes -->
+      <div class="bg-cs-green/5 border border-cs-green/20 rounded-xl p-6 mb-6">
+        <h3 class="text-lg font-bold text-cs-green mb-3">✅ Member Outcomes</h3>
+        <ul class="space-y-2 text-sm">
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Understand Bitcoin mining economics and how production cost creates a price floor</li>
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Can read halving cycle data and miner capitulation signals</li>
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Know advanced Bitcoin strategies beyond simple accumulation (UTXO, Lightning)</li>
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Understand the Bitcoin L2 landscape at an awareness level</li>
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Have deeper, data-backed conviction in their Bitcoin thesis</li>
+        </ul>
+      </div>
+
+      <!-- Teaching Frameworks -->
+      <div class="bg-white border border-[#E8E8EA] rounded-xl p-6 mb-6">
+        <h3 class="text-lg font-bold mb-3">🎯 Teaching Frameworks Used</h3>
+        <div class="space-y-3">
+          <div class="flex items-start gap-3">
+            <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono font-bold px-2 py-1 rounded flex-shrink-0">#6</span>
+            <div><p class="font-bold text-sm">"The 5-Year Gun-to-Head Test"</p><p class="text-sm text-[#807F86]">Mining economics provides the quantitative backing for long-term conviction.</p></div>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono font-bold px-2 py-1 rounded flex-shrink-0">#4</span>
+            <div><p class="font-bold text-sm">"The Price You Deserve"</p><p class="text-sm text-[#807F86]">"Everyone gets Bitcoin at the price they deserve." Reinforced by production cost data.</p></div>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono font-bold px-2 py-1 rounded flex-shrink-0">#10</span>
+            <div><p class="font-bold text-sm">"Bitcoin: Hold. Altcoins: Trade."</p><p class="text-sm text-[#807F86]">L2 adds the tools for holding more effectively at scale.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nav -->
+      <div class="flex items-center justify-between pt-6 border-t border-[#E8E8EA]">
+        <a href="m1-advanced-foundations.html" class="text-[#807F86] hover:text-cs-orange text-sm font-medium transition-colors">← Advanced Foundations</a>
+        <a href="m3-advanced-altcoins.html" class="bg-cs-orange text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-cs-orange/90 transition-colors">Next: Advanced Altcoins →</a>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

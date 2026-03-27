@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Advanced Foundations — Level 2 Module 1 | Collective Shift</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cs: {
+          orange: '#FC5C03',
+          'orange-light': '#FC8C4E',
+          'orange-bg': '#FEDECC',
+          'orange-hover': '#FEEEE5',
+          green: '#08C394',
+          purple: '#654FFC',
+          border: '#E8E8EA',
+          text: '#1B1925',
+          secondary: '#4D4C55',
+          muted: '#807F86',
+        }
+      },
+      fontFamily: {
+        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+        barlow: ['Barlow', 'sans-serif'],
+        mono: ['Source Code Pro', 'monospace'],
+      }
+    }
+  }
+}
+</script>
+<style>
+body{font-family:'Barlow',sans-serif}
+h1,h2,h3,h4,h5{font-family:'Plus Jakarta Sans',sans-serif}
+.label-tag{font-family:'Source Code Pro',monospace}
+.sidebar-l2{transition:transform .3s ease}
+@media(max-width:1023px){.sidebar-l2{transform:translateX(-100%);position:fixed;z-index:50;top:56px;left:0;height:calc(100vh - 56px)}.sidebar-l2.open{transform:translateX(0)}}
+.nav-link{transition:all .15s}
+.nav-link:hover,.nav-link.active{background:rgba(252,92,3,.12);color:#FC5C03;border-left-color:#FC5C03}
+.framework-quote{border-left:4px solid #FC5C03;background:#FFFAF7;border-radius:0 12px 12px 0;padding:20px 24px;margin:16px 0}
+.member-evidence{background:#F5F5F5;border:1px solid #E8E8EA;border-radius:12px;padding:16px 20px;margin:12px 0}
+.topic-card{background:#FFFFFF;border:1px solid #E8E8EA;border-radius:16px;padding:24px;margin-bottom:16px;transition:all .2s}
+.topic-card:hover{border-color:rgba(252,92,3,0.3);box-shadow:0 4px 16px rgba(0,0,0,0.04)}
+.question-list li{padding:6px 0;border-bottom:1px solid #F0F0F0}
+.question-list li:last-child{border-bottom:none}
+@media print{.sidebar-l2,.csn-bar{display:none!important}body{padding-top:0!important}.print-break{page-break-before:always}}
+</style>
+</head>
+<body class="bg-white text-[#1B1925] min-h-screen">
+
+<!-- ═══ TOP NAV ═══ -->
+<style>
+:root{--csn-h:56px;--csn-bg:#FFF;--csn-border:#E8E8EA;--csn-text:#1B1925;--csn-muted:#4D4C55;--csn-orange:#FC5C03;--csn-orange-bg:#FEEEE5;--csn-dd-bg:#FFF;--csn-dd-shadow:0 8px 24px rgba(0,0,0,.10),0 2px 8px rgba(0,0,0,.06);--csn-z:9000}
+.csn-bar{position:fixed;top:0;left:0;right:0;height:var(--csn-h);background:var(--csn-bg);border-bottom:1px solid var(--csn-border);display:flex;align-items:center;padding:0 24px;z-index:var(--csn-z);font-family:'Plus Jakarta Sans',sans-serif}
+.csn-logo{font-weight:700;font-size:15px;color:var(--csn-orange);text-decoration:none;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;margin-right:32px}
+.csn-nav{display:flex;align-items:center;gap:2px;flex:1}
+.csn-link{display:flex;align-items:center;gap:5px;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--csn-muted);text-decoration:none;white-space:nowrap;transition:color .15s,background .15s}
+.csn-link:hover{color:var(--csn-orange);background:var(--csn-orange-bg)}
+.csn-item.active>.csn-link{color:var(--csn-orange);font-weight:600}
+.csn-chevron{transition:transform .2s}
+.csn-dropdown{display:none;position:absolute;top:calc(100% + 6px);left:0;min-width:240px;background:var(--csn-dd-bg);border:1px solid var(--csn-border);border-radius:12px;box-shadow:var(--csn-dd-shadow);padding:6px;z-index:calc(var(--csn-z)+1)}
+.csn-item.csn-has-dd{position:relative}
+.csn-item.csn-has-dd::after{content:"";position:absolute;top:100%;left:0;width:100%;height:12px}
+.csn-item.csn-has-dd:hover>.csn-dropdown{display:block}
+.csn-dd-item{display:block;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--csn-muted);text-decoration:none;transition:color .12s,background .12s;white-space:nowrap}
+.csn-dd-item:hover{color:var(--csn-orange);background:var(--csn-orange-bg)}
+.csn-divider{height:1px;background:var(--csn-border);margin:4px 8px}
+.csn-hamburger{display:none;background:none;border:none;cursor:pointer;color:var(--csn-muted);padding:4px;margin-left:auto}
+body{padding-top:var(--csn-h)!important}
+@media(max-width:1023px){.csn-nav{display:none}.csn-hamburger{display:block}}
+</style>
+<nav class="csn-bar" role="navigation">
+  <a href="../../index.html" class="csn-logo">Collective Shift</a>
+  <div class="csn-nav">
+    <div class="csn-item"><a href="../../index.html" class="csn-link">CEO Dashboard</a></div>
+    <div class="csn-item csn-has-dd active">
+      <a href="../operating-system.html" class="csn-link">Operating System <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></a>
+      <div class="csn-dropdown">
+        <a href="../operating-system.html" class="csn-dd-item">OS Overview</a>
+        <div class="csn-divider"></div>
+        <a href="../modules/m1-foundations.html" class="csn-dd-item">L1: Foundations</a>
+        <a href="../modules/m2-bitcoin.html" class="csn-dd-item">L1: Bitcoin</a>
+        <a href="../modules/m3-altcoins.html" class="csn-dd-item">L1: Altcoins</a>
+        <a href="../modules/m4-how-we-invest.html" class="csn-dd-item">L1: How We Invest</a>
+        <a href="../modules/m5-buy-sell.html" class="csn-dd-item">L1: Buy &amp; Sell</a>
+        <a href="../modules/m6-send-store.html" class="csn-dd-item">L1: Send &amp; Store</a>
+        <a href="../modules/m7-tax.html" class="csn-dd-item">L1: Tax</a>
+        <a href="../modules/m8-sell-strategy.html" class="csn-dd-item">L1: Sell Strategy</a>
+        <div class="csn-divider"></div>
+        <a href="m1-advanced-foundations.html" class="csn-dd-item" style="color:#FC5C03">L2: Advanced Foundations</a>
+        <a href="m2-advanced-bitcoin.html" class="csn-dd-item">L2: Advanced Bitcoin</a>
+        <a href="m3-advanced-altcoins.html" class="csn-dd-item">L2: Advanced Altcoins</a>
+        <a href="m4-advanced-how-we-invest.html" class="csn-dd-item">L2: Advanced How We Invest</a>
+        <a href="m5-advanced-buy-sell.html" class="csn-dd-item">L2: Advanced Buy &amp; Sell</a>
+        <a href="m6-advanced-send-store.html" class="csn-dd-item">L2: Advanced Send &amp; Store</a>
+        <a href="m7-advanced-tax.html" class="csn-dd-item">L2: Advanced Tax</a>
+        <a href="m8-advanced-sell-strategy.html" class="csn-dd-item">L2: Advanced Sell Strategy</a>
+      </div>
+    </div>
+    <div class="csn-item"><a href="../products.html" class="csn-link">Product</a></div>
+    <div class="csn-item"><a href="../brand.html" class="csn-link">Brand</a></div>
+  </div>
+  <button class="csn-hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')" aria-label="Menu">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+
+<div class="flex">
+  <!-- L2 Sidebar -->
+  <aside id="sidebar" class="sidebar-l2 w-64 min-h-screen bg-white border-r border-[#E8E8EA] flex-shrink-0 flex flex-col fixed top-[56px] left-0 h-[calc(100vh-56px)] overflow-y-auto">
+    <div class="p-5 border-b border-[#E8E8EA]">
+      <p class="text-xs font-mono text-cs-muted uppercase tracking-widest">Level 2 — Advanced</p>
+      <p class="text-lg font-bold text-blue-500 mt-1">OS Bible</p>
+    </div>
+    <nav class="flex-1 py-4 px-3 space-y-1">
+      <a href="m1-advanced-foundations.html" class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium border-l-2 border-transparent">
+        <span class="text-xs font-mono font-bold bg-blue-500/20 text-blue-500 rounded px-1.5 py-0.5">01</span> Advanced Foundations
+      </a>
+      <a href="m2-advanced-bitcoin.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent">
+        <span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">02</span> Advanced Bitcoin
+      </a>
+      <a href="m3-advanced-altcoins.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent">
+        <span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">03</span> Advanced Altcoins
+      </a>
+      <a href="m4-advanced-how-we-invest.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent">
+        <span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">04</span> Advanced How We Invest
+      </a>
+      <a href="m5-advanced-buy-sell.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent">
+        <span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">05</span> Advanced Buy &amp; Sell
+      </a>
+      <a href="m6-advanced-send-store.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent">
+        <span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">06</span> Advanced Send &amp; Store
+      </a>
+      <a href="m7-advanced-tax.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent">
+        <span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">07</span> Advanced Tax
+      </a>
+      <a href="m8-advanced-sell-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent">
+        <span class="text-xs font-mono font-bold bg-cs-orange/20 text-cs-orange rounded px-1.5 py-0.5">08</span> Advanced Sell Strategy
+      </a>
+      <div class="border-t border-[#E8E8EA] my-3"></div>
+      <a href="../operating-system.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#807F86] border-l-2 border-transparent">
+        <span>←</span> Back to OS Overview
+      </a>
+    </nav>
+    <div class="p-4 border-t border-[#E8E8EA]">
+      <p class="text-[#807F86] text-xs font-mono">L2 Bible · v9.0 · Internal Only</p>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 min-h-screen ml-64 max-lg:ml-0">
+    <div class="px-6 lg:px-10 py-3 border-b border-[#E8E8EA] bg-white/50">
+      <div class="flex items-center gap-2 text-xs font-mono text-[#807F86]">
+        <a href="../operating-system.html" class="text-cs-orange hover:underline">Operating System</a>
+        <span>/</span>
+        <a href="m1-advanced-foundations.html" class="text-blue-500 hover:underline">Level 2</a>
+        <span>/</span>
+        <span>Advanced Foundations</span>
+      </div>
+    </div>
+
+    <div class="px-6 lg:px-10 py-8 max-w-4xl">
+
+      <!-- Module Header -->
+      <div class="mb-8">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="bg-blue-500/20 text-blue-500 text-xs font-bold font-mono px-3 py-1 rounded-full uppercase tracking-wide">Level 2</span>
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono px-3 py-1 rounded-full uppercase tracking-wide">A1 — Advanced Foundations Session</span>
+          <span class="bg-[#F5F5F5] text-[#807F86] text-xs font-mono px-3 py-1 rounded-full">Step 01</span>
+        </div>
+        <h1 class="text-4xl font-bold tracking-tight mb-3">Advanced Foundations</h1>
+        <p class="text-[#807F86] text-lg max-w-2xl">Deep macro-digital asset correlations, institutional flow analysis, advanced ecosystem metrics, and cross-cycle pattern recognition. The advanced mental model for understanding where markets are — and where they're going.</p>
+      </div>
+
+      <!-- Prerequisites -->
+      <div class="bg-red-50 border border-red-200 rounded-xl p-5 mb-6">
+        <h3 class="text-sm font-bold text-red-600 mb-2">⚠️ Prerequisites — Must Complete Before This Module</h3>
+        <ul class="text-sm text-red-700 space-y-1">
+          <li>✅ All Level 1 modules (Steps 1–8) completed</li>
+          <li>✅ B3 8-Step Strategy Process completed with 1:1 analyst sign-off</li>
+          <li>✅ L1 Gate passed — member has a written strategy and understands basic market cycles</li>
+        </ul>
+      </div>
+
+      <!-- Delivery Notes -->
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-6">
+        <h3 class="text-sm font-bold text-blue-600 mb-2">📋 Delivery Notes</h3>
+        <div class="text-sm text-blue-800 space-y-2">
+          <p><strong>Format:</strong> A1 — One-off live session (advanced content for Steps 1–4). This module covers the Foundations portion (~30 mins of the session).</p>
+          <p><strong>Slides:</strong> 45–55 slides total for the full A1 session. Foundations section: ~12–15 slides.</p>
+          <p><strong>Audience:</strong> Members who've completed all of Level 1. They already understand basic market cycles, blockchain ecosystems, and the investment thesis. This session goes deeper.</p>
+          <p><strong>Key difference from L1:</strong> L1 asks "Why do digital assets exist?" L2 asks "What macro forces drive them and how do we measure ecosystem health objectively?"</p>
+        </div>
+      </div>
+
+      <!-- What's Unlocked at L2 -->
+      <div class="bg-cs-orange/5 border border-cs-orange/20 rounded-xl p-5 mb-8">
+        <h3 class="text-sm font-bold text-cs-orange mb-2">🔓 What's Unlocked at Level 2</h3>
+        <div class="flex flex-wrap gap-2">
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Macro Correlations</span>
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Institutional Flow Analysis</span>
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">On-Chain Analytics</span>
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">TVL / Developer Metrics</span>
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Cross-Chain Analysis</span>
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono px-3 py-1 rounded-full">Cross-Cycle Pattern Recognition</span>
+        </div>
+      </div>
+
+      <!-- ═══ TOPIC 1 ═══ -->
+      <div class="topic-card">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-blue-500/20 text-blue-500 text-xs font-bold font-mono rounded-lg px-3 py-1">TOPIC 1</span>
+          <h2 class="text-xl font-bold">Advanced Market Structure — Beyond the Basics</h2>
+        </div>
+
+        <p class="text-[#807F86] mb-4">L1 taught members that markets move in cycles. L2 teaches them <em>why</em> — the macro forces, institutional flows, and on-chain data that drive price action. Members move from "where are we in the cycle?" to "what data tells me where we are?"</p>
+
+        <h4 class="font-bold text-sm mb-3 text-cs-orange">Sub-Topics to Cover:</h4>
+        <div class="space-y-3 mb-5">
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <h5 class="font-bold text-sm mb-1">Macro Correlations: Interest Rates, DXY, Global Liquidity Cycles</h5>
+            <p class="text-sm text-[#807F86]">How interest rate decisions by the Fed/RBA directly impact risk asset pricing. The DXY (US Dollar Index) inverse correlation with Bitcoin. Global M2 money supply as a leading indicator. When liquidity expands, digital assets rise — teach members to read the macro before reading the chart.</p>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <h5 class="font-bold text-sm mb-1">How Institutional Flows Affect Digital Asset Markets</h5>
+            <p class="text-sm text-[#807F86]">Bitcoin ETF inflows/outflows as a new demand signal. How corporate treasury allocations (MicroStrategy, etc.) create structural demand. The difference between retail sentiment and institutional positioning. Why institutional entry changes the cycle dynamics members learned in L1.</p>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <h5 class="font-bold text-sm mb-1">On-Chain Analytics: What the Data Tells Us</h5>
+            <p class="text-sm text-[#807F86]">NUPL (Net Unrealised Profit/Loss) — measures aggregate holder profitability. MVRV (Market Value to Realised Value) — identifies overvaluation/undervaluation. STH (Short-Term Holder) cost basis — where new buyers are underwater. 200-week moving average — the long-term floor. Teach members to read these, not just know the names.</p>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <h5 class="font-bold text-sm mb-1">Cross-Cycle Pattern Recognition and Long-Term Structural Analysis</h5>
+            <p class="text-sm text-[#807F86]">Overlay the 2014, 2018, 2022, and current cycle. What patterns repeat? What's structurally different this time (ETFs, institutional adoption, macro backdrop)? Teach members to think in multi-cycle terms — reinforces "No one makes it in a single cycle."</p>
+          </div>
+        </div>
+
+        <h4 class="font-bold text-sm mb-3">📝 Key Questions Answered:</h4>
+        <ul class="question-list text-sm text-[#807F86] mb-5">
+          <li>"Why does Bitcoin move with stocks?"</li>
+          <li>"What are institutions doing?"</li>
+          <li>"How do I read on-chain data to know where we are in the cycle?"</li>
+          <li>"Is this cycle different from previous ones?"</li>
+          <li>"What macro factors should I be watching?"</li>
+        </ul>
+
+        <div class="framework-quote">
+          <p class="text-sm italic text-[#4D4C55]">"No one makes it in a single cycle. Stick it out."</p>
+          <p class="text-xs text-cs-orange font-mono mt-2">Teaching Framework #7 — "One Cycle Is Not Enough" · Applied here at L2 with cross-cycle data overlay</p>
+        </div>
+
+        <div class="member-evidence">
+          <p class="text-xs font-bold text-[#807F86] uppercase tracking-wide mb-2">👥 Member Evidence</p>
+          <p class="text-sm text-[#807F86]">New members (Nigel, Stacey, Greg) arrived in L1 with zero reference for bear/bull transitions. By the time they reach L2, they've experienced at least one cycle transition — now they need the analytical tools to understand it, not just survive it. Multiple members asked "Why does Bitcoin move with stocks?" during coaching calls.</p>
+        </div>
+      </div>
+
+      <!-- ═══ TOPIC 2 ═══ -->
+      <div class="topic-card print-break">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-blue-500/20 text-blue-500 text-xs font-bold font-mono rounded-lg px-3 py-1">TOPIC 2</span>
+          <h2 class="text-xl font-bold">Advanced Ecosystem Analysis — Multi-Chain Deep Dive</h2>
+        </div>
+
+        <p class="text-[#807F86] mb-4">L1 taught members that different blockchains are different ecosystems (Bitcoin ≠ Ethereum ≠ Solana). L2 teaches them how to <em>compare and evaluate</em> ecosystems using quantitative metrics — not headlines or Twitter hype.</p>
+
+        <h4 class="font-bold text-sm mb-3 text-cs-orange">Sub-Topics to Cover:</h4>
+        <div class="space-y-3 mb-5">
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <h5 class="font-bold text-sm mb-1">Layer 1 vs Layer 2 Architecture in Depth</h5>
+            <p class="text-sm text-[#807F86]">What L1s and L2s actually do at a technical level. The scalability trilemma (decentralisation, security, scalability — pick two). How L2s like Arbitrum and Optimism extend Ethereum. Why Solana chose a different architectural approach. This isn't about picking a "winner" — it's about understanding the trade-offs each chain makes.</p>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <h5 class="font-bold text-sm mb-1">Ecosystem Health Metrics: Developer Activity, TVL, Active Users</h5>
+            <p class="text-sm text-[#807F86]">TVL (Total Value Locked) — how much capital is deployed in an ecosystem's DeFi protocols. Developer activity — measured by GitHub commits, active developers, new repos. Active daily/monthly users — real usage vs inflated numbers. Revenue generation — which chains actually make money from fees. How to access this data: DefiLlama, Token Terminal, Electric Capital reports.</p>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <h5 class="font-bold text-sm mb-1">Cross-Chain Bridges and Interoperability</h5>
+            <p class="text-sm text-[#807F86]">Why bridges exist and the risks they carry. Major bridge hacks and what they teach us. The state of cross-chain interoperability. How members should think about multi-chain exposure in their portfolio.</p>
+          </div>
+          <div class="bg-white border border-[#E8E8EA] rounded-lg p-4">
+            <h5 class="font-bold text-sm mb-1">How to Compare Ecosystems Using Quantitative Metrics</h5>
+            <p class="text-sm text-[#807F86]">Build a comparison framework: TVL/market cap ratio, developer growth rate, fee revenue, user retention. Applied example: compare Ethereum, Solana, and a newer chain (e.g., Sui or Aptos) using the same metrics. Teach members the framework so they can apply it to any new chain that emerges.</p>
+          </div>
+        </div>
+
+        <h4 class="font-bold text-sm mb-3">📝 Key Questions Answered:</h4>
+        <ul class="question-list text-sm text-[#807F86] mb-5">
+          <li>"Which ecosystem is winning?"</li>
+          <li>"How do I compare chains objectively?"</li>
+          <li>"What metrics actually matter for blockchain health?"</li>
+          <li>"Is TVL a reliable metric?"</li>
+          <li>"Where do I find this data?"</li>
+        </ul>
+
+        <div class="member-evidence">
+          <p class="text-xs font-bold text-[#807F86] uppercase tracking-wide mb-2">👥 Member Evidence</p>
+          <p class="text-sm text-[#807F86]">Members in L1 consistently didn't understand Bitcoin chain vs Solana vs Ethereum as separate ecosystems. By L2, they have the basic mental model — now they need the quantitative tools to evaluate which ecosystems deserve capital allocation. This feeds directly into the Portfolio Allocation work in Module 4.</p>
+        </div>
+      </div>
+
+      <!-- ═══ MEMBER OUTCOMES ═══ -->
+      <div class="bg-cs-green/5 border border-cs-green/20 rounded-xl p-6 mb-6">
+        <h3 class="text-lg font-bold text-cs-green mb-3">✅ Member Outcomes — After Completing This Module</h3>
+        <ul class="space-y-2 text-sm">
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Understand macro-digital asset correlations (interest rates, DXY, liquidity cycles)</li>
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Can read and interpret on-chain analytics (NUPL, MVRV, STH cost basis)</li>
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Can analyse blockchain ecosystems using quantitative metrics (TVL, developer activity, revenue)</li>
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Have tools for deeper market analysis than headline prices</li>
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Can overlay cross-cycle patterns to form a probability-based view on market positioning</li>
+          <li class="flex items-start gap-2"><span class="text-cs-green font-bold">✓</span> Know where to find the data (DefiLlama, Token Terminal, Glassnode, etc.)</li>
+        </ul>
+      </div>
+
+      <!-- Teaching Frameworks Used -->
+      <div class="bg-white border border-[#E8E8EA] rounded-xl p-6 mb-6">
+        <h3 class="text-lg font-bold mb-3">🎯 Teaching Frameworks Used in This Module</h3>
+        <div class="space-y-3">
+          <div class="flex items-start gap-3">
+            <span class="bg-cs-orange/20 text-cs-orange text-xs font-mono font-bold px-2 py-1 rounded flex-shrink-0">#7</span>
+            <div>
+              <p class="font-bold text-sm">"One Cycle Is Not Enough"</p>
+              <p class="text-sm text-[#807F86]">"No one makes it in a single cycle. Stick it out." — Applied here with cross-cycle data analysis, showing members the mathematical evidence that multi-cycle commitment outperforms.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="flex items-center justify-between pt-6 border-t border-[#E8E8EA]">
+        <a href="../operating-system.html" class="text-[#807F86] hover:text-cs-orange text-sm font-medium transition-colors">← Back to OS Overview</a>
+        <a href="m2-advanced-bitcoin.html" class="bg-cs-orange text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-cs-orange/90 transition-colors">Next: Advanced Bitcoin →</a>
+      </div>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>
