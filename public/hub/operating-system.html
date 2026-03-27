@@ -10,14 +10,23 @@
 tailwind.config={theme:{extend:{colors:{cs:{bg:'#1B1925',card:'#242232',border:'#2E2C3E',orange:'#FC5C03',green:'#08C394',text:'#F9F9F9',muted:'#9B99A9'}},fontFamily:{heading:['Oswald','sans-serif'],body:['Barlow','sans-serif'],mono:['Source Code Pro','monospace']}}}}
 </script>
 <style>
-body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-serif}.label-tag{font-family:'Source Code Pro',monospace}.sidebar{transition:transform .3s ease}@media(max-width:1023px){.sidebar{transform:translateX(-100%);position:fixed;z-index:50;top:0;left:0;height:100vh}.sidebar.open{transform:translateX(0)}}.nav-link{transition:all .15s}.nav-link:hover,.nav-link.active{background:rgba(252,92,3,.12);color:#FC5C03;border-left-color:#FC5C03}.pillar-tag{font-size:10px;padding:2px 8px;border-radius:9999px;font-family:'Source Code Pro',monospace;font-weight:600}
+body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-serif}.label-tag{font-family:'Source Code Pro',monospace}.sidebar{transition:transform .3s ease}@media(max-width:1023px){.sidebar{transform:translateX(-100%);position:fixed;z-index:50;top:0;left:0;height:100vh}.sidebar.open{transform:translateX(0)}}.nav-link{transition:all .15s}.nav-link:hover,.nav-link.active{background:rgba(252,92,3,.12);color:#FC5C03;border-left-color:#FC5C03}
+.module-card{transition:all .2s ease;cursor:pointer;text-decoration:none;display:block}
+.module-card:hover{transform:translateY(-2px);border-color:rgba(252,92,3,0.5);box-shadow:0 8px 32px rgba(252,92,3,0.12)}
+.module-card:hover .module-step{color:#FC5C03}
+.module-card:hover .module-arrow{opacity:1;transform:translateX(3px)}
+.module-arrow{opacity:0;transition:all .2s ease}
+.step-connector{background:linear-gradient(90deg,#FC5C03,#08C394);height:2px;flex:1;margin:0 -1px}
+@media(max-width:767px){.step-connector{display:none}}
+.progression-step{transition:all .2s}
+.progression-step:hover{transform:scale(1.03)}
 </style>
 </head>
 <body class="bg-cs-bg text-cs-text min-h-screen">
 
 <div class="lg:hidden flex items-center justify-between px-4 py-3 bg-cs-card border-b border-cs-border sticky top-0 z-40">
   <span class="font-heading text-cs-orange text-lg font-bold tracking-wide">COLLECTIVE SHIFT</span>
-  <button onclick="document.getElementById('sidebar').classList.toggle('open')" class="text-cs-muted hover:text-cs-orange">
+  <button onclick="document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('hidden')" class="text-cs-muted hover:text-cs-orange">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
   </button>
 </div>
@@ -40,7 +49,7 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
       <a href="competitors.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🏆</span> Competitive Intel</a>
       <a href="brand.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🎨</span> Brand & Voice</a>
     </nav>
-    <div class="p-4 border-t border-cs-border"><p class="text-cs-muted text-xs font-mono">v2.3 · March 2026</p></div>
+    <div class="p-4 border-t border-cs-border"><p class="text-cs-muted text-xs font-mono">v9.0 · March 2026</p></div>
   </aside>
 
   <main class="flex-1 min-h-screen">
@@ -53,579 +62,447 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
       </div>
     </div>
 
-    <div class="px-6 lg:px-10 py-8 max-w-5xl">
-      <p class="label-tag text-cs-orange text-xs font-semibold tracking-widest uppercase mb-2">The Shift OS V8 — Modules with Pillars</p>
-      <h1 class="text-4xl font-bold tracking-tight mb-3">The Shift Operating System</h1>
-      <p class="text-cs-muted text-lg mb-2 max-w-2xl">"We teach you how to think. Not what to think."</p>
-      <p class="text-cs-muted text-sm mb-8">V8 embeds education call insights as <strong class="text-cs-orange">pillars within each module</strong> — no standalone new modules. Each pillar maps to real member questions, Simon's battle-tested teaching frameworks, and specific knowledge gaps identified from 30+ education calls.</p>
+    <div class="px-6 lg:px-10 py-8 max-w-6xl">
 
-      <!-- Key Quotes -->
-      <div class="border-l-4 border-cs-orange bg-cs-card rounded-r-xl p-5 mb-8">
+      <!-- Header -->
+      <p class="label-tag text-cs-orange text-xs font-semibold tracking-widest uppercase mb-2">The Shift OS V9 — 8-Step System</p>
+      <h1 class="text-4xl font-bold tracking-tight mb-3">The Shift Operating System</h1>
+      <p class="text-cs-muted text-lg mb-2">"We teach you how to think. Not what to think."</p>
+      <p class="text-cs-muted text-sm mb-8 max-w-2xl">8 steps. Two levels. One complete framework for building, managing, and growing a digital asset portfolio — built from real member questions across 30+ education calls.</p>
+
+      <!-- Hero Quote -->
+      <div class="border-l-4 border-cs-orange bg-cs-card rounded-r-xl p-5 mb-10">
         <p class="text-cs-muted italic text-sm">"We are Collective Shift, a digital asset and Bitcoin education company. We educate you about the space. We're not an advisory firm, we're not financial advisors, we're not telling you what to do."</p>
         <p class="text-cs-orange text-xs mt-2 font-mono">— Ben Simpson</p>
       </div>
 
-      <!-- Four Pillars -->
-      <h2 class="text-2xl font-bold mb-4">The Four Pillars</h2>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 text-center">
-          <div class="text-3xl mb-2">📚</div>
-          <h3 class="text-sm font-bold">Education</h3>
-          <p class="text-cs-muted text-xs mt-1">Proprietary frameworks and structured learning modules</p>
-        </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 text-center">
-          <div class="text-3xl mb-2">📊</div>
-          <h3 class="text-sm font-bold">Research</h3>
-          <p class="text-cs-muted text-xs mt-1">Institutional-grade market analysis and deep dives</p>
-        </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 text-center">
-          <div class="text-3xl mb-2">👥</div>
-          <h3 class="text-sm font-bold">Community</h3>
-          <p class="text-cs-muted text-xs mt-1">Circle community with Platinum Beginners Lounge</p>
-        </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 text-center">
-          <div class="text-3xl mb-2">🎯</div>
-          <h3 class="text-sm font-bold">Coaching</h3>
-          <p class="text-cs-muted text-xs mt-1">1-on-1 sessions, group workshops, analyst access</p>
+      <!-- ===================== 8-STEP OS ===================== -->
+      <h2 class="text-2xl font-bold mb-2">The 8-Step Shift OS</h2>
+      <p class="text-cs-muted text-sm mb-6">Each step is a module. Every module covers Level 1 content first, then Level 2. Click any module to see all topics, teaching frameworks, and member outcomes.</p>
+
+      <!-- Step indicator row -->
+      <div class="hidden md:flex items-center mb-4 px-2">
+        <div class="w-20 shrink-0"></div>
+        <div class="flex-1 flex items-center">
+          <div class="step-connector"></div>
         </div>
       </div>
 
-      <!-- 7-Step Shift OS -->
-      <h2 class="text-2xl font-bold mb-4">7-Step Shift OS: Three Phases</h2>
-      <div class="bg-cs-card border border-cs-border rounded-xl overflow-hidden mb-10">
-        <div class="border-b border-cs-border">
-          <div class="bg-cs-green/10 px-5 py-3 border-b border-cs-border">
-            <span class="font-mono text-cs-green text-xs font-bold uppercase tracking-wider">Phase 1: Foundations — First 30 Days</span>
-          </div>
-          <div class="divide-y divide-cs-border">
-            <div class="flex gap-4 px-5 py-3 items-start">
-              <span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">01</span>
-              <div><p class="font-semibold text-sm">Foundation & Market Positioning</p><p class="text-cs-muted text-xs">Interpret market cycles, form your own strategic view. <span class="text-cs-green">L1:</span> Core thesis. <span class="text-blue-400">L2:</span> Macro correlations.</p></div>
-            </div>
-            <div class="flex gap-4 px-5 py-3 items-start">
-              <span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">02</span>
-              <div><p class="font-semibold text-sm">Asset Exposure & Security Setup</p><p class="text-cs-muted text-xs">Exchange selection, hardware wallet, security. <span class="text-cs-green">L1:</span> CEX + HW wallet. <span class="text-blue-400">L2:</span> Multi-sig, advanced cold storage.</p></div>
-            </div>
-            <div class="flex gap-4 px-5 py-3 items-start">
-              <span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">03</span>
-              <div><p class="font-semibold text-sm">Investor OS & Risk Framework</p><p class="text-cs-muted text-xs">Build your own Investor Operating System. <span class="text-cs-green">L1:</span> Personal risk parameters. <span class="text-blue-400">L2:</span> Advanced risk modelling.</p></div>
-            </div>
-            <div class="flex gap-4 px-5 py-3 items-start">
-              <span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">04</span>
-              <div><p class="font-semibold text-sm">Portfolio Strategy & Goal Setting</p><p class="text-cs-muted text-xs">Define portfolio strategy. <span class="text-cs-green">L1:</span> BTC/alt split. <span class="text-blue-400">L2:</span> Yield positions, borrowing strategies.</p></div>
-            </div>
-          </div>
+      <!-- Module Grid — Level 1 steps 1-4 -->
+      <div class="mb-3">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono px-3 py-1 rounded-full uppercase tracking-wide">B1 — Foundations Session</span>
+          <span class="text-cs-muted text-xs font-mono">2-hour live session · Steps 1–4</span>
         </div>
-        <div class="border-b border-cs-border">
-          <div class="bg-cs-orange/10 px-5 py-3 border-b border-cs-border">
-            <span class="font-mono text-cs-orange text-xs font-bold uppercase tracking-wider">Phase 2: Progressive — Months 2–9</span>
-          </div>
-          <div class="divide-y divide-cs-border">
-            <div class="flex gap-4 px-5 py-3 items-start">
-              <span class="bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">05</span>
-              <div><p class="font-semibold text-sm">Be Your Own Bank, Self Custody, Stablecoins</p><p class="text-cs-muted text-xs"><span class="text-cs-green">L1:</span> CEX buying, DCA, first self-custody. <span class="text-blue-400">L2:</span> DeFi yields, staking, stablecoins.</p></div>
-            </div>
-            <div class="flex gap-4 px-5 py-3 items-start">
-              <span class="bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">06</span>
-              <div><p class="font-semibold text-sm">Sell Strategy & Profit Taking</p><p class="text-cs-muted text-xs"><span class="text-cs-green">L1:</span> Exit strategy, loss-cutting. <span class="text-blue-400">L2:</span> Opportunity cost frameworks, cycle-aware exits.</p></div>
-            </div>
-            <div class="flex gap-4 px-5 py-3 items-start">
-              <span class="bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">07</span>
-              <div><p class="font-semibold text-sm">Tax Planning & Wealth Preservation</p><p class="text-cs-muted text-xs"><span class="text-cs-green">L1:</span> CGT basics, record keeping. <span class="text-blue-400">L2:</span> Multi-entity, trust structures, tax optimisation.</p></div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div class="bg-blue-500/10 px-5 py-3 border-b border-cs-border">
-            <span class="font-mono text-blue-400 text-xs font-bold uppercase tracking-wider">Phase 3: Ongoing — Continuous</span>
-          </div>
-          <div class="divide-y divide-cs-border">
-            <div class="flex gap-4 px-5 py-3 items-start text-sm text-cs-muted"><span class="text-blue-400 font-bold">•</span><span>Quarterly Coaching Sessions (1:1 analyst calls)</span></div>
-            <div class="flex gap-4 px-5 py-3 items-start text-sm text-cs-muted"><span class="text-blue-400 font-bold">•</span><span>CS Portfolio Access (real-time)</span></div>
-            <div class="flex gap-4 px-5 py-3 items-start text-sm text-cs-muted"><span class="text-blue-400 font-bold">•</span><span>Research Platform (daily pulse, weekly outlook, reports)</span></div>
-            <div class="flex gap-4 px-5 py-3 items-start text-sm text-cs-muted"><span class="text-blue-400 font-bold">•</span><span>Circle Community Access</span></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Two-Track System — Level 1 -->
-      <h2 class="text-2xl font-bold mb-4">Two-Track Education System</h2>
-
-      <!-- LEVEL 1 -->
-      <div class="bg-cs-card border border-cs-border rounded-xl overflow-hidden mb-8">
-        <div class="bg-cs-green/10 px-5 py-3 border-b border-cs-border flex items-center gap-2">
-          <span class="text-cs-green font-bold">🟢</span>
-          <span class="font-heading text-lg font-bold">Level 1 — Beginner Track</span>
-        </div>
-        <div class="p-5">
-          <p class="text-cs-muted text-xs mb-6">New to digital assets, or experienced but without a system. CEX only. No DeFi, yield, staking, or borrowing.</p>
-
-          <!-- B1 -->
-          <h4 class="font-mono text-xs text-cs-green uppercase tracking-wider font-bold mb-1">B1 — Foundations Session</h4>
-          <p class="text-cs-muted text-xs mb-4">One-off, 2-hour live session · 40–50 slides</p>
-
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
           <!-- M1 -->
-          <div class="bg-cs-bg border border-cs-border rounded-xl p-4 mb-3">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg px-2 py-0.5">M1</span>
-              <h5 class="font-bold text-sm">Foundations — Why Digital Assets Exist</h5>
+          <a href="modules/m1-foundations.html" class="module-card bg-cs-card border border-cs-border rounded-xl p-4">
+            <div class="flex items-center justify-between mb-3">
+              <span class="module-step bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg px-2 py-1">01</span>
+              <span class="module-arrow text-cs-orange text-lg font-bold">→</span>
             </div>
-            <p class="text-cs-muted text-xs mb-3">The entry point. Establishes why digital assets matter, how markets move in cycles, and why multiple blockchain ecosystems exist.</p>
-            <div class="flex flex-wrap gap-2">
-              <span class="pillar-tag bg-cs-green/15 text-cs-green">Why Digital Assets Exist</span>
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Market Cycles</span>
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Blockchain Ecosystems</span>
+            <h3 class="font-bold text-sm mb-1">Foundations</h3>
+            <p class="text-cs-muted text-xs mb-3 leading-relaxed">Why digital assets exist, market cycles, and blockchain ecosystems.</p>
+            <div class="flex flex-wrap gap-1 mb-3">
+              <span class="bg-cs-green/15 text-cs-green text-xs font-mono px-2 py-0.5 rounded-full">3 topics</span>
+              <span class="bg-cs-green/15 text-cs-green text-xs font-mono px-2 py-0.5 rounded-full">L1</span>
+              <span class="bg-blue-500/15 text-blue-400 text-xs font-mono px-2 py-0.5 rounded-full">L2</span>
             </div>
-            <p class="text-cs-muted text-xs mt-2 italic">"No one makes it in a single cycle. Stick it out."</p>
-          </div>
-
+            <p class="text-cs-muted text-xs italic">"No one makes it in a single cycle."</p>
+          </a>
           <!-- M2 -->
-          <div class="bg-cs-bg border border-cs-border rounded-xl p-4 mb-3">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg px-2 py-0.5">M2</span>
-              <h5 class="font-bold text-sm">Bitcoin — Conviction Framework</h5>
+          <a href="modules/m2-bitcoin.html" class="module-card bg-cs-card border border-cs-border rounded-xl p-4">
+            <div class="flex items-center justify-between mb-3">
+              <span class="module-step bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono rounded-lg px-2 py-1">02</span>
+              <span class="module-arrow text-cs-orange text-lg font-bold">→</span>
             </div>
-            <p class="text-cs-muted text-xs mb-3">Builds deep Bitcoin conviction through first-principles thinking and practical DCA execution.</p>
-            <div class="flex flex-wrap gap-2">
-              <span class="pillar-tag bg-cs-green/15 text-cs-green">Bitcoin Thesis</span>
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Conviction Building</span>
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">DCA Entry Strategy</span>
-              <span class="pillar-tag bg-cs-green/15 text-cs-green">Bitcoin: Hold. Altcoins: Trade.</span>
+            <h3 class="font-bold text-sm mb-1">Bitcoin</h3>
+            <p class="text-cs-muted text-xs mb-3 leading-relaxed">Bitcoin thesis, DCA strategy, conviction building, and mining economics.</p>
+            <div class="flex flex-wrap gap-1 mb-3">
+              <span class="bg-cs-orange/15 text-cs-orange text-xs font-mono px-2 py-0.5 rounded-full">₿</span>
+              <span class="bg-cs-green/15 text-cs-green text-xs font-mono px-2 py-0.5 rounded-full">4 topics L1</span>
+              <span class="bg-blue-500/15 text-blue-400 text-xs font-mono px-2 py-0.5 rounded-full">L2</span>
             </div>
-            <p class="text-cs-muted text-xs mt-2 italic">"Everyone gets Bitcoin at the price they deserve."</p>
-          </div>
-
+            <p class="text-cs-muted text-xs italic">"Everyone gets Bitcoin at the price they deserve."</p>
+          </a>
           <!-- M3 -->
-          <div class="bg-cs-bg border border-cs-border rounded-xl p-4 mb-3">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg px-2 py-0.5">M3</span>
-              <h5 class="font-bold text-sm">Altcoins — Fundamental Analysis</h5>
+          <a href="modules/m3-altcoins.html" class="module-card bg-cs-card border border-cs-border rounded-xl p-4">
+            <div class="flex items-center justify-between mb-3">
+              <span class="module-step bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono rounded-lg px-2 py-1">03</span>
+              <span class="module-arrow text-cs-orange text-lg font-bold">→</span>
             </div>
-            <p class="text-cs-muted text-xs mb-3">Reframes altcoins as tech startups, teaches fundamental analysis, and addresses the #1 gateway question (XRP).</p>
-            <div class="flex flex-wrap gap-2">
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Tech Startups, Not Stocks</span>
-              <span class="pillar-tag bg-cs-green/15 text-cs-green">Fundamental Analysis</span>
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">XRP Reality Check</span>
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Portfolio Allocation</span>
+            <h3 class="font-bold text-sm mb-1">Altcoins</h3>
+            <p class="text-cs-muted text-xs mb-3 leading-relaxed">Tech startup framework, fundamental analysis, XRP reality check, tokenomics.</p>
+            <div class="flex flex-wrap gap-1 mb-3">
+              <span class="bg-red-500/15 text-red-400 text-xs font-mono px-2 py-0.5 rounded-full">⚠ high impact</span>
+              <span class="bg-cs-green/15 text-cs-green text-xs font-mono px-2 py-0.5 rounded-full">L1</span>
+              <span class="bg-blue-500/15 text-blue-400 text-xs font-mono px-2 py-0.5 rounded-full">L2</span>
             </div>
-            <p class="text-cs-muted text-xs mt-2 italic">"Altcoins should really be called tech startups."</p>
-          </div>
-
+            <p class="text-cs-muted text-xs italic">"Altcoins = tech startups."</p>
+          </a>
           <!-- M4 -->
-          <div class="bg-cs-bg border border-cs-border rounded-xl p-4 mb-5">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg px-2 py-0.5">M4</span>
-              <h5 class="font-bold text-sm">How We Invest — Investment Principles</h5>
+          <a href="modules/m4-how-we-invest.html" class="module-card bg-cs-card border border-cs-border rounded-xl p-4">
+            <div class="flex items-center justify-between mb-3">
+              <span class="module-step bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono rounded-lg px-2 py-1">04</span>
+              <span class="module-arrow text-cs-orange text-lg font-bold">→</span>
             </div>
-            <p class="text-cs-muted text-xs mb-3">CS investment philosophy: risk-to-reward, portfolio allocation by investor type, and managing trading impulses.</p>
-            <div class="flex flex-wrap gap-2">
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Risk-to-Reward Framework</span>
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Allocation by Investor Type</span>
-              <span class="pillar-tag bg-cs-green/15 text-cs-green">TA as Tool, Not Strategy</span>
+            <h3 class="font-bold text-sm mb-1">How We Invest</h3>
+            <p class="text-cs-muted text-xs mb-3 leading-relaxed">Risk-to-reward, investment principles, portfolio allocation, TA as a tool.</p>
+            <div class="flex flex-wrap gap-1 mb-3">
+              <span class="bg-cs-orange/15 text-cs-orange text-xs font-mono px-2 py-0.5 rounded-full">principles</span>
+              <span class="bg-cs-green/15 text-cs-green text-xs font-mono px-2 py-0.5 rounded-full">L1</span>
+              <span class="bg-blue-500/15 text-blue-400 text-xs font-mono px-2 py-0.5 rounded-full">L2</span>
             </div>
-            <p class="text-cs-muted text-xs mt-2 italic">"They hear '3x up' and ignore the '80% down' part."</p>
-          </div>
+            <p class="text-cs-muted text-xs italic">"High risk = both directions."</p>
+          </a>
+        </div>
+      </div>
 
-          <!-- B2 -->
-          <h4 class="font-mono text-xs text-cs-green uppercase tracking-wider font-bold mb-1">B2 — Practical How-To's</h4>
-          <p class="text-cs-muted text-xs mb-4">L1 Weekly Coaching Call · 15–25 slides/module</p>
-
+      <!-- Module Grid — Level 1 steps 5-8 -->
+      <div class="mb-8">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono px-3 py-1 rounded-full uppercase tracking-wide">B2 — Practical How-Tos</span>
+          <span class="text-cs-muted text-xs font-mono">Weekly coaching calls · Steps 5–8</span>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-3">
           <!-- M5 -->
-          <div class="bg-cs-bg border border-cs-border rounded-xl p-4 mb-3">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg px-2 py-0.5">M5</span>
-              <h5 class="font-bold text-sm">Buy/Sell (CEX)</h5>
+          <a href="modules/m5-buy-sell.html" class="module-card bg-cs-card border border-cs-border rounded-xl p-4">
+            <div class="flex items-center justify-between mb-3">
+              <span class="module-step bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg px-2 py-1">05</span>
+              <span class="module-arrow text-cs-orange text-lg font-bold">→</span>
             </div>
-            <p class="text-cs-muted text-xs mb-3">From zero to first purchase. Getting money onto exchanges, setting up DCA, and navigating bank friction.</p>
-            <div class="flex flex-wrap gap-2">
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Bank Friction & On-Ramping</span>
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">DCA Setup & Automation</span>
-              <span class="pillar-tag bg-cs-green/15 text-cs-green">Exchange Guides (AU)</span>
+            <h3 class="font-bold text-sm mb-1">Buy & Sell</h3>
+            <p class="text-cs-muted text-xs mb-3 leading-relaxed">Bank friction, DCA setup, exchange guides. L2: yield, staking, DeFi.</p>
+            <div class="flex flex-wrap gap-1 mb-3">
+              <span class="bg-cs-green/15 text-cs-green text-xs font-mono px-2 py-0.5 rounded-full">L1: CEX</span>
+              <span class="bg-blue-500/15 text-blue-400 text-xs font-mono px-2 py-0.5 rounded-full">L2: yield</span>
             </div>
-            <p class="text-cs-muted text-xs mt-2 italic">"I've never regretted dollar cost averaging."</p>
-          </div>
-
+            <p class="text-cs-muted text-xs italic">"I've never regretted DCA."</p>
+          </a>
           <!-- M6 -->
-          <div class="bg-cs-bg border border-cs-border rounded-xl p-4 mb-3">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg px-2 py-0.5">M6</span>
-              <h5 class="font-bold text-sm">Send/Store (CEX + Hardware Wallet)</h5>
+          <a href="modules/m6-send-store.html" class="module-card bg-cs-card border border-cs-border rounded-xl p-4">
+            <div class="flex items-center justify-between mb-3">
+              <span class="module-step bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg px-2 py-1">06</span>
+              <span class="module-arrow text-cs-orange text-lg font-bold">→</span>
             </div>
-            <p class="text-cs-muted text-xs mb-3">Securing digital assets. Scales security advice based on portfolio size.</p>
-            <div class="flex flex-wrap gap-2">
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Self-Custody Fundamentals</span>
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Hardware Wallet Setup</span>
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Security Scaling</span>
+            <h3 class="font-bold text-sm mb-1">Send & Store</h3>
+            <p class="text-cs-muted text-xs mb-3 leading-relaxed">Self-custody, hardware wallets, security scaling. L2: multi-sig, estate planning.</p>
+            <div class="flex flex-wrap gap-1 mb-3">
+              <span class="bg-red-500/15 text-red-400 text-xs font-mono px-2 py-0.5 rounded-full">🔑 #1 need</span>
+              <span class="bg-cs-green/15 text-cs-green text-xs font-mono px-2 py-0.5 rounded-full">L1</span>
+              <span class="bg-blue-500/15 text-blue-400 text-xs font-mono px-2 py-0.5 rounded-full">L2</span>
             </div>
-            <p class="text-cs-muted text-xs mt-2 italic">"The level of paranoia should equal the number of zeros."</p>
-          </div>
-
+            <p class="text-cs-muted text-xs italic">"Paranoia = zeros."</p>
+          </a>
           <!-- M7 -->
-          <div class="bg-cs-bg border border-cs-border rounded-xl p-4 mb-3">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg px-2 py-0.5">M7</span>
-              <h5 class="font-bold text-sm">Tax Basics</h5>
+          <a href="modules/m7-tax.html" class="module-card bg-cs-card border border-cs-border rounded-xl p-4">
+            <div class="flex items-center justify-between mb-3">
+              <span class="module-step bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg px-2 py-1">07</span>
+              <span class="module-arrow text-cs-orange text-lg font-bold">→</span>
             </div>
-            <p class="text-cs-muted text-xs mb-3">Foundation-level tax education. Frameworks to engage professional advisors effectively.</p>
-            <div class="flex flex-wrap gap-2">
-              <span class="pillar-tag bg-cs-green/15 text-cs-green">CGT Fundamentals</span>
-              <span class="pillar-tag bg-cs-green/15 text-cs-green">Record Keeping & Tools</span>
+            <h3 class="font-bold text-sm mb-1">Tax</h3>
+            <p class="text-cs-muted text-xs mb-3 leading-relaxed">CGT basics, record keeping, tools. L2: optimisation, entity structures.</p>
+            <div class="flex flex-wrap gap-1 mb-3">
+              <span class="bg-amber-500/15 text-amber-400 text-xs font-mono px-2 py-0.5 rounded-full">edu only</span>
+              <span class="bg-cs-green/15 text-cs-green text-xs font-mono px-2 py-0.5 rounded-full">L1</span>
+              <span class="bg-blue-500/15 text-blue-400 text-xs font-mono px-2 py-0.5 rounded-full">L2</span>
             </div>
-          </div>
-
+            <p class="text-cs-muted text-xs italic">CGT, record keeping, SMSF, trusts.</p>
+          </a>
           <!-- M8 -->
-          <div class="bg-cs-bg border border-cs-border rounded-xl p-4 mb-5">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg px-2 py-0.5">M8</span>
-              <h5 class="font-bold text-sm">Sell Strategy</h5>
+          <a href="modules/m8-sell-strategy.html" class="module-card bg-cs-card border border-cs-orange/30 rounded-xl p-4">
+            <div class="flex items-center justify-between mb-3">
+              <span class="module-step bg-cs-orange/30 text-cs-orange text-xs font-bold font-mono rounded-lg px-2 py-1">08</span>
+              <span class="module-arrow text-cs-orange text-lg font-bold">→</span>
             </div>
-            <p class="text-cs-muted text-xs mb-3">The most emotionally challenging and most important module. Directly addresses ICP's #1 fear: "no exit plan."</p>
-            <div class="flex flex-wrap gap-2">
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Loss-Cutting (Polygon Story)</span>
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Re-Entry Framework</span>
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Exit Strategy</span>
+            <h3 class="font-bold text-sm mb-1 text-cs-orange">Sell Strategy</h3>
+            <p class="text-cs-muted text-xs mb-3 leading-relaxed">Loss-cutting, exit planning, re-entry. L2: opportunity cost, borrowing.</p>
+            <div class="flex flex-wrap gap-1 mb-3">
+              <span class="bg-red-500/15 text-red-400 text-xs font-mono px-2 py-0.5 rounded-full">#1 fear</span>
+              <span class="bg-cs-green/15 text-cs-green text-xs font-mono px-2 py-0.5 rounded-full">L1</span>
+              <span class="bg-blue-500/15 text-blue-400 text-xs font-mono px-2 py-0.5 rounded-full">L2: borrow</span>
             </div>
-            <p class="text-cs-muted text-xs mt-2 italic">"My best investment decision was getting out of Polygon before I lost 70-80%."</p>
-          </div>
-
-          <!-- B3 -->
-          <h4 class="font-mono text-xs text-cs-green uppercase tracking-wider font-bold mb-2">B3 — 8-Step Strategy Process</h4>
-          <p class="text-cs-muted text-xs mb-2">Workbook + Shift Strategy Builder. One step per call → 1:1 analyst session on completion.</p>
-
-          <div class="mt-4 bg-red-500/10 border border-red-500/20 rounded-lg p-3">
-            <p class="text-red-400 text-xs font-bold font-mono uppercase">🚫 Beginner Rule — CEX Only</p>
-            <p class="text-cs-muted text-xs mt-1">No yield · No staking · No DeFi · No borrowing. Keep it simple. Build confidence first.</p>
-          </div>
+            <p class="text-cs-muted text-xs italic">"A strategy in your head is a vague intention."</p>
+          </a>
         </div>
       </div>
 
-      <!-- LEVEL 2 -->
-      <div class="bg-cs-card border border-cs-border rounded-xl overflow-hidden mb-8">
-        <div class="bg-blue-500/10 px-5 py-3 border-b border-cs-border flex items-center gap-2">
-          <span class="text-blue-400 font-bold">🔵</span>
-          <span class="font-heading text-lg font-bold">Level 2 — Advanced Track</span>
+      <!-- ===================== TWO-TRACK LAYOUT ===================== -->
+      <h2 class="text-2xl font-bold mb-2">Two-Track Education System</h2>
+      <p class="text-cs-muted text-sm mb-6">All 8 modules have Level 1 and Level 2 content. Level 1 comes first — complete all 8 to unlock Level 2.</p>
+
+      <div class="grid md:grid-cols-2 gap-4 mb-10">
+        <!-- Level 1 -->
+        <div class="bg-cs-card border border-cs-green/30 rounded-xl overflow-hidden">
+          <div class="bg-cs-green/10 px-5 py-3 border-b border-cs-green/20 flex items-center gap-2">
+            <span class="text-cs-green text-lg">🟢</span>
+            <div>
+              <h3 class="font-heading font-bold text-cs-green">Level 1 — Beginner Track</h3>
+              <p class="text-xs text-cs-muted font-mono">CEX only · No yield · No DeFi · No borrowing</p>
+            </div>
+          </div>
+          <div class="p-5 space-y-3">
+            <div class="bg-cs-bg rounded-lg p-3 border-l-3 border-cs-green">
+              <p class="text-xs font-bold text-cs-green font-mono mb-1">B1 — Foundations Session</p>
+              <p class="text-xs text-cs-muted">2-hour live session covering Steps 1–4: Foundations, Bitcoin, Altcoins, How We Invest</p>
+            </div>
+            <div class="bg-cs-bg rounded-lg p-3">
+              <p class="text-xs font-bold text-cs-green font-mono mb-1">B2 — Practical How-Tos</p>
+              <p class="text-xs text-cs-muted">Weekly coaching calls covering Steps 5–8: Buy & Sell, Send & Store, Tax, Sell Strategy</p>
+            </div>
+            <div class="bg-cs-bg rounded-lg p-3">
+              <p class="text-xs font-bold text-cs-green font-mono mb-1">B3 — 8-Step Strategy Process</p>
+              <p class="text-xs text-cs-muted">Workbook + Shift Strategy Builder. One step per call → 1:1 analyst session on completion</p>
+            </div>
+            <div class="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mt-2">
+              <p class="text-red-400 text-xs font-bold font-mono uppercase">🚫 CEX Only Rule</p>
+              <p class="text-cs-muted text-xs mt-1">No yield · No staking · No DeFi · No borrowing</p>
+            </div>
+          </div>
         </div>
-        <div class="p-5">
-          <p class="text-cs-muted text-xs mb-6">Completed all 8 Beginner steps. Adds yield, staking, DeFi, borrowing, advanced tax, multi-entity strategies.</p>
 
-          <!-- A1 -->
-          <h4 class="font-mono text-xs text-blue-400 uppercase tracking-wider font-bold mb-1">A1 — Advanced Foundations</h4>
-          <p class="text-cs-muted text-xs mb-4">One-off live session · 45–55 slides</p>
-
-          <!-- A-M1 -->
-          <div class="bg-cs-bg border border-cs-border rounded-xl p-4 mb-3">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="bg-blue-500/20 text-blue-400 text-xs font-bold font-mono rounded-lg px-2 py-0.5">M1</span>
-              <h5 class="font-bold text-sm">Advanced Foundations</h5>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              <span class="pillar-tag bg-blue-500/15 text-blue-400">Advanced Market Structure</span>
-              <span class="pillar-tag bg-blue-500/15 text-blue-400">Advanced Ecosystem Analysis</span>
+        <!-- Level 2 -->
+        <div class="bg-cs-card border border-blue-500/30 rounded-xl overflow-hidden">
+          <div class="bg-blue-500/10 px-5 py-3 border-b border-blue-500/20 flex items-center gap-2">
+            <span class="text-blue-400 text-lg">🔵</span>
+            <div>
+              <h3 class="font-heading font-bold text-blue-400">Level 2 — Advanced Track</h3>
+              <p class="text-xs text-cs-muted font-mono">Unlocks: yield · staking · DeFi · borrowing</p>
             </div>
           </div>
-
-          <!-- A-M2 -->
-          <div class="bg-cs-bg border border-cs-border rounded-xl p-4 mb-3">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="bg-blue-500/20 text-blue-400 text-xs font-bold font-mono rounded-lg px-2 py-0.5">M2</span>
-              <h5 class="font-bold text-sm">Advanced Bitcoin</h5>
+          <div class="p-5 space-y-3">
+            <div class="bg-cs-bg rounded-lg p-3">
+              <p class="text-xs font-bold text-blue-400 font-mono mb-1">A1 — Advanced Foundations</p>
+              <p class="text-xs text-cs-muted">Live session covering advanced Steps 1–4: macro correlations, mining economics, tokenomics, multi-entity structures</p>
             </div>
-            <div class="flex flex-wrap gap-2">
-              <span class="pillar-tag bg-blue-500/15 text-blue-400">Mining Economics</span>
-              <span class="pillar-tag bg-blue-500/15 text-blue-400">Advanced Bitcoin Strategies</span>
+            <div class="bg-cs-bg rounded-lg p-3">
+              <p class="text-xs font-bold text-blue-400 font-mono mb-1">A2 — Advanced How-Tos</p>
+              <p class="text-xs text-cs-muted">Weekly coaching calls: DeFi yields, stablecoin strategies, advanced tax, opportunity cost frameworks, borrowing</p>
             </div>
-          </div>
-
-          <!-- A-M3 -->
-          <div class="bg-cs-bg border border-cs-border rounded-xl p-4 mb-3">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="bg-blue-500/20 text-blue-400 text-xs font-bold font-mono rounded-lg px-2 py-0.5">M3</span>
-              <h5 class="font-bold text-sm">Advanced Altcoins</h5>
+            <div class="bg-cs-bg rounded-lg p-3">
+              <p class="text-xs font-bold text-blue-400 font-mono mb-1">A3 — Advanced 8-Step Process</p>
+              <p class="text-xs text-cs-muted">Advanced workbook + Strategy Builder. Multi-entity structures · Tax optimisation · 1:1 analyst session on completion</p>
             </div>
-            <div class="flex flex-wrap gap-2">
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Tokenomics Deep Dive</span>
-              <span class="pillar-tag bg-blue-500/15 text-blue-400">Early-Stage Discovery</span>
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">RWA Tokenisation</span>
-            </div>
-            <p class="text-cs-muted text-xs mt-2 italic">HYPE as case study — real product, real fees, real users.</p>
-          </div>
-
-          <!-- A-M4 -->
-          <div class="bg-cs-bg border border-cs-border rounded-xl p-4 mb-5">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="bg-blue-500/20 text-blue-400 text-xs font-bold font-mono rounded-lg px-2 py-0.5">M4</span>
-              <h5 class="font-bold text-sm">Advanced Investment Principles</h5>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Advanced Risk Frameworks</span>
-              <span class="pillar-tag bg-blue-500/15 text-blue-400">Multi-Entity Structures</span>
-            </div>
-          </div>
-
-          <!-- A2 -->
-          <h4 class="font-mono text-xs text-blue-400 uppercase tracking-wider font-bold mb-1">A2 — Advanced How-To's</h4>
-          <p class="text-cs-muted text-xs mb-4">L2 Weekly Coaching Call · 15–25 slides/module</p>
-
-          <!-- A-M5 -->
-          <div class="bg-cs-bg border border-cs-border rounded-xl p-4 mb-3">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="bg-blue-500/20 text-blue-400 text-xs font-bold font-mono rounded-lg px-2 py-0.5">M5</span>
-              <h5 class="font-bold text-sm">Yield & Staking</h5>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">DeFi Yields Explained</span>
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Stablecoin Strategies</span>
-              <span class="pillar-tag bg-blue-500/15 text-blue-400">Staking Fundamentals</span>
-            </div>
-            <p class="text-cs-muted text-xs mt-2 italic">"If you can't explain where the yield comes from, you don't understand the risk."</p>
-          </div>
-
-          <!-- A-M6 -->
-          <div class="bg-cs-bg border border-cs-border rounded-xl p-4 mb-3">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="bg-blue-500/20 text-blue-400 text-xs font-bold font-mono rounded-lg px-2 py-0.5">M6</span>
-              <h5 class="font-bold text-sm">Advanced Tax & Structure</h5>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              <span class="pillar-tag bg-blue-500/15 text-blue-400">Tax Optimisation</span>
-              <span class="pillar-tag bg-blue-500/15 text-blue-400">Entity Structures</span>
-            </div>
-          </div>
-
-          <!-- A-M7 -->
-          <div class="bg-cs-bg border border-cs-border rounded-xl p-4 mb-3">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="bg-blue-500/20 text-blue-400 text-xs font-bold font-mono rounded-lg px-2 py-0.5">M7</span>
-              <h5 class="font-bold text-sm">Advanced Sell Strategy</h5>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Opportunity Cost Framework</span>
-              <span class="pillar-tag bg-blue-500/15 text-blue-400">Cycle-Aware Exit Strategies</span>
-            </div>
-          </div>
-
-          <!-- A-M8 -->
-          <div class="bg-cs-bg border border-cs-border rounded-xl p-4 mb-5">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="bg-blue-500/20 text-blue-400 text-xs font-bold font-mono rounded-lg px-2 py-0.5">M8</span>
-              <h5 class="font-bold text-sm">Borrowing</h5>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              <span class="pillar-tag bg-blue-500/15 text-blue-400">Borrowing Basics</span>
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Margin Call Risk</span>
-              <span class="pillar-tag bg-cs-orange/15 text-cs-orange">Ledn / Block Earner</span>
-            </div>
-            <p class="text-cs-muted text-xs mt-2 italic">"If you don't understand liquidation, you shouldn't be borrowing."</p>
-          </div>
-
-          <!-- A3 -->
-          <h4 class="font-mono text-xs text-blue-400 uppercase tracking-wider font-bold mb-2">A3 — Advanced 8-Step Process</h4>
-          <p class="text-cs-muted text-xs">Advanced workbook + Strategy Builder. Multi-entity structures · Tax optimisation · 1:1 analyst session on completion.</p>
-
-          <div class="mt-4 bg-cs-orange/10 border border-cs-orange/20 rounded-lg p-3">
-            <p class="text-cs-orange text-xs font-bold font-mono uppercase">Advanced Adds:</p>
-            <div class="flex flex-wrap gap-2 mt-2">
-              <span class="bg-cs-orange/20 text-cs-orange text-xs px-2 py-0.5 rounded-full font-mono">Yield & Staking</span>
-              <span class="bg-cs-orange/20 text-cs-orange text-xs px-2 py-0.5 rounded-full font-mono">DeFi</span>
-              <span class="bg-cs-orange/20 text-cs-orange text-xs px-2 py-0.5 rounded-full font-mono">Borrowing</span>
-              <span class="bg-cs-orange/20 text-cs-orange text-xs px-2 py-0.5 rounded-full font-mono">RWA Tokenisation</span>
-              <span class="bg-cs-orange/20 text-cs-orange text-xs px-2 py-0.5 rounded-full font-mono">Multi-Entity</span>
-              <span class="bg-cs-orange/20 text-cs-orange text-xs px-2 py-0.5 rounded-full font-mono">Tax Optimisation</span>
+            <div class="bg-cs-orange/10 border border-cs-orange/20 rounded-lg p-3 mt-2">
+              <p class="text-cs-orange text-xs font-bold font-mono uppercase">Advanced Unlocks:</p>
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                <span class="bg-cs-orange/20 text-cs-orange text-xs px-2 py-0.5 rounded-full font-mono">Yield</span>
+                <span class="bg-cs-orange/20 text-cs-orange text-xs px-2 py-0.5 rounded-full font-mono">Staking</span>
+                <span class="bg-cs-orange/20 text-cs-orange text-xs px-2 py-0.5 rounded-full font-mono">DeFi</span>
+                <span class="bg-cs-orange/20 text-cs-orange text-xs px-2 py-0.5 rounded-full font-mono">Borrowing</span>
+                <span class="bg-cs-orange/20 text-cs-orange text-xs px-2 py-0.5 rounded-full font-mono">RWA</span>
+                <span class="bg-cs-orange/20 text-cs-orange text-xs px-2 py-0.5 rounded-full font-mono">Multi-Entity</span>
+                <span class="bg-cs-orange/20 text-cs-orange text-xs px-2 py-0.5 rounded-full font-mono">Tax Optimisation</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Level Progression Flow -->
-      <h2 class="text-2xl font-bold mb-4">Level Progression</h2>
-      <div class="bg-cs-card border border-cs-border rounded-xl p-6 mb-8">
-        <div class="flex flex-col md:flex-row items-center gap-3 text-center">
-          <div class="bg-cs-bg border border-cs-border rounded-lg px-4 py-3 flex-1"><div class="text-lg mb-1">🚀</div><p class="text-xs font-bold">Pro Accelerator</p></div>
-          <span class="text-cs-orange font-bold text-xl hidden md:block">→</span><span class="text-cs-orange font-bold text-xl md:hidden">↓</span>
-          <div class="bg-cs-green/10 border border-cs-green/30 rounded-lg px-4 py-3 flex-1"><div class="text-lg mb-1">📗</div><p class="text-xs font-bold text-cs-green">Level 1 — Beginner</p></div>
-          <span class="text-cs-orange font-bold text-xl hidden md:block">→</span><span class="text-cs-orange font-bold text-xl md:hidden">↓</span>
-          <div class="bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3 flex-1"><div class="text-lg mb-1">🔒</div><p class="text-xs font-bold text-red-400">GATE: Complete 8 Steps</p></div>
-          <span class="text-cs-orange font-bold text-xl hidden md:block">→</span><span class="text-cs-orange font-bold text-xl md:hidden">↓</span>
-          <div class="bg-blue-500/10 border border-blue-500/30 rounded-lg px-4 py-3 flex-1"><div class="text-lg mb-1">📘</div><p class="text-xs font-bold text-blue-400">Level 2 — Advanced</p></div>
-          <span class="text-cs-orange font-bold text-xl hidden md:block">→</span><span class="text-cs-orange font-bold text-xl md:hidden">↓</span>
-          <div class="bg-cs-orange/10 border border-cs-orange/30 rounded-lg px-4 py-3 flex-1"><div class="text-lg mb-1">👑</div><p class="text-xs font-bold text-cs-orange">Level 3 — Elevate (1+ yr)</p></div>
+      <!-- ===================== LEVEL PROGRESSION ===================== -->
+      <h2 class="text-2xl font-bold mb-2">Level Progression</h2>
+      <p class="text-cs-muted text-sm mb-6">The full member journey from entry to mastery. Each level is gated — complete all modules and sessions before advancing.</p>
+
+      <div class="bg-cs-card border border-cs-border rounded-xl p-6 mb-10">
+        <!-- Desktop progression -->
+        <div class="hidden md:flex items-stretch gap-0">
+          <!-- Go Pro -->
+          <div class="progression-step flex-1 bg-cs-bg border border-cs-border rounded-xl p-4 text-center">
+            <div class="text-2xl mb-2">🚀</div>
+            <p class="text-xs font-bold text-cs-muted font-mono uppercase tracking-wide">Entry</p>
+            <p class="text-sm font-bold mt-1">Go Pro</p>
+            <p class="text-cs-muted text-xs mt-2">Research platform, Circle community, introductory education</p>
+          </div>
+          <div class="flex items-center px-2 text-cs-orange font-bold text-xl flex-shrink-0">→</div>
+          <!-- Accelerator -->
+          <div class="progression-step flex-1 bg-cs-bg border border-cs-border rounded-xl p-4 text-center">
+            <div class="text-2xl mb-2">⚡</div>
+            <p class="text-xs font-bold text-cs-muted font-mono uppercase tracking-wide">Mid Tier</p>
+            <p class="text-sm font-bold mt-1">Accelerator</p>
+            <p class="text-cs-muted text-xs mt-2">1-on-1 coaching, live Foundation sessions, starts 8-step curriculum</p>
+          </div>
+          <div class="flex items-center px-2 text-cs-orange font-bold text-xl flex-shrink-0">→</div>
+          <!-- Level 1 -->
+          <div class="progression-step flex-1 bg-cs-green/10 border border-cs-green/30 rounded-xl p-4 text-center">
+            <div class="text-2xl mb-2">📗</div>
+            <p class="text-xs font-bold text-cs-green font-mono uppercase tracking-wide">Beginner</p>
+            <p class="text-sm font-bold mt-1 text-cs-green">Level 1</p>
+            <p class="text-cs-muted text-xs mt-2">B1 Foundations · B2 How-Tos · B3 Strategy Process</p>
+          </div>
+          <div class="flex items-center px-1 flex-shrink-0">
+            <div class="bg-red-500/20 border border-red-500/30 rounded-lg px-2 py-3 text-center">
+              <p class="text-red-400 text-xs font-bold font-mono">GATE</p>
+              <p class="text-red-400 text-xs">All 8<br/>modules</p>
+            </div>
+          </div>
+          <!-- Level 2 -->
+          <div class="progression-step flex-1 bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 text-center">
+            <div class="text-2xl mb-2">📘</div>
+            <p class="text-xs font-bold text-blue-400 font-mono uppercase tracking-wide">Advanced</p>
+            <p class="text-sm font-bold mt-1 text-blue-400">Level 2</p>
+            <p class="text-cs-muted text-xs mt-2">A1 Advanced · A2 How-Tos · A3 Strategy Process</p>
+          </div>
+          <div class="flex items-center px-1 flex-shrink-0">
+            <div class="bg-red-500/20 border border-red-500/30 rounded-lg px-2 py-3 text-center">
+              <p class="text-red-400 text-xs font-bold font-mono">GATE</p>
+              <p class="text-red-400 text-xs">All 8<br/>modules</p>
+            </div>
+          </div>
+          <!-- Level 3 -->
+          <div class="progression-step flex-1 bg-cs-orange/10 border border-cs-orange/30 rounded-xl p-4 text-center">
+            <div class="text-2xl mb-2">👑</div>
+            <p class="text-xs font-bold text-cs-orange font-mono uppercase tracking-wide">1 Year+</p>
+            <p class="text-sm font-bold mt-1 text-cs-orange">Level 3: Elevate</p>
+            <p class="text-cs-muted text-xs mt-2">Ongoing coaching, weekly calls, full analyst access</p>
+          </div>
+        </div>
+        <!-- Mobile progression -->
+        <div class="md:hidden space-y-3">
+          <div class="flex gap-3 items-center bg-cs-bg border border-cs-border rounded-lg p-3">
+            <span class="text-2xl">🚀</span>
+            <div><p class="text-xs font-bold">Go Pro</p><p class="text-cs-muted text-xs">Entry tier · Research + community</p></div>
+          </div>
+          <div class="text-cs-orange font-bold text-center">↓</div>
+          <div class="flex gap-3 items-center bg-cs-bg border border-cs-border rounded-lg p-3">
+            <span class="text-2xl">⚡</span>
+            <div><p class="text-xs font-bold">Accelerator</p><p class="text-cs-muted text-xs">Mid tier · Coaching + structured curriculum</p></div>
+          </div>
+          <div class="text-cs-orange font-bold text-center">↓</div>
+          <div class="flex gap-3 items-center bg-cs-green/10 border border-cs-green/30 rounded-lg p-3">
+            <span class="text-2xl">📗</span>
+            <div><p class="text-xs font-bold text-cs-green">Level 1 — Beginner</p><p class="text-cs-muted text-xs">B1 + B2 + B3 · Complete all 8 modules</p></div>
+          </div>
+          <div class="flex items-center gap-2 justify-center">
+            <div class="bg-red-500/20 border border-red-500/30 rounded-lg px-3 py-1"><p class="text-red-400 text-xs font-bold font-mono">GATE: All 8 modules</p></div>
+          </div>
+          <div class="flex gap-3 items-center bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
+            <span class="text-2xl">📘</span>
+            <div><p class="text-xs font-bold text-blue-400">Level 2 — Advanced</p><p class="text-cs-muted text-xs">A1 + A2 + A3 · Complete all 8 modules</p></div>
+          </div>
+          <div class="flex items-center gap-2 justify-center">
+            <div class="bg-red-500/20 border border-red-500/30 rounded-lg px-3 py-1"><p class="text-red-400 text-xs font-bold font-mono">GATE: All 8 modules</p></div>
+          </div>
+          <div class="flex gap-3 items-center bg-cs-orange/10 border border-cs-orange/30 rounded-lg p-3">
+            <span class="text-2xl">👑</span>
+            <div><p class="text-xs font-bold text-cs-orange">Level 3: Elevate</p><p class="text-cs-muted text-xs">1 year+ · Ongoing coaching + weekly calls</p></div>
+          </div>
+        </div>
+        <!-- Level 3 detail -->
+        <div class="mt-4 bg-cs-orange/5 border border-cs-orange/20 rounded-xl p-4">
+          <p class="text-cs-orange text-xs font-bold font-mono uppercase mb-2">👑 Level 3: Elevate — What's Included</p>
+          <div class="grid md:grid-cols-3 gap-3">
+            <div class="text-xs text-cs-muted flex gap-2"><span class="text-cs-orange">✓</span> Ongoing 1-on-1 coaching sessions</div>
+            <div class="text-xs text-cs-muted flex gap-2"><span class="text-cs-orange">✓</span> Weekly live strategy calls + Q&A</div>
+            <div class="text-xs text-cs-muted flex gap-2"><span class="text-cs-orange">✓</span> Full analyst access + priority scheduling</div>
+            <div class="text-xs text-cs-muted flex gap-2"><span class="text-cs-orange">✓</span> 8-step process revisited at advanced level</div>
+            <div class="text-xs text-cs-muted flex gap-2"><span class="text-cs-orange">✓</span> Peer cohort — small group of committed investors</div>
+            <div class="text-xs text-cs-muted flex gap-2"><span class="text-cs-orange">✓</span> Priority access to new research and deep dives</div>
+          </div>
         </div>
       </div>
 
-      <!-- Three Investor Types -->
-      <h2 class="text-2xl font-bold mb-4">Three Investor Types</h2>
-      <p class="text-cs-muted text-sm mb-4">Every member falls into one of three categories. The Shift OS tailors frameworks, worked examples, and allocation guidance to each.</p>
-      <div class="grid md:grid-cols-3 gap-4 mb-8">
+      <!-- ===================== THREE INVESTOR TYPES ===================== -->
+      <h2 class="text-2xl font-bold mb-2">Three Investor Types</h2>
+      <p class="text-cs-muted text-sm mb-4">Every member falls into one of three categories. The Shift OS tailors frameworks, allocation guidance, and worked examples to each.</p>
+      <div class="grid md:grid-cols-3 gap-4 mb-10">
         <div class="bg-cs-card border border-cs-orange/30 rounded-xl p-5">
           <div class="text-2xl mb-2">💰</div>
           <h3 class="font-bold text-sm mb-2">Wealth Generation</h3>
-          <p class="text-cs-muted text-xs">Growing capital significantly. Higher risk tolerance. Longer time horizon. Larger altcoin allocation as satellite positions around a Bitcoin core.</p>
+          <p class="text-cs-muted text-xs mb-3">Growing capital significantly. Higher risk tolerance. Longer time horizon. Bitcoin core with altcoin satellites.</p>
+          <p class="text-cs-muted text-xs italic">Examples: Ryan ($300K, wants to double), Harry (50% net worth in digital assets)</p>
         </div>
         <div class="bg-cs-card border border-cs-green/30 rounded-xl p-5">
           <div class="text-2xl mb-2">🛡️</div>
           <h3 class="font-bold text-sm mb-2">Wealth Protection</h3>
-          <p class="text-cs-muted text-xs">Protecting existing wealth. Bitcoin-dominant (70–80%). Lower amounts per DCA. Focus on long-term thesis over price action.</p>
+          <p class="text-cs-muted text-xs mb-3">Protecting existing wealth. Bitcoin-dominant (70–80%). Lower DCA amounts. Long-term thesis over price action.</p>
+          <p class="text-cs-muted text-xs italic">Examples: Stacey (precious metals → Bitcoin), Nigel ($200K from property sale), Dina (senior)</p>
         </div>
         <div class="bg-cs-card border border-blue-500/30 rounded-xl p-5">
           <div class="text-2xl mb-2">📈</div>
           <h3 class="font-bold text-sm mb-2">Income Creation</h3>
-          <p class="text-cs-muted text-xs">Generating yield on holdings. Stablecoin and DeFi strategies. Systematic withdrawal schedules. Available in Advanced track.</p>
+          <p class="text-cs-muted text-xs mb-3">Generating yield on holdings. Stablecoin/DeFi strategies. Systematic withdrawal schedules. Available in Level 2 only.</p>
+          <p class="text-cs-muted text-xs italic">Members asking about stablecoin yields, DeFi interest, term deposit alternatives</p>
         </div>
       </div>
 
-      <!-- 8-Step Strategy Process -->
-      <h2 class="text-2xl font-bold mb-4">The 8-Step Strategy Process</h2>
-      <div class="bg-cs-card border border-cs-border rounded-xl p-6 mb-8">
-        <div class="grid md:grid-cols-2 gap-4">
-          <div class="space-y-3">
-            <div class="flex gap-3 items-start"><span class="bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono rounded-full w-7 h-7 flex items-center justify-center flex-shrink-0">1</span><div><p class="font-semibold text-sm">Define Your Goals</p><p class="text-cs-muted text-xs">Type · Horizon · Target outcome</p></div></div>
-            <div class="flex gap-3 items-start"><span class="bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono rounded-full w-7 h-7 flex items-center justify-center flex-shrink-0">2</span><div><p class="font-semibold text-sm">Assess Your Risk Profile</p><p class="text-cs-muted text-xs">Capacity · Tolerance · Constraints</p></div></div>
-            <div class="flex gap-3 items-start"><span class="bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono rounded-full w-7 h-7 flex items-center justify-center flex-shrink-0">3</span><div><p class="font-semibold text-sm">Build Your Investment Thesis</p><p class="text-cs-muted text-xs">Why you believe in each asset</p></div></div>
-            <div class="flex gap-3 items-start"><span class="bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono rounded-full w-7 h-7 flex items-center justify-center flex-shrink-0">4</span><div><p class="font-semibold text-sm">Set Your Portfolio Allocation</p><p class="text-cs-muted text-xs">BTC % · Alts % · Cash %</p></div></div>
-          </div>
-          <div class="space-y-3">
-            <div class="flex gap-3 items-start"><span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-full w-7 h-7 flex items-center justify-center flex-shrink-0">5</span><div><p class="font-semibold text-sm">Create Your Buy Strategy</p><p class="text-cs-muted text-xs">DCA · Lump sum · Triggers</p></div></div>
-            <div class="flex gap-3 items-start"><span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-full w-7 h-7 flex items-center justify-center flex-shrink-0">6</span><div><p class="font-semibold text-sm">Plan Your Tax Approach</p><p class="text-cs-muted text-xs">Structures · CGT · Record keeping</p></div></div>
-            <div class="flex gap-3 items-start"><span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-full w-7 h-7 flex items-center justify-center flex-shrink-0">7</span><div><p class="font-semibold text-sm">Secure Your Assets</p><p class="text-cs-muted text-xs">Wallets · Custody · Backup</p></div></div>
-            <div class="flex gap-3 items-start"><span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-full w-7 h-7 flex items-center justify-center flex-shrink-0">8</span><div><p class="font-semibold text-sm">Write Your Sell Strategy</p><p class="text-cs-muted text-xs">Targets · Triggers · Rules</p></div></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Teaching Frameworks -->
+      <!-- ===================== TEACHING FRAMEWORKS ===================== -->
       <h2 class="text-2xl font-bold mb-2">Teaching Frameworks</h2>
-      <p class="text-cs-muted text-sm mb-4">Battle-tested explanations from 30+ member education calls. Every analyst and content creator should use these consistently.</p>
+      <p class="text-cs-muted text-sm mb-4">Simon's 10 battle-tested frameworks from 30+ education calls. Used consistently at every level. Every analyst should know these by heart.</p>
       <div class="grid md:grid-cols-2 gap-4 mb-10">
         <div class="bg-cs-card border border-cs-border rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">🏗️ "Altcoins = Tech Startups"</h4>
           <p class="text-cs-muted italic text-xs mb-2">"Altcoins should really be called tech startups. The only similarity with Bitcoin is they both use blockchain technology."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">PILLAR IN:</span> <span class="text-cs-muted">M3 Altcoins (B1 + A1)</span></p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 3 Altcoins · All content</span></p>
         </div>
         <div class="bg-cs-card border border-cs-border rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">💰 "The DCA Certainty"</h4>
-          <p class="text-cs-muted italic text-xs mb-2">"I've never regretted DCA."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">PILLAR IN:</span> <span class="text-cs-muted">M2 Bitcoin · M5 Buy/Sell</span></p>
+          <p class="text-cs-muted italic text-xs mb-2">"I've never regretted dollar cost averaging."</p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 2 Bitcoin · Step 5 Buy & Sell</span></p>
         </div>
         <div class="bg-cs-card border border-cs-border rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">✂️ "Best Trade Was a Loss"</h4>
           <p class="text-cs-muted italic text-xs mb-2">"My best investment decision was getting out of Polygon before I lost 70-80%."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">PILLAR IN:</span> <span class="text-cs-muted">M8 Sell Strategy · M7 Adv Sell</span></p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 8 Sell Strategy · L2 How-Tos</span></p>
         </div>
         <div class="bg-cs-card border border-cs-border rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">₿ "The Price You Deserve"</h4>
           <p class="text-cs-muted italic text-xs mb-2">"Everyone gets Bitcoin at the price they deserve."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">PILLAR IN:</span> <span class="text-cs-muted">M2 Bitcoin</span></p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 2 Bitcoin · Onboarding</span></p>
         </div>
         <div class="bg-cs-card border border-cs-border rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">🔐 "Paranoia = Zeros"</h4>
           <p class="text-cs-muted italic text-xs mb-2">"The level of paranoia should equal the number of zeros you're trying to protect."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">PILLAR IN:</span> <span class="text-cs-muted">M6 Send/Store</span></p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 6 Send & Store</span></p>
         </div>
         <div class="bg-cs-card border border-cs-border rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">⏳ "One Cycle Is Not Enough"</h4>
           <p class="text-cs-muted italic text-xs mb-2">"No one makes it in a single cycle. Stick it out."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">PILLAR IN:</span> <span class="text-cs-muted">M1 Foundations</span></p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 1 Foundations · Retention</span></p>
         </div>
         <div class="bg-cs-card border border-cs-border rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">⚖️ "High Risk = Both Directions"</h4>
           <p class="text-cs-muted italic text-xs mb-2">"They hear '3x up' and ignore the '80% down' part."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">PILLAR IN:</span> <span class="text-cs-muted">M4 How We Invest</span></p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 4 How We Invest</span></p>
         </div>
         <div class="bg-cs-card border border-cs-border rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">🔫 "The 5-Year Gun-to-Head Test"</h4>
           <p class="text-cs-muted italic text-xs mb-2">"Where's Bitcoin in 5-10 years? About $500,000. That's 6x from here."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">PILLAR IN:</span> <span class="text-cs-muted">M2 Bitcoin</span></p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 2 Bitcoin · Bear market coaching</span></p>
         </div>
         <div class="bg-cs-card border border-cs-border rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">📊 "TA as Tool, Not Strategy"</h4>
           <p class="text-cs-muted italic text-xs mb-2">"95% of people who try to be a day trader lose money."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">PILLAR IN:</span> <span class="text-cs-muted">M4 How We Invest</span></p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 4 How We Invest</span></p>
         </div>
         <div class="bg-cs-card border border-cs-border rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">♾️ "Bitcoin: Hold. Altcoins: Trade."</h4>
           <p class="text-cs-muted italic text-xs mb-2">"I've never met a single person who said buying and holding Bitcoin long term was a bad idea."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">PILLAR IN:</span> <span class="text-cs-muted">M2 Bitcoin · M3 Altcoins</span></p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 2 Bitcoin · Step 3 Altcoins · All content</span></p>
         </div>
       </div>
 
-      <!-- Content Pipeline -->
-      <h2 class="text-2xl font-bold mb-2">Content Pipeline</h2>
-      <p class="text-cs-muted text-sm mb-4">Prioritised content opportunities from education call analysis.</p>
-      <div class="bg-cs-card border border-cs-border rounded-xl overflow-hidden mb-10">
-        <div class="bg-red-500/10 px-5 py-3 border-b border-cs-border">
-          <span class="font-mono text-red-400 text-xs font-bold uppercase tracking-wider">🔴 High Priority — YouTube Videos</span>
-        </div>
-        <div class="divide-y divide-cs-border">
-          <div class="flex gap-4 px-5 py-3 items-start">
-            <span class="bg-red-500/20 text-red-400 text-xs font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">01</span>
-            <div><p class="font-semibold text-sm">"Why Altcoins Are Tech Startups, Not Stocks"</p><p class="text-cs-muted text-xs">Explained in 80%+ of calls. Signature content.</p></div>
-          </div>
-          <div class="flex gap-4 px-5 py-3 items-start">
-            <span class="bg-red-500/20 text-red-400 text-xs font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">02</span>
-            <div><p class="font-semibold text-sm">"My Best Investment Decision Was Selling at a Loss"</p><p class="text-cs-muted text-xs">Simon's Polygon story. Counterintuitive and memorable.</p></div>
-          </div>
-          <div class="flex gap-4 px-5 py-3 items-start">
-            <span class="bg-red-500/20 text-red-400 text-xs font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">03</span>
-            <div><p class="font-semibold text-sm">"Dollar Cost Averaging: The Strategy That Always Works"</p><p class="text-cs-muted text-xs">Said in every single call.</p></div>
-          </div>
-          <div class="flex gap-4 px-5 py-3 items-start">
-            <span class="bg-red-500/20 text-red-400 text-xs font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">04</span>
-            <div><p class="font-semibold text-sm">"Bear Market Survival Guide"</p><p class="text-cs-muted text-xs">Addresses #1 emotional state of members.</p></div>
-          </div>
-          <div class="flex gap-4 px-5 py-3 items-start">
-            <span class="bg-red-500/20 text-red-400 text-xs font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">05</span>
-            <div><p class="font-semibold text-sm">"Self-Custody in 10 Minutes"</p><p class="text-cs-muted text-xs">#1 unmet educational need.</p></div>
-          </div>
-        </div>
-        <div class="bg-amber-500/10 px-5 py-3 border-b border-t border-cs-border">
-          <span class="font-mono text-amber-400 text-xs font-bold uppercase tracking-wider">🟡 Medium Priority</span>
-        </div>
-        <div class="divide-y divide-cs-border">
-          <div class="flex gap-4 px-5 py-3 items-start">
-            <span class="bg-amber-500/20 text-amber-400 text-xs font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">06</span>
-            <div><p class="font-semibold text-sm">"The 1 Bitcoin Goal"</p><p class="text-cs-muted text-xs">Multiple members mention wanting 1 BTC.</p></div>
-          </div>
-          <div class="flex gap-4 px-5 py-3 items-start">
-            <span class="bg-amber-500/20 text-amber-400 text-xs font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">07</span>
-            <div><p class="font-semibold text-sm">"Banks Hate This: How to Get Money Into Digital Assets"</p><p class="text-cs-muted text-xs">Universal pain point.</p></div>
-          </div>
-          <div class="flex gap-4 px-5 py-3 items-start">
-            <span class="bg-amber-500/20 text-amber-400 text-xs font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">08</span>
-            <div><p class="font-semibold text-sm">"XRP: Great Marketing, Flawed Business Model"</p><p class="text-cs-muted text-xs">60%+ of members ask about XRP.</p></div>
-          </div>
-          <div class="flex gap-4 px-5 py-3 items-start">
-            <span class="bg-amber-500/20 text-amber-400 text-xs font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">09</span>
-            <div><p class="font-semibold text-sm">"Why I Don't Sell Bitcoin"</p><p class="text-cs-muted text-xs">CS philosophy explained.</p></div>
-          </div>
-          <div class="flex gap-4 px-5 py-3 items-start">
-            <span class="bg-amber-500/20 text-amber-400 text-xs font-bold font-mono rounded-lg w-8 h-8 flex items-center justify-center flex-shrink-0">10</span>
-            <div><p class="font-semibold text-sm">"Stablecoin Yields: The 6% That's Better Than Your Bank"</p><p class="text-cs-muted text-xs">Demystifies DeFi yields.</p></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Product Tools -->
+      <!-- ===================== PRODUCT TOOLS ===================== -->
       <h2 class="text-2xl font-bold mb-4">🛠️ Product Tools</h2>
       <div class="grid md:grid-cols-2 gap-4 mb-10">
-        <a href="/portfolio-calculator.html" class="bg-cs-card border border-cs-orange/30 rounded-xl p-5 block hover:border-cs-orange transition-colors">
+        <a href="/portfolio-calculator.html" class="bg-cs-card border border-cs-orange/30 rounded-xl p-5 block hover:border-cs-orange transition-colors group">
           <div class="flex items-center gap-3 mb-2">
             <div class="text-2xl">📊</div>
             <h3 class="text-sm font-bold text-cs-orange">Portfolio Allocation Calculator</h3>
           </div>
-          <p class="text-cs-muted text-xs">Interactive tool for members to determine their suggested BTC/altcoin/stablecoin split based on risk profile, timeline, and goals.</p>
-          <span class="inline-block mt-2 text-cs-orange text-xs font-mono font-bold">LAUNCH TOOL →</span>
+          <p class="text-cs-muted text-xs mb-2">Interactive tool: input risk tolerance, capital, and time horizon. Output: suggested BTC/altcoin/stablecoin split matched to your investor type.</p>
+          <span class="inline-block mt-2 text-cs-orange text-xs font-mono font-bold group-hover:underline">LAUNCH TOOL →</span>
         </a>
         <div class="bg-cs-card border border-cs-border rounded-xl p-5 opacity-75">
           <div class="flex items-center gap-3 mb-2">
             <div class="text-2xl">🗺️</div>
             <h3 class="text-sm font-bold">Beginner Journey Flow</h3>
           </div>
-          <p class="text-cs-muted text-xs">Guided onboarding from signup through first Bitcoin purchase to self-custody, following the Level 1/Level 2 track system.</p>
+          <p class="text-cs-muted text-xs mb-2">Guided onboarding: signup → first Bitcoin purchase → self-custody transfer. Checkpoint system with milestones and celebration moments.</p>
           <span class="inline-block mt-2 text-cs-muted text-xs font-mono font-bold">COMING SOON</span>
         </div>
       </div>
 
-      <!-- Community -->
+      <!-- ===================== COMMUNITY ===================== -->
       <h2 class="text-2xl font-bold mb-4">Community Platform</h2>
       <div class="grid md:grid-cols-2 gap-4 mb-10">
         <div class="bg-cs-card border border-cs-green/30 rounded-xl p-5">
@@ -633,14 +510,14 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
             <div class="text-2xl">💬</div>
             <h3 class="text-sm font-bold text-cs-green">Circle Community</h3>
           </div>
-          <p class="text-cs-muted text-xs">Circle provides structured, searchable community for all member interaction.</p>
+          <p class="text-cs-muted text-xs">All member interaction on Circle. Structured, searchable, and designed for quality discussion. Not WhatsApp — Circle.</p>
         </div>
         <div class="bg-cs-card border border-cs-green/30 rounded-xl p-5">
           <div class="flex items-center gap-3 mb-2">
             <div class="text-2xl">🟢</div>
             <h3 class="text-sm font-bold text-cs-green">Platinum Beginners Lounge</h3>
           </div>
-          <p class="text-cs-muted text-xs">Dedicated safe space on Circle for new Platinum members to ask beginner questions without feeling intimidated.</p>
+          <p class="text-cs-muted text-xs">Safe space on Circle for new Platinum members to ask beginner questions without intimidation. Directly addresses the silent churn risk — members like Nigel who are afraid to post in the main community.</p>
         </div>
       </div>
 
@@ -653,6 +530,7 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
         <p class="text-cs-muted italic text-sm">"A strategy in your head is not a strategy. It's a vague intention."</p>
         <p class="text-cs-orange text-xs mt-2 font-mono">— Shift OS Philosophy</p>
       </div>
+
     </div>
   </main>
 </div>
