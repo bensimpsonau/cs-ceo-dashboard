@@ -1,3 +1,470 @@
-[updated HTML that corrects all Level 1 links to point to /l1/m1-beginner-foundations.html ... /l1/m8-beginner-sell-strategy.html, with visible links for Level 2 as coming soon, and reflects all module naming, paths, and step references as per the L1 beginner modules that were created.]
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<title>The Collective Shift Operating System — CEO Command Centre</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cs: {
+          orange: '#FC5C03',
+          'orange-light': '#FC8C4E',
+          'orange-bg': '#FEDECC',
+          'orange-hover': '#FEEEE5',
+          green: '#08C394',
+          purple: '#654FFC',
+          border: '#E8E8EA',
+          text: '#1B1925',
+          secondary: '#4D4C55',
+          muted: '#807F86',
+        }
+      },
+      fontFamily: {
+        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+        barlow: ['Barlow', 'sans-serif'],
+        mono: ['Source Code Pro', 'monospace'],
+      }
+    }
+  }
+}
+</script>
+<style>
+  * { box-sizing: border-box; }
+  body { background: #FFFFFF; color: #1B1925; font-family: 'Barlow', sans-serif; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #FFFFFF; }
+  ::-webkit-scrollbar-thumb { background: #33313F; border-radius: 3px; }
 
-<!-- [full up-to-date file content omitted for brevity in sample, but would be a fully updated copy reflecting this structure and all working links to new files] -->
+  /* Sidebar */
+  .sidebar { width: 240px; min-height: 100vh; background: #F9F9F9; border-right: 1px solid #E8E8EA; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); z-index: 60; position: fixed; top: 56px; left: 0; height: calc(100vh - 56px); overflow-y: auto; }
+  .sidebar-link { display: flex; align-items: center; gap: 12px; padding: 10px 20px; color: #807F86; font-size: 14px; font-weight: 500; transition: all 0.15s ease; border-left: 3px solid transparent; }
+  .sidebar-link:hover { color: #1B1925; background: #FFFFFF; }
+  .sidebar-link.active { color: #FC5C03; border-left-color: #FC5C03; background: rgba(252,92,3,0.06); }
+  .sidebar-section { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #4D4C55; padding: 20px 20px 8px; font-weight: 600; }
+  @media (max-width: 1023px) {
+    .sidebar { position: fixed; left: 0; top: 0; transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 55; }
+    .sidebar-overlay.open { display: block; }
+  }
+
+  .module-card { transition: all 0.2s ease; border: 1px solid #E8E8EA; }
+  .module-card:hover { transform: translateY(-2px); border-color: #FC5C03; box-shadow: 0 4px 16px rgba(252,92,3,0.12); }
+
+  :root {
+    --csn-h: 56px;
+    --csn-bg: #FFFFFF;
+    --csn-border: #E8E8EA;
+    --csn-text: #1B1925;
+    --csn-muted: #4D4C55;
+    --csn-orange: #FC5C03;
+    --csn-orange-bg: #FEEEE5;
+    --csn-dd-bg: #FFFFFF;
+    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    --csn-z: 9000;
+  }
+  .csn-bar { position: fixed; top: 0; left: 0; right: 0; height: var(--csn-h); background: var(--csn-bg); border-bottom: 1px solid var(--csn-border); display: flex; align-items: center; padding: 0 24px; gap: 0; z-index: var(--csn-z); font-family: 'Plus Jakarta Sans', 'Barlow', sans-serif; }
+  .csn-logo { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 15px; color: var(--csn-orange); text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; margin-right: 32px; flex-shrink: 0; }
+  .csn-nav { display: flex; align-items: center; gap: 2px; flex: 1; }
+  .csn-item { position: relative; }
+  .csn-link { display: flex; align-items: center; gap: 5px; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--csn-muted); text-decoration: none; white-space: nowrap; transition: color 0.15s, background 0.15s; cursor: pointer; }
+  .csn-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-item.active > .csn-link { color: var(--csn-orange); font-weight: 600; }
+  .csn-chevron { transition: transform 0.2s; flex-shrink: 0; }
+  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
+  .csn-dropdown { display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 240px; background: var(--csn-dd-bg); border: 1px solid var(--csn-border); border-radius: 12px; box-shadow: var(--csn-dd-shadow); padding: 6px; z-index: calc(var(--csn-z) + 1); }
+  .csn-item.csn-has-dd { position: relative; }
+  .csn-item.csn-has-dd::after { content: ""; position: absolute; top: 100%; left: 0; width: 100%; height: 12px; }
+  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
+  .csn-dd-item { display: block; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--csn-muted); text-decoration: none; transition: color 0.12s, background 0.12s; white-space: nowrap; }
+  .csn-dd-item:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-dd-header { display: block; padding: 6px 12px 2px; font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: #807F86; font-weight: 600; }
+  .csn-divider { height: 1px; background: var(--csn-border); margin: 4px 8px; }
+  .csn-hamburger { display: none; background: none; border: none; cursor: pointer; color: var(--csn-muted); padding: 4px; margin-left: auto; }
+  .csn-mobile-menu { display: none; position: fixed; top: var(--csn-h); left: 0; right: 0; background: var(--csn-bg); border-bottom: 1px solid var(--csn-border); padding: 8px 16px 16px; z-index: calc(var(--csn-z) - 1); max-height: calc(100vh - var(--csn-h)); overflow-y: auto; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+  .csn-mobile-menu.open { display: block; }
+  .csn-mob-link { display: block; padding: 9px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--csn-muted); text-decoration: none; transition: color 0.12s, background 0.12s; }
+  .csn-mob-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-mob-top { font-weight: 600; color: var(--csn-text); margin-top: 4px; }
+  .csn-mob-sub { font-size: 12px; padding-left: 20px; }
+  .csn-mob-header { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: #807F86; font-weight: 600; padding: 8px 12px 2px 20px; }
+  body { padding-top: var(--csn-h) !important; }
+  @media (max-width: 1023px) {
+    .csn-nav { display: none; }
+    .csn-hamburger { display: block; }
+  }
+  @media (max-width: 640px) {
+    .csn-logo { font-size: 13px; margin-right: 16px; }
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- ═══ TOP NAV ═══ -->
+<nav class="csn-bar" role="navigation" aria-label="Main navigation">
+  <a href="../index.html" class="csn-logo">Collective Shift</a>
+  <div class="csn-nav">
+      <div class="csn-item"><a href="../index.html" class="csn-link">CEO Dashboard</a></div>
+      <div class="csn-item csn-has-dd active">
+        <a href="operating-system.html" class="csn-link">The Collective Shift Operating System
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown">
+          <a href="operating-system.html" class="csn-dd-item">Operating System Overview</a>
+          <div class="csn-divider"></div>
+          <div class="csn-dd-header">Level 1 — Beginner</div>
+          <a href="l1/m1-beginner-foundations.html" class="csn-dd-item">Step 1: Foundations</a>
+          <a href="l1/m2-beginner-bitcoin.html" class="csn-dd-item">Step 2: Bitcoin</a>
+          <a href="l1/m3-beginner-altcoins.html" class="csn-dd-item">Step 3: Altcoins</a>
+          <a href="l1/m4-beginner-how-we-invest.html" class="csn-dd-item">Step 4: How We Invest</a>
+          <a href="l1/m5-beginner-buy-sell.html" class="csn-dd-item">Step 5: Buy &amp; Sell</a>
+          <a href="l1/m6-beginner-send-store.html" class="csn-dd-item">Step 6: Send &amp; Store</a>
+          <a href="l1/m7-beginner-tax.html" class="csn-dd-item">Step 7: Tax</a>
+          <a href="l1/m8-beginner-sell-strategy.html" class="csn-dd-item">Step 8: Sell Strategy</a>
+          <div class="csn-divider"></div>
+          <div class="csn-dd-header">Level 2 — Advanced</div>
+          <a href="l2/m1-advanced-foundations.html" class="csn-dd-item">Step 1: Advanced Foundations</a>
+          <a href="l2/m2-advanced-bitcoin.html" class="csn-dd-item">Step 2: Advanced Bitcoin</a>
+          <a href="l2/m3-advanced-altcoins.html" class="csn-dd-item">Step 3: Advanced Altcoins</a>
+          <a href="l2/m4-advanced-how-we-invest.html" class="csn-dd-item">Step 4: Advanced How We Invest</a>
+          <a href="l2/m5-advanced-buy-sell.html" class="csn-dd-item">Step 5: Advanced Buy &amp; Sell</a>
+          <a href="l2/m6-advanced-send-store.html" class="csn-dd-item">Step 6: Advanced Send &amp; Store</a>
+          <a href="l2/m7-advanced-tax.html" class="csn-dd-item">Step 7: Advanced Tax</a>
+          <a href="l2/m8-advanced-sell-strategy.html" class="csn-dd-item">Step 8: Advanced Sell Strategy</a>
+          <div class="csn-divider"></div>
+          <a href="../8-step-strategy-workbook.html" class="csn-dd-item">8-Step Strategy Workbook</a>
+          <a href="../8-step-strategy-workbook-L1.html" class="csn-dd-item">↳ Level 1 Workbook</a>
+          <a href="../8-step-strategy-workbook-L2.html" class="csn-dd-item">↳ Level 2 Workbook</a>
+          <a href="../portfolio-calculator.html" class="csn-dd-item">Portfolio Allocation Calculator</a>
+        </div>
+      </div>
+      <div class="csn-item csn-has-dd">
+        <a href="products.html" class="csn-link">Product
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="products.html#platinum" class="csn-dd-item">Platinum</a><a href="products.html#accelerator" class="csn-dd-item">Accelerator</a><a href="beginner-journey.html" class="csn-dd-item">Beginner's Journey</a><a href="products.html#two-track" class="csn-dd-item">Two-Track System</a></div>
+      </div>
+      <div class="csn-item csn-has-dd">
+        <a href="youtube-strategy.html" class="csn-link">Social Media
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a><a href="social-strategy.html" class="csn-dd-item">Social Strategy</a><a href="instagram-strategy.html" class="csn-dd-item">Instagram Strategy</a><div class="csn-divider"></div><a href="brand.html" class="csn-dd-item">Brand & Voice</a><a href="positioning.html" class="csn-dd-item">Positioning & ICP</a><a href="competitors.html" class="csn-dd-item">Competitors</a></div>
+      </div>
+      <div class="csn-item csn-has-dd">
+        <a href="../travis-briefing-2026-03-27.html" class="csn-link">Documents
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a><a href="../cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a><a href="../q2-market-briefing.html" class="csn-dd-item">Q2 Market Briefing</a><a href="../webinar-q2-2026-is-now-the-time.html" class="csn-dd-item">Webinar: Is Now The Time?</a></div>
+      </div>
+  </div>
+  <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="csnMobileMenu" class="csn-mobile-menu">
+  <a href="../index.html" class="csn-mob-link csn-mob-top">CEO Dashboard</a>
+  <a href="operating-system.html" class="csn-mob-link csn-mob-top">The Collective Shift Operating System</a>
+  <a href="operating-system.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Operating System Overview</a>
+  <div class="csn-mob-header">Level 1 — Beginner</div>
+  <a href="l1/m1-beginner-foundations.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 1: Foundations</a>
+  <a href="l1/m2-beginner-bitcoin.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 2: Bitcoin</a>
+  <a href="l1/m3-beginner-altcoins.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 3: Altcoins</a>
+  <a href="l1/m4-beginner-how-we-invest.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 4: How We Invest</a>
+  <a href="l1/m5-beginner-buy-sell.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 5: Buy &amp; Sell</a>
+  <a href="l1/m6-beginner-send-store.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 6: Send &amp; Store</a>
+  <a href="l1/m7-beginner-tax.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 7: Tax</a>
+  <a href="l1/m8-beginner-sell-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 8: Sell Strategy</a>
+  <div class="csn-mob-header">Level 2 — Advanced</div>
+  <a href="l2/m1-advanced-foundations.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 1: Advanced Foundations</a>
+  <a href="l2/m2-advanced-bitcoin.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 2: Advanced Bitcoin</a>
+  <a href="l2/m3-advanced-altcoins.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 3: Advanced Altcoins</a>
+  <a href="l2/m4-advanced-how-we-invest.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 4: Advanced How We Invest</a>
+  <a href="l2/m5-advanced-buy-sell.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 5: Advanced Buy &amp; Sell</a>
+  <a href="l2/m6-advanced-send-store.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 6: Advanced Send &amp; Store</a>
+  <a href="l2/m7-advanced-tax.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 7: Advanced Tax</a>
+  <a href="l2/m8-advanced-sell-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 8: Advanced Sell Strategy</a>
+  <a href="../8-step-strategy-workbook.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;8-Step Strategy Workbook</a>
+  <a href="../8-step-strategy-workbook-L1.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;↳ Level 1 Workbook</a>
+  <a href="../8-step-strategy-workbook-L2.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;↳ Level 2 Workbook</a>
+  <a href="../portfolio-calculator.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Portfolio Allocation Calculator</a>
+  <a href="products.html" class="csn-mob-link csn-mob-top">Product</a>
+  <a href="products.html#platinum" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Platinum</a>
+  <a href="products.html#accelerator" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Accelerator</a>
+  <a href="beginner-journey.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Beginner's Journey</a>
+  <a href="products.html#two-track" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Two-Track System</a>
+  <a href="youtube-strategy.html" class="csn-mob-link csn-mob-top">Social Media</a>
+  <a href="youtube-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;YouTube Strategy</a>
+  <a href="social-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Social Strategy</a>
+  <a href="instagram-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Instagram Strategy</a>
+  <a href="brand.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Brand & Voice</a>
+  <a href="positioning.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Positioning & ICP</a>
+  <a href="competitors.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Competitors</a>
+  <a href="../travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-top">Documents</a>
+  <a href="../travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Travis CGO Briefing</a>
+  <a href="../cs-education-system-overview.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Education System Overview</a>
+  <a href="../q2-market-briefing.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Q2 Market Briefing</a>
+  <a href="../webinar-q2-2026-is-now-the-time.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Webinar: Is Now The Time?</a>
+</div>
+<!-- ═══ END TOP NAV ═══ -->
+
+<!-- SIDEBAR OVERLAY (mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar fixed top-0 left-0" id="sidebar">
+  <div class="px-5 py-5 border-b border-[#E8E8EA]">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-cs-orange/15 flex items-center justify-center">
+        <span class="text-cs-orange text-sm font-bold">CS</span>
+      </div>
+      <div>
+        <div class="font-jakarta text-sm font-semibold text-[#1B1925] tracking-wide">COLLECTIVE SHIFT</div>
+        <div class="text-[10px] text-[#807F86] font-mono">CEO Command Centre</div>
+      </div>
+    </div>
+  </div>
+  <nav class="py-4">
+    <div class="sidebar-section">Navigation</div>
+    <a href="../index.html" class="sidebar-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a href="operating-system.html" class="sidebar-link active">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      Operating System
+    </a>
+  </nav>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="lg:ml-[240px] p-6 lg:p-10 max-w-6xl">
+
+  <!-- HERO -->
+  <div class="mb-10">
+    <div class="flex items-center gap-3 mb-3">
+      <div class="w-10 h-10 rounded-xl bg-cs-orange/10 flex items-center justify-center">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FC5C03" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      </div>
+      <h1 class="font-jakarta text-3xl font-bold text-[#1B1925]">The Collective Shift Operating System</h1>
+    </div>
+    <p class="text-[#4D4C55] text-lg max-w-3xl leading-relaxed">
+      Our 8-step education system is the core product engine of Collective Shift. It takes members from complete beginner to confident, self-directed digital asset investor — across two structured levels with hands-on workbooks and tools at every stage.
+    </p>
+  </div>
+
+  <!-- EDUCATION SYSTEM OVERVIEW -->
+  <section class="mb-10">
+    <a href="../cs-education-system-overview.html" class="block module-card rounded-2xl p-6 bg-gradient-to-r from-[#1A1A2E] to-[#2D2B55] text-white">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <div>
+          <h2 class="font-jakarta text-xl font-bold mb-1">Education System Overview</h2>
+          <p class="text-white/70 text-sm">Full team presentation — the complete 8-step education framework, two-track system, and delivery strategy.</p>
+        </div>
+        <svg class="ml-auto flex-shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
+  </section>
+
+  <!-- LEVEL 1 — BEGINNER TRACK -->
+  <section class="mb-10">
+    <div class="flex items-center gap-3 mb-5">
+      <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-cs-orange/10 text-cs-orange uppercase tracking-wider">Level 1</span>
+      <h2 class="font-jakarta text-xl font-bold text-[#1B1925]">Beginner Track</h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+      <a href="l1/m1-beginner-foundations.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="text-cs-orange font-jakarta font-bold text-sm mb-1">Step 1</div>
+        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Foundations</div>
+        <div class="text-xs text-[#807F86]">Crypto fundamentals, key concepts, and getting oriented.</div>
+      </a>
+
+      <a href="l1/m2-beginner-bitcoin.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="text-cs-orange font-jakarta font-bold text-sm mb-1">Step 2</div>
+        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Bitcoin</div>
+        <div class="text-xs text-[#807F86]">Why Bitcoin matters, how it works, and the investment case.</div>
+      </a>
+
+      <a href="l1/m3-beginner-altcoins.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="text-cs-orange font-jakarta font-bold text-sm mb-1">Step 3</div>
+        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Altcoins</div>
+        <div class="text-xs text-[#807F86]">Digital assets beyond Bitcoin — evaluation frameworks.</div>
+      </a>
+
+      <a href="l1/m4-beginner-how-we-invest.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="text-cs-orange font-jakarta font-bold text-sm mb-1">Step 4</div>
+        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">How We Invest</div>
+        <div class="text-xs text-[#807F86]">Portfolio construction, allocation, and risk management.</div>
+      </a>
+
+      <a href="l1/m5-beginner-buy-sell.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="text-cs-orange font-jakarta font-bold text-sm mb-1">Step 5</div>
+        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Buy &amp; Sell</div>
+        <div class="text-xs text-[#807F86]">Exchanges, purchasing, and trading fundamentals.</div>
+      </a>
+
+      <a href="l1/m6-beginner-send-store.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="text-cs-orange font-jakarta font-bold text-sm mb-1">Step 6</div>
+        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Send &amp; Store</div>
+        <div class="text-xs text-[#807F86]">Wallets, self-custody, and secure storage practices.</div>
+      </a>
+
+      <a href="l1/m7-beginner-tax.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="text-cs-orange font-jakarta font-bold text-sm mb-1">Step 7</div>
+        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Tax</div>
+        <div class="text-xs text-[#807F86]">Australian crypto tax obligations and reporting.</div>
+      </a>
+
+      <a href="l1/m8-beginner-sell-strategy.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="text-cs-orange font-jakarta font-bold text-sm mb-1">Step 8</div>
+        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Sell Strategy</div>
+        <div class="text-xs text-[#807F86]">When and how to take profits — exit planning.</div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- LEVEL 2 — ADVANCED TRACK -->
+  <section class="mb-10">
+    <div class="flex items-center gap-3 mb-5">
+      <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#654FFC]/10 text-[#654FFC] uppercase tracking-wider">Level 2</span>
+      <h2 class="font-jakarta text-xl font-bold text-[#1B1925]">Advanced Track</h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+      <a href="l2/m1-advanced-foundations.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="text-[#654FFC] font-jakarta font-bold text-sm mb-1">Step 1</div>
+        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Advanced Foundations</div>
+        <div class="text-xs text-[#807F86]">Deep-dive into blockchain technology and market structure.</div>
+      </a>
+
+      <a href="l2/m2-advanced-bitcoin.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="text-[#654FFC] font-jakarta font-bold text-sm mb-1">Step 2</div>
+        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Advanced Bitcoin</div>
+        <div class="text-xs text-[#807F86]">On-chain analysis, mining economics, and advanced BTC thesis.</div>
+      </a>
+
+      <a href="l2/m3-advanced-altcoins.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="text-[#654FFC] font-jakarta font-bold text-sm mb-1">Step 3</div>
+        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Advanced Altcoins</div>
+        <div class="text-xs text-[#807F86]">DeFi, L2s, tokenomics, and advanced evaluation.</div>
+      </a>
+
+      <a href="l2/m4-advanced-how-we-invest.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="text-[#654FFC] font-jakarta font-bold text-sm mb-1">Step 4</div>
+        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Advanced How We Invest</div>
+        <div class="text-xs text-[#807F86]">Advanced portfolio strategies and position sizing.</div>
+      </a>
+
+      <a href="l2/m5-advanced-buy-sell.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="text-[#654FFC] font-jakarta font-bold text-sm mb-1">Step 5</div>
+        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Advanced Buy &amp; Sell</div>
+        <div class="text-xs text-[#807F86]">Advanced order types, DEXs, and execution strategies.</div>
+      </a>
+
+      <a href="l2/m6-advanced-send-store.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="text-[#654FFC] font-jakarta font-bold text-sm mb-1">Step 6</div>
+        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Advanced Send &amp; Store</div>
+        <div class="text-xs text-[#807F86]">Multi-sig, hardware wallets, and advanced security.</div>
+      </a>
+
+      <a href="l2/m7-advanced-tax.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="text-[#654FFC] font-jakarta font-bold text-sm mb-1">Step 7</div>
+        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Advanced Tax</div>
+        <div class="text-xs text-[#807F86]">DeFi tax, staking, airdrops, and complex scenarios.</div>
+      </a>
+
+      <a href="l2/m8-advanced-sell-strategy.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="text-[#654FFC] font-jakarta font-bold text-sm mb-1">Step 8</div>
+        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Advanced Sell Strategy</div>
+        <div class="text-xs text-[#807F86]">Cycle analysis, rebalancing, and advanced exit frameworks.</div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- TOOLS & WORKBOOKS -->
+  <section class="mb-10">
+    <div class="flex items-center gap-3 mb-5">
+      <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#08C394]/10 text-[#08C394] uppercase tracking-wider">Tools</span>
+      <h2 class="font-jakarta text-xl font-bold text-[#1B1925]">Workbooks &amp; Tools</h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+      <a href="../8-step-strategy-workbook.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-[#08C394]/10 flex items-center justify-center flex-shrink-0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#08C394" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <div>
+            <div class="font-jakarta font-semibold text-[#1B1925]">8-Step Strategy Workbook</div>
+            <div class="text-xs text-[#807F86]">The master workbook covering all 8 steps.</div>
+          </div>
+        </div>
+      </a>
+
+      <a href="../8-step-strategy-workbook-L1.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-cs-orange/10 flex items-center justify-center flex-shrink-0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FC5C03" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <div>
+            <div class="font-jakarta font-semibold text-[#1B1925]">Level 1 Workbook</div>
+            <div class="text-xs text-[#807F86]">Beginner-track exercises and action items.</div>
+          </div>
+        </div>
+      </a>
+
+      <a href="../8-step-strategy-workbook-L2.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-[#654FFC]/10 flex items-center justify-center flex-shrink-0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#654FFC" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <div>
+            <div class="font-jakarta font-semibold text-[#1B1925]">Level 2 Workbook</div>
+            <div class="text-xs text-[#807F86]">Advanced-track exercises and action items.</div>
+          </div>
+        </div>
+      </a>
+
+      <a href="../portfolio-calculator.html" class="module-card rounded-xl p-5 bg-white block">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-[#08C394]/10 flex items-center justify-center flex-shrink-0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#08C394" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg>
+          </div>
+          <div>
+            <div class="font-jakarta font-semibold text-[#1B1925]">Portfolio Allocation Calculator</div>
+            <div class="text-xs text-[#807F86]">Interactive tool for building allocation models.</div>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="text-center text-xs text-[#807F86] mt-16 pb-8">
+    Collective Shift — CEO Command Centre · Operating System Hub
+  </div>
+
+</main>
+
+<script>
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+</script>
+</body>
+</html>
