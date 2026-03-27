@@ -3,37 +3,280 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+
 <title>Step 8: Sell Strategy — Collective Shift Strategy Hub</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
-<script>tailwind.config={theme:{extend:{colors:{cs:{bg:'#1B1925',card:'#242232',border:'#2E2C3E',orange:'#FC5C03',green:'#08C394',text:'#F9F9F9',muted:'#9B99A9'}},fontFamily:{heading:['Oswald','sans-serif'],body:['Barlow','sans-serif'],mono:['Source Code Pro','monospace']}}}}</script>
-<style>body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-serif}.sidebar{transition:transform .3s ease}@media(max-width:1023px){.sidebar{transform:translateX(-100%);position:fixed;z-index:50;top:0;left:0;height:100vh}.sidebar.open{transform:translateX(0)}}.nav-link{transition:all .15s}.nav-link:hover,.nav-link.active{background:rgba(252,92,3,.12);color:#FC5C03;border-left-color:#FC5C03}</style>
+
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cs: {
+          orange: '#FC5C03',
+          'orange-light': '#FC8C4E',
+          'orange-bg': '#FEDECC',
+          'orange-hover': '#FEEEE5',
+          green: '#08C394',
+          purple: '#654FFC',
+          border: '#E8E8EA',
+          text: '#1B1925',
+          secondary: '#4D4C55',
+          muted: '#807F86',
+        }
+      },
+      fontFamily: {
+        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+        barlow: ['Barlow', 'sans-serif'],
+        mono: ['Source Code Pro', 'monospace'],
+      },
+      borderRadius: {
+        pill: '100px',
+      }
+    }
+  }
+}
+</script>
+<style>body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Plus Jakarta Sans',sans-serif}.sidebar{transition:transform .3s ease}@media(max-width:1023px){.sidebar{transform:translateX(-100%);position:fixed;z-index:50;top:0;left:0;height:100vh}.sidebar.open{transform:translateX(0)}}.nav-link{transition:all .15s}.nav-link:hover,.nav-link.active{background:rgba(252,92,3,.12);color:#FC5C03;border-left-color:#FC5C03}</style>
 </head>
-<body class="bg-cs-bg text-cs-text min-h-screen">
-<div class="lg:hidden flex items-center justify-between px-4 py-3 bg-cs-card border-b border-cs-border sticky top-0 z-40">
+<body class="bg-white text-\[#1B1925\] min-h-screen">
+<!-- ═══ COLLECTIVE SHIFT TOP NAV ═══ -->
+<style>
+  :root {
+    --csn-h: 56px;
+    --csn-bg: #FFFFFF;
+    --csn-border: #E8E8EA;
+    --csn-text: #1B1925;
+    --csn-muted: #4D4C55;
+    --csn-orange: #FC5C03;
+    --csn-orange-bg: #FEEEE5;
+    --csn-dd-bg: #FFFFFF;
+    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    --csn-z: 9000;
+  }
+  .csn-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--csn-h);
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 0;
+    z-index: var(--csn-z);
+    font-family: 'Plus Jakarta Sans', 'Barlow', sans-serif;
+  }
+  .csn-logo {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--csn-orange);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin-right: 32px;
+    flex-shrink: 0;
+  }
+  .csn-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+  }
+  .csn-item {
+    position: relative;
+  }
+  .csn-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s, background 0.15s;
+    cursor: pointer;
+  }
+  .csn-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-item.active > .csn-link { color: var(--csn-orange); font-weight: 600; }
+  .csn-chevron { transition: transform 0.2s; flex-shrink: 0; }
+  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
+  /* Dropdown */
+  .csn-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 240px;
+    background: var(--csn-dd-bg);
+    border: 1px solid var(--csn-border);
+    border-radius: 12px;
+    box-shadow: var(--csn-dd-shadow);
+    padding: 6px;
+    z-index: calc(var(--csn-z) + 1);
+  }
+  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
+  .csn-dd-item {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+    white-space: nowrap;
+  }
+  .csn-dd-item:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-divider { height: 1px; background: var(--csn-border); margin: 4px 8px; }
+  /* Mobile hamburger */
+  .csn-hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--csn-muted);
+    padding: 4px;
+    margin-left: auto;
+  }
+  /* Mobile drawer */
+  .csn-mobile-menu {
+    display: none;
+    position: fixed;
+    top: var(--csn-h);
+    left: 0; right: 0;
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    padding: 8px 16px 16px;
+    z-index: calc(var(--csn-z) - 1);
+    max-height: calc(100vh - var(--csn-h));
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .csn-mobile-menu.open { display: block; }
+  .csn-mob-link {
+    display: block;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+  }
+  .csn-mob-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-mob-top { font-weight: 600; color: var(--csn-text); margin-top: 4px; }
+  .csn-mob-sub { font-size: 12px; padding-left: 20px; }
+  /* Body offset */
+  body { padding-top: var(--csn-h) !important; }
+  @media (max-width: 1023px) {
+    .csn-nav { display: none; }
+    .csn-hamburger { display: block; }
+  }
+  @media (max-width: 640px) {
+    .csn-logo { font-size: 13px; margin-right: 16px; }
+  }
+</style>
+<nav class="csn-bar" role="navigation" aria-label="Main navigation">
+  <a href="../../index.html" class="csn-logo">Collective Shift</a>
+  <div class="csn-nav">
+      <div class="csn-item "><a href="../../index.html" class="csn-link">CEO Dashboard</a></div>
+      <div class="csn-item csn-has-dd active">
+        <a href="../../hub/operating-system.html" class="csn-link">The Collective Shift Operating System
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../../hub/operating-system.html" class="csn-dd-item">Operating System Overview</a><a href="../../hub/modules/m1-foundations.html" class="csn-dd-item">Module 1: Foundations</a><a href="../../hub/modules/m2-bitcoin.html" class="csn-dd-item">Module 2: Bitcoin</a><a href="../../hub/modules/m3-altcoins.html" class="csn-dd-item">Module 3: Digital Assets</a><a href="../../hub/modules/m4-how-we-invest.html" class="csn-dd-item">Module 4: How We Invest</a><a href="../../hub/modules/m5-buy-sell.html" class="csn-dd-item">Module 5: Buy & Sell</a><a href="../../hub/modules/m6-send-store.html" class="csn-dd-item">Module 6: Send & Store</a><a href="../../hub/modules/m7-tax.html" class="csn-dd-item">Module 7: Tax</a><a href="../../hub/modules/m8-sell-strategy.html" class="csn-dd-item">Module 8: Exit Strategy</a><div class="csn-divider"></div><a href="../../8-step-strategy-workbook.html" class="csn-dd-item">8-Step Strategy Workbook</a><a href="../../8-step-strategy-workbook-L1.html" class="csn-dd-item">↳ Level 1 Workbook</a><a href="../../8-step-strategy-workbook-L2.html" class="csn-dd-item">↳ Level 2 Workbook</a><a href="../../portfolio-calculator.html" class="csn-dd-item">Portfolio Allocation Calculator</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="../../hub/products.html" class="csn-link">Product
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../../hub/products.html#platinum" class="csn-dd-item">Platinum</a><a href="../../hub/products.html#accelerator" class="csn-dd-item">Accelerator</a><a href="../../hub/beginner-journey.html" class="csn-dd-item">Beginner's Journey</a><a href="../../hub/products.html#two-track" class="csn-dd-item">Two-Track System</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="../../hub/youtube-strategy.html" class="csn-link">Social Media
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../../hub/youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a><a href="../../hub/social-strategy.html" class="csn-dd-item">Social Strategy</a><a href="../../hub/instagram-strategy.html" class="csn-dd-item">Instagram Strategy</a><div class="csn-divider"></div><a href="../../hub/brand.html" class="csn-dd-item">Brand & Voice</a><a href="../../hub/positioning.html" class="csn-dd-item">Positioning & ICP</a><a href="../../hub/competitors.html" class="csn-dd-item">Competitors</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="../../travis-briefing-2026-03-27.html" class="csn-link">Documents
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../../travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a><a href="../../cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a><a href="../../q2-market-briefing.html" class="csn-dd-item">Q2 Market Briefing</a><a href="../../webinar-q2-2026-is-now-the-time.html" class="csn-dd-item">Webinar: Is Now The Time?</a></div>
+      </div>
+  </div>
+  <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+<div id="csnMobileMenu" class="csn-mobile-menu">
+  <a href="../../index.html" class="csn-mob-link csn-mob-top">CEO Dashboard</a>
+<a href="../../hub/operating-system.html" class="csn-mob-link csn-mob-top">The Collective Shift Operating System</a>
+<a href="../../hub/operating-system.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Operating System Overview</a>
+<a href="../../hub/modules/m1-foundations.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 1: Foundations</a>
+<a href="../../hub/modules/m2-bitcoin.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 2: Bitcoin</a>
+<a href="../../hub/modules/m3-altcoins.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 3: Digital Assets</a>
+<a href="../../hub/modules/m4-how-we-invest.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 4: How We Invest</a>
+<a href="../../hub/modules/m5-buy-sell.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 5: Buy & Sell</a>
+<a href="../../hub/modules/m6-send-store.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 6: Send & Store</a>
+<a href="../../hub/modules/m7-tax.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 7: Tax</a>
+<a href="../../hub/modules/m8-sell-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 8: Exit Strategy</a>
+<a href="../../8-step-strategy-workbook.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;8-Step Strategy Workbook</a>
+<a href="../../8-step-strategy-workbook-L1.html" class="csn-mob-link csn-mob-sub">↳ Level 1 Workbook</a>
+<a href="../../8-step-strategy-workbook-L2.html" class="csn-mob-link csn-mob-sub">↳ Level 2 Workbook</a>
+<a href="../../portfolio-calculator.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Portfolio Allocation Calculator</a>
+<a href="../../hub/products.html" class="csn-mob-link csn-mob-top">Product</a>
+<a href="../../hub/products.html#platinum" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Platinum</a>
+<a href="../../hub/products.html#accelerator" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Accelerator</a>
+<a href="../../hub/beginner-journey.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Beginner's Journey</a>
+<a href="../../hub/products.html#two-track" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Two-Track System</a>
+<a href="../../hub/youtube-strategy.html" class="csn-mob-link csn-mob-top">Social Media</a>
+<a href="../../hub/youtube-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;YouTube Strategy</a>
+<a href="../../hub/social-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Social Strategy</a>
+<a href="../../hub/instagram-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Instagram Strategy</a>
+<a href="../../hub/brand.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Brand & Voice</a>
+<a href="../../hub/positioning.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Positioning & ICP</a>
+<a href="../../hub/competitors.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Competitors</a>
+<a href="../../travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-top">Documents</a>
+<a href="../../travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Travis CGO Briefing</a>
+<a href="../../cs-education-system-overview.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Education System Overview</a>
+<a href="../../q2-market-briefing.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Q2 Market Briefing</a>
+<a href="../../webinar-q2-2026-is-now-the-time.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Webinar: Is Now The Time?</a>
+</div>
+<!-- ═══ END TOP NAV ═══ -->
+
+<div class="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-\[#E8E8EA\] sticky top-0 z-40">
   <span class="font-heading text-cs-orange text-lg font-bold tracking-wide">COLLECTIVE SHIFT</span>
-  <button onclick="document.getElementById('sidebar').classList.toggle('open')" class="text-cs-muted hover:text-cs-orange"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <button onclick="document.getElementById('sidebar').classList.toggle('open')" class="text-\[#807F86\] hover:text-cs-orange"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
 </div>
 <div class="flex">
-  <aside id="sidebar" class="sidebar w-64 min-h-screen bg-cs-card border-r border-cs-border flex-shrink-0 flex flex-col">
-    <div class="p-5 border-b border-cs-border"><a href="../index.html" class="font-heading text-cs-orange text-xl font-bold tracking-wider">COLLECTIVE SHIFT</a><p class="text-cs-muted text-xs mt-1 font-mono">STRATEGY HUB</p></div>
+  <aside id="sidebar" class="sidebar w-64 min-h-screen bg-white border-r border-\[#E8E8EA\] flex-shrink-0 flex flex-col">
+    <div class="p-5 border-b border-\[#E8E8EA\]"><a href="../index.html" class="font-heading text-cs-orange text-xl font-bold tracking-wider">COLLECTIVE SHIFT</a><p class="text-\[#807F86\] text-xs mt-1 font-mono">STRATEGY HUB</p></div>
     <nav class="flex-1 py-4 px-3 space-y-1">
-      <a href="/" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>📊</span> Dashboard</a>
-      <a href="../index.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🏠</span> Home</a>
-      <a href="../positioning.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🎯</span> Positioning & ICP</a>
+      <a href="/" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>📊</span> Dashboard</a>
+      <a href="../index.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🏠</span> Home</a>
+      <a href="../positioning.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🎯</span> Positioning & ICP</a>
       <a href="../operating-system.html" class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium border-l-2 border-transparent"><span>⚙️</span> Operating System</a>
-      <a href="../products.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>💎</span> Products</a>
-      <a href="../social-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>📱</span> Social & Content</a>
-      <a href="../youtube-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🎬</span> YouTube Strategy</a>
-      <a href="../competitors.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🏆</span> Competitive Intel</a>
-      <a href="../brand.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🎨</span> Brand & Voice</a>
+      <a href="../products.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>💎</span> Products</a>
+      <a href="../social-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>📱</span> Social & Content</a>
+      <a href="../youtube-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🎬</span> YouTube Strategy</a>
+      <a href="../competitors.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🏆</span> Competitive Intel</a>
+      <a href="../brand.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🎨</span> Brand & Voice</a>
     </nav>
-    <div class="p-4 border-t border-cs-border"><p class="text-cs-muted text-xs font-mono">v9.0 · March 2026</p></div>
+    <div class="p-4 border-t border-\[#E8E8EA\]"><p class="text-\[#807F86\] text-xs font-mono">v9.0 · March 2026</p></div>
   </aside>
   <main class="flex-1 min-h-screen">
-    <div class="px-6 lg:px-10 py-3 border-b border-cs-border bg-cs-card/50">
+    <div class="px-6 lg:px-10 py-3 border-b border-\[#E8E8EA\] bg-white/50">
       <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2 text-xs font-mono text-cs-muted">
+        <div class="flex items-center gap-2 text-xs font-mono text-\[#807F86\]">
           <a href="../index.html" class="text-cs-orange hover:underline">Strategy Hub</a><span>/</span>
           <a href="../operating-system.html" class="text-cs-orange hover:underline">Operating System</a><span>/</span>
           <span>Step 8: Sell Strategy</span>
@@ -44,92 +287,92 @@
     <div class="px-6 lg:px-10 py-8 max-w-4xl">
       <div class="flex items-center gap-4 mb-2">
         <span class="bg-cs-orange/30 text-cs-orange font-mono font-bold text-lg rounded-xl px-4 py-2">STEP 08</span>
-        <span class="bg-cs-card border border-cs-border text-cs-muted font-mono text-xs px-3 py-1 rounded-full">PRACTICAL HOW-TOS (B2)</span>
+        <span class="bg-white border border-\[#E8E8EA\] text-\[#807F86\] font-mono text-xs px-3 py-1 rounded-full">PRACTICAL HOW-TOS (B2)</span>
         <span class="bg-red-500/20 text-red-400 font-mono text-xs px-3 py-1 rounded-full">ICP #1 PAIN POINT</span>
       </div>
       <h1 class="text-4xl font-bold tracking-tight mb-3">Sell Strategy</h1>
-      <p class="text-cs-muted text-lg mb-2">The most emotionally challenging — and most important — module in the OS.</p>
-      <p class="text-cs-muted text-sm mb-6">Directly addresses the ICP's #1 fear: no exit plan. Teaches members when and how to sell, reframes loss-cutting as a skill, and builds a systematic exit strategy. Level 2 adds advanced opportunity cost frameworks, cycle-aware exits, and borrowing as an alternative to selling.</p>
+      <p class="text-\[#807F86\] text-lg mb-2">The most emotionally challenging — and most important — module in the OS.</p>
+      <p class="text-\[#807F86\] text-sm mb-6">Directly addresses the ICP's #1 fear: no exit plan. Teaches members when and how to sell, reframes loss-cutting as a skill, and builds a systematic exit strategy. Level 2 adds advanced opportunity cost frameworks, cycle-aware exits, and borrowing as an alternative to selling.</p>
       <div class="flex flex-wrap gap-3 mb-8">
         <span class="bg-red-500/15 text-red-400 text-xs font-mono font-bold px-3 py-1 rounded-full">🎯 SOLVES #1 FEAR</span>
         <span class="bg-cs-green/15 text-cs-green text-xs font-mono font-bold px-3 py-1 rounded-full">3 TOPICS L1</span>
         <span class="bg-blue-500/15 text-blue-400 text-xs font-mono font-bold px-3 py-1 rounded-full">3 TOPICS L2</span>
-        <span class="bg-cs-card border border-cs-border text-cs-muted text-xs font-mono px-3 py-1 rounded-full">WORKBOOK INCLUDED</span>
+        <span class="bg-white border border-\[#E8E8EA\] text-\[#807F86\] text-xs font-mono px-3 py-1 rounded-full">WORKBOOK INCLUDED</span>
       </div>
 
       <div class="mb-2"><span class="font-mono text-cs-green text-xs font-bold uppercase tracking-wider">🟢 LEVEL 1 CONTENT</span></div>
       <div class="space-y-4 mb-10">
-        <div class="bg-cs-card border border-cs-green/30 rounded-xl p-5">
+        <div class="bg-white border border-cs-green/30 rounded-xl p-5">
           <h3 class="font-bold text-base mb-1">Loss-Cutting as a Skill</h3>
-          <p class="text-cs-muted text-xs mb-3">The Polygon story. Why the best investment decision isn't always a winning trade.</p>
-          <ul class="space-y-1 text-sm text-cs-muted mb-3">
+          <p class="text-\[#807F86\] text-xs mb-3">The Polygon story. Why the best investment decision isn't always a winning trade.</p>
+          <ul class="space-y-1 text-sm text-\[#807F86\] mb-3">
             <li class="flex gap-2"><span class="text-cs-green flex-shrink-0">→</span> Why selling at a loss is sometimes the best trade you'll ever make</li>
             <li class="flex gap-2"><span class="text-cs-green flex-shrink-0">→</span> Opportunity cost: what is your capital doing while you hold a loser?</li>
             <li class="flex gap-2"><span class="text-cs-green flex-shrink-0">→</span> Simon's Polygon story: cutting before 70-80% loss — the decision, the reasoning, the outcome</li>
             <li class="flex gap-2"><span class="text-cs-green flex-shrink-0">→</span> The sunk cost fallacy applied to digital assets</li>
             <li class="flex gap-2"><span class="text-cs-green flex-shrink-0">→</span> Emotional vs rational selling: how to separate the two</li>
           </ul>
-          <div class="bg-cs-bg rounded-lg p-3 border-l-4 border-cs-orange">
-            <p class="text-cs-muted italic text-xs">"My best investment decision wasn't Solana at 10x. It was getting out of Polygon before I lost 70-80%."</p>
+          <div class="bg-white rounded-lg p-3 border-l-4 border-cs-orange">
+            <p class="text-\[#807F86\] italic text-xs">"My best investment decision wasn't Solana at 10x. It was getting out of Polygon before I lost 70-80%."</p>
           </div>
-          <p class="text-cs-muted text-xs mt-3"><span class="text-cs-orange font-mono font-bold">ANSWERS:</span> "Should I sell my altcoin at a loss?" · "Will it come back?" · "I'm down 50% — should I hold?"</p>
-          <p class="text-cs-muted text-xs mt-1"><span class="text-blue-400 font-mono font-bold">EVIDENCE:</span> Greg went from $180K to $80K without cutting. Sunit asked "if this was your portfolio, what would you do?"</p>
+          <p class="text-\[#807F86\] text-xs mt-3"><span class="text-cs-orange font-mono font-bold">ANSWERS:</span> "Should I sell my altcoin at a loss?" · "Will it come back?" · "I'm down 50% — should I hold?"</p>
+          <p class="text-\[#807F86\] text-xs mt-1"><span class="text-blue-400 font-mono font-bold">EVIDENCE:</span> Greg went from $180K to $80K without cutting. Sunit asked "if this was your portfolio, what would you do?"</p>
         </div>
-        <div class="bg-cs-card border border-cs-green/30 rounded-xl p-5">
+        <div class="bg-white border border-cs-green/30 rounded-xl p-5">
           <h3 class="font-bold text-base mb-1">Re-Entry Framework</h3>
-          <p class="text-cs-muted text-xs mb-3">Selling isn't the end — it's freeing up capital for the next opportunity. But when and how do you re-enter?</p>
-          <ul class="space-y-1 text-sm text-cs-muted mb-3">
+          <p class="text-\[#807F86\] text-xs mb-3">Selling isn't the end — it's freeing up capital for the next opportunity. But when and how do you re-enter?</p>
+          <ul class="space-y-1 text-sm text-\[#807F86\] mb-3">
             <li class="flex gap-2"><span class="text-cs-green flex-shrink-0">→</span> How to build a re-entry strategy after de-risking (written, not vague)</li>
             <li class="flex gap-2"><span class="text-cs-green flex-shrink-0">→</span> What signals to watch for: risk-to-reward skew returning</li>
             <li class="flex gap-2"><span class="text-cs-green flex-shrink-0">→</span> DCA back in vs lump sum re-entry — when each makes sense</li>
             <li class="flex gap-2"><span class="text-cs-green flex-shrink-0">→</span> Patience as a strategy: waiting for value, not just price</li>
           </ul>
-          <p class="text-cs-muted text-xs"><span class="text-cs-orange font-mono font-bold">ANSWERS:</span> "I sold — when do I buy back?" · "How do I know when to re-enter?" · "What's the trigger?"</p>
-          <p class="text-cs-muted text-xs mt-1"><span class="text-blue-400 font-mono font-bold">EVIDENCE:</span> John/Johannes sold most holdings at $80K BTC break — asked for re-entry strategy. Said "patience" advice "wasn't sufficient."</p>
+          <p class="text-\[#807F86\] text-xs"><span class="text-cs-orange font-mono font-bold">ANSWERS:</span> "I sold — when do I buy back?" · "How do I know when to re-enter?" · "What's the trigger?"</p>
+          <p class="text-\[#807F86\] text-xs mt-1"><span class="text-blue-400 font-mono font-bold">EVIDENCE:</span> John/Johannes sold most holdings at $80K BTC break — asked for re-entry strategy. Said "patience" advice "wasn't sufficient."</p>
         </div>
-        <div class="bg-cs-card border border-cs-green/30 rounded-xl p-5">
+        <div class="bg-white border border-cs-green/30 rounded-xl p-5">
           <h3 class="font-bold text-base mb-1">Exit Strategy — Your Personal Sell Plan</h3>
-          <p class="text-cs-muted text-xs mb-3">A strategy in your head is not a strategy. This session builds your written sell plan.</p>
-          <ul class="space-y-1 text-sm text-cs-muted mb-3">
+          <p class="text-\[#807F86\] text-xs mb-3">A strategy in your head is not a strategy. This session builds your written sell plan.</p>
+          <ul class="space-y-1 text-sm text-\[#807F86\] mb-3">
             <li class="flex gap-2"><span class="text-cs-green flex-shrink-0">→</span> Building a written sell strategy: targets, triggers, rules (fill-in workbook)</li>
             <li class="flex gap-2"><span class="text-cs-green flex-shrink-0">→</span> Partial profit-taking frameworks: how much to sell and when</li>
             <li class="flex gap-2"><span class="text-cs-green flex-shrink-0">→</span> Bitcoin vs altcoin sell strategies — fundamentally different rules</li>
             <li class="flex gap-2"><span class="text-cs-green flex-shrink-0">→</span> CS portfolio de-risk decisions as case studies: what triggered them</li>
           </ul>
-          <div class="bg-cs-bg rounded-lg p-3 border-l-4 border-cs-orange">
-            <p class="text-cs-muted italic text-xs">"A strategy in your head is not a strategy. It's a vague intention."</p>
+          <div class="bg-white rounded-lg p-3 border-l-4 border-cs-orange">
+            <p class="text-\[#807F86\] italic text-xs">"A strategy in your head is not a strategy. It's a vague intention."</p>
           </div>
-          <p class="text-cs-muted text-xs mt-3"><span class="text-cs-orange font-mono font-bold">ANSWERS:</span> "When should I sell?" · "How do I take profits?" · "How much should I sell?"</p>
+          <p class="text-\[#807F86\] text-xs mt-3"><span class="text-cs-orange font-mono font-bold">ANSWERS:</span> "When should I sell?" · "How do I take profits?" · "How much should I sell?"</p>
         </div>
       </div>
 
       <div class="mb-2"><span class="font-mono text-blue-400 text-xs font-bold uppercase tracking-wider">🔵 LEVEL 2 CONTENT</span></div>
-      <p class="text-cs-muted text-xs mb-4">Unlocked after completing all 8 Level 1 modules.</p>
+      <p class="text-\[#807F86\] text-xs mb-4">Unlocked after completing all 8 Level 1 modules.</p>
       <div class="space-y-4 mb-10">
-        <div class="bg-cs-card border border-blue-500/30 rounded-xl p-5">
+        <div class="bg-white border border-blue-500/30 rounded-xl p-5">
           <h3 class="font-bold text-base mb-1">Opportunity Cost Framework</h3>
-          <ul class="space-y-1 text-sm text-cs-muted mb-3">
+          <ul class="space-y-1 text-sm text-\[#807F86\] mb-3">
             <li class="flex gap-2"><span class="text-blue-400 flex-shrink-0">→</span> How to calculate opportunity cost of holding underperformers</li>
             <li class="flex gap-2"><span class="text-blue-400 flex-shrink-0">→</span> "What else could this capital be doing?" — the systematic portfolio review</li>
             <li class="flex gap-2"><span class="text-blue-400 flex-shrink-0">→</span> When to cut vs when to hold: objective, pre-defined criteria</li>
             <li class="flex gap-2"><span class="text-blue-400 flex-shrink-0">→</span> Systematic portfolio review process (frequency, what to look for)</li>
           </ul>
-          <p class="text-cs-muted text-xs"><span class="text-cs-orange font-mono font-bold">ANSWERS:</span> "Should I hold this loser or sell and redeploy?" · "What's the opportunity cost of holding?"</p>
+          <p class="text-\[#807F86\] text-xs"><span class="text-cs-orange font-mono font-bold">ANSWERS:</span> "Should I hold this loser or sell and redeploy?" · "What's the opportunity cost of holding?"</p>
         </div>
-        <div class="bg-cs-card border border-blue-500/30 rounded-xl p-5">
+        <div class="bg-white border border-blue-500/30 rounded-xl p-5">
           <h3 class="font-bold text-base mb-1">Cycle-Aware Exit Strategies</h3>
-          <ul class="space-y-1 text-sm text-cs-muted mb-3">
+          <ul class="space-y-1 text-sm text-\[#807F86\] mb-3">
             <li class="flex gap-2"><span class="text-blue-400 flex-shrink-0">→</span> How to build cycle-aware sell triggers (objective, written, pre-committed)</li>
             <li class="flex gap-2"><span class="text-blue-400 flex-shrink-0">→</span> CS portfolio de-risk decisions as case studies (what triggered them, when)</li>
             <li class="flex gap-2"><span class="text-blue-400 flex-shrink-0">→</span> Systematic profit-taking across multiple positions</li>
             <li class="flex gap-2"><span class="text-blue-400 flex-shrink-0">→</span> Rebalancing frequency and trigger conditions</li>
           </ul>
-          <p class="text-cs-muted text-xs"><span class="text-blue-400 font-mono font-bold">EVIDENCE:</span> John felt the "patience" advice wasn't sufficient — wanted clear, objective de-risk triggers</p>
+          <p class="text-\[#807F86\] text-xs"><span class="text-blue-400 font-mono font-bold">EVIDENCE:</span> John felt the "patience" advice wasn't sufficient — wanted clear, objective de-risk triggers</p>
         </div>
-        <div class="bg-cs-card border border-blue-500/30 rounded-xl p-5">
+        <div class="bg-white border border-blue-500/30 rounded-xl p-5">
           <h3 class="font-bold text-base mb-1">Borrowing as an Alternative to Selling</h3>
-          <p class="text-cs-muted text-xs mb-3">Advanced strategy: use your digital assets as collateral instead of selling. But only once you fully understand the risks.</p>
-          <ul class="space-y-1 text-sm text-cs-muted mb-3">
+          <p class="text-\[#807F86\] text-xs mb-3">Advanced strategy: use your digital assets as collateral instead of selling. But only once you fully understand the risks.</p>
+          <ul class="space-y-1 text-sm text-\[#807F86\] mb-3">
             <li class="flex gap-2"><span class="text-blue-400 flex-shrink-0">→</span> How collateralised lending works: using digital assets as collateral</li>
             <li class="flex gap-2"><span class="text-blue-400 flex-shrink-0">→</span> Loan-to-value ratios, interest rates, when borrowing makes sense</li>
             <li class="flex gap-2"><span class="text-blue-400 flex-shrink-0">→</span> Tax advantages of borrowing vs selling (avoid CGT events)</li>
@@ -137,27 +380,27 @@
             <li class="flex gap-2"><span class="text-blue-400 flex-shrink-0">→</span> How to stress-test your loan against significant price drops</li>
             <li class="flex gap-2"><span class="text-blue-400 flex-shrink-0">→</span> Platform comparison: Ledn, Block Earner, and others</li>
           </ul>
-          <div class="bg-cs-bg rounded-lg p-3 border-l-4 border-red-500">
+          <div class="bg-white rounded-lg p-3 border-l-4 border-red-500">
             <p class="text-red-400 italic text-xs">"If you don't understand liquidation, you shouldn't be borrowing."</p>
           </div>
-          <p class="text-cs-muted text-xs mt-3"><span class="text-cs-orange font-mono font-bold">ANSWERS:</span> "Can I borrow against my Bitcoin?" · "What happens if Bitcoin drops while I have a loan?" · "Can I lose my Bitcoin?"</p>
-          <p class="text-cs-muted text-xs mt-1"><span class="text-blue-400 font-mono font-bold">EVIDENCE:</span> Growing interest in borrowing (Ledn, Block Earner) but zero understanding of liquidation risks</p>
+          <p class="text-\[#807F86\] text-xs mt-3"><span class="text-cs-orange font-mono font-bold">ANSWERS:</span> "Can I borrow against my Bitcoin?" · "What happens if Bitcoin drops while I have a loan?" · "Can I lose my Bitcoin?"</p>
+          <p class="text-\[#807F86\] text-xs mt-1"><span class="text-blue-400 font-mono font-bold">EVIDENCE:</span> Growing interest in borrowing (Ledn, Block Earner) but zero understanding of liquidation risks</p>
         </div>
       </div>
 
       <div class="grid md:grid-cols-2 gap-4 mb-8">
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5">
           <h4 class="font-bold text-sm mb-3 text-cs-orange">📋 Delivery Format</h4>
-          <ul class="space-y-2 text-xs text-cs-muted">
+          <ul class="space-y-2 text-xs text-\[#807F86\]">
             <li class="flex gap-2"><span>🎯</span> L1: Week 5 — ONE weekly coaching call (this module's week) · Phase 3 strategy starts from here</li>
             <li class="flex gap-2"><span>📓</span> Workbook: Written sell strategy template (fill-in)</li>
             <li class="flex gap-2"><span>📊</span> Case studies: CS portfolio sell examples and historical decisions</li>
             <li class="flex gap-2"><span>🔵</span> L2: Risk assessment questionnaire before borrowing</li>
           </ul>
         </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5">
           <h4 class="font-bold text-sm mb-3 text-cs-green">✅ Member Outcomes</h4>
-          <ul class="space-y-2 text-xs text-cs-muted">
+          <ul class="space-y-2 text-xs text-\[#807F86\]">
             <li class="flex gap-2"><span class="text-cs-green">✓</span> Understand that cutting losses is a skill, not a failure</li>
             <li class="flex gap-2"><span class="text-cs-green">✓</span> Have a written re-entry framework (not just "wait and see")</li>
             <li class="flex gap-2"><span class="text-cs-green">✓</span> Personal exit strategy written down with specific targets and triggers</li>
@@ -167,21 +410,21 @@
         </div>
       </div>
 
-      <div class="bg-cs-card border border-cs-border rounded-xl p-5 mb-8">
+      <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5 mb-8">
         <h4 class="font-bold text-sm mb-3 text-cs-orange">⚡ Teaching Frameworks Used in This Module</h4>
         <div class="space-y-3">
-          <div class="bg-cs-bg rounded-lg p-3"><p class="text-xs font-bold text-cs-text mb-1">"The Best Trade Was a Loss"</p><p class="text-cs-muted italic text-xs">"My best investment decision wasn't Solana at 10x. It was getting out of Polygon before I lost 70-80%."</p></div>
-          <div class="bg-cs-bg rounded-lg p-3"><p class="text-xs font-bold text-cs-text mb-1">"Bitcoin: Hold. Altcoins: Trade."</p><p class="text-cs-muted italic text-xs">"I've never met a single person who said buying and holding Bitcoin long term was a bad idea. Everyone who's been in the space long enough says: buying and holding an altcoin for long term was a bad idea."</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-xs font-bold text-\[#1B1925\] mb-1">"The Best Trade Was a Loss"</p><p class="text-\[#807F86\] italic text-xs">"My best investment decision wasn't Solana at 10x. It was getting out of Polygon before I lost 70-80%."</p></div>
+          <div class="bg-white rounded-lg p-3"><p class="text-xs font-bold text-\[#1B1925\] mb-1">"Bitcoin: Hold. Altcoins: Trade."</p><p class="text-\[#807F86\] italic text-xs">"I've never met a single person who said buying and holding Bitcoin long term was a bad idea. Everyone who's been in the space long enough says: buying and holding an altcoin for long term was a bad idea."</p></div>
         </div>
       </div>
 
-      <div class="border-l-4 border-cs-orange bg-cs-card rounded-r-xl p-5 mb-8">
-        <p class="text-cs-muted italic text-sm">"A strategy in your head is not a strategy. It's a vague intention."</p>
+      <div class="border-l-4 border-cs-orange bg-white rounded-r-xl p-5 mb-8">
+        <p class="text-\[#807F86\] italic text-sm">"A strategy in your head is not a strategy. It's a vague intention."</p>
         <p class="text-cs-orange text-xs mt-2 font-mono">— Shift OS Philosophy</p>
       </div>
 
-      <div class="flex items-center justify-between pt-6 border-t border-cs-border">
-        <a href="m7-tax.html" class="text-cs-muted hover:text-cs-orange text-sm font-semibold transition-colors">← Step 7: Tax</a>
+      <div class="flex items-center justify-between pt-6 border-t border-\[#E8E8EA\]">
+        <a href="m7-tax.html" class="text-\[#807F86\] hover:text-cs-orange text-sm font-semibold transition-colors">← Step 7: Tax</a>
         <a href="../operating-system.html" class="text-cs-orange hover:text-cs-green text-sm font-semibold transition-colors">↑ Back to Operating System</a>
         <span class="bg-cs-green/20 text-cs-green font-bold text-sm px-5 py-2.5 rounded-xl">✓ Final Step</span>
       </div>

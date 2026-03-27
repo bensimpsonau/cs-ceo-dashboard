@@ -3,14 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+
 <title>Beginner Journey — Collective Shift Strategy Hub</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+
 <script>
-tailwind.config={theme:{extend:{colors:{cs:{bg:'#1B1925',card:'#242232',border:'#2E2C3E',orange:'#FC5C03',green:'#08C394',text:'#F9F9F9',muted:'#9B99A9'}},fontFamily:{heading:['Oswald','sans-serif'],body:['Barlow','sans-serif'],mono:['Source Code Pro','monospace']}}}}
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cs: {
+          orange: '#FC5C03',
+          'orange-light': '#FC8C4E',
+          'orange-bg': '#FEDECC',
+          'orange-hover': '#FEEEE5',
+          green: '#08C394',
+          purple: '#654FFC',
+          border: '#E8E8EA',
+          text: '#1B1925',
+          secondary: '#4D4C55',
+          muted: '#807F86',
+        }
+      },
+      fontFamily: {
+        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+        barlow: ['Barlow', 'sans-serif'],
+        mono: ['Source Code Pro', 'monospace'],
+      },
+      borderRadius: {
+        pill: '100px',
+      }
+    }
+  }
+}
 </script>
 <style>
-body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-serif}.label-tag{font-family:'Source Code Pro',monospace}.sidebar{transition:transform .3s ease}@media(max-width:1023px){.sidebar{transform:translateX(-100%);position:fixed;z-index:50;top:0;left:0;height:100vh}.sidebar.open{transform:translateX(0)}}.nav-link{transition:all .15s}.nav-link:hover,.nav-link.active{background:rgba(252,92,3,.12);color:#FC5C03;border-left-color:#FC5C03}
+body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Plus Jakarta Sans',sans-serif}.label-tag{font-family:'Source Code Pro',monospace}.sidebar{transition:transform .3s ease}@media(max-width:1023px){.sidebar{transform:translateX(-100%);position:fixed;z-index:50;top:0;left:0;height:100vh}.sidebar.open{transform:translateX(0)}}.nav-link{transition:all .15s}.nav-link:hover,.nav-link.active{background:rgba(252,92,3,.12);color:#FC5C03;border-left-color:#FC5C03}
 
 /* Timeline */
 .timeline-line{position:absolute;left:23px;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,#08C394 0%,#08C394 55%,#FC5C03 55%,#FC5C03 85%,#6366f1 85%,#6366f1 100%);border-radius:2px}
@@ -40,12 +70,223 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
 .stage-node-active{animation:pulse-ring 2s infinite}
 </style>
 </head>
-<body class="bg-cs-bg text-cs-text min-h-screen">
+<body class="bg-white text-\[#1B1925\] min-h-screen">
+<!-- ═══ COLLECTIVE SHIFT TOP NAV ═══ -->
+<style>
+  :root {
+    --csn-h: 56px;
+    --csn-bg: #FFFFFF;
+    --csn-border: #E8E8EA;
+    --csn-text: #1B1925;
+    --csn-muted: #4D4C55;
+    --csn-orange: #FC5C03;
+    --csn-orange-bg: #FEEEE5;
+    --csn-dd-bg: #FFFFFF;
+    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    --csn-z: 9000;
+  }
+  .csn-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--csn-h);
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 0;
+    z-index: var(--csn-z);
+    font-family: 'Plus Jakarta Sans', 'Barlow', sans-serif;
+  }
+  .csn-logo {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--csn-orange);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin-right: 32px;
+    flex-shrink: 0;
+  }
+  .csn-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+  }
+  .csn-item {
+    position: relative;
+  }
+  .csn-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s, background 0.15s;
+    cursor: pointer;
+  }
+  .csn-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-item.active > .csn-link { color: var(--csn-orange); font-weight: 600; }
+  .csn-chevron { transition: transform 0.2s; flex-shrink: 0; }
+  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
+  /* Dropdown */
+  .csn-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 240px;
+    background: var(--csn-dd-bg);
+    border: 1px solid var(--csn-border);
+    border-radius: 12px;
+    box-shadow: var(--csn-dd-shadow);
+    padding: 6px;
+    z-index: calc(var(--csn-z) + 1);
+  }
+  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
+  .csn-dd-item {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+    white-space: nowrap;
+  }
+  .csn-dd-item:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-divider { height: 1px; background: var(--csn-border); margin: 4px 8px; }
+  /* Mobile hamburger */
+  .csn-hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--csn-muted);
+    padding: 4px;
+    margin-left: auto;
+  }
+  /* Mobile drawer */
+  .csn-mobile-menu {
+    display: none;
+    position: fixed;
+    top: var(--csn-h);
+    left: 0; right: 0;
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    padding: 8px 16px 16px;
+    z-index: calc(var(--csn-z) - 1);
+    max-height: calc(100vh - var(--csn-h));
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .csn-mobile-menu.open { display: block; }
+  .csn-mob-link {
+    display: block;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+  }
+  .csn-mob-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-mob-top { font-weight: 600; color: var(--csn-text); margin-top: 4px; }
+  .csn-mob-sub { font-size: 12px; padding-left: 20px; }
+  /* Body offset */
+  body { padding-top: var(--csn-h) !important; }
+  @media (max-width: 1023px) {
+    .csn-nav { display: none; }
+    .csn-hamburger { display: block; }
+  }
+  @media (max-width: 640px) {
+    .csn-logo { font-size: 13px; margin-right: 16px; }
+  }
+</style>
+<nav class="csn-bar" role="navigation" aria-label="Main navigation">
+  <a href="../index.html" class="csn-logo">Collective Shift</a>
+  <div class="csn-nav">
+      <div class="csn-item "><a href="../index.html" class="csn-link">CEO Dashboard</a></div>
+      <div class="csn-item csn-has-dd ">
+        <a href="../hub/operating-system.html" class="csn-link">The Collective Shift Operating System
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../hub/operating-system.html" class="csn-dd-item">Operating System Overview</a><a href="../hub/modules/m1-foundations.html" class="csn-dd-item">Module 1: Foundations</a><a href="../hub/modules/m2-bitcoin.html" class="csn-dd-item">Module 2: Bitcoin</a><a href="../hub/modules/m3-altcoins.html" class="csn-dd-item">Module 3: Digital Assets</a><a href="../hub/modules/m4-how-we-invest.html" class="csn-dd-item">Module 4: How We Invest</a><a href="../hub/modules/m5-buy-sell.html" class="csn-dd-item">Module 5: Buy & Sell</a><a href="../hub/modules/m6-send-store.html" class="csn-dd-item">Module 6: Send & Store</a><a href="../hub/modules/m7-tax.html" class="csn-dd-item">Module 7: Tax</a><a href="../hub/modules/m8-sell-strategy.html" class="csn-dd-item">Module 8: Exit Strategy</a><div class="csn-divider"></div><a href="../8-step-strategy-workbook.html" class="csn-dd-item">8-Step Strategy Workbook</a><a href="../8-step-strategy-workbook-L1.html" class="csn-dd-item">↳ Level 1 Workbook</a><a href="../8-step-strategy-workbook-L2.html" class="csn-dd-item">↳ Level 2 Workbook</a><a href="../portfolio-calculator.html" class="csn-dd-item">Portfolio Allocation Calculator</a></div>
+      </div>
+      <div class="csn-item csn-has-dd active">
+        <a href="../hub/products.html" class="csn-link">Product
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../hub/products.html#platinum" class="csn-dd-item">Platinum</a><a href="../hub/products.html#accelerator" class="csn-dd-item">Accelerator</a><a href="../hub/beginner-journey.html" class="csn-dd-item">Beginner's Journey</a><a href="../hub/products.html#two-track" class="csn-dd-item">Two-Track System</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="../hub/youtube-strategy.html" class="csn-link">Social Media
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../hub/youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a><a href="../hub/social-strategy.html" class="csn-dd-item">Social Strategy</a><a href="../hub/instagram-strategy.html" class="csn-dd-item">Instagram Strategy</a><div class="csn-divider"></div><a href="../hub/brand.html" class="csn-dd-item">Brand & Voice</a><a href="../hub/positioning.html" class="csn-dd-item">Positioning & ICP</a><a href="../hub/competitors.html" class="csn-dd-item">Competitors</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="../travis-briefing-2026-03-27.html" class="csn-link">Documents
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a><a href="../cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a><a href="../q2-market-briefing.html" class="csn-dd-item">Q2 Market Briefing</a><a href="../webinar-q2-2026-is-now-the-time.html" class="csn-dd-item">Webinar: Is Now The Time?</a></div>
+      </div>
+  </div>
+  <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+<div id="csnMobileMenu" class="csn-mobile-menu">
+  <a href="../index.html" class="csn-mob-link csn-mob-top">CEO Dashboard</a>
+<a href="../hub/operating-system.html" class="csn-mob-link csn-mob-top">The Collective Shift Operating System</a>
+<a href="../hub/operating-system.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Operating System Overview</a>
+<a href="../hub/modules/m1-foundations.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 1: Foundations</a>
+<a href="../hub/modules/m2-bitcoin.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 2: Bitcoin</a>
+<a href="../hub/modules/m3-altcoins.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 3: Digital Assets</a>
+<a href="../hub/modules/m4-how-we-invest.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 4: How We Invest</a>
+<a href="../hub/modules/m5-buy-sell.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 5: Buy & Sell</a>
+<a href="../hub/modules/m6-send-store.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 6: Send & Store</a>
+<a href="../hub/modules/m7-tax.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 7: Tax</a>
+<a href="../hub/modules/m8-sell-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 8: Exit Strategy</a>
+<a href="../8-step-strategy-workbook.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;8-Step Strategy Workbook</a>
+<a href="../8-step-strategy-workbook-L1.html" class="csn-mob-link csn-mob-sub">↳ Level 1 Workbook</a>
+<a href="../8-step-strategy-workbook-L2.html" class="csn-mob-link csn-mob-sub">↳ Level 2 Workbook</a>
+<a href="../portfolio-calculator.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Portfolio Allocation Calculator</a>
+<a href="../hub/products.html" class="csn-mob-link csn-mob-top">Product</a>
+<a href="../hub/products.html#platinum" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Platinum</a>
+<a href="../hub/products.html#accelerator" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Accelerator</a>
+<a href="../hub/beginner-journey.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Beginner's Journey</a>
+<a href="../hub/products.html#two-track" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Two-Track System</a>
+<a href="../hub/youtube-strategy.html" class="csn-mob-link csn-mob-top">Social Media</a>
+<a href="../hub/youtube-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;YouTube Strategy</a>
+<a href="../hub/social-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Social Strategy</a>
+<a href="../hub/instagram-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Instagram Strategy</a>
+<a href="../hub/brand.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Brand & Voice</a>
+<a href="../hub/positioning.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Positioning & ICP</a>
+<a href="../hub/competitors.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Competitors</a>
+<a href="../travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-top">Documents</a>
+<a href="../travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Travis CGO Briefing</a>
+<a href="../cs-education-system-overview.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Education System Overview</a>
+<a href="../q2-market-briefing.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Q2 Market Briefing</a>
+<a href="../webinar-q2-2026-is-now-the-time.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Webinar: Is Now The Time?</a>
+</div>
+<!-- ═══ END TOP NAV ═══ -->
+
 
 <!-- Mobile Header -->
-<div class="lg:hidden flex items-center justify-between px-4 py-3 bg-cs-card border-b border-cs-border sticky top-0 z-40">
+<div class="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-\[#E8E8EA\] sticky top-0 z-40">
   <span class="font-heading text-cs-orange text-lg font-bold tracking-wide">COLLECTIVE SHIFT</span>
-  <button onclick="document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('hidden')" class="text-cs-muted hover:text-cs-orange">
+  <button onclick="document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('hidden')" class="text-\[#807F86\] hover:text-cs-orange">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
   </button>
 </div>
@@ -53,31 +294,31 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
 
 <div class="flex">
   <!-- Sidebar -->
-  <aside id="sidebar" class="sidebar w-64 min-h-screen bg-cs-card border-r border-cs-border flex-shrink-0 flex flex-col">
-    <div class="p-5 border-b border-cs-border">
+  <aside id="sidebar" class="sidebar w-64 min-h-screen bg-white border-r border-\[#E8E8EA\] flex-shrink-0 flex flex-col">
+    <div class="p-5 border-b border-\[#E8E8EA\]">
       <a href="index.html" class="font-heading text-cs-orange text-xl font-bold tracking-wider">COLLECTIVE SHIFT</a>
-      <p class="text-cs-muted text-xs mt-1 font-mono">STRATEGY HUB</p>
+      <p class="text-\[#807F86\] text-xs mt-1 font-mono">STRATEGY HUB</p>
     </div>
     <nav class="flex-1 py-4 px-3 space-y-1">
-      <a href="/" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🏠</span> Dashboard</a>
-      <a href="index.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🏡</span> Home</a>
-      <a href="positioning.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🎯</span> Positioning & ICP</a>
-      <a href="operating-system.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>⚙️</span> Operating System</a>
-      <a href="products.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>💎</span> Products</a>
-      <a href="social-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>📱</span> Social & Content</a>
-      <a href="youtube-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🎬</span> YouTube Strategy</a>
-      <a href="competitors.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🏆</span> Competitive Intel</a>
-      <a href="brand.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🎨</span> Brand & Voice</a>
+      <a href="/" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🏠</span> Dashboard</a>
+      <a href="index.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🏡</span> Home</a>
+      <a href="positioning.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🎯</span> Positioning & ICP</a>
+      <a href="operating-system.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>⚙️</span> Operating System</a>
+      <a href="products.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>💎</span> Products</a>
+      <a href="social-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>📱</span> Social & Content</a>
+      <a href="youtube-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🎬</span> YouTube Strategy</a>
+      <a href="competitors.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🏆</span> Competitive Intel</a>
+      <a href="brand.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🎨</span> Brand & Voice</a>
       <a href="beginner-journey.html" class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium border-l-2 border-transparent"><span>🗺️</span> Beginner Journey</a>
     </nav>
-    <div class="p-4 border-t border-cs-border"><p class="text-cs-muted text-xs font-mono">v2.1 · March 2026</p></div>
+    <div class="p-4 border-t border-\[#E8E8EA\]"><p class="text-\[#807F86\] text-xs font-mono">v2.1 · March 2026</p></div>
   </aside>
 
   <!-- Main Content -->
   <main class="flex-1 min-h-screen">
     <!-- Breadcrumb -->
-    <div class="px-6 lg:px-10 py-3 border-b border-cs-border bg-cs-card/50">
-      <div class="flex items-center gap-2 text-xs font-mono text-cs-muted">
+    <div class="px-6 lg:px-10 py-3 border-b border-\[#E8E8EA\] bg-white/50">
+      <div class="flex items-center gap-2 text-xs font-mono text-\[#807F86\]">
         <a href="index.html" class="text-cs-orange hover:underline">Strategy Hub</a><span>/</span><span>Beginner Journey</span>
       </div>
     </div>
@@ -86,22 +327,22 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
       <!-- Header -->
       <p class="label-tag text-cs-orange text-xs font-semibold tracking-widest uppercase mb-2">2-Track Education Model — Member Pathway</p>
       <h1 class="text-4xl font-bold tracking-tight mb-3">The Beginner Journey</h1>
-      <p class="text-cs-muted text-lg mb-2 max-w-2xl">"We teach you how to think. Not what to think."</p>
-      <p class="text-cs-muted text-sm mb-6">A visual roadmap of the full member education pathway — from first sign-up to advanced strategies. Track what's built, in development, and planned.</p>
+      <p class="text-\[#807F86\] text-lg mb-2 max-w-2xl">"We teach you how to think. Not what to think."</p>
+      <p class="text-\[#807F86\] text-sm mb-6">A visual roadmap of the full member education pathway — from first sign-up to advanced strategies. Track what's built, in development, and planned.</p>
 
       <!-- Progress Overview -->
-      <div class="bg-cs-card border border-cs-border rounded-xl p-5 mb-8">
+      <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5 mb-8">
         <div class="flex items-center justify-between mb-3">
           <h3 class="font-heading text-lg font-bold">Build Progress</h3>
           <span id="progressLabel" class="label-tag text-cs-orange text-sm font-bold">0 / 35 modules</span>
         </div>
-        <div class="w-full bg-cs-bg rounded-full h-3 overflow-hidden">
+        <div class="w-full bg-white rounded-full h-3 overflow-hidden">
           <div id="progressBar" class="progress-fill h-full bg-gradient-to-r from-cs-green to-cs-orange rounded-full" style="width:0%"></div>
         </div>
         <div class="flex gap-6 mt-4 flex-wrap">
-          <div class="flex items-center gap-2"><span class="inline-block w-3 h-3 rounded-sm status-built"></span><span class="text-xs text-cs-muted">✅ Built</span><span id="countBuilt" class="label-tag text-xs text-cs-green font-bold">0</span></div>
-          <div class="flex items-center gap-2"><span class="inline-block w-3 h-3 rounded-sm status-dev"></span><span class="text-xs text-cs-muted">🔨 In Development</span><span id="countDev" class="label-tag text-xs text-cs-orange font-bold">0</span></div>
-          <div class="flex items-center gap-2"><span class="inline-block w-3 h-3 rounded-sm status-planned"></span><span class="text-xs text-cs-muted">📋 Planned</span><span id="countPlanned" class="label-tag text-xs text-cs-muted font-bold">0</span></div>
+          <div class="flex items-center gap-2"><span class="inline-block w-3 h-3 rounded-sm status-built"></span><span class="text-xs text-\[#807F86\]">✅ Built</span><span id="countBuilt" class="label-tag text-xs text-cs-green font-bold">0</span></div>
+          <div class="flex items-center gap-2"><span class="inline-block w-3 h-3 rounded-sm status-dev"></span><span class="text-xs text-\[#807F86\]">🔨 In Development</span><span id="countDev" class="label-tag text-xs text-cs-orange font-bold">0</span></div>
+          <div class="flex items-center gap-2"><span class="inline-block w-3 h-3 rounded-sm status-planned"></span><span class="text-xs text-\[#807F86\]">📋 Planned</span><span id="countPlanned" class="label-tag text-xs text-\[#807F86\] font-bold">0</span></div>
         </div>
       </div>
 
@@ -109,15 +350,15 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
       <div class="flex gap-4 mb-6 flex-wrap">
         <div class="flex items-center gap-2">
           <div class="w-3 h-3 rounded-full bg-cs-green"></div>
-          <span class="text-xs text-cs-muted font-mono">LEVEL 1 — FOUNDATION</span>
+          <span class="text-xs text-\[#807F86\] font-mono">LEVEL 1 — FOUNDATION</span>
         </div>
         <div class="flex items-center gap-2">
           <div class="w-3 h-3 rounded-full bg-cs-orange"></div>
-          <span class="text-xs text-cs-muted font-mono">GRADUATION GATE</span>
+          <span class="text-xs text-\[#807F86\] font-mono">GRADUATION GATE</span>
         </div>
         <div class="flex items-center gap-2">
           <div class="w-3 h-3 rounded-full bg-indigo-500"></div>
-          <span class="text-xs text-cs-muted font-mono">LEVEL 2 — ADVANCED</span>
+          <span class="text-xs text-\[#807F86\] font-mono">LEVEL 2 — ADVANCED</span>
         </div>
       </div>
 
@@ -133,13 +374,13 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
             <div class="w-10 h-10 rounded-full bg-cs-green/20 border-2 border-cs-green flex items-center justify-center text-cs-green font-bold text-sm font-mono flex-shrink-0">L1</div>
             <div>
               <h2 class="font-heading text-xl font-bold text-cs-green">Level 1 — Foundation Track</h2>
-              <p class="text-cs-muted text-xs">New to digital assets, or experienced but without a system. CEX only.</p>
+              <p class="text-\[#807F86\] text-xs">New to digital assets, or experienced but without a system. CEX only.</p>
             </div>
           </div>
         </div>
 
         <!-- Stage 1: Onboarding -->
-        <div class="stage-card bg-cs-card border border-cs-border rounded-xl mb-4 cursor-pointer" onclick="toggleStage(this)" data-stage="1">
+        <div class="stage-card bg-white border border-\[#E8E8EA\] rounded-xl mb-4 cursor-pointer" onclick="toggleStage(this)" data-stage="1">
           <div class="flex items-start gap-4 p-5">
             <div class="stage-node w-12 h-12 rounded-full bg-cs-green/20 border-2 border-cs-green flex items-center justify-center text-cs-green font-bold text-lg font-mono flex-shrink-0 -ml-16">1</div>
             <div class="flex-1 min-w-0">
@@ -147,62 +388,62 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
                 <div>
                   <span class="label-tag text-cs-green text-xs font-bold uppercase tracking-wider">Stage 1 · Week 1</span>
                   <h3 class="font-heading text-xl font-bold mt-1">Onboarding</h3>
-                  <p class="text-cs-muted text-sm mt-1">First steps into the Collective Shift ecosystem — get set up, get connected, get oriented.</p>
+                  <p class="text-\[#807F86\] text-sm mt-1">First steps into the Collective Shift ecosystem — get set up, get connected, get oriented.</p>
                 </div>
-                <svg class="chevron w-5 h-5 text-cs-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                <svg class="chevron w-5 h-5 text-\[#807F86\] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </div>
             </div>
           </div>
           <div class="stage-content">
             <div class="px-5 pb-5 space-y-3 ml-0">
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s1-welcome" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Welcome + Platform Tour</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Guided walkthrough of the CS platform — research, portfolio, community, and education sections.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Guided walkthrough of the CS platform — research, portfolio, community, and education sections.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s1-circle" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Join Circle Community</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Onboard to the Platinum Beginners Lounge on Circle — a safe space for new members to ask questions without intimidation.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Onboard to the Platinum Beginners Lounge on Circle — a safe space for new members to ask questions without intimidation.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s1-analyst" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Meet Your Analyst (Intro Call)</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Scheduled 1-on-1 intro call with assigned analyst. Map goals, assess experience level, set expectations.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Scheduled 1-on-1 intro call with assigned analyst. Map goals, assess experience level, set expectations.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s1-exchange" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Set Up Exchange Account</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Guided exchange selection (CoinSpot, Swyftx, etc.) with step-by-step KYC and security setup.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Guided exchange selection (CoinSpot, Swyftx, etc.) with step-by-step KYC and security setup.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s1-why" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Complete "Why Digital Assets?" Module</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Foundational module: why digital assets exist, the investment thesis, and what makes this space different. Embeds: "No one makes it in a single cycle."</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Foundational module: why digital assets exist, the investment thesis, and what makes this space different. Embeds: "No one makes it in a single cycle."</p>
                 </div>
               </div>
             </div>
@@ -210,7 +451,7 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
         </div>
 
         <!-- Stage 2: First Purchase -->
-        <div class="stage-card bg-cs-card border border-cs-border rounded-xl mb-4 cursor-pointer" onclick="toggleStage(this)" data-stage="2">
+        <div class="stage-card bg-white border border-\[#E8E8EA\] rounded-xl mb-4 cursor-pointer" onclick="toggleStage(this)" data-stage="2">
           <div class="flex items-start gap-4 p-5">
             <div class="stage-node w-12 h-12 rounded-full bg-cs-green/20 border-2 border-cs-green flex items-center justify-center text-cs-green font-bold text-lg font-mono flex-shrink-0 -ml-16">2</div>
             <div class="flex-1 min-w-0">
@@ -218,15 +459,15 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
                 <div>
                   <span class="label-tag text-cs-green text-xs font-bold uppercase tracking-wider">Stage 2 · Week 2–3</span>
                   <h3 class="font-heading text-xl font-bold mt-1">First Purchase</h3>
-                  <p class="text-cs-muted text-sm mt-1">From theory to action — understand market context, navigate bank friction, and make your first Bitcoin purchase.</p>
+                  <p class="text-\[#807F86\] text-sm mt-1">From theory to action — understand market context, navigate bank friction, and make your first Bitcoin purchase.</p>
                 </div>
-                <svg class="chevron w-5 h-5 text-cs-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                <svg class="chevron w-5 h-5 text-\[#807F86\] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </div>
             </div>
           </div>
           <div class="stage-content">
             <div class="px-5 pb-5 space-y-3">
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s2-cycles" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
@@ -234,10 +475,10 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
                     <span class="label-tag text-cs-orange text-xs">🆕</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">What history tells us about bear/bull transitions. New members need this context before interpreting current conditions.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">What history tells us about bear/bull transitions. New members need this context before interpreting current conditions.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s2-blockchain" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
@@ -245,10 +486,10 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
                     <span class="label-tag text-cs-orange text-xs">🆕</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Why there are many chains — Bitcoin vs Solana vs Ethereum as separate ecosystems, not competing "coins."</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Why there are many chains — Bitcoin vs Solana vs Ethereum as separate ecosystems, not competing "coins."</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s2-bankin" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
@@ -256,27 +497,27 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
                     <span class="label-tag text-cs-orange text-xs">🆕</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Step-by-step guide for navigating bank blocks, frozen accounts, and exchange on-ramping. Universal pain point — Nigel, Harry, Stacey all flagged this.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Step-by-step guide for navigating bank blocks, frozen accounts, and exchange on-ramping. Universal pain point — Nigel, Harry, Stacey all flagged this.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s2-firstbtc" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">First Bitcoin Purchase (Guided)</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Hands-on walkthrough with checklist: choose exchange → deposit AUD → buy Bitcoin → confirm in portfolio. Embeds: "Everyone gets Bitcoin at the price they deserve."</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Hands-on walkthrough with checklist: choose exchange → deposit AUD → buy Bitcoin → confirm in portfolio. Embeds: "Everyone gets Bitcoin at the price they deserve."</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s2-dca" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Start DCA Setup</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Set up recurring buy on their exchange. Strategy before execution. Embeds: "I've never regretted dollar cost averaging."</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Set up recurring buy on their exchange. Strategy before execution. Embeds: "I've never regretted dollar cost averaging."</p>
                 </div>
               </div>
             </div>
@@ -284,7 +525,7 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
         </div>
 
         <!-- Stage 3: Foundation Building -->
-        <div class="stage-card bg-cs-card border border-cs-border rounded-xl mb-4 cursor-pointer" onclick="toggleStage(this)" data-stage="3">
+        <div class="stage-card bg-white border border-\[#E8E8EA\] rounded-xl mb-4 cursor-pointer" onclick="toggleStage(this)" data-stage="3">
           <div class="flex items-start gap-4 p-5">
             <div class="stage-node w-12 h-12 rounded-full bg-cs-green/20 border-2 border-cs-green flex items-center justify-center text-cs-green font-bold text-lg font-mono flex-shrink-0 -ml-16">3</div>
             <div class="flex-1 min-w-0">
@@ -292,15 +533,15 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
                 <div>
                   <span class="label-tag text-cs-green text-xs font-bold uppercase tracking-wider">Stage 3 · Month 1–2</span>
                   <h3 class="font-heading text-xl font-bold mt-1">Foundation Building</h3>
-                  <p class="text-cs-muted text-sm mt-1">Deepen understanding — altcoins, DCA mastery, Bitcoin conviction, and your first portfolio allocation.</p>
+                  <p class="text-\[#807F86\] text-sm mt-1">Deepen understanding — altcoins, DCA mastery, Bitcoin conviction, and your first portfolio allocation.</p>
                 </div>
-                <svg class="chevron w-5 h-5 text-cs-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                <svg class="chevron w-5 h-5 text-\[#807F86\] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </div>
             </div>
           </div>
           <div class="stage-content">
             <div class="px-5 pb-5 space-y-3">
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s3-altcoins" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
@@ -308,10 +549,10 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
                     <span class="label-tag text-cs-orange text-xs">🆕</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Deep-dive on why altcoins ≠ equities. No ownership, no vetting, most fail. 80%+ of members need this reframe. Embeds: "Altcoins = tech startups" framework.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Deep-dive on why altcoins ≠ equities. No ownership, no vetting, most fail. 80%+ of members need this reframe. Embeds: "Altcoins = tech startups" framework.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s3-dcamaster" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
@@ -319,38 +560,38 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
                     <span class="label-tag text-cs-orange text-xs">🆕</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Practical DCA setup with automation guides per exchange. Removes emotional barriers to executing. "Take the emotion out of it."</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Practical DCA setup with automation guides per exchange. Removes emotional barriers to executing. "Take the emotion out of it."</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s3-bitcoin" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Bitcoin Module (Deep Dive)</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Conviction framework. Why Bitcoin is different from everything else. Embeds: "The 5-Year Gun-to-Head Test" and "Bitcoin: Hold. Altcoins: Trade."</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Conviction framework. Why Bitcoin is different from everything else. Embeds: "The 5-Year Gun-to-Head Test" and "Bitcoin: Hold. Altcoins: Trade."</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s3-portfolio" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Portfolio Allocation (Calculator Tool)</span>
                     <span class="status-built text-xs px-2 py-0.5 rounded-full font-mono">✅ Built</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Interactive portfolio allocation calculator — input risk tolerance, capital, time horizon. Output: suggested BTC/altcoin/stablecoin split.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Interactive portfolio allocation calculator — input risk tolerance, capital, time horizon. Output: suggested BTC/altcoin/stablecoin split.</p>
                   <a href="/portfolio-calculator.html" class="text-cs-orange text-xs hover:underline mt-1 inline-block">→ Open Portfolio Calculator</a>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s3-1on1" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">First 1-on-1 Analyst Call</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Personalised strategy session with assigned analyst. Review portfolio, set allocation, discuss risk profile. Members value these enormously.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Personalised strategy session with assigned analyst. Review portfolio, set allocation, discuss risk profile. Members value these enormously.</p>
                 </div>
               </div>
             </div>
@@ -358,7 +599,7 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
         </div>
 
         <!-- Stage 4: Self-Custody -->
-        <div class="stage-card bg-cs-card border border-cs-border rounded-xl mb-4 cursor-pointer" onclick="toggleStage(this)" data-stage="4">
+        <div class="stage-card bg-white border border-\[#E8E8EA\] rounded-xl mb-4 cursor-pointer" onclick="toggleStage(this)" data-stage="4">
           <div class="flex items-start gap-4 p-5">
             <div class="stage-node w-12 h-12 rounded-full bg-cs-green/20 border-2 border-cs-green flex items-center justify-center text-cs-green font-bold text-lg font-mono flex-shrink-0 -ml-16">4</div>
             <div class="flex-1 min-w-0">
@@ -366,62 +607,62 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
                 <div>
                   <span class="label-tag text-cs-green text-xs font-bold uppercase tracking-wider">Stage 4 · Month 2–3</span>
                   <h3 class="font-heading text-xl font-bold mt-1">Self-Custody</h3>
-                  <p class="text-cs-muted text-sm mt-1">Be your own bank — hardware wallets, cold storage, and the security mindset that protects your wealth.</p>
+                  <p class="text-\[#807F86\] text-sm mt-1">Be your own bank — hardware wallets, cold storage, and the security mindset that protects your wealth.</p>
                 </div>
-                <svg class="chevron w-5 h-5 text-cs-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                <svg class="chevron w-5 h-5 text-\[#807F86\] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </div>
             </div>
           </div>
           <div class="stage-content">
             <div class="px-5 pb-5 space-y-3">
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s4-custody101" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Self-Custody 101 Module</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Hot vs cold wallets, why self-custody matters, when to move off exchange. #1 unmet educational need across all members.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Hot vs cold wallets, why self-custody matters, when to move off exchange. #1 unmet educational need across all members.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s4-hwwallet" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Hardware Wallet Purchase + Setup</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Which wallet to buy, where to buy from (only official sources), unboxing and initialisation guide.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Which wallet to buy, where to buy from (only official sources), unboxing and initialisation guide.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s4-transfer" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">First Transfer to Cold Wallet (Guided)</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Step-by-step walkthrough: exchange → hardware wallet. Small test amount first. Verify on blockchain explorer.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Step-by-step walkthrough: exchange → hardware wallet. Small test amount first. Verify on blockchain explorer.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s4-seed" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Seed Phrase Backup Protocols</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Metal backup, multiple locations, never digital. What to do and — critically — what never to do with your seed phrase.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Metal backup, multiple locations, never digital. What to do and — critically — what never to do with your seed phrase.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s4-paranoia" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Paranoia = Zeros Framework</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">"The level of paranoia should be equal to the number of zeros you're trying to protect." Scales security advice proportionally.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">"The level of paranoia should be equal to the number of zeros you're trying to protect." Scales security advice proportionally.</p>
                 </div>
               </div>
             </div>
@@ -429,7 +670,7 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
         </div>
 
         <!-- Stage 5: Graduation Gate -->
-        <div class="stage-card bg-cs-card border-2 border-cs-orange/40 rounded-xl mb-4 cursor-pointer" onclick="toggleStage(this)" data-stage="5">
+        <div class="stage-card bg-white border-2 border-cs-orange/40 rounded-xl mb-4 cursor-pointer" onclick="toggleStage(this)" data-stage="5">
           <div class="flex items-start gap-4 p-5">
             <div class="stage-node stage-node-active w-12 h-12 rounded-full bg-cs-orange/20 border-2 border-cs-orange flex items-center justify-center text-cs-orange font-bold text-lg font-mono flex-shrink-0 -ml-16">🔓</div>
             <div class="flex-1 min-w-0">
@@ -437,47 +678,47 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
                 <div>
                   <span class="label-tag text-cs-orange text-xs font-bold uppercase tracking-wider">Stage 5 · Graduation Gate</span>
                   <h3 class="font-heading text-xl font-bold mt-1">Graduation to Level 2</h3>
-                  <p class="text-cs-muted text-sm mt-1">Complete the foundation. Get sign-off. Unlock advanced strategies.</p>
+                  <p class="text-\[#807F86\] text-sm mt-1">Complete the foundation. Get sign-off. Unlock advanced strategies.</p>
                 </div>
-                <svg class="chevron w-5 h-5 text-cs-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                <svg class="chevron w-5 h-5 text-\[#807F86\] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </div>
             </div>
           </div>
           <div class="stage-content">
             <div class="px-5 pb-5 space-y-3">
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s5-checklist" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Completion Checklist Review</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Automated review of all Level 1 modules completed. Module tick-off, not tests — members progress by completing the work.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Automated review of all Level 1 modules completed. Module tick-off, not tests — members progress by completing the work.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s5-signoff" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Analyst Sign-Off</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">1-on-1 session with analyst to confirm readiness. Review strategy workbook and personal framework outputs.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">1-on-1 session with analyst to confirm readiness. Review strategy workbook and personal framework outputs.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s5-unlock" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Unlock Level 2 Content</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Access to yield, staking, DeFi, borrowing, advanced tax, and multi-entity strategies. The "CEX only" restriction lifts.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Access to yield, staking, DeFi, borrowing, advanced tax, and multi-entity strategies. The "CEX only" restriction lifts.</p>
                 </div>
               </div>
               <div class="bg-cs-orange/10 border border-cs-orange/20 rounded-lg p-3 mt-2">
                 <p class="text-cs-orange text-xs font-bold font-mono uppercase">🚫 Beginner Rule Reminder</p>
-                <p class="text-cs-muted text-xs mt-1">Until this gate is passed: No yield · No staking · No DeFi · No borrowing. Build confidence first.</p>
+                <p class="text-\[#807F86\] text-xs mt-1">Until this gate is passed: No yield · No staking · No DeFi · No borrowing. Build confidence first.</p>
               </div>
             </div>
           </div>
@@ -491,13 +732,13 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
             <div class="w-10 h-10 rounded-full bg-indigo-500/20 border-2 border-indigo-500 flex items-center justify-center text-indigo-400 font-bold text-sm font-mono flex-shrink-0">L2</div>
             <div>
               <h2 class="font-heading text-xl font-bold text-indigo-400">Level 2 — Advanced Track</h2>
-              <p class="text-cs-muted text-xs">Completed all Level 1 steps. Unlocks yield, staking, DeFi, borrowing, and advanced strategies.</p>
+              <p class="text-\[#807F86\] text-xs">Completed all Level 1 steps. Unlocks yield, staking, DeFi, borrowing, and advanced strategies.</p>
             </div>
           </div>
         </div>
 
         <!-- Stage 6: Portfolio Strategy -->
-        <div class="stage-card bg-cs-card border border-cs-border rounded-xl mb-4 cursor-pointer" onclick="toggleStage(this)" data-stage="6">
+        <div class="stage-card bg-white border border-\[#E8E8EA\] rounded-xl mb-4 cursor-pointer" onclick="toggleStage(this)" data-stage="6">
           <div class="flex items-start gap-4 p-5">
             <div class="stage-node w-12 h-12 rounded-full bg-indigo-500/20 border-2 border-indigo-500 flex items-center justify-center text-indigo-400 font-bold text-lg font-mono flex-shrink-0 -ml-16">6</div>
             <div class="flex-1 min-w-0">
@@ -505,35 +746,35 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
                 <div>
                   <span class="label-tag text-indigo-400 text-xs font-bold uppercase tracking-wider">Stage 6 · Advanced</span>
                   <h3 class="font-heading text-xl font-bold mt-1">Portfolio Strategy</h3>
-                  <p class="text-cs-muted text-sm mt-1">Advanced investment frameworks — how CS invests, when to sell, risk-to-reward, and altcoin evaluation.</p>
+                  <p class="text-\[#807F86\] text-sm mt-1">Advanced investment frameworks — how CS invests, when to sell, risk-to-reward, and altcoin evaluation.</p>
                 </div>
-                <svg class="chevron w-5 h-5 text-cs-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                <svg class="chevron w-5 h-5 text-\[#807F86\] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </div>
             </div>
           </div>
           <div class="stage-content">
             <div class="px-5 pb-5 space-y-3">
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s6-invest" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">How We Invest Module</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">CS investment philosophy, portfolio construction, and the thinking behind allocation decisions. Embeds: "High Risk = Both Directions" framework.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">CS investment philosophy, portfolio construction, and the thinking behind allocation decisions. Embeds: "High Risk = Both Directions" framework.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s6-sell" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Sell Strategy + Exit Framework</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">When to sell, why it's your best trade, opportunity cost framework. Embeds: Simon's Polygon loss-cut story. Directly addresses ICP's #1 fear.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">When to sell, why it's your best trade, opportunity cost framework. Embeds: Simon's Polygon loss-cut story. Directly addresses ICP's #1 fear.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s6-risk" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
@@ -541,10 +782,10 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
                     <span class="label-tag text-cs-orange text-xs">🆕</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">"People say 'high risk' but they only hear the upside." Forces members to internalise downside before they allocate.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">"People say 'high risk' but they only hear the upside." Forces members to internalise downside before they allocate.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s6-tokenomics" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
@@ -552,7 +793,7 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
                     <span class="label-tag text-cs-orange text-xs">🆕</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Fee generation, buybacks, utility, real product-market fit. HYPE as case study. Required for informed altcoin evaluation.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Fee generation, buybacks, utility, real product-market fit. HYPE as case study. Required for informed altcoin evaluation.</p>
                 </div>
               </div>
             </div>
@@ -560,7 +801,7 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
         </div>
 
         <!-- Stage 7: Yield & DeFi -->
-        <div class="stage-card bg-cs-card border border-cs-border rounded-xl mb-4 cursor-pointer" onclick="toggleStage(this)" data-stage="7">
+        <div class="stage-card bg-white border border-\[#E8E8EA\] rounded-xl mb-4 cursor-pointer" onclick="toggleStage(this)" data-stage="7">
           <div class="flex items-start gap-4 p-5">
             <div class="stage-node w-12 h-12 rounded-full bg-indigo-500/20 border-2 border-indigo-500 flex items-center justify-center text-indigo-400 font-bold text-lg font-mono flex-shrink-0 -ml-16">7</div>
             <div class="flex-1 min-w-0">
@@ -568,25 +809,25 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
                 <div>
                   <span class="label-tag text-indigo-400 text-xs font-bold uppercase tracking-wider">Stage 7 · Advanced</span>
                   <h3 class="font-heading text-xl font-bold mt-1">Yield & DeFi</h3>
-                  <p class="text-cs-muted text-sm mt-1">Where does the yield come from? Staking, stablecoins, DeFi, and borrowing strategies — with full risk awareness.</p>
+                  <p class="text-\[#807F86\] text-sm mt-1">Where does the yield come from? Staking, stablecoins, DeFi, and borrowing strategies — with full risk awareness.</p>
                 </div>
-                <svg class="chevron w-5 h-5 text-cs-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                <svg class="chevron w-5 h-5 text-\[#807F86\] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </div>
             </div>
           </div>
           <div class="stage-content">
             <div class="px-5 pb-5 space-y-3">
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s7-yield" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Yield & Staking Module</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">What staking is, how it works, risks and rewards. Clear distinction between native staking and "staking" as marketing.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">What staking is, how it works, risks and rewards. Clear distinction between native staking and "staking" as marketing.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s7-defi" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
@@ -594,20 +835,20 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
                     <span class="label-tag text-cs-orange text-xs">🆕</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">"Where does the money come from?" Members hear "6% on USDC" but have no understanding of mechanics or risks.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">"Where does the money come from?" Members hear "6% on USDC" but have no understanding of mechanics or risks.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s7-stable" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Stablecoin Strategies</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">USDC vs USDT, on-chain vs CeFi yields, risk laddering, and how to park capital productively during bear markets.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">USDC vs USDT, on-chain vs CeFi yields, risk laddering, and how to park capital productively during bear markets.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s7-borrow" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
@@ -615,7 +856,7 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
                     <span class="label-tag text-cs-orange text-xs">🆕</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Opportunities & margin call risks (Ledn, Block Earner). Growing interest but zero understanding of liquidation risks. "You cannot earn a yield on Bitcoin."</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Opportunities & margin call risks (Ledn, Block Earner). Growing interest but zero understanding of liquidation risks. "You cannot earn a yield on Bitcoin."</p>
                 </div>
               </div>
             </div>
@@ -623,7 +864,7 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
         </div>
 
         <!-- Stage 8: Advanced Topics -->
-        <div class="stage-card bg-cs-card border border-cs-border rounded-xl mb-4 cursor-pointer" onclick="toggleStage(this)" data-stage="8">
+        <div class="stage-card bg-white border border-\[#E8E8EA\] rounded-xl mb-4 cursor-pointer" onclick="toggleStage(this)" data-stage="8">
           <div class="flex items-start gap-4 p-5">
             <div class="stage-node w-12 h-12 rounded-full bg-indigo-500/20 border-2 border-indigo-500 flex items-center justify-center text-indigo-400 font-bold text-lg font-mono flex-shrink-0 -ml-16">8</div>
             <div class="flex-1 min-w-0">
@@ -631,15 +872,15 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
                 <div>
                   <span class="label-tag text-indigo-400 text-xs font-bold uppercase tracking-wider">Stage 8 · Advanced</span>
                   <h3 class="font-heading text-xl font-bold mt-1">Advanced Topics</h3>
-                  <p class="text-cs-muted text-sm mt-1">Emerging opportunities — RWA tokenisation, technical analysis, advanced portfolio management, and market cycle positioning.</p>
+                  <p class="text-\[#807F86\] text-sm mt-1">Emerging opportunities — RWA tokenisation, technical analysis, advanced portfolio management, and market cycle positioning.</p>
                 </div>
-                <svg class="chevron w-5 h-5 text-cs-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                <svg class="chevron w-5 h-5 text-\[#807F86\] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </div>
             </div>
           </div>
           <div class="stage-content">
             <div class="px-5 pb-5 space-y-3">
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s8-rwa" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
@@ -647,37 +888,37 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
                     <span class="label-tag text-cs-orange text-xs">🆕</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Emerging topic: gold/silver on-chain, RWA protocols. Members hearing about it but don't understand the mechanics or risks.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Emerging topic: gold/silver on-chain, RWA protocols. Members hearing about it but don't understand the mechanics or risks.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s8-ta" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Technical Analysis Basics</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Reading TradingView charts, support/resistance, trend lines. Framed correctly: "Use TA as a tool, not a strategy. 95% of day traders lose money."</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Reading TradingView charts, support/resistance, trend lines. Framed correctly: "Use TA as a tool, not a strategy. 95% of day traders lose money."</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s8-advport" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Advanced Portfolio Management</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Multi-entity structures, tax optimisation, rebalancing strategies, and the advanced 8-step strategy process.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Multi-entity structures, tax optimisation, rebalancing strategies, and the advanced 8-step strategy process.</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 bg-cs-bg/50 rounded-lg p-3">
+              <div class="flex items-start gap-3 bg-white/50 rounded-lg p-3">
                 <input type="checkbox" class="build-check mt-0.5" data-key="s8-cycle" onchange="saveCheck(this)">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-semibold text-sm">Market Cycle Positioning</span>
                     <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
                   </div>
-                  <p class="text-cs-muted text-xs mt-1">Where are we in the cycle? Deploy, wait, or de-risk. Using the CS traffic light framework for strategic positioning.</p>
+                  <p class="text-\[#807F86\] text-xs mt-1">Where are we in the cycle? Deploy, wait, or de-risk. Using the CS traffic light framework for strategic positioning.</p>
                 </div>
               </div>
             </div>
@@ -689,7 +930,7 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
       <!-- Tools & Resources -->
       <h2 class="text-2xl font-bold mb-4 mt-10">Tools & Resources Status</h2>
       <div class="grid md:grid-cols-2 gap-4 mb-8">
-        <div class="bg-cs-card border border-cs-green/30 rounded-xl p-5">
+        <div class="bg-white border border-cs-green/30 rounded-xl p-5">
           <div class="flex items-center gap-3 mb-2">
             <span class="text-xl">🧮</span>
             <div>
@@ -697,10 +938,10 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
               <span class="status-built text-xs px-2 py-0.5 rounded-full font-mono">✅ Built</span>
             </div>
           </div>
-          <p class="text-cs-muted text-xs">Input risk tolerance, capital, time horizon → suggested BTC/altcoin/stablecoin split.</p>
+          <p class="text-\[#807F86\] text-xs">Input risk tolerance, capital, time horizon → suggested BTC/altcoin/stablecoin split.</p>
           <a href="/portfolio-calculator.html" class="text-cs-orange text-xs hover:underline mt-2 inline-block">→ Open Calculator</a>
         </div>
-        <div class="bg-cs-card border border-cs-orange/30 rounded-xl p-5">
+        <div class="bg-white border border-cs-orange/30 rounded-xl p-5">
           <div class="flex items-center gap-3 mb-2">
             <span class="text-xl">🔍</span>
             <div>
@@ -708,9 +949,9 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
               <span class="status-dev text-xs px-2 py-0.5 rounded-full font-mono">🔨 In Development</span>
             </div>
           </div>
-          <p class="text-cs-muted text-xs">Help members find research posts, analyst content, and modules. Tim Barnes building.</p>
+          <p class="text-\[#807F86\] text-xs">Help members find research posts, analyst content, and modules. Tim Barnes building.</p>
         </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5">
           <div class="flex items-center gap-3 mb-2">
             <span class="text-xl">🚦</span>
             <div>
@@ -718,9 +959,9 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
               <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
             </div>
           </div>
-          <p class="text-cs-muted text-xs">🟢 Deploy / 🟡 Wait / 🔴 De-risk — updated by analysts. Members want clear signals.</p>
+          <p class="text-\[#807F86\] text-xs">🟢 Deploy / 🟡 Wait / 🔴 De-risk — updated by analysts. Members want clear signals.</p>
         </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5">
           <div class="flex items-center gap-3 mb-2">
             <span class="text-xl">📧</span>
             <div>
@@ -728,21 +969,21 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
               <span class="status-planned text-xs px-2 py-0.5 rounded-full font-mono">📋 Planned</span>
             </div>
           </div>
-          <p class="text-cs-muted text-xs">"Latest from Your Analyst" push notifications and email digests. Members aren't finding content.</p>
+          <p class="text-\[#807F86\] text-xs">"Latest from Your Analyst" push notifications and email digests. Members aren't finding content.</p>
         </div>
       </div>
 
       <!-- Key Insight from Education Calls -->
-      <div class="border-l-4 border-cs-orange bg-cs-card rounded-r-xl p-5 mb-4">
-        <p class="text-cs-muted italic text-sm">"I'm a dead set novice." — Nigel, new member with $200K to deploy</p>
+      <div class="border-l-4 border-cs-orange bg-white rounded-r-xl p-5 mb-4">
+        <p class="text-\[#807F86\] italic text-sm">"I'm a dead set novice." — Nigel, new member with $200K to deploy</p>
         <p class="text-cs-orange text-xs mt-2 font-mono">The gap between joining and competence is the #1 churn risk. This journey closes that gap.</p>
       </div>
-      <div class="border-l-4 border-cs-green bg-cs-card rounded-r-xl p-5 mb-4">
-        <p class="text-cs-muted italic text-sm">"I feel like an idiot just being new and posting some guide that I follow."</p>
+      <div class="border-l-4 border-cs-green bg-white rounded-r-xl p-5 mb-4">
+        <p class="text-\[#807F86\] italic text-sm">"I feel like an idiot just being new and posting some guide that I follow."</p>
         <p class="text-cs-green text-xs mt-2 font-mono">Community intimidation is a silent churn risk → Platinum Beginners Lounge on Circle solves this.</p>
       </div>
-      <div class="border-l-4 border-indigo-500 bg-cs-card rounded-r-xl p-5">
-        <p class="text-cs-muted italic text-sm">"We are Collective Shift, a digital asset and Bitcoin education company. We educate you about the space. We're not an advisory firm — we're not telling you what to do."</p>
+      <div class="border-l-4 border-indigo-500 bg-white rounded-r-xl p-5">
+        <p class="text-\[#807F86\] italic text-sm">"We are Collective Shift, a digital asset and Bitcoin education company. We educate you about the space. We're not an advisory firm — we're not telling you what to do."</p>
         <p class="text-indigo-400 text-xs mt-2 font-mono">— Ben Simpson, Founder</p>
       </div>
 

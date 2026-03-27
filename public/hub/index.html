@@ -3,20 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Strategy Hub — Collective Shift</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+
+<title>The Collective Shift Operating System</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+
 <script>
 tailwind.config = {
   theme: {
     extend: {
       colors: {
-        cs: { bg: '#1B1925', card: '#242232', border: '#2E2C3E', orange: '#FC5C03', green: '#08C394', text: '#F9F9F9', muted: '#9B99A9' },
+        cs: {
+          orange: '#FC5C03',
+          'orange-light': '#FC8C4E',
+          'orange-bg': '#FEDECC',
+          'orange-hover': '#FEEEE5',
+          green: '#08C394',
+          purple: '#654FFC',
+          border: '#E8E8EA',
+          text: '#1B1925',
+          secondary: '#4D4C55',
+          muted: '#807F86',
+        }
       },
       fontFamily: {
-        heading: ['Oswald', 'sans-serif'],
-        body: ['Barlow', 'sans-serif'],
+        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+        barlow: ['Barlow', 'sans-serif'],
         mono: ['Source Code Pro', 'monospace'],
+      },
+      borderRadius: {
+        pill: '100px',
       }
     }
   }
@@ -24,7 +41,7 @@ tailwind.config = {
 </script>
 <style>
   body { font-family: 'Barlow', sans-serif; }
-  h1, h2, h3, h4, h5 { font-family: 'Oswald', sans-serif; }
+  h1, h2, h3, h4, h5 { font-family: 'Plus Jakarta Sans', sans-serif; }
   .label-tag { font-family: 'Source Code Pro', monospace; }
   /* Sidebar */
   .sidebar { transition: transform 0.3s ease; }
@@ -40,12 +57,223 @@ tailwind.config = {
   .section-card:hover { transform: translateY(-3px); border-color: #FC5C03; }
 </style>
 </head>
-<body class="bg-cs-bg text-cs-text min-h-screen">
+<body class="bg-white text-\[#1B1925\] min-h-screen">
+<!-- ═══ COLLECTIVE SHIFT TOP NAV ═══ -->
+<style>
+  :root {
+    --csn-h: 56px;
+    --csn-bg: #FFFFFF;
+    --csn-border: #E8E8EA;
+    --csn-text: #1B1925;
+    --csn-muted: #4D4C55;
+    --csn-orange: #FC5C03;
+    --csn-orange-bg: #FEEEE5;
+    --csn-dd-bg: #FFFFFF;
+    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    --csn-z: 9000;
+  }
+  .csn-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--csn-h);
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 0;
+    z-index: var(--csn-z);
+    font-family: 'Plus Jakarta Sans', 'Barlow', sans-serif;
+  }
+  .csn-logo {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--csn-orange);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin-right: 32px;
+    flex-shrink: 0;
+  }
+  .csn-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+  }
+  .csn-item {
+    position: relative;
+  }
+  .csn-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s, background 0.15s;
+    cursor: pointer;
+  }
+  .csn-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-item.active > .csn-link { color: var(--csn-orange); font-weight: 600; }
+  .csn-chevron { transition: transform 0.2s; flex-shrink: 0; }
+  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
+  /* Dropdown */
+  .csn-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 240px;
+    background: var(--csn-dd-bg);
+    border: 1px solid var(--csn-border);
+    border-radius: 12px;
+    box-shadow: var(--csn-dd-shadow);
+    padding: 6px;
+    z-index: calc(var(--csn-z) + 1);
+  }
+  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
+  .csn-dd-item {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+    white-space: nowrap;
+  }
+  .csn-dd-item:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-divider { height: 1px; background: var(--csn-border); margin: 4px 8px; }
+  /* Mobile hamburger */
+  .csn-hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--csn-muted);
+    padding: 4px;
+    margin-left: auto;
+  }
+  /* Mobile drawer */
+  .csn-mobile-menu {
+    display: none;
+    position: fixed;
+    top: var(--csn-h);
+    left: 0; right: 0;
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    padding: 8px 16px 16px;
+    z-index: calc(var(--csn-z) - 1);
+    max-height: calc(100vh - var(--csn-h));
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .csn-mobile-menu.open { display: block; }
+  .csn-mob-link {
+    display: block;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+  }
+  .csn-mob-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-mob-top { font-weight: 600; color: var(--csn-text); margin-top: 4px; }
+  .csn-mob-sub { font-size: 12px; padding-left: 20px; }
+  /* Body offset */
+  body { padding-top: var(--csn-h) !important; }
+  @media (max-width: 1023px) {
+    .csn-nav { display: none; }
+    .csn-hamburger { display: block; }
+  }
+  @media (max-width: 640px) {
+    .csn-logo { font-size: 13px; margin-right: 16px; }
+  }
+</style>
+<nav class="csn-bar" role="navigation" aria-label="Main navigation">
+  <a href="../index.html" class="csn-logo">Collective Shift</a>
+  <div class="csn-nav">
+      <div class="csn-item "><a href="../index.html" class="csn-link">CEO Dashboard</a></div>
+      <div class="csn-item csn-has-dd active">
+        <a href="../hub/operating-system.html" class="csn-link">The Collective Shift Operating System
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../hub/operating-system.html" class="csn-dd-item">Operating System Overview</a><a href="../hub/modules/m1-foundations.html" class="csn-dd-item">Module 1: Foundations</a><a href="../hub/modules/m2-bitcoin.html" class="csn-dd-item">Module 2: Bitcoin</a><a href="../hub/modules/m3-altcoins.html" class="csn-dd-item">Module 3: Digital Assets</a><a href="../hub/modules/m4-how-we-invest.html" class="csn-dd-item">Module 4: How We Invest</a><a href="../hub/modules/m5-buy-sell.html" class="csn-dd-item">Module 5: Buy & Sell</a><a href="../hub/modules/m6-send-store.html" class="csn-dd-item">Module 6: Send & Store</a><a href="../hub/modules/m7-tax.html" class="csn-dd-item">Module 7: Tax</a><a href="../hub/modules/m8-sell-strategy.html" class="csn-dd-item">Module 8: Exit Strategy</a><div class="csn-divider"></div><a href="../8-step-strategy-workbook.html" class="csn-dd-item">8-Step Strategy Workbook</a><a href="../8-step-strategy-workbook-L1.html" class="csn-dd-item">↳ Level 1 Workbook</a><a href="../8-step-strategy-workbook-L2.html" class="csn-dd-item">↳ Level 2 Workbook</a><a href="../portfolio-calculator.html" class="csn-dd-item">Portfolio Allocation Calculator</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="../hub/products.html" class="csn-link">Product
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../hub/products.html#platinum" class="csn-dd-item">Platinum</a><a href="../hub/products.html#accelerator" class="csn-dd-item">Accelerator</a><a href="../hub/beginner-journey.html" class="csn-dd-item">Beginner's Journey</a><a href="../hub/products.html#two-track" class="csn-dd-item">Two-Track System</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="../hub/youtube-strategy.html" class="csn-link">Social Media
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../hub/youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a><a href="../hub/social-strategy.html" class="csn-dd-item">Social Strategy</a><a href="../hub/instagram-strategy.html" class="csn-dd-item">Instagram Strategy</a><div class="csn-divider"></div><a href="../hub/brand.html" class="csn-dd-item">Brand & Voice</a><a href="../hub/positioning.html" class="csn-dd-item">Positioning & ICP</a><a href="../hub/competitors.html" class="csn-dd-item">Competitors</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="../travis-briefing-2026-03-27.html" class="csn-link">Documents
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a><a href="../cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a><a href="../q2-market-briefing.html" class="csn-dd-item">Q2 Market Briefing</a><a href="../webinar-q2-2026-is-now-the-time.html" class="csn-dd-item">Webinar: Is Now The Time?</a></div>
+      </div>
+  </div>
+  <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+<div id="csnMobileMenu" class="csn-mobile-menu">
+  <a href="../index.html" class="csn-mob-link csn-mob-top">CEO Dashboard</a>
+<a href="../hub/operating-system.html" class="csn-mob-link csn-mob-top">The Collective Shift Operating System</a>
+<a href="../hub/operating-system.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Operating System Overview</a>
+<a href="../hub/modules/m1-foundations.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 1: Foundations</a>
+<a href="../hub/modules/m2-bitcoin.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 2: Bitcoin</a>
+<a href="../hub/modules/m3-altcoins.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 3: Digital Assets</a>
+<a href="../hub/modules/m4-how-we-invest.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 4: How We Invest</a>
+<a href="../hub/modules/m5-buy-sell.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 5: Buy & Sell</a>
+<a href="../hub/modules/m6-send-store.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 6: Send & Store</a>
+<a href="../hub/modules/m7-tax.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 7: Tax</a>
+<a href="../hub/modules/m8-sell-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 8: Exit Strategy</a>
+<a href="../8-step-strategy-workbook.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;8-Step Strategy Workbook</a>
+<a href="../8-step-strategy-workbook-L1.html" class="csn-mob-link csn-mob-sub">↳ Level 1 Workbook</a>
+<a href="../8-step-strategy-workbook-L2.html" class="csn-mob-link csn-mob-sub">↳ Level 2 Workbook</a>
+<a href="../portfolio-calculator.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Portfolio Allocation Calculator</a>
+<a href="../hub/products.html" class="csn-mob-link csn-mob-top">Product</a>
+<a href="../hub/products.html#platinum" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Platinum</a>
+<a href="../hub/products.html#accelerator" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Accelerator</a>
+<a href="../hub/beginner-journey.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Beginner's Journey</a>
+<a href="../hub/products.html#two-track" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Two-Track System</a>
+<a href="../hub/youtube-strategy.html" class="csn-mob-link csn-mob-top">Social Media</a>
+<a href="../hub/youtube-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;YouTube Strategy</a>
+<a href="../hub/social-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Social Strategy</a>
+<a href="../hub/instagram-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Instagram Strategy</a>
+<a href="../hub/brand.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Brand & Voice</a>
+<a href="../hub/positioning.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Positioning & ICP</a>
+<a href="../hub/competitors.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Competitors</a>
+<a href="../travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-top">Documents</a>
+<a href="../travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Travis CGO Briefing</a>
+<a href="../cs-education-system-overview.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Education System Overview</a>
+<a href="../q2-market-briefing.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Q2 Market Briefing</a>
+<a href="../webinar-q2-2026-is-now-the-time.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Webinar: Is Now The Time?</a>
+</div>
+<!-- ═══ END TOP NAV ═══ -->
+
 
 <!-- Mobile Header -->
-<div class="lg:hidden flex items-center justify-between px-4 py-3 bg-cs-card border-b border-cs-border sticky top-0 z-40">
+<div class="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-\[#E8E8EA\] sticky top-0 z-40">
   <span class="font-heading text-cs-orange text-lg font-bold tracking-wide">COLLECTIVE SHIFT</span>
-  <button onclick="document.getElementById('sidebar').classList.toggle('open')" class="text-cs-muted hover:text-cs-orange">
+  <button onclick="document.getElementById('sidebar').classList.toggle('open')" class="text-\[#807F86\] hover:text-cs-orange">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
   </button>
 </div>
@@ -55,50 +283,50 @@ tailwind.config = {
 
 <div class="flex">
   <!-- Sidebar -->
-  <aside id="sidebar" class="sidebar w-64 min-h-screen bg-cs-card border-r border-cs-border flex-shrink-0 flex flex-col">
-    <div class="p-5 border-b border-cs-border">
+  <aside id="sidebar" class="sidebar w-64 min-h-screen bg-white border-r border-\[#E8E8EA\] flex-shrink-0 flex flex-col">
+    <div class="p-5 border-b border-\[#E8E8EA\]">
       <a href="index.html" class="font-heading text-cs-orange text-xl font-bold tracking-wider">COLLECTIVE SHIFT</a>
-      <p class="text-cs-muted text-xs mt-1 font-mono">STRATEGY HUB</p>
+      <p class="text-\[#807F86\] text-xs mt-1 font-mono">THE SHIFT OS</p>
     </div>
     <nav class="flex-1 py-4 px-3 space-y-1">
-      <a href="/" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent">
+      <a href="/" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent">
         <span>📊</span> Dashboard
       </a>
       <a href="index.html" class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium border-l-2 border-transparent">
         <span>🏠</span> Home
       </a>
-      <a href="positioning.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent">
+      <a href="positioning.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent">
         <span>🎯</span> Positioning & ICP
       </a>
-      <a href="operating-system.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent">
+      <a href="operating-system.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent">
         <span>⚙️</span> Operating System
       </a>
-      <a href="products.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent">
+      <a href="products.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent">
         <span>💎</span> Products
       </a>
-      <a href="social-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent">
-      <a href="youtube-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🎬</span> YouTube Strategy</a>
+      <a href="social-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent">
+      <a href="youtube-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🎬</span> YouTube Strategy</a>
         <span>📱</span> Social & Content
       </a>
-      <a href="competitors.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent">
+      <a href="competitors.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent">
         <span>🏆</span> Competitive Intel
       </a>
-      <a href="brand.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent">
+      <a href="brand.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent">
         <span>🎨</span> Brand & Voice
       </a>
     </nav>
-    <div class="p-4 border-t border-cs-border">
-      <p class="text-cs-muted text-xs font-mono">v2.0 · March 2026</p>
-      <p class="text-cs-muted text-xs">Internal use only</p>
+    <div class="p-4 border-t border-\[#E8E8EA\]">
+      <p class="text-\[#807F86\] text-xs font-mono">v2.0 · March 2026</p>
+      <p class="text-\[#807F86\] text-xs">Internal use only</p>
     </div>
   </aside>
 
   <!-- Main Content -->
   <main class="flex-1 min-h-screen">
     <!-- Breadcrumb -->
-    <div class="px-6 lg:px-10 py-3 border-b border-cs-border bg-cs-card/50">
-      <div class="flex items-center gap-2 text-xs font-mono text-cs-muted">
-        <span class="text-cs-orange">Strategy Hub</span>
+    <div class="px-6 lg:px-10 py-3 border-b border-\[#E8E8EA\] bg-white/50">
+      <div class="flex items-center gap-2 text-xs font-mono text-\[#807F86\]">
+        <span class="text-cs-orange">The Collective Shift Operating System</span>
         <span>/</span>
         <span>Home</span>
       </div>
@@ -108,100 +336,100 @@ tailwind.config = {
       <!-- Hero -->
       <div class="mb-10">
         <p class="label-tag text-cs-orange text-xs font-semibold tracking-widest uppercase mb-2">Overview</p>
-        <h1 class="text-4xl lg:text-5xl font-bold tracking-tight mb-3">Strategy Hub</h1>
-        <p class="text-cs-muted text-lg max-w-2xl">To be the world's most trusted digital asset education company, empowering members to build generational wealth through a systematic, research-driven framework.</p>
+        <h1 class="text-4xl lg:text-5xl font-bold tracking-tight mb-3">The Collective Shift Operating System</h1>
+        <p class="text-\[#807F86\] text-lg max-w-2xl">To be the world's most trusted digital asset education company, empowering members to build generational wealth through a systematic, research-driven framework.</p>
       </div>
 
       <!-- Key Metrics -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-        <div class="stat-card bg-cs-card border border-cs-border rounded-xl p-5 text-center">
+        <div class="stat-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 text-center">
           <div class="text-3xl font-heading font-bold text-cs-orange">1,163</div>
-          <div class="text-cs-muted text-xs uppercase tracking-wider mt-1 font-mono">Total Members</div>
+          <div class="text-\[#807F86\] text-xs uppercase tracking-wider mt-1 font-mono">Total Members</div>
         </div>
-        <div class="stat-card bg-cs-card border border-cs-border rounded-xl p-5 text-center">
+        <div class="stat-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 text-center">
           <div class="text-3xl font-heading font-bold text-cs-orange">402</div>
-          <div class="text-cs-muted text-xs uppercase tracking-wider mt-1 font-mono">Platinum Members</div>
+          <div class="text-\[#807F86\] text-xs uppercase tracking-wider mt-1 font-mono">Platinum Members</div>
         </div>
-        <div class="stat-card bg-cs-card border border-cs-border rounded-xl p-5 text-center">
+        <div class="stat-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 text-center">
           <div class="text-3xl font-heading font-bold text-cs-green">A$7.3M</div>
-          <div class="text-cs-muted text-xs uppercase tracking-wider mt-1 font-mono">ARR</div>
+          <div class="text-\[#807F86\] text-xs uppercase tracking-wider mt-1 font-mono">ARR</div>
         </div>
-        <div class="stat-card bg-cs-card border border-cs-border rounded-xl p-5 text-center">
+        <div class="stat-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 text-center">
           <div class="text-3xl font-heading font-bold text-cs-green">203%</div>
-          <div class="text-cs-muted text-xs uppercase tracking-wider mt-1 font-mono">YoY Growth</div>
+          <div class="text-\[#807F86\] text-xs uppercase tracking-wider mt-1 font-mono">YoY Growth</div>
         </div>
       </div>
 
       <!-- Quick Links -->
       <h2 class="text-2xl font-bold mb-5 tracking-tight">Sections</h2>
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
-        <a href="positioning.html" class="section-card bg-cs-card border border-cs-border rounded-xl p-5 block">
+        <a href="positioning.html" class="section-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 block">
           <div class="text-2xl mb-2">🎯</div>
           <h3 class="text-lg font-bold mb-1">Positioning & ICP</h3>
-          <p class="text-cs-muted text-sm">Who we are, who we're for, validated "Why", acquisition path, and language guide.</p>
+          <p class="text-\[#807F86\] text-sm">Who we are, who we're for, validated "Why", acquisition path, and language guide.</p>
         </a>
-        <a href="operating-system.html" class="section-card bg-cs-card border border-cs-border rounded-xl p-5 block">
+        <a href="operating-system.html" class="section-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 block">
           <div class="text-2xl mb-2">⚙️</div>
           <h3 class="text-lg font-bold mb-1">Operating System</h3>
-          <p class="text-cs-muted text-sm">The 7-Step Shift OS, 2-track system, onboarding path, module deep-dives, and graduation model.</p>
+          <p class="text-\[#807F86\] text-sm">The 7-Step Shift OS, 2-track system, onboarding path, module deep-dives, and graduation model.</p>
         </a>
-        <a href="products.html" class="section-card bg-cs-card border border-cs-border rounded-xl p-5 block">
+        <a href="products.html" class="section-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 block">
           <div class="text-2xl mb-2">💎</div>
           <h3 class="text-lg font-bold mb-1">Products</h3>
-          <p class="text-cs-muted text-sm">Accelerator, Platinum, and Black Tier — pricing, features, tier comparison, and the four pillars.</p>
+          <p class="text-\[#807F86\] text-sm">Accelerator, Platinum, and Black Tier — pricing, features, tier comparison, and the four pillars.</p>
         </a>
-        <a href="social-strategy.html" class="section-card bg-cs-card border border-cs-border rounded-xl p-5 block">
+        <a href="social-strategy.html" class="section-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 block">
           <div class="text-2xl mb-2">📱</div>
           <h3 class="text-lg font-bold mb-1">Social & Content Strategy</h3>
-          <p class="text-cs-muted text-sm">YouTube strategy, Instagram playbook, 40 video ideas, 12-week calendar, and content pillars.</p>
+          <p class="text-\[#807F86\] text-sm">YouTube strategy, Instagram playbook, 40 video ideas, 12-week calendar, and content pillars.</p>
         </a>
-        <a href="competitors.html" class="section-card bg-cs-card border border-cs-border rounded-xl p-5 block">
+        <a href="competitors.html" class="section-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 block">
           <div class="text-2xl mb-2">🏆</div>
           <h3 class="text-lg font-bold mb-1">Competitive Intel</h3>
-          <p class="text-cs-muted text-sm">Invest Diva, Decentralized Masters, Yieldschool — analysis, positioning matrix, and where we win.</p>
+          <p class="text-\[#807F86\] text-sm">Invest Diva, Decentralized Masters, Yieldschool — analysis, positioning matrix, and where we win.</p>
         </a>
-        <a href="brand.html" class="section-card bg-cs-card border border-cs-border rounded-xl p-5 block">
+        <a href="brand.html" class="section-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 block">
           <div class="text-2xl mb-2">🎨</div>
           <h3 class="text-lg font-bold mb-1">Brand & Voice</h3>
-          <p class="text-cs-muted text-sm">Voice guide, language do/don't table, messaging framework, and outcome-based headline options.</p>
+          <p class="text-\[#807F86\] text-sm">Voice guide, language do/don't table, messaging framework, and outcome-based headline options.</p>
         </a>
       </div>
 
       <!-- Latest Updates -->
       <h2 class="text-2xl font-bold mb-5 tracking-tight">Latest Updates</h2>
-      <div class="bg-cs-card border border-cs-border rounded-xl p-6 space-y-4">
+      <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-6 space-y-4">
         <div class="flex gap-4 items-start">
           <span class="label-tag text-cs-green text-xs font-semibold bg-cs-green/10 px-2 py-1 rounded whitespace-nowrap">Mar 27</span>
           <div>
-            <p class="font-semibold text-sm">Strategy Hub v2.0 launched</p>
-            <p class="text-cs-muted text-sm">Multi-page hub replaces single-page strategy dashboard. All content migrated and updated.</p>
+            <p class="font-semibold text-sm">The Collective Shift Operating System v2.0 launched</p>
+            <p class="text-\[#807F86\] text-sm">Multi-page hub replaces single-page strategy dashboard. All content migrated and updated.</p>
           </div>
         </div>
         <div class="flex gap-4 items-start">
           <span class="label-tag text-cs-orange text-xs font-semibold bg-cs-orange/10 px-2 py-1 rounded whitespace-nowrap">Mar 27</span>
           <div>
             <p class="font-semibold text-sm">Language rule enforced: "digital assets" everywhere</p>
-            <p class="text-cs-muted text-sm">All content updated. "Bitcoin" stays as Bitcoin. Never use "crypto" in external-facing content.</p>
+            <p class="text-\[#807F86\] text-sm">All content updated. "Bitcoin" stays as Bitcoin. Never use "crypto" in external-facing content.</p>
           </div>
         </div>
         <div class="flex gap-4 items-start">
-          <span class="label-tag text-cs-muted text-xs font-semibold bg-cs-card px-2 py-1 rounded whitespace-nowrap">Mar 27</span>
+          <span class="label-tag text-\[#807F86\] text-xs font-semibold bg-white px-2 py-1 rounded whitespace-nowrap">Mar 27</span>
           <div>
             <p class="font-semibold text-sm">ICP updated with validated "Why" from Dee call</p>
-            <p class="text-cs-muted text-sm">Six validated reasons HNW investors join. Acquisition path confirmed: YouTube → comparison → CS.</p>
+            <p class="text-\[#807F86\] text-sm">Six validated reasons HNW investors join. Acquisition path confirmed: YouTube → comparison → CS.</p>
           </div>
         </div>
         <div class="flex gap-4 items-start">
-          <span class="label-tag text-cs-muted text-xs font-semibold bg-cs-card px-2 py-1 rounded whitespace-nowrap">Mar 26</span>
+          <span class="label-tag text-\[#807F86\] text-xs font-semibold bg-white px-2 py-1 rounded whitespace-nowrap">Mar 26</span>
           <div>
             <p class="font-semibold text-sm">Key metrics updated</p>
-            <p class="text-cs-muted text-sm">1,163 total members · 402 Platinum · A$7.3M ARR · 203% YoY growth.</p>
+            <p class="text-\[#807F86\] text-sm">1,163 total members · 402 Platinum · A$7.3M ARR · 203% YoY growth.</p>
           </div>
         </div>
       </div>
 
       <!-- Core Identity -->
-      <div class="mt-10 bg-cs-card border border-cs-border rounded-xl p-6">
+      <div class="mt-10 bg-white border border-\[#E8E8EA\] rounded-xl p-6">
         <h2 class="text-2xl font-bold mb-4 tracking-tight">Core Identity</h2>
         <div class="grid md:grid-cols-2 gap-6">
           <div>
@@ -215,7 +443,7 @@ tailwind.config = {
           </div>
           <div>
             <h3 class="text-sm font-mono text-red-400 uppercase tracking-wider mb-2">What We Are Not</h3>
-            <ul class="space-y-2 text-sm text-cs-muted">
+            <ul class="space-y-2 text-sm text-\[#807F86\]">
               <li class="flex gap-2"><span class="text-red-400">✗</span> Signals group / speculative gambling</li>
               <li class="flex gap-2"><span class="text-red-400">✗</span> Advertising-funded or token promoters</li>
               <li class="flex gap-2"><span class="text-red-400">✗</span> Shortcuts or tips</li>

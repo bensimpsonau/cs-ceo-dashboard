@@ -3,35 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+
 <title>Collective Shift — CEO Command Centre v7</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+
 <script>
 tailwind.config = {
   theme: {
     extend: {
       colors: {
         cs: {
-          bg: '#1B1925',
-          'bg-card': '#242230',
-          'bg-hover': '#2D2B3A',
           orange: '#FC5C03',
+          'orange-light': '#FC8C4E',
+          'orange-bg': '#FEDECC',
+          'orange-hover': '#FEEEE5',
           green: '#08C394',
-          turquoise: '#0BF4B9',
-          text: '#F9F9F9',
+          purple: '#654FFC',
+          border: '#E8E8EA',
+          text: '#1B1925',
+          secondary: '#4D4C55',
           muted: '#807F86',
-          body: '#4D4C55',
-          border: '#33313F',
-          urgent: '#EF4444',
-          progress: '#F59E0B',
-          done: '#08C394',
-          sidebar: '#16141E',
         }
       },
       fontFamily: {
-        oswald: ['Oswald', 'sans-serif'],
+        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
         barlow: ['Barlow', 'sans-serif'],
         mono: ['Source Code Pro', 'monospace'],
+      },
+      borderRadius: {
+        pill: '100px',
       }
     }
   }
@@ -39,16 +41,16 @@ tailwind.config = {
 </script>
 <style>
   * { box-sizing: border-box; }
-  body { background: #1B1925; color: #F9F9F9; font-family: 'Barlow', sans-serif; }
+  body { background: #FFFFFF; color: #1B1925; font-family: 'Barlow', sans-serif; }
   ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: #1B1925; }
+  ::-webkit-scrollbar-track { background: #FFFFFF; }
   ::-webkit-scrollbar-thumb { background: #33313F; border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: #4D4C55; }
 
   /* Sidebar */
-  .sidebar { width: 240px; min-height: 100vh; background: #16141E; border-right: 1px solid #33313F; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); z-index: 60; }
+  .sidebar { width: 240px; min-height: 100vh; background: #F9F9F9; border-right: 1px solid #E8E8EA; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); z-index: 60; }
   .sidebar-link { display: flex; align-items: center; gap: 12px; padding: 10px 20px; color: #807F86; font-size: 14px; font-weight: 500; transition: all 0.15s ease; border-left: 3px solid transparent; }
-  .sidebar-link:hover { color: #F9F9F9; background: #242230; }
+  .sidebar-link:hover { color: #1B1925; background: #FFFFFF; }
   .sidebar-link.active { color: #FC5C03; border-left-color: #FC5C03; background: rgba(252,92,3,0.06); }
   .sidebar-section { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #4D4C55; padding: 20px 20px 8px; font-weight: 600; }
   @media (max-width: 1023px) {
@@ -60,7 +62,7 @@ tailwind.config = {
 
   /* Priority cards */
   .priority-card { transition: all 0.2s ease; }
-  .priority-card:hover { background: #2D2B3A; border-color: #4D4C55; }
+  .priority-card:hover { background: #F2F2F2; border-color: #4D4C55; }
   .priority-card.dragging { opacity: 0.5; transform: scale(0.98); }
   .priority-card.drag-over { border-top: 2px solid #FC5C03; }
   .priority-detail { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease; opacity: 0; }
@@ -97,27 +99,238 @@ tailwind.config = {
   .nav-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(252,92,3,0.2); }
 
   .bot-card { transition: all 0.15s ease; }
-  .bot-card:hover { background: #2D2B3A; border-color: #4D4C55; }
+  .bot-card:hover { background: #F2F2F2; border-color: #4D4C55; }
 
   .intel-item { transition: all 0.15s ease; }
-  .intel-item:hover { background: #2D2B3A; }
+  .intel-item:hover { background: #F2F2F2; }
 </style>
 </head>
 <body class="min-h-screen">
+<!-- ═══ COLLECTIVE SHIFT TOP NAV ═══ -->
+<style>
+  :root {
+    --csn-h: 56px;
+    --csn-bg: #FFFFFF;
+    --csn-border: #E8E8EA;
+    --csn-text: #1B1925;
+    --csn-muted: #4D4C55;
+    --csn-orange: #FC5C03;
+    --csn-orange-bg: #FEEEE5;
+    --csn-dd-bg: #FFFFFF;
+    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    --csn-z: 9000;
+  }
+  .csn-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--csn-h);
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 0;
+    z-index: var(--csn-z);
+    font-family: 'Plus Jakarta Sans', 'Barlow', sans-serif;
+  }
+  .csn-logo {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--csn-orange);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin-right: 32px;
+    flex-shrink: 0;
+  }
+  .csn-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+  }
+  .csn-item {
+    position: relative;
+  }
+  .csn-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s, background 0.15s;
+    cursor: pointer;
+  }
+  .csn-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-item.active > .csn-link { color: var(--csn-orange); font-weight: 600; }
+  .csn-chevron { transition: transform 0.2s; flex-shrink: 0; }
+  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
+  /* Dropdown */
+  .csn-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 240px;
+    background: var(--csn-dd-bg);
+    border: 1px solid var(--csn-border);
+    border-radius: 12px;
+    box-shadow: var(--csn-dd-shadow);
+    padding: 6px;
+    z-index: calc(var(--csn-z) + 1);
+  }
+  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
+  .csn-dd-item {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+    white-space: nowrap;
+  }
+  .csn-dd-item:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-divider { height: 1px; background: var(--csn-border); margin: 4px 8px; }
+  /* Mobile hamburger */
+  .csn-hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--csn-muted);
+    padding: 4px;
+    margin-left: auto;
+  }
+  /* Mobile drawer */
+  .csn-mobile-menu {
+    display: none;
+    position: fixed;
+    top: var(--csn-h);
+    left: 0; right: 0;
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    padding: 8px 16px 16px;
+    z-index: calc(var(--csn-z) - 1);
+    max-height: calc(100vh - var(--csn-h));
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .csn-mobile-menu.open { display: block; }
+  .csn-mob-link {
+    display: block;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+  }
+  .csn-mob-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-mob-top { font-weight: 600; color: var(--csn-text); margin-top: 4px; }
+  .csn-mob-sub { font-size: 12px; padding-left: 20px; }
+  /* Body offset */
+  body { padding-top: var(--csn-h) !important; }
+  @media (max-width: 1023px) {
+    .csn-nav { display: none; }
+    .csn-hamburger { display: block; }
+  }
+  @media (max-width: 640px) {
+    .csn-logo { font-size: 13px; margin-right: 16px; }
+  }
+</style>
+<nav class="csn-bar" role="navigation" aria-label="Main navigation">
+  <a href="index.html" class="csn-logo">Collective Shift</a>
+  <div class="csn-nav">
+      <div class="csn-item active"><a href="index.html" class="csn-link">CEO Dashboard</a></div>
+      <div class="csn-item csn-has-dd ">
+        <a href="hub/operating-system.html" class="csn-link">The Collective Shift Operating System
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="hub/operating-system.html" class="csn-dd-item">Operating System Overview</a><a href="hub/modules/m1-foundations.html" class="csn-dd-item">Module 1: Foundations</a><a href="hub/modules/m2-bitcoin.html" class="csn-dd-item">Module 2: Bitcoin</a><a href="hub/modules/m3-altcoins.html" class="csn-dd-item">Module 3: Digital Assets</a><a href="hub/modules/m4-how-we-invest.html" class="csn-dd-item">Module 4: How We Invest</a><a href="hub/modules/m5-buy-sell.html" class="csn-dd-item">Module 5: Buy & Sell</a><a href="hub/modules/m6-send-store.html" class="csn-dd-item">Module 6: Send & Store</a><a href="hub/modules/m7-tax.html" class="csn-dd-item">Module 7: Tax</a><a href="hub/modules/m8-sell-strategy.html" class="csn-dd-item">Module 8: Exit Strategy</a><div class="csn-divider"></div><a href="8-step-strategy-workbook.html" class="csn-dd-item">8-Step Strategy Workbook</a><a href="8-step-strategy-workbook-L1.html" class="csn-dd-item">↳ Level 1 Workbook</a><a href="8-step-strategy-workbook-L2.html" class="csn-dd-item">↳ Level 2 Workbook</a><a href="portfolio-calculator.html" class="csn-dd-item">Portfolio Allocation Calculator</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="hub/products.html" class="csn-link">Product
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="hub/products.html#platinum" class="csn-dd-item">Platinum</a><a href="hub/products.html#accelerator" class="csn-dd-item">Accelerator</a><a href="hub/beginner-journey.html" class="csn-dd-item">Beginner's Journey</a><a href="hub/products.html#two-track" class="csn-dd-item">Two-Track System</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="hub/youtube-strategy.html" class="csn-link">Social Media
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="hub/youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a><a href="hub/social-strategy.html" class="csn-dd-item">Social Strategy</a><a href="hub/instagram-strategy.html" class="csn-dd-item">Instagram Strategy</a><div class="csn-divider"></div><a href="hub/brand.html" class="csn-dd-item">Brand & Voice</a><a href="hub/positioning.html" class="csn-dd-item">Positioning & ICP</a><a href="hub/competitors.html" class="csn-dd-item">Competitors</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="travis-briefing-2026-03-27.html" class="csn-link">Documents
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a><a href="cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a><a href="q2-market-briefing.html" class="csn-dd-item">Q2 Market Briefing</a><a href="webinar-q2-2026-is-now-the-time.html" class="csn-dd-item">Webinar: Is Now The Time?</a></div>
+      </div>
+  </div>
+  <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+<div id="csnMobileMenu" class="csn-mobile-menu">
+  <a href="index.html" class="csn-mob-link csn-mob-top">CEO Dashboard</a>
+<a href="hub/operating-system.html" class="csn-mob-link csn-mob-top">The Collective Shift Operating System</a>
+<a href="hub/operating-system.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Operating System Overview</a>
+<a href="hub/modules/m1-foundations.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 1: Foundations</a>
+<a href="hub/modules/m2-bitcoin.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 2: Bitcoin</a>
+<a href="hub/modules/m3-altcoins.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 3: Digital Assets</a>
+<a href="hub/modules/m4-how-we-invest.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 4: How We Invest</a>
+<a href="hub/modules/m5-buy-sell.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 5: Buy & Sell</a>
+<a href="hub/modules/m6-send-store.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 6: Send & Store</a>
+<a href="hub/modules/m7-tax.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 7: Tax</a>
+<a href="hub/modules/m8-sell-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 8: Exit Strategy</a>
+<a href="8-step-strategy-workbook.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;8-Step Strategy Workbook</a>
+<a href="8-step-strategy-workbook-L1.html" class="csn-mob-link csn-mob-sub">↳ Level 1 Workbook</a>
+<a href="8-step-strategy-workbook-L2.html" class="csn-mob-link csn-mob-sub">↳ Level 2 Workbook</a>
+<a href="portfolio-calculator.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Portfolio Allocation Calculator</a>
+<a href="hub/products.html" class="csn-mob-link csn-mob-top">Product</a>
+<a href="hub/products.html#platinum" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Platinum</a>
+<a href="hub/products.html#accelerator" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Accelerator</a>
+<a href="hub/beginner-journey.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Beginner's Journey</a>
+<a href="hub/products.html#two-track" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Two-Track System</a>
+<a href="hub/youtube-strategy.html" class="csn-mob-link csn-mob-top">Social Media</a>
+<a href="hub/youtube-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;YouTube Strategy</a>
+<a href="hub/social-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Social Strategy</a>
+<a href="hub/instagram-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Instagram Strategy</a>
+<a href="hub/brand.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Brand & Voice</a>
+<a href="hub/positioning.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Positioning & ICP</a>
+<a href="hub/competitors.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Competitors</a>
+<a href="travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-top">Documents</a>
+<a href="travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Travis CGO Briefing</a>
+<a href="cs-education-system-overview.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Education System Overview</a>
+<a href="q2-market-briefing.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Q2 Market Briefing</a>
+<a href="webinar-q2-2026-is-now-the-time.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Webinar: Is Now The Time?</a>
+</div>
+<!-- ═══ END TOP NAV ═══ -->
+
 
 <!-- SIDEBAR OVERLAY (mobile) -->
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
 <!-- SIDEBAR -->
 <aside class="sidebar fixed top-0 left-0" id="sidebar">
-  <div class="px-5 py-5 border-b border-cs-border">
+  <div class="px-5 py-5 border-b border-\[#E8E8EA\]">
     <div class="flex items-center gap-3">
       <div class="w-8 h-8 rounded-lg bg-cs-orange/15 flex items-center justify-center">
         <span class="text-cs-orange text-sm font-bold">CS</span>
       </div>
       <div>
-        <div class="font-oswald text-sm font-600 text-cs-text tracking-wide">COLLECTIVE SHIFT</div>
-        <div class="text-[10px] text-cs-muted font-mono">CEO Command Centre</div>
+        <div class="font-oswald text-sm font-600 text-\[#1B1925\] tracking-wide">COLLECTIVE SHIFT</div>
+        <div class="text-[10px] text-\[#807F86\] font-mono">CEO Command Centre</div>
       </div>
     </div>
   </div>
@@ -178,22 +391,22 @@ tailwind.config = {
 </aside>
 
 <!-- TOP BAR -->
-<header class="sticky top-0 z-50 bg-cs-bg/95 backdrop-blur-md border-b border-cs-border lg:ml-[240px]">
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-\[#E8E8EA\] lg:ml-[240px]">
   <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
     <div class="flex items-center gap-3">
       <!-- Hamburger (mobile) -->
-      <button class="lg:hidden text-cs-muted hover:text-cs-text p-1" onclick="toggleSidebar()">
+      <button class="lg:hidden text-\[#807F86\] hover:text-\[#1B1925\] p-1" onclick="toggleSidebar()">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
       </button>
       <h1 class="font-oswald text-lg sm:text-xl font-600 tracking-wide uppercase">
         <span class="text-cs-orange">Collective Shift</span>
-        <span class="text-cs-muted mx-1">—</span>
-        <span class="text-cs-text">CEO Command Centre</span>
+        <span class="text-\[#807F86\] mx-1">—</span>
+        <span class="text-\[#1B1925\]">CEO Command Centre</span>
       </h1>
-      <span class="text-[10px] font-mono text-cs-body bg-cs-bg-card px-2 py-0.5 rounded hidden sm:inline">v7</span>
+      <span class="text-[10px] font-mono text-\[#4D4C55\] bg-[#FFFFFF] px-2 py-0.5 rounded hidden sm:inline">v7</span>
     </div>
     <div class="flex items-center gap-4 sm:gap-6">
-      <div id="clock" class="text-cs-muted text-sm font-mono hidden sm:block"></div>
+      <div id="clock" class="text-\[#807F86\] text-sm font-mono hidden sm:block"></div>
       <div class="flex items-center gap-2">
         <span class="badge-dot bg-cs-green pulse"></span>
         <span class="text-xs font-medium text-cs-green">BenBot Online</span>
@@ -211,9 +424,9 @@ tailwind.config = {
 
       <!-- KPI STRIP -->
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
-          <div class="text-[10px] uppercase tracking-wider text-cs-muted font-mono font-medium mb-1">Members</div>
-          <div class="text-xl font-oswald font-600 text-cs-text">1,163</div>
+        <div class="kpi-card bg-[#FFFFFF] border border-\[#E8E8EA\] rounded-lg p-3 text-center">
+          <div class="text-[10px] uppercase tracking-wider text-\[#807F86\] font-mono font-medium mb-1">Members</div>
+          <div class="text-xl font-oswald font-600 text-\[#1B1925\]">1,163</div>
           <div class="sparkline justify-center mt-2">
             <div class="sparkline-bar bg-cs-green/40" style="height:40%"></div>
             <div class="sparkline-bar bg-cs-green/40" style="height:55%"></div>
@@ -225,8 +438,8 @@ tailwind.config = {
             <div class="sparkline-bar bg-cs-green" style="height:90%"></div>
           </div>
         </div>
-        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
-          <div class="text-[10px] uppercase tracking-wider text-cs-muted font-mono font-medium mb-1">Platinum</div>
+        <div class="kpi-card bg-[#FFFFFF] border border-\[#E8E8EA\] rounded-lg p-3 text-center">
+          <div class="text-[10px] uppercase tracking-wider text-\[#807F86\] font-mono font-medium mb-1">Platinum</div>
           <div class="text-xl font-oswald font-600 text-cs-turquoise">402</div>
           <div class="sparkline justify-center mt-2">
             <div class="sparkline-bar bg-cs-turquoise/30" style="height:30%"></div>
@@ -239,8 +452,8 @@ tailwind.config = {
             <div class="sparkline-bar bg-cs-turquoise" style="height:95%"></div>
           </div>
         </div>
-        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
-          <div class="text-[10px] uppercase tracking-wider text-cs-muted font-mono font-medium mb-1">ARR</div>
+        <div class="kpi-card bg-[#FFFFFF] border border-\[#E8E8EA\] rounded-lg p-3 text-center">
+          <div class="text-[10px] uppercase tracking-wider text-\[#807F86\] font-mono font-medium mb-1">ARR</div>
           <div class="text-xl font-oswald font-600 text-cs-green">A$7.3M</div>
           <div class="sparkline justify-center mt-2">
             <div class="sparkline-bar bg-cs-green/30" style="height:25%"></div>
@@ -253,26 +466,26 @@ tailwind.config = {
             <div class="sparkline-bar bg-cs-green" style="height:100%"></div>
           </div>
         </div>
-        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
-          <div class="text-[10px] uppercase tracking-wider text-cs-muted font-mono font-medium mb-1">YoY Growth</div>
+        <div class="kpi-card bg-[#FFFFFF] border border-\[#E8E8EA\] rounded-lg p-3 text-center">
+          <div class="text-[10px] uppercase tracking-wider text-\[#807F86\] font-mono font-medium mb-1">YoY Growth</div>
           <div class="text-xl font-oswald font-600 text-cs-orange">203%</div>
           <div class="flex items-center justify-center gap-1 mt-2">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FC5C03" stroke-width="2.5"><path d="M7 17l5-5 5 5"/><path d="M7 11l5-5 5 5"/></svg>
             <span class="text-[10px] text-cs-orange font-mono">+203%</span>
           </div>
         </div>
-        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
-          <div class="text-[10px] uppercase tracking-wider text-cs-muted font-mono font-medium mb-1">ROAS</div>
-          <div class="text-xl font-oswald font-600 text-cs-text">3.18x</div>
-          <div class="text-[10px] text-cs-muted mt-1">8-month avg</div>
+        <div class="kpi-card bg-[#FFFFFF] border border-\[#E8E8EA\] rounded-lg p-3 text-center">
+          <div class="text-[10px] uppercase tracking-wider text-\[#807F86\] font-mono font-medium mb-1">ROAS</div>
+          <div class="text-xl font-oswald font-600 text-\[#1B1925\]">3.18x</div>
+          <div class="text-[10px] text-\[#807F86\] mt-1">8-month avg</div>
           <div class="w-full bg-cs-border rounded-full h-1 mt-1.5">
             <div class="bg-cs-green rounded-full h-1" style="width:79%"></div>
           </div>
         </div>
-        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
-          <div class="text-[10px] uppercase tracking-wider text-cs-muted font-mono font-medium mb-1">Retention</div>
+        <div class="kpi-card bg-[#FFFFFF] border border-\[#E8E8EA\] rounded-lg p-3 text-center">
+          <div class="text-[10px] uppercase tracking-wider text-\[#807F86\] font-mono font-medium mb-1">Retention</div>
           <div class="text-xl font-oswald font-600 text-cs-turquoise">68%</div>
-          <div class="text-[10px] text-cs-muted mt-1">Y2, 2023 cohort</div>
+          <div class="text-[10px] text-\[#807F86\] mt-1">Y2, 2023 cohort</div>
           <div class="w-full bg-cs-border rounded-full h-1 mt-1.5">
             <div class="bg-cs-turquoise rounded-full h-1" style="width:68%"></div>
           </div>
@@ -282,9 +495,9 @@ tailwind.config = {
       <!-- ACTIVE PRIORITIES (HERO FEATURE) -->
       <div>
         <div class="flex items-center justify-between mb-3">
-          <h2 class="font-oswald text-base uppercase tracking-wider text-cs-muted flex items-center gap-2">
+          <h2 class="font-oswald text-base uppercase tracking-wider text-\[#807F86\] flex items-center gap-2">
             <span class="text-cs-orange">▎</span>Active Priorities
-            <span class="text-[10px] font-mono text-cs-body bg-cs-bg-card px-2 py-0.5 rounded" id="priority-count"></span>
+            <span class="text-[10px] font-mono text-\[#4D4C55\] bg-[#FFFFFF] px-2 py-0.5 rounded" id="priority-count"></span>
           </h2>
           <button onclick="addPriority()" class="text-xs bg-cs-orange/10 border border-cs-orange/30 text-cs-orange px-3 py-1.5 rounded-lg hover:bg-cs-orange/20 transition-all flex items-center gap-1.5">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
@@ -296,23 +509,23 @@ tailwind.config = {
 
       <!-- QUICK ACTIONS -->
       <div>
-        <h2 class="font-oswald text-base uppercase tracking-wider text-cs-muted mb-3 flex items-center gap-2">
+        <h2 class="font-oswald text-base uppercase tracking-wider text-\[#807F86\] mb-3 flex items-center gap-2">
           <span class="text-cs-orange">▎</span>Quick Actions
         </h2>
         <div class="flex flex-wrap gap-3">
           <a href="/hub/" class="nav-btn inline-flex items-center gap-2 bg-cs-orange/10 border border-cs-orange/30 text-cs-orange px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-cs-orange/20">
             📊 Strategy Hub
           </a>
-          <a href="#intelligence" class="nav-btn inline-flex items-center gap-2 bg-cs-bg-card border border-cs-border text-cs-text px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-cs-bg-hover">
+          <a href="#intelligence" class="nav-btn inline-flex items-center gap-2 bg-[#FFFFFF] border border-\[#E8E8EA\] text-\[#1B1925\] px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-[#F2F2F2]">
             🔍 Sales Intelligence
           </a>
-          <a href="#intelligence" class="nav-btn inline-flex items-center gap-2 bg-cs-bg-card border border-cs-border text-cs-text px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-cs-bg-hover">
+          <a href="#intelligence" class="nav-btn inline-flex items-center gap-2 bg-[#FFFFFF] border border-\[#E8E8EA\] text-\[#1B1925\] px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-[#F2F2F2]">
             🎓 Education Intel
           </a>
-          <a href="https://discord.com/channels/1482990760692420690/1482993283838771322" target="_blank" class="nav-btn inline-flex items-center gap-2 bg-cs-bg-card border border-cs-border text-cs-text px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-cs-bg-hover">
+          <a href="https://discord.com/channels/1482990760692420690/1482993283838771322" target="_blank" class="nav-btn inline-flex items-center gap-2 bg-[#FFFFFF] border border-\[#E8E8EA\] text-\[#1B1925\] px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-[#F2F2F2]">
             💬 Message BenBot
           </a>
-          <a href="https://app.pipedrive.com" target="_blank" class="nav-btn inline-flex items-center gap-2 bg-cs-bg-card border border-cs-border text-cs-text px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-cs-bg-hover">
+          <a href="https://app.pipedrive.com" target="_blank" class="nav-btn inline-flex items-center gap-2 bg-[#FFFFFF] border border-\[#E8E8EA\] text-\[#1B1925\] px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-[#F2F2F2]">
             📈 CRM Pipeline
           </a>
         </div>
@@ -320,16 +533,16 @@ tailwind.config = {
 
       <!-- LATEST INTELLIGENCE -->
       <div id="intelligence">
-        <h2 class="font-oswald text-base uppercase tracking-wider text-cs-muted mb-3 flex items-center gap-2">
+        <h2 class="font-oswald text-base uppercase tracking-wider text-\[#807F86\] mb-3 flex items-center gap-2">
           <span class="text-cs-turquoise">▎</span>Latest Intelligence
         </h2>
-        <div class="bg-cs-bg-card border border-cs-border rounded-lg divide-y divide-cs-border">
+        <div class="bg-[#FFFFFF] border border-\[#E8E8EA\] rounded-lg divide-y divide-cs-border">
           <a href="/hub/" class="intel-item flex items-center justify-between px-4 py-3 group">
             <div class="flex items-center gap-3">
               <span class="w-8 h-8 rounded-lg bg-cs-green/10 flex items-center justify-center text-sm">📊</span>
               <div>
-                <div class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Strategy Hub</div>
-                <div class="text-xs text-cs-muted">7 pages live — full company strategy</div>
+                <div class="text-sm font-medium text-\[#1B1925\] group-hover:text-cs-turquoise transition-colors">Strategy Hub</div>
+                <div class="text-xs text-\[#807F86\]">7 pages live — full company strategy</div>
               </div>
             </div>
             <span class="text-[10px] font-mono text-cs-green bg-cs-green/10 px-2 py-0.5 rounded">Complete ✅</span>
@@ -338,8 +551,8 @@ tailwind.config = {
             <div class="flex items-center gap-3">
               <span class="w-8 h-8 rounded-lg bg-cs-orange/10 flex items-center justify-center text-sm">🔍</span>
               <div>
-                <div class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Sales Intelligence Report</div>
-                <div class="text-xs text-cs-muted">Pipeline analysis, conversion data, forecasts</div>
+                <div class="text-sm font-medium text-\[#1B1925\] group-hover:text-cs-turquoise transition-colors">Sales Intelligence Report</div>
+                <div class="text-xs text-\[#807F86\]">Pipeline analysis, conversion data, forecasts</div>
               </div>
             </div>
             <span class="text-[10px] font-mono text-cs-green bg-cs-green/10 px-2 py-0.5 rounded">Complete ✅</span>
@@ -348,8 +561,8 @@ tailwind.config = {
             <div class="flex items-center gap-3">
               <span class="w-8 h-8 rounded-lg bg-cs-turquoise/10 flex items-center justify-center text-sm">🎓</span>
               <div>
-                <div class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Education Call Intelligence</div>
-                <div class="text-xs text-cs-muted">Member call transcripts and action items</div>
+                <div class="text-sm font-medium text-\[#1B1925\] group-hover:text-cs-turquoise transition-colors">Education Call Intelligence</div>
+                <div class="text-xs text-\[#807F86\]">Member call transcripts and action items</div>
               </div>
             </div>
             <span class="text-[10px] font-mono text-cs-green bg-cs-green/10 px-2 py-0.5 rounded">Complete ✅</span>
@@ -363,22 +576,22 @@ tailwind.config = {
 
       <!-- BOT TEAM STATUS -->
       <div>
-        <h2 class="font-oswald text-base uppercase tracking-wider text-cs-muted mb-3 flex items-center gap-2">
+        <h2 class="font-oswald text-base uppercase tracking-wider text-\[#807F86\] mb-3 flex items-center gap-2">
           <span class="text-cs-green">▎</span>Bot Team Status
-          <span class="text-[10px] font-mono text-cs-body bg-cs-bg-card px-2 py-0.5 rounded">11 agents</span>
+          <span class="text-[10px] font-mono text-\[#4D4C55\] bg-[#FFFFFF] px-2 py-0.5 rounded">11 agents</span>
         </h2>
         <div class="space-y-2" id="bot-team-list"></div>
       </div>
 
       <!-- BENBOT CHAT PANEL -->
-      <div class="bg-cs-bg-card border border-cs-border rounded-lg p-4">
-        <h3 class="font-oswald text-sm uppercase tracking-wider text-cs-text mb-3 flex items-center gap-2">
+      <div class="bg-[#FFFFFF] border border-\[#E8E8EA\] rounded-lg p-4">
+        <h3 class="font-oswald text-sm uppercase tracking-wider text-\[#1B1925\] mb-3 flex items-center gap-2">
           💬 Message BenBot
         </h3>
         <textarea id="benbot-msg" rows="3" placeholder="Type a message for BenBot..."
-          class="w-full bg-cs-bg border border-cs-border rounded-lg px-3 py-2 text-sm text-cs-text placeholder:text-cs-body focus:outline-none focus:border-cs-orange/50 resize-none"></textarea>
+          class="w-full bg-white border border-\[#E8E8EA\] rounded-lg px-3 py-2 text-sm text-\[#1B1925\] placeholder:text-\[#4D4C55\] focus:outline-none focus:border-cs-orange/50 resize-none"></textarea>
         <div class="flex items-center justify-between mt-2">
-          <span class="text-[11px] text-cs-muted">Opens Discord #ceo-benbot</span>
+          <span class="text-[11px] text-\[#807F86\]">Opens Discord #ceo-benbot</span>
           <button onclick="sendBenBot()" class="bg-cs-orange hover:bg-cs-orange/90 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors">
             Send
           </button>
@@ -436,7 +649,7 @@ let priorities = loadPriorities();
 
 const STATUS_MAP = {
   urgent: { emoji: '🔴', label: 'Urgent', color: 'text-red-400', bg: 'bg-red-400/10', border: 'border-red-400/20' },
-  progress: { emoji: '🟡', label: 'In Progress', color: 'text-yellow-400', bg: 'bg-yellow-400/10', border: 'border-cs-border' },
+  progress: { emoji: '🟡', label: 'In Progress', color: 'text-yellow-400', bg: 'bg-yellow-400/10', border: 'border-\[#E8E8EA\]' },
   done: { emoji: '✅', label: 'Done', color: 'text-cs-green', bg: 'bg-cs-green/10', border: 'border-cs-green/20' },
 };
 
@@ -453,7 +666,7 @@ function renderPriorities() {
     const dueDisplay = p.due ? (p.due === todayStr ? 'Today' : new Date(p.due + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })) : '';
 
     return `
-      <div class="priority-card bg-cs-bg-card border ${s.border} rounded-lg overflow-hidden"
+      <div class="priority-card bg-[#FFFFFF] border ${s.border} rounded-lg overflow-hidden"
            draggable="true"
            data-index="${i}"
            ondragstart="onDragStart(event, ${i})"
@@ -463,15 +676,15 @@ function renderPriorities() {
            ondragend="onDragEnd(event)">
         <div class="flex items-center gap-2 px-3 py-3">
           <!-- Drag handle -->
-          <div class="drag-handle flex-shrink-0 text-cs-muted" title="Drag to reorder">
+          <div class="drag-handle flex-shrink-0 text-\[#807F86\]" title="Drag to reorder">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
           </div>
           <!-- Status emoji -->
           <span class="text-sm flex-shrink-0">${s.emoji}</span>
           <!-- Name -->
           <div class="min-w-0 flex-1 cursor-pointer" onclick="togglePriority(${i})">
-            <span class="font-semibold text-sm text-cs-text ${p.status === 'done' ? 'line-through opacity-60' : ''}">${escHtml(p.name)}</span>
-            ${dueDisplay ? `<span class="ml-2 text-[10px] font-mono ${isOverdue ? 'text-red-400' : 'text-cs-muted'}">${dueDisplay}</span>` : ''}
+            <span class="font-semibold text-sm text-\[#1B1925\] ${p.status === 'done' ? 'line-through opacity-60' : ''}">${escHtml(p.name)}</span>
+            ${dueDisplay ? `<span class="ml-2 text-[10px] font-mono ${isOverdue ? 'text-red-400' : 'text-\[#807F86\]'}">${dueDisplay}</span>` : ''}
           </div>
           <!-- Status badge -->
           <select class="status-select ${s.color} ${s.bg} text-[10px] font-semibold px-2 py-0.5 rounded-full border-0 bg-transparent focus:outline-none"
@@ -483,22 +696,22 @@ function renderPriorities() {
           </select>
           <!-- Expand/Delete -->
           <button onclick="togglePriority(${i})" class="flex-shrink-0 p-1">
-            <svg class="chevron w-4 h-4 text-cs-muted" id="chev-${i}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <svg class="chevron w-4 h-4 text-\[#807F86\]" id="chev-${i}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </button>
         </div>
         <div class="priority-detail px-4 pb-1" id="detail-${i}">
           <div class="space-y-3 pb-3">
             <div class="flex flex-wrap items-start gap-4">
               <div>
-                <label class="text-[10px] font-semibold text-cs-muted uppercase tracking-wide block mb-1">Due Date</label>
+                <label class="text-[10px] font-semibold text-\[#807F86\] uppercase tracking-wide block mb-1">Due Date</label>
                 <input type="date" value="${p.due || ''}" onchange="changeDue(${i}, this.value)"
-                  class="bg-cs-bg border border-cs-border rounded px-2 py-1 text-xs text-cs-text focus:outline-none focus:border-cs-orange/50">
+                  class="bg-white border border-\[#E8E8EA\] rounded px-2 py-1 text-xs text-\[#1B1925\] focus:outline-none focus:border-cs-orange/50">
               </div>
               <div class="flex-1 min-w-[200px]">
-                <label class="text-[10px] font-semibold text-cs-muted uppercase tracking-wide block mb-1">Notes</label>
+                <label class="text-[10px] font-semibold text-\[#807F86\] uppercase tracking-wide block mb-1">Notes</label>
                 <textarea rows="2" placeholder="Add notes..."
                   onchange="changeNotes(${i}, this.value)"
-                  class="notes-field w-full bg-cs-bg border border-cs-border rounded px-2 py-1 text-xs text-cs-text placeholder:text-cs-body focus:outline-none focus:border-cs-orange/50 resize-none">${escHtml(p.notes)}</textarea>
+                  class="notes-field w-full bg-white border border-\[#E8E8EA\] rounded px-2 py-1 text-xs text-\[#1B1925\] placeholder:text-\[#4D4C55\] focus:outline-none focus:border-cs-orange/50 resize-none">${escHtml(p.notes)}</textarea>
               </div>
             </div>
             <div class="flex items-center gap-2">
@@ -628,17 +841,17 @@ function renderBotTeam() {
   list.innerHTML = botTeam.map(b => {
     const s = statusColors[b.status];
     return `
-      <div class="bot-card bg-cs-bg-card border border-cs-border rounded-lg px-4 py-3 flex items-center justify-between">
+      <div class="bot-card bg-[#FFFFFF] border border-\[#E8E8EA\] rounded-lg px-4 py-3 flex items-center justify-between">
         <div class="flex items-center gap-3 min-w-0">
           <span class="badge-dot ${s.dot} flex-shrink-0 ${b.status === 'green' ? 'pulse' : ''}"></span>
           <div class="min-w-0">
-            <div class="text-sm font-medium text-cs-text">${b.name}</div>
-            <div class="text-[10px] font-mono text-cs-body">${b.channel}</div>
+            <div class="text-sm font-medium text-\[#1B1925\]">${b.name}</div>
+            <div class="text-[10px] font-mono text-\[#4D4C55\]">${b.channel}</div>
           </div>
         </div>
         <div class="text-right flex-shrink-0">
           <div class="text-[10px] font-semibold ${s.text}">${s.label}</div>
-          <div class="text-[10px] text-cs-muted">${b.activity}</div>
+          <div class="text-[10px] text-\[#807F86\]">${b.activity}</div>
         </div>
       </div>`;
   }).join('');

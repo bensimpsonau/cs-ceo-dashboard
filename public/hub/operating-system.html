@@ -3,14 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+
 <title>Operating System — Collective Shift Strategy Hub</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+
 <script>
-tailwind.config={theme:{extend:{colors:{cs:{bg:'#1B1925',card:'#242232',border:'#2E2C3E',orange:'#FC5C03',green:'#08C394',text:'#F9F9F9',muted:'#9B99A9'}},fontFamily:{heading:['Oswald','sans-serif'],body:['Barlow','sans-serif'],mono:['Source Code Pro','monospace']}}}}
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cs: {
+          orange: '#FC5C03',
+          'orange-light': '#FC8C4E',
+          'orange-bg': '#FEDECC',
+          'orange-hover': '#FEEEE5',
+          green: '#08C394',
+          purple: '#654FFC',
+          border: '#E8E8EA',
+          text: '#1B1925',
+          secondary: '#4D4C55',
+          muted: '#807F86',
+        }
+      },
+      fontFamily: {
+        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+        barlow: ['Barlow', 'sans-serif'],
+        mono: ['Source Code Pro', 'monospace'],
+      },
+      borderRadius: {
+        pill: '100px',
+      }
+    }
+  }
+}
 </script>
 <style>
-body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-serif}.label-tag{font-family:'Source Code Pro',monospace}.sidebar{transition:transform .3s ease}@media(max-width:1023px){.sidebar{transform:translateX(-100%);position:fixed;z-index:50;top:0;left:0;height:100vh}.sidebar.open{transform:translateX(0)}}.nav-link{transition:all .15s}.nav-link:hover,.nav-link.active{background:rgba(252,92,3,.12);color:#FC5C03;border-left-color:#FC5C03}
+body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Plus Jakarta Sans',sans-serif}.label-tag{font-family:'Source Code Pro',monospace}.sidebar{transition:transform .3s ease}@media(max-width:1023px){.sidebar{transform:translateX(-100%);position:fixed;z-index:50;top:0;left:0;height:100vh}.sidebar.open{transform:translateX(0)}}.nav-link{transition:all .15s}.nav-link:hover,.nav-link.active{background:rgba(252,92,3,.12);color:#FC5C03;border-left-color:#FC5C03}
 .module-card{transition:all .2s ease;cursor:pointer;text-decoration:none;display:block}
 .module-card:hover{transform:translateY(-2px);border-color:rgba(252,92,3,0.5);box-shadow:0 8px 32px rgba(252,92,3,0.12)}
 .module-card:hover .module-step{color:#FC5C03}
@@ -22,40 +52,251 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
 .progression-step:hover{transform:scale(1.03)}
 </style>
 </head>
-<body class="bg-cs-bg text-cs-text min-h-screen">
+<body class="bg-white text-\[#1B1925\] min-h-screen">
+<!-- ═══ COLLECTIVE SHIFT TOP NAV ═══ -->
+<style>
+  :root {
+    --csn-h: 56px;
+    --csn-bg: #FFFFFF;
+    --csn-border: #E8E8EA;
+    --csn-text: #1B1925;
+    --csn-muted: #4D4C55;
+    --csn-orange: #FC5C03;
+    --csn-orange-bg: #FEEEE5;
+    --csn-dd-bg: #FFFFFF;
+    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    --csn-z: 9000;
+  }
+  .csn-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--csn-h);
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 0;
+    z-index: var(--csn-z);
+    font-family: 'Plus Jakarta Sans', 'Barlow', sans-serif;
+  }
+  .csn-logo {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--csn-orange);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin-right: 32px;
+    flex-shrink: 0;
+  }
+  .csn-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+  }
+  .csn-item {
+    position: relative;
+  }
+  .csn-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s, background 0.15s;
+    cursor: pointer;
+  }
+  .csn-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-item.active > .csn-link { color: var(--csn-orange); font-weight: 600; }
+  .csn-chevron { transition: transform 0.2s; flex-shrink: 0; }
+  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
+  /* Dropdown */
+  .csn-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 240px;
+    background: var(--csn-dd-bg);
+    border: 1px solid var(--csn-border);
+    border-radius: 12px;
+    box-shadow: var(--csn-dd-shadow);
+    padding: 6px;
+    z-index: calc(var(--csn-z) + 1);
+  }
+  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
+  .csn-dd-item {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+    white-space: nowrap;
+  }
+  .csn-dd-item:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-divider { height: 1px; background: var(--csn-border); margin: 4px 8px; }
+  /* Mobile hamburger */
+  .csn-hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--csn-muted);
+    padding: 4px;
+    margin-left: auto;
+  }
+  /* Mobile drawer */
+  .csn-mobile-menu {
+    display: none;
+    position: fixed;
+    top: var(--csn-h);
+    left: 0; right: 0;
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    padding: 8px 16px 16px;
+    z-index: calc(var(--csn-z) - 1);
+    max-height: calc(100vh - var(--csn-h));
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .csn-mobile-menu.open { display: block; }
+  .csn-mob-link {
+    display: block;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+  }
+  .csn-mob-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-mob-top { font-weight: 600; color: var(--csn-text); margin-top: 4px; }
+  .csn-mob-sub { font-size: 12px; padding-left: 20px; }
+  /* Body offset */
+  body { padding-top: var(--csn-h) !important; }
+  @media (max-width: 1023px) {
+    .csn-nav { display: none; }
+    .csn-hamburger { display: block; }
+  }
+  @media (max-width: 640px) {
+    .csn-logo { font-size: 13px; margin-right: 16px; }
+  }
+</style>
+<nav class="csn-bar" role="navigation" aria-label="Main navigation">
+  <a href="../index.html" class="csn-logo">Collective Shift</a>
+  <div class="csn-nav">
+      <div class="csn-item "><a href="../index.html" class="csn-link">CEO Dashboard</a></div>
+      <div class="csn-item csn-has-dd active">
+        <a href="../hub/operating-system.html" class="csn-link">The Collective Shift Operating System
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../hub/operating-system.html" class="csn-dd-item">Operating System Overview</a><a href="../hub/modules/m1-foundations.html" class="csn-dd-item">Module 1: Foundations</a><a href="../hub/modules/m2-bitcoin.html" class="csn-dd-item">Module 2: Bitcoin</a><a href="../hub/modules/m3-altcoins.html" class="csn-dd-item">Module 3: Digital Assets</a><a href="../hub/modules/m4-how-we-invest.html" class="csn-dd-item">Module 4: How We Invest</a><a href="../hub/modules/m5-buy-sell.html" class="csn-dd-item">Module 5: Buy & Sell</a><a href="../hub/modules/m6-send-store.html" class="csn-dd-item">Module 6: Send & Store</a><a href="../hub/modules/m7-tax.html" class="csn-dd-item">Module 7: Tax</a><a href="../hub/modules/m8-sell-strategy.html" class="csn-dd-item">Module 8: Exit Strategy</a><div class="csn-divider"></div><a href="../8-step-strategy-workbook.html" class="csn-dd-item">8-Step Strategy Workbook</a><a href="../8-step-strategy-workbook-L1.html" class="csn-dd-item">↳ Level 1 Workbook</a><a href="../8-step-strategy-workbook-L2.html" class="csn-dd-item">↳ Level 2 Workbook</a><a href="../portfolio-calculator.html" class="csn-dd-item">Portfolio Allocation Calculator</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="../hub/products.html" class="csn-link">Product
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../hub/products.html#platinum" class="csn-dd-item">Platinum</a><a href="../hub/products.html#accelerator" class="csn-dd-item">Accelerator</a><a href="../hub/beginner-journey.html" class="csn-dd-item">Beginner's Journey</a><a href="../hub/products.html#two-track" class="csn-dd-item">Two-Track System</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="../hub/youtube-strategy.html" class="csn-link">Social Media
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../hub/youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a><a href="../hub/social-strategy.html" class="csn-dd-item">Social Strategy</a><a href="../hub/instagram-strategy.html" class="csn-dd-item">Instagram Strategy</a><div class="csn-divider"></div><a href="../hub/brand.html" class="csn-dd-item">Brand & Voice</a><a href="../hub/positioning.html" class="csn-dd-item">Positioning & ICP</a><a href="../hub/competitors.html" class="csn-dd-item">Competitors</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="../travis-briefing-2026-03-27.html" class="csn-link">Documents
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a><a href="../cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a><a href="../q2-market-briefing.html" class="csn-dd-item">Q2 Market Briefing</a><a href="../webinar-q2-2026-is-now-the-time.html" class="csn-dd-item">Webinar: Is Now The Time?</a></div>
+      </div>
+  </div>
+  <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+<div id="csnMobileMenu" class="csn-mobile-menu">
+  <a href="../index.html" class="csn-mob-link csn-mob-top">CEO Dashboard</a>
+<a href="../hub/operating-system.html" class="csn-mob-link csn-mob-top">The Collective Shift Operating System</a>
+<a href="../hub/operating-system.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Operating System Overview</a>
+<a href="../hub/modules/m1-foundations.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 1: Foundations</a>
+<a href="../hub/modules/m2-bitcoin.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 2: Bitcoin</a>
+<a href="../hub/modules/m3-altcoins.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 3: Digital Assets</a>
+<a href="../hub/modules/m4-how-we-invest.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 4: How We Invest</a>
+<a href="../hub/modules/m5-buy-sell.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 5: Buy & Sell</a>
+<a href="../hub/modules/m6-send-store.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 6: Send & Store</a>
+<a href="../hub/modules/m7-tax.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 7: Tax</a>
+<a href="../hub/modules/m8-sell-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 8: Exit Strategy</a>
+<a href="../8-step-strategy-workbook.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;8-Step Strategy Workbook</a>
+<a href="../8-step-strategy-workbook-L1.html" class="csn-mob-link csn-mob-sub">↳ Level 1 Workbook</a>
+<a href="../8-step-strategy-workbook-L2.html" class="csn-mob-link csn-mob-sub">↳ Level 2 Workbook</a>
+<a href="../portfolio-calculator.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Portfolio Allocation Calculator</a>
+<a href="../hub/products.html" class="csn-mob-link csn-mob-top">Product</a>
+<a href="../hub/products.html#platinum" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Platinum</a>
+<a href="../hub/products.html#accelerator" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Accelerator</a>
+<a href="../hub/beginner-journey.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Beginner's Journey</a>
+<a href="../hub/products.html#two-track" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Two-Track System</a>
+<a href="../hub/youtube-strategy.html" class="csn-mob-link csn-mob-top">Social Media</a>
+<a href="../hub/youtube-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;YouTube Strategy</a>
+<a href="../hub/social-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Social Strategy</a>
+<a href="../hub/instagram-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Instagram Strategy</a>
+<a href="../hub/brand.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Brand & Voice</a>
+<a href="../hub/positioning.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Positioning & ICP</a>
+<a href="../hub/competitors.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Competitors</a>
+<a href="../travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-top">Documents</a>
+<a href="../travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Travis CGO Briefing</a>
+<a href="../cs-education-system-overview.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Education System Overview</a>
+<a href="../q2-market-briefing.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Q2 Market Briefing</a>
+<a href="../webinar-q2-2026-is-now-the-time.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Webinar: Is Now The Time?</a>
+</div>
+<!-- ═══ END TOP NAV ═══ -->
 
-<div class="lg:hidden flex items-center justify-between px-4 py-3 bg-cs-card border-b border-cs-border sticky top-0 z-40">
+
+<div class="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-\[#E8E8EA\] sticky top-0 z-40">
   <span class="font-heading text-cs-orange text-lg font-bold tracking-wide">COLLECTIVE SHIFT</span>
-  <button onclick="document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('hidden')" class="text-cs-muted hover:text-cs-orange">
+  <button onclick="document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('hidden')" class="text-\[#807F86\] hover:text-cs-orange">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
   </button>
 </div>
 <div id="overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="document.getElementById('sidebar').classList.remove('open');this.classList.add('hidden')"></div>
 
 <div class="flex">
-  <aside id="sidebar" class="sidebar w-64 min-h-screen bg-cs-card border-r border-cs-border flex-shrink-0 flex flex-col">
-    <div class="p-5 border-b border-cs-border">
+  <aside id="sidebar" class="sidebar w-64 min-h-screen bg-white border-r border-\[#E8E8EA\] flex-shrink-0 flex flex-col">
+    <div class="p-5 border-b border-\[#E8E8EA\]">
       <a href="index.html" class="font-heading text-cs-orange text-xl font-bold tracking-wider">COLLECTIVE SHIFT</a>
-      <p class="text-cs-muted text-xs mt-1 font-mono">STRATEGY HUB</p>
+      <p class="text-\[#807F86\] text-xs mt-1 font-mono">STRATEGY HUB</p>
     </div>
     <nav class="flex-1 py-4 px-3 space-y-1">
-      <a href="/" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>📊</span> Dashboard</a>
-      <a href="index.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🏠</span> Home</a>
-      <a href="positioning.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🎯</span> Positioning & ICP</a>
+      <a href="/" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>📊</span> Dashboard</a>
+      <a href="index.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🏠</span> Home</a>
+      <a href="positioning.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🎯</span> Positioning & ICP</a>
       <a href="operating-system.html" class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium border-l-2 border-transparent"><span>⚙️</span> Operating System</a>
-      <a href="products.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>💎</span> Products</a>
-      <a href="social-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>📱</span> Social & Content</a>
-      <a href="youtube-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🎬</span> YouTube Strategy</a>
-      <a href="competitors.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🏆</span> Competitive Intel</a>
-      <a href="brand.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🎨</span> Brand & Voice</a>
+      <a href="products.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>💎</span> Products</a>
+      <a href="social-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>📱</span> Social & Content</a>
+      <a href="youtube-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🎬</span> YouTube Strategy</a>
+      <a href="competitors.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🏆</span> Competitive Intel</a>
+      <a href="brand.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🎨</span> Brand & Voice</a>
     </nav>
-    <div class="p-4 border-t border-cs-border"><p class="text-cs-muted text-xs font-mono">v9.0 · March 2026</p></div>
+    <div class="p-4 border-t border-\[#E8E8EA\]"><p class="text-\[#807F86\] text-xs font-mono">v9.0 · March 2026</p></div>
   </aside>
 
   <main class="flex-1 min-h-screen">
-    <div class="px-6 lg:px-10 py-3 border-b border-cs-border bg-cs-card/50">
+    <div class="px-6 lg:px-10 py-3 border-b border-\[#E8E8EA\] bg-white/50">
       <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2 text-xs font-mono text-cs-muted">
+        <div class="flex items-center gap-2 text-xs font-mono text-\[#807F86\]">
           <a href="index.html" class="text-cs-orange hover:underline">Strategy Hub</a><span>/</span><span>Operating System</span>
         </div>
         <a href="/" class="text-cs-orange hover:text-cs-green text-sm font-semibold transition-colors">← Back to CEO Dashboard</a>
@@ -67,18 +308,18 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
       <!-- Header -->
       <p class="label-tag text-cs-orange text-xs font-semibold tracking-widest uppercase mb-2">The Shift OS V9 — 8-Step System</p>
       <h1 class="text-4xl font-bold tracking-tight mb-3">The Shift Operating System</h1>
-      <p class="text-cs-muted text-lg mb-2">"We teach you how to think. Not what to think."</p>
-      <p class="text-cs-muted text-sm mb-8 max-w-2xl">8 steps. Two levels. One complete framework for building, managing, and growing a digital asset portfolio — built from real member questions across 30+ education calls.</p>
+      <p class="text-\[#807F86\] text-lg mb-2">"We teach you how to think. Not what to think."</p>
+      <p class="text-\[#807F86\] text-sm mb-8 max-w-2xl">8 steps. Two levels. One complete framework for building, managing, and growing a digital asset portfolio — built from real member questions across 30+ education calls.</p>
 
       <!-- Hero Quote -->
-      <div class="border-l-4 border-cs-orange bg-cs-card rounded-r-xl p-5 mb-10">
-        <p class="text-cs-muted italic text-sm">"We are Collective Shift, a digital asset and Bitcoin education company. We educate you about the space. We're not an advisory firm, we're not financial advisors, we're not telling you what to do."</p>
+      <div class="border-l-4 border-cs-orange bg-white rounded-r-xl p-5 mb-10">
+        <p class="text-\[#807F86\] italic text-sm">"We are Collective Shift, a digital asset and Bitcoin education company. We educate you about the space. We're not an advisory firm, we're not financial advisors, we're not telling you what to do."</p>
         <p class="text-cs-orange text-xs mt-2 font-mono">— Ben Simpson</p>
       </div>
 
       <!-- ===================== 8-STEP OS ===================== -->
       <h2 class="text-2xl font-bold mb-2">The 8-Step Shift OS</h2>
-      <p class="text-cs-muted text-sm mb-6">Each step is a module. Every module covers Level 1 content first, then Level 2. Click any module to see all topics, teaching frameworks, and member outcomes.</p>
+      <p class="text-\[#807F86\] text-sm mb-6">Each step is a module. Every module covers Level 1 content first, then Level 2. Click any module to see all topics, teaching frameworks, and member outcomes.</p>
 
       <!-- Step indicator row -->
       <div class="hidden md:flex items-center mb-4 px-2">
@@ -92,68 +333,68 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
       <div class="mb-3">
         <div class="flex items-center gap-2 mb-3">
           <span class="bg-cs-green/20 text-cs-green text-xs font-bold font-mono px-3 py-1 rounded-full uppercase tracking-wide">B1 — Foundations Session</span>
-          <span class="text-cs-muted text-xs font-mono">Week 1 · 2-hour live session · Steps 1–4</span>
+          <span class="text-\[#807F86\] text-xs font-mono">Week 1 · 2-hour live session · Steps 1–4</span>
         </div>
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
           <!-- M1 -->
-          <a href="modules/m1-foundations.html" class="module-card bg-cs-card border border-cs-border rounded-xl p-4">
+          <a href="modules/m1-foundations.html" class="module-card bg-white border border-\[#E8E8EA\] rounded-xl p-4">
             <div class="flex items-center justify-between mb-3">
               <span class="module-step bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg px-2 py-1">01</span>
               <span class="module-arrow text-cs-orange text-lg font-bold">→</span>
             </div>
             <h3 class="font-bold text-sm mb-1">Foundations</h3>
-            <p class="text-cs-muted text-xs mb-3 leading-relaxed">Why digital assets exist, market cycles, blockchain ecosystems. Narrative Cycles, Signals vs Noise.</p>
+            <p class="text-\[#807F86\] text-xs mb-3 leading-relaxed">Why digital assets exist, market cycles, blockchain ecosystems. Narrative Cycles, Signals vs Noise.</p>
             <div class="flex flex-wrap gap-1 mb-3">
               <span class="bg-cs-green/15 text-cs-green text-xs font-mono px-2 py-0.5 rounded-full">3 topics</span>
               <span class="bg-cs-green/15 text-cs-green text-xs font-mono px-2 py-0.5 rounded-full">L1</span>
               <span class="bg-blue-500/15 text-blue-400 text-xs font-mono px-2 py-0.5 rounded-full">L2</span>
             </div>
-            <p class="text-cs-muted text-xs italic">"No one makes it in a single cycle."</p>
+            <p class="text-\[#807F86\] text-xs italic">"No one makes it in a single cycle."</p>
           </a>
           <!-- M2 -->
-          <a href="modules/m2-bitcoin.html" class="module-card bg-cs-card border border-cs-border rounded-xl p-4">
+          <a href="modules/m2-bitcoin.html" class="module-card bg-white border border-\[#E8E8EA\] rounded-xl p-4">
             <div class="flex items-center justify-between mb-3">
               <span class="module-step bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono rounded-lg px-2 py-1">02</span>
               <span class="module-arrow text-cs-orange text-lg font-bold">→</span>
             </div>
             <h3 class="font-bold text-sm mb-1">Bitcoin</h3>
-            <p class="text-cs-muted text-xs mb-3 leading-relaxed">Bitcoin thesis, DCA strategy, conviction building, mining economics. CS Portfolio entry prices.</p>
+            <p class="text-\[#807F86\] text-xs mb-3 leading-relaxed">Bitcoin thesis, DCA strategy, conviction building, mining economics. CS Portfolio entry prices.</p>
             <div class="flex flex-wrap gap-1 mb-3">
               <span class="bg-cs-orange/15 text-cs-orange text-xs font-mono px-2 py-0.5 rounded-full">₿</span>
               <span class="bg-cs-green/15 text-cs-green text-xs font-mono px-2 py-0.5 rounded-full">4 topics L1</span>
               <span class="bg-blue-500/15 text-blue-400 text-xs font-mono px-2 py-0.5 rounded-full">L2</span>
             </div>
-            <p class="text-cs-muted text-xs italic">"Everyone gets Bitcoin at the price they deserve."</p>
+            <p class="text-\[#807F86\] text-xs italic">"Everyone gets Bitcoin at the price they deserve."</p>
           </a>
           <!-- M3 -->
-          <a href="modules/m3-altcoins.html" class="module-card bg-cs-card border border-cs-border rounded-xl p-4">
+          <a href="modules/m3-altcoins.html" class="module-card bg-white border border-\[#E8E8EA\] rounded-xl p-4">
             <div class="flex items-center justify-between mb-3">
               <span class="module-step bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono rounded-lg px-2 py-1">03</span>
               <span class="module-arrow text-cs-orange text-lg font-bold">→</span>
             </div>
             <h3 class="font-bold text-sm mb-1">Altcoins</h3>
-            <p class="text-cs-muted text-xs mb-3 leading-relaxed">Tech startup framework, CS Filter (98% fail), XRP reality check, tokenomics, RWA.</p>
+            <p class="text-\[#807F86\] text-xs mb-3 leading-relaxed">Tech startup framework, CS Filter (98% fail), XRP reality check, tokenomics, RWA.</p>
             <div class="flex flex-wrap gap-1 mb-3">
               <span class="bg-red-500/15 text-red-400 text-xs font-mono px-2 py-0.5 rounded-full">⚠ high impact</span>
               <span class="bg-cs-green/15 text-cs-green text-xs font-mono px-2 py-0.5 rounded-full">L1</span>
               <span class="bg-blue-500/15 text-blue-400 text-xs font-mono px-2 py-0.5 rounded-full">L2</span>
             </div>
-            <p class="text-cs-muted text-xs italic">"Altcoins = tech startups."</p>
+            <p class="text-\[#807F86\] text-xs italic">"Altcoins = tech startups."</p>
           </a>
           <!-- M4 -->
-          <a href="modules/m4-how-we-invest.html" class="module-card bg-cs-card border border-cs-border rounded-xl p-4">
+          <a href="modules/m4-how-we-invest.html" class="module-card bg-white border border-\[#E8E8EA\] rounded-xl p-4">
             <div class="flex items-center justify-between mb-3">
               <span class="module-step bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono rounded-lg px-2 py-1">04</span>
               <span class="module-arrow text-cs-orange text-lg font-bold">→</span>
             </div>
             <h3 class="font-bold text-sm mb-1">How We Invest</h3>
-            <p class="text-cs-muted text-xs mb-3 leading-relaxed">Risk-to-reward, investment principles, portfolio allocation, TA as a tool.</p>
+            <p class="text-\[#807F86\] text-xs mb-3 leading-relaxed">Risk-to-reward, investment principles, portfolio allocation, TA as a tool.</p>
             <div class="flex flex-wrap gap-1 mb-3">
               <span class="bg-cs-orange/15 text-cs-orange text-xs font-mono px-2 py-0.5 rounded-full">principles</span>
               <span class="bg-cs-green/15 text-cs-green text-xs font-mono px-2 py-0.5 rounded-full">L1</span>
               <span class="bg-blue-500/15 text-blue-400 text-xs font-mono px-2 py-0.5 rounded-full">L2</span>
             </div>
-            <p class="text-cs-muted text-xs italic">"High risk = both directions."</p>
+            <p class="text-\[#807F86\] text-xs italic">"High risk = both directions."</p>
           </a>
         </div>
       </div>
@@ -162,130 +403,130 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
       <div class="mb-8">
         <div class="flex items-center gap-2 mb-3">
           <span class="bg-cs-orange/20 text-cs-orange text-xs font-bold font-mono px-3 py-1 rounded-full uppercase tracking-wide">B2 — Practical How-Tos</span>
-          <span class="text-cs-muted text-xs font-mono">Weeks 2–5 · 1 module/week via weekly coaching call · Steps 5–8</span>
+          <span class="text-\[#807F86\] text-xs font-mono">Weeks 2–5 · 1 module/week via weekly coaching call · Steps 5–8</span>
         </div>
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-3">
           <!-- M5 -->
-          <a href="modules/m5-buy-sell.html" class="module-card bg-cs-card border border-cs-border rounded-xl p-4">
+          <a href="modules/m5-buy-sell.html" class="module-card bg-white border border-\[#E8E8EA\] rounded-xl p-4">
             <div class="flex items-center justify-between mb-3">
               <span class="module-step bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg px-2 py-1">05</span>
               <span class="module-arrow text-cs-orange text-lg font-bold">→</span>
             </div>
             <h3 class="font-bold text-sm mb-1">Buy & Sell</h3>
-            <p class="text-cs-muted text-xs mb-3 leading-relaxed">Bank friction, DCA setup, Exchange Guides by Country (L1). L2: 4-Tier Yield Spectrum, Staking as inflation offset, DeFi.</p>
+            <p class="text-\[#807F86\] text-xs mb-3 leading-relaxed">Bank friction, DCA setup, Exchange Guides by Country (L1). L2: 4-Tier Yield Spectrum, Staking as inflation offset, DeFi.</p>
             <div class="flex flex-wrap gap-1 mb-3">
               <span class="bg-cs-green/15 text-cs-green text-xs font-mono px-2 py-0.5 rounded-full">L1: CEX · Wk 2</span>
               <span class="bg-blue-500/15 text-blue-400 text-xs font-mono px-2 py-0.5 rounded-full">L2: 4-tier yield</span>
             </div>
-            <p class="text-cs-muted text-xs italic">"I've never regretted DCA."</p>
+            <p class="text-\[#807F86\] text-xs italic">"I've never regretted DCA."</p>
           </a>
           <!-- M6 -->
-          <a href="modules/m6-send-store.html" class="module-card bg-cs-card border border-cs-border rounded-xl p-4">
+          <a href="modules/m6-send-store.html" class="module-card bg-white border border-\[#E8E8EA\] rounded-xl p-4">
             <div class="flex items-center justify-between mb-3">
               <span class="module-step bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg px-2 py-1">06</span>
               <span class="module-arrow text-cs-orange text-lg font-bold">→</span>
             </div>
             <h3 class="font-bold text-sm mb-1">Send & Store</h3>
-            <p class="text-cs-muted text-xs mb-3 leading-relaxed">Self-custody, hardware wallets, security scaling. L2: multi-sig, estate planning.</p>
+            <p class="text-\[#807F86\] text-xs mb-3 leading-relaxed">Self-custody, hardware wallets, security scaling. L2: multi-sig, estate planning.</p>
             <div class="flex flex-wrap gap-1 mb-3">
               <span class="bg-red-500/15 text-red-400 text-xs font-mono px-2 py-0.5 rounded-full">🔑 #1 need</span>
               <span class="bg-cs-green/15 text-cs-green text-xs font-mono px-2 py-0.5 rounded-full">L1</span>
               <span class="bg-blue-500/15 text-blue-400 text-xs font-mono px-2 py-0.5 rounded-full">L2</span>
             </div>
-            <p class="text-cs-muted text-xs italic">"Paranoia = zeros."</p>
+            <p class="text-\[#807F86\] text-xs italic">"Paranoia = zeros."</p>
           </a>
           <!-- M7 -->
-          <a href="modules/m7-tax.html" class="module-card bg-cs-card border border-cs-border rounded-xl p-4">
+          <a href="modules/m7-tax.html" class="module-card bg-white border border-\[#E8E8EA\] rounded-xl p-4">
             <div class="flex items-center justify-between mb-3">
               <span class="module-step bg-cs-green/20 text-cs-green text-xs font-bold font-mono rounded-lg px-2 py-1">07</span>
               <span class="module-arrow text-cs-orange text-lg font-bold">→</span>
             </div>
             <h3 class="font-bold text-sm mb-1">Tax</h3>
-            <p class="text-cs-muted text-xs mb-3 leading-relaxed">CGT basics, record keeping, tools. L2: optimisation, entity structures.</p>
+            <p class="text-\[#807F86\] text-xs mb-3 leading-relaxed">CGT basics, record keeping, tools. L2: optimisation, entity structures.</p>
             <div class="flex flex-wrap gap-1 mb-3">
               <span class="bg-amber-500/15 text-amber-400 text-xs font-mono px-2 py-0.5 rounded-full">edu only</span>
               <span class="bg-cs-green/15 text-cs-green text-xs font-mono px-2 py-0.5 rounded-full">L1</span>
               <span class="bg-blue-500/15 text-blue-400 text-xs font-mono px-2 py-0.5 rounded-full">L2</span>
             </div>
-            <p class="text-cs-muted text-xs italic">CGT, record keeping, SMSF, trusts.</p>
+            <p class="text-\[#807F86\] text-xs italic">CGT, record keeping, SMSF, trusts.</p>
           </a>
           <!-- M8 -->
-          <a href="modules/m8-sell-strategy.html" class="module-card bg-cs-card border border-cs-orange/30 rounded-xl p-4">
+          <a href="modules/m8-sell-strategy.html" class="module-card bg-white border border-cs-orange/30 rounded-xl p-4">
             <div class="flex items-center justify-between mb-3">
               <span class="module-step bg-cs-orange/30 text-cs-orange text-xs font-bold font-mono rounded-lg px-2 py-1">08</span>
               <span class="module-arrow text-cs-orange text-lg font-bold">→</span>
             </div>
             <h3 class="font-bold text-sm mb-1 text-cs-orange">Sell Strategy</h3>
-            <p class="text-cs-muted text-xs mb-3 leading-relaxed">Loss-cutting, exit planning, re-entry. L2: opportunity cost, borrowing.</p>
+            <p class="text-\[#807F86\] text-xs mb-3 leading-relaxed">Loss-cutting, exit planning, re-entry. L2: opportunity cost, borrowing.</p>
             <div class="flex flex-wrap gap-1 mb-3">
               <span class="bg-red-500/15 text-red-400 text-xs font-mono px-2 py-0.5 rounded-full">#1 fear</span>
               <span class="bg-cs-green/15 text-cs-green text-xs font-mono px-2 py-0.5 rounded-full">L1</span>
               <span class="bg-blue-500/15 text-blue-400 text-xs font-mono px-2 py-0.5 rounded-full">L2: borrow</span>
             </div>
-            <p class="text-cs-muted text-xs italic">"A strategy in your head is a vague intention."</p>
+            <p class="text-\[#807F86\] text-xs italic">"A strategy in your head is a vague intention."</p>
           </a>
         </div>
       </div>
 
       <!-- ===================== TWO-TRACK LAYOUT ===================== -->
       <h2 class="text-2xl font-bold mb-2">Two-Track Education System</h2>
-      <p class="text-cs-muted text-sm mb-2">All 8 modules have Level 1 and Level 2 content. <strong class="text-cs-green">L1 is sequential</strong> — finish Phase 2 how-tos before Phase 3 strategy. <strong class="text-blue-400">L2 is concurrent</strong> — Phase 2 + Phase 3 run in parallel from Week 2.</p>
+      <p class="text-\[#807F86\] text-sm mb-2">All 8 modules have Level 1 and Level 2 content. <strong class="text-cs-green">L1 is sequential</strong> — finish Phase 2 how-tos before Phase 3 strategy. <strong class="text-blue-400">L2 is concurrent</strong> — Phase 2 + Phase 3 run in parallel from Week 2.</p>
       <div class="bg-cs-orange/5 border border-cs-orange/20 rounded-xl p-4 mb-6 flex items-start gap-3">
         <span class="text-cs-orange text-lg flex-shrink-0">📅</span>
-        <p class="text-xs text-cs-muted"><strong class="text-cs-text">ONE weekly coaching call covers both phases</strong> — not separate calls. In L1 Weeks 2–5, the call focuses on that week's how-to module. From Week 5+ it shifts to supporting strategy work. For L2, the single call wraps both advanced how-tos AND strategy simultaneously.</p>
+        <p class="text-xs text-\[#807F86\]"><strong class="text-\[#1B1925\]">ONE weekly coaching call covers both phases</strong> — not separate calls. In L1 Weeks 2–5, the call focuses on that week's how-to module. From Week 5+ it shifts to supporting strategy work. For L2, the single call wraps both advanced how-tos AND strategy simultaneously.</p>
       </div>
 
       <div class="grid md:grid-cols-2 gap-4 mb-10">
         <!-- Level 1 -->
-        <div class="bg-cs-card border border-cs-green/30 rounded-xl overflow-hidden">
+        <div class="bg-white border border-cs-green/30 rounded-xl overflow-hidden">
           <div class="bg-cs-green/10 px-5 py-3 border-b border-cs-green/20 flex items-center gap-2">
             <span class="text-cs-green text-lg">🟢</span>
             <div>
               <h3 class="font-heading font-bold text-cs-green">Level 1 — Beginner Track</h3>
-              <p class="text-xs text-cs-muted font-mono">Sequential · 90 days · CEX only · No yield · No DeFi</p>
+              <p class="text-xs text-\[#807F86\] font-mono">Sequential · 90 days · CEX only · No yield · No DeFi</p>
             </div>
           </div>
           <div class="p-5 space-y-3">
-            <div class="bg-cs-bg rounded-lg p-3 border-l-3 border-cs-green">
+            <div class="bg-white rounded-lg p-3 border-l-3 border-cs-green">
               <p class="text-xs font-bold text-cs-green font-mono mb-1">B1 — Foundations Session · Week 1</p>
-              <p class="text-xs text-cs-muted">One-off 2-hour live session covering Steps 1–4: Foundations, Bitcoin, Altcoins, How We Invest</p>
+              <p class="text-xs text-\[#807F86\]">One-off 2-hour live session covering Steps 1–4: Foundations, Bitcoin, Altcoins, How We Invest</p>
             </div>
-            <div class="bg-cs-bg rounded-lg p-3">
+            <div class="bg-white rounded-lg p-3">
               <p class="text-xs font-bold text-cs-green font-mono mb-1">B2 — Practical How-Tos · Weeks 2–5</p>
-              <p class="text-xs text-cs-muted">One module per week: Week 2 = M5 Buy &amp; Sell, Week 3 = M6 Send &amp; Store, Week 4 = M7 Tax, Week 5 = M8 Sell Strategy. Delivered through the weekly coaching call.</p>
+              <p class="text-xs text-\[#807F86\]">One module per week: Week 2 = M5 Buy &amp; Sell, Week 3 = M6 Send &amp; Store, Week 4 = M7 Tax, Week 5 = M8 Sell Strategy. Delivered through the weekly coaching call.</p>
             </div>
-            <div class="bg-cs-bg rounded-lg p-3">
+            <div class="bg-white rounded-lg p-3">
               <p class="text-xs font-bold text-cs-green font-mono mb-1">B3 — 8-Step Strategy Process · Day 30–Day 90 (Weeks 5–12)</p>
-              <p class="text-xs text-cs-muted">Starts AFTER B2 is complete (sequential). Pre-recorded course + same weekly coaching call. Culminates in 1:1 analyst session.</p>
+              <p class="text-xs text-\[#807F86\]">Starts AFTER B2 is complete (sequential). Pre-recorded course + same weekly coaching call. Culminates in 1:1 analyst session.</p>
             </div>
             <div class="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mt-2">
               <p class="text-red-400 text-xs font-bold font-mono uppercase">🚫 CEX Only Rule</p>
-              <p class="text-cs-muted text-xs mt-1">No yield · No staking · No DeFi · No borrowing in L1</p>
+              <p class="text-\[#807F86\] text-xs mt-1">No yield · No staking · No DeFi · No borrowing in L1</p>
             </div>
           </div>
         </div>
 
         <!-- Level 2 -->
-        <div class="bg-cs-card border border-blue-500/30 rounded-xl overflow-hidden">
+        <div class="bg-white border border-blue-500/30 rounded-xl overflow-hidden">
           <div class="bg-blue-500/10 px-5 py-3 border-b border-blue-500/20 flex items-center gap-2">
             <span class="text-blue-400 text-lg">🔵</span>
             <div>
               <h3 class="font-heading font-bold text-blue-400">Level 2 — Advanced Track</h3>
-              <p class="text-xs text-cs-muted font-mono">Concurrent · Phase 2 + 3 in parallel from Week 2</p>
+              <p class="text-xs text-\[#807F86\] font-mono">Concurrent · Phase 2 + 3 in parallel from Week 2</p>
             </div>
           </div>
           <div class="p-5 space-y-3">
-            <div class="bg-cs-bg rounded-lg p-3">
+            <div class="bg-white rounded-lg p-3">
               <p class="text-xs font-bold text-blue-400 font-mono mb-1">A1 — Advanced Foundations · Week 1 of L2</p>
-              <p class="text-xs text-cs-muted">One-off live session covering advanced Steps 1–4: macro correlations, mining economics, tokenomics, multi-entity structures</p>
+              <p class="text-xs text-\[#807F86\]">One-off live session covering advanced Steps 1–4: macro correlations, mining economics, tokenomics, multi-entity structures</p>
             </div>
-            <div class="bg-cs-bg rounded-lg p-3">
+            <div class="bg-white rounded-lg p-3">
               <p class="text-xs font-bold text-blue-400 font-mono mb-1">A2 — Advanced How-Tos · Weeks 2+ (one module/week)</p>
-              <p class="text-xs text-cs-muted">Concurrent with Phase 3. Week 2 = M5 (4-Tier Yield Spectrum, staking as inflation offset), Week 3 = M6 (multi-sig), Week 4 = M7 (tax optimisation), Week 5 = M8 (exit ladders, borrowing). Via L2 weekly coaching call.</p>
+              <p class="text-xs text-\[#807F86\]">Concurrent with Phase 3. Week 2 = M5 (4-Tier Yield Spectrum, staking as inflation offset), Week 3 = M6 (multi-sig), Week 4 = M7 (tax optimisation), Week 5 = M8 (exit ladders, borrowing). Via L2 weekly coaching call.</p>
             </div>
-            <div class="bg-cs-bg rounded-lg p-3">
+            <div class="bg-white rounded-lg p-3">
               <p class="text-xs font-bold text-blue-400 font-mono mb-1">A3 — Advanced 8-Step Strategy · Weeks 2+ (concurrent)</p>
-              <p class="text-xs text-cs-muted">Runs IN PARALLEL with A2 from Week 2. Pre-recorded + same L2 coaching call. 1:1 analyst session can be booked whenever ready — not gated to end of Phase 2.</p>
+              <p class="text-xs text-\[#807F86\]">Runs IN PARALLEL with A2 from Week 2. Pre-recorded + same L2 coaching call. 1:1 analyst session can be booked whenever ready — not gated to end of Phase 2.</p>
             </div>
             <div class="bg-cs-orange/10 border border-cs-orange/20 rounded-lg p-3 mt-2">
               <p class="text-cs-orange text-xs font-bold font-mono uppercase">Advanced Unlocks:</p>
@@ -305,75 +546,75 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
 
       <!-- ===================== 8-STEP STRATEGY PROCESS ===================== -->
       <h2 class="text-2xl font-bold mb-2">The 8-Step Strategy Process (Phase 3)</h2>
-      <p class="text-cs-muted text-sm mb-6">The culminating exercise for both Level 1 and Level 2. Members complete a written strategy document — one step per session. <em>"A strategy in your head is not a strategy. It's a vague intention."</em></p>
+      <p class="text-\[#807F86\] text-sm mb-6">The culminating exercise for both Level 1 and Level 2. Members complete a written strategy document — one step per session. <em>"A strategy in your head is not a strategy. It's a vague intention."</em></p>
 
       <div class="grid md:grid-cols-4 gap-3 mb-4">
-        <div class="bg-cs-card border border-cs-orange/30 rounded-xl p-4">
+        <div class="bg-white border border-cs-orange/30 rounded-xl p-4">
           <div class="text-cs-orange text-xs font-bold font-mono mb-1">STEP 01</div>
           <h4 class="text-sm font-bold mb-1">Define Your Goals</h4>
-          <p class="text-cs-muted text-xs">Time horizon, capital targets, life goals tied to portfolio</p>
+          <p class="text-\[#807F86\] text-xs">Time horizon, capital targets, life goals tied to portfolio</p>
         </div>
-        <div class="bg-cs-card border border-cs-orange/30 rounded-xl p-4">
+        <div class="bg-white border border-cs-orange/30 rounded-xl p-4">
           <div class="text-cs-orange text-xs font-bold font-mono mb-1">STEP 02</div>
           <h4 class="text-sm font-bold mb-1">Assess Your Risk Profile</h4>
-          <p class="text-cs-muted text-xs">Wealth Generation, Protection, or Income Creation. Capital sizing.</p>
+          <p class="text-\[#807F86\] text-xs">Wealth Generation, Protection, or Income Creation. Capital sizing.</p>
         </div>
-        <div class="bg-cs-card border border-cs-orange/30 rounded-xl p-4">
+        <div class="bg-white border border-cs-orange/30 rounded-xl p-4">
           <div class="text-cs-orange text-xs font-bold font-mono mb-1">STEP 03</div>
           <h4 class="text-sm font-bold mb-1">Build Your Investment Thesis</h4>
-          <p class="text-cs-muted text-xs">Why you hold each asset — written, first-principles conviction</p>
+          <p class="text-\[#807F86\] text-xs">Why you hold each asset — written, first-principles conviction</p>
         </div>
-        <div class="bg-cs-card border border-cs-orange/30 rounded-xl p-4">
+        <div class="bg-white border border-cs-orange/30 rounded-xl p-4">
           <div class="text-cs-orange text-xs font-bold font-mono mb-1">STEP 04</div>
           <h4 class="text-sm font-bold mb-1">Your Portfolio Allocation</h4>
-          <p class="text-cs-muted text-xs">BTC / altcoin / stablecoin split with rationale. Portfolio Allocation Calculator.</p>
+          <p class="text-\[#807F86\] text-xs">BTC / altcoin / stablecoin split with rationale. Portfolio Allocation Calculator.</p>
         </div>
-        <div class="bg-cs-card border border-cs-orange/30 rounded-xl p-4">
+        <div class="bg-white border border-cs-orange/30 rounded-xl p-4">
           <div class="text-cs-orange text-xs font-bold font-mono mb-1">STEP 05</div>
           <h4 class="text-sm font-bold mb-1">Create Your Buy Strategy</h4>
-          <p class="text-cs-muted text-xs">DCA amounts, frequency, automation setup, lump sum decision framework</p>
+          <p class="text-\[#807F86\] text-xs">DCA amounts, frequency, automation setup, lump sum decision framework</p>
         </div>
-        <div class="bg-cs-card border border-cs-orange/30 rounded-xl p-4">
+        <div class="bg-white border border-cs-orange/30 rounded-xl p-4">
           <div class="text-cs-orange text-xs font-bold font-mono mb-1">STEP 06</div>
           <h4 class="text-sm font-bold mb-1">Plan Your Tax Approach</h4>
-          <p class="text-cs-muted text-xs">Record keeping, software (Koinly/CTC), accountant briefing, CGT rules</p>
+          <p class="text-\[#807F86\] text-xs">Record keeping, software (Koinly/CTC), accountant briefing, CGT rules</p>
         </div>
-        <div class="bg-cs-card border border-cs-orange/30 rounded-xl p-4">
+        <div class="bg-white border border-cs-orange/30 rounded-xl p-4">
           <div class="text-cs-orange text-xs font-bold font-mono mb-1">STEP 07</div>
           <h4 class="text-sm font-bold mb-1">Secure Your Assets</h4>
-          <p class="text-cs-muted text-xs">Security tier matched to portfolio size. Hardware wallet + seed phrase backup (L1). Multi-sig, estate planning (L2).</p>
+          <p class="text-\[#807F86\] text-xs">Security tier matched to portfolio size. Hardware wallet + seed phrase backup (L1). Multi-sig, estate planning (L2).</p>
         </div>
-        <div class="bg-cs-card border border-cs-orange/40 bg-cs-orange/5 rounded-xl p-4">
+        <div class="bg-white border border-cs-orange/40 bg-cs-orange/5 rounded-xl p-4">
           <div class="text-cs-orange text-xs font-bold font-mono mb-1">STEP 08</div>
           <h4 class="text-sm font-bold mb-1 text-cs-orange">Write Your Sell Strategy</h4>
-          <p class="text-cs-muted text-xs">Written, pre-committed exit rules — targets, triggers, types. The #1 member pain point. Most powerful marketing hook.</p>
+          <p class="text-\[#807F86\] text-xs">Written, pre-committed exit rules — targets, triggers, types. The #1 member pain point. Most powerful marketing hook.</p>
         </div>
       </div>
       <div class="bg-cs-green/5 border border-cs-green/20 rounded-xl p-4 mb-10">
-        <p class="text-xs text-cs-muted"><span class="text-cs-green font-bold">L1 timing:</span> Starts Day 30 (Week 5) after completing B2 how-tos. Works through steps via weekly coaching call. Culminates in 1:1 analyst sign-off. <span class="text-blue-400 font-bold ml-4">L2 timing:</span> Starts Week 2 concurrently with A2 how-tos. Can book 1:1 analyst whenever ready.</p>
+        <p class="text-xs text-\[#807F86\]"><span class="text-cs-green font-bold">L1 timing:</span> Starts Day 30 (Week 5) after completing B2 how-tos. Works through steps via weekly coaching call. Culminates in 1:1 analyst sign-off. <span class="text-blue-400 font-bold ml-4">L2 timing:</span> Starts Week 2 concurrently with A2 how-tos. Can book 1:1 analyst whenever ready.</p>
       </div>
 
       <!-- ===================== LEVEL PROGRESSION ===================== -->
       <h2 class="text-2xl font-bold mb-2">Level Progression</h2>
-      <p class="text-cs-muted text-sm mb-6">The full member journey from entry to mastery. Each level is gated — complete all modules and sessions before advancing.</p>
+      <p class="text-\[#807F86\] text-sm mb-6">The full member journey from entry to mastery. Each level is gated — complete all modules and sessions before advancing.</p>
 
-      <div class="bg-cs-card border border-cs-border rounded-xl p-6 mb-10">
+      <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-6 mb-10">
         <!-- Desktop progression -->
         <div class="hidden md:flex items-stretch gap-0">
           <!-- Go Pro -->
-          <div class="progression-step flex-1 bg-cs-bg border border-cs-border rounded-xl p-4 text-center">
+          <div class="progression-step flex-1 bg-white border border-\[#E8E8EA\] rounded-xl p-4 text-center">
             <div class="text-2xl mb-2">🚀</div>
-            <p class="text-xs font-bold text-cs-muted font-mono uppercase tracking-wide">Entry</p>
+            <p class="text-xs font-bold text-\[#807F86\] font-mono uppercase tracking-wide">Entry</p>
             <p class="text-sm font-bold mt-1">Go Pro</p>
-            <p class="text-cs-muted text-xs mt-2">Research platform, Circle community, introductory education</p>
+            <p class="text-\[#807F86\] text-xs mt-2">Research platform, Circle community, introductory education</p>
           </div>
           <div class="flex items-center px-2 text-cs-orange font-bold text-xl flex-shrink-0">→</div>
           <!-- Accelerator -->
-          <div class="progression-step flex-1 bg-cs-bg border border-cs-border rounded-xl p-4 text-center">
+          <div class="progression-step flex-1 bg-white border border-\[#E8E8EA\] rounded-xl p-4 text-center">
             <div class="text-2xl mb-2">⚡</div>
-            <p class="text-xs font-bold text-cs-muted font-mono uppercase tracking-wide">Mid Tier</p>
+            <p class="text-xs font-bold text-\[#807F86\] font-mono uppercase tracking-wide">Mid Tier</p>
             <p class="text-sm font-bold mt-1">Accelerator</p>
-            <p class="text-cs-muted text-xs mt-2">1-on-1 coaching, live Foundation sessions, starts 8-step curriculum</p>
+            <p class="text-\[#807F86\] text-xs mt-2">1-on-1 coaching, live Foundation sessions, starts 8-step curriculum</p>
           </div>
           <div class="flex items-center px-2 text-cs-orange font-bold text-xl flex-shrink-0">→</div>
           <!-- Level 1 -->
@@ -381,7 +622,7 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
             <div class="text-2xl mb-2">📗</div>
             <p class="text-xs font-bold text-cs-green font-mono uppercase tracking-wide">Beginner</p>
             <p class="text-sm font-bold mt-1 text-cs-green">Level 1</p>
-            <p class="text-cs-muted text-xs mt-2">B1 Foundations · B2 How-Tos · B3 Strategy Process</p>
+            <p class="text-\[#807F86\] text-xs mt-2">B1 Foundations · B2 How-Tos · B3 Strategy Process</p>
           </div>
           <div class="flex items-center px-1 flex-shrink-0">
             <div class="bg-red-500/20 border border-red-500/30 rounded-lg px-2 py-3 text-center">
@@ -394,7 +635,7 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
             <div class="text-2xl mb-2">📘</div>
             <p class="text-xs font-bold text-blue-400 font-mono uppercase tracking-wide">Advanced</p>
             <p class="text-sm font-bold mt-1 text-blue-400">Level 2</p>
-            <p class="text-cs-muted text-xs mt-2">A1 Advanced · A2 How-Tos · A3 Strategy Process</p>
+            <p class="text-\[#807F86\] text-xs mt-2">A1 Advanced · A2 How-Tos · A3 Strategy Process</p>
           </div>
           <div class="flex items-center px-1 flex-shrink-0">
             <div class="bg-red-500/20 border border-red-500/30 rounded-lg px-2 py-3 text-center">
@@ -407,181 +648,181 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
             <div class="text-2xl mb-2">👑</div>
             <p class="text-xs font-bold text-cs-orange font-mono uppercase tracking-wide">1 Year+</p>
             <p class="text-sm font-bold mt-1 text-cs-orange">Level 3: Elevate</p>
-            <p class="text-cs-muted text-xs mt-2">Ongoing coaching, weekly calls, full analyst access</p>
+            <p class="text-\[#807F86\] text-xs mt-2">Ongoing coaching, weekly calls, full analyst access</p>
           </div>
         </div>
         <!-- Mobile progression -->
         <div class="md:hidden space-y-3">
-          <div class="flex gap-3 items-center bg-cs-bg border border-cs-border rounded-lg p-3">
+          <div class="flex gap-3 items-center bg-white border border-\[#E8E8EA\] rounded-lg p-3">
             <span class="text-2xl">🚀</span>
-            <div><p class="text-xs font-bold">Go Pro</p><p class="text-cs-muted text-xs">Entry tier · Research + community</p></div>
+            <div><p class="text-xs font-bold">Go Pro</p><p class="text-\[#807F86\] text-xs">Entry tier · Research + community</p></div>
           </div>
           <div class="text-cs-orange font-bold text-center">↓</div>
-          <div class="flex gap-3 items-center bg-cs-bg border border-cs-border rounded-lg p-3">
+          <div class="flex gap-3 items-center bg-white border border-\[#E8E8EA\] rounded-lg p-3">
             <span class="text-2xl">⚡</span>
-            <div><p class="text-xs font-bold">Accelerator</p><p class="text-cs-muted text-xs">Mid tier · Coaching + structured curriculum</p></div>
+            <div><p class="text-xs font-bold">Accelerator</p><p class="text-\[#807F86\] text-xs">Mid tier · Coaching + structured curriculum</p></div>
           </div>
           <div class="text-cs-orange font-bold text-center">↓</div>
           <div class="flex gap-3 items-center bg-cs-green/10 border border-cs-green/30 rounded-lg p-3">
             <span class="text-2xl">📗</span>
-            <div><p class="text-xs font-bold text-cs-green">Level 1 — Beginner</p><p class="text-cs-muted text-xs">B1 + B2 + B3 · Complete all 8 modules</p></div>
+            <div><p class="text-xs font-bold text-cs-green">Level 1 — Beginner</p><p class="text-\[#807F86\] text-xs">B1 + B2 + B3 · Complete all 8 modules</p></div>
           </div>
           <div class="flex items-center gap-2 justify-center">
             <div class="bg-red-500/20 border border-red-500/30 rounded-lg px-3 py-1"><p class="text-red-400 text-xs font-bold font-mono">GATE: All 8 modules</p></div>
           </div>
           <div class="flex gap-3 items-center bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
             <span class="text-2xl">📘</span>
-            <div><p class="text-xs font-bold text-blue-400">Level 2 — Advanced</p><p class="text-cs-muted text-xs">A1 + A2 + A3 · Complete all 8 modules</p></div>
+            <div><p class="text-xs font-bold text-blue-400">Level 2 — Advanced</p><p class="text-\[#807F86\] text-xs">A1 + A2 + A3 · Complete all 8 modules</p></div>
           </div>
           <div class="flex items-center gap-2 justify-center">
             <div class="bg-red-500/20 border border-red-500/30 rounded-lg px-3 py-1"><p class="text-red-400 text-xs font-bold font-mono">GATE: All 8 modules</p></div>
           </div>
           <div class="flex gap-3 items-center bg-cs-orange/10 border border-cs-orange/30 rounded-lg p-3">
             <span class="text-2xl">👑</span>
-            <div><p class="text-xs font-bold text-cs-orange">Level 3: Elevate</p><p class="text-cs-muted text-xs">1 year+ · Ongoing coaching + weekly calls</p></div>
+            <div><p class="text-xs font-bold text-cs-orange">Level 3: Elevate</p><p class="text-\[#807F86\] text-xs">1 year+ · Ongoing coaching + weekly calls</p></div>
           </div>
         </div>
         <!-- Level 3 detail -->
         <div class="mt-4 bg-cs-orange/5 border border-cs-orange/20 rounded-xl p-4">
           <p class="text-cs-orange text-xs font-bold font-mono uppercase mb-2">👑 Level 3: Elevate — What's Included</p>
           <div class="grid md:grid-cols-3 gap-3">
-            <div class="text-xs text-cs-muted flex gap-2"><span class="text-cs-orange">✓</span> Ongoing 1-on-1 coaching sessions</div>
-            <div class="text-xs text-cs-muted flex gap-2"><span class="text-cs-orange">✓</span> Weekly live strategy calls + Q&A</div>
-            <div class="text-xs text-cs-muted flex gap-2"><span class="text-cs-orange">✓</span> Full analyst access + priority scheduling</div>
-            <div class="text-xs text-cs-muted flex gap-2"><span class="text-cs-orange">✓</span> 8-step process revisited at advanced level</div>
-            <div class="text-xs text-cs-muted flex gap-2"><span class="text-cs-orange">✓</span> Peer cohort — small group of committed investors</div>
-            <div class="text-xs text-cs-muted flex gap-2"><span class="text-cs-orange">✓</span> Priority access to new research and deep dives</div>
+            <div class="text-xs text-\[#807F86\] flex gap-2"><span class="text-cs-orange">✓</span> Ongoing 1-on-1 coaching sessions</div>
+            <div class="text-xs text-\[#807F86\] flex gap-2"><span class="text-cs-orange">✓</span> Weekly live strategy calls + Q&A</div>
+            <div class="text-xs text-\[#807F86\] flex gap-2"><span class="text-cs-orange">✓</span> Full analyst access + priority scheduling</div>
+            <div class="text-xs text-\[#807F86\] flex gap-2"><span class="text-cs-orange">✓</span> 8-step process revisited at advanced level</div>
+            <div class="text-xs text-\[#807F86\] flex gap-2"><span class="text-cs-orange">✓</span> Peer cohort — small group of committed investors</div>
+            <div class="text-xs text-\[#807F86\] flex gap-2"><span class="text-cs-orange">✓</span> Priority access to new research and deep dives</div>
           </div>
         </div>
       </div>
 
       <!-- ===================== THREE INVESTOR TYPES ===================== -->
       <h2 class="text-2xl font-bold mb-2">Three Investor Types</h2>
-      <p class="text-cs-muted text-sm mb-4">Every member falls into one of three categories. The Shift OS tailors frameworks, allocation guidance, and worked examples to each.</p>
+      <p class="text-\[#807F86\] text-sm mb-4">Every member falls into one of three categories. The Shift OS tailors frameworks, allocation guidance, and worked examples to each.</p>
       <div class="grid md:grid-cols-3 gap-4 mb-10">
-        <div class="bg-cs-card border border-cs-orange/30 rounded-xl p-5">
+        <div class="bg-white border border-cs-orange/30 rounded-xl p-5">
           <div class="text-2xl mb-2">💰</div>
           <h3 class="font-bold text-sm mb-2">Wealth Generation</h3>
-          <p class="text-cs-muted text-xs mb-3">Growing capital significantly. Higher risk tolerance. Longer time horizon. Bitcoin core with altcoin satellites.</p>
-          <p class="text-cs-muted text-xs italic">Examples: Ryan ($300K, wants to double), Harry (50% net worth in digital assets)</p>
+          <p class="text-\[#807F86\] text-xs mb-3">Growing capital significantly. Higher risk tolerance. Longer time horizon. Bitcoin core with altcoin satellites.</p>
+          <p class="text-\[#807F86\] text-xs italic">Examples: Ryan ($300K, wants to double), Harry (50% net worth in digital assets)</p>
         </div>
-        <div class="bg-cs-card border border-cs-green/30 rounded-xl p-5">
+        <div class="bg-white border border-cs-green/30 rounded-xl p-5">
           <div class="text-2xl mb-2">🛡️</div>
           <h3 class="font-bold text-sm mb-2">Wealth Protection</h3>
-          <p class="text-cs-muted text-xs mb-3">Protecting existing wealth. Bitcoin-dominant (70–80%). Lower DCA amounts. Long-term thesis over price action.</p>
-          <p class="text-cs-muted text-xs italic">Examples: Stacey (precious metals → Bitcoin), Nigel ($200K from property sale), Dina (senior)</p>
+          <p class="text-\[#807F86\] text-xs mb-3">Protecting existing wealth. Bitcoin-dominant (70–80%). Lower DCA amounts. Long-term thesis over price action.</p>
+          <p class="text-\[#807F86\] text-xs italic">Examples: Stacey (precious metals → Bitcoin), Nigel ($200K from property sale), Dina (senior)</p>
         </div>
-        <div class="bg-cs-card border border-blue-500/30 rounded-xl p-5">
+        <div class="bg-white border border-blue-500/30 rounded-xl p-5">
           <div class="text-2xl mb-2">📈</div>
           <h3 class="font-bold text-sm mb-2">Income Creation</h3>
-          <p class="text-cs-muted text-xs mb-3">Generating yield on holdings. Stablecoin/DeFi strategies. Systematic withdrawal schedules. Available in Level 2 only.</p>
-          <p class="text-cs-muted text-xs italic">Members asking about stablecoin yields, DeFi interest, term deposit alternatives</p>
+          <p class="text-\[#807F86\] text-xs mb-3">Generating yield on holdings. Stablecoin/DeFi strategies. Systematic withdrawal schedules. Available in Level 2 only.</p>
+          <p class="text-\[#807F86\] text-xs italic">Members asking about stablecoin yields, DeFi interest, term deposit alternatives</p>
         </div>
       </div>
 
       <!-- ===================== TEACHING FRAMEWORKS ===================== -->
       <h2 class="text-2xl font-bold mb-2">Teaching Frameworks</h2>
-      <p class="text-cs-muted text-sm mb-4">Simon's 10 battle-tested frameworks from 30+ education calls. Used consistently at every level. Every analyst should know these by heart.</p>
+      <p class="text-\[#807F86\] text-sm mb-4">Simon's 10 battle-tested frameworks from 30+ education calls. Used consistently at every level. Every analyst should know these by heart.</p>
       <div class="grid md:grid-cols-2 gap-4 mb-10">
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">🏗️ "Altcoins = Tech Startups"</h4>
-          <p class="text-cs-muted italic text-xs mb-2">"Altcoins should really be called tech startups. The only similarity with Bitcoin is they both use blockchain technology."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 3 Altcoins · All content</span></p>
+          <p class="text-\[#807F86\] italic text-xs mb-2">"Altcoins should really be called tech startups. The only similarity with Bitcoin is they both use blockchain technology."</p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-\[#807F86\]">Step 3 Altcoins · All content</span></p>
         </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">💰 "The DCA Certainty"</h4>
-          <p class="text-cs-muted italic text-xs mb-2">"I've never regretted dollar cost averaging."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 2 Bitcoin · Step 5 Buy & Sell</span></p>
+          <p class="text-\[#807F86\] italic text-xs mb-2">"I've never regretted dollar cost averaging."</p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-\[#807F86\]">Step 2 Bitcoin · Step 5 Buy & Sell</span></p>
         </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">✂️ "Best Trade Was a Loss"</h4>
-          <p class="text-cs-muted italic text-xs mb-2">"My best investment decision was getting out of Polygon before I lost 70-80%."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 8 Sell Strategy · L2 How-Tos</span></p>
+          <p class="text-\[#807F86\] italic text-xs mb-2">"My best investment decision was getting out of Polygon before I lost 70-80%."</p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-\[#807F86\]">Step 8 Sell Strategy · L2 How-Tos</span></p>
         </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">₿ "The Price You Deserve"</h4>
-          <p class="text-cs-muted italic text-xs mb-2">"Everyone gets Bitcoin at the price they deserve."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 2 Bitcoin · Onboarding</span></p>
+          <p class="text-\[#807F86\] italic text-xs mb-2">"Everyone gets Bitcoin at the price they deserve."</p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-\[#807F86\]">Step 2 Bitcoin · Onboarding</span></p>
         </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">🔐 "Paranoia = Zeros"</h4>
-          <p class="text-cs-muted italic text-xs mb-2">"The level of paranoia should equal the number of zeros you're trying to protect."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 6 Send & Store</span></p>
+          <p class="text-\[#807F86\] italic text-xs mb-2">"The level of paranoia should equal the number of zeros you're trying to protect."</p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-\[#807F86\]">Step 6 Send & Store</span></p>
         </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">⏳ "One Cycle Is Not Enough"</h4>
-          <p class="text-cs-muted italic text-xs mb-2">"No one makes it in a single cycle. Stick it out."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 1 Foundations · Retention</span></p>
+          <p class="text-\[#807F86\] italic text-xs mb-2">"No one makes it in a single cycle. Stick it out."</p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-\[#807F86\]">Step 1 Foundations · Retention</span></p>
         </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">⚖️ "High Risk = Both Directions"</h4>
-          <p class="text-cs-muted italic text-xs mb-2">"They hear '3x up' and ignore the '80% down' part."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 4 How We Invest</span></p>
+          <p class="text-\[#807F86\] italic text-xs mb-2">"They hear '3x up' and ignore the '80% down' part."</p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-\[#807F86\]">Step 4 How We Invest</span></p>
         </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">🔫 "The 5-Year Gun-to-Head Test"</h4>
-          <p class="text-cs-muted italic text-xs mb-2">"Where's Bitcoin in 5-10 years? About $500,000. That's 6x from here."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 2 Bitcoin · Bear market coaching</span></p>
+          <p class="text-\[#807F86\] italic text-xs mb-2">"Where's Bitcoin in 5-10 years? About $500,000. That's 6x from here."</p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-\[#807F86\]">Step 2 Bitcoin · Bear market coaching</span></p>
         </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">📊 "TA as Tool, Not Strategy"</h4>
-          <p class="text-cs-muted italic text-xs mb-2">"95% of people who try to be a day trader lose money."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 4 How We Invest</span></p>
+          <p class="text-\[#807F86\] italic text-xs mb-2">"95% of people who try to be a day trader lose money."</p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-\[#807F86\]">Step 4 How We Invest</span></p>
         </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5">
           <h4 class="text-sm font-bold text-cs-orange mb-2">♾️ "Bitcoin: Hold. Altcoins: Trade."</h4>
-          <p class="text-cs-muted italic text-xs mb-2">"I've never met a single person who said buying and holding Bitcoin long term was a bad idea."</p>
-          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-cs-muted">Step 2 Bitcoin · Step 3 Altcoins · All content</span></p>
+          <p class="text-\[#807F86\] italic text-xs mb-2">"I've never met a single person who said buying and holding Bitcoin long term was a bad idea."</p>
+          <p class="text-xs"><span class="text-cs-green font-mono font-bold">IN:</span> <span class="text-\[#807F86\]">Step 2 Bitcoin · Step 3 Altcoins · All content</span></p>
         </div>
       </div>
 
       <!-- ===================== PRODUCT TOOLS ===================== -->
       <h2 class="text-2xl font-bold mb-4">🛠️ Product Tools</h2>
       <div class="grid md:grid-cols-2 gap-4 mb-10">
-        <a href="/portfolio-calculator.html" class="bg-cs-card border border-cs-orange/30 rounded-xl p-5 block hover:border-cs-orange transition-colors group">
+        <a href="/portfolio-calculator.html" class="bg-white border border-cs-orange/30 rounded-xl p-5 block hover:border-cs-orange transition-colors group">
           <div class="flex items-center gap-3 mb-2">
             <div class="text-2xl">📊</div>
             <h3 class="text-sm font-bold text-cs-orange">Portfolio Allocation Calculator</h3>
           </div>
-          <p class="text-cs-muted text-xs mb-2">Interactive tool: input risk tolerance, capital, and time horizon. Output: suggested BTC/altcoin/stablecoin split matched to your investor type.</p>
+          <p class="text-\[#807F86\] text-xs mb-2">Interactive tool: input risk tolerance, capital, and time horizon. Output: suggested BTC/altcoin/stablecoin split matched to your investor type.</p>
           <span class="inline-block mt-2 text-cs-orange text-xs font-mono font-bold group-hover:underline">LAUNCH TOOL →</span>
         </a>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5 opacity-75">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5 opacity-75">
           <div class="flex items-center gap-3 mb-2">
             <div class="text-2xl">🗺️</div>
             <h3 class="text-sm font-bold">Beginner Journey Flow</h3>
           </div>
-          <p class="text-cs-muted text-xs mb-2">Guided onboarding: signup → first Bitcoin purchase → self-custody transfer. Checkpoint system with milestones and celebration moments.</p>
-          <span class="inline-block mt-2 text-cs-muted text-xs font-mono font-bold">COMING SOON</span>
+          <p class="text-\[#807F86\] text-xs mb-2">Guided onboarding: signup → first Bitcoin purchase → self-custody transfer. Checkpoint system with milestones and celebration moments.</p>
+          <span class="inline-block mt-2 text-\[#807F86\] text-xs font-mono font-bold">COMING SOON</span>
         </div>
       </div>
 
       <!-- ===================== COMMUNITY ===================== -->
       <h2 class="text-2xl font-bold mb-4">Community Platform</h2>
       <div class="grid md:grid-cols-2 gap-4 mb-10">
-        <div class="bg-cs-card border border-cs-green/30 rounded-xl p-5">
+        <div class="bg-white border border-cs-green/30 rounded-xl p-5">
           <div class="flex items-center gap-3 mb-2">
             <div class="text-2xl">💬</div>
             <h3 class="text-sm font-bold text-cs-green">Circle Community</h3>
           </div>
-          <p class="text-cs-muted text-xs">All member interaction on Circle. Structured, searchable, and designed for quality discussion. Not WhatsApp — Circle.</p>
+          <p class="text-\[#807F86\] text-xs">All member interaction on Circle. Structured, searchable, and designed for quality discussion. Not WhatsApp — Circle.</p>
         </div>
-        <div class="bg-cs-card border border-cs-green/30 rounded-xl p-5">
+        <div class="bg-white border border-cs-green/30 rounded-xl p-5">
           <div class="flex items-center gap-3 mb-2">
             <div class="text-2xl">🟢</div>
             <h3 class="text-sm font-bold text-cs-green">Platinum Beginners Lounge</h3>
           </div>
-          <p class="text-cs-muted text-xs">Safe space on Circle for new Platinum members to ask beginner questions without intimidation. Directly addresses the silent churn risk — members like Nigel who are afraid to post in the main community.</p>
+          <p class="text-\[#807F86\] text-xs">Safe space on Circle for new Platinum members to ask beginner questions without intimidation. Directly addresses the silent churn risk — members like Nigel who are afraid to post in the main community.</p>
         </div>
       </div>
 
       <!-- Key Quotes -->
-      <div class="border-l-4 border-cs-green bg-cs-card rounded-r-xl p-5 mb-4">
-        <p class="text-cs-muted italic text-sm">"We cannot reach through the screen and hit the sell button for you. That's not a thing. You have to hit the sell button. This is not on me. We're an education company."</p>
+      <div class="border-l-4 border-cs-green bg-white rounded-r-xl p-5 mb-4">
+        <p class="text-\[#807F86\] italic text-sm">"We cannot reach through the screen and hit the sell button for you. That's not a thing. You have to hit the sell button. This is not on me. We're an education company."</p>
         <p class="text-cs-orange text-xs mt-2 font-mono">— Travis, Product</p>
       </div>
-      <div class="border-l-4 border-cs-orange bg-cs-card rounded-r-xl p-5">
-        <p class="text-cs-muted italic text-sm">"A strategy in your head is not a strategy. It's a vague intention."</p>
+      <div class="border-l-4 border-cs-orange bg-white rounded-r-xl p-5">
+        <p class="text-\[#807F86\] italic text-sm">"A strategy in your head is not a strategy. It's a vague intention."</p>
         <p class="text-cs-orange text-xs mt-2 font-mono">— Shift OS Philosophy</p>
       </div>
 

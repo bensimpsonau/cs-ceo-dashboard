@@ -3,49 +3,290 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+
 <title>Competitive Intel — Collective Shift Strategy Hub</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+
 <script>
-tailwind.config={theme:{extend:{colors:{cs:{bg:'#1B1925',card:'#242232',border:'#2E2C3E',orange:'#FC5C03',green:'#08C394',text:'#F9F9F9',muted:'#9B99A9'}},fontFamily:{heading:['Oswald','sans-serif'],body:['Barlow','sans-serif'],mono:['Source Code Pro','monospace']}}}}
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cs: {
+          orange: '#FC5C03',
+          'orange-light': '#FC8C4E',
+          'orange-bg': '#FEDECC',
+          'orange-hover': '#FEEEE5',
+          green: '#08C394',
+          purple: '#654FFC',
+          border: '#E8E8EA',
+          text: '#1B1925',
+          secondary: '#4D4C55',
+          muted: '#807F86',
+        }
+      },
+      fontFamily: {
+        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+        barlow: ['Barlow', 'sans-serif'],
+        mono: ['Source Code Pro', 'monospace'],
+      },
+      borderRadius: {
+        pill: '100px',
+      }
+    }
+  }
+}
 </script>
 <style>
-body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-serif}.label-tag{font-family:'Source Code Pro',monospace}.sidebar{transition:transform .3s ease}@media(max-width:1023px){.sidebar{transform:translateX(-100%);position:fixed;z-index:50;top:0;left:0;height:100vh}.sidebar.open{transform:translateX(0)}}.nav-link{transition:all .15s}.nav-link:hover,.nav-link.active{background:rgba(252,92,3,.12);color:#FC5C03;border-left-color:#FC5C03}
+body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Plus Jakarta Sans',sans-serif}.label-tag{font-family:'Source Code Pro',monospace}.sidebar{transition:transform .3s ease}@media(max-width:1023px){.sidebar{transform:translateX(-100%);position:fixed;z-index:50;top:0;left:0;height:100vh}.sidebar.open{transform:translateX(0)}}.nav-link{transition:all .15s}.nav-link:hover,.nav-link.active{background:rgba(252,92,3,.12);color:#FC5C03;border-left-color:#FC5C03}
 </style>
 </head>
-<body class="bg-cs-bg text-cs-text min-h-screen">
+<body class="bg-white text-\[#1B1925\] min-h-screen">
+<!-- ═══ COLLECTIVE SHIFT TOP NAV ═══ -->
+<style>
+  :root {
+    --csn-h: 56px;
+    --csn-bg: #FFFFFF;
+    --csn-border: #E8E8EA;
+    --csn-text: #1B1925;
+    --csn-muted: #4D4C55;
+    --csn-orange: #FC5C03;
+    --csn-orange-bg: #FEEEE5;
+    --csn-dd-bg: #FFFFFF;
+    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    --csn-z: 9000;
+  }
+  .csn-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--csn-h);
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 0;
+    z-index: var(--csn-z);
+    font-family: 'Plus Jakarta Sans', 'Barlow', sans-serif;
+  }
+  .csn-logo {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--csn-orange);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin-right: 32px;
+    flex-shrink: 0;
+  }
+  .csn-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+  }
+  .csn-item {
+    position: relative;
+  }
+  .csn-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s, background 0.15s;
+    cursor: pointer;
+  }
+  .csn-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-item.active > .csn-link { color: var(--csn-orange); font-weight: 600; }
+  .csn-chevron { transition: transform 0.2s; flex-shrink: 0; }
+  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
+  /* Dropdown */
+  .csn-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 240px;
+    background: var(--csn-dd-bg);
+    border: 1px solid var(--csn-border);
+    border-radius: 12px;
+    box-shadow: var(--csn-dd-shadow);
+    padding: 6px;
+    z-index: calc(var(--csn-z) + 1);
+  }
+  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
+  .csn-dd-item {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+    white-space: nowrap;
+  }
+  .csn-dd-item:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-divider { height: 1px; background: var(--csn-border); margin: 4px 8px; }
+  /* Mobile hamburger */
+  .csn-hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--csn-muted);
+    padding: 4px;
+    margin-left: auto;
+  }
+  /* Mobile drawer */
+  .csn-mobile-menu {
+    display: none;
+    position: fixed;
+    top: var(--csn-h);
+    left: 0; right: 0;
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    padding: 8px 16px 16px;
+    z-index: calc(var(--csn-z) - 1);
+    max-height: calc(100vh - var(--csn-h));
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .csn-mobile-menu.open { display: block; }
+  .csn-mob-link {
+    display: block;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+  }
+  .csn-mob-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-mob-top { font-weight: 600; color: var(--csn-text); margin-top: 4px; }
+  .csn-mob-sub { font-size: 12px; padding-left: 20px; }
+  /* Body offset */
+  body { padding-top: var(--csn-h) !important; }
+  @media (max-width: 1023px) {
+    .csn-nav { display: none; }
+    .csn-hamburger { display: block; }
+  }
+  @media (max-width: 640px) {
+    .csn-logo { font-size: 13px; margin-right: 16px; }
+  }
+</style>
+<nav class="csn-bar" role="navigation" aria-label="Main navigation">
+  <a href="../index.html" class="csn-logo">Collective Shift</a>
+  <div class="csn-nav">
+      <div class="csn-item "><a href="../index.html" class="csn-link">CEO Dashboard</a></div>
+      <div class="csn-item csn-has-dd ">
+        <a href="../hub/operating-system.html" class="csn-link">The Collective Shift Operating System
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../hub/operating-system.html" class="csn-dd-item">Operating System Overview</a><a href="../hub/modules/m1-foundations.html" class="csn-dd-item">Module 1: Foundations</a><a href="../hub/modules/m2-bitcoin.html" class="csn-dd-item">Module 2: Bitcoin</a><a href="../hub/modules/m3-altcoins.html" class="csn-dd-item">Module 3: Digital Assets</a><a href="../hub/modules/m4-how-we-invest.html" class="csn-dd-item">Module 4: How We Invest</a><a href="../hub/modules/m5-buy-sell.html" class="csn-dd-item">Module 5: Buy & Sell</a><a href="../hub/modules/m6-send-store.html" class="csn-dd-item">Module 6: Send & Store</a><a href="../hub/modules/m7-tax.html" class="csn-dd-item">Module 7: Tax</a><a href="../hub/modules/m8-sell-strategy.html" class="csn-dd-item">Module 8: Exit Strategy</a><div class="csn-divider"></div><a href="../8-step-strategy-workbook.html" class="csn-dd-item">8-Step Strategy Workbook</a><a href="../8-step-strategy-workbook-L1.html" class="csn-dd-item">↳ Level 1 Workbook</a><a href="../8-step-strategy-workbook-L2.html" class="csn-dd-item">↳ Level 2 Workbook</a><a href="../portfolio-calculator.html" class="csn-dd-item">Portfolio Allocation Calculator</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="../hub/products.html" class="csn-link">Product
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../hub/products.html#platinum" class="csn-dd-item">Platinum</a><a href="../hub/products.html#accelerator" class="csn-dd-item">Accelerator</a><a href="../hub/beginner-journey.html" class="csn-dd-item">Beginner's Journey</a><a href="../hub/products.html#two-track" class="csn-dd-item">Two-Track System</a></div>
+      </div>
+      <div class="csn-item csn-has-dd active">
+        <a href="../hub/youtube-strategy.html" class="csn-link">Social Media
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../hub/youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a><a href="../hub/social-strategy.html" class="csn-dd-item">Social Strategy</a><a href="../hub/instagram-strategy.html" class="csn-dd-item">Instagram Strategy</a><div class="csn-divider"></div><a href="../hub/brand.html" class="csn-dd-item">Brand & Voice</a><a href="../hub/positioning.html" class="csn-dd-item">Positioning & ICP</a><a href="../hub/competitors.html" class="csn-dd-item">Competitors</a></div>
+      </div>
+      <div class="csn-item csn-has-dd ">
+        <a href="../travis-briefing-2026-03-27.html" class="csn-link">Documents
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown"><a href="../travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a><a href="../cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a><a href="../q2-market-briefing.html" class="csn-dd-item">Q2 Market Briefing</a><a href="../webinar-q2-2026-is-now-the-time.html" class="csn-dd-item">Webinar: Is Now The Time?</a></div>
+      </div>
+  </div>
+  <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+<div id="csnMobileMenu" class="csn-mobile-menu">
+  <a href="../index.html" class="csn-mob-link csn-mob-top">CEO Dashboard</a>
+<a href="../hub/operating-system.html" class="csn-mob-link csn-mob-top">The Collective Shift Operating System</a>
+<a href="../hub/operating-system.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Operating System Overview</a>
+<a href="../hub/modules/m1-foundations.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 1: Foundations</a>
+<a href="../hub/modules/m2-bitcoin.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 2: Bitcoin</a>
+<a href="../hub/modules/m3-altcoins.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 3: Digital Assets</a>
+<a href="../hub/modules/m4-how-we-invest.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 4: How We Invest</a>
+<a href="../hub/modules/m5-buy-sell.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 5: Buy & Sell</a>
+<a href="../hub/modules/m6-send-store.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 6: Send & Store</a>
+<a href="../hub/modules/m7-tax.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 7: Tax</a>
+<a href="../hub/modules/m8-sell-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 8: Exit Strategy</a>
+<a href="../8-step-strategy-workbook.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;8-Step Strategy Workbook</a>
+<a href="../8-step-strategy-workbook-L1.html" class="csn-mob-link csn-mob-sub">↳ Level 1 Workbook</a>
+<a href="../8-step-strategy-workbook-L2.html" class="csn-mob-link csn-mob-sub">↳ Level 2 Workbook</a>
+<a href="../portfolio-calculator.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Portfolio Allocation Calculator</a>
+<a href="../hub/products.html" class="csn-mob-link csn-mob-top">Product</a>
+<a href="../hub/products.html#platinum" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Platinum</a>
+<a href="../hub/products.html#accelerator" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Accelerator</a>
+<a href="../hub/beginner-journey.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Beginner's Journey</a>
+<a href="../hub/products.html#two-track" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Two-Track System</a>
+<a href="../hub/youtube-strategy.html" class="csn-mob-link csn-mob-top">Social Media</a>
+<a href="../hub/youtube-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;YouTube Strategy</a>
+<a href="../hub/social-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Social Strategy</a>
+<a href="../hub/instagram-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Instagram Strategy</a>
+<a href="../hub/brand.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Brand & Voice</a>
+<a href="../hub/positioning.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Positioning & ICP</a>
+<a href="../hub/competitors.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Competitors</a>
+<a href="../travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-top">Documents</a>
+<a href="../travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Travis CGO Briefing</a>
+<a href="../cs-education-system-overview.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Education System Overview</a>
+<a href="../q2-market-briefing.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Q2 Market Briefing</a>
+<a href="../webinar-q2-2026-is-now-the-time.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Webinar: Is Now The Time?</a>
+</div>
+<!-- ═══ END TOP NAV ═══ -->
 
-<div class="lg:hidden flex items-center justify-between px-4 py-3 bg-cs-card border-b border-cs-border sticky top-0 z-40">
+
+<div class="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-\[#E8E8EA\] sticky top-0 z-40">
   <span class="font-heading text-cs-orange text-lg font-bold tracking-wide">COLLECTIVE SHIFT</span>
-  <button onclick="document.getElementById('sidebar').classList.toggle('open')" class="text-cs-muted hover:text-cs-orange">
+  <button onclick="document.getElementById('sidebar').classList.toggle('open')" class="text-\[#807F86\] hover:text-cs-orange">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
   </button>
 </div>
 <div id="overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="document.getElementById('sidebar').classList.remove('open');this.classList.add('hidden')"></div>
 
 <div class="flex">
-  <aside id="sidebar" class="sidebar w-64 min-h-screen bg-cs-card border-r border-cs-border flex-shrink-0 flex flex-col">
-    <div class="p-5 border-b border-cs-border">
+  <aside id="sidebar" class="sidebar w-64 min-h-screen bg-white border-r border-\[#E8E8EA\] flex-shrink-0 flex flex-col">
+    <div class="p-5 border-b border-\[#E8E8EA\]">
       <a href="index.html" class="font-heading text-cs-orange text-xl font-bold tracking-wider">COLLECTIVE SHIFT</a>
-      <p class="text-cs-muted text-xs mt-1 font-mono">STRATEGY HUB</p>
+      <p class="text-\[#807F86\] text-xs mt-1 font-mono">STRATEGY HUB</p>
     </div>
     <nav class="flex-1 py-4 px-3 space-y-1">
-      <a href="/" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>📊</span> Dashboard</a>
-      <a href="index.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🏠</span> Home</a>
-      <a href="positioning.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🎯</span> Positioning & ICP</a>
-      <a href="operating-system.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>⚙️</span> Operating System</a>
-      <a href="products.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>💎</span> Products</a>
-      <a href="social-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>📱</span> Social & Content</a>
-      <a href="youtube-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🎬</span> YouTube Strategy</a>
+      <a href="/" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>📊</span> Dashboard</a>
+      <a href="index.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🏠</span> Home</a>
+      <a href="positioning.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🎯</span> Positioning & ICP</a>
+      <a href="operating-system.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>⚙️</span> Operating System</a>
+      <a href="products.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>💎</span> Products</a>
+      <a href="social-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>📱</span> Social & Content</a>
+      <a href="youtube-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🎬</span> YouTube Strategy</a>
       <a href="competitors.html" class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium border-l-2 border-transparent"><span>🏆</span> Competitive Intel</a>
-      <a href="brand.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-cs-muted border-l-2 border-transparent"><span>🎨</span> Brand & Voice</a>
+      <a href="brand.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🎨</span> Brand & Voice</a>
     </nav>
-    <div class="p-4 border-t border-cs-border"><p class="text-cs-muted text-xs font-mono">v2.0 · March 2026</p></div>
+    <div class="p-4 border-t border-\[#E8E8EA\]"><p class="text-\[#807F86\] text-xs font-mono">v2.0 · March 2026</p></div>
   </aside>
 
   <main class="flex-1 min-h-screen">
-    <div class="px-6 lg:px-10 py-3 border-b border-cs-border bg-cs-card/50">
-      <div class="flex items-center gap-2 text-xs font-mono text-cs-muted">
+    <div class="px-6 lg:px-10 py-3 border-b border-\[#E8E8EA\] bg-white/50">
+      <div class="flex items-center gap-2 text-xs font-mono text-\[#807F86\]">
         <a href="index.html" class="text-cs-orange hover:underline">Strategy Hub</a><span>/</span><span>Competitive Intel</span>
       </div>
     </div>
@@ -53,28 +294,28 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
     <div class="px-6 lg:px-10 py-8 max-w-5xl">
       <p class="label-tag text-cs-orange text-xs font-semibold tracking-widest uppercase mb-2">Market Position</p>
       <h1 class="text-4xl font-bold tracking-tight mb-3">Competitive Intel</h1>
-      <p class="text-cs-muted text-lg mb-8 max-w-2xl">Three key competitors in the premium digital asset education space. Understanding their positioning helps sharpen ours.</p>
+      <p class="text-\[#807F86\] text-lg mb-8 max-w-2xl">Three key competitors in the premium digital asset education space. Understanding their positioning helps sharpen ours.</p>
 
       <!-- Competitor Cards -->
       <div class="grid lg:grid-cols-3 gap-6 mb-10">
         <!-- Invest Diva -->
-        <div class="bg-cs-card border border-cs-border rounded-xl overflow-hidden">
-          <div class="bg-purple-500/10 px-5 py-3 border-b border-cs-border">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl overflow-hidden">
+          <div class="bg-purple-500/10 px-5 py-3 border-b border-\[#E8E8EA\]">
             <h2 class="font-heading text-lg font-bold text-purple-400">Invest Diva</h2>
-            <p class="text-cs-muted text-xs">Kiana Danial · investdiva.com</p>
+            <p class="text-\[#807F86\] text-xs">Kiana Danial · investdiva.com</p>
           </div>
           <div class="p-5 space-y-4">
             <div>
               <h4 class="font-mono text-xs text-cs-orange uppercase tracking-wider font-bold mb-1">Positioning</h4>
-              <p class="text-sm text-cs-muted">Outcome-based messaging — focuses on financial freedom and lifestyle results. Book channel + broader investment education (stocks, forex, AND digital assets).</p>
+              <p class="text-sm text-\[#807F86\]">Outcome-based messaging — focuses on financial freedom and lifestyle results. Book channel + broader investment education (stocks, forex, AND digital assets).</p>
             </div>
             <div>
               <h4 class="font-mono text-xs text-cs-orange uppercase tracking-wider font-bold mb-1">ICP</h4>
-              <p class="text-sm text-cs-muted">Women investors, broader age range, lower net worth threshold than CS. More aspirational messaging.</p>
+              <p class="text-sm text-\[#807F86\]">Women investors, broader age range, lower net worth threshold than CS. More aspirational messaging.</p>
             </div>
             <div>
               <h4 class="font-mono text-xs text-cs-orange uppercase tracking-wider font-bold mb-1">Strengths</h4>
-              <ul class="text-sm text-cs-muted space-y-1">
+              <ul class="text-sm text-\[#807F86\] space-y-1">
                 <li class="flex gap-2"><span class="text-purple-400">•</span>Strong personal brand</li>
                 <li class="flex gap-2"><span class="text-purple-400">•</span>Outcome-focused messaging that converts</li>
                 <li class="flex gap-2"><span class="text-purple-400">•</span>Published author — credibility anchor</li>
@@ -83,7 +324,7 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
             </div>
             <div>
               <h4 class="font-mono text-xs text-red-400 uppercase tracking-wider font-bold mb-1">Weaknesses</h4>
-              <ul class="text-sm text-cs-muted space-y-1">
+              <ul class="text-sm text-\[#807F86\] space-y-1">
                 <li class="flex gap-2"><span class="text-red-400">•</span>Broad focus = shallow digital asset depth</li>
                 <li class="flex gap-2"><span class="text-red-400">•</span>No audited portfolio / transparency</li>
                 <li class="flex gap-2"><span class="text-red-400">•</span>Less rigorous systematic framework</li>
@@ -94,23 +335,23 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
         </div>
 
         <!-- Decentralized Masters -->
-        <div class="bg-cs-card border border-cs-border rounded-xl overflow-hidden">
-          <div class="bg-red-500/10 px-5 py-3 border-b border-cs-border">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl overflow-hidden">
+          <div class="bg-red-500/10 px-5 py-3 border-b border-\[#E8E8EA\]">
             <h2 class="font-heading text-lg font-bold text-red-400">Decentralized Masters</h2>
-            <p class="text-cs-muted text-xs">Gavin White · decentralizedmasters.com</p>
+            <p class="text-\[#807F86\] text-xs">Gavin White · decentralizedmasters.com</p>
           </div>
           <div class="p-5 space-y-4">
             <div>
               <h4 class="font-mono text-xs text-cs-orange uppercase tracking-wider font-bold mb-1">Positioning</h4>
-              <p class="text-sm text-cs-muted">"ABN Method" — proprietary DeFi-focused system. Aggressive sales tactics with high-pressure funnels. Heavy emphasis on passive income through DeFi.</p>
+              <p class="text-sm text-\[#807F86\]">"ABN Method" — proprietary DeFi-focused system. Aggressive sales tactics with high-pressure funnels. Heavy emphasis on passive income through DeFi.</p>
             </div>
             <div>
               <h4 class="font-mono text-xs text-cs-orange uppercase tracking-wider font-bold mb-1">ICP</h4>
-              <p class="text-sm text-cs-muted">DeFi-curious investors, yield-seekers. More aggressive risk tolerance. Skews younger and more tech-forward.</p>
+              <p class="text-sm text-\[#807F86\]">DeFi-curious investors, yield-seekers. More aggressive risk tolerance. Skews younger and more tech-forward.</p>
             </div>
             <div>
               <h4 class="font-mono text-xs text-cs-orange uppercase tracking-wider font-bold mb-1">Strengths</h4>
-              <ul class="text-sm text-cs-muted space-y-1">
+              <ul class="text-sm text-\[#807F86\] space-y-1">
                 <li class="flex gap-2"><span class="text-red-400">•</span>Named method ("ABN") = brandable IP</li>
                 <li class="flex gap-2"><span class="text-red-400">•</span>DeFi-first positioning — clear niche</li>
                 <li class="flex gap-2"><span class="text-red-400">•</span>Aggressive marketing machine</li>
@@ -119,7 +360,7 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
             </div>
             <div>
               <h4 class="font-mono text-xs text-red-400 uppercase tracking-wider font-bold mb-1">Weaknesses</h4>
-              <ul class="text-sm text-cs-muted space-y-1">
+              <ul class="text-sm text-\[#807F86\] space-y-1">
                 <li class="flex gap-2"><span class="text-red-400">•</span>Aggressive sales → trust deficit</li>
                 <li class="flex gap-2"><span class="text-red-400">•</span>DeFi-only = narrow scope</li>
                 <li class="flex gap-2"><span class="text-red-400">•</span>Higher risk strategies alienate conservative investors</li>
@@ -130,23 +371,23 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
         </div>
 
         <!-- Yieldschool -->
-        <div class="bg-cs-card border border-cs-border rounded-xl overflow-hidden">
-          <div class="bg-blue-500/10 px-5 py-3 border-b border-cs-border">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl overflow-hidden">
+          <div class="bg-blue-500/10 px-5 py-3 border-b border-\[#E8E8EA\]">
             <h2 class="font-heading text-lg font-bold text-blue-400">Yieldschool</h2>
-            <p class="text-cs-muted text-xs">yieldschool.io</p>
+            <p class="text-\[#807F86\] text-xs">yieldschool.io</p>
           </div>
           <div class="p-5 space-y-4">
             <div>
               <h4 class="font-mono text-xs text-cs-orange uppercase tracking-wider font-bold mb-1">Positioning</h4>
-              <p class="text-sm text-cs-muted">"Crypto Native Protocol" — yield-focused education with emphasis on DeFi income strategies. Strong mentoring component.</p>
+              <p class="text-sm text-\[#807F86\]">"Crypto Native Protocol" — yield-focused education with emphasis on DeFi income strategies. Strong mentoring component.</p>
             </div>
             <div>
               <h4 class="font-mono text-xs text-cs-orange uppercase tracking-wider font-bold mb-1">ICP</h4>
-              <p class="text-sm text-cs-muted">Yield-seekers and income-focused investors. More technically sophisticated audience. Looking for passive income from their digital asset holdings.</p>
+              <p class="text-sm text-\[#807F86\]">Yield-seekers and income-focused investors. More technically sophisticated audience. Looking for passive income from their digital asset holdings.</p>
             </div>
             <div>
               <h4 class="font-mono text-xs text-cs-orange uppercase tracking-wider font-bold mb-1">Strengths</h4>
-              <ul class="text-sm text-cs-muted space-y-1">
+              <ul class="text-sm text-\[#807F86\] space-y-1">
                 <li class="flex gap-2"><span class="text-blue-400">•</span>Deep yield/DeFi expertise</li>
                 <li class="flex gap-2"><span class="text-blue-400">•</span>Strong mentoring model</li>
                 <li class="flex gap-2"><span class="text-blue-400">•</span>Protocol-native approach</li>
@@ -155,7 +396,7 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
             </div>
             <div>
               <h4 class="font-mono text-xs text-red-400 uppercase tracking-wider font-bold mb-1">Weaknesses</h4>
-              <ul class="text-sm text-cs-muted space-y-1">
+              <ul class="text-sm text-\[#807F86\] space-y-1">
                 <li class="flex gap-2"><span class="text-red-400">•</span>Narrow focus on yield only</li>
                 <li class="flex gap-2"><span class="text-red-400">•</span>Missing holistic framework (buy, sell, allocate)</li>
                 <li class="flex gap-2"><span class="text-red-400">•</span>Smaller brand awareness</li>
@@ -168,12 +409,12 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
 
       <!-- Positioning Matrix -->
       <h2 class="text-2xl font-bold mb-4">Positioning Matrix</h2>
-      <div class="bg-cs-card border border-cs-border rounded-xl overflow-hidden mb-10">
+      <div class="bg-white border border-\[#E8E8EA\] rounded-xl overflow-hidden mb-10">
         <div class="overflow-x-auto">
           <table class="w-full text-sm">
             <thead>
-              <tr class="border-b border-cs-border bg-cs-bg">
-                <th class="py-3 px-4 text-left font-mono text-xs text-cs-muted uppercase tracking-wider">Dimension</th>
+              <tr class="border-b border-\[#E8E8EA\] bg-white">
+                <th class="py-3 px-4 text-left font-mono text-xs text-\[#807F86\] uppercase tracking-wider">Dimension</th>
                 <th class="py-3 px-4 text-center font-mono text-xs text-cs-orange uppercase tracking-wider">Collective Shift</th>
                 <th class="py-3 px-4 text-center font-mono text-xs text-purple-400 uppercase tracking-wider">Invest Diva</th>
                 <th class="py-3 px-4 text-center font-mono text-xs text-red-400 uppercase tracking-wider">Decentral. Masters</th>
@@ -181,15 +422,15 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
               </tr>
             </thead>
             <tbody>
-              <tr class="border-b border-cs-border"><td class="py-2.5 px-4 font-semibold">Focus</td><td class="py-2.5 px-4 text-center text-cs-orange">Holistic digital asset education</td><td class="py-2.5 px-4 text-center text-cs-muted">Broad investing (stocks + DA)</td><td class="py-2.5 px-4 text-center text-cs-muted">DeFi / Passive income</td><td class="py-2.5 px-4 text-center text-cs-muted">Yield / DeFi protocols</td></tr>
-              <tr class="border-b border-cs-border"><td class="py-2.5 px-4 font-semibold">Framework</td><td class="py-2.5 px-4 text-center text-cs-orange">7-Step Shift OS</td><td class="py-2.5 px-4 text-center text-cs-muted">Book-based curriculum</td><td class="py-2.5 px-4 text-center text-cs-muted">ABN Method</td><td class="py-2.5 px-4 text-center text-cs-muted">Crypto Native Protocol</td></tr>
-              <tr class="border-b border-cs-border"><td class="py-2.5 px-4 font-semibold">Price</td><td class="py-2.5 px-4 text-center text-cs-orange">$15K/yr (Platinum)</td><td class="py-2.5 px-4 text-center text-cs-muted">~$2K–$5K</td><td class="py-2.5 px-4 text-center text-cs-muted">~$3K–$10K</td><td class="py-2.5 px-4 text-center text-cs-muted">~$2K–$5K</td></tr>
-              <tr class="border-b border-cs-border"><td class="py-2.5 px-4 font-semibold">Target ICP</td><td class="py-2.5 px-4 text-center text-cs-orange">HNW ($500K+), 40–59</td><td class="py-2.5 px-4 text-center text-cs-muted">Broader, women-focused</td><td class="py-2.5 px-4 text-center text-cs-muted">DeFi-curious, younger</td><td class="py-2.5 px-4 text-center text-cs-muted">Yield-seekers, technical</td></tr>
-              <tr class="border-b border-cs-border"><td class="py-2.5 px-4 font-semibold">1:1 Coaching</td><td class="py-2.5 px-4 text-center text-cs-green">✓ 8/year + quarterly</td><td class="py-2.5 px-4 text-center text-cs-muted">Limited</td><td class="py-2.5 px-4 text-center text-cs-muted">Group-focused</td><td class="py-2.5 px-4 text-center text-cs-muted">Mentoring model</td></tr>
-              <tr class="border-b border-cs-border"><td class="py-2.5 px-4 font-semibold">Audited Portfolio</td><td class="py-2.5 px-4 text-center text-cs-green">✓ 6-year, 116% avg/yr</td><td class="py-2.5 px-4 text-center text-red-400">✗</td><td class="py-2.5 px-4 text-center text-red-400">✗</td><td class="py-2.5 px-4 text-center text-red-400">✗</td></tr>
-              <tr class="border-b border-cs-border"><td class="py-2.5 px-4 font-semibold">Independence</td><td class="py-2.5 px-4 text-center text-cs-green">✓ Zero affiliates</td><td class="py-2.5 px-4 text-center text-cs-muted">Some affiliates</td><td class="py-2.5 px-4 text-center text-cs-muted">Affiliate-heavy</td><td class="py-2.5 px-4 text-center text-cs-muted">Protocol partnerships</td></tr>
-              <tr class="border-b border-cs-border"><td class="py-2.5 px-4 font-semibold">Sales Approach</td><td class="py-2.5 px-4 text-center text-cs-orange">Application-only</td><td class="py-2.5 px-4 text-center text-cs-muted">Book funnel</td><td class="py-2.5 px-4 text-center text-cs-muted">Aggressive webinar</td><td class="py-2.5 px-4 text-center text-cs-muted">Community-based</td></tr>
-              <tr><td class="py-2.5 px-4 font-semibold">Track Record</td><td class="py-2.5 px-4 text-center text-cs-green">9 years, publicly verified</td><td class="py-2.5 px-4 text-center text-cs-muted">~8 years</td><td class="py-2.5 px-4 text-center text-cs-muted">~4 years</td><td class="py-2.5 px-4 text-center text-cs-muted">~3 years</td></tr>
+              <tr class="border-b border-\[#E8E8EA\]"><td class="py-2.5 px-4 font-semibold">Focus</td><td class="py-2.5 px-4 text-center text-cs-orange">Holistic digital asset education</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">Broad investing (stocks + DA)</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">DeFi / Passive income</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">Yield / DeFi protocols</td></tr>
+              <tr class="border-b border-\[#E8E8EA\]"><td class="py-2.5 px-4 font-semibold">Framework</td><td class="py-2.5 px-4 text-center text-cs-orange">7-Step Shift OS</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">Book-based curriculum</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">ABN Method</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">Crypto Native Protocol</td></tr>
+              <tr class="border-b border-\[#E8E8EA\]"><td class="py-2.5 px-4 font-semibold">Price</td><td class="py-2.5 px-4 text-center text-cs-orange">$15K/yr (Platinum)</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">~$2K–$5K</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">~$3K–$10K</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">~$2K–$5K</td></tr>
+              <tr class="border-b border-\[#E8E8EA\]"><td class="py-2.5 px-4 font-semibold">Target ICP</td><td class="py-2.5 px-4 text-center text-cs-orange">HNW ($500K+), 40–59</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">Broader, women-focused</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">DeFi-curious, younger</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">Yield-seekers, technical</td></tr>
+              <tr class="border-b border-\[#E8E8EA\]"><td class="py-2.5 px-4 font-semibold">1:1 Coaching</td><td class="py-2.5 px-4 text-center text-cs-green">✓ 8/year + quarterly</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">Limited</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">Group-focused</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">Mentoring model</td></tr>
+              <tr class="border-b border-\[#E8E8EA\]"><td class="py-2.5 px-4 font-semibold">Audited Portfolio</td><td class="py-2.5 px-4 text-center text-cs-green">✓ 6-year, 116% avg/yr</td><td class="py-2.5 px-4 text-center text-red-400">✗</td><td class="py-2.5 px-4 text-center text-red-400">✗</td><td class="py-2.5 px-4 text-center text-red-400">✗</td></tr>
+              <tr class="border-b border-\[#E8E8EA\]"><td class="py-2.5 px-4 font-semibold">Independence</td><td class="py-2.5 px-4 text-center text-cs-green">✓ Zero affiliates</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">Some affiliates</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">Affiliate-heavy</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">Protocol partnerships</td></tr>
+              <tr class="border-b border-\[#E8E8EA\]"><td class="py-2.5 px-4 font-semibold">Sales Approach</td><td class="py-2.5 px-4 text-center text-cs-orange">Application-only</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">Book funnel</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">Aggressive webinar</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">Community-based</td></tr>
+              <tr><td class="py-2.5 px-4 font-semibold">Track Record</td><td class="py-2.5 px-4 text-center text-cs-green">9 years, publicly verified</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">~8 years</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">~4 years</td><td class="py-2.5 px-4 text-center text-\[#807F86\]">~3 years</td></tr>
             </tbody>
           </table>
         </div>
@@ -197,31 +438,31 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
 
       <!-- Why We Win -->
       <h2 class="text-2xl font-bold mb-4">Why We Win</h2>
-      <div class="bg-cs-card border border-cs-orange/30 rounded-xl p-6 mb-8">
+      <div class="bg-white border border-cs-orange/30 rounded-xl p-6 mb-8">
         <div class="grid md:grid-cols-2 gap-4">
           <div class="flex gap-3 items-start">
             <span class="text-cs-orange text-lg">🏆</span>
-            <div><p class="font-semibold text-sm">Holistic Framework</p><p class="text-cs-muted text-xs">Only company with a complete 7-step system covering buy, hold, sell, tax, security, and strategy — not just one niche.</p></div>
+            <div><p class="font-semibold text-sm">Holistic Framework</p><p class="text-\[#807F86\] text-xs">Only company with a complete 7-step system covering buy, hold, sell, tax, security, and strategy — not just one niche.</p></div>
           </div>
           <div class="flex gap-3 items-start">
             <span class="text-cs-orange text-lg">📊</span>
-            <div><p class="font-semibold text-sm">Audited Transparency</p><p class="text-cs-muted text-xs">6-year publicly audited portfolio averaging 116% annual returns. No competitor offers this level of transparency.</p></div>
+            <div><p class="font-semibold text-sm">Audited Transparency</p><p class="text-\[#807F86\] text-xs">6-year publicly audited portfolio averaging 116% annual returns. No competitor offers this level of transparency.</p></div>
           </div>
           <div class="flex gap-3 items-start">
             <span class="text-cs-orange text-lg">🚫</span>
-            <div><p class="font-semibold text-sm">Zero Affiliates</p><p class="text-cs-muted text-xs">100% independent research. No affiliate links, no token promotions, no advertising revenue. Recommendations are pure.</p></div>
+            <div><p class="font-semibold text-sm">Zero Affiliates</p><p class="text-\[#807F86\] text-xs">100% independent research. No affiliate links, no token promotions, no advertising revenue. Recommendations are pure.</p></div>
           </div>
           <div class="flex gap-3 items-start">
             <span class="text-cs-orange text-lg">🤝</span>
-            <div><p class="font-semibold text-sm">High-Touch Model</p><p class="text-cs-muted text-xs">8× annual 1:1 analyst calls + dedicated CSM + quarterly reviews. Competitors can't match this at any price point.</p></div>
+            <div><p class="font-semibold text-sm">High-Touch Model</p><p class="text-\[#807F86\] text-xs">8× annual 1:1 analyst calls + dedicated CSM + quarterly reviews. Competitors can't match this at any price point.</p></div>
           </div>
           <div class="flex gap-3 items-start">
             <span class="text-cs-orange text-lg">⏳</span>
-            <div><p class="font-semibold text-sm">9-Year Track Record</p><p class="text-cs-muted text-xs">Longest track record of any premium digital asset education company. Multiple bull and bear cycles proven.</p></div>
+            <div><p class="font-semibold text-sm">9-Year Track Record</p><p class="text-\[#807F86\] text-xs">Longest track record of any premium digital asset education company. Multiple bull and bear cycles proven.</p></div>
           </div>
           <div class="flex gap-3 items-start">
             <span class="text-cs-orange text-lg">🎯</span>
-            <div><p class="font-semibold text-sm">Premium ICP Focus</p><p class="text-cs-muted text-xs">$15K price point self-selects serious HNW investors. Community quality is a moat competitors can't replicate at lower prices.</p></div>
+            <div><p class="font-semibold text-sm">Premium ICP Focus</p><p class="text-\[#807F86\] text-xs">$15K price point self-selects serious HNW investors. Community quality is a moat competitors can't replicate at lower prices.</p></div>
           </div>
         </div>
       </div>
@@ -229,21 +470,21 @@ body{font-family:'Barlow',sans-serif}h1,h2,h3,h4,h5{font-family:'Oswald',sans-se
       <!-- YouTube Landscape -->
       <h2 class="text-2xl font-bold mb-4">YouTube Competitor Landscape</h2>
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5">
           <h3 class="font-bold text-sm mb-2">Mark Moss</h3>
-          <p class="text-cs-muted text-xs">"Retire Off Bitcoin" — similar ICP, more aggressive BTC maxi positioning</p>
+          <p class="text-\[#807F86\] text-xs">"Retire Off Bitcoin" — similar ICP, more aggressive BTC maxi positioning</p>
         </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5">
           <h3 class="font-bold text-sm mb-2">Raoul Pal</h3>
-          <p class="text-cs-muted text-xs">Macro + digital assets, institutional lens, skews older audience demographic</p>
+          <p class="text-\[#807F86\] text-xs">Macro + digital assets, institutional lens, skews older audience demographic</p>
         </div>
-        <div class="bg-cs-card border border-cs-border rounded-xl p-5">
+        <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-5">
           <h3 class="font-bold text-sm mb-2">Anthony Pompliano</h3>
-          <p class="text-cs-muted text-xs">Broad Bitcoin education, mainstream bridging, high volume content</p>
+          <p class="text-\[#807F86\] text-xs">Broad Bitcoin education, mainstream bridging, high volume content</p>
         </div>
-        <div class="bg-cs-card border border-cs-orange/30 rounded-xl p-5">
+        <div class="bg-white border border-cs-orange/30 rounded-xl p-5">
           <h3 class="font-bold text-sm text-cs-orange mb-2">✦ CS Differentiator</h3>
-          <p class="text-cs-muted text-xs">Education system (not signals) · Audited returns (116% avg) · 9-year track record · No affiliates · Application-only</p>
+          <p class="text-\[#807F86\] text-xs">Education system (not signals) · Audited returns (116% avg) · 9-year track record · No affiliates · Application-only</p>
         </div>
       </div>
     </div>
