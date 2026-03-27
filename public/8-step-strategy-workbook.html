@@ -1,0 +1,1844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>8-Step Strategy Workbook — Collective Shift</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── TOKENS ─────────────────────────────────────────────── */
+    :root {
+      --orange:  #FC5C03;
+      --green:   #08C394;
+      --dark:    #1B1925;
+      --mid:     #3D3A4A;
+      --muted:   #6B6880;
+      --rule:    #D8D5E0;
+      --bg:      #FFFFFF;
+      --bg-alt:  #F8F7FA;
+      --step-w:  760px;
+    }
+
+    /* ─── RESET & BASE ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--dark);
+      background: var(--bg-alt);
+    }
+
+    /* ─── STICKY TOP BAR ─────────────────────────────────────── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--dark);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    }
+    .topbar-logo {
+      font-family: 'Oswald', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--orange);
+      flex-shrink: 0;
+      text-transform: uppercase;
+    }
+    .topbar-title {
+      font-family: 'Barlow', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.6);
+      flex: 1;
+    }
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 7px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: var(--orange); color: #fff; }
+    .btn-ghost { background: rgba(255,255,255,0.12); color: #fff; }
+    .btn-save { background: var(--green); color: #fff; }
+    .save-status {
+      font-size: 12px;
+      color: var(--green);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .save-status.visible { opacity: 1; }
+
+    /* ─── PROGRESS BAR ───────────────────────────────────────── */
+    .progress-wrap {
+      background: rgba(255,255,255,0.08);
+      border-radius: 0;
+      height: 4px;
+    }
+    .progress-fill {
+      height: 4px;
+      background: linear-gradient(90deg, var(--orange) 0%, var(--green) 100%);
+      border-radius: 0 2px 2px 0;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    /* ─── PROGRESS NAV DOTS ──────────────────────────────────── */
+    .step-nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--rule);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+    }
+    .step-dot {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--rule);
+      background: var(--bg);
+      color: var(--muted);
+      font-family: 'Oswald', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .step-dot:hover { border-color: var(--orange); color: var(--orange); }
+    .step-dot.active { background: var(--orange); border-color: var(--orange); color: #fff; }
+    .step-dot.complete { background: var(--green); border-color: var(--green); color: #fff; }
+    .step-connector {
+      flex-shrink: 0;
+      height: 2px;
+      width: 16px;
+      background: var(--rule);
+      border-radius: 1px;
+    }
+
+    /* ─── LAYOUT ─────────────────────────────────────────────── */
+    .workbook-body {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+
+    /* ─── COVER PAGE ─────────────────────────────────────────── */
+    .cover {
+      background: var(--dark);
+      color: #fff;
+      border-radius: 8px;
+      padding: 56px 48px 48px;
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 260px; height: 260px;
+      border-radius: 50%;
+      background: var(--orange);
+      opacity: 0.07;
+    }
+    .cover::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: -40px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: var(--green);
+      opacity: 0.06;
+    }
+    .cover-logo {
+      font-family: 'Oswald', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cover-logo-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--orange);
+    }
+    .cover-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 12px;
+    }
+    .cover-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 44px;
+      font-weight: 700;
+      line-height: 1.1;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+    .cover-title span { color: var(--orange); }
+    .cover-sub {
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.65);
+      max-width: 520px;
+      margin-bottom: 36px;
+    }
+    .cover-meta {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .cover-field {
+      flex: 1;
+      min-width: 180px;
+    }
+    .cover-field-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 6px;
+    }
+    .cover-field-input {
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      background: transparent;
+      color: #fff;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 14px;
+      padding: 4px 0;
+      width: 100%;
+      outline: none;
+    }
+    .cover-field-input:focus { border-bottom-color: var(--orange); }
+    .cover-quote {
+      margin-top: 36px;
+      padding: 16px 20px;
+      border-left: 3px solid var(--green);
+      background: rgba(8,195,148,0.06);
+      border-radius: 0 6px 6px 0;
+      font-size: 14px;
+      font-style: italic;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ─── STEP CARDS ─────────────────────────────────────────── */
+    .step-section {
+      background: var(--bg);
+      border-radius: 8px;
+      border: 1px solid var(--rule);
+      margin-bottom: 24px;
+      overflow: hidden;
+      scroll-margin-top: 100px;
+    }
+    .step-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 28px 32px;
+      border-bottom: 1px solid var(--rule);
+      background: var(--bg);
+    }
+    .step-badge {
+      flex-shrink: 0;
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
+      background: var(--orange);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+    }
+    .step-badge-num {
+      font-family: 'Oswald', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+    }
+    .step-badge-of {
+      font-size: 9px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+    .step-header-text { flex: 1; }
+    .step-number-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 4px;
+    }
+    .step-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--dark);
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+    .step-desc {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 560px;
+    }
+    .step-complete-btn {
+      flex-shrink: 0;
+      margin-top: 4px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--rule);
+      background: transparent;
+      font-family: 'Barlow', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .step-complete-btn:hover { border-color: var(--green); color: var(--green); }
+    .step-complete-btn.done { border-color: var(--green); background: var(--green); color: #fff; }
+
+    /* ─── STEP CONTENT AREA ──────────────────────────────────── */
+    .step-content {
+      padding: 28px 32px;
+    }
+
+    /* ─── QUESTION BLOCKS ────────────────────────────────────── */
+    .q-block {
+      margin-bottom: 28px;
+    }
+    .q-block:last-child { margin-bottom: 0; }
+    .q-label {
+      font-family: 'Barlow', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--dark);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .q-label-icon {
+      width: 20px; height: 20px;
+      border-radius: 4px;
+      background: rgba(252,92,3,0.1);
+      color: var(--orange);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .q-hint {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 400;
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+    .q-input {
+      width: 100%;
+      border: none;
+      border-bottom: 1.5px solid var(--rule);
+      background: transparent;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 13.5px;
+      color: var(--dark);
+      padding: 6px 0;
+      outline: none;
+      min-height: 32px;
+      transition: border-color 0.2s;
+      resize: none;
+      overflow: hidden;
+    }
+    .q-input:focus { border-bottom-color: var(--orange); }
+    .q-input-box {
+      width: 100%;
+      min-height: 80px;
+      border: 1.5px solid var(--rule);
+      border-radius: 6px;
+      background: var(--bg-alt);
+      font-family: 'Source Code Pro', monospace;
+      font-size: 13.5px;
+      color: var(--dark);
+      padding: 12px 14px;
+      outline: none;
+      resize: vertical;
+      transition: border-color 0.2s;
+      line-height: 1.6;
+    }
+    .q-input-box:focus { border-color: var(--orange); background: var(--bg); }
+    .q-input-box.tall { min-height: 120px; }
+
+    /* ─── INLINE FIELDS ROW ──────────────────────────────────── */
+    .fields-row {
+      display: grid;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    .fields-row-2 { grid-template-columns: 1fr 1fr; }
+    .fields-row-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .fields-row-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+    .field-item {}
+    .field-item .q-label { font-size: 12px; }
+
+    /* ─── SLIDER ─────────────────────────────────────────────── */
+    .slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .slider-wrap input[type=range] {
+      flex: 1;
+      -webkit-appearance: none;
+      height: 4px;
+      background: var(--rule);
+      border-radius: 2px;
+      outline: none;
+    }
+    .slider-wrap input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--orange);
+      cursor: pointer;
+      border: 2px solid #fff;
+      box-shadow: 0 1px 6px rgba(252,92,3,0.3);
+    }
+    .slider-val {
+      font-family: 'Oswald', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--orange);
+      width: 52px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ─── RADIO CHIPS ────────────────────────────────────────── */
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .chip {
+      padding: 7px 16px;
+      border-radius: 20px;
+      border: 1.5px solid var(--rule);
+      background: var(--bg);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .chip:hover { border-color: var(--orange); color: var(--orange); }
+    .chip.selected { border-color: var(--orange); background: rgba(252,92,3,0.08); color: var(--orange); font-weight: 600; }
+    .chip.selected-green { border-color: var(--green); background: rgba(8,195,148,0.08); color: var(--dark); }
+
+    /* ─── CHECKLIST ──────────────────────────────────────────── */
+    .checklist {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .check-box {
+      flex-shrink: 0;
+      width: 20px; height: 20px;
+      border: 1.5px solid var(--rule);
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 2px;
+      transition: all 0.15s;
+    }
+    .check-box.checked { background: var(--green); border-color: var(--green); }
+    .check-box.checked::after {
+      content: '';
+      width: 10px; height: 6px;
+      border-left: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: rotate(-45deg) translateY(-1px);
+    }
+    .check-text {
+      font-size: 14px;
+      color: var(--dark);
+      line-height: 1.5;
+    }
+    .check-text.done { text-decoration: line-through; color: var(--muted); }
+
+    /* ─── ALLOCATION GRID ────────────────────────────────────── */
+    .alloc-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .alloc-cell {
+      background: var(--bg-alt);
+      border: 1.5px solid var(--rule);
+      border-radius: 8px;
+      padding: 16px 12px 12px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .alloc-cell:focus-within { border-color: var(--orange); background: var(--bg); }
+    .alloc-cell-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .alloc-cell-input {
+      width: 100%;
+      border: none;
+      border-bottom: 1.5px solid var(--rule);
+      background: transparent;
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--dark);
+      text-align: center;
+      outline: none;
+      padding: 2px 0;
+    }
+    .alloc-cell-input:focus { border-bottom-color: var(--orange); }
+    .alloc-cell-pct {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .alloc-total {
+      text-align: right;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+    .alloc-total .ok { color: var(--green); font-weight: 600; }
+    .alloc-total .warn { color: var(--orange); font-weight: 600; }
+
+    /* ─── RULES LIST ─────────────────────────────────────────── */
+    .rules-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .rule-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .rule-num {
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(252,92,3,0.1);
+      color: var(--orange);
+      font-family: 'Oswald', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ─── QUOTE CALLOUT ──────────────────────────────────────── */
+    .callout {
+      display: flex;
+      gap: 14px;
+      background: rgba(8,195,148,0.06);
+      border-left: 3px solid var(--green);
+      border-radius: 0 6px 6px 0;
+      padding: 14px 16px;
+      margin-bottom: 24px;
+    }
+    .callout-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .callout-body {
+      font-size: 13.5px;
+      color: var(--mid);
+      font-style: italic;
+      line-height: 1.6;
+    }
+    .callout-body strong {
+      font-style: normal;
+      font-weight: 600;
+      color: var(--dark);
+      display: block;
+      margin-bottom: 2px;
+    }
+    .callout.orange {
+      background: rgba(252,92,3,0.05);
+      border-left-color: var(--orange);
+    }
+
+    /* ─── DIVIDER ────────────────────────────────────────────── */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 24px 0;
+    }
+
+    /* ─── SECTION LABEL ──────────────────────────────────────── */
+    .section-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(252,92,3,0.15);
+    }
+
+    /* ─── PRICE TARGET TABLE ─────────────────────────────────── */
+    .target-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+    .target-table th {
+      text-align: left;
+      padding: 8px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1.5px solid var(--rule);
+      background: var(--bg-alt);
+    }
+    .target-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .target-table .editable {
+      font-family: 'Source Code Pro', monospace;
+      outline: none;
+      min-width: 80px;
+      color: var(--dark);
+    }
+    .target-table .editable:focus { background: rgba(252,92,3,0.04); }
+    .target-table tr:hover td { background: var(--bg-alt); }
+    .add-row-btn {
+      margin-top: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--orange);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: none;
+      padding: 4px 0;
+    }
+    .add-row-btn:hover { opacity: 0.8; }
+
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    .workbook-footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .workbook-footer a { color: var(--orange); text-decoration: none; }
+
+    /* ─── PRINT STYLES ───────────────────────────────────────── */
+    @media print {
+      body { background: #fff !important; font-size: 11pt; }
+      .topbar, .step-nav, .topbar-actions, .btn, .add-row-btn,
+      .step-complete-btn { display: none !important; }
+      .workbook-body { max-width: 100%; padding: 0; }
+      .cover {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        page-break-after: always;
+        border-radius: 0;
+        margin-bottom: 0;
+      }
+      .step-section {
+        page-break-before: always;
+        border: none;
+        border-radius: 0;
+        margin: 0;
+        border-top: 3px solid var(--orange);
+      }
+      .step-header { border-bottom: 1px solid var(--rule); }
+      .step-badge {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .q-input, .q-input-box { border-color: #ccc; }
+      .callout {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .alloc-cell { break-inside: avoid; }
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────── */
+    @media (max-width: 680px) {
+      .cover { padding: 32px 24px; }
+      .cover-title { font-size: 30px; }
+      .step-header { flex-wrap: wrap; gap: 12px; }
+      .step-complete-btn { width: 100%; text-align: center; justify-content: center; display: flex; }
+      .step-content { padding: 20px 20px; }
+      .fields-row-2, .fields-row-3, .fields-row-4 { grid-template-columns: 1fr; }
+      .alloc-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── TOP BAR ──────────────────────────────────────────────── -->
+<div class="topbar">
+  <div class="topbar-logo">◆ Collective Shift</div>
+  <div class="topbar-title">Platinum Member — 8-Step Strategy Workbook</div>
+  <div class="topbar-actions">
+    <span class="save-status" id="saveStatus">✓ Saved</span>
+    <button class="btn btn-save" onclick="saveAll()">💾 Save Progress</button>
+    <button class="btn btn-primary" onclick="window.print()">🖨 Print / PDF</button>
+  </div>
+</div>
+<div class="progress-wrap">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
+
+<!-- ─── STEP NAVIGATION DOTS ─────────────────────────────────── -->
+<div class="step-nav">
+  <a class="step-dot" href="#step-0" id="dot-0">◆</a>
+  <div class="step-connector"></div>
+  <a class="step-dot" href="#step-1" id="dot-1">1</a>
+  <div class="step-connector"></div>
+  <a class="step-dot" href="#step-2" id="dot-2">2</a>
+  <div class="step-connector"></div>
+  <a class="step-dot" href="#step-3" id="dot-3">3</a>
+  <div class="step-connector"></div>
+  <a class="step-dot" href="#step-4" id="dot-4">4</a>
+  <div class="step-connector"></div>
+  <a class="step-dot" href="#step-5" id="dot-5">5</a>
+  <div class="step-connector"></div>
+  <a class="step-dot" href="#step-6" id="dot-6">6</a>
+  <div class="step-connector"></div>
+  <a class="step-dot" href="#step-7" id="dot-7">7</a>
+  <div class="step-connector"></div>
+  <a class="step-dot" href="#step-8" id="dot-8">8</a>
+</div>
+
+<!-- ─── WORKBOOK BODY ─────────────────────────────────────────── -->
+<div class="workbook-body">
+
+  <!-- COVER ──────────────────────────────────────────────────── -->
+  <div class="cover" id="step-0">
+    <div class="cover-logo">
+      <div class="cover-logo-dot"></div>
+      Collective Shift — Platinum Membership
+    </div>
+    <div class="cover-label">Phase 3 · B3 / A3 · 8-Step Strategy Process</div>
+    <h1 class="cover-title">My Digital Asset<br /><span>Strategy Workbook</span></h1>
+    <p class="cover-sub">Complete one step per coaching call. Build your personal strategy — not someone else's signals. A strategy in your head is not a strategy. It's a vague intention.</p>
+    <div class="cover-meta">
+      <div class="cover-field">
+        <div class="cover-field-label">Your Name</div>
+        <input class="cover-field-input" id="cover_name" type="text" placeholder="Enter your full name" autocomplete="off" />
+      </div>
+      <div class="cover-field">
+        <div class="cover-field-label">Date Started</div>
+        <input class="cover-field-input" id="cover_date" type="text" placeholder="DD / MM / YYYY" />
+      </div>
+      <div class="cover-field">
+        <div class="cover-field-label">Your Analyst</div>
+        <input class="cover-field-input" id="cover_analyst" type="text" placeholder="e.g. Simon Amery" />
+      </div>
+    </div>
+    <div class="cover-quote">
+      "We teach you how to think. Not what to think." — Collective Shift
+    </div>
+  </div>
+
+  <!-- ─── STEP 1: FOUNDATIONS ───────────────────────────────── -->
+  <div class="step-section" id="step-1">
+    <div class="step-header">
+      <div class="step-badge">
+        <div class="step-badge-num">1</div>
+        <div class="step-badge-of">of 8</div>
+      </div>
+      <div class="step-header-text">
+        <div class="step-number-label">Step 01 — Foundations</div>
+        <div class="step-title">Why Digital Assets?</div>
+        <div class="step-desc">Establish your personal thesis for being here. Clarity on your "why" is the foundation everything else is built on.</div>
+      </div>
+      <button class="step-complete-btn" data-step="1" onclick="toggleComplete(this)">Mark Complete</button>
+    </div>
+    <div class="step-content">
+
+      <div class="callout">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body"><strong>Framework: No one makes it in a single cycle. Stick it out.</strong>This is a multi-cycle journey. Understanding your personal "why" is what keeps you grounded when markets get uncomfortable.</div>
+      </div>
+
+      <div class="section-label">My Personal Why</div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> Why am I investing in digital assets?</div>
+        <div class="q-hint">Be specific. Wealth protection, wealth generation, income creation, financial sovereignty, diversification?</div>
+        <textarea class="q-input-box tall" id="s1_why" placeholder="Write your personal reason here. E.g. I want to build a second income stream outside of property and shares, and I believe Bitcoin is the most scarce asset ever created..."></textarea>
+      </div>
+
+      <div class="section-label">My Goals</div>
+
+      <div class="fields-row fields-row-3">
+        <div class="field-item">
+          <div class="q-label">In 1 year, I want to:</div>
+          <textarea class="q-input-box" id="s1_goal_1y" placeholder="e.g. Own 0.5 BTC and have DCA running automatically"></textarea>
+        </div>
+        <div class="field-item">
+          <div class="q-label">In 3 years, I want to:</div>
+          <textarea class="q-input-box" id="s1_goal_3y" placeholder="e.g. Own 1 full Bitcoin and a small altcoin portfolio"></textarea>
+        </div>
+        <div class="field-item">
+          <div class="q-label">In 5 years, I want to:</div>
+          <textarea class="q-input-box" id="s1_goal_5y" placeholder="e.g. Generate enough returns to supplement retirement income"></textarea>
+        </div>
+      </div>
+
+      <div class="section-label">Self-Assessment</div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> My current knowledge level</div>
+        <div class="chip-group" id="s1_level">
+          <div class="chip" onclick="selectChip(this, 's1_level')" data-val="Complete beginner — I'm learning from scratch">Complete Beginner</div>
+          <div class="chip" onclick="selectChip(this, 's1_level')" data-val="Some knowledge — I've bought digital assets but don't have a system">Some Knowledge</div>
+          <div class="chip" onclick="selectChip(this, 's1_level')" data-val="Intermediate — I understand the market but need a framework">Intermediate</div>
+          <div class="chip" onclick="selectChip(this, 's1_level')" data-val="Experienced — I'm here to refine and professionalise my approach">Experienced</div>
+        </div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> My key fears and concerns to address</div>
+        <div class="q-hint">Honesty here is powerful. What worries you most? Security, market crashes, missing out, making mistakes?</div>
+        <textarea class="q-input-box" id="s1_fears" placeholder="e.g. I'm worried about losing money I can't afford to lose. I'm afraid of making a security mistake with self-custody..."></textarea>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> What does success look like for me in this program?</div>
+        <textarea class="q-input-box" id="s1_success" placeholder="e.g. I'll feel successful when I have a written strategy I actually follow, my DCA is running, and I fully understand what I own and why..."></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── STEP 2: BITCOIN ───────────────────────────────────── -->
+  <div class="step-section" id="step-2">
+    <div class="step-header">
+      <div class="step-badge" style="background: #F7931A;">
+        <div class="step-badge-num">2</div>
+        <div class="step-badge-of">of 8</div>
+      </div>
+      <div class="step-header-text">
+        <div class="step-number-label">Step 02 — Bitcoin</div>
+        <div class="step-title">My Bitcoin Thesis</div>
+        <div class="step-desc">Build genuine, educated conviction in Bitcoin. Know why you hold it — so you keep holding it when everyone else is panicking.</div>
+      </div>
+      <button class="step-complete-btn" data-step="2" onclick="toggleComplete(this)">Mark Complete</button>
+    </div>
+    <div class="step-content">
+
+      <div class="callout">
+        <div class="callout-icon">₿</div>
+        <div class="callout-body"><strong>Framework: Bitcoin is a hold. Altcoins are a trade.</strong>"I've never met a single person who's ever said: buying and holding Bitcoin for long term was a bad idea." — Simon Amery</div>
+      </div>
+
+      <div class="section-label">My Bitcoin Thesis</div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> Why I believe in Bitcoin (in my own words)</div>
+        <div class="q-hint">Scarcity, decentralisation, store of value, network effects, digital gold — write it in your own language.</div>
+        <textarea class="q-input-box tall" id="s2_thesis" placeholder="I believe in Bitcoin because..."></textarea>
+      </div>
+
+      <div class="section-label">My Conviction</div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> My Bitcoin conviction level (1 = unsure, 10 = completely convicted)</div>
+        <div class="slider-wrap">
+          <input type="range" min="1" max="10" value="5" id="s2_conviction" oninput="document.getElementById('s2_conv_val').textContent=this.value+'/10'" />
+          <div class="slider-val" id="s2_conv_val">5/10</div>
+        </div>
+        <div class="slider-labels"><span>1 — Unsure</span><span>10 — Fully Convicted</span></div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> Questions I still have about Bitcoin</div>
+        <div class="q-hint">No question is too basic. Write them down — these get answered in your coaching calls.</div>
+        <textarea class="q-input-box" id="s2_questions" placeholder="e.g. What happens when all 21 million Bitcoin are mined? Can governments ban it? Is it too late to buy?"></textarea>
+      </div>
+
+      <div class="section-label">My Bitcoin Strategy</div>
+
+      <div class="fields-row fields-row-2">
+        <div class="field-item">
+          <div class="q-label">Target Bitcoin allocation (% of total portfolio)</div>
+          <div class="q-hint">Most wealth protection investors: 60–80%. Wealth generation: 40–60%.</div>
+          <input type="text" class="q-input" id="s2_btc_alloc" placeholder="e.g. 65%" />
+        </div>
+        <div class="field-item">
+          <div class="q-label">Target Bitcoin holding (coins / AUD value)</div>
+          <div class="q-hint">e.g. Own 1 full Bitcoin / AUD $50,000 worth</div>
+          <input type="text" class="q-input" id="s2_btc_target" placeholder="e.g. 1 BTC or AUD $50,000" />
+        </div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> How Bitcoin fits into my overall wealth strategy</div>
+        <div class="q-hint">Is it your largest position? A diversifier alongside property/shares? A long-term retirement asset?</div>
+        <textarea class="q-input-box" id="s2_fit" placeholder="e.g. Bitcoin is my primary digital asset position. It sits alongside my property investment as a store of value hedge. I treat it like I treat gold — buy and hold indefinitely..."></textarea>
+      </div>
+
+      <div class="callout orange">
+        <div class="callout-icon">📌</div>
+        <div class="callout-body"><strong>Reminder: Bitcoin is a hold-forever asset.</strong>"Everyone gets Bitcoin at the price they deserve. That's the cost of entry." Start your DCA now — don't wait for the perfect price.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── STEP 3: ALTCOINS ──────────────────────────────────── -->
+  <div class="step-section" id="step-3">
+    <div class="step-header">
+      <div class="step-badge" style="background: var(--green);">
+        <div class="step-badge-num">3</div>
+        <div class="step-badge-of">of 8</div>
+      </div>
+      <div class="step-header-text">
+        <div class="step-number-label">Step 03 — Altcoins</div>
+        <div class="step-title">My Altcoin Strategy</div>
+        <div class="step-desc">Altcoins are tech startups — not stocks. Understand that framework, set your parameters, and only then decide how much exposure you want.</div>
+      </div>
+      <button class="step-complete-btn" data-step="3" onclick="toggleComplete(this)">Mark Complete</button>
+    </div>
+    <div class="step-content">
+
+      <div class="callout">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body"><strong>Critical Framework: Altcoins = Tech Startups, Not Stocks.</strong>"The only similarity with Bitcoin is they both use blockchain technology. That's where it ends." Most altcoins do not recover to their all-time highs. Think "good time, not a long time."</div>
+      </div>
+
+      <div class="section-label">My Mental Model</div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> In my own words: why are altcoins NOT like stocks?</div>
+        <div class="q-hint">Can you explain this to a friend? If not, revisit Step 3 in the Shift OS before completing this.</div>
+        <textarea class="q-input-box" id="s3_model" placeholder="Unlike stocks, altcoins have no equity ownership, no board governance, no regulatory vetting. They're more like investing in a startup than buying a share in a company..."></textarea>
+      </div>
+
+      <div class="section-label">Sectors That Interest Me</div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> Which altcoin sectors interest me most?</div>
+        <div class="chip-group" id="s3_sectors">
+          <div class="chip" onclick="selectChip(this, 's3_sectors', true)" data-val="DeFi">DeFi</div>
+          <div class="chip" onclick="selectChip(this, 's3_sectors', true)" data-val="Layer 1 Infrastructure">Layer 1 Infra</div>
+          <div class="chip" onclick="selectChip(this, 's3_sectors', true)" data-val="Layer 2 Scaling">Layer 2 Scaling</div>
+          <div class="chip" onclick="selectChip(this, 's3_sectors', true)" data-val="Real World Assets (RWA)">RWA</div>
+          <div class="chip" onclick="selectChip(this, 's3_sectors', true)" data-val="AI & Data">AI & Data</div>
+          <div class="chip" onclick="selectChip(this, 's3_sectors', true)" data-val="Gaming & NFTs">Gaming / NFTs</div>
+          <div class="chip" onclick="selectChip(this, 's3_sectors', true)" data-val="Stablecoins & Payments">Payments</div>
+          <div class="chip" onclick="selectChip(this, 's3_sectors', true)" data-val="DEX & Trading Infrastructure">DEX / Trading</div>
+          <div class="chip" onclick="selectChip(this, 's3_sectors', true)" data-val="Privacy">Privacy</div>
+        </div>
+      </div>
+
+      <div class="section-label">My Altcoin Parameters</div>
+
+      <div class="fields-row fields-row-2">
+        <div class="field-item">
+          <div class="q-label">Target altcoin allocation (% of total portfolio)</div>
+          <div class="q-hint">Remember: more altcoins = more risk. CS often runs &lt;5% in bear markets.</div>
+          <input type="text" class="q-input" id="s3_alt_alloc" placeholder="e.g. 20%" />
+        </div>
+        <div class="field-item">
+          <div class="q-label">Maximum number of altcoin positions</div>
+          <div class="q-hint">Fewer, higher-conviction positions typically outperform a scattered approach.</div>
+          <input type="text" class="q-input" id="s3_max_pos" placeholder="e.g. 5 positions maximum" />
+        </div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> My risk tolerance for altcoins</div>
+        <div class="chip-group" id="s3_risk">
+          <div class="chip" onclick="selectChip(this, 's3_risk')" data-val="Low — Only top 10 by market cap">Low — Top 10 only</div>
+          <div class="chip" onclick="selectChip(this, 's3_risk')" data-val="Medium — Established projects with real products">Medium — Established projects</div>
+          <div class="chip" onclick="selectChip(this, 's3_risk')" data-val="High — Willing to include early-stage projects">High — Include early-stage</div>
+          <div class="chip" onclick="selectChip(this, 's3_risk')" data-val="Varies by position size — higher risk for smaller positions">Mixed — Risk varies by size</div>
+        </div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> My altcoin evaluation checklist (what I require before buying any altcoin)</div>
+        <div class="q-hint">Build your minimum criteria. Eg: real product with users, identifiable team, clear revenue model, liquid market.</div>
+        <textarea class="q-input-box" id="s3_eval" placeholder="Before I buy any altcoin I will check:&#10;1. Does it have a real product with actual users?&#10;2. Is the team identifiable and credible?&#10;3. What is the token's revenue model / value accrual?&#10;4. ..."></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── STEP 4: HOW WE INVEST ─────────────────────────────── -->
+  <div class="step-section" id="step-4">
+    <div class="step-header">
+      <div class="step-badge" style="background: #5B4FCF;">
+        <div class="step-badge-num">4</div>
+        <div class="step-badge-of">of 8</div>
+      </div>
+      <div class="step-header-text">
+        <div class="step-number-label">Step 04 — How We Invest</div>
+        <div class="step-title">My Investment Framework</div>
+        <div class="step-desc">Define your risk profile, portfolio allocation, and the personal investment rules you will actually follow.</div>
+      </div>
+      <button class="step-complete-btn" data-step="4" onclick="toggleComplete(this)">Mark Complete</button>
+    </div>
+    <div class="step-content">
+
+      <div class="callout">
+        <div class="callout-icon">⚖️</div>
+        <div class="callout-body"><strong>Framework: High Risk means BOTH directions.</strong>"People say 'high risk' but they only hear the upside. They hear '3x up' and ignore the '80% down' part." — Simon Amery. Risk-to-reward must be evaluated fully before committing capital.</div>
+      </div>
+
+      <div class="section-label">My Investor Type</div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> My primary investor type</div>
+        <div class="chip-group" id="s4_investor_type">
+          <div class="chip" onclick="selectChip(this, 's4_investor_type')" data-val="Wealth Generation — Growing capital significantly. Higher risk, longer horizon.">💰 Wealth Generation</div>
+          <div class="chip" onclick="selectChip(this, 's4_investor_type')" data-val="Wealth Protection — Protecting existing wealth. Bitcoin-dominant, conservative allocation.">🛡 Wealth Protection</div>
+          <div class="chip" onclick="selectChip(this, 's4_investor_type')" data-val="Income Creation — Generating yield on holdings. Stablecoin and DeFi strategies. (Level 2 only)">📈 Income Creation</div>
+        </div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> My risk profile</div>
+        <div class="chip-group" id="s4_risk_profile">
+          <div class="chip" onclick="selectChip(this, 's4_risk_profile')" data-val="Conservative">Conservative</div>
+          <div class="chip" onclick="selectChip(this, 's4_risk_profile')" data-val="Moderate">Moderate</div>
+          <div class="chip" onclick="selectChip(this, 's4_risk_profile')" data-val="Aggressive">Aggressive</div>
+        </div>
+      </div>
+
+      <div class="section-label">My Target Portfolio Allocation</div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> How I will split my digital asset portfolio (must add up to 100%)</div>
+        <div class="alloc-grid" id="alloc_grid">
+          <div class="alloc-cell">
+            <div class="alloc-cell-label">Bitcoin</div>
+            <input type="number" class="alloc-cell-input" id="alloc_btc" placeholder="60" min="0" max="100" oninput="updateAllocTotal()" />
+            <div class="alloc-cell-pct">%</div>
+          </div>
+          <div class="alloc-cell">
+            <div class="alloc-cell-label">Altcoins</div>
+            <input type="number" class="alloc-cell-input" id="alloc_alts" placeholder="20" min="0" max="100" oninput="updateAllocTotal()" />
+            <div class="alloc-cell-pct">%</div>
+          </div>
+          <div class="alloc-cell">
+            <div class="alloc-cell-label">Stablecoins</div>
+            <input type="number" class="alloc-cell-input" id="alloc_stable" placeholder="15" min="0" max="100" oninput="updateAllocTotal()" />
+            <div class="alloc-cell-pct">%</div>
+          </div>
+          <div class="alloc-cell">
+            <div class="alloc-cell-label">Cash / Fiat</div>
+            <input type="number" class="alloc-cell-input" id="alloc_cash" placeholder="5" min="0" max="100" oninput="updateAllocTotal()" />
+            <div class="alloc-cell-pct">%</div>
+          </div>
+        </div>
+        <div class="alloc-total" id="alloc_total">Total: 0% — enter your allocations above</div>
+      </div>
+
+      <div class="section-label">My Investment Rules</div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> My personal investment rules (write 3–5 rules you will follow)</div>
+        <div class="q-hint">These are YOUR rules. Examples: "I will never invest more than I can afford to lose completely." "I will always DCA into Bitcoin, never lump sum into altcoins." "I will not check prices more than once per day."</div>
+        <div class="rules-list">
+          <div class="rule-row"><div class="rule-num">1</div><input type="text" class="q-input" id="s4_rule1" placeholder="My first investment rule..." /></div>
+          <div class="rule-row"><div class="rule-num">2</div><input type="text" class="q-input" id="s4_rule2" placeholder="My second investment rule..." /></div>
+          <div class="rule-row"><div class="rule-num">3</div><input type="text" class="q-input" id="s4_rule3" placeholder="My third investment rule..." /></div>
+          <div class="rule-row"><div class="rule-num">4</div><input type="text" class="q-input" id="s4_rule4" placeholder="My fourth investment rule (optional)..." /></div>
+          <div class="rule-row"><div class="rule-num">5</div><input type="text" class="q-input" id="s4_rule5" placeholder="My fifth investment rule (optional)..." /></div>
+        </div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> My position sizing framework</div>
+        <div class="q-hint">How will you decide how much goes into each position? E.g. maximum 5% of portfolio per altcoin, no limit on Bitcoin.</div>
+        <textarea class="q-input-box" id="s4_sizing" placeholder="e.g. Maximum 5% of my total portfolio per single altcoin position. No single altcoin to exceed 10% even after gains. Bitcoin has no maximum — I will always add to Bitcoin."></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── STEP 5: BUY & SELL ────────────────────────────────── -->
+  <div class="step-section" id="step-5">
+    <div class="step-header">
+      <div class="step-badge" style="background: #0C8CE9;">
+        <div class="step-badge-num">5</div>
+        <div class="step-badge-of">of 8</div>
+      </div>
+      <div class="step-header-text">
+        <div class="step-number-label">Step 05 — Buy &amp; Sell</div>
+        <div class="step-title">My Execution Plan</div>
+        <div class="step-desc">Get operational. Choose your exchange, set up your DCA, solve the bank friction problem. Your plan means nothing until you execute it.</div>
+      </div>
+      <button class="step-complete-btn" data-step="5" onclick="toggleComplete(this)">Mark Complete</button>
+    </div>
+    <div class="step-content">
+
+      <div class="callout">
+        <div class="callout-icon">⚙️</div>
+        <div class="callout-body"><strong>Framework: Set it, forget it, sleep well.</strong>"Dollar cost averaging — you catch some up there, you catch some down there, you take the emotion out of it. I've never regretted DCA." Automate your purchases so emotion can't interfere.</div>
+      </div>
+
+      <div class="section-label">My Exchange Setup</div>
+
+      <div class="fields-row fields-row-2">
+        <div class="field-item">
+          <div class="q-label">Primary exchange I will use</div>
+          <div class="chip-group" id="s5_exchange">
+            <div class="chip" onclick="selectChip(this, 's5_exchange')" data-val="CoinSpot">CoinSpot</div>
+            <div class="chip" onclick="selectChip(this, 's5_exchange')" data-val="Swyftx">Swyftx</div>
+            <div class="chip" onclick="selectChip(this, 's5_exchange')" data-val="Coinbase">Coinbase</div>
+            <div class="chip" onclick="selectChip(this, 's5_exchange')" data-val="Kraken">Kraken</div>
+            <div class="chip" onclick="selectChip(this, 's5_exchange')" data-val="Other">Other</div>
+          </div>
+        </div>
+        <div class="field-item">
+          <div class="q-label">If "Other", specify:</div>
+          <input type="text" class="q-input" id="s5_exchange_other" placeholder="Exchange name..." />
+        </div>
+      </div>
+
+      <div class="section-label">My DCA Plan</div>
+
+      <div class="fields-row fields-row-3">
+        <div class="field-item">
+          <div class="q-label">DCA amount (per purchase)</div>
+          <input type="text" class="q-input" id="s5_dca_amount" placeholder="e.g. $500" />
+        </div>
+        <div class="field-item">
+          <div class="q-label">DCA frequency</div>
+          <div class="chip-group" id="s5_dca_freq">
+            <div class="chip" onclick="selectChip(this, 's5_dca_freq')" data-val="Weekly">Weekly</div>
+            <div class="chip" onclick="selectChip(this, 's5_dca_freq')" data-val="Fortnightly">Fortnightly</div>
+            <div class="chip" onclick="selectChip(this, 's5_dca_freq')" data-val="Monthly">Monthly</div>
+          </div>
+        </div>
+        <div class="field-item">
+          <div class="q-label">Day of week / month</div>
+          <input type="text" class="q-input" id="s5_dca_day" placeholder="e.g. Every Monday" />
+        </div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> How I will get money in (bank transfer method)</div>
+        <div class="q-hint">Which bank? What method will you use? Have you already done a test transfer?</div>
+        <textarea class="q-input-box" id="s5_bank" placeholder="e.g. I'll use BPAY via my CBA account to CoinSpot. I've already done a test transfer of $50. My bank didn't block it. If they do, I'll call and explain it's an investment..."></textarea>
+      </div>
+
+      <div class="section-label">My Buying Checklist</div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">✓</div> Tick off when complete</div>
+        <ul class="checklist" id="s5_checklist">
+          <li><div class="check-box" onclick="toggleCheck(this)"></div><span class="check-text">Exchange account created and fully verified (KYC complete)</span></li>
+          <li><div class="check-box" onclick="toggleCheck(this)"></div><span class="check-text">Test bank transfer completed (any amount)</span></li>
+          <li><div class="check-box" onclick="toggleCheck(this)"></div><span class="check-text">First Bitcoin purchase made</span></li>
+          <li><div class="check-box" onclick="toggleCheck(this)"></div><span class="check-text">Recurring DCA set up and scheduled</span></li>
+          <li><div class="check-box" onclick="toggleCheck(this)"></div><span class="check-text">Confirmed Bitcoin is showing in exchange wallet</span></li>
+          <li><div class="check-box" onclick="toggleCheck(this)"></div><span class="check-text">Screenshotted or recorded cost basis for tax purposes</span></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── STEP 6: SEND & STORE ──────────────────────────────── -->
+  <div class="step-section" id="step-6">
+    <div class="step-header">
+      <div class="step-badge" style="background: #C0392B;">
+        <div class="step-badge-num">6</div>
+        <div class="step-badge-of">of 8</div>
+      </div>
+      <div class="step-header-text">
+        <div class="step-number-label">Step 06 — Send &amp; Store</div>
+        <div class="step-title">My Security Plan</div>
+        <div class="step-desc">Not your keys, not your coins. Build a security plan appropriate for your portfolio size — paranoia should equal the number of zeros you're protecting.</div>
+      </div>
+      <button class="step-complete-btn" data-step="6" onclick="toggleComplete(this)">Mark Complete</button>
+    </div>
+    <div class="step-content">
+
+      <div class="callout">
+        <div class="callout-icon">🔐</div>
+        <div class="callout-body"><strong>Framework: Paranoia = Zeros.</strong>"The level of paranoia should be equal to the number of zeros you're trying to protect." A $500 portfolio and a $500,000 portfolio require very different security approaches.</div>
+      </div>
+
+      <div class="section-label">My Self-Custody Timeline</div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> When will I move to a hardware wallet?</div>
+        <div class="chip-group" id="s6_timeline">
+          <div class="chip" onclick="selectChip(this, 's6_timeline')" data-val="Already have one">Already have one</div>
+          <div class="chip" onclick="selectChip(this, 's6_timeline')" data-val="Within the next 30 days">Next 30 days</div>
+          <div class="chip" onclick="selectChip(this, 's6_timeline')" data-val="When my portfolio reaches $5,000+">At $5,000+</div>
+          <div class="chip" onclick="selectChip(this, 's6_timeline')" data-val="When my portfolio reaches $10,000+">At $10,000+</div>
+          <div class="chip" onclick="selectChip(this, 's6_timeline')" data-val="When my portfolio reaches $50,000+">At $50,000+</div>
+        </div>
+      </div>
+
+      <div class="fields-row fields-row-2">
+        <div class="field-item">
+          <div class="q-label">Hardware wallet I will use (or am using)</div>
+          <div class="chip-group" id="s6_wallet">
+            <div class="chip" onclick="selectChip(this, 's6_wallet')" data-val="Ledger">Ledger</div>
+            <div class="chip" onclick="selectChip(this, 's6_wallet')" data-val="Trezor">Trezor</div>
+            <div class="chip" onclick="selectChip(this, 's6_wallet')" data-val="Coldcard">Coldcard</div>
+            <div class="chip" onclick="selectChip(this, 's6_wallet')" data-val="Not decided yet">Not decided yet</div>
+          </div>
+        </div>
+        <div class="field-item">
+          <div class="q-label">Completed first transfer to hardware wallet?</div>
+          <div class="chip-group" id="s6_first_tx">
+            <div class="chip" onclick="selectChip(this, 's6_first_tx')" data-val="Yes — transfer complete">✅ Yes, complete</div>
+            <div class="chip" onclick="selectChip(this, 's6_first_tx')" data-val="No — not yet">❌ Not yet</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label">My Seed Phrase Backup Plan</div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> How I will back up and store my seed phrase</div>
+        <div class="q-hint">Where will you store it? How many copies? Metal plate or paper? Never store digitally or in photos.</div>
+        <textarea class="q-input-box" id="s6_seed" placeholder="e.g. I will write my seed phrase on a metal plate (Cryptosteel). I will keep one copy in my home safe and one in a bank safety deposit box. I will NEVER store it digitally or take a photo of it..."></textarea>
+      </div>
+
+      <div class="section-label">My Security Scaling Plan</div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> My security approach at different portfolio sizes</div>
+        <div class="fields-row fields-row-3">
+          <div class="field-item">
+            <div class="q-label" style="color:var(--muted); font-size:11px;">Under $5,000</div>
+            <textarea class="q-input-box" id="s6_tier1" placeholder="e.g. Exchange is fine. Not worth the hardware wallet cost yet."></textarea>
+          </div>
+          <div class="field-item">
+            <div class="q-label" style="color:var(--muted); font-size:11px;">$5,000 – $50,000</div>
+            <textarea class="q-input-box" id="s6_tier2" placeholder="e.g. Hardware wallet for long-term hold. Keep small amounts on exchange for DCA."></textarea>
+          </div>
+          <div class="field-item">
+            <div class="q-label" style="color:var(--muted); font-size:11px;">Over $50,000</div>
+            <textarea class="q-input-box" id="s6_tier3" placeholder="e.g. Consider multi-sig. Review estate plan. Geographically distributed backups."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> Emergency access plan — what happens if something happens to me?</div>
+        <div class="q-hint">Who needs to know? What instructions have you left? How can they access your digital assets?</div>
+        <textarea class="q-input-box" id="s6_emergency" placeholder="e.g. My partner knows my hardware wallet is in the safe. I have left written instructions in a sealed envelope with my will/estate plan. My solicitor has a copy of the access instructions (not the seed phrase itself)..."></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── STEP 7: TAX ───────────────────────────────────────── -->
+  <div class="step-section" id="step-7">
+    <div class="step-header">
+      <div class="step-badge" style="background: #27AE60;">
+        <div class="step-badge-num">7</div>
+        <div class="step-badge-of">of 8</div>
+      </div>
+      <div class="step-header-text">
+        <div class="step-number-label">Step 07 — Tax</div>
+        <div class="step-title">My Tax Plan</div>
+        <div class="step-desc">Not tax advice — an education framework to help you stay compliant and have better conversations with your accountant.</div>
+      </div>
+      <button class="step-complete-btn" data-step="7" onclick="toggleComplete(this)">Mark Complete</button>
+    </div>
+    <div class="step-content">
+
+      <div class="callout orange">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body"><strong>Important: This is education, not tax advice.</strong>Always work with a qualified accountant or tax professional for your specific situation. Digital asset tax rules vary significantly by country and change frequently.</div>
+      </div>
+
+      <div class="section-label">My Tax Profile</div>
+
+      <div class="fields-row fields-row-2">
+        <div class="field-item">
+          <div class="q-label">Country / jurisdiction</div>
+          <input type="text" class="q-input" id="s7_country" placeholder="e.g. Australia" />
+        </div>
+        <div class="field-item">
+          <div class="q-label">Have I discussed digital assets with my accountant?</div>
+          <div class="chip-group" id="s7_accountant_discuss">
+            <div class="chip" onclick="selectChip(this, 's7_accountant_discuss')" data-val="Yes">Yes ✅</div>
+            <div class="chip" onclick="selectChip(this, 's7_accountant_discuss')" data-val="No — on my to-do list">No — on to-do list</div>
+            <div class="chip" onclick="selectChip(this, 's7_accountant_discuss')" data-val="No accountant yet">No accountant yet</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label">My Tax Reporting Method</div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> How I will handle tax reporting</div>
+        <div class="chip-group" id="s7_method">
+          <div class="chip" onclick="selectChip(this, 's7_method')" data-val="Accountant only">Accountant only</div>
+          <div class="chip" onclick="selectChip(this, 's7_method')" data-val="Tax software only (self-managed)">Software only (self-managed)</div>
+          <div class="chip" onclick="selectChip(this, 's7_method')" data-val="Both — software to track, accountant to lodge">Both — software + accountant</div>
+        </div>
+      </div>
+
+      <div class="fields-row fields-row-2">
+        <div class="field-item">
+          <div class="q-label">Tax software I will use</div>
+          <div class="chip-group" id="s7_software">
+            <div class="chip" onclick="selectChip(this, 's7_software')" data-val="Koinly">Koinly</div>
+            <div class="chip" onclick="selectChip(this, 's7_software')" data-val="CryptoTaxCalculator">CryptoTaxCalculator</div>
+            <div class="chip" onclick="selectChip(this, 's7_software')" data-val="CoinTracker">CoinTracker</div>
+            <div class="chip" onclick="selectChip(this, 's7_software')" data-val="None — handled by accountant">Accountant handles it</div>
+          </div>
+        </div>
+        <div class="field-item">
+          <div class="q-label">Software connected to my exchange(s)?</div>
+          <div class="chip-group" id="s7_connected">
+            <div class="chip" onclick="selectChip(this, 's7_connected')" data-val="Yes — all exchanges connected">✅ Yes, all connected</div>
+            <div class="chip" onclick="selectChip(this, 's7_connected')" data-val="Partially — some connected">⚡ Partially</div>
+            <div class="chip" onclick="selectChip(this, 's7_connected')" data-val="No — not set up yet">❌ Not set up yet</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label">My Key Dates &amp; Record-Keeping</div>
+
+      <div class="fields-row fields-row-2">
+        <div class="field-item">
+          <div class="q-label">Key tax deadlines for my jurisdiction</div>
+          <textarea class="q-input-box" id="s7_dates" placeholder="e.g. Australia: Financial year ends June 30. Tax return due October 31 (self-lodged) or May 15 (via accountant). CGT discount available for assets held 12+ months."></textarea>
+        </div>
+        <div class="field-item">
+          <div class="q-label">My record-keeping system</div>
+          <textarea class="q-input-box" id="s7_records" placeholder="e.g. I export my transaction history from CoinSpot monthly and store it in a dedicated Google Drive folder. All purchase receipts are kept. Tax software is connected to all exchanges via API."></textarea>
+        </div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> Tax actions I need to take (your to-do list)</div>
+        <textarea class="q-input-box" id="s7_actions" placeholder="e.g.&#10;1. Set up Koinly and connect to CoinSpot&#10;2. Email accountant to discuss digital asset holdings before June 30&#10;3. Export full transaction history from old exchange I no longer use&#10;4. Understand the 12-month CGT discount and plan accordingly"></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── STEP 8: SELL STRATEGY ─────────────────────────────── -->
+  <div class="step-section" id="step-8">
+    <div class="step-header">
+      <div class="step-badge" style="background: var(--dark);">
+        <div class="step-badge-num">8</div>
+        <div class="step-badge-of">of 8</div>
+      </div>
+      <div class="step-header-text">
+        <div class="step-number-label">Step 08 — Sell Strategy</div>
+        <div class="step-title">My Exit Plan</div>
+        <div class="step-desc">The most emotionally challenging step — and the most important. A strategy in your head is not a strategy. Write it down. Commit to it now so you execute it under pressure later.</div>
+      </div>
+      <button class="step-complete-btn" data-step="8" onclick="toggleComplete(this)">Mark Complete</button>
+    </div>
+    <div class="step-content">
+
+      <div class="callout">
+        <div class="callout-icon">🏆</div>
+        <div class="callout-body"><strong>Framework: The best trade can be a loss-cut.</strong>"My best investment decision wasn't Solana at 10x. It was getting out of Polygon before I lost 70-80%." — Simon Amery. Knowing when to sell is as important as knowing when to buy.</div>
+      </div>
+
+      <div class="section-label">My Sell Strategy Type</div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> My primary sell strategy approach</div>
+        <div class="chip-group" id="s8_strategy_type">
+          <div class="chip" onclick="selectChip(this, 's8_strategy_type')" data-val="Target-based — I sell when positions hit specific price targets">Target-Based</div>
+          <div class="chip" onclick="selectChip(this, 's8_strategy_type')" data-val="DCA-out — I gradually reduce positions over time">DCA-Out</div>
+          <div class="chip" onclick="selectChip(this, 's8_strategy_type')" data-val="Trailing stops — I set stop-loss levels below the current price">Trailing Stops</div>
+          <div class="chip" onclick="selectChip(this, 's8_strategy_type')" data-val="Hybrid — I use a combination of the above approaches">Hybrid</div>
+        </div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> What I will sell into</div>
+        <div class="chip-group" id="s8_sell_into">
+          <div class="chip" onclick="selectChip(this, 's8_sell_into', true)" data-val="Stablecoins (USDC/USDT)">Stablecoins</div>
+          <div class="chip" onclick="selectChip(this, 's8_sell_into', true)" data-val="Fiat (AUD/USD)">Fiat</div>
+          <div class="chip" onclick="selectChip(this, 's8_sell_into', true)" data-val="Reallocate to Bitcoin">Reallocate → Bitcoin</div>
+          <div class="chip" onclick="selectChip(this, 's8_sell_into', true)" data-val="Reallocate to other positions">Reallocate → Other</div>
+        </div>
+      </div>
+
+      <div class="section-label">My Price Targets</div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> Specific price targets for each position</div>
+        <div class="q-hint">Be specific. Vague intentions are not a strategy. Write your actual targets, not "when it 10x's."</div>
+        <table class="target-table" id="targetTable">
+          <thead>
+            <tr>
+              <th>Asset</th>
+              <th>My Avg Entry Price</th>
+              <th>Target 1 (Take Partial %)</th>
+              <th>Target 2 (Take Partial %)</th>
+              <th>Full Exit Target</th>
+              <th>Stop-Loss / Cut Level</th>
+            </tr>
+          </thead>
+          <tbody id="targetTableBody">
+            <tr>
+              <td><span class="editable" contenteditable="true" data-placeholder="e.g. Bitcoin">Bitcoin</span></td>
+              <td><span class="editable" contenteditable="true" data-placeholder="e.g. $82,000"></span></td>
+              <td><span class="editable" contenteditable="true" data-placeholder="e.g. $150,000 (sell 10%)"></span></td>
+              <td><span class="editable" contenteditable="true" data-placeholder="e.g. $250,000 (sell 20%)"></span></td>
+              <td><span class="editable" contenteditable="true" data-placeholder="e.g. $500,000+"></span></td>
+              <td><span class="editable" contenteditable="true" data-placeholder="N/A — Hold forever"></span></td>
+            </tr>
+            <tr>
+              <td><span class="editable" contenteditable="true" data-placeholder="Altcoin 1"></span></td>
+              <td><span class="editable" contenteditable="true" data-placeholder="e.g. $3.20"></span></td>
+              <td><span class="editable" contenteditable="true" data-placeholder="e.g. $8 (sell 25%)"></span></td>
+              <td><span class="editable" contenteditable="true" data-placeholder="e.g. $15 (sell 50%)"></span></td>
+              <td><span class="editable" contenteditable="true" data-placeholder="e.g. $30"></span></td>
+              <td><span class="editable" contenteditable="true" data-placeholder="e.g. $1.80 (-44%)"></span></td>
+            </tr>
+            <tr>
+              <td><span class="editable" contenteditable="true" data-placeholder="Altcoin 2"></span></td>
+              <td><span class="editable" contenteditable="true" data-placeholder="Entry price..."></span></td>
+              <td><span class="editable" contenteditable="true" data-placeholder="Target 1..."></span></td>
+              <td><span class="editable" contenteditable="true" data-placeholder="Target 2..."></span></td>
+              <td><span class="editable" contenteditable="true" data-placeholder="Full exit..."></span></td>
+              <td><span class="editable" contenteditable="true" data-placeholder="Stop-loss..."></span></td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="add-row-btn" onclick="addTargetRow()">+ Add Position</button>
+      </div>
+
+      <div class="section-label">My Emotional Triggers &amp; Rules</div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> Emotional triggers I need to watch for — and how I'll handle them</div>
+        <div class="q-hint">Fear, greed, FOMO, panic — identify your specific triggers and write a rule for each one.</div>
+        <textarea class="q-input-box tall" id="s8_emotional" placeholder="Trigger 1: FOMO — I buy altcoins when I see them pumping on social media.&#10;My rule: Before any unplanned purchase, I wait 48 hours and check the Shift OS framework. If it doesn't pass my checklist, I don't buy.&#10;&#10;Trigger 2: Panic selling — I sell Bitcoin when prices drop sharply.&#10;My rule: I have a written note to myself that says: 'Bitcoin is a hold. You have seen this before. Do not sell.'&#10;&#10;Trigger 3: Holding losers too long.&#10;My rule: Any altcoin position down more than 50% from entry gets a mandatory review. If the thesis is broken, I cut."></textarea>
+      </div>
+
+      <div class="section-label">My Re-Entry Framework</div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> When and how I will buy back after selling</div>
+        <div class="q-hint">What signals will you look for? DCA back in or lump sum? What triggers you to re-enter a position?</div>
+        <textarea class="q-input-box" id="s8_reentry" placeholder="e.g. After de-risking or selling a position, I will wait for one of these signals before re-entering:&#10;1. Bitcoin reclaims its 200-day moving average with volume&#10;2. Risk-to-reward framework shows a clear skew in my favour&#10;3. I will DCA back in over 4-8 weeks rather than lump sum re-enter&#10;4. I will not re-enter an altcoin unless its fundamental thesis is intact"></textarea>
+      </div>
+
+      <div class="callout">
+        <div class="callout-icon">📝</div>
+        <div class="callout-body"><strong>Final commitment: Sign your strategy.</strong>You've built your personal 8-step strategy. This is the most important financial document you'll create. Review it with your analyst, then commit to following it — especially when it gets uncomfortable.</div>
+      </div>
+
+      <div class="section-label">My Commitment</div>
+
+      <div class="fields-row fields-row-2">
+        <div class="field-item">
+          <div class="q-label">My name (electronic signature)</div>
+          <input type="text" class="q-input" id="s8_signature" placeholder="Sign your name here..." />
+        </div>
+        <div class="field-item">
+          <div class="q-label">Date of completion</div>
+          <input type="text" class="q-input" id="s8_date" placeholder="DD / MM / YYYY" />
+        </div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-label"><div class="q-label-icon">Q</div> My one-sentence strategy summary</div>
+        <div class="q-hint">Write your entire strategy in one sentence. If you can't, you don't know it well enough yet.</div>
+        <input type="text" class="q-input" id="s8_summary" placeholder="e.g. I am a wealth generation investor, 60% Bitcoin / 25% altcoins / 15% stablecoins, DCA weekly, with written price targets and a rule to cut any altcoin that breaks its thesis." />
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER ─────────────────────────────────────────────────── -->
+  <div class="workbook-footer">
+    Collective Shift Platinum — 8-Step Strategy Workbook &nbsp;·&nbsp; For internal member use only &nbsp;·&nbsp; Not financial advice &nbsp;·&nbsp; <a href="https://collectiveshift.io" target="_blank">collectiveshift.io</a>
+  </div>
+
+</div><!-- /workbook-body -->
+
+<script>
+  /* ─── CHIP SELECTION ─────────────────────────────────────── */
+  function selectChip(el, groupId, multi = false) {
+    const group = document.getElementById(groupId);
+    if (!group) return;
+    const chips = group.querySelectorAll('.chip');
+    if (multi) {
+      el.classList.toggle('selected');
+    } else {
+      chips.forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+    autoSave();
+    updateProgress();
+  }
+
+  /* ─── CHECKBOX TOGGLE ────────────────────────────────────── */
+  function toggleCheck(el) {
+    el.classList.toggle('checked');
+    const text = el.nextElementSibling;
+    if (text) text.classList.toggle('done', el.classList.contains('checked'));
+    autoSave();
+    updateProgress();
+  }
+
+  /* ─── STEP COMPLETE ──────────────────────────────────────── */
+  function toggleComplete(btn) {
+    btn.classList.toggle('done');
+    btn.textContent = btn.classList.contains('done') ? '✓ Completed' : 'Mark Complete';
+    const stepNum = btn.getAttribute('data-step');
+    const dot = document.getElementById('dot-' + stepNum);
+    if (dot) dot.classList.toggle('complete', btn.classList.contains('done'));
+    autoSave();
+    updateProgress();
+  }
+
+  /* ─── ALLOCATION TOTAL ───────────────────────────────────── */
+  function updateAllocTotal() {
+    const ids = ['alloc_btc','alloc_alts','alloc_stable','alloc_cash'];
+    const total = ids.reduce((sum, id) => {
+      const v = parseFloat(document.getElementById(id)?.value || 0);
+      return sum + (isNaN(v) ? 0 : v);
+    }, 0);
+    const el = document.getElementById('alloc_total');
+    if (!el) return;
+    if (total === 100) {
+      el.innerHTML = `Total: <span class="ok">100% ✓ Perfect</span>`;
+    } else if (total > 100) {
+      el.innerHTML = `Total: <span class="warn">${total}% — over by ${total-100}%</span>`;
+    } else {
+      el.innerHTML = `Total: <span class="warn">${total}%</span> — ${100-total}% unallocated`;
+    }
+  }
+
+  /* ─── ADD TARGET ROW ─────────────────────────────────────── */
+  function addTargetRow() {
+    const tbody = document.getElementById('targetTableBody');
+    if (!tbody) return;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="editable" contenteditable="true"></span></td>
+      <td><span class="editable" contenteditable="true"></span></td>
+      <td><span class="editable" contenteditable="true"></span></td>
+      <td><span class="editable" contenteditable="true"></span></td>
+      <td><span class="editable" contenteditable="true"></span></td>
+      <td><span class="editable" contenteditable="true"></span></td>
+    `;
+    tbody.appendChild(tr);
+  }
+
+  /* ─── PROGRESS ───────────────────────────────────────────── */
+  function updateProgress() {
+    const completeBtns = document.querySelectorAll('.step-complete-btn.done');
+    const pct = (completeBtns.length / 8) * 100;
+    const fill = document.getElementById('progressFill');
+    if (fill) fill.style.width = pct + '%';
+  }
+
+  /* ─── AUTO-RESIZE TEXTAREAS ──────────────────────────────── */
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.max(el.scrollHeight, 60) + 'px';
+  }
+  document.querySelectorAll('textarea').forEach(ta => {
+    ta.addEventListener('input', function() { autoResize(this); autoSave(); updateProgress(); });
+  });
+  document.querySelectorAll('input[type=text], input[type=number]').forEach(inp => {
+    inp.addEventListener('input', function() { autoSave(); updateProgress(); });
+  });
+  document.querySelectorAll('.cover-field-input').forEach(inp => {
+    inp.addEventListener('input', autoSave);
+  });
+
+  /* ─── CONTENTEDITABLE TABLE CELLS ───────────────────────── */
+  document.addEventListener('input', function(e) {
+    if (e.target.classList.contains('editable')) autoSave();
+  });
+
+  /* ─── SAVE TO LOCALSTORAGE ───────────────────────────────── */
+  const SAVE_KEY = 'cs_workbook_v1';
+
+  function collectData() {
+    const data = {};
+    // text inputs
+    document.querySelectorAll('input[id], textarea[id]').forEach(el => {
+      data[el.id] = el.value;
+    });
+    // chips
+    document.querySelectorAll('[id$="_level"], [id$="_investor_type"], [id$="_risk_profile"], [id$="_sectors"], [id$="_risk"], [id^="s5_"], [id^="s6_"], [id^="s7_"], [id^="s8_"]').forEach(group => {
+      // handled by chip groups below
+    });
+    document.querySelectorAll('.chip-group').forEach(group => {
+      const selected = Array.from(group.querySelectorAll('.chip.selected')).map(c => c.getAttribute('data-val'));
+      if (group.id) data['chip_' + group.id] = JSON.stringify(selected);
+    });
+    // checkboxes
+    const checks = [];
+    document.querySelectorAll('#s5_checklist .check-box').forEach((cb, i) => {
+      checks.push(cb.classList.contains('checked'));
+    });
+    data['checklist_s5'] = JSON.stringify(checks);
+    // complete buttons
+    const completes = {};
+    document.querySelectorAll('.step-complete-btn').forEach(btn => {
+      completes[btn.getAttribute('data-step')] = btn.classList.contains('done');
+    });
+    data['step_completes'] = JSON.stringify(completes);
+    // conviction slider
+    const conv = document.getElementById('s2_conviction');
+    if (conv) data['s2_conviction'] = conv.value;
+    // allocation inputs
+    ['alloc_btc','alloc_alts','alloc_stable','alloc_cash'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) data[id] = el.value;
+    });
+    // target table
+    const tableRows = [];
+    document.querySelectorAll('#targetTableBody tr').forEach(tr => {
+      const cells = Array.from(tr.querySelectorAll('.editable')).map(td => td.textContent.trim());
+      tableRows.push(cells);
+    });
+    data['target_table'] = JSON.stringify(tableRows);
+    return data;
+  }
+
+  function restoreData(data) {
+    if (!data) return;
+    // text inputs
+    document.querySelectorAll('input[id], textarea[id]').forEach(el => {
+      if (data[el.id] !== undefined) {
+        el.value = data[el.id];
+        if (el.tagName === 'TEXTAREA') autoResize(el);
+      }
+    });
+    // chips
+    document.querySelectorAll('.chip-group').forEach(group => {
+      const key = 'chip_' + group.id;
+      if (data[key]) {
+        const selected = JSON.parse(data[key]);
+        group.querySelectorAll('.chip').forEach(c => {
+          c.classList.toggle('selected', selected.includes(c.getAttribute('data-val')));
+        });
+      }
+    });
+    // checkboxes
+    if (data['checklist_s5']) {
+      const checks = JSON.parse(data['checklist_s5']);
+      document.querySelectorAll('#s5_checklist .check-box').forEach((cb, i) => {
+        if (checks[i]) {
+          cb.classList.add('checked');
+          const text = cb.nextElementSibling;
+          if (text) text.classList.add('done');
+        }
+      });
+    }
+    // complete buttons
+    if (data['step_completes']) {
+      const completes = JSON.parse(data['step_completes']);
+      document.querySelectorAll('.step-complete-btn').forEach(btn => {
+        const step = btn.getAttribute('data-step');
+        if (completes[step]) {
+          btn.classList.add('done');
+          btn.textContent = '✓ Completed';
+          const dot = document.getElementById('dot-' + step);
+          if (dot) dot.classList.add('complete');
+        }
+      });
+    }
+    // conviction slider
+    if (data['s2_conviction']) {
+      const conv = document.getElementById('s2_conviction');
+      const val = document.getElementById('s2_conv_val');
+      if (conv) conv.value = data['s2_conviction'];
+      if (val) val.textContent = data['s2_conviction'] + '/10';
+    }
+    // allocation inputs
+    ['alloc_btc','alloc_alts','alloc_stable','alloc_cash'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && data[id] !== undefined) el.value = data[id];
+    });
+    updateAllocTotal();
+    // target table
+    if (data['target_table']) {
+      const rows = JSON.parse(data['target_table']);
+      const tbody = document.getElementById('targetTableBody');
+      if (tbody && rows.length > 0) {
+        // Fill existing rows first
+        const existingRows = tbody.querySelectorAll('tr');
+        rows.forEach((rowData, ri) => {
+          let tr = existingRows[ri];
+          if (!tr) {
+            tr = document.createElement('tr');
+            tr.innerHTML = `<td><span class="editable" contenteditable="true"></span></td>`.repeat(6);
+            tbody.appendChild(tr);
+          }
+          const cells = tr.querySelectorAll('.editable');
+          rowData.forEach((val, ci) => {
+            if (cells[ci]) cells[ci].textContent = val;
+          });
+        });
+      }
+    }
+    updateProgress();
+  }
+
+  let saveTimer;
+  function autoSave() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveAll, 1200);
+  }
+
+  function saveAll() {
+    try {
+      const data = collectData();
+      localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+      const status = document.getElementById('saveStatus');
+      if (status) {
+        status.classList.add('visible');
+        setTimeout(() => status.classList.remove('visible'), 2000);
+      }
+    } catch(e) { console.warn('Save failed', e); }
+  }
+
+  /* ─── INIT ───────────────────────────────────────────────── */
+  window.addEventListener('DOMContentLoaded', () => {
+    try {
+      const saved = localStorage.getItem(SAVE_KEY);
+      if (saved) restoreData(JSON.parse(saved));
+    } catch(e) { console.warn('Restore failed', e); }
+    updateProgress();
+    updateAllocTotal();
+    // Set today's date if cover date is empty
+    const coverDate = document.getElementById('cover_date');
+    if (coverDate && !coverDate.value) {
+      const now = new Date();
+      coverDate.value = `${String(now.getDate()).padStart(2,'0')} / ${String(now.getMonth()+1).padStart(2,'0')} / ${now.getFullYear()}`;
+    }
+  });
+
+  /* ─── ACTIVE DOT ON SCROLL ───────────────────────────────── */
+  const stepIds = ['step-0','step-1','step-2','step-3','step-4','step-5','step-6','step-7','step-8'];
+  const dotIds  = ['dot-0','dot-1','dot-2','dot-3','dot-4','dot-5','dot-6','dot-7','dot-8'];
+  function updateActiveDot() {
+    let current = 0;
+    stepIds.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= 160) current = i;
+      }
+    });
+    dotIds.forEach((id, i) => {
+      const dot = document.getElementById(id);
+      if (!dot) return;
+      dot.classList.toggle('active', i === current && !dot.classList.contains('complete'));
+    });
+  }
+  window.addEventListener('scroll', updateActiveDot, { passive: true });
+  updateActiveDot();
+</script>
+</body>
+</html>
