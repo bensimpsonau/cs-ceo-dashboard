@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Collective Shift — CEO Command Centre</title>
+<title>Collective Shift — CEO Command Centre v7</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
 <script>
@@ -25,6 +25,7 @@ tailwind.config = {
           urgent: '#EF4444',
           progress: '#F59E0B',
           done: '#08C394',
+          sidebar: '#16141E',
         }
       },
       fontFamily: {
@@ -43,36 +44,153 @@ tailwind.config = {
   ::-webkit-scrollbar-track { background: #1B1925; }
   ::-webkit-scrollbar-thumb { background: #33313F; border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: #4D4C55; }
-  .priority-detail { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease, padding 0.3s ease; opacity: 0; padding-top: 0; padding-bottom: 0; }
-  .priority-detail.open { max-height: 600px; opacity: 1; padding-top: 0.75rem; padding-bottom: 0.75rem; }
-  .priority-card { transition: background 0.15s ease, border-color 0.15s ease; }
+
+  /* Sidebar */
+  .sidebar { width: 240px; min-height: 100vh; background: #16141E; border-right: 1px solid #33313F; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); z-index: 60; }
+  .sidebar-link { display: flex; align-items: center; gap: 12px; padding: 10px 20px; color: #807F86; font-size: 14px; font-weight: 500; transition: all 0.15s ease; border-left: 3px solid transparent; }
+  .sidebar-link:hover { color: #F9F9F9; background: #242230; }
+  .sidebar-link.active { color: #FC5C03; border-left-color: #FC5C03; background: rgba(252,92,3,0.06); }
+  .sidebar-section { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #4D4C55; padding: 20px 20px 8px; font-weight: 600; }
+  @media (max-width: 1023px) {
+    .sidebar { position: fixed; left: 0; top: 0; transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 55; }
+    .sidebar-overlay.open { display: block; }
+  }
+
+  /* Priority cards */
+  .priority-card { transition: all 0.2s ease; }
   .priority-card:hover { background: #2D2B3A; border-color: #4D4C55; }
-  .kpi-card { backdrop-filter: blur(8px); }
+  .priority-card.dragging { opacity: 0.5; transform: scale(0.98); }
+  .priority-card.drag-over { border-top: 2px solid #FC5C03; }
+  .priority-detail { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease; opacity: 0; }
+  .priority-detail.open { max-height: 800px; opacity: 1; }
+  .chevron { transition: transform 0.3s ease; }
+  .chevron.rotated { transform: rotate(180deg); }
+
+  /* Animations */
   .badge-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
   .pulse { animation: pulse-glow 2s ease-in-out infinite; }
   @keyframes pulse-glow { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-  .chevron { transition: transform 0.3s ease; }
-  .chevron.rotated { transform: rotate(180deg); }
-  .msg-confirm { animation: fadeIn 0.3s ease; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-in { animation: fadeIn 0.3s ease; }
+
+  /* KPI sparklines */
+  .sparkline { display: flex; align-items: flex-end; gap: 2px; height: 24px; }
+  .sparkline-bar { width: 4px; border-radius: 2px; transition: height 0.5s ease; }
+
+  /* Status select */
+  .status-select { appearance: none; -webkit-appearance: none; cursor: pointer; }
+
+  /* Drag handle */
+  .drag-handle { cursor: grab; opacity: 0.3; transition: opacity 0.15s; }
+  .drag-handle:hover { opacity: 0.8; }
+  .priority-card:active .drag-handle { cursor: grabbing; }
+
+  /* Notes textarea */
+  .notes-field { transition: height 0.2s ease; }
+
+  .kpi-card { backdrop-filter: blur(8px); transition: transform 0.15s ease, border-color 0.15s ease; }
+  .kpi-card:hover { transform: translateY(-2px); border-color: #4D4C55; }
+
   .nav-btn { transition: all 0.2s ease; }
   .nav-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(252,92,3,0.2); }
-  .project-card { transition: background 0.15s ease; }
-  .project-card:hover { background: #2D2B3A; }
-  .progress-bar-fill { transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+
+  .bot-card { transition: all 0.15s ease; }
+  .bot-card:hover { background: #2D2B3A; border-color: #4D4C55; }
+
+  .intel-item { transition: all 0.15s ease; }
+  .intel-item:hover { background: #2D2B3A; }
 </style>
 </head>
 <body class="min-h-screen">
 
+<!-- SIDEBAR OVERLAY (mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar fixed top-0 left-0" id="sidebar">
+  <div class="px-5 py-5 border-b border-cs-border">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-cs-orange/15 flex items-center justify-center">
+        <span class="text-cs-orange text-sm font-bold">CS</span>
+      </div>
+      <div>
+        <div class="font-oswald text-sm font-600 text-cs-text tracking-wide">COLLECTIVE SHIFT</div>
+        <div class="text-[10px] text-cs-muted font-mono">CEO Command Centre</div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="py-4">
+    <div class="sidebar-section">Navigation</div>
+    <a href="/" class="sidebar-link active">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a href="/hub/" class="sidebar-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      Strategy Hub
+    </a>
+    <a href="/projects/" class="sidebar-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      Projects
+    </a>
+
+    <div class="sidebar-section mt-4">Quick Links</div>
+    <a href="https://notion.so" target="_blank" class="sidebar-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" rx="2"/><path d="M8 8v8"/><path d="M8 8l8 8"/><path d="M16 8v8"/></svg>
+      Notion
+    </a>
+    <a href="https://pipedrive.com" target="_blank" class="sidebar-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      Pipedrive
+    </a>
+    <a href="https://slack.com" target="_blank" class="sidebar-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="8" height="2" rx="1"/><rect x="13" y="11" width="8" height="2" rx="1"/><rect x="11" y="3" width="2" height="8" rx="1"/><rect x="11" y="13" width="2" height="8" rx="1"/></svg>
+      Slack
+    </a>
+    <a href="https://discord.com/channels/1482990760692420690" target="_blank" class="sidebar-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" fill="currentColor"/><path d="M15 12a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" fill="currentColor"/><path d="M7.5 7.2c1.5-.8 3-1.2 4.5-1.2s3 .4 4.5 1.2"/><path d="M7.5 16.8c1.5.8 3 1.2 4.5 1.2s3-.4 4.5-1.2"/><path d="M4 12c0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8-8-3.6-8-8z"/></svg>
+      Discord
+    </a>
+
+    <div class="sidebar-section mt-4">Documents</div>
+    <a href="/hub/positioning.html" class="sidebar-link">
+      <span class="text-xs">🎯</span> Positioning & ICP
+    </a>
+    <a href="/hub/operating-system.html" class="sidebar-link">
+      <span class="text-xs">⚙️</span> Operating System
+    </a>
+    <a href="/hub/products.html" class="sidebar-link">
+      <span class="text-xs">📦</span> Products
+    </a>
+    <a href="/hub/social-strategy.html" class="sidebar-link">
+      <span class="text-xs">📱</span> Social Strategy
+    </a>
+    <a href="/hub/competitors.html" class="sidebar-link">
+      <span class="text-xs">🔍</span> Competitive Intel
+    </a>
+    <a href="/hub/brand.html" class="sidebar-link">
+      <span class="text-xs">🎨</span> Brand & Voice
+    </a>
+  </nav>
+</aside>
+
 <!-- TOP BAR -->
-<header class="sticky top-0 z-50 bg-cs-bg/95 backdrop-blur-md border-b border-cs-border">
+<header class="sticky top-0 z-50 bg-cs-bg/95 backdrop-blur-md border-b border-cs-border lg:ml-[240px]">
   <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
     <div class="flex items-center gap-3">
+      <!-- Hamburger (mobile) -->
+      <button class="lg:hidden text-cs-muted hover:text-cs-text p-1" onclick="toggleSidebar()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
       <h1 class="font-oswald text-lg sm:text-xl font-600 tracking-wide uppercase">
         <span class="text-cs-orange">Collective Shift</span>
         <span class="text-cs-muted mx-1">—</span>
         <span class="text-cs-text">CEO Command Centre</span>
       </h1>
+      <span class="text-[10px] font-mono text-cs-body bg-cs-bg-card px-2 py-0.5 rounded hidden sm:inline">v7</span>
     </div>
     <div class="flex items-center gap-4 sm:gap-6">
       <div id="clock" class="text-cs-muted text-sm font-mono hidden sm:block"></div>
@@ -85,121 +203,171 @@ tailwind.config = {
 </header>
 
 <!-- MAIN CONTENT -->
-<main class="max-w-[1600px] mx-auto px-4 sm:px-6 py-5">
-  <div class="flex flex-col lg:flex-row gap-5">
+<main class="lg:ml-[240px] max-w-[1600px] mx-auto px-4 sm:px-6 py-5">
+  <div class="flex flex-col xl:flex-row gap-5">
 
-    <!-- LEFT COLUMN (60%) -->
-    <div class="w-full lg:w-[60%] space-y-5">
+    <!-- LEFT COLUMN -->
+    <div class="w-full xl:w-[62%] space-y-5">
 
       <!-- KPI STRIP -->
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
-          <div class="text-[11px] uppercase tracking-wider text-cs-muted font-medium mb-1">Cash</div>
-          <div class="text-xl font-oswald font-600 text-cs-text">$915K</div>
-        </div>
-        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
-          <div class="text-[11px] uppercase tracking-wider text-cs-muted font-medium mb-1">Survivor Line</div>
-          <div class="text-xl font-oswald font-600 text-cs-turquoise">$613K</div>
-        </div>
-        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
-          <div class="text-[11px] uppercase tracking-wider text-cs-muted font-medium mb-1">Active Members</div>
+          <div class="text-[10px] uppercase tracking-wider text-cs-muted font-mono font-medium mb-1">Members</div>
           <div class="text-xl font-oswald font-600 text-cs-text">1,163</div>
-        </div>
-        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
-          <div class="text-[11px] uppercase tracking-wider text-cs-muted font-medium mb-1">Platinum</div>
-          <div class="text-xl font-oswald font-600 text-cs-text">402</div>
-        </div>
-        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
-          <div class="text-[11px] uppercase tracking-wider text-cs-muted font-medium mb-1">ARR</div>
-          <div class="text-xl font-oswald font-600 text-cs-green">A$7.3M</div>
-        </div>
-        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
-          <div class="text-[11px] uppercase tracking-wider text-cs-muted font-medium mb-1">Renewals</div>
-          <div class="text-lg font-oswald font-600 text-cs-orange">$131K<span class="text-cs-muted text-sm">/$180K</span></div>
-          <div class="w-full bg-cs-border rounded-full h-1.5 mt-1.5">
-            <div class="progress-bar-fill bg-cs-orange rounded-full h-1.5" style="width: 73%"></div>
+          <div class="sparkline justify-center mt-2">
+            <div class="sparkline-bar bg-cs-green/40" style="height:40%"></div>
+            <div class="sparkline-bar bg-cs-green/40" style="height:55%"></div>
+            <div class="sparkline-bar bg-cs-green/50" style="height:50%"></div>
+            <div class="sparkline-bar bg-cs-green/50" style="height:65%"></div>
+            <div class="sparkline-bar bg-cs-green/60" style="height:70%"></div>
+            <div class="sparkline-bar bg-cs-green/60" style="height:75%"></div>
+            <div class="sparkline-bar bg-cs-green/70" style="height:80%"></div>
+            <div class="sparkline-bar bg-cs-green" style="height:90%"></div>
           </div>
-          <div class="text-[10px] text-cs-muted mt-1">73% — $49K gap</div>
+        </div>
+        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
+          <div class="text-[10px] uppercase tracking-wider text-cs-muted font-mono font-medium mb-1">Platinum</div>
+          <div class="text-xl font-oswald font-600 text-cs-turquoise">402</div>
+          <div class="sparkline justify-center mt-2">
+            <div class="sparkline-bar bg-cs-turquoise/30" style="height:30%"></div>
+            <div class="sparkline-bar bg-cs-turquoise/40" style="height:45%"></div>
+            <div class="sparkline-bar bg-cs-turquoise/40" style="height:50%"></div>
+            <div class="sparkline-bar bg-cs-turquoise/50" style="height:60%"></div>
+            <div class="sparkline-bar bg-cs-turquoise/50" style="height:55%"></div>
+            <div class="sparkline-bar bg-cs-turquoise/60" style="height:70%"></div>
+            <div class="sparkline-bar bg-cs-turquoise/70" style="height:80%"></div>
+            <div class="sparkline-bar bg-cs-turquoise" style="height:95%"></div>
+          </div>
+        </div>
+        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
+          <div class="text-[10px] uppercase tracking-wider text-cs-muted font-mono font-medium mb-1">ARR</div>
+          <div class="text-xl font-oswald font-600 text-cs-green">A$7.3M</div>
+          <div class="sparkline justify-center mt-2">
+            <div class="sparkline-bar bg-cs-green/30" style="height:25%"></div>
+            <div class="sparkline-bar bg-cs-green/40" style="height:35%"></div>
+            <div class="sparkline-bar bg-cs-green/40" style="height:45%"></div>
+            <div class="sparkline-bar bg-cs-green/50" style="height:55%"></div>
+            <div class="sparkline-bar bg-cs-green/60" style="height:65%"></div>
+            <div class="sparkline-bar bg-cs-green/70" style="height:78%"></div>
+            <div class="sparkline-bar bg-cs-green/80" style="height:88%"></div>
+            <div class="sparkline-bar bg-cs-green" style="height:100%"></div>
+          </div>
+        </div>
+        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
+          <div class="text-[10px] uppercase tracking-wider text-cs-muted font-mono font-medium mb-1">YoY Growth</div>
+          <div class="text-xl font-oswald font-600 text-cs-orange">203%</div>
+          <div class="flex items-center justify-center gap-1 mt-2">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FC5C03" stroke-width="2.5"><path d="M7 17l5-5 5 5"/><path d="M7 11l5-5 5 5"/></svg>
+            <span class="text-[10px] text-cs-orange font-mono">+203%</span>
+          </div>
+        </div>
+        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
+          <div class="text-[10px] uppercase tracking-wider text-cs-muted font-mono font-medium mb-1">ROAS</div>
+          <div class="text-xl font-oswald font-600 text-cs-text">3.18x</div>
+          <div class="text-[10px] text-cs-muted mt-1">8-month avg</div>
+          <div class="w-full bg-cs-border rounded-full h-1 mt-1.5">
+            <div class="bg-cs-green rounded-full h-1" style="width:79%"></div>
+          </div>
+        </div>
+        <div class="kpi-card bg-cs-bg-card border border-cs-border rounded-lg p-3 text-center">
+          <div class="text-[10px] uppercase tracking-wider text-cs-muted font-mono font-medium mb-1">Retention</div>
+          <div class="text-xl font-oswald font-600 text-cs-turquoise">68%</div>
+          <div class="text-[10px] text-cs-muted mt-1">Y2, 2023 cohort</div>
+          <div class="w-full bg-cs-border rounded-full h-1 mt-1.5">
+            <div class="bg-cs-turquoise rounded-full h-1" style="width:68%"></div>
+          </div>
         </div>
       </div>
 
-      <!-- ACTIVE PRIORITIES -->
+      <!-- ACTIVE PRIORITIES (HERO FEATURE) -->
       <div>
-        <h2 class="font-oswald text-base uppercase tracking-wider text-cs-muted mb-3 flex items-center gap-2">
-          <span class="text-cs-orange">▎</span>Active Priorities
-        </h2>
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="font-oswald text-base uppercase tracking-wider text-cs-muted flex items-center gap-2">
+            <span class="text-cs-orange">▎</span>Active Priorities
+            <span class="text-[10px] font-mono text-cs-body bg-cs-bg-card px-2 py-0.5 rounded" id="priority-count"></span>
+          </h2>
+          <button onclick="addPriority()" class="text-xs bg-cs-orange/10 border border-cs-orange/30 text-cs-orange px-3 py-1.5 rounded-lg hover:bg-cs-orange/20 transition-all flex items-center gap-1.5">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            Add Priority
+          </button>
+        </div>
         <div class="space-y-2" id="priorities-list"></div>
       </div>
 
-      <!-- NAVIGATION BUTTONS -->
-      <div class="flex flex-wrap gap-3">
-        <a href="/hub/index.html" class="nav-btn inline-flex items-center gap-2 bg-cs-orange/10 border border-cs-orange/30 text-cs-orange px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-cs-orange/20">
-          📊 Strategy Center
-        </a>
-        <a href="#documents" class="nav-btn inline-flex items-center gap-2 bg-cs-bg-card border border-cs-border text-cs-text px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-cs-bg-hover">
-          📁 Documents
-        </a>
+      <!-- QUICK ACTIONS -->
+      <div>
+        <h2 class="font-oswald text-base uppercase tracking-wider text-cs-muted mb-3 flex items-center gap-2">
+          <span class="text-cs-orange">▎</span>Quick Actions
+        </h2>
+        <div class="flex flex-wrap gap-3">
+          <a href="/hub/" class="nav-btn inline-flex items-center gap-2 bg-cs-orange/10 border border-cs-orange/30 text-cs-orange px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-cs-orange/20">
+            📊 Strategy Hub
+          </a>
+          <a href="#intelligence" class="nav-btn inline-flex items-center gap-2 bg-cs-bg-card border border-cs-border text-cs-text px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-cs-bg-hover">
+            🔍 Sales Intelligence
+          </a>
+          <a href="#intelligence" class="nav-btn inline-flex items-center gap-2 bg-cs-bg-card border border-cs-border text-cs-text px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-cs-bg-hover">
+            🎓 Education Intel
+          </a>
+          <a href="https://discord.com/channels/1482990760692420690/1482993283838771322" target="_blank" class="nav-btn inline-flex items-center gap-2 bg-cs-bg-card border border-cs-border text-cs-text px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-cs-bg-hover">
+            💬 Message BenBot
+          </a>
+          <a href="https://app.pipedrive.com" target="_blank" class="nav-btn inline-flex items-center gap-2 bg-cs-bg-card border border-cs-border text-cs-text px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-cs-bg-hover">
+            📈 CRM Pipeline
+          </a>
+        </div>
       </div>
 
-      <!-- DOCUMENTS SECTION -->
-      <div id="documents">
+      <!-- LATEST INTELLIGENCE -->
+      <div id="intelligence">
         <h2 class="font-oswald text-base uppercase tracking-wider text-cs-muted mb-3 flex items-center gap-2">
-          <span class="text-cs-orange">▎</span>Documents
+          <span class="text-cs-turquoise">▎</span>Latest Intelligence
         </h2>
         <div class="bg-cs-bg-card border border-cs-border rounded-lg divide-y divide-cs-border">
-          <a href="/hub/index.html" class="flex items-center gap-3 px-4 py-3 hover:bg-cs-bg-hover transition-colors group">
-            <span class="text-cs-orange text-sm">📊</span>
-            <span class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Strategy Hub</span>
+          <a href="/hub/" class="intel-item flex items-center justify-between px-4 py-3 group">
+            <div class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-lg bg-cs-green/10 flex items-center justify-center text-sm">📊</span>
+              <div>
+                <div class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Strategy Hub</div>
+                <div class="text-xs text-cs-muted">7 pages live — full company strategy</div>
+              </div>
+            </div>
+            <span class="text-[10px] font-mono text-cs-green bg-cs-green/10 px-2 py-0.5 rounded">Complete ✅</span>
           </a>
-          <a href="/hub/positioning.html" class="flex items-center gap-3 px-4 py-3 hover:bg-cs-bg-hover transition-colors group">
-            <span class="text-cs-orange text-sm">🎯</span>
-            <span class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Positioning & ICP</span>
+          <a href="#" class="intel-item flex items-center justify-between px-4 py-3 group">
+            <div class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-lg bg-cs-orange/10 flex items-center justify-center text-sm">🔍</span>
+              <div>
+                <div class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Sales Intelligence Report</div>
+                <div class="text-xs text-cs-muted">Pipeline analysis, conversion data, forecasts</div>
+              </div>
+            </div>
+            <span class="text-[10px] font-mono text-cs-green bg-cs-green/10 px-2 py-0.5 rounded">Complete ✅</span>
           </a>
-          <a href="/hub/operating-system.html" class="flex items-center gap-3 px-4 py-3 hover:bg-cs-bg-hover transition-colors group">
-            <span class="text-cs-orange text-sm">⚙️</span>
-            <span class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Operating System</span>
+          <a href="#" class="intel-item flex items-center justify-between px-4 py-3 group">
+            <div class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-lg bg-cs-turquoise/10 flex items-center justify-center text-sm">🎓</span>
+              <div>
+                <div class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Education Call Intelligence</div>
+                <div class="text-xs text-cs-muted">Member call transcripts and action items</div>
+              </div>
+            </div>
+            <span class="text-[10px] font-mono text-cs-green bg-cs-green/10 px-2 py-0.5 rounded">Complete ✅</span>
           </a>
-          <a href="/hub/products.html" class="flex items-center gap-3 px-4 py-3 hover:bg-cs-bg-hover transition-colors group">
-            <span class="text-cs-orange text-sm">📦</span>
-            <span class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Products</span>
-          </a>
-          <a href="/hub/social-strategy.html" class="flex items-center gap-3 px-4 py-3 hover:bg-cs-bg-hover transition-colors group">
-            <span class="text-cs-orange text-sm">📱</span>
-            <span class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Social Strategy</span>
-          </a>
-          <a href="/hub/competitors.html" class="flex items-center gap-3 px-4 py-3 hover:bg-cs-bg-hover transition-colors group">
-            <span class="text-cs-orange text-sm">🔍</span>
-            <span class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Competitive Intel</span>
-          </a>
-          <a href="/hub/brand.html" class="flex items-center gap-3 px-4 py-3 hover:bg-cs-bg-hover transition-colors group">
-            <span class="text-cs-orange text-sm">🎨</span>
-            <span class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Brand & Voice</span>
-          </a>
-          <a href="/CS_Brand_Guidelines_Figma_2026.html" class="flex items-center gap-3 px-4 py-3 hover:bg-cs-bg-hover transition-colors group">
-            <span class="text-cs-orange text-sm">📐</span>
-            <span class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">CS Brand Guidelines</span>
-          </a>
-          <a href="/cs-education-system-overview.html" class="flex items-center gap-3 px-4 py-3 hover:bg-cs-bg-hover transition-colors group">
-            <span class="text-cs-orange text-sm">🎓</span>
-            <span class="text-sm font-medium text-cs-text group-hover:text-cs-turquoise transition-colors">Education System Overview</span>
-          </a>
-          <div class="flex items-center gap-3 px-4 py-3 text-cs-muted">
-            <span class="text-sm">📄</span>
-            <span class="text-sm font-medium">Webinar Deck <span class="text-xs">(local file)</span></span>
-          </div>
         </div>
       </div>
     </div>
 
-    <!-- RIGHT COLUMN (40%) -->
-    <div class="w-full lg:w-[40%] space-y-5">
+    <!-- RIGHT COLUMN -->
+    <div class="w-full xl:w-[38%] space-y-5">
 
-      <!-- PROJECTS PANEL -->
+      <!-- BOT TEAM STATUS -->
       <div>
         <h2 class="font-oswald text-base uppercase tracking-wider text-cs-muted mb-3 flex items-center gap-2">
-          <span class="text-cs-turquoise">▎</span>Projects
+          <span class="text-cs-green">▎</span>Bot Team Status
+          <span class="text-[10px] font-mono text-cs-body bg-cs-bg-card px-2 py-0.5 rounded">11 agents</span>
         </h2>
-        <div class="space-y-2 max-h-[480px] overflow-y-auto pr-1" id="projects-list"></div>
+        <div class="space-y-2" id="bot-team-list"></div>
       </div>
 
       <!-- BENBOT CHAT PANEL -->
@@ -216,21 +384,18 @@ tailwind.config = {
           </button>
         </div>
         <div id="msg-confirm" class="hidden mt-2"></div>
-        <p class="text-[11px] text-cs-body mt-2">BenBot responds in Discord within seconds</p>
-      </div>
-
-      <!-- AGENT STATUS -->
-      <div>
-        <h2 class="font-oswald text-base uppercase tracking-wider text-cs-muted mb-3 flex items-center gap-2">
-          <span class="text-cs-green">▎</span>Agent Status
-        </h2>
-        <div class="grid grid-cols-3 sm:grid-cols-4 gap-2" id="agents-grid"></div>
       </div>
     </div>
   </div>
 </main>
 
 <script>
+// ===== SIDEBAR =====
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+
 // ===== CLOCK =====
 function updateClock() {
   const now = new Date();
@@ -240,259 +405,243 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 
-// ===== PRIORITIES DATA =====
-const priorities = [
-  {
-    id: 'renewal-sprint',
-    name: 'Renewal Sprint',
-    status: 'urgent',
-    badge: '🔴 Urgent',
-    summary: '$131K of $180K — $49K gap, 5 days left',
-    details: 'Current renewal revenue at $131K against $180K monthly target. Need to close $49K in remaining 5 days. Sales Bot tracking pipeline daily. CSM Bot flagging at-risk members for priority outreach.',
-    pending: 'Close remaining $49K gap — focus on high-value renewals and win-back campaigns.',
-    links: [
-      { label: 'CRM Pipeline', url: 'https://app.pipedrive.com' },
-      { label: 'Sales Bot Channel', url: 'https://discord.com/channels/1482990760692420690/1482993287768834150' }
-    ],
-    defaultDue: '2026-03-31'
-  },
-  {
-    id: 'us-closers-deck',
-    name: 'US Closers Deck',
-    status: 'urgent',
-    badge: '🔴 Urgent',
-    summary: 'Fix and send today',
-    details: 'US sales deck needs final revisions before sending to closers team. Positioning must align with new outcome-based messaging.',
-    pending: 'Apply final edits, review positioning, send to US closers.',
-    links: [
-      { label: 'Slides Folder', url: 'https://drive.google.com' }
-    ],
-    defaultDue: '2026-03-27'
-  },
-  {
-    id: 'session-slides',
-    name: "Tomorrow's Session Slides",
-    status: 'urgent',
-    badge: '🔴 Urgent',
-    summary: 'Create for Saturday session',
-    details: 'Saturday member session requires a fresh slide deck. Content should cover current market conditions and portfolio strategy.',
-    pending: 'Build slide deck, review content, prep speaker notes.',
-    links: [],
-    defaultDue: '2026-03-28'
-  },
-  {
-    id: 'onboarding-system',
-    name: '2-Track Onboarding System',
-    status: 'progress',
-    badge: '🟡 In Progress',
-    summary: 'Shift OS V11, Level 1/Level 2 tracks, Circle launch',
-    details: 'Building two-track onboarding: Level 1 (Beginners Lounge in Circle) and Level 2 (advanced members). Shift OS V11 complete with 16 modules, 27K words. Circle community being configured.',
-    pending: 'Finalise Circle setup, map onboarding flows, launch Level 1 track.',
-    links: [
-      { label: 'Operating System', url: '/hub/operating-system.html' }
-    ],
-    defaultDue: '2026-04-07'
-  },
-  {
-    id: 'website-positioning',
-    name: 'Website Positioning Overhaul',
-    status: 'progress',
-    badge: '🟡 In Progress',
-    summary: 'New outcome-based messaging, Figma designs',
-    details: 'Complete website redesign with outcome-based positioning. Moving away from feature-led to outcome-led messaging. Figma designs in progress.',
-    pending: 'Finalise Figma designs, approve copy, begin development.',
-    links: [
-      { label: 'Figma Designs', url: 'https://figma.com' },
-      { label: 'Positioning Doc', url: '/hub/positioning.html' }
-    ],
-    defaultDue: '2026-04-14'
-  },
-  {
-    id: 'series-a',
-    name: 'Pre-Series A Raise',
-    status: 'progress',
-    badge: '🟡 In Progress',
-    summary: 'A$3M closing this month',
-    details: 'Pre-Series A raise targeting A$3M. Multiple investor conversations active. Pitch deck and data room prepared.',
-    pending: 'Close remaining commitments, finalise term sheet, legal review.',
-    links: [
-      { label: 'Investor Docs', url: 'https://drive.google.com' }
-    ],
-    defaultDue: '2026-03-31'
-  },
-  {
-    id: 'youtube-strategy',
-    name: 'YouTube Strategy',
-    status: 'progress',
-    badge: '🟡 In Progress',
-    summary: 'Jeremy Haynes framework, 12-week calendar',
-    details: 'Implementing Jeremy Haynes YouTube growth framework. Building 12-week content calendar. Focus on authority-building content in digital assets education space.',
-    pending: 'Finalise content calendar, brief Video Clipper Bot, begin production pipeline.',
-    links: [
-      { label: 'Social Strategy', url: '/hub/social-strategy.html' }
-    ],
-    defaultDue: '2026-04-14'
-  },
-  {
-    id: 'marketing-briefing',
-    name: 'Marketing Bot Briefing',
-    status: 'progress',
-    badge: '🟡 In Progress',
-    summary: 'Jeremy Haynes docs, Hormozi offer, messaging fix',
-    details: 'Briefing Marketing Bot with Jeremy Haynes growth methodology, Hormozi-style offer structure, and updated messaging framework aligned with new positioning.',
-    pending: 'Complete briefing document, upload reference materials, configure Marketing Bot.',
-    links: [],
-    defaultDue: '2026-04-01'
-  },
-  {
-    id: 'legal-audit',
-    name: 'Legal Audit',
-    status: 'progress',
-    badge: '🟡 In Progress',
-    summary: 'Misleading & deceptive conduct review with Aston',
-    details: 'Comprehensive legal audit of all marketing materials, website copy, and member communications. Working with Aston on misleading & deceptive conduct compliance.',
-    pending: 'Complete review, implement required changes, sign-off from legal.',
-    links: [],
-    defaultDue: '2026-04-07'
-  },
-  {
-    id: 'meeting-pipeline',
-    name: 'Meeting Recording Pipeline',
-    status: 'progress',
-    badge: '🟡 In Progress',
-    summary: 'Granola setup, auto-routing',
-    details: 'Setting up Granola for meeting recording and transcription. Auto-routing transcripts to relevant channels and agents for action items.',
-    pending: 'Complete Granola integration, test auto-routing, configure agent notifications.',
-    links: [
-      { label: 'Meeting Notes', url: '/meeting-notes/' }
-    ],
-    defaultDue: '2026-04-07'
+// ===== PRIORITIES DATA & LOCALSTORAGE =====
+const DEFAULT_PRIORITIES = [
+  { id: 'p1', name: 'YouTube video (biggest priority)', status: 'urgent', due: '2026-03-27', notes: '' },
+  { id: 'p2', name: 'YouTube videos for Pat (Loom)', status: 'urgent', due: '2026-03-27', notes: '' },
+  { id: 'p3', name: 'Record reels for Pat', status: 'urgent', due: '2026-03-27', notes: '' },
+  { id: 'p4', name: 'Pre-Series A deck — finalize + send to Steve', status: 'urgent', due: '2026-03-27', notes: '' },
+  { id: 'p5', name: 'Session slides for tomorrow', status: 'done', due: '', notes: '' },
+  { id: 'p6', name: 'US closers deck', status: 'done', due: '', notes: '' },
+  { id: 'p7', name: '2-track onboarding system + Collective OS', status: 'progress', due: '', notes: '' },
+  { id: 'p8', name: 'Marketing bot brief', status: 'progress', due: '', notes: 'Jeremy Haynes docs sent, need Hormozi offer docs' },
+  { id: 'p9', name: 'Legal audit (Aston)', status: 'progress', due: '', notes: '' },
+  { id: 'p10', name: 'Meeting recording pipeline', status: 'progress', due: '', notes: 'V1 complete (Granola). Tested with Dee call.' },
+  { id: 'p11', name: 'YouTube strategy execution', status: 'progress', due: '', notes: '40 video ideas + 12-week calendar ready' },
+];
+
+function loadPriorities() {
+  const saved = localStorage.getItem('cs-priorities-v7');
+  if (saved) {
+    try { return JSON.parse(saved); } catch(e) {}
   }
-];
+  return JSON.parse(JSON.stringify(DEFAULT_PRIORITIES));
+}
 
-// ===== PROJECTS DATA =====
-const projects = [
-  { name: 'CEO Command Centre', desc: 'Dashboard + Strategy Hub build', status: 'progress', badge: '🟡 In Progress' },
-  { name: 'Shift OS V11', desc: '16 modules, 27K words', status: 'done', badge: '🟢 Complete' },
-  { name: 'Circle Community Launch', desc: "Beginner's Lounge, Level 1 coaching", status: 'progress', badge: '🟡 In Progress' },
-  { name: 'Website Redesign', desc: 'Figma designs, outcome-based copy', status: 'progress', badge: '🟡 Planning' },
-  { name: 'AI Agent Team', desc: '11 bots active, version sync pending', status: 'progress', badge: '🟡 In Progress' },
-  { name: 'YouTube Channel', desc: 'Jeremy Haynes framework, content calendar', status: 'progress', badge: '🟡 Planning' },
-  { name: 'US Expansion', desc: 'LA events, US sales team, Delaware entity', status: 'progress', badge: '🟡 In Progress' },
-  { name: 'Pre-Series A', desc: 'A$3M raise, closing March', status: 'urgent', badge: '🔴 Urgent' },
-  { name: 'Branded Methodology Name', desc: 'Replace "Shift OS" with marketable brand', status: 'progress', badge: '🟡 In Progress' },
-  { name: 'Meeting Pipeline', desc: 'Granola → transcribe → route', status: 'done', badge: '🟢 V1 Complete' }
-];
+function savePriorities(priorities) {
+  localStorage.setItem('cs-priorities-v7', JSON.stringify(priorities));
+}
 
-// ===== AGENTS DATA =====
-const agents = ['Finance','EA','Marketing','Social','Email','SEO','Sales','CSM','Analyst','Ben Analyst','Video'];
+let priorities = loadPriorities();
 
-// ===== RENDER PRIORITIES =====
+const STATUS_MAP = {
+  urgent: { emoji: '🔴', label: 'Urgent', color: 'text-red-400', bg: 'bg-red-400/10', border: 'border-red-400/20' },
+  progress: { emoji: '🟡', label: 'In Progress', color: 'text-yellow-400', bg: 'bg-yellow-400/10', border: 'border-cs-border' },
+  done: { emoji: '✅', label: 'Done', color: 'text-cs-green', bg: 'bg-cs-green/10', border: 'border-cs-green/20' },
+};
+
+let dragSrcIndex = null;
+
 function renderPriorities() {
   const list = document.getElementById('priorities-list');
+  document.getElementById('priority-count').textContent = priorities.length + ' items';
+
   list.innerHTML = priorities.map((p, i) => {
-    const savedDue = localStorage.getItem(`due-${p.id}`) || p.defaultDue;
-    const savedNotes = localStorage.getItem(`notes-${p.id}`) || '';
-    const statusColor = p.status === 'urgent' ? 'text-red-400 bg-red-400/10' : p.status === 'done' ? 'text-cs-green bg-cs-green/10' : 'text-yellow-400 bg-yellow-400/10';
-    const borderColor = p.status === 'urgent' ? 'border-red-400/20' : 'border-cs-border';
+    const s = STATUS_MAP[p.status] || STATUS_MAP.progress;
+    const todayStr = new Date().toISOString().split('T')[0];
+    const isOverdue = p.due && p.due < todayStr && p.status !== 'done';
+    const dueDisplay = p.due ? (p.due === todayStr ? 'Today' : new Date(p.due + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })) : '';
 
     return `
-      <div class="priority-card bg-cs-bg-card border ${borderColor} rounded-lg overflow-hidden">
-        <div class="flex items-center justify-between px-4 py-3 cursor-pointer select-none" onclick="togglePriority(${i})">
-          <div class="flex items-center gap-3 min-w-0">
-            <span class="text-sm flex-shrink-0">${p.status === 'urgent' ? '🔴' : p.status === 'done' ? '🟢' : '🟡'}</span>
-            <div class="min-w-0">
-              <span class="font-semibold text-sm text-cs-text">${p.name}</span>
-              <span class="text-cs-muted text-xs ml-2 hidden sm:inline">— ${p.summary}</span>
-            </div>
+      <div class="priority-card bg-cs-bg-card border ${s.border} rounded-lg overflow-hidden"
+           draggable="true"
+           data-index="${i}"
+           ondragstart="onDragStart(event, ${i})"
+           ondragover="onDragOver(event, ${i})"
+           ondragleave="onDragLeave(event)"
+           ondrop="onDrop(event, ${i})"
+           ondragend="onDragEnd(event)">
+        <div class="flex items-center gap-2 px-3 py-3">
+          <!-- Drag handle -->
+          <div class="drag-handle flex-shrink-0 text-cs-muted" title="Drag to reorder">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
           </div>
-          <div class="flex items-center gap-2 flex-shrink-0">
-            <span class="${statusColor} text-[10px] font-semibold px-2 py-0.5 rounded-full hidden sm:inline-block">${p.badge.replace(/🔴|🟡|🟢/g,'').trim()}</span>
+          <!-- Status emoji -->
+          <span class="text-sm flex-shrink-0">${s.emoji}</span>
+          <!-- Name -->
+          <div class="min-w-0 flex-1 cursor-pointer" onclick="togglePriority(${i})">
+            <span class="font-semibold text-sm text-cs-text ${p.status === 'done' ? 'line-through opacity-60' : ''}">${escHtml(p.name)}</span>
+            ${dueDisplay ? `<span class="ml-2 text-[10px] font-mono ${isOverdue ? 'text-red-400' : 'text-cs-muted'}">${dueDisplay}</span>` : ''}
+          </div>
+          <!-- Status badge -->
+          <select class="status-select ${s.color} ${s.bg} text-[10px] font-semibold px-2 py-0.5 rounded-full border-0 bg-transparent focus:outline-none"
+                  onchange="changeStatus(${i}, this.value)"
+                  title="Change status">
+            <option value="urgent" ${p.status === 'urgent' ? 'selected' : ''}>🔴 Urgent</option>
+            <option value="progress" ${p.status === 'progress' ? 'selected' : ''}>🟡 In Progress</option>
+            <option value="done" ${p.status === 'done' ? 'selected' : ''}>✅ Done</option>
+          </select>
+          <!-- Expand/Delete -->
+          <button onclick="togglePriority(${i})" class="flex-shrink-0 p-1">
             <svg class="chevron w-4 h-4 text-cs-muted" id="chev-${i}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </div>
+          </button>
         </div>
-        <div class="priority-detail px-4" id="detail-${i}">
-          <p class="text-xs text-cs-muted mb-1 sm:hidden">— ${p.summary}</p>
-          <div class="space-y-3">
-            <div>
-              <p class="text-xs font-semibold text-cs-muted uppercase tracking-wide mb-1">Status</p>
-              <p class="text-sm text-cs-text/80">${p.details}</p>
-            </div>
-            <div>
-              <p class="text-xs font-semibold text-cs-muted uppercase tracking-wide mb-1">Pending</p>
-              <p class="text-sm text-cs-text/80">${p.pending}</p>
-            </div>
-            ${p.links.length ? `
-            <div>
-              <p class="text-xs font-semibold text-cs-muted uppercase tracking-wide mb-1">Links</p>
-              <div class="flex flex-wrap gap-2">
-                ${p.links.map(l => `<a href="${l.url}" target="_blank" class="text-xs text-cs-turquoise hover:text-cs-orange transition-colors underline underline-offset-2">${l.label}</a>`).join('')}
-              </div>
-            </div>` : ''}
-            <div class="flex flex-wrap items-center gap-4">
+        <div class="priority-detail px-4 pb-1" id="detail-${i}">
+          <div class="space-y-3 pb-3">
+            <div class="flex flex-wrap items-start gap-4">
               <div>
-                <label class="text-xs font-semibold text-cs-muted uppercase tracking-wide block mb-1">Due Date</label>
-                <input type="date" value="${savedDue}" onchange="saveDue('${p.id}', this.value)"
+                <label class="text-[10px] font-semibold text-cs-muted uppercase tracking-wide block mb-1">Due Date</label>
+                <input type="date" value="${p.due || ''}" onchange="changeDue(${i}, this.value)"
                   class="bg-cs-bg border border-cs-border rounded px-2 py-1 text-xs text-cs-text focus:outline-none focus:border-cs-orange/50">
               </div>
               <div class="flex-1 min-w-[200px]">
-                <label class="text-xs font-semibold text-cs-muted uppercase tracking-wide block mb-1">Notes</label>
-                <textarea rows="2" placeholder="Add notes..." onchange="saveNotes('${p.id}', this.value)"
-                  class="w-full bg-cs-bg border border-cs-border rounded px-2 py-1 text-xs text-cs-text placeholder:text-cs-body focus:outline-none focus:border-cs-orange/50 resize-none">${savedNotes}</textarea>
+                <label class="text-[10px] font-semibold text-cs-muted uppercase tracking-wide block mb-1">Notes</label>
+                <textarea rows="2" placeholder="Add notes..."
+                  onchange="changeNotes(${i}, this.value)"
+                  class="notes-field w-full bg-cs-bg border border-cs-border rounded px-2 py-1 text-xs text-cs-text placeholder:text-cs-body focus:outline-none focus:border-cs-orange/50 resize-none">${escHtml(p.notes)}</textarea>
               </div>
             </div>
-            <button onclick="messageBenBot('Re: ${p.name} — ')" class="text-xs bg-cs-orange/10 border border-cs-orange/30 text-cs-orange px-3 py-1.5 rounded-lg hover:bg-cs-orange/20 transition-colors">
-              💬 Message BenBot
-            </button>
+            <div class="flex items-center gap-2">
+              <button onclick="deletePriority(${i})" class="text-[11px] text-red-400/60 hover:text-red-400 transition-colors flex items-center gap-1">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       </div>`;
   }).join('');
+}
+
+function escHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
 }
 
 function togglePriority(i) {
   const detail = document.getElementById(`detail-${i}`);
   const chev = document.getElementById(`chev-${i}`);
-  detail.classList.toggle('open');
-  chev.classList.toggle('rotated');
+  if (detail && chev) {
+    detail.classList.toggle('open');
+    chev.classList.toggle('rotated');
+  }
 }
 
-function saveDue(id, val) { localStorage.setItem(`due-${id}`, val); }
-function saveNotes(id, val) { localStorage.setItem(`notes-${id}`, val); }
-
-function messageBenBot(prefill) {
-  const ta = document.getElementById('benbot-msg');
-  ta.value = prefill || '';
-  ta.focus();
-  ta.scrollIntoView({ behavior: 'smooth', block: 'center' });
+function changeStatus(i, val) {
+  priorities[i].status = val;
+  savePriorities(priorities);
+  renderPriorities();
 }
 
-// ===== RENDER PROJECTS =====
-function renderProjects() {
-  const list = document.getElementById('projects-list');
-  list.innerHTML = projects.map(p => {
-    const dot = p.status === 'urgent' ? 'bg-red-400' : p.status === 'done' ? 'bg-cs-green' : 'bg-yellow-400';
+function changeDue(i, val) {
+  priorities[i].due = val;
+  savePriorities(priorities);
+}
+
+function changeNotes(i, val) {
+  priorities[i].notes = val;
+  savePriorities(priorities);
+}
+
+function addPriority() {
+  const name = prompt('New priority name:');
+  if (!name || !name.trim()) return;
+  priorities.push({
+    id: 'p' + Date.now(),
+    name: name.trim(),
+    status: 'progress',
+    due: '',
+    notes: '',
+  });
+  savePriorities(priorities);
+  renderPriorities();
+}
+
+function deletePriority(i) {
+  if (!confirm(`Delete "${priorities[i].name}"?`)) return;
+  priorities.splice(i, 1);
+  savePriorities(priorities);
+  renderPriorities();
+}
+
+// Drag and Drop
+function onDragStart(e, i) {
+  dragSrcIndex = i;
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', i);
+}
+
+function onDragOver(e, i) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  if (i !== dragSrcIndex) {
+    e.currentTarget.classList.add('drag-over');
+  }
+}
+
+function onDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+
+function onDrop(e, i) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (dragSrcIndex === null || dragSrcIndex === i) return;
+  const moved = priorities.splice(dragSrcIndex, 1)[0];
+  priorities.splice(i, 0, moved);
+  savePriorities(priorities);
+  renderPriorities();
+  dragSrcIndex = null;
+}
+
+function onDragEnd(e) {
+  e.currentTarget.classList.remove('dragging');
+  document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+  dragSrcIndex = null;
+}
+
+// ===== BOT TEAM STATUS =====
+const botTeam = [
+  { name: 'Finance Bot', channel: '#finance-bot', status: 'green', activity: 'Today' },
+  { name: 'EA Bot', channel: '#executive-assistant', status: 'green', activity: 'Today' },
+  { name: 'Marketing Bot', channel: '#marketing-bot', status: 'amber', activity: 'Briefing sent' },
+  { name: 'Social Media Bot', channel: '#social-media-bot', status: 'amber', activity: 'Awaiting brief' },
+  { name: 'Email Bot', channel: '#email-marketing-bot', status: 'amber', activity: 'Awaiting brief' },
+  { name: 'SEO Bot', channel: '#seo-bot', status: 'amber', activity: 'Awaiting brief' },
+  { name: 'Sales Bot', channel: '#sales-bot', status: 'green', activity: 'Today' },
+  { name: 'CSM Bot', channel: '#client-success-bot', status: 'green', activity: 'Today' },
+  { name: 'Crypto Analyst Bot', channel: '#crypto-analyst-bot', status: 'green', activity: 'Today' },
+  { name: 'Ben Analyst Bot', channel: '#ben-analyst-bot', status: 'green', activity: 'Today' },
+  { name: 'Video Clipper Bot', channel: '#video-clipper-bot', status: 'amber', activity: 'Awaiting brief' },
+];
+
+function renderBotTeam() {
+  const list = document.getElementById('bot-team-list');
+  const statusColors = {
+    green: { dot: 'bg-cs-green', text: 'text-cs-green', label: 'Active' },
+    amber: { dot: 'bg-yellow-400', text: 'text-yellow-400', label: 'Pending' },
+    red: { dot: 'bg-red-400', text: 'text-red-400', label: 'Offline' },
+  };
+
+  list.innerHTML = botTeam.map(b => {
+    const s = statusColors[b.status];
     return `
-      <div class="project-card bg-cs-bg-card border border-cs-border rounded-lg px-4 py-3 flex items-start gap-3">
-        <span class="badge-dot ${dot} mt-1.5 flex-shrink-0"></span>
-        <div class="min-w-0">
-          <div class="font-semibold text-sm text-cs-text">${p.name}</div>
-          <div class="text-xs text-cs-muted mt-0.5">${p.desc}</div>
+      <div class="bot-card bg-cs-bg-card border border-cs-border rounded-lg px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3 min-w-0">
+          <span class="badge-dot ${s.dot} flex-shrink-0 ${b.status === 'green' ? 'pulse' : ''}"></span>
+          <div class="min-w-0">
+            <div class="text-sm font-medium text-cs-text">${b.name}</div>
+            <div class="text-[10px] font-mono text-cs-body">${b.channel}</div>
+          </div>
         </div>
-        <span class="text-[10px] text-cs-muted whitespace-nowrap ml-auto flex-shrink-0">${p.badge.replace(/🔴|🟡|🟢/g,'').trim()}</span>
+        <div class="text-right flex-shrink-0">
+          <div class="text-[10px] font-semibold ${s.text}">${s.label}</div>
+          <div class="text-[10px] text-cs-muted">${b.activity}</div>
+        </div>
       </div>`;
   }).join('');
-}
-
-// ===== RENDER AGENTS =====
-function renderAgents() {
-  const grid = document.getElementById('agents-grid');
-  grid.innerHTML = agents.map(a => `
-    <div class="bg-cs-bg-card border border-cs-border rounded-lg px-3 py-2 flex items-center gap-2">
-      <span class="badge-dot bg-cs-green flex-shrink-0"></span>
-      <span class="text-xs font-medium text-cs-text truncate">${a}</span>
-    </div>
-  `).join('');
 }
 
 // ===== SEND TO BENBOT =====
@@ -501,7 +650,7 @@ function sendBenBot() {
   const msg = ta.value.trim();
   if (!msg) return;
   const confirm = document.getElementById('msg-confirm');
-  confirm.innerHTML = '<p class="msg-confirm text-xs text-cs-green">Message sent to #ceo-benbot ✅</p>';
+  confirm.innerHTML = '<p class="fade-in text-xs text-cs-green">Message sent to #ceo-benbot ✅</p>';
   confirm.classList.remove('hidden');
   window.open('https://discord.com/channels/1482990760692420690/1482993283838771322', '_blank');
   setTimeout(() => { confirm.classList.add('hidden'); ta.value = ''; }, 3000);
@@ -509,8 +658,7 @@ function sendBenBot() {
 
 // ===== INIT =====
 renderPriorities();
-renderProjects();
-renderAgents();
+renderBotTeam();
 </script>
 </body>
 </html>
