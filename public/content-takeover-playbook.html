@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Production Takeover Plan - Collective Shift</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #1A1A2E;
+    background: #fff;
+    font-size: 8.5pt;
+    line-height: 1.35;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm;
+    height: 297mm;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    padding: 12mm 14mm;
+  }
+  .page:last-child { page-break-after: avoid; }
+
+  /* Watermark */
+  .page::after {
+    content: 'CONFIDENTIAL';
+    position: absolute;
+    bottom: 8mm;
+    right: 14mm;
+    font-size: 7pt;
+    font-weight: 600;
+    color: rgba(252,92,3,0.18);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  /* Cover page */
+  .cover {
+    background: linear-gradient(145deg, #1A1A2E 0%, #0d0d1a 60%, #1a1a2e 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20mm 24mm;
+    color: #fff;
+  }
+  .cover::after {
+    color: rgba(255,255,255,0.12);
+  }
+  .cover-badge {
+    display: inline-block;
+    border: 1.5px solid #FC5C03;
+    color: #FC5C03;
+    font-size: 7pt;
+    font-weight: 700;
+    letter-spacing: 3px;
+    padding: 4px 16px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    margin-bottom: 28mm;
+  }
+  .cover h1 {
+    font-size: 28pt;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 6mm;
+    letter-spacing: -0.5px;
+  }
+  .cover h1 span { color: #FC5C03; }
+  .cover h2 {
+    font-size: 12pt;
+    font-weight: 400;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 16mm;
+    line-height: 1.4;
+  }
+  .cover-meta {
+    font-size: 8.5pt;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.6;
+  }
+  .cover-line {
+    width: 60px;
+    height: 3px;
+    background: #FC5C03;
+    margin: 0 auto 8mm;
+    border-radius: 2px;
+  }
+
+  /* Section headers */
+  .section-num {
+    font-size: 7pt;
+    font-weight: 700;
+    color: #FC5C03;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 2mm;
+  }
+  h2.page-title {
+    font-size: 16pt;
+    font-weight: 800;
+    color: #1A1A2E;
+    margin-bottom: 5mm;
+    line-height: 1.2;
+  }
+  h3 {
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: #1A1A2E;
+    margin-bottom: 2mm;
+    margin-top: 3mm;
+  }
+  h4 {
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: #FC5C03;
+    margin-bottom: 1.5mm;
+    margin-top: 2.5mm;
+  }
+  .subtitle {
+    font-size: 8.5pt;
+    color: #666;
+    margin-bottom: 5mm;
+  }
+
+  /* Cards and boxes */
+  .card {
+    background: #f8f8fa;
+    border-radius: 4px;
+    padding: 4mm;
+    margin-bottom: 3mm;
+  }
+  .card-orange {
+    background: rgba(252,92,3,0.06);
+    border-left: 3px solid #FC5C03;
+  }
+  .card-navy {
+    background: rgba(26,26,46,0.04);
+    border-left: 3px solid #1A1A2E;
+  }
+  .stat-row {
+    display: flex;
+    gap: 3mm;
+    margin-bottom: 3mm;
+  }
+  .stat-box {
+    flex: 1;
+    background: #1A1A2E;
+    color: #fff;
+    border-radius: 4px;
+    padding: 4mm;
+    text-align: center;
+  }
+  .stat-box .num {
+    font-size: 18pt;
+    font-weight: 800;
+    color: #FC5C03;
+    line-height: 1.1;
+  }
+  .stat-box .label {
+    font-size: 7pt;
+    color: rgba(255,255,255,0.6);
+    margin-top: 1mm;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 7.5pt;
+    margin-bottom: 3mm;
+  }
+  table th {
+    background: #1A1A2E;
+    color: #fff;
+    font-weight: 600;
+    text-align: left;
+    padding: 2mm 2.5mm;
+    font-size: 7pt;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  table td {
+    padding: 1.8mm 2.5mm;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  table tr:last-child td { border-bottom: none; }
+  table tr:nth-child(even) td { background: #fafafa; }
+  .table-highlight td {
+    background: rgba(252,92,3,0.08) !important;
+    font-weight: 700;
+  }
+
+  /* Timeline */
+  .timeline-item {
+    display: flex;
+    gap: 3mm;
+    margin-bottom: 3mm;
+    position: relative;
+  }
+  .timeline-marker {
+    width: 22mm;
+    min-width: 22mm;
+    text-align: center;
+  }
+  .timeline-badge {
+    display: inline-block;
+    background: #FC5C03;
+    color: #fff;
+    font-size: 7.5pt;
+    font-weight: 700;
+    padding: 1.5mm 3mm;
+    border-radius: 3px;
+    width: 100%;
+  }
+  .timeline-badge.active {
+    background: #1A1A2E;
+  }
+  .timeline-date {
+    font-size: 6.5pt;
+    color: #999;
+    margin-top: 1mm;
+  }
+  .timeline-content {
+    flex: 1;
+    background: #f8f8fa;
+    border-radius: 4px;
+    padding: 3mm;
+    font-size: 7.5pt;
+  }
+  .timeline-content strong { color: #1A1A2E; }
+
+  /* Pipeline */
+  .pipeline {
+    display: flex;
+    gap: 1.5mm;
+    margin: 3mm 0;
+  }
+  .pipe-step {
+    flex: 1;
+    background: #f8f8fa;
+    border-radius: 4px;
+    padding: 3mm 2mm;
+    text-align: center;
+    position: relative;
+    border-top: 2.5px solid #FC5C03;
+  }
+  .pipe-step .step-num {
+    font-size: 14pt;
+    font-weight: 800;
+    color: #FC5C03;
+    line-height: 1;
+  }
+  .pipe-step .step-title {
+    font-size: 7pt;
+    font-weight: 700;
+    color: #1A1A2E;
+    margin: 1mm 0;
+    line-height: 1.2;
+  }
+  .pipe-step .step-bot {
+    font-size: 6pt;
+    color: #FC5C03;
+    font-weight: 600;
+    background: rgba(252,92,3,0.08);
+    padding: 1mm 1.5mm;
+    border-radius: 2px;
+    display: inline-block;
+    margin-top: 0.5mm;
+  }
+  .pipe-arrow {
+    display: flex;
+    align-items: center;
+    color: #ccc;
+    font-size: 10pt;
+    min-width: 4mm;
+    justify-content: center;
+  }
+
+  /* Checklist */
+  .checklist { list-style: none; padding: 0; }
+  .checklist li {
+    padding: 1.5mm 0 1.5mm 5mm;
+    position: relative;
+    font-size: 8pt;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .checklist li::before {
+    content: '☐';
+    position: absolute;
+    left: 0;
+    color: #FC5C03;
+    font-size: 9pt;
+  }
+
+  /* Flow items */
+  .flow-row {
+    display: flex;
+    align-items: center;
+    gap: 2mm;
+    margin-bottom: 2mm;
+    font-size: 7.5pt;
+  }
+  .flow-arrow {
+    color: #FC5C03;
+    font-weight: 700;
+    font-size: 9pt;
+  }
+  .flow-box {
+    background: #f8f8fa;
+    padding: 1.5mm 3mm;
+    border-radius: 3px;
+    font-size: 7.5pt;
+  }
+  .flow-box.bot {
+    background: rgba(252,92,3,0.08);
+    border: 1px solid rgba(252,92,3,0.2);
+    font-weight: 600;
+    color: #FC5C03;
+  }
+  .flow-box.human {
+    background: rgba(26,26,46,0.06);
+    border: 1px solid rgba(26,26,46,0.15);
+    font-weight: 600;
+    color: #1A1A2E;
+  }
+
+  /* Two column layout */
+  .two-col {
+    display: flex;
+    gap: 4mm;
+  }
+  .two-col > div { flex: 1; }
+
+  /* Footer */
+  .page-footer {
+    position: absolute;
+    bottom: 6mm;
+    left: 14mm;
+    right: 14mm;
+    display: flex;
+    justify-content: space-between;
+    font-size: 6pt;
+    color: #bbb;
+  }
+
+  /* Bullet points */
+  ul.bullets {
+    padding-left: 4mm;
+    margin-bottom: 2mm;
+  }
+  ul.bullets li {
+    font-size: 7.5pt;
+    margin-bottom: 0.8mm;
+    line-height: 1.3;
+  }
+
+  .orange { color: #FC5C03; }
+  .bold { font-weight: 700; }
+  .small { font-size: 7pt; color: #888; }
+
+  /* Cost comparison */
+  .cost-before table th { background: #666; }
+  .cost-after table th { background: #FC5C03; }
+
+  .savings-banner {
+    background: #1A1A2E;
+    color: #fff;
+    text-align: center;
+    padding: 4mm;
+    border-radius: 4px;
+    margin-top: 3mm;
+  }
+  .savings-banner .big {
+    font-size: 20pt;
+    font-weight: 800;
+    color: #FC5C03;
+  }
+  .savings-banner .sub {
+    font-size: 8pt;
+    color: rgba(255,255,255,0.6);
+  }
+
+  /* Next steps */
+  .next-step {
+    display: flex;
+    gap: 3mm;
+    align-items: flex-start;
+    margin-bottom: 2.5mm;
+  }
+  .next-num {
+    background: #FC5C03;
+    color: #fff;
+    width: 6mm;
+    height: 6mm;
+    min-width: 6mm;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7.5pt;
+    font-weight: 700;
+  }
+  .next-text {
+    font-size: 8pt;
+    padding-top: 0.5mm;
+  }
+
+  .turnaround-row {
+    display: flex;
+    gap: 2mm;
+    margin-top: 2mm;
+  }
+  .turnaround-item {
+    flex: 1;
+    background: #1A1A2E;
+    color: #fff;
+    border-radius: 4px;
+    padding: 3mm;
+    text-align: center;
+  }
+  .turnaround-item .time {
+    font-size: 14pt;
+    font-weight: 800;
+    color: #FC5C03;
+  }
+  .turnaround-item .desc {
+    font-size: 6.5pt;
+    color: rgba(255,255,255,0.6);
+    margin-top: 0.5mm;
+  }
+
+  .risk-table td:first-child {
+    font-weight: 600;
+    width: 30%;
+    color: #1A1A2E;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3mm;
+    margin-bottom: 4mm;
+  }
+  .summary-card {
+    background: #f8f8fa;
+    border-radius: 4px;
+    padding: 4mm;
+    border-top: 3px solid #FC5C03;
+  }
+  .summary-card .sc-label {
+    font-size: 6.5pt;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+  .summary-card .sc-value {
+    font-size: 13pt;
+    font-weight: 800;
+    color: #1A1A2E;
+    margin-top: 1mm;
+  }
+  .summary-card .sc-value.orange { color: #FC5C03; }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: COVER -->
+<div class="page cover">
+  <div class="cover-badge">Confidential</div>
+  <h1>Content Production<br><span>Takeover Plan</span></h1>
+  <div class="cover-line"></div>
+  <h2>Replacing Human Management with<br>AI + Contractor Stack</h2>
+  <div class="cover-meta">
+    Quarterly Strategy Meeting - March 30, 2026<br>
+    Collective Shift Pty Ltd<br><br>
+    Prepared by BenBot (CEO Agent)
+  </div>
+</div>
+
+<!-- PAGE 2: PROBLEM + SOLUTION -->
+<div class="page">
+  <div class="section-num">01 - Overview</div>
+  <h2 class="page-title">The Problem + Solution</h2>
+
+  <div class="two-col" style="margin-bottom: 4mm;">
+    <div class="card card-navy">
+      <h4 style="color: #1A1A2E;">The Problem</h4>
+      <p style="font-size: 8pt; margin-bottom: 2mm;">Pat (Social Media Manager) is departing Tuesday April 1. Pat currently manages <strong>all</strong> content operations: podcast distribution, YouTube coordination with Giorgio, social media posting, content calendar, and contractor coordination via Slack.</p>
+      <p style="font-size: 8pt;"><strong>Current cost:</strong> A$9,333/month (A$112,000/year)</p>
+      <p style="font-size: 8pt;"><strong>Risk:</strong> Total content production halt if not replaced immediately.</p>
+    </div>
+    <div class="card card-orange">
+      <h4>The Solution</h4>
+      <p style="font-size: 8pt; margin-bottom: 2mm;">A purpose-built AI bot team (6 agents, already skilled up as of March 29) + 2 Fiverr contractors + existing editor Giorgio. The system is <strong>already built and operational</strong>.</p>
+      <p style="font-size: 8pt;"><strong>New cost:</strong> A$650/month (A$7,800/year)</p>
+      <p style="font-size: 8pt; font-weight: 700; color: #FC5C03;">Zero gap. Immediate takeover. System is live.</p>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="num">93%</div>
+      <div class="label">Cost Reduction</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">6</div>
+      <div class="label">AI Bots Active</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">24+</div>
+      <div class="label">Pieces / Week</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">0</div>
+      <div class="label">Days Downtime</div>
+    </div>
+  </div>
+
+  <h3>AI Bot Team (Skilled Up - March 29, 2026)</h3>
+  <table>
+    <tr><th style="width:25%;">Bot</th><th>Role</th><th style="width:30%;">Replaces</th></tr>
+    <tr><td><strong>BenBot</strong> (CEO Agent)</td><td>Coordinates all bots, manages contractors via Slack/Asana, follows up on deadlines</td><td>Pat's coordination role</td></tr>
+    <tr><td><strong>Marketing Bot</strong></td><td>Podcast scripts, YouTube titles/descriptions/tags/chapters, thumbnail concepts</td><td>Pat's content creation</td></tr>
+    <tr><td><strong>Analyst Bot</strong></td><td>Fact-checks all content (prices, stats, claims) before publishing</td><td>Manual QA process</td></tr>
+    <tr><td><strong>Social Bot</strong></td><td>Platform-specific posts: YouTube, Instagram, TikTok, X/Twitter, LinkedIn</td><td>Pat's social posting</td></tr>
+    <tr><td><strong>Email Bot</strong></td><td>Episode newsletters, promotional emails, nurture sequences</td><td>Pat's email drafting</td></tr>
+    <tr><td><strong>SEO Bot</strong></td><td>Content strategy, keyword research, website optimization</td><td>New capability (upgrade)</td></tr>
+  </table>
+
+  <h3>Contractor Stack</h3>
+  <table>
+    <tr><th>Contractor</th><th>Role</th><th>Cost</th><th>Status</th></tr>
+    <tr><td><strong>Giorgio</strong> (existing)</td><td>Long-form YouTube editor, managed via Slack</td><td>Already budgeted</td><td style="color: green; font-weight: 600;">Active</td></tr>
+    <tr><td><strong>Short-form Editor</strong> (Fiverr)</td><td>Polishes Riverside Magic Clips into premium reels</td><td>A$100-200/episode</td><td style="color: #FC5C03; font-weight: 600;">Hiring this week</td></tr>
+    <tr><td><strong>Thumbnail Designer</strong> (Fiverr)</td><td>Click-worthy thumbnails from Marketing Bot concepts</td><td>A$25-50/thumbnail</td><td style="color: #FC5C03; font-weight: 600;">Hiring this week</td></tr>
+  </table>
+
+  <div class="page-footer">
+    <span>Collective Shift - Content Production Takeover Plan</span>
+    <span>Page 2 of 10</span>
+  </div>
+</div>
+
+<!-- PAGE 3: TRANSITION TIMELINE -->
+<div class="page">
+  <div class="section-num">02 - Timeline</div>
+  <h2 class="page-title">Transition Timeline</h2>
+  <p class="subtitle">Immediate takeover. Full autonomy by Week 2. Zero content gap.</p>
+
+  <div class="timeline-item">
+    <div class="timeline-marker">
+      <div class="timeline-badge">WEEK 0</div>
+      <div class="timeline-date">Mar 31 - Apr 4</div>
+    </div>
+    <div class="timeline-content" style="border-left: 3px solid #FC5C03;">
+      <strong>Tuesday Conversation + Same-Day Takeover</strong><br>
+      <ul class="bullets" style="margin-top: 1mm;">
+        <li>Tuesday: Mutual separation conversation with Pat (4 weeks notice)</li>
+        <li><strong>BenBot takes over coordination the same day</strong></li>
+        <li>Pat completes handover: Giorgio contact, Asana access, Drive folder structure, posting schedules, pending content</li>
+        <li>Hire Fiverr short-form editor + thumbnail designer (briefs already drafted)</li>
+        <li>Content calendar pre-loaded for April Week 1 before Tuesday conversation</li>
+        <li>All platform credentials documented in secure vault</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-marker">
+      <div class="timeline-badge active">WEEK 1</div>
+      <div class="timeline-date">Apr 7 - 11</div>
+    </div>
+    <div class="timeline-content" style="border-left: 3px solid #1A1A2E;">
+      <strong>First Full AI-Managed Episode Cycle</strong><br>
+      <ul class="bullets" style="margin-top: 1mm;">
+        <li>Full production pipeline: Ben records > Riverside processes > Bots package > Contractors edit > Upload</li>
+        <li>Pat still available for questions (notice period) but not managing</li>
+        <li>Marketing Bot generates scripts, titles, descriptions, tags, chapters</li>
+        <li>Social Bot creates all platform-specific posts for approval</li>
+        <li>BenBot coordinates Giorgio + new contractors via Slack</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-marker">
+      <div class="timeline-badge active">WEEK 2</div>
+      <div class="timeline-date">Apr 14 - 18</div>
+    </div>
+    <div class="timeline-content" style="border-left: 3px solid #1A1A2E;">
+      <strong>System Running Independently</strong><br>
+      <ul class="bullets" style="margin-top: 1mm;">
+        <li>Pat's involvement minimal to zero</li>
+        <li>First content calendar fully AI-generated by Marketing Bot + SEO Bot</li>
+        <li>All four brands producing content on schedule</li>
+        <li>Quality review workflow proven and running smoothly</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-marker">
+      <div class="timeline-badge active">WEEK 3-4</div>
+      <div class="timeline-date">Apr 21 - May 2</div>
+    </div>
+    <div class="timeline-content" style="border-left: 3px solid #1A1A2E;">
+      <strong>Full Autonomy. System Proven.</strong><br>
+      <ul class="bullets" style="margin-top: 1mm;">
+        <li>Pat's final weeks. No operational dependency.</li>
+        <li>AI system running at full capacity across all brands</li>
+        <li>Contractor relationships established and reliable</li>
+        <li>Ben's review time reduced to approvals only (~30 min/day)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card card-orange" style="margin-top: 3mm;">
+    <strong>Key message:</strong> The system does not wait for Pat to leave. BenBot and the full AI team take over coordination on Tuesday. Pat's 4-week notice period is a safety net, not a dependency.
+  </div>
+
+  <div class="page-footer">
+    <span>Collective Shift - Content Production Takeover Plan</span>
+    <span>Page 3 of 10</span>
+  </div>
+</div>
+
+<!-- PAGE 4: AI PRODUCTION PIPELINE -->
+<div class="page">
+  <div class="section-num">03 - Pipeline</div>
+  <h2 class="page-title">The AI Production Pipeline</h2>
+  <p class="subtitle">End-to-end content production. From script to published. Every step covered.</p>
+
+  <div class="pipeline">
+    <div class="pipe-step">
+      <div class="step-num">1</div>
+      <div class="step-title">Script Creation</div>
+      <div class="step-bot">Marketing Bot</div><br>
+      <div class="step-bot">Analyst Bot</div>
+    </div>
+    <div class="pipe-arrow">&#9654;</div>
+    <div class="pipe-step">
+      <div class="step-num">2</div>
+      <div class="step-title">Recording</div>
+      <div class="step-bot" style="background: rgba(26,26,46,0.08); color: #1A1A2E;">Ben / Travis / Zen</div>
+    </div>
+    <div class="pipe-arrow">&#9654;</div>
+    <div class="pipe-step">
+      <div class="step-num">3</div>
+      <div class="step-title">Post-Production</div>
+      <div class="step-bot" style="background: rgba(26,26,46,0.08); color: #1A1A2E;">Riverside AI</div>
+    </div>
+    <div class="pipe-arrow">&#9654;</div>
+    <div class="pipe-step">
+      <div class="step-num">4</div>
+      <div class="step-title">Packaging</div>
+      <div class="step-bot">Marketing Bot</div>
+    </div>
+    <div class="pipe-arrow">&#9654;</div>
+    <div class="pipe-step">
+      <div class="step-num">5</div>
+      <div class="step-title">Distribution</div>
+      <div class="step-bot">Social Bot</div><br>
+      <div class="step-bot">Email Bot</div>
+    </div>
+    <div class="pipe-arrow">&#9654;</div>
+    <div class="pipe-step">
+      <div class="step-num">6</div>
+      <div class="step-title">Upload</div>
+      <div class="step-bot" style="background: rgba(26,26,46,0.08); color: #1A1A2E;">VA / Auto-post</div>
+    </div>
+  </div>
+
+  <h3>Detailed Pipeline Breakdown</h3>
+
+  <div class="two-col">
+    <div>
+      <div class="card" style="margin-bottom: 2mm;">
+        <h4>Step 1: Script Creation</h4>
+        <p style="font-size: 7.5pt;"><strong>Marketing Bot</strong> drafts podcast scripts, talking points, and episode outlines based on content calendar and SEO Bot keyword research. <strong>Analyst Bot</strong> fact-checks all data points, prices, statistics, and claims before script is finalised. Scripts stored in Notion.</p>
+      </div>
+      <div class="card" style="margin-bottom: 2mm;">
+        <h4>Step 2: Recording</h4>
+        <p style="font-size: 7.5pt;">Ben, Travis, or Zen records on <strong>Riverside</strong>. High-quality audio/video capture. Riverside generates automatic transcript for downstream processing.</p>
+      </div>
+      <div class="card" style="margin-bottom: 2mm;">
+        <h4>Step 3: Post-Production</h4>
+        <p style="font-size: 7.5pt;"><strong>Riverside AI</strong> handles: Magic Audio (noise removal, leveling), Magic Clips (auto-generated short clips), Co-Creator (titles, descriptions), text-based editing. <strong>Giorgio</strong> edits long-form. <strong>Fiverr editor</strong> polishes short-form clips.</p>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom: 2mm;">
+        <h4>Step 4: Packaging</h4>
+        <p style="font-size: 7.5pt;"><strong>Marketing Bot</strong> creates: YouTube titles, descriptions, tags, chapters, Anchor/Spotify descriptions, thumbnail concepts (sent to Fiverr designer), email newsletter copy, blog post summaries.</p>
+      </div>
+      <div class="card" style="margin-bottom: 2mm;">
+        <h4>Step 5: Distribution</h4>
+        <p style="font-size: 7.5pt;"><strong>Social Bot</strong> creates platform-specific posts: YouTube community posts, Instagram captions + hashtags, TikTok descriptions, X/Twitter threads, LinkedIn articles. <strong>Email Bot</strong> drafts episode newsletters and promo emails.</p>
+      </div>
+      <div class="card" style="margin-bottom: 2mm;">
+        <h4>Step 6: Upload + Publish</h4>
+        <p style="font-size: 7.5pt;">VA handles final uploads to all platforms. Scheduling coordinated via Asana board (7 columns: Backlog > Scripting > Recording > Editing > Review > Scheduled > Published). <strong>BenBot</strong> tracks progress and follows up on deadlines.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-orange" style="margin-top: 2mm;">
+    <strong>Tools powering the pipeline:</strong> Riverside (recording + AI), Asana (project management), Slack (contractor coordination), Google Drive (file storage by brand/month/episode), Notion (scripts + planning)
+  </div>
+
+  <div class="page-footer">
+    <span>Collective Shift - Content Production Takeover Plan</span>
+    <span>Page 4 of 10</span>
+  </div>
+</div>
+
+<!-- PAGE 5: HOUSE OF BRANDS CONTENT MATRIX -->
+<div class="page">
+  <div class="section-num">04 - Content Matrix</div>
+  <h2 class="page-title">House of Brands Content Matrix</h2>
+  <p class="subtitle">4 brands. 24+ pieces per week. All AI-coordinated.</p>
+
+  <table style="margin-bottom: 4mm;">
+    <tr>
+      <th style="width: 18%;">Brand</th>
+      <th style="width: 22%;">Content Type</th>
+      <th style="width: 12%;">Frequency</th>
+      <th style="width: 25%;">Platforms</th>
+      <th style="width: 23%;">Bot Owner</th>
+    </tr>
+    <tr>
+      <td><strong>Ben Simpson</strong></td>
+      <td>Long-form YouTube, Reels, Shorts</td>
+      <td>2/week</td>
+      <td>YouTube, Instagram, TikTok, X, LinkedIn</td>
+      <td>Marketing + Social Bot</td>
+    </tr>
+    <tr>
+      <td><strong>Travis Thomas</strong></td>
+      <td>Short-form, LinkedIn thought leadership</td>
+      <td>1/week</td>
+      <td>YouTube, LinkedIn, Instagram</td>
+      <td>Marketing + Social Bot</td>
+    </tr>
+    <tr>
+      <td><strong>Zen / Sarn</strong></td>
+      <td>Beginner guides, TikTok education</td>
+      <td>2/week</td>
+      <td>YouTube, TikTok, Instagram</td>
+      <td>Marketing + Social Bot</td>
+    </tr>
+    <tr>
+      <td><strong>The Wealth Shift</strong></td>
+      <td>Podcast episodes + clips</td>
+      <td>1/week</td>
+      <td>YouTube, Spotify, Instagram, TikTok</td>
+      <td>Marketing + Social Bot</td>
+    </tr>
+  </table>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="num">6</div>
+      <div class="label">Episodes / Week</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">24+</div>
+      <div class="label">Content Pieces / Week</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">4</div>
+      <div class="label">Brands Managed</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">5</div>
+      <div class="label">Platforms</div>
+    </div>
+  </div>
+
+  <h3>Content Redistribution: 1 Video = 17 Pieces</h3>
+  <p style="font-size: 7.5pt; margin-bottom: 3mm;">Every long-form video is systematically redistributed across platforms and formats by the AI bot team:</p>
+
+  <div class="two-col">
+    <div>
+      <table>
+        <tr><th>#</th><th>Content Piece</th><th>Bot</th></tr>
+        <tr><td>1</td><td>Full YouTube video</td><td>Marketing</td></tr>
+        <tr><td>2</td><td>YouTube title + description + tags</td><td>Marketing</td></tr>
+        <tr><td>3</td><td>YouTube chapters</td><td>Marketing</td></tr>
+        <tr><td>4</td><td>YouTube community post</td><td>Social</td></tr>
+        <tr><td>5</td><td>Podcast episode (Spotify/Anchor)</td><td>Marketing</td></tr>
+        <tr><td>6</td><td>Anchor description</td><td>Marketing</td></tr>
+        <tr><td>7</td><td>Thumbnail design brief</td><td>Marketing</td></tr>
+        <tr><td>8</td><td>3-5 Magic Clips (short-form)</td><td>Riverside AI</td></tr>
+        <tr><td>9</td><td>Instagram Reel (edited clip)</td><td>Social</td></tr>
+      </table>
+    </div>
+    <div>
+      <table>
+        <tr><th>#</th><th>Content Piece</th><th>Bot</th></tr>
+        <tr><td>10</td><td>Instagram caption + hashtags</td><td>Social</td></tr>
+        <tr><td>11</td><td>TikTok video</td><td>Social</td></tr>
+        <tr><td>12</td><td>TikTok description</td><td>Social</td></tr>
+        <tr><td>13</td><td>X/Twitter thread</td><td>Social</td></tr>
+        <tr><td>14</td><td>LinkedIn article/post</td><td>Social</td></tr>
+        <tr><td>15</td><td>Episode newsletter</td><td>Email</td></tr>
+        <tr><td>16</td><td>Promo email</td><td>Email</td></tr>
+        <tr><td>17</td><td>Blog summary / show notes</td><td>SEO</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card card-orange" style="margin-top: 3mm;">
+    <strong>Output multiplier:</strong> With 6 recordings per week across 4 brands, the system produces 100+ individual content pieces weekly. All ICP-targeted, fact-checked, and brand-consistent.
+  </div>
+
+  <div class="page-footer">
+    <span>Collective Shift - Content Production Takeover Plan</span>
+    <span>Page 5 of 10</span>
+  </div>
+</div>
+
+<!-- PAGE 6: COST COMPARISON -->
+<div class="page">
+  <div class="section-num">05 - Financials</div>
+  <h2 class="page-title">Cost Comparison</h2>
+  <p class="subtitle">93% cost reduction. Same output. Better quality control.</p>
+
+  <div class="two-col" style="margin-bottom: 4mm;">
+    <div class="cost-before">
+      <h3 style="color: #666;">Before (Pat + Current Setup)</h3>
+      <table>
+        <tr><th>Role</th><th style="text-align: right;">Monthly Cost</th></tr>
+        <tr><td>Pat (Social Media Manager)</td><td style="text-align: right;">A$9,333</td></tr>
+        <tr class="table-highlight" style="background: rgba(102,102,102,0.08);"><td><strong>Total</strong></td><td style="text-align: right;"><strong>A$9,333/month</strong></td></tr>
+      </table>
+      <p class="small" style="margin-top: 2mm; text-align: center;">A$112,000 per year</p>
+    </div>
+    <div class="cost-after">
+      <h3 style="color: #FC5C03;">After (AI + Contractors)</h3>
+      <table>
+        <tr><th>Role</th><th style="text-align: right;">Monthly Cost</th></tr>
+        <tr><td>Giorgio (long-form editor)</td><td style="text-align: right; color: #999;">Already budgeted</td></tr>
+        <tr><td>Fiverr Short-form Editor</td><td style="text-align: right;">A$400</td></tr>
+        <tr><td>Fiverr Thumbnail Designer</td><td style="text-align: right;">A$150</td></tr>
+        <tr><td>VA (upload coordination)</td><td style="text-align: right;">A$100</td></tr>
+        <tr><td>AI Bot Infrastructure</td><td style="text-align: right; color: #999;">Already running</td></tr>
+        <tr><td>Riverside Pro</td><td style="text-align: right; color: #999;">Already subscribed</td></tr>
+        <tr class="table-highlight"><td><strong>Total</strong></td><td style="text-align: right;"><strong>A$650/month</strong></td></tr>
+      </table>
+      <p class="small" style="margin-top: 2mm; text-align: center;">A$7,800 per year</p>
+    </div>
+  </div>
+
+  <div class="savings-banner">
+    <div class="sub">Annual Savings</div>
+    <div class="big">A$104,196</div>
+    <div class="sub">93% cost reduction - A$9,333/month to A$650/month</div>
+  </div>
+
+  <h3 style="margin-top: 5mm;">What You Get for A$650/month vs A$9,333/month</h3>
+  <table style="margin-top: 2mm;">
+    <tr><th style="width: 35%;">Capability</th><th style="width: 30%;">Before (Pat)</th><th style="width: 35%;">After (AI + Contractors)</th></tr>
+    <tr><td>Content coordination</td><td>Manual, single person</td><td>BenBot - 24/7, automated</td></tr>
+    <tr><td>Script writing</td><td>Not included</td><td>Marketing Bot - instant</td></tr>
+    <tr><td>Fact-checking</td><td>Manual / ad hoc</td><td>Analyst Bot - every piece</td></tr>
+    <tr><td>Social post creation</td><td>Manual, one platform at a time</td><td>Social Bot - all 5 platforms simultaneously</td></tr>
+    <tr><td>Email marketing</td><td>Basic</td><td>Email Bot - newsletters, nurture, promos</td></tr>
+    <tr><td>SEO optimization</td><td>Not included</td><td>SEO Bot - keyword research, strategy</td></tr>
+    <tr><td>Availability</td><td>Business hours</td><td>24/7/365</td></tr>
+    <tr><td>Scalability</td><td>1 person = bottleneck</td><td>Unlimited parallel processing</td></tr>
+  </table>
+
+  <div class="card card-orange" style="margin-top: 3mm;">
+    <strong>Net result:</strong> More output, more capabilities, better quality control, and A$104,196/year in savings. The AI system is not a downgrade. It is a significant upgrade at 10% of the cost.
+  </div>
+
+  <div class="page-footer">
+    <span>Collective Shift - Content Production Takeover Plan</span>
+    <span>Page 6 of 10</span>
+  </div>
+</div>
+
+<!-- PAGE 7: QUALITY + REVIEW WORKFLOW -->
+<div class="page">
+  <div class="section-num">06 - Quality Assurance</div>
+  <h2 class="page-title">Quality + Review Workflow</h2>
+  <p class="subtitle">Nothing goes live without Ben's eyes on it. Every piece fact-checked and approved.</p>
+
+  <h3>Script Approval Flow</h3>
+  <div class="flow-row">
+    <div class="flow-box bot">Marketing Bot</div>
+    <div class="flow-arrow">&#9654;</div>
+    <div class="flow-box bot">Analyst Bot (fact-check)</div>
+    <div class="flow-arrow">&#9654;</div>
+    <div class="flow-box bot">Marketing Bot (finalise)</div>
+    <div class="flow-arrow">&#9654;</div>
+    <div class="flow-box human">Ben Reviews</div>
+    <div class="flow-arrow">&#9654;</div>
+    <div class="flow-box" style="background: #e8f5e9; border: 1px solid #4caf50; color: #2e7d32; font-weight: 600;">Approved</div>
+  </div>
+
+  <h3>Social Post Approval Flow</h3>
+  <div class="flow-row">
+    <div class="flow-box bot">Social Bot (draft)</div>
+    <div class="flow-arrow">&#9654;</div>
+    <div class="flow-box human">Ben Approves</div>
+    <div class="flow-arrow">&#9654;</div>
+    <div class="flow-box" style="background: #e8f5e9; border: 1px solid #4caf50; color: #2e7d32; font-weight: 600;">Scheduled</div>
+  </div>
+
+  <h3>Video Content Approval Flow</h3>
+  <div class="flow-row">
+    <div class="flow-box bot">Marketing Bot (brief)</div>
+    <div class="flow-arrow">&#9654;</div>
+    <div class="flow-box" style="background: rgba(26,26,46,0.06); border: 1px solid rgba(26,26,46,0.15); font-weight: 600;">Giorgio / Fiverr Editor</div>
+    <div class="flow-arrow">&#9654;</div>
+    <div class="flow-box human">Ben Reviews</div>
+    <div class="flow-arrow">&#9654;</div>
+    <div class="flow-box" style="background: #e8f5e9; border: 1px solid #4caf50; color: #2e7d32; font-weight: 600;">Published</div>
+  </div>
+
+  <h3 style="margin-top: 3mm;">Quality Safeguards</h3>
+  <div class="two-col">
+    <div>
+      <div class="card" style="margin-bottom: 2mm;">
+        <h4>Analyst Bot Fact-Checking</h4>
+        <ul class="bullets">
+          <li>Every data point verified against live sources</li>
+          <li>Bitcoin prices, market caps, statistics cross-referenced</li>
+          <li>Claims validated before any content is published</li>
+          <li>Runs automatically on all scripts and posts</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-bottom: 2mm;">
+        <h4>Ben's Review Gate</h4>
+        <ul class="bullets">
+          <li>All scripts require Ben's approval before recording</li>
+          <li>All social posts require approval before scheduling</li>
+          <li>Travis reviews growth/strategy content flagged for his brand</li>
+          <li><strong>Nothing goes live without human approval</strong></li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom: 2mm;">
+        <h4>Brand Consistency</h4>
+        <ul class="bullets">
+          <li>Each bot trained on brand voice guidelines</li>
+          <li>"Digital assets" not "crypto" (Ben's writing rules)</li>
+          <li>Direct, educational tone. Never salesy.</li>
+          <li>Platform-specific formatting (Social Bot)</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-bottom: 2mm;">
+        <h4>Asana Tracking</h4>
+        <ul class="bullets">
+          <li>Every piece tracked: Backlog > Scripting > Recording > Editing > Review > Scheduled > Published</li>
+          <li>BenBot monitors progress and flags delays</li>
+          <li>Full audit trail of every content piece</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h3>Turnaround Times</h3>
+  <div class="turnaround-row">
+    <div class="turnaround-item">
+      <div class="time">24h</div>
+      <div class="desc">Script Drafts</div>
+    </div>
+    <div class="turnaround-item">
+      <div class="time">4h</div>
+      <div class="desc">Social Posts</div>
+    </div>
+    <div class="turnaround-item">
+      <div class="time">24h</div>
+      <div class="desc">Email Drafts</div>
+    </div>
+    <div class="turnaround-item">
+      <div class="time">48h</div>
+      <div class="desc">Video Packaging</div>
+    </div>
+    <div class="turnaround-item">
+      <div class="time">~30min</div>
+      <div class="desc">Ben's Daily Review</div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Collective Shift - Content Production Takeover Plan</span>
+    <span>Page 7 of 10</span>
+  </div>
+</div>
+
+<!-- PAGE 8: HANDOVER CHECKLIST -->
+<div class="page">
+  <div class="section-num">07 - Handover</div>
+  <h2 class="page-title">Handover Checklist: Pat to AI</h2>
+  <p class="subtitle">Everything Pat hands over on Tuesday. Structured for zero-gap transition.</p>
+
+  <div class="two-col">
+    <div>
+      <h3>Contractor + Team Access</h3>
+      <ul class="checklist">
+        <li>Giorgio's Slack contact + working relationship notes</li>
+        <li>Any other contractor contacts or freelancer details</li>
+        <li>Contractor payment details and processes</li>
+        <li>Communication preferences and response patterns</li>
+      </ul>
+
+      <h3>Tools + Platform Access</h3>
+      <ul class="checklist">
+        <li>Asana board access + current task status</li>
+        <li>Google Drive folder structure + file locations</li>
+        <li>Platform login credentials (or confirm who has them)</li>
+        <li>Any third-party tool logins (scheduling tools, analytics)</li>
+        <li>Brand assets location (logos, templates, fonts)</li>
+      </ul>
+
+      <h3>Content Operations</h3>
+      <ul class="checklist">
+        <li>Posting schedule (what goes where, when)</li>
+        <li>Content calendar (any planned content for April)</li>
+        <li>Any pending content in progress</li>
+        <li>Recurring tasks and deadlines Pat manages</li>
+        <li>Editorial guidelines or style notes</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Knowledge Transfer</h3>
+      <ul class="checklist">
+        <li>Platform-specific best practices Pat has learned</li>
+        <li>Optimal posting times per platform</li>
+        <li>Hashtag strategies that work</li>
+        <li>Audience engagement patterns and insights</li>
+        <li>What content performs best on each platform</li>
+      </ul>
+
+      <h3>In-Flight Work</h3>
+      <ul class="checklist">
+        <li>Any episodes currently in production pipeline</li>
+        <li>Scheduled but unpublished content</li>
+        <li>Draft posts awaiting review</li>
+        <li>Upcoming deadlines or commitments</li>
+        <li>Any brand partnerships or collaborations in progress</li>
+      </ul>
+
+      <h3 style="margin-top: 4mm;">Handover Timeline</h3>
+      <div class="card card-orange">
+        <p style="font-size: 7.5pt;"><strong>Tuesday April 1:</strong> Conversation with Pat. Begin handover documentation.</p>
+        <p style="font-size: 7.5pt; margin-top: 1mm;"><strong>Wednesday April 2:</strong> Pat documents all items above. BenBot reviews and confirms completeness.</p>
+        <p style="font-size: 7.5pt; margin-top: 1mm;"><strong>Thursday April 3:</strong> BenBot runs first coordination cycle using handover info. Pat available for questions.</p>
+        <p style="font-size: 7.5pt; margin-top: 1mm;"><strong>Friday April 4:</strong> Week 0 complete. System operational. All access confirmed.</p>
+      </div>
+
+      <div class="card card-navy" style="margin-top: 3mm;">
+        <h4 style="color: #1A1A2E;">Pre-Tuesday Prep (Before the Conversation)</h4>
+        <ul class="bullets">
+          <li>Content calendar pre-loaded for April Week 1</li>
+          <li>All platform credentials documented in secure vault</li>
+          <li>Fiverr contractor job posts drafted and ready</li>
+          <li>BenBot briefed on Giorgio's communication style</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Collective Shift - Content Production Takeover Plan</span>
+    <span>Page 8 of 10</span>
+  </div>
+</div>
+
+<!-- PAGE 9: RISK MITIGATION -->
+<div class="page">
+  <div class="section-num">08 - Risk Management</div>
+  <h2 class="page-title">Risk Mitigation</h2>
+  <p class="subtitle">Every risk identified. Every risk mitigated. No surprises.</p>
+
+  <table class="risk-table" style="margin-bottom: 5mm;">
+    <tr>
+      <th style="width: 22%;">Risk</th>
+      <th style="width: 10%;">Severity</th>
+      <th style="width: 38%;">Mitigation Strategy</th>
+      <th style="width: 30%;">Owner</th>
+    </tr>
+    <tr>
+      <td>Quality drop during transition</td>
+      <td style="color: #FC5C03; font-weight: 600;">Medium</td>
+      <td>Ben personally reviews everything for the first 2 weeks. Analyst Bot fact-checks every data point in every piece of content before publishing.</td>
+      <td>Ben + Analyst Bot</td>
+    </tr>
+    <tr>
+      <td>Giorgio relationship disruption</td>
+      <td style="color: #e6a817; font-weight: 600;">Low</td>
+      <td>BenBot takes over Slack coordination with Giorgio. Same briefs, same quality expectations, same communication style. Giorgio's workflow does not change.</td>
+      <td>BenBot</td>
+    </tr>
+    <tr>
+      <td>Posting consistency gap</td>
+      <td style="color: #FC5C03; font-weight: 600;">Medium</td>
+      <td>Content calendar pre-loaded for April Week 1 before Tuesday conversation. Social Bot has all posting schedules configured. No gap possible.</td>
+      <td>Marketing + Social Bot</td>
+    </tr>
+    <tr>
+      <td>Contractor reliability (Fiverr)</td>
+      <td style="color: #e6a817; font-weight: 600;">Low</td>
+      <td>2 backup editors shortlisted on Fiverr for each role. Never single-source any contractor. Trial period with test projects before full commitment.</td>
+      <td>BenBot</td>
+    </tr>
+    <tr>
+      <td>Platform access issues</td>
+      <td style="color: #e6a817; font-weight: 600;">Low</td>
+      <td>All credentials documented in secure vault before Tuesday. Audit all platform access on Monday to confirm nothing depends solely on Pat's accounts.</td>
+      <td>Ben + BenBot</td>
+    </tr>
+    <tr>
+      <td>AI content quality / tone</td>
+      <td style="color: #e6a817; font-weight: 600;">Low</td>
+      <td>All bots trained on Collective Shift brand voice. Ben's writing preferences enforced (no em dashes, "digital assets" not "crypto", educator tone). Continuous refinement.</td>
+      <td>All Bots + Ben</td>
+    </tr>
+    <tr>
+      <td>Pat's reaction / morale</td>
+      <td style="color: #e6a817; font-weight: 600;">Low</td>
+      <td>Positioned as mutual separation. 4 weeks notice. Professional and respectful. Pat's contribution acknowledged. Reference provided.</td>
+      <td>Ben</td>
+    </tr>
+    <tr>
+      <td>Knowledge loss</td>
+      <td style="color: #FC5C03; font-weight: 600;">Medium</td>
+      <td>Comprehensive handover checklist (Page 8). Pat documents all institutional knowledge in first week. BenBot captures and stores in knowledge base.</td>
+      <td>Pat + BenBot</td>
+    </tr>
+  </table>
+
+  <h3>Contingency Plan</h3>
+  <div class="card card-navy">
+    <p style="font-size: 8pt;"><strong>If the AI system underperforms in Week 1:</strong> Pat is still on notice period and available for support. Ben can increase personal review time temporarily. Fiverr contractors can absorb additional manual work. The 4-week notice period is specifically designed as a safety net.</p>
+  </div>
+
+  <div class="card card-orange" style="margin-top: 3mm;">
+    <p style="font-size: 8pt;"><strong>Key risk insight:</strong> The biggest risk is NOT the AI system failing. It is already built and tested. The biggest risk would have been NOT having the system ready before Pat's departure. That risk has been eliminated - the system was completed March 29, 2026.</p>
+  </div>
+
+  <div class="page-footer">
+    <span>Collective Shift - Content Production Takeover Plan</span>
+    <span>Page 9 of 10</span>
+  </div>
+</div>
+
+<!-- PAGE 10: SUMMARY + NEXT STEPS -->
+<div class="page">
+  <div class="section-num">09 - Summary</div>
+  <h2 class="page-title">Summary + Next Steps</h2>
+  <p class="subtitle">The system is built. The bots are active. Execution starts Tuesday.</p>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="sc-label">System Status</div>
+      <div class="sc-value orange">BUILT + ACTIVE</div>
+      <p style="font-size: 7pt; color: #666; margin-top: 1mm;">Bots skilled up March 29, 2026</p>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Monthly Cost</div>
+      <div class="sc-value">A$650<span style="font-size: 8pt; color: #999;"> /month</span></div>
+      <p style="font-size: 7pt; color: #666; margin-top: 1mm;">Down from A$9,333 (93% reduction)</p>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Annual Savings</div>
+      <div class="sc-value orange">A$104,196</div>
+      <p style="font-size: 7pt; color: #666; margin-top: 1mm;">A$112,000 to A$7,800 per year</p>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Weekly Output</div>
+      <div class="sc-value">24+ pieces</div>
+      <p style="font-size: 7pt; color: #666; margin-top: 1mm;">Across 4 brands, 5 platforms</p>
+    </div>
+  </div>
+
+  <h3>Immediate Next Steps</h3>
+
+  <div class="next-step">
+    <div class="next-num">1</div>
+    <div class="next-text">
+      <strong>Monday March 31 - Pre-load content calendar</strong><br>
+      <span style="font-size: 7.5pt; color: #666;">Marketing Bot generates April Week 1 content calendar. Social Bot pre-drafts all posts. Everything ready before Tuesday.</span>
+    </div>
+  </div>
+
+  <div class="next-step">
+    <div class="next-num">2</div>
+    <div class="next-text">
+      <strong>Tuesday April 1 - Handover conversation with Pat</strong><br>
+      <span style="font-size: 7.5pt; color: #666;">Mutual separation discussion. 4 weeks notice. Begin structured handover per checklist (Page 8). BenBot takes over coordination same day.</span>
+    </div>
+  </div>
+
+  <div class="next-step">
+    <div class="next-num">3</div>
+    <div class="next-text">
+      <strong>Tuesday-Friday April 1-4 - Hire Fiverr contractors</strong><br>
+      <span style="font-size: 7.5pt; color: #666;">Post jobs for short-form editor (A$100-200/episode) and thumbnail designer (A$25-50/thumbnail). Trial with test projects. 2 backups shortlisted for each role.</span>
+    </div>
+  </div>
+
+  <div class="next-step">
+    <div class="next-num">4</div>
+    <div class="next-text">
+      <strong>Week 1 (Apr 7-11) - First AI-managed episode cycle</strong><br>
+      <span style="font-size: 7.5pt; color: #666;">Full pipeline: Record > Process > Package > Distribute > Publish. All bot-coordinated. Ben reviews all output. Pat available for questions.</span>
+    </div>
+  </div>
+
+  <div class="next-step">
+    <div class="next-num">5</div>
+    <div class="next-text">
+      <strong>Week 2 (Apr 14-18) - Full autonomy checkpoint</strong><br>
+      <span style="font-size: 7.5pt; color: #666;">System running independently. First fully AI-generated content calendar. Review quality metrics and adjust. Pat's involvement zero.</span>
+    </div>
+  </div>
+
+  <div style="margin-top: 6mm; padding: 5mm; background: #1A1A2E; border-radius: 6px; color: #fff; text-align: center;">
+    <p style="font-size: 9pt; color: rgba(255,255,255,0.6); margin-bottom: 2mm;">The Bottom Line</p>
+    <p style="font-size: 12pt; font-weight: 700; line-height: 1.4;">
+      We replace a A$112,000/year role with a <span style="color: #FC5C03;">A$7,800/year AI + contractor system</span><br>
+      that produces <span style="color: #FC5C03;">more content, across more platforms, with better quality control</span>.<br>
+      The system is already built. Execution starts Tuesday.
+    </p>
+  </div>
+
+  <div style="margin-top: 8mm; text-align: center;">
+    <p style="font-size: 7.5pt; color: #999;">Prepared by BenBot (CEO Agent) for Collective Shift Quarterly Strategy Meeting</p>
+    <p style="font-size: 7.5pt; color: #999;">March 30, 2026 - CONFIDENTIAL</p>
+  </div>
+
+  <div class="page-footer">
+    <span>Collective Shift - Content Production Takeover Plan</span>
+    <span>Page 10 of 10</span>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Production - Collective Shift</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #F5F5F5;
+    color: #1A1A2E;
+    min-height: 100vh;
+  }
+
+  /* ── Top Navigation Bar ── */
+  .top-nav {
+    background: #FFFFFF;
+    border-bottom: 1px solid #E0E0E0;
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .top-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .workspace-name {
+    font-size: 13px;
+    color: #6B7280;
+    font-weight: 500;
+    padding: 4px 10px;
+    background: #F3F4F6;
+    border-radius: 6px;
+  }
+  .nav-logo {
+    width: 28px;
+    height: 28px;
+    background: #FC5C03;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .top-nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .nav-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #FC5C03;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  /* ── Board Header ── */
+  .board-header {
+    background: #FFFFFF;
+    border-bottom: 1px solid #E0E0E0;
+    padding: 16px 24px 12px;
+  }
+  .board-title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 4px;
+  }
+  .board-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #FC5C03, #E04D00);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .board-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1A1A2E;
+  }
+  .board-subtitle {
+    font-size: 13px;
+    color: #6B7280;
+    margin-left: 48px;
+    margin-bottom: 12px;
+  }
+  .board-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 48px;
+  }
+  .view-btn {
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    background: transparent;
+    color: #6B7280;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .view-btn:hover { background: #F3F4F6; color: #1A1A2E; }
+  .view-btn.active {
+    background: #1A1A2E;
+    color: #FFFFFF;
+  }
+  .filter-btn {
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid #D1D5DB;
+    background: #FFFFFF;
+    color: #6B7280;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-left: 12px;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .filter-btn:hover { border-color: #9CA3AF; }
+
+  /* ── Legend ── */
+  .legend-bar {
+    background: #FFFFFF;
+    border-bottom: 1px solid #E0E0E0;
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .legend-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: #6B7280;
+  }
+  .legend-label {
+    font-weight: 600;
+    color: #374151;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+  }
+  .legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+  .legend-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 600;
+    color: white;
+  }
+
+  /* ── Board Container ── */
+  .board-container {
+    padding: 20px 24px;
+    overflow-x: auto;
+  }
+  .board {
+    display: flex;
+    gap: 12px;
+    min-width: max-content;
+  }
+
+  /* ── Column ── */
+  .column {
+    width: 290px;
+    min-width: 290px;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 260px);
+  }
+  .column-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+  }
+  .column-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .column-badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: white;
+  }
+  .column-count {
+    font-size: 13px;
+    font-weight: 600;
+    color: #9CA3AF;
+  }
+  .column-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    padding-bottom: 8px;
+  }
+
+  /* Column colors */
+  .col-backlog .column-badge { background: #6B7280; }
+  .col-scripting .column-badge { background: #3B82F6; }
+  .col-recording .column-badge { background: #F59E0B; }
+  .col-editing .column-badge { background: #8B5CF6; }
+  .col-review .column-badge { background: #D97706; }
+  .col-scheduled .column-badge { background: #10B981; }
+  .col-published .column-badge { background: #047857; }
+
+  /* ── Card ── */
+  .card {
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 12px 12px 12px 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    border: 1px solid #E5E7EB;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    border-radius: 8px 0 0 8px;
+  }
+  .card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-1px);
+  }
+
+  /* Brand borders */
+  .brand-ben::before { background: #FC5C03; }
+  .brand-travis::before { background: #2563EB; }
+  .brand-zen::before { background: #059669; }
+  .brand-ws::before { background: #7C3AED; }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1A1A2E;
+    line-height: 1.35;
+    margin-bottom: 8px;
+    padding-right: 4px;
+  }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .card-tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: #F3F4F6;
+    color: #4B5563;
+    white-space: nowrap;
+  }
+  .card-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+  .card-subtask {
+    margin-top: 8px;
+    font-size: 11px;
+    color: #6B7280;
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    line-height: 1.35;
+  }
+  .card-subtask .check-icon {
+    color: #9CA3AF;
+    font-size: 12px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .card-due {
+    margin-top: 6px;
+    font-size: 11px;
+    color: #EF4444;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .card-scheduled {
+    margin-top: 6px;
+    font-size: 11px;
+    color: #10B981;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .card-metrics {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #F3F4F6;
+    font-size: 11px;
+    color: #6B7280;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .metric-item {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .card-published-date {
+    margin-top: 6px;
+    font-size: 11px;
+    color: #047857;
+    font-weight: 500;
+  }
+
+  /* Avatar colors */
+  .av-mb { background: #6366F1; }
+  .av-ab { background: #EC4899; }
+  .av-sb { background: #14B8A6; }
+  .av-eb { background: #F59E0B; }
+  .av-bs { background: #FC5C03; }
+  .av-gn { background: #8B5CF6; }
+  .av-fe { background: #64748B; }
+  .av-fd { background: #0EA5E9; }
+  .av-va { background: #84CC16; }
+  .av-bb { background: #1A1A2E; }
+  .av-bb2 { background: #7C3AED; }
+
+  /* ── Redistribution Section ── */
+  .redistribution {
+    margin: 32px 24px 40px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    border: 1px solid #E5E7EB;
+    padding: 28px 32px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .redist-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .redist-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #FC5C03, #E04D00);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+  .redist-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1A1A2E;
+  }
+  .redist-subtitle {
+    font-size: 13px;
+    color: #6B7280;
+  }
+  .redist-flow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .redist-source {
+    background: linear-gradient(135deg, #1A1A2E, #2D2D4E);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 12px;
+    text-align: center;
+    min-width: 140px;
+  }
+  .redist-source-num {
+    font-size: 28px;
+    font-weight: 700;
+  }
+  .redist-source-label {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-top: 2px;
+  }
+  .redist-arrow {
+    font-size: 24px;
+    color: #FC5C03;
+    font-weight: 700;
+  }
+  .redist-output {
+    background: linear-gradient(135deg, #FC5C03, #E04D00);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 12px;
+    text-align: center;
+    min-width: 140px;
+  }
+  .redist-output-num {
+    font-size: 28px;
+    font-weight: 700;
+  }
+  .redist-output-label {
+    font-size: 12px;
+    opacity: 0.9;
+    margin-top: 2px;
+  }
+  .redist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 8px;
+    margin-top: 20px;
+  }
+  .redist-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #F9FAFB;
+    border-radius: 8px;
+    border: 1px solid #F3F4F6;
+    font-size: 12px;
+    color: #374151;
+  }
+  .redist-item-count {
+    font-weight: 700;
+    color: #FC5C03;
+    font-size: 14px;
+    min-width: 16px;
+  }
+
+  /* ── Scrollbar ── */
+  .board-container::-webkit-scrollbar { height: 8px; }
+  .board-container::-webkit-scrollbar-track { background: transparent; }
+  .board-container::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 4px; }
+  .column-cards::-webkit-scrollbar { width: 4px; }
+  .column-cards::-webkit-scrollbar-track { background: transparent; }
+  .column-cards::-webkit-scrollbar-thumb { background: #E5E7EB; border-radius: 2px; }
+
+  /* Print / PDF tweaks */
+  @media print {
+    body { background: white; }
+    .board-container { overflow: visible; }
+    .board { flex-wrap: wrap; min-width: unset; }
+    .column { min-width: 200px; width: auto; flex: 1; max-height: unset; page-break-inside: avoid; }
+    .card:hover { transform: none; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Top Nav ── -->
+<div class="top-nav">
+  <div class="top-nav-left">
+    <div class="nav-logo">CS</div>
+    <span class="workspace-name">House of Brands</span>
+  </div>
+  <div class="top-nav-right">
+    <span style="font-size:13px;color:#6B7280;font-weight:500;">Collective Shift</span>
+    <div class="nav-avatar">BS</div>
+  </div>
+</div>
+
+<!-- ── Board Header ── -->
+<div class="board-header">
+  <div class="board-title-row">
+    <div class="board-icon">&#9776;</div>
+    <div class="board-title">Content Production - Collective Shift</div>
+  </div>
+  <div class="board-subtitle">House of Brands Content Pipeline</div>
+  <div class="board-controls">
+    <button class="view-btn">List</button>
+    <button class="view-btn active">Board</button>
+    <button class="view-btn">Timeline</button>
+    <button class="view-btn">Calendar</button>
+    <button class="filter-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
+      Filter
+    </button>
+  </div>
+</div>
+
+<!-- ── Legend ── -->
+<div class="legend-bar">
+  <div class="legend-section">
+    <span class="legend-label">Brands</span>
+    <div class="legend-item"><div class="legend-color" style="background:#FC5C03"></div>Ben</div>
+    <div class="legend-item"><div class="legend-color" style="background:#2563EB"></div>Travis</div>
+    <div class="legend-item"><div class="legend-color" style="background:#059669"></div>Zen</div>
+    <div class="legend-item"><div class="legend-color" style="background:#7C3AED"></div>Wealth Shift</div>
+  </div>
+  <div style="width:1px;height:20px;background:#E5E7EB"></div>
+  <div class="legend-section">
+    <span class="legend-label">Team</span>
+    <div class="legend-item"><div class="legend-avatar av-mb">MB</div>Marketing</div>
+    <div class="legend-item"><div class="legend-avatar av-ab">AB</div>Analyst</div>
+    <div class="legend-item"><div class="legend-avatar av-sb">SB</div>Social</div>
+    <div class="legend-item"><div class="legend-avatar av-eb">EB</div>Email</div>
+    <div class="legend-item"><div class="legend-avatar av-bb">BB</div>BenBot</div>
+    <div class="legend-item"><div class="legend-avatar av-bs">BS</div>Ben</div>
+    <div class="legend-item"><div class="legend-avatar av-gn">GN</div>Giorgio</div>
+    <div class="legend-item"><div class="legend-avatar av-va">VA</div>VA</div>
+  </div>
+</div>
+
+<!-- ── Kanban Board ── -->
+<div class="board-container">
+  <div class="board">
+
+    <!-- BACKLOG -->
+    <div class="column col-backlog">
+      <div class="column-header">
+        <div class="column-header-left">
+          <span class="column-badge">Backlog</span>
+          <span class="column-count">5</span>
+        </div>
+      </div>
+      <div class="column-cards">
+        <div class="card brand-ben">
+          <div class="card-title">Ben - Bitcoin ETF Impact on Portfolio Strategy</div>
+          <div class="card-meta">
+            <span class="card-tag">YouTube Long-form</span>
+            <div class="card-avatar av-mb" title="Marketing Bot">MB</div>
+          </div>
+        </div>
+        <div class="card brand-ws">
+          <div class="card-title">Wealth Shift - Episode 47: Bear Market Playbook</div>
+          <div class="card-meta">
+            <span class="card-tag">Podcast</span>
+            <div class="card-avatar av-mb" title="Marketing Bot">MB</div>
+          </div>
+        </div>
+        <div class="card brand-travis">
+          <div class="card-title">Travis - Corporate Treasury Bitcoin Adoption</div>
+          <div class="card-meta">
+            <span class="card-tag">LinkedIn</span>
+            <div class="card-avatar av-mb" title="Marketing Bot">MB</div>
+          </div>
+        </div>
+        <div class="card brand-zen">
+          <div class="card-title">Zen - Beginner's Guide to Self-Custody</div>
+          <div class="card-meta">
+            <span class="card-tag">TikTok Series</span>
+            <div class="card-avatar av-mb" title="Marketing Bot">MB</div>
+          </div>
+        </div>
+        <div class="card brand-ben">
+          <div class="card-title">Ben - April Content Calendar Planning</div>
+          <div class="card-meta">
+            <span class="card-tag">Planning</span>
+            <div class="card-avatar av-bb" title="BenBot">BB</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCRIPTING -->
+    <div class="column col-scripting">
+      <div class="column-header">
+        <div class="column-header-left">
+          <span class="column-badge">Scripting</span>
+          <span class="column-count">2</span>
+        </div>
+      </div>
+      <div class="column-cards">
+        <div class="card brand-ben">
+          <div class="card-title">Ben - Why Smart Money Is Accumulating Now</div>
+          <div class="card-meta">
+            <span class="card-tag">YouTube Long-form</span>
+            <div class="card-avatar av-mb" title="Marketing Bot">MB</div>
+          </div>
+          <div class="card-subtask">
+            <span class="check-icon">&#9744;</span>
+            Analyst Bot fact-check: pending
+          </div>
+        </div>
+        <div class="card brand-ws">
+          <div class="card-title">Wealth Shift - Episode 46: Institutional Adoption Deep Dive</div>
+          <div class="card-meta">
+            <span class="card-tag">Podcast</span>
+            <div class="card-avatar av-mb" title="Marketing Bot">MB</div>
+          </div>
+          <div class="card-subtask">
+            <span class="check-icon">&#9745;</span>
+            Script draft complete, fact-check in progress
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECORDING -->
+    <div class="column col-recording">
+      <div class="column-header">
+        <div class="column-header-left">
+          <span class="column-badge">Recording</span>
+          <span class="column-count">2</span>
+        </div>
+      </div>
+      <div class="column-cards">
+        <div class="card brand-ben">
+          <div class="card-title">Ben - The 3 Biggest Mistakes HNW Investors Make</div>
+          <div class="card-meta">
+            <span class="card-tag">YouTube Long-form</span>
+            <div class="card-avatar av-bs" title="Ben Simpson">BS</div>
+          </div>
+          <div class="card-subtask">
+            <span class="check-icon">&#9745;</span>
+            Script approved, Riverside session ready
+          </div>
+        </div>
+        <div class="card brand-ws">
+          <div class="card-title">Wealth Shift - Episode 45: Bitcoin as a Reserve Asset</div>
+          <div class="card-meta">
+            <span class="card-tag">Podcast</span>
+            <div class="card-avatar av-bs" title="Ben + Bergs">B+B</div>
+          </div>
+          <div class="card-subtask">
+            <span class="check-icon">&#9745;</span>
+            Riverside room created
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDITING -->
+    <div class="column col-editing">
+      <div class="column-header">
+        <div class="column-header-left">
+          <span class="column-badge">Editing</span>
+          <span class="column-count">3</span>
+        </div>
+      </div>
+      <div class="column-cards">
+        <div class="card brand-ben">
+          <div class="card-title">Ben - March Market Update: What Changed</div>
+          <div class="card-meta">
+            <span class="card-tag">YouTube Long-form</span>
+            <div class="card-avatar av-gn" title="Giorgio">GN</div>
+          </div>
+          <div class="card-subtask">
+            <span class="check-icon">&#9745;</span>
+            Raw footage uploaded to Drive
+          </div>
+          <div class="card-due">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            Due Apr 2
+          </div>
+        </div>
+        <div class="card brand-ws">
+          <div class="card-title">Wealth Shift - Episode 44 Clips x6</div>
+          <div class="card-meta">
+            <span class="card-tag">Short-form</span>
+            <div class="card-avatar av-fe" title="Fiverr Editor">FE</div>
+          </div>
+          <div class="card-subtask">
+            <span class="check-icon">&#9745;</span>
+            Magic Clips exported, 6 clips selected
+          </div>
+        </div>
+        <div class="card brand-ben">
+          <div class="card-title">Ben - March Market Update Thumbnail</div>
+          <div class="card-meta">
+            <span class="card-tag">Thumbnail</span>
+            <div class="card-avatar av-fd" title="Fiverr Designer">FD</div>
+          </div>
+          <div class="card-subtask">
+            <span class="check-icon">&#9744;</span>
+            Concept from Marketing Bot sent
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REVIEW -->
+    <div class="column col-review">
+      <div class="column-header">
+        <div class="column-header-left">
+          <span class="column-badge">Review</span>
+          <span class="column-count">2</span>
+        </div>
+      </div>
+      <div class="column-cards">
+        <div class="card brand-ben">
+          <div class="card-title">Ben - How Bitcoin Protects Generational Wealth</div>
+          <div class="card-meta">
+            <span class="card-tag">YouTube Long-form</span>
+            <div class="card-avatar av-bs" title="Ben Simpson">BS</div>
+          </div>
+          <div class="card-subtask">
+            <span class="check-icon">&#9745;</span>
+            Final cut ready, thumbnail attached, description written
+          </div>
+        </div>
+        <div class="card brand-ws">
+          <div class="card-title">Wealth Shift Ep43 - Social Package</div>
+          <div class="card-meta">
+            <span class="card-tag">Social</span>
+            <div class="card-avatar av-sb" title="Social Bot">SB</div>
+          </div>
+          <div class="card-subtask">
+            <span class="check-icon">&#9745;</span>
+            6 platform posts drafted: YT community, IG, TikTok, X, LinkedIn, email
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCHEDULED -->
+    <div class="column col-scheduled">
+      <div class="column-header">
+        <div class="column-header-left">
+          <span class="column-badge">Scheduled</span>
+          <span class="column-count">3</span>
+        </div>
+      </div>
+      <div class="column-cards">
+        <div class="card brand-ben">
+          <div class="card-title">Ben - Digital Asset Portfolio Framework</div>
+          <div class="card-meta">
+            <span class="card-tag">YouTube</span>
+            <div class="card-avatar av-va" title="VA">VA</div>
+          </div>
+          <div class="card-scheduled">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Mon Apr 7, 9am AEST
+          </div>
+        </div>
+        <div class="card brand-ws">
+          <div class="card-title">Wealth Shift Ep43 - IG Reel #1</div>
+          <div class="card-meta">
+            <span class="card-tag">Instagram</span>
+            <div class="card-avatar av-va" title="VA">VA</div>
+          </div>
+          <div class="card-scheduled">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Tue Apr 1, 12pm AEST
+          </div>
+        </div>
+        <div class="card brand-ws">
+          <div class="card-title">Wealth Shift Ep43 - Email Newsletter</div>
+          <div class="card-meta">
+            <span class="card-tag">Email</span>
+            <div class="card-avatar av-eb" title="Email Bot">EB</div>
+          </div>
+          <div class="card-scheduled">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Wed Apr 2, 7am AEST
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PUBLISHED -->
+    <div class="column col-published">
+      <div class="column-header">
+        <div class="column-header-left">
+          <span class="column-badge">Published</span>
+          <span class="column-count">3</span>
+        </div>
+      </div>
+      <div class="column-cards">
+        <div class="card brand-ws">
+          <div class="card-title">Wealth Shift Ep42 - Full Episode</div>
+          <div class="card-meta">
+            <span class="card-tag">YouTube + Spotify</span>
+          </div>
+          <div class="card-published-date">&#10003; Published Mar 25</div>
+          <div class="card-metrics">
+            <div class="metric-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              2.1K views
+            </div>
+            <div class="metric-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              48 comments
+            </div>
+          </div>
+        </div>
+        <div class="card brand-ben">
+          <div class="card-title">Ben - Why I'm Bullish on Bitcoin Right Now</div>
+          <div class="card-meta">
+            <span class="card-tag">YouTube</span>
+          </div>
+          <div class="card-published-date">&#10003; Published Mar 22</div>
+          <div class="card-metrics">
+            <div class="metric-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              5.3K views
+            </div>
+            <div class="metric-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              127 comments
+            </div>
+          </div>
+        </div>
+        <div class="card brand-ws">
+          <div class="card-title">Wealth Shift Ep42 - Social Package</div>
+          <div class="card-meta">
+            <span class="card-tag">All platforms</span>
+          </div>
+          <div class="card-published-date">&#10003; Published Mar 26</div>
+          <div class="card-metrics">
+            <div class="metric-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              12 posts
+            </div>
+            <div class="metric-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+              890 engagements
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Redistribution Flow ── -->
+<div class="redistribution">
+  <div class="redist-header">
+    <div class="redist-icon">&#9889;</div>
+    <div>
+      <div class="redist-title">Content Redistribution Flow</div>
+      <div class="redist-subtitle">Automated by the AI content pipeline</div>
+    </div>
+  </div>
+
+  <div class="redist-flow">
+    <div class="redist-source">
+      <div class="redist-source-num">1</div>
+      <div class="redist-source-label">YouTube Video</div>
+    </div>
+    <div class="redist-arrow">&#10230;</div>
+    <div class="redist-output">
+      <div class="redist-output-num">17</div>
+      <div class="redist-output-label">Pieces of Content</div>
+    </div>
+  </div>
+
+  <div class="redist-grid">
+    <div class="redist-item"><span class="redist-item-count">6</span> Short clips</div>
+    <div class="redist-item"><span class="redist-item-count">1</span> YouTube community post</div>
+    <div class="redist-item"><span class="redist-item-count">1</span> IG carousel</div>
+    <div class="redist-item"><span class="redist-item-count">2</span> IG stories</div>
+    <div class="redist-item"><span class="redist-item-count">1</span> TikTok</div>
+    <div class="redist-item"><span class="redist-item-count">1</span> X thread</div>
+    <div class="redist-item"><span class="redist-item-count">1</span> LinkedIn post</div>
+    <div class="redist-item"><span class="redist-item-count">1</span> Email newsletter</div>
+    <div class="redist-item"><span class="redist-item-count">1</span> Blog post</div>
+    <div class="redist-item"><span class="redist-item-count">1</span> Podcast show notes</div>
+  </div>
+</div>
+
+</body>
+</html>
