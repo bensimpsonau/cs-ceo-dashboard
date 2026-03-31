@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Calendar | Collective Shift</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --orange: #FC5C03;
+    --green: #08C394;
+    --dark: #1A1A2E;
+    --purple: #654FFC;
+    --blue: #3B82F6;
+    --red: #DC2626;
+    --grey: #6B7280;
+    --amber: #F59E0B;
+    --border: #E8E8EA;
+    --bg-card: #FFFFFF;
+    --bg-page: #F7F7F8;
+    --text-muted: #6B6B7B;
+    --light-orange: #FFF3ED;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--dark);
+    background: var(--bg-page);
+    padding-top: 56px !important;
+  }
+  h1, h2, h3, h4, h5 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    color: var(--dark);
+  }
+  .label {
+    font-family: 'Source Code Pro', monospace;
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ====== NAV BAR ====== */
+  :root {
+    --csn-h: 56px;
+    --csn-bg: #FFFFFF;
+    --csn-border: #E8E8EA;
+    --csn-text: #1B1925;
+    --csn-muted: #4D4C55;
+    --csn-orange: #FC5C03;
+    --csn-orange-bg: #FEEEE5;
+    --csn-dd-bg: #FFFFFF;
+    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    --csn-z: 9000;
+  }
+  .csn-bar {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--csn-h);
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    display: flex; align-items: center;
+    padding: 0 24px; gap: 0;
+    z-index: var(--csn-z);
+    font-family: 'Plus Jakarta Sans', 'Barlow', sans-serif;
+  }
+  .csn-logo {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700; font-size: 15px;
+    color: var(--csn-orange); text-decoration: none;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    white-space: nowrap; margin-right: 32px; flex-shrink: 0;
+  }
+  .csn-nav { display: flex; align-items: center; gap: 2px; flex: 1; }
+  .csn-item { position: relative; }
+  .csn-link {
+    display: flex; align-items: center; gap: 5px;
+    padding: 8px 12px; border-radius: 8px;
+    font-size: 13px; font-weight: 500;
+    color: var(--csn-muted); text-decoration: none;
+    white-space: nowrap; transition: color 0.15s, background 0.15s; cursor: pointer;
+  }
+  .csn-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-item.active > .csn-link { color: var(--csn-orange); font-weight: 600; }
+  .csn-chevron { transition: transform 0.2s; flex-shrink: 0; }
+  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
+  .csn-dropdown {
+    display: none; position: absolute; top: calc(100% + 6px); left: 0;
+    min-width: 240px; background: var(--csn-dd-bg);
+    border: 1px solid var(--csn-border); border-radius: 12px;
+    box-shadow: var(--csn-dd-shadow); padding: 6px;
+    z-index: calc(var(--csn-z) + 1);
+  }
+  .csn-item.csn-has-dd { position: relative; }
+  .csn-item.csn-has-dd::after { content: ""; position: absolute; top: 100%; left: 0; width: 100%; height: 12px; }
+  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
+  .csn-dd-item {
+    display: block; padding: 8px 12px; border-radius: 8px;
+    font-size: 13px; font-weight: 500; color: var(--csn-muted);
+    text-decoration: none; transition: color 0.12s, background 0.12s; white-space: nowrap;
+  }
+  .csn-dd-item:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-divider { height: 1px; background: var(--csn-border); margin: 4px 8px; }
+  .csn-hamburger {
+    display: none; background: none; border: none; cursor: pointer;
+    color: var(--csn-muted); padding: 4px; margin-left: auto;
+  }
+  .csn-mobile-menu {
+    display: none; position: fixed; top: var(--csn-h); left: 0; right: 0;
+    background: var(--csn-bg); border-bottom: 1px solid var(--csn-border);
+    padding: 8px 16px 16px; z-index: calc(var(--csn-z) - 1);
+    max-height: calc(100vh - var(--csn-h)); overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .csn-mobile-menu.open { display: block; }
+  .csn-mob-link {
+    display: block; padding: 9px 12px; border-radius: 8px;
+    font-size: 13px; font-weight: 500; color: var(--csn-muted);
+    text-decoration: none; transition: color 0.12s, background 0.12s;
+  }
+  .csn-mob-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-mob-top { font-weight: 600; color: var(--csn-text); margin-top: 4px; }
+  .csn-mob-sub { font-size: 12px; padding-left: 20px; }
+  .csn-mob-active { color: var(--csn-orange) !important; font-weight: 600 !important; }
+  @media (max-width: 1023px) {
+    .csn-nav { display: none; }
+    .csn-hamburger { display: block; }
+  }
+  @media (max-width: 640px) {
+    .csn-logo { font-size: 13px; margin-right: 16px; }
+  }
+
+  /* ====== MAIN CONTENT ====== */
+  .document {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  /* ====== PAGE HEADER ====== */
+  .page-header {
+    background: var(--dark);
+    border-radius: var(--radius);
+    padding: 28px 32px 24px;
+    margin-bottom: 24px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .page-header h1 { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .page-header .timestamp {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 12px; color: rgba(255,255,255,0.5);
+  }
+  .header-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .view-toggle {
+    display: flex; gap: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px; padding: 3px;
+  }
+  .view-btn {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px; font-weight: 600;
+    padding: 7px 18px; border-radius: 6px;
+    border: none; cursor: pointer;
+    transition: all 0.2s; white-space: nowrap;
+    color: rgba(255,255,255,0.6); background: transparent;
+  }
+  .view-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+  .view-btn.active { color: var(--dark); background: #fff; }
+
+  .btn-add-source {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px; font-weight: 600;
+    padding: 9px 20px; border-radius: 8px;
+    border: none; cursor: pointer;
+    background: var(--orange); color: #fff;
+    transition: all 0.2s; white-space: nowrap;
+  }
+  .btn-add-source:hover { background: #e05200; transform: translateY(-1px); }
+
+  /* ====== STATS BAR ====== */
+  .stats-bar {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 12px; margin-bottom: 24px;
+  }
+  .stat-card {
+    background: #fff; border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 16px 18px; text-align: center;
+  }
+  .stat-value {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700; font-size: 28px; line-height: 1.1;
+  }
+  .stat-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted); margin-top: 4px;
+  }
+  .stat-value.text-orange { color: var(--orange); }
+  .stat-value.text-blue { color: var(--blue); }
+  .stat-value.text-green { color: var(--green); }
+  .stat-value.text-purple { color: var(--purple); }
+
+  @media (max-width: 640px) {
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .header-controls { width: 100%; }
+  }
+
+  /* ====== FILTER BAR ====== */
+  .filter-bar {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 24px; align-items: center;
+  }
+  .filter-bar .filter-group {
+    display: flex; flex-wrap: wrap; gap: 4px; align-items: center;
+  }
+  .filter-bar .filter-divider {
+    width: 1px; height: 24px; background: var(--border); margin: 0 8px;
+  }
+  .filter-pill {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px; font-weight: 500;
+    padding: 5px 14px; border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: #fff; color: var(--text-muted);
+    cursor: pointer; transition: all 0.15s;
+    white-space: nowrap; letter-spacing: 0.03em;
+  }
+  .filter-pill:hover { border-color: var(--orange); color: var(--orange); }
+  .filter-pill.active { background: var(--dark); color: #fff; border-color: var(--dark); }
+  .filter-pill.brand-ben.active { background: var(--orange); border-color: var(--orange); }
+  .filter-pill.brand-travis.active { background: var(--blue); border-color: var(--blue); }
+  .filter-pill.brand-sarn.active { background: var(--green); border-color: var(--green); }
+  .filter-pill.brand-ws.active { background: var(--purple); border-color: var(--purple); }
+
+  /* ====== ADD SOURCE FORM ====== */
+  .add-source-form {
+    background: #fff; border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 0;
+    margin-bottom: 24px; overflow: hidden;
+    max-height: 0; opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+  }
+  .add-source-form.open {
+    max-height: 1200px; opacity: 1; padding: 24px 28px;
+  }
+  .form-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px; font-weight: 700;
+    margin-bottom: 20px; color: var(--dark);
+  }
+  .form-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .form-grid .full-width { grid-column: 1 / -1; }
+  .form-group label {
+    display: block;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 6px;
+  }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; font-family: 'Barlow', sans-serif;
+    font-size: 14px; padding: 10px 14px;
+    border: 1.5px solid var(--border); border-radius: 8px;
+    background: #fff; color: var(--dark);
+    transition: border-color 0.15s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(252,92,3,0.1);
+  }
+  .form-group textarea { resize: vertical; min-height: 120px; }
+  .form-actions {
+    margin-top: 20px; display: flex; gap: 12px;
+  }
+  .btn-generate {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px; font-weight: 600;
+    padding: 12px 28px; border-radius: 8px;
+    border: none; cursor: pointer;
+    background: var(--orange); color: #fff;
+    transition: all 0.2s;
+  }
+  .btn-generate:hover { background: #e05200; }
+  .btn-cancel {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px; font-weight: 500;
+    padding: 12px 20px; border-radius: 8px;
+    border: 1.5px solid var(--border); cursor: pointer;
+    background: #fff; color: var(--text-muted);
+    transition: all 0.15s;
+  }
+  .btn-cancel:hover { border-color: var(--red); color: var(--red); }
+
+  @media (max-width: 640px) {
+    .form-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ====== CALENDAR VIEW ====== */
+  .calendar-view { display: none; }
+  .calendar-view.active { display: block; }
+
+  .week-nav {
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px; margin-bottom: 16px;
+  }
+  .week-nav-btn {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px; font-weight: 600;
+    padding: 8px 16px; border-radius: 8px;
+    border: 1.5px solid var(--border); background: #fff;
+    color: var(--dark); cursor: pointer; transition: all 0.15s;
+  }
+  .week-nav-btn:hover { border-color: var(--orange); color: var(--orange); }
+  .week-nav-label {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px; font-weight: 600;
+    min-width: 200px; text-align: center;
+  }
+  .week-nav-today {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px; font-weight: 500;
+    padding: 6px 14px; border-radius: 6px;
+    border: none; background: var(--light-orange);
+    color: var(--orange); cursor: pointer; transition: all 0.15s;
+  }
+  .week-nav-today:hover { background: var(--orange); color: #fff; }
+
+  .calendar-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 8px; min-height: 400px;
+  }
+  .cal-day-header {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--text-muted); text-align: center;
+    padding: 8px 4px;
+  }
+  .cal-day {
+    background: #fff; border: 1.5px solid var(--border);
+    border-radius: 10px; padding: 10px 8px;
+    min-height: 120px; transition: border-color 0.15s;
+    position: relative;
+  }
+  .cal-day:hover { border-color: #ccc; }
+  .cal-day.today { border-color: var(--orange); border-width: 2px; }
+  .cal-day-num {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 12px; font-weight: 600;
+    color: var(--text-muted); margin-bottom: 6px;
+  }
+  .cal-day.today .cal-day-num { color: var(--orange); }
+
+  .cal-card {
+    display: flex; align-items: flex-start; gap: 4px;
+    padding: 6px 8px; margin-bottom: 4px;
+    border-radius: 6px; cursor: pointer;
+    transition: all 0.15s; position: relative;
+    border-left: 3px solid transparent;
+    background: var(--bg-page); font-size: 12px;
+  }
+  .cal-card:hover { background: #eee; }
+  .cal-card .card-emoji { flex-shrink: 0; font-size: 12px; }
+  .cal-card .card-text {
+    flex: 1; min-width: 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    font-weight: 500; font-size: 11px;
+  }
+  .cal-card .status-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    flex-shrink: 0; margin-top: 3px;
+  }
+  .status-dot.overdue { background: var(--red); }
+  .status-dot.draft { background: var(--amber); }
+  .status-dot.ready { background: var(--green); }
+  .status-dot.scheduled { background: var(--blue); }
+  .status-dot.posted { background: var(--grey); }
+  .status-dot.idea { background: #D1D5DB; }
+
+  .brand-bar-ben { border-left-color: var(--orange); }
+  .brand-bar-travis { border-left-color: var(--blue); }
+  .brand-bar-sarn { border-left-color: var(--green); }
+  .brand-bar-ws { border-left-color: var(--purple); }
+
+  /* ====== PIPELINE VIEW ====== */
+  .pipeline-view { display: none; }
+  .pipeline-view.active { display: block; }
+  .pipeline-container {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    overflow-x: auto;
+  }
+  .pipeline-col {
+    background: #fff; border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 12px 10px;
+    min-width: 150px; min-height: 300px;
+  }
+  .pipeline-col-header {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--text-muted); margin-bottom: 12px;
+    padding-bottom: 8px; border-bottom: 1.5px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .pipeline-col-count {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px; background: var(--bg-page);
+    padding: 2px 8px; border-radius: 10px;
+  }
+  .pipe-card {
+    padding: 10px; margin-bottom: 8px;
+    border-radius: 8px; cursor: pointer;
+    border-left: 3px solid transparent;
+    background: var(--bg-page); transition: all 0.15s;
+  }
+  .pipe-card:hover { background: #eee; }
+  .pipe-card-title {
+    font-size: 12px; font-weight: 600;
+    margin-bottom: 4px;
+    display: -webkit-box; -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .pipe-card-meta {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px; color: var(--text-muted);
+    display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+  }
+  .pipe-card select {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px; padding: 2px 4px;
+    border: 1px solid var(--border); border-radius: 4px;
+    background: #fff; margin-top: 6px; width: 100%;
+  }
+
+  @media (max-width: 900px) {
+    .pipeline-container { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .pipeline-container { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ====== ALL CONTENT VIEW ====== */
+  .all-view { display: none; }
+  .all-view.active { display: block; }
+  .content-table {
+    width: 100%; border-collapse: collapse;
+    background: #fff; border-radius: var(--radius);
+    overflow: hidden; border: 1.5px solid var(--border);
+  }
+  .content-table th {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--text-muted); padding: 12px 14px;
+    text-align: left; background: var(--bg-page);
+    border-bottom: 1.5px solid var(--border);
+    cursor: pointer; user-select: none;
+    white-space: nowrap;
+  }
+  .content-table th:hover { color: var(--orange); }
+  .content-table td {
+    padding: 10px 14px; font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .content-table tr:hover td { background: #FAFAFA; }
+  .content-table tr { cursor: pointer; transition: background 0.1s; }
+  .table-brand-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    display: inline-block; margin-right: 6px;
+  }
+  .table-status-badge {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px; font-weight: 600;
+    padding: 3px 8px; border-radius: 4px;
+    white-space: nowrap;
+  }
+  .status-idea { background: #F3F4F6; color: #6B7280; }
+  .status-draft { background: #FEF3C7; color: #92400E; }
+  .status-scripting { background: #DBEAFE; color: #1D4ED8; }
+  .status-filming { background: #FCE7F3; color: #9D174D; }
+  .status-editing { background: #E0E7FF; color: #4338CA; }
+  .status-ready { background: #D1FAE5; color: #065F46; }
+  .status-scheduled { background: #DBEAFE; color: #1D4ED8; }
+  .status-posted { background: #F3F4F6; color: #6B7280; }
+  .status-published { background: #D1FAE5; color: #065F46; }
+
+  /* ====== EXPANDED CARD MODAL ====== */
+  .card-modal-overlay {
+    display: none; position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(26,26,46,0.5);
+    z-index: 10000; justify-content: center;
+    align-items: flex-start; padding: 80px 24px 40px;
+    overflow-y: auto;
+  }
+  .card-modal-overlay.open { display: flex; }
+  .card-modal {
+    background: #fff; border-radius: var(--radius);
+    max-width: 680px; width: 100%;
+    padding: 28px 32px; position: relative;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.18);
+    animation: modalIn 0.2s ease;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .card-modal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: none; border: none; cursor: pointer;
+    color: var(--text-muted); font-size: 20px;
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .card-modal-close:hover { background: var(--bg-page); color: var(--red); }
+  .modal-form-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 14px; margin-top: 16px;
+  }
+  .modal-form-grid .full-width { grid-column: 1 / -1; }
+  .modal-form-grid label {
+    display: block;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 4px;
+  }
+  .modal-form-grid input, .modal-form-grid select, .modal-form-grid textarea {
+    width: 100%; font-family: 'Barlow', sans-serif;
+    font-size: 13px; padding: 8px 12px;
+    border: 1.5px solid var(--border); border-radius: 8px;
+    background: #fff; color: var(--dark); transition: border-color 0.15s;
+  }
+  .modal-form-grid input:focus, .modal-form-grid select:focus, .modal-form-grid textarea:focus {
+    outline: none; border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(252,92,3,0.1);
+  }
+  .modal-form-grid textarea { resize: vertical; min-height: 100px; }
+  .modal-actions {
+    display: flex; gap: 10px; margin-top: 20px;
+    padding-top: 16px; border-top: 1.5px solid var(--border);
+  }
+  .btn-posted {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px; font-weight: 600;
+    padding: 10px 20px; border-radius: 8px;
+    border: none; cursor: pointer;
+    background: var(--green); color: #fff; transition: all 0.15s;
+  }
+  .btn-posted:hover { background: #069e7a; }
+  .btn-delete {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px; font-weight: 500;
+    padding: 10px 20px; border-radius: 8px;
+    border: 1.5px solid var(--border); cursor: pointer;
+    background: #fff; color: var(--red); transition: all 0.15s;
+    margin-left: auto;
+  }
+  .btn-delete:hover { border-color: var(--red); background: #FEF2F2; }
+  .btn-save-modal {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px; font-weight: 600;
+    padding: 10px 20px; border-radius: 8px;
+    border: none; cursor: pointer;
+    background: var(--orange); color: #fff; transition: all 0.15s;
+  }
+  .btn-save-modal:hover { background: #e05200; }
+
+  /* ====== CADENCE REFERENCE ====== */
+  .cadence-section {
+    margin-top: 40px;
+  }
+  .cadence-header {
+    display: flex; align-items: center; gap: 12px;
+    cursor: pointer; user-select: none; margin-bottom: 12px;
+  }
+  .cadence-header h3 {
+    font-size: 15px; font-weight: 700; color: var(--dark);
+  }
+  .cadence-chevron {
+    transition: transform 0.25s; color: var(--text-muted);
+  }
+  .cadence-chevron.collapsed { transform: rotate(-90deg); }
+  .cadence-content {
+    overflow: hidden; transition: max-height 0.35s ease, opacity 0.25s ease;
+    max-height: 600px; opacity: 1;
+  }
+  .cadence-content.collapsed { max-height: 0; opacity: 0; }
+  .cadence-table {
+    width: 100%; border-collapse: collapse;
+    background: #fff; border: 1.5px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+  }
+  .cadence-table th {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--text-muted); padding: 10px 14px;
+    text-align: left; background: var(--bg-page);
+    border-bottom: 1.5px solid var(--border);
+  }
+  .cadence-table td {
+    padding: 10px 14px; font-size: 13px;
+    border-bottom: 1px solid var(--border);
+  }
+  .cadence-table tr:last-child td { border-bottom: none; }
+
+  /* ====== FOOTER ====== */
+  .page-footer {
+    margin-top: 40px; padding: 20px 24px;
+    background: #fff; border: 1.5px solid var(--border);
+    border-radius: var(--radius); text-align: center;
+  }
+  .page-footer .sync-time {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 12px; color: var(--text-muted); margin-bottom: 6px;
+  }
+  .page-footer .sync-note {
+    font-size: 13px; color: var(--text-muted); line-height: 1.5;
+  }
+
+  /* ====== PRINT ====== */
+  @media print {
+    body { padding-top: 0 !important; }
+    .csn-bar, .csn-mobile-menu, .view-toggle, .btn-add-source,
+    .filter-bar, .add-source-form, .week-nav, .card-modal-overlay { display: none !important; }
+    .document { max-width: 100%; padding: 20px; }
+    .page-header { background: #1A1A2E !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .cal-card, .pipe-card, .table-status-badge, .stat-card {
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== NAV BAR ====== -->
+<nav class="csn-bar" role="navigation" aria-label="Main navigation">
+  <a href="index.html" class="csn-logo">Collective Shift</a>
+  <div class="csn-nav">
+    <div class="csn-item"><a href="index.html" class="csn-link">CEO Dashboard</a></div>
+    <div class="csn-item csn-has-dd">
+      <a href="hub/operating-system.html" class="csn-link">The Collective Shift Operating System
+        <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="csn-dropdown">
+        <a href="hub/operating-system.html" class="csn-dd-item">Operating System Overview</a>
+        <a href="hub/modules/m1-foundations.html" class="csn-dd-item">Module 1: Foundations</a>
+        <a href="hub/modules/m2-bitcoin.html" class="csn-dd-item">Module 2: Bitcoin</a>
+        <a href="hub/modules/m3-altcoins.html" class="csn-dd-item">Module 3: Digital Assets</a>
+        <a href="hub/modules/m4-how-we-invest.html" class="csn-dd-item">Module 4: How We Invest</a>
+        <a href="hub/modules/m5-buy-sell.html" class="csn-dd-item">Module 5: Buy &amp; Sell</a>
+        <a href="hub/modules/m6-send-store.html" class="csn-dd-item">Module 6: Send &amp; Store</a>
+        <a href="hub/modules/m7-tax.html" class="csn-dd-item">Module 7: Tax</a>
+        <a href="hub/modules/m8-sell-strategy.html" class="csn-dd-item">Module 8: Exit Strategy</a>
+        <div class="csn-divider"></div>
+        <a href="8-step-strategy-workbook.html" class="csn-dd-item">8-Step Strategy Workbook</a>
+        <a href="portfolio-calculator.html" class="csn-dd-item">Portfolio Allocation Calculator</a>
+      </div>
+    </div>
+    <div class="csn-item csn-has-dd">
+      <a href="hub/products.html" class="csn-link">Product
+        <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="csn-dropdown">
+        <a href="hub/products.html#platinum" class="csn-dd-item">Platinum</a>
+        <a href="hub/products.html#accelerator" class="csn-dd-item">Accelerator</a>
+        <a href="hub/beginner-journey.html" class="csn-dd-item">Beginner's Journey</a>
+        <a href="hub/products.html#two-track" class="csn-dd-item">Two-Track System</a>
+      </div>
+    </div>
+    <div class="csn-item csn-has-dd">
+      <a href="hub/youtube-strategy.html" class="csn-link">Social Media
+        <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="csn-dropdown">
+        <a href="hub/youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a>
+        <a href="hub/social-strategy.html" class="csn-dd-item">Social Strategy</a>
+        <a href="hub/instagram-strategy.html" class="csn-dd-item">Instagram Strategy</a>
+        <div class="csn-divider"></div>
+        <a href="hub/brand.html" class="csn-dd-item">Brand &amp; Voice</a>
+        <a href="hub/positioning.html" class="csn-dd-item">Positioning &amp; ICP</a>
+        <a href="hub/competitors.html" class="csn-dd-item">Competitors</a>
+      </div>
+    </div>
+    <div class="csn-item csn-has-dd">
+      <a href="travis-briefing-2026-03-27.html" class="csn-link">Documents
+        <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="csn-dropdown">
+        <a href="travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a>
+        <a href="cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a>
+        <a href="q2-market-briefing.html" class="csn-dd-item">Q2 Market Briefing</a>
+      </div>
+    </div>
+    <div class="csn-item"><a href="actions.html" class="csn-link">Action Tracker</a></div>
+    <div class="csn-item active"><a href="content-calendar.html" class="csn-link">Content Calendar</a></div>
+  </div>
+  <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+<div id="csnMobileMenu" class="csn-mobile-menu">
+  <a href="index.html" class="csn-mob-link csn-mob-top">CEO Dashboard</a>
+  <a href="hub/operating-system.html" class="csn-mob-link csn-mob-top">Operating System</a>
+  <a href="hub/products.html" class="csn-mob-link csn-mob-top">Product</a>
+  <a href="hub/youtube-strategy.html" class="csn-mob-link csn-mob-top">Social Media</a>
+  <a href="travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-top">Documents</a>
+  <a href="actions.html" class="csn-mob-link csn-mob-top">Action Tracker</a>
+  <a href="content-calendar.html" class="csn-mob-link csn-mob-top csn-mob-active">Content Calendar</a>
+</div>
+
+<!-- ====== EXPANDED CARD MODAL ====== -->
+<div class="card-modal-overlay" id="cardModal">
+  <div class="card-modal">
+    <button class="card-modal-close" onclick="closeModal()">&times;</button>
+    <h3 id="modalTitle" style="font-size:16px;font-weight:700;margin-bottom:4px;">Edit Content</h3>
+    <div class="modal-form-grid" id="modalBody"></div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<!-- ====== MAIN CONTENT ====== -->
+<div class="document">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1>Content Calendar</h1>
+      <div class="timestamp" id="headerTimestamp"></div>
+    </div>
+    <div class="header-controls">
+      <div class="view-toggle" id="viewToggle">
+        <button class="view-btn active" data-view="calendar">Calendar</button>
+        <button class="view-btn" data-view="pipeline">Pipeline</button>
+        <button class="view-btn" data-view="all">All Content</button>
+      </div>
+      <button class="btn-add-source" onclick="toggleAddForm()">+ Add Source Video</button>
+    </div>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-value text-orange" id="statSources">0</div>
+      <div class="stat-label">Source Videos</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value text-blue" id="statPieces">0</div>
+      <div class="stat-label">Content Pieces</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value text-green" id="statReady">0</div>
+      <div class="stat-label">Ready to Post</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value text-purple" id="statPosted">0</div>
+      <div class="stat-label">Posted This Week</div>
+    </div>
+  </div>
+
+  <!-- Add Source Form -->
+  <div class="add-source-form" id="addSourceForm">
+    <div class="form-title">Add Source Video</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Video Title</label>
+        <input type="text" id="formTitle" placeholder="e.g. Bitcoin Is Down 48%. Is Now the Time to Buy?">
+      </div>
+      <div class="form-group">
+        <label>Video Link / URL</label>
+        <input type="url" id="formLink" placeholder="https://youtube.com/watch?v=...">
+      </div>
+      <div class="form-group">
+        <label>Date Recorded</label>
+        <input type="date" id="formDate">
+      </div>
+      <div class="form-group">
+        <label>Brand</label>
+        <select id="formBrand">
+          <option value="Ben">Ben Simpson</option>
+          <option value="Travis">Travis</option>
+          <option value="Sarn">Sarn</option>
+          <option value="Wealth Shift">Wealth Shift Podcast</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Topic / Theme</label>
+        <input type="text" id="formTopic" placeholder="e.g. Bitcoin accumulation framework">
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="formStatus">
+          <option value="idea">Idea</option>
+          <option value="scripting">Scripting</option>
+          <option value="filming">Filming</option>
+          <option value="editing">Editing</option>
+          <option value="ready">Ready</option>
+          <option value="published">Published</option>
+        </select>
+      </div>
+      <div class="form-group full-width">
+        <label>Script / Notes</label>
+        <textarea id="formScript" placeholder="Paste the full script or notes here..."></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-generate" onclick="createSourceVideo()">Create + Generate 7-Day Schedule</button>
+      <button class="btn-cancel" onclick="toggleAddForm()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <div class="filter-group" id="platformFilters">
+      <span class="filter-pill active" data-platform="all">All</span>
+      <span class="filter-pill" data-platform="youtube">📺 YouTube</span>
+      <span class="filter-pill" data-platform="instagram">📸 Instagram</span>
+      <span class="filter-pill" data-platform="x">🐦 X</span>
+      <span class="filter-pill" data-platform="linkedin">💼 LinkedIn</span>
+      <span class="filter-pill" data-platform="tiktok">🎵 TikTok</span>
+      <span class="filter-pill" data-platform="podcast">🎙️ Podcast</span>
+    </div>
+    <div class="filter-divider"></div>
+    <div class="filter-group" id="brandFilters">
+      <span class="filter-pill active" data-brand="all">All</span>
+      <span class="filter-pill brand-ben" data-brand="Ben">Ben</span>
+      <span class="filter-pill brand-travis" data-brand="Travis">Travis</span>
+      <span class="filter-pill brand-sarn" data-brand="Sarn">Sarn</span>
+      <span class="filter-pill brand-ws" data-brand="Wealth Shift">Wealth Shift</span>
+    </div>
+  </div>
+
+  <!-- Calendar View -->
+  <div class="calendar-view active" id="calendarView">
+    <div class="week-nav">
+      <button class="week-nav-btn" onclick="changeWeek(-1)">&lt; Prev</button>
+      <span class="week-nav-label" id="weekLabel"></span>
+      <button class="week-nav-btn" onclick="changeWeek(1)">Next &gt;</button>
+      <button class="week-nav-today" onclick="goToday()">Today</button>
+    </div>
+    <div class="calendar-grid" id="calendarGrid"></div>
+  </div>
+
+  <!-- Pipeline View -->
+  <div class="pipeline-view" id="pipelineView">
+    <div class="pipeline-container" id="pipelineContainer"></div>
+  </div>
+
+  <!-- All Content View -->
+  <div class="all-view" id="allView">
+    <table class="content-table" id="contentTable">
+      <thead>
+        <tr>
+          <th data-sort="date">Date</th>
+          <th data-sort="title">Title</th>
+          <th data-sort="platform">Platform</th>
+          <th data-sort="brand">Brand</th>
+          <th data-sort="type">Type</th>
+          <th data-sort="status">Status</th>
+          <th data-sort="source">Source Video</th>
+        </tr>
+      </thead>
+      <tbody id="contentTableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- 7-Day Cadence Template -->
+  <div class="cadence-section">
+    <div class="cadence-header" onclick="toggleCadence()">
+      <svg class="cadence-chevron collapsed" id="cadenceChevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      <h3>7-Day Content Cadence Template</h3>
+    </div>
+    <div class="cadence-content collapsed" id="cadenceContent">
+      <table class="cadence-table">
+        <thead>
+          <tr><th>Day</th><th>Content</th><th>Platforms</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Community Post</td><td>📸 Instagram, 💼 LinkedIn</td><td>Thought leadership, quote from video</td></tr>
+          <tr><td>2</td><td>X Thread + LinkedIn Article</td><td>🐦 X, 💼 LinkedIn</td><td>Key insights from video, 5-8 tweets</td></tr>
+          <tr><td>3</td><td>Carousel + Stories</td><td>📸 Instagram</td><td>5-8 slides summarizing key points</td></tr>
+          <tr><td>4</td><td>Greenscreen Reel</td><td>📸 Instagram, 🎵 TikTok</td><td>Reacting to or commenting on the topic</td></tr>
+          <tr><td>5</td><td>Short Clip #1</td><td>📺 YouTube Shorts, 📸 IG Reels, 🎵 TikTok</td><td>Best 60-sec moment from source video</td></tr>
+          <tr><td>6</td><td>Short Clip #2</td><td>📺 YouTube Shorts, 📸 IG Reels, 🎵 TikTok</td><td>Second best moment</td></tr>
+          <tr><td>7</td><td>Short Clip #3 + Recap Story</td><td>All platforms</td><td>Third clip + weekly recap story</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <div class="sync-time" id="footerSync"></div>
+    <div class="sync-note">Content calendar powered by BenBot. Add source videos to auto-generate 7-day content schedules.</div>
+  </div>
+
+</div>
+
+<script>
+// ====== CONSTANTS ======
+const TODAY = new Date().toISOString().split('T')[0];
+const DATA_VERSION = '1';
+const SOURCES_KEY = 'cc-source-videos';
+const CONTENT_KEY = 'cc-content-items';
+
+// Version check
+if (localStorage.getItem('cc-data-version') !== DATA_VERSION) {
+  localStorage.removeItem(SOURCES_KEY);
+  localStorage.removeItem(CONTENT_KEY);
+  localStorage.setItem('cc-data-version', DATA_VERSION);
+}
+
+// ====== BRAND HELPERS ======
+const BRAND_COLORS = { 'Ben': '#FC5C03', 'Travis': '#3B82F6', 'Sarn': '#08C394', 'Wealth Shift': '#654FFC' };
+const BRAND_CLASS = { 'Ben': 'brand-bar-ben', 'Travis': 'brand-bar-travis', 'Sarn': 'brand-bar-sarn', 'Wealth Shift': 'brand-bar-ws' };
+
+const PLATFORM_EMOJI = {
+  'youtube': '📺', 'instagram': '📸', 'x': '🐦', 'linkedin': '💼',
+  'tiktok': '🎵', 'podcast': '🎙️', 'all': '📢'
+};
+
+function platformEmojis(platforms) {
+  return platforms.map(p => PLATFORM_EMOJI[p] || '').join(' ');
+}
+
+// ====== 7-DAY CADENCE ======
+const CADENCE = [
+  { day: 1, type: 'Community Post', contentType: 'Post', platforms: ['instagram', 'linkedin'], notes: 'Thought leadership, quote from video' },
+  { day: 2, type: 'X Thread + LinkedIn Article', contentType: 'Thread', platforms: ['x', 'linkedin'], notes: 'Key insights from video, 5-8 tweets' },
+  { day: 3, type: 'Carousel + Stories', contentType: 'Carousel', platforms: ['instagram'], notes: '5-8 slides summarizing key points' },
+  { day: 4, type: 'Greenscreen Reel', contentType: 'Reel', platforms: ['instagram', 'tiktok'], notes: 'Reacting to or commenting on the topic' },
+  { day: 5, type: 'Short Clip #1', contentType: 'Short', platforms: ['youtube', 'instagram', 'tiktok'], notes: 'Best 60-sec moment from source video' },
+  { day: 6, type: 'Short Clip #2', contentType: 'Short', platforms: ['youtube', 'instagram', 'tiktok'], notes: 'Second best moment' },
+  { day: 7, type: 'Short Clip #3 + Recap Story', contentType: 'Short', platforms: ['youtube', 'instagram', 'tiktok', 'x', 'linkedin'], notes: 'Third clip + weekly recap story' },
+];
+
+// ====== DATA MANAGEMENT ======
+function loadSources() {
+  try { return JSON.parse(localStorage.getItem(SOURCES_KEY)) || []; } catch(e) { return []; }
+}
+function saveSources(data) { localStorage.setItem(SOURCES_KEY, JSON.stringify(data)); }
+function loadContent() {
+  try { return JSON.parse(localStorage.getItem(CONTENT_KEY)) || []; } catch(e) { return []; }
+}
+function saveContent(data) { localStorage.setItem(CONTENT_KEY, JSON.stringify(data)); }
+
+function addDays(dateStr, days) {
+  const d = new Date(dateStr + 'T00:00:00');
+  d.setDate(d.getDate() + days);
+  return d.toISOString().split('T')[0];
+}
+
+function generateContentFromSource(source) {
+  const items = [];
+  CADENCE.forEach(c => {
+    items.push({
+      id: 'c-' + Date.now() + '-' + Math.random().toString(36).slice(2,8),
+      sourceId: source.id,
+      sourceTitle: source.title,
+      title: c.type + ' - ' + source.title,
+      type: c.type,
+      contentType: c.contentType,
+      platforms: c.platforms,
+      brand: source.brand,
+      status: 'draft',
+      scheduledDate: addDays(source.dateRecorded, c.day),
+      scheduledTime: '',
+      script: '',
+      notes: c.notes,
+    });
+  });
+  return items;
+}
+
+// ====== SAMPLE DATA ======
+function initSampleData() {
+  if (loadSources().length > 0) return;
+
+  const samples = [
+    {
+      id: 'sv-1',
+      title: 'This Altcoin Is Up 70% While Everything Else Bleeds (Hyperliquid)',
+      link: 'https://youtube.com/watch?v=example',
+      dateRecorded: '2026-03-29',
+      brand: 'Ben',
+      topic: 'Hyperliquid analysis - why it outperformed in the bear market',
+      script: '',
+      status: 'published',
+    },
+    {
+      id: 'sv-2',
+      title: 'Bitcoin Is Down 48%. Is Now the Time to Buy?',
+      link: '',
+      dateRecorded: '2026-03-31',
+      brand: 'Ben',
+      topic: 'Bitcoin accumulation framework - 50/100/200 week MAs + MVRV ratio',
+      script: 'Opening hook: Bitcoin is down 48% from its all time high. Every headline is screaming bear market. But what does the data actually show?\n\n[Walk through 200-week MA framework]\n[Show MVRV ratio overlay]\n[Three tiers of accumulation]\n[Case study: what happened last time we were at these levels]\n[CTA: strategy session]',
+      status: 'scripting',
+    },
+    {
+      id: 'sv-3',
+      title: 'Wealth Shift Ep. 47 - Market Update + Trump Tariffs',
+      link: '',
+      dateRecorded: '2026-03-28',
+      brand: 'Wealth Shift',
+      topic: 'Weekly market update, tariff impact on digital assets',
+      script: '',
+      status: 'editing',
+    },
+  ];
+
+  saveSources(samples);
+
+  let allContent = [];
+  samples.forEach(s => {
+    allContent = allContent.concat(generateContentFromSource(s));
+  });
+  saveContent(allContent);
+}
+
+initSampleData();
+
+// ====== STATE ======
+let currentView = 'calendar';
+let currentWeekStart = getMonday(new Date());
+let activePlatformFilter = 'all';
+let activeBrandFilter = 'all';
+let sortColumn = 'date';
+let sortDir = 1;
+
+function getMonday(d) {
+  const date = new Date(d);
+  const day = date.getDay();
+  const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+  date.setDate(diff);
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+// ====== FILTERING ======
+function filterContent(items) {
+  return items.filter(item => {
+    if (activePlatformFilter !== 'all') {
+      if (!item.platforms || !item.platforms.includes(activePlatformFilter)) return false;
+    }
+    if (activeBrandFilter !== 'all') {
+      if (item.brand !== activeBrandFilter) return false;
+    }
+    return true;
+  });
+}
+
+// ====== TIMESTAMPS ======
+function updateTimestamps() {
+  const now = new Date();
+  const opts = { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Australia/Melbourne' };
+  const ts = now.toLocaleString('en-AU', opts) + ' AEST';
+  document.getElementById('headerTimestamp').textContent = 'Last updated: ' + ts;
+  document.getElementById('footerSync').textContent = 'Last synced: ' + ts;
+}
+
+// ====== STATS ======
+function updateStats() {
+  const sources = loadSources();
+  const content = loadContent();
+  const now = new Date();
+  const weekStart = getMonday(now);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekEnd.getDate() + 6);
+
+  const wsStr = weekStart.toISOString().split('T')[0];
+  const weStr = weekEnd.toISOString().split('T')[0];
+
+  document.getElementById('statSources').textContent = sources.length;
+  document.getElementById('statPieces').textContent = content.length;
+  document.getElementById('statReady').textContent = content.filter(c => c.status === 'ready' || c.status === 'scheduled').length;
+  document.getElementById('statPosted').textContent = content.filter(c =>
+    (c.status === 'posted' || c.status === 'published') && c.scheduledDate >= wsStr && c.scheduledDate <= weStr
+  ).length;
+}
+
+// ====== VIEW SWITCHING ======
+function switchView(view) {
+  currentView = view;
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+  document.getElementById('calendarView').classList.toggle('active', view === 'calendar');
+  document.getElementById('pipelineView').classList.toggle('active', view === 'pipeline');
+  document.getElementById('allView').classList.toggle('active', view === 'all');
+  renderCurrentView();
+}
+
+document.querySelectorAll('.view-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchView(btn.dataset.view));
+});
+
+// ====== FILTER CLICKS ======
+document.querySelectorAll('#platformFilters .filter-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    document.querySelectorAll('#platformFilters .filter-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    activePlatformFilter = pill.dataset.platform;
+    renderCurrentView();
+  });
+});
+document.querySelectorAll('#brandFilters .filter-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    document.querySelectorAll('#brandFilters .filter-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    activeBrandFilter = pill.dataset.brand;
+    renderCurrentView();
+  });
+});
+
+// ====== ADD SOURCE FORM ======
+function toggleAddForm() {
+  document.getElementById('addSourceForm').classList.toggle('open');
+}
+
+function createSourceVideo() {
+  const title = document.getElementById('formTitle').value.trim();
+  if (!title) { alert('Please enter a video title.'); return; }
+
+  const source = {
+    id: 'sv-' + Date.now(),
+    title: title,
+    link: document.getElementById('formLink').value.trim(),
+    dateRecorded: document.getElementById('formDate').value || TODAY,
+    brand: document.getElementById('formBrand').value,
+    topic: document.getElementById('formTopic').value.trim(),
+    script: document.getElementById('formScript').value.trim(),
+    status: document.getElementById('formStatus').value,
+  };
+
+  const sources = loadSources();
+  sources.push(source);
+  saveSources(sources);
+
+  const newContent = generateContentFromSource(source);
+  const content = loadContent();
+  saveContent(content.concat(newContent));
+
+  // Reset form
+  document.getElementById('formTitle').value = '';
+  document.getElementById('formLink').value = '';
+  document.getElementById('formDate').value = '';
+  document.getElementById('formTopic').value = '';
+  document.getElementById('formScript').value = '';
+  toggleAddForm();
+
+  renderAll();
+}
+
+// ====== CALENDAR VIEW ======
+function formatDate(d) {
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return d.getDate() + ' ' + months[d.getMonth()];
+}
+
+function changeWeek(dir) {
+  currentWeekStart = new Date(currentWeekStart);
+  currentWeekStart.setDate(currentWeekStart.getDate() + (dir * 7));
+  renderCalendar();
+}
+
+function goToday() {
+  currentWeekStart = getMonday(new Date());
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const grid = document.getElementById('calendarGrid');
+  const content = filterContent(loadContent());
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+  // Week label
+  const weekEnd = new Date(currentWeekStart);
+  weekEnd.setDate(weekEnd.getDate() + 6);
+  document.getElementById('weekLabel').textContent = formatDate(currentWeekStart) + ' - ' + formatDate(weekEnd) + ' ' + weekEnd.getFullYear();
+
+  let html = '';
+  // Day headers
+  days.forEach(d => { html += '<div class="cal-day-header">' + d + '</div>'; });
+
+  // Day cells
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(currentWeekStart);
+    date.setDate(date.getDate() + i);
+    const dateStr = date.toISOString().split('T')[0];
+    const isToday = dateStr === TODAY;
+    const dayContent = content.filter(c => c.scheduledDate === dateStr);
+
+    html += '<div class="cal-day' + (isToday ? ' today' : '') + '">';
+    html += '<div class="cal-day-num">' + date.getDate() + (isToday ? ' - Today' : '') + '</div>';
+
+    dayContent.forEach(item => {
+      const brandClass = BRAND_CLASS[item.brand] || '';
+      const statusClass = getStatusDotClass(item);
+      html += '<div class="cal-card ' + brandClass + '" onclick="openCardModal(\'' + item.id + '\')">';
+      html += '<span class="card-emoji">' + platformEmojis(item.platforms || []) + '</span>';
+      html += '<span class="card-text">' + escHtml(item.contentType || item.type) + '</span>';
+      html += '<span class="status-dot ' + statusClass + '"></span>';
+      html += '</div>';
+    });
+
+    html += '</div>';
+  }
+
+  grid.innerHTML = html;
+}
+
+function getStatusDotClass(item) {
+  const s = item.status;
+  if (s === 'posted' || s === 'published') return 'posted';
+  if (s === 'scheduled') return 'scheduled';
+  if (s === 'ready') return 'ready';
+  if (s === 'draft' || s === 'scripting' || s === 'filming' || s === 'editing') {
+    // Check if overdue
+    if (item.scheduledDate && item.scheduledDate < TODAY) return 'overdue';
+    return 'draft';
+  }
+  if (s === 'idea') return 'idea';
+  return 'draft';
+}
+
+// ====== PIPELINE VIEW ======
+const PIPELINE_STATUSES = [
+  { key: 'idea', label: 'Idea' },
+  { key: 'scripting', label: 'Scripting' },
+  { key: 'filming', label: 'Filming' },
+  { key: 'editing', label: 'Editing' },
+  { key: 'ready', label: 'Ready' },
+  { key: 'scheduled', label: 'Scheduled' },
+  { key: 'posted', label: 'Posted' },
+];
+
+// Map draft to idea for pipeline display
+function pipelineStatus(s) {
+  if (s === 'draft') return 'idea';
+  if (s === 'published') return 'posted';
+  return s;
+}
+
+function renderPipeline() {
+  const container = document.getElementById('pipelineContainer');
+  const content = filterContent(loadContent());
+
+  let html = '';
+  PIPELINE_STATUSES.forEach(col => {
+    const items = content.filter(c => pipelineStatus(c.status) === col.key);
+    html += '<div class="pipeline-col">';
+    html += '<div class="pipeline-col-header">' + col.label + '<span class="pipeline-col-count">' + items.length + '</span></div>';
+
+    items.forEach(item => {
+      const brandClass = BRAND_CLASS[item.brand] || '';
+      html += '<div class="pipe-card ' + brandClass + '" onclick="openCardModal(\'' + item.id + '\')">';
+      html += '<div class="pipe-card-title">' + platformEmojis(item.platforms || []) + ' ' + escHtml(truncate(item.title, 50)) + '</div>';
+      html += '<div class="pipe-card-meta">';
+      html += '<span>' + (item.scheduledDate || '') + '</span>';
+      html += '<span style="color:' + (BRAND_COLORS[item.brand] || '#666') + ';font-weight:600;">' + escHtml(item.brand) + '</span>';
+      html += '</div>';
+      html += '<select onchange="quickStatusChange(\'' + item.id + '\', this.value); event.stopPropagation();">';
+      PIPELINE_STATUSES.forEach(s => {
+        html += '<option value="' + s.key + '"' + (pipelineStatus(item.status) === s.key ? ' selected' : '') + '>' + s.label + '</option>';
+      });
+      html += '</select>';
+      html += '</div>';
+    });
+
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+function quickStatusChange(id, newStatus) {
+  const content = loadContent();
+  const item = content.find(c => c.id === id);
+  if (item) {
+    item.status = newStatus;
+    saveContent(content);
+    renderAll();
+  }
+}
+
+// ====== ALL CONTENT VIEW ======
+function renderAllContent() {
+  const tbody = document.getElementById('contentTableBody');
+  let content = filterContent(loadContent());
+
+  // Sort
+  content.sort((a, b) => {
+    let va, vb;
+    switch(sortColumn) {
+      case 'date': va = a.scheduledDate || ''; vb = b.scheduledDate || ''; break;
+      case 'title': va = a.title.toLowerCase(); vb = b.title.toLowerCase(); break;
+      case 'platform': va = (a.platforms || []).join(','); vb = (b.platforms || []).join(','); break;
+      case 'brand': va = a.brand; vb = b.brand; break;
+      case 'type': va = a.contentType || a.type; vb = b.contentType || b.type; break;
+      case 'status': va = a.status; vb = b.status; break;
+      case 'source': va = a.sourceTitle || ''; vb = b.sourceTitle || ''; break;
+      default: va = a.scheduledDate || ''; vb = b.scheduledDate || '';
+    }
+    if (va < vb) return -1 * sortDir;
+    if (va > vb) return 1 * sortDir;
+    return 0;
+  });
+
+  let html = '';
+  content.forEach(item => {
+    const brandColor = BRAND_COLORS[item.brand] || '#666';
+    const statusClass = 'status-' + (item.status || 'draft');
+    html += '<tr onclick="openCardModal(\'' + item.id + '\')">';
+    html += '<td>' + (item.scheduledDate || '-') + '</td>';
+    html += '<td style="font-weight:500;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(item.title) + '</td>';
+    html += '<td>' + platformEmojis(item.platforms || []) + '</td>';
+    html += '<td><span class="table-brand-dot" style="background:' + brandColor + ';"></span>' + escHtml(item.brand) + '</td>';
+    html += '<td>' + escHtml(item.contentType || item.type) + '</td>';
+    html += '<td><span class="table-status-badge ' + statusClass + '">' + escHtml(item.status) + '</span></td>';
+    html += '<td style="font-size:12px;color:var(--text-muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(item.sourceTitle || '-') + '</td>';
+    html += '</tr>';
+  });
+
+  tbody.innerHTML = html;
+}
+
+// Sort clicks
+document.querySelectorAll('.content-table th').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.sort;
+    if (sortColumn === col) { sortDir *= -1; }
+    else { sortColumn = col; sortDir = 1; }
+    renderAllContent();
+  });
+});
+
+// ====== CARD MODAL ======
+let editingItemId = null;
+
+function openCardModal(id) {
+  editingItemId = id;
+  const content = loadContent();
+  const item = content.find(c => c.id === id);
+  if (!item) return;
+
+  document.getElementById('modalTitle').textContent = 'Edit: ' + truncate(item.title, 60);
+
+  const allStatuses = ['idea','draft','scripting','filming','editing','ready','scheduled','posted'];
+  const allTypes = ['Long-form','Short','Reel','Carousel','Thread','Story','Article','Post'];
+  const allBrands = ['Ben','Travis','Sarn','Wealth Shift'];
+
+  const body = document.getElementById('modalBody');
+  body.innerHTML = `
+    <div class="form-group full-width">
+      <label>Title</label>
+      <input type="text" id="modalItemTitle" value="${escAttr(item.title)}">
+    </div>
+    <div class="form-group">
+      <label>Platforms</label>
+      <input type="text" id="modalItemPlatforms" value="${escAttr((item.platforms || []).join(', '))}" placeholder="instagram, x, tiktok">
+    </div>
+    <div class="form-group">
+      <label>Brand</label>
+      <select id="modalItemBrand">
+        ${allBrands.map(b => '<option value="' + b + '"' + (item.brand === b ? ' selected' : '') + '>' + b + '</option>').join('')}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Content Type</label>
+      <select id="modalItemType">
+        ${allTypes.map(t => '<option value="' + t + '"' + ((item.contentType||item.type) === t ? ' selected' : '') + '>' + t + '</option>').join('')}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select id="modalItemStatus">
+        ${allStatuses.map(s => '<option value="' + s + '"' + (item.status === s ? ' selected' : '') + '>' + s + '</option>').join('')}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Scheduled Date</label>
+      <input type="date" id="modalItemDate" value="${item.scheduledDate || ''}">
+    </div>
+    <div class="form-group">
+      <label>Scheduled Time</label>
+      <input type="time" id="modalItemTime" value="${item.scheduledTime || ''}">
+    </div>
+    <div class="form-group full-width">
+      <label>Script / Copy</label>
+      <textarea id="modalItemScript" rows="5">${escHtml(item.script || '')}</textarea>
+    </div>
+    <div class="form-group full-width">
+      <label>Notes</label>
+      <textarea id="modalItemNotes" rows="3">${escHtml(item.notes || '')}</textarea>
+    </div>
+    ${item.sourceTitle ? '<div class="form-group full-width"><label>Source Video</label><div style="font-size:13px;color:var(--text-muted);padding:8px 0;">' + escHtml(item.sourceTitle) + '</div></div>' : ''}
+  `;
+
+  const actions = document.getElementById('modalActions');
+  actions.innerHTML = `
+    <button class="btn-save-modal" onclick="saveModal()">Save Changes</button>
+    <button class="btn-posted" onclick="markAsPosted()">Mark as Posted</button>
+    <button class="btn-delete" onclick="deleteItem()">Delete</button>
+  `;
+
+  document.getElementById('cardModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('cardModal').classList.remove('open');
+  editingItemId = null;
+}
+
+// Close on overlay click
+document.getElementById('cardModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+function saveModal() {
+  if (!editingItemId) return;
+  const content = loadContent();
+  const item = content.find(c => c.id === editingItemId);
+  if (!item) return;
+
+  item.title = document.getElementById('modalItemTitle').value.trim();
+  item.platforms = document.getElementById('modalItemPlatforms').value.split(',').map(s => s.trim()).filter(Boolean);
+  item.brand = document.getElementById('modalItemBrand').value;
+  item.contentType = document.getElementById('modalItemType').value;
+  item.status = document.getElementById('modalItemStatus').value;
+  item.scheduledDate = document.getElementById('modalItemDate').value;
+  item.scheduledTime = document.getElementById('modalItemTime').value;
+  item.script = document.getElementById('modalItemScript').value;
+  item.notes = document.getElementById('modalItemNotes').value;
+
+  saveContent(content);
+  closeModal();
+  renderAll();
+}
+
+function markAsPosted() {
+  if (!editingItemId) return;
+  const content = loadContent();
+  const item = content.find(c => c.id === editingItemId);
+  if (item) {
+    item.status = 'posted';
+    saveContent(content);
+    closeModal();
+    renderAll();
+  }
+}
+
+function deleteItem() {
+  if (!editingItemId) return;
+  if (!confirm('Delete this content item?')) return;
+  let content = loadContent();
+  content = content.filter(c => c.id !== editingItemId);
+  saveContent(content);
+  closeModal();
+  renderAll();
+}
+
+// ====== CADENCE TOGGLE ======
+function toggleCadence() {
+  document.getElementById('cadenceContent').classList.toggle('collapsed');
+  document.getElementById('cadenceChevron').classList.toggle('collapsed');
+}
+
+// ====== ADD FORM TOGGLE ======
+// Already defined above
+
+// ====== HELPERS ======
+function escHtml(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escAttr(s) { return String(s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function truncate(s, n) { return s && s.length > n ? s.slice(0, n) + '...' : (s || ''); }
+
+// ====== RENDER ALL ======
+function renderCurrentView() {
+  if (currentView === 'calendar') renderCalendar();
+  else if (currentView === 'pipeline') renderPipeline();
+  else renderAllContent();
+}
+
+function renderAll() {
+  updateTimestamps();
+  updateStats();
+  renderCurrentView();
+}
+
+// ====== INIT ======
+renderAll();
+
+// Set default form date
+document.getElementById('formDate').value = TODAY;
+</script>
+</body>
+</html>
