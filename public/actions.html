@@ -185,7 +185,7 @@
 
   /* ====== MAIN CONTENT ====== */
   .document {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 32px 24px 80px;
   }
@@ -197,7 +197,13 @@
     padding: 28px 32px 24px;
     margin-bottom: 24px;
     color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
   }
+  .page-header-left {}
   .page-header h1 {
     font-size: 24px;
     font-weight: 700;
@@ -209,6 +215,28 @@
     font-size: 12px;
     color: rgba(255,255,255,0.5);
   }
+  .view-toggle {
+    display: flex;
+    gap: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 3px;
+  }
+  .view-btn {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 18px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    color: rgba(255,255,255,0.6);
+    background: transparent;
+  }
+  .view-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+  .view-btn.active { color: var(--dark); background: #fff; }
 
   /* ====== STATS BAR ====== */
   .stats-bar {
@@ -223,6 +251,7 @@
     border-radius: var(--radius);
     padding: 16px 18px;
     text-align: center;
+    transition: border-color 0.2s;
   }
   .stat-value {
     font-family: 'Plus Jakarta Sans', sans-serif;
@@ -239,120 +268,207 @@
     margin-top: 4px;
   }
   .stat-value.text-orange { color: var(--orange); }
+  .stat-value.text-blue { color: var(--blue); }
   .stat-value.text-red { color: var(--red); }
   .stat-value.text-amber { color: var(--amber); }
   .stat-value.text-green { color: var(--green); }
 
   @media (max-width: 640px) {
     .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .page-header { flex-direction: column; align-items: flex-start; }
   }
 
-  /* ====== FILTER TABS ====== */
-  .filter-tabs {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 28px;
-    flex-wrap: wrap;
-  }
-  .filter-tab {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 8px 16px;
-    border-radius: 8px;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-  .filter-tab:hover { color: var(--orange); border-color: var(--orange); }
-  .filter-tab.active {
-    background: var(--orange);
-    color: #fff;
-    border-color: var(--orange);
-  }
-  .filter-tab .count {
-    font-family: 'Source Code Pro', monospace;
-    font-size: 10px;
-    background: rgba(0,0,0,0.1);
-    padding: 1px 6px;
-    border-radius: 4px;
-    margin-left: 4px;
-  }
-  .filter-tab.active .count { background: rgba(255,255,255,0.25); }
-
-  /* ====== PERSON SECTION ====== */
-  .person-section {
-    margin-bottom: 28px;
-  }
-  .person-header {
+  /* ====== SECTION HEADERS ====== */
+  .section-header {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 18px;
-    border-radius: var(--radius) var(--radius) 0 0;
-    color: #fff;
+    margin-bottom: 16px;
+    margin-top: 32px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .section-header:first-child { margin-top: 0; }
+  .section-header h2 {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .section-chevron {
+    transition: transform 0.25s;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .section-chevron.collapsed { transform: rotate(-90deg); }
+  .section-badge {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: var(--light-orange);
+    color: var(--orange);
+    font-weight: 600;
+  }
+  .section-content {
+    overflow: hidden;
+    transition: max-height 0.35s ease, opacity 0.25s ease;
+    max-height: 3000px;
+    opacity: 1;
+  }
+  .section-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+  }
+
+  /* ====== MEETINGS LOG ====== */
+  .meeting-card {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    margin-bottom: 10px;
+    transition: border-color 0.15s;
+  }
+  .meeting-card:hover { border-color: #ccc; }
+  .meeting-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .meeting-expand-icon {
+    color: var(--text-muted);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .meeting-expand-icon.open { transform: rotate(90deg); }
+  .meeting-info { flex: 1; min-width: 0; }
+  .meeting-title {
     font-family: 'Plus Jakarta Sans', sans-serif;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 14px;
+    color: var(--dark);
   }
-  .person-header .person-count {
+  .meeting-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+    align-items: center;
+  }
+  .meeting-meta .tag { font-size: 10px; }
+  .meeting-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 0 0 0 28px;
+  }
+  .meeting-details.open {
+    max-height: 500px;
+    padding: 14px 0 4px 28px;
+  }
+  .meeting-details p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+  .meeting-empty {
+    text-align: center;
+    padding: 40px 24px;
+    color: var(--text-muted);
+    font-size: 14px;
+    background: #fff;
+    border: 1.5px dashed var(--border);
+    border-radius: var(--radius);
+  }
+  .meeting-empty-icon { font-size: 28px; margin-bottom: 8px; }
+
+  /* ====== PRIORITY GROUP HEADERS ====== */
+  .priority-group {
+    margin-bottom: 20px;
+  }
+  .priority-group-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding: 0 4px;
+  }
+  .priority-group-header h3 {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .priority-group-header .group-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .priority-group-header .group-count {
     font-family: 'Source Code Pro', monospace;
-    font-size: 11px;
-    background: rgba(255,255,255,0.2);
-    padding: 2px 8px;
-    border-radius: 4px;
-    margin-left: auto;
+    font-size: 10px;
+    color: var(--text-muted);
   }
-  .ph-orange { background: var(--orange); }
-  .ph-blue { background: var(--blue); }
-  .ph-purple { background: var(--purple); }
-  .ph-red { background: var(--red); }
-  .ph-green { background: var(--green); }
-  .ph-grey { background: var(--grey); }
 
   /* ====== ACTION CARDS ====== */
-  .actions-list {
-    border: 1.5px solid var(--border);
-    border-top: none;
-    border-radius: 0 0 var(--radius) var(--radius);
-    overflow: hidden;
-  }
   .action-card {
     display: flex;
     align-items: flex-start;
     gap: 12px;
     padding: 14px 18px;
     background: #fff;
-    border-bottom: 1px solid var(--border);
-    transition: background 0.1s;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 6px;
+    transition: all 0.3s ease;
+    position: relative;
   }
-  .action-card:last-child { border-bottom: none; }
-  .action-card:hover { background: #FAFAFA; }
-  .action-card.done { opacity: 0.5; }
-  .action-card.done .action-desc { text-decoration: line-through; }
+  .action-card:hover { border-color: #ccc; }
+  .action-card.completing {
+    opacity: 0;
+    transform: translateX(20px) scale(0.98);
+  }
+  .action-card.is-done {
+    opacity: 0.5;
+    background: #FAFAFA;
+  }
+  .action-card.is-done .action-desc { text-decoration: line-through; color: var(--text-muted); }
+  .action-card.reassigning {
+    animation: pulse-border 0.4s ease;
+  }
+  @keyframes pulse-border {
+    0% { border-color: var(--border); }
+    50% { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(252,92,3,0.1); }
+    100% { border-color: var(--border); }
+  }
 
   .action-checkbox {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     border: 2px solid var(--border);
-    border-radius: 5px;
+    border-radius: 6px;
     flex-shrink: 0;
-    margin-top: 2px;
+    margin-top: 1px;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #fff;
   }
-  .action-card.done .action-checkbox {
+  .action-checkbox:hover { border-color: var(--green); background: #F0FDF4; }
+  .action-checkbox.checked {
     background: var(--green);
     border-color: var(--green);
   }
-  .action-card.done .action-checkbox::after {
+  .action-checkbox.checked::after {
     content: "\2713";
     color: #fff;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
   }
 
@@ -371,6 +487,14 @@
     align-items: center;
   }
 
+  .action-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-shrink: 0;
+    align-items: flex-end;
+  }
+
   /* Tags & Badges */
   .tag {
     display: inline-block;
@@ -385,17 +509,82 @@
   .tag-urgent { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; font-weight: 600; }
   .tag-thisweek { background: #FFF7ED; color: #92400E; border: 1px solid #FDE68A; }
   .tag-backlog { background: #F3F4F6; color: #6B7280; border: 1px solid #E5E7EB; }
+  .tag-delegate-note {
+    background: #F5F3FF;
+    color: var(--purple);
+    border: 1px solid #DDD6FE;
+    font-size: 10px;
+    font-style: italic;
+  }
 
-  .badge-open { background: #DBEAFE; color: #1D4ED8; }
-  .badge-inprogress { background: #FFF7ED; color: #92400E; }
-  .badge-waiting { background: #F5F3FF; color: var(--purple); }
-  .badge-done { background: #D1FAE5; color: #065F46; }
+  /* Assignee badges */
+  .assignee-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+  }
+  .assignee-ben { background: var(--light-orange); color: var(--orange); }
+  .assignee-ea { background: #DBEAFE; color: #1D4ED8; }
+  .assignee-delegate { background: #F5F3FF; color: var(--purple); }
 
   /* Deadline colors */
   .deadline-overdue { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; }
   .deadline-today { background: #FFFBEB; color: #92400E; border: 1px solid #FDE68A; }
   .deadline-future { background: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0; }
-  .deadline-past { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; }
+
+  /* Custom select dropdowns */
+  .custom-select {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 24px 4px 8px;
+    border-radius: 6px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--dark);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    min-width: 90px;
+    transition: border-color 0.15s;
+  }
+  .custom-select:hover { border-color: var(--orange); }
+  .custom-select:focus { outline: none; border-color: var(--orange); box-shadow: 0 0 0 3px rgba(252,92,3,0.1); }
+  .select-assignee-ben { border-color: var(--orange); background-color: #FFFAF5; }
+  .select-assignee-ea { border-color: var(--blue); background-color: #F0F7FF; }
+  .select-assignee-delegate { border-color: var(--purple); background-color: #FAF5FF; }
+  .select-status-done { border-color: var(--green); background-color: #F0FDF4; }
+  .select-status-inprogress { border-color: var(--amber); background-color: #FFFBEB; }
+  .select-status-waiting { border-color: var(--purple); background-color: #FAF5FF; }
+
+  /* ====== COMPLETED SECTION ====== */
+  .completed-section {
+    margin-top: 32px;
+    opacity: 0.7;
+  }
+  .completed-section:hover { opacity: 1; }
+  .completed-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .completed-header h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
 
   /* ====== FOOTER ====== */
   .page-footer {
@@ -418,8 +607,15 @@
     line-height: 1.5;
   }
 
-  /* ====== HIDDEN SECTIONS ====== */
-  .hidden { display: none !important; }
+  /* ====== PRINT STYLES ====== */
+  @media print {
+    body { padding-top: 0 !important; }
+    .csn-bar, .csn-mobile-menu, .view-toggle, .custom-select, .action-checkbox { display: none !important; }
+    .action-card { break-inside: avoid; border: 1px solid #ddd; }
+    .document { max-width: 100%; padding: 20px; }
+    .page-header { background: #1A1A2E !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .assignee-badge, .tag { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
 </style>
 </head>
 <body>
@@ -503,166 +699,179 @@
 
   <!-- Page Header -->
   <div class="page-header">
-    <h1>CEO Action Tracker</h1>
-    <div class="timestamp">Last updated: 31 March 2026, 2:15pm AEST</div>
+    <div class="page-header-left">
+      <h1>CEO Action Tracker</h1>
+      <div class="timestamp">Last updated: 31 March 2026, 2:15pm AEST</div>
+    </div>
+    <div class="view-toggle" id="viewToggle">
+      <button class="view-btn active" data-view="ben">Ben's View</button>
+      <button class="view-btn" data-view="ea">Alice's View</button>
+      <button class="view-btn" data-view="all">All</button>
+    </div>
   </div>
 
   <!-- Stats Bar -->
   <div class="stats-bar" id="statsBar">
     <div class="stat-card">
-      <div class="stat-value text-orange" id="statTotal">-</div>
-      <div class="stat-label">Open Actions</div>
+      <div class="stat-value text-orange" id="statBen">-</div>
+      <div class="stat-label">Open (Ben)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value text-blue" id="statEA">-</div>
+      <div class="stat-label">Open (Alice)</div>
     </div>
     <div class="stat-card">
       <div class="stat-value text-red" id="statOverdue">-</div>
       <div class="stat-label">Overdue</div>
     </div>
     <div class="stat-card">
-      <div class="stat-value text-amber" id="statToday">-</div>
-      <div class="stat-label">Due Today</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value text-green" id="statWeek">-</div>
-      <div class="stat-label">Due This Week</div>
+      <div class="stat-value text-green" id="statMeetings">0</div>
+      <div class="stat-label">Meetings This Week</div>
     </div>
   </div>
 
-  <!-- Filter Tabs -->
-  <div class="filter-tabs" id="filterTabs">
-    <button class="filter-tab active" data-filter="all">All</button>
-    <button class="filter-tab" data-filter="ben">Ben Only</button>
-    <button class="filter-tab" data-filter="delegate">To Delegate</button>
-    <button class="filter-tab" data-filter="waiting">Waiting On</button>
-    <button class="filter-tab" data-filter="done">Completed</button>
+  <!-- Section 1: Meetings Log -->
+  <div class="section-header" onclick="toggleSection('meetings')">
+    <svg class="section-chevron" id="meetingsChevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    <h2>Meetings Log</h2>
+    <span class="section-badge" id="meetingCount">0 meetings</span>
+  </div>
+  <div class="section-content" id="meetingsContent">
+    <div id="meetingsContainer">
+      <div class="meeting-empty">
+        <div class="meeting-empty-icon">&#128197;</div>
+        No meetings processed yet. Drop recordings in #executive-assistant to populate.
+      </div>
+    </div>
   </div>
 
-  <!-- Action Sections Container -->
-  <div id="sectionsContainer"></div>
+  <!-- Section 2: Action Items -->
+  <div class="section-header" onclick="toggleSection('actions')" style="margin-top:32px;">
+    <svg class="section-chevron" id="actionsChevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    <h2>Action Items</h2>
+    <span class="section-badge" id="actionCount">- open</span>
+  </div>
+  <div class="section-content" id="actionsContent">
+    <div id="actionsContainer"></div>
+    <!-- Completed section -->
+    <div class="completed-section" id="completedSection" style="display:none;">
+      <div class="completed-header" onclick="toggleSection('completed')">
+        <svg class="section-chevron collapsed" id="completedChevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        <h3>Completed (<span id="completedCount">0</span>)</h3>
+      </div>
+      <div class="section-content collapsed" id="completedContent">
+        <div id="completedContainer"></div>
+      </div>
+    </div>
+  </div>
 
   <!-- Footer -->
   <div class="page-footer">
     <div class="sync-time">Last synced: 31 March 2026, 2:15pm AEST</div>
-    <div class="sync-note">Actions are updated by BenBot from meetings, conversations, and heartbeat checks. Drop meeting recordings in #executive-assistant to auto-populate.</div>
+    <div class="sync-note">Actions are updated by BenBot from meetings, conversations, and heartbeat checks.<br>Drop meeting recordings in #executive-assistant to auto-populate.</div>
   </div>
 
 </div>
 
 <script>
-// ====== ACTION DATA ======
+// ====== DATA ======
 const TODAY = '2026-03-31';
 
-const people = [
-  {
-    name: 'Ben Simpson (CEO)',
-    colorClass: 'ph-orange',
-    category: 'ben',
-    actions: [
-      { desc: 'URGENT: Call Aaron re API security', source: 'Aaron video message', deadline: '2026-03-31', priority: 'urgent', status: 'open' },
-      { desc: 'URGENT: Change Pipedrive password', source: 'Aaron security flag', deadline: '2026-03-31', priority: 'urgent', status: 'open' },
-      { desc: 'Answer VTO questions (Core Values, Core Focus, 10-Year Target, 3-Year Picture, 1-Year Plan)', source: 'VTO doc build', deadline: '2026-03-30', priority: 'thisweek', status: 'open' },
-      { desc: 'Provide calendar rules, email triage rules, travel preferences', source: 'EA Bot setup', deadline: '2026-03-30', priority: 'thisweek', status: 'open' },
-      { desc: 'Send iPrefer screenshot for EA Bot', source: 'EA Bot browser', deadline: '2026-03-30', priority: 'thisweek', status: 'open' },
-      { desc: 'Meta Ads Manager re-auth (day 10)', source: 'Finance Bot', deadline: '2026-03-21', priority: 'urgent', status: 'open' },
-    ]
-  },
-  {
-    name: 'Aaron (CTO)',
-    colorClass: 'ph-red',
-    category: 'delegate',
-    actions: [
-      { desc: 'Request read-only WooCommerce API setup', source: 'API cleanup', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
-      { desc: 'Request read-only Whop API setup', source: 'API cleanup', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
-      { desc: 'Request read-only Notion API reconnect', source: 'API cleanup', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
-      { desc: 'Discuss API access protocol going forward', source: 'Aaron security conversation', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
-    ]
-  },
-  {
-    name: 'Tim (Tech)',
-    colorClass: 'ph-red',
-    category: 'delegate',
-    actions: []
-  },
-  {
-    name: 'Sanjay (Alchemy Scaling)',
-    colorClass: 'ph-purple',
-    category: 'delegate',
-    actions: [
-      { desc: 'URGENT: Fee negotiation - propose 15% flat or tiered structure', source: 'Unit economics analysis', deadline: '2026-03-31', priority: 'urgent', status: 'open' },
-      { desc: 'Confirm new scope (all channels, all geos vs US-only)', source: 'Alchemy contract review', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
-    ]
-  },
-  {
-    name: 'Kishan (Growth/Marketing)',
-    colorClass: 'ph-purple',
-    category: 'delegate',
-    actions: [
-      { desc: 'Meta Ads dashboard access for Kishan', source: 'Marketing Bot setup', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
-    ]
-  },
-  {
-    name: 'DT (Sales Closer)',
-    colorClass: 'ph-blue',
-    category: 'delegate',
-    actions: [
-      { desc: 'Commission restructure conversation (10% draw model)', source: 'Sales negotiation sheet', deadline: '2026-03-31', priority: 'urgent', status: 'open' },
-      { desc: 'AR collection follow-up ($112K overdue)', source: 'Finance Bot', deadline: '2026-03-31', priority: 'urgent', status: 'open' },
-      { desc: 'Stale pipeline cleanup in Pipedrive', source: 'Sales Bot', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
-    ]
-  },
-  {
-    name: 'Reece (Sales Closer)',
-    colorClass: 'ph-blue',
-    category: 'delegate',
-    actions: [
-      { desc: 'Commission restructure conversation (10% draw model)', source: 'Sales negotiation sheet', deadline: '2026-03-31', priority: 'urgent', status: 'open' },
-      { desc: 'AR collection follow-up ($55K due)', source: 'Finance Bot', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
-    ]
-  },
-  {
-    name: 'Travis (CGO)',
-    colorClass: 'ph-green',
-    category: 'delegate',
-    actions: [
-      { desc: 'Share updated unit economics (post Alchemy negotiation)', source: 'Fee negotiation', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
-      { desc: 'Align on restructure communication to wider team', source: 'Restructure plan', deadline: '2026-03-30', priority: 'urgent', status: 'open' },
-    ]
-  },
-  {
-    name: 'Pat Hynes (departing)',
-    colorClass: 'ph-grey',
-    category: 'delegate',
-    actions: [
-      { desc: 'URGENT: Deed of Release - draft and send', source: 'Restructure', deadline: '2026-03-31', priority: 'urgent', status: 'open' },
-      { desc: "Await Pat's decision by EOD tomorrow", source: 'Slack message', deadline: '2026-03-30', priority: 'urgent', status: 'waiting' },
-      { desc: 'Login/access handover', source: 'Separation agreement', deadline: '2026-03-30', priority: 'thisweek', status: 'waiting' },
-    ]
-  },
-  {
-    name: 'Josh (departing)',
-    colorClass: 'ph-grey',
-    category: 'delegate',
-    actions: [
-      { desc: 'URGENT: Deed of Release - draft and send', source: 'Restructure', deadline: '2026-03-31', priority: 'urgent', status: 'open' },
-      { desc: "Await Josh's decision by EOD tomorrow", source: 'Separation meeting', deadline: '2026-03-30', priority: 'urgent', status: 'waiting' },
-    ]
-  },
-  {
-    name: 'Zen (Setter)',
-    colorClass: 'ph-blue',
-    category: 'delegate',
-    actions: [
-      { desc: 'Confirm 5% setter commission in new structure', source: 'Commission restructure', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
-    ]
-  },
-  {
-    name: 'Alicia (EA - departing)',
-    colorClass: 'ph-grey',
-    category: 'delegate',
-    actions: [
-      { desc: 'Get current task list / job description from Alicia', source: 'EA Bot setup', deadline: '2026-03-30', priority: 'thisweek', status: 'open' },
-    ]
-  },
+// All action items with unique IDs
+const ACTIONS = [
+  // Ben Simpson (CEO)
+  { id: 'ben-1', desc: 'URGENT: Call Aaron re API security', source: 'Aaron video message', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Ben Simpson' },
+  { id: 'ben-2', desc: 'URGENT: Change Pipedrive password', source: 'Aaron security flag', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Ben Simpson' },
+  { id: 'ben-3', desc: 'Answer VTO questions (Core Values, Core Focus, 10-Year Target, 3-Year Picture, 1-Year Plan)', source: 'VTO doc build', deadline: '2026-03-30', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Ben Simpson' },
+  { id: 'ben-4', desc: 'Provide calendar rules, email triage rules, travel preferences', source: 'EA Bot setup', deadline: '2026-03-30', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Ben Simpson' },
+  { id: 'ben-5', desc: 'Send iPrefer screenshot for EA Bot', source: 'EA Bot browser', deadline: '2026-03-30', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Ben Simpson' },
+  { id: 'ben-6', desc: 'Meta Ads Manager re-auth (day 10 overdue)', source: 'Finance Bot', deadline: '2026-03-21', priority: 'urgent', defaultAssignee: 'Ben', person: 'Ben Simpson' },
+
+  // Aaron / Tim
+  { id: 'aaron-1', desc: 'Request read-only WooCommerce API setup', source: 'API cleanup', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Aaron / Tim' },
+  { id: 'aaron-2', desc: 'Request read-only Whop API setup', source: 'API cleanup', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Aaron / Tim' },
+  { id: 'aaron-3', desc: 'Request read-only Notion API reconnect', source: 'API cleanup', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Aaron / Tim' },
+  { id: 'aaron-4', desc: 'Discuss API access protocol going forward', source: 'Aaron security conversation', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Aaron / Tim' },
+
+  // Sanjay & Kishan
+  { id: 'sanjay-1', desc: 'URGENT: Fee negotiation - propose 15% flat or tiered', source: 'Unit economics analysis', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Sanjay & Kishan' },
+  { id: 'sanjay-2', desc: 'Confirm new scope (all channels vs US-only)', source: 'Alchemy contract review', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Sanjay & Kishan' },
+  { id: 'sanjay-3', desc: 'Meta Ads dashboard access for Kishan', source: 'Marketing Bot setup', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Sanjay & Kishan' },
+
+  // DT
+  { id: 'dt-1', desc: 'Commission restructure conversation (10% draw model)', source: 'Sales negotiation sheet', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'DT' },
+  { id: 'dt-2', desc: 'AR collection follow-up ($112K overdue)', source: 'Finance Bot', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'DT' },
+  { id: 'dt-3', desc: 'Stale pipeline cleanup in Pipedrive', source: 'Sales Bot', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'DT' },
+
+  // Reece
+  { id: 'reece-1', desc: 'Commission restructure conversation (10% draw model)', source: 'Sales negotiation sheet', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Reece' },
+  { id: 'reece-2', desc: 'AR collection follow-up ($55K due)', source: 'Finance Bot', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Reece' },
+
+  // Pat Hynes (departing)
+  { id: 'pat-1', desc: 'URGENT: Deed of Release - draft and send', source: 'Restructure', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Pat Hynes (departing)' },
+  { id: 'pat-2', desc: "Await Pat's decision by EOD", source: 'Slack message', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Pat Hynes (departing)' },
+  { id: 'pat-3', desc: 'Login/access handover once agreed', source: 'Separation agreement', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Pat Hynes (departing)' },
+
+  // Josh (departing)
+  { id: 'josh-1', desc: 'URGENT: Deed of Release - draft and send', source: 'Restructure', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Josh (departing)' },
+  { id: 'josh-2', desc: "Await Josh's decision by EOD", source: 'Separation meeting', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Josh (departing)' },
+
+  // Travis
+  { id: 'travis-1', desc: 'Share updated unit economics post negotiation', source: 'Fee negotiation', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Travis' },
+  { id: 'travis-2', desc: 'Align on restructure comms to wider team', source: 'Restructure plan', deadline: '2026-03-30', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Travis' },
+
+  // Alice
+  { id: 'alice-1', desc: 'Get current task list / job description', source: 'EA Bot setup', deadline: '2026-03-30', priority: 'thisweek', defaultAssignee: 'Alice', person: 'Alice' },
+
+  // Zen
+  { id: 'zen-1', desc: 'Confirm 5% setter commission in new structure', source: 'Commission restructure', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Zen' },
 ];
+
+// Team members for assignee dropdown
+const TEAM_MEMBERS = ['Ben', 'Alice', 'DT', 'Reece', 'Kishan', 'Travis', 'Aaron', 'Sanjay', 'Zen'];
+
+// ====== STATE MANAGEMENT ======
+const STORAGE_KEY = 'ceo-action-tracker-state';
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch(e) { return {}; }
+}
+
+function saveState(state) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function getItemState(id) {
+  const state = loadState();
+  return state[id] || {};
+}
+
+function setItemState(id, key, value) {
+  const state = loadState();
+  if (!state[id]) state[id] = {};
+  state[id][key] = value;
+  saveState(state);
+}
+
+function getAssignee(action) {
+  const saved = getItemState(action.id).assignee;
+  return saved || action.defaultAssignee;
+}
+
+function getStatus(action) {
+  const saved = getItemState(action.id).status;
+  return saved || 'open';
+}
+
+function isDone(action) {
+  return getStatus(action) === 'done';
+}
+
+// ====== CURRENT VIEW ======
+let currentView = 'ben';
 
 // ====== HELPERS ======
 function deadlineClass(d) {
@@ -676,7 +885,9 @@ function deadlineLabel(d) {
   if (!d) return '';
   if (d < TODAY) return 'OVERDUE';
   if (d === TODAY) return 'TODAY';
-  return d;
+  const parts = d.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return parseInt(parts[2]) + ' ' + months[parseInt(parts[1])-1];
 }
 
 function priorityTag(p) {
@@ -685,119 +896,284 @@ function priorityTag(p) {
   return '<span class="tag tag-backlog">BACKLOG</span>';
 }
 
-function statusBadge(s) {
-  const map = {
-    'open': '<span class="tag badge-open">Open</span>',
-    'inprogress': '<span class="tag badge-inprogress">In Progress</span>',
-    'waiting': '<span class="tag badge-waiting">Waiting</span>',
-    'done': '<span class="tag badge-done">Done</span>',
-  };
-  return map[s] || map['open'];
+function assigneeBadgeClass(assignee) {
+  if (assignee === 'Ben') return 'assignee-ben';
+  if (assignee === 'Alice') return 'assignee-ea';
+  return 'assignee-delegate';
 }
 
-function formatDate(d) {
-  if (!d) return '';
-  const parts = d.split('-');
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  return parseInt(parts[2]) + ' ' + months[parseInt(parts[1])-1];
+function assigneeBadgeLabel(assignee) {
+  if (assignee === 'Ben') return 'Ben';
+  if (assignee === 'Alice') return 'Alice (EA)';
+  return assignee;
+}
+
+function isDelegate(assignee) {
+  return assignee !== 'Ben' && assignee !== 'Alice';
+}
+
+function priorityOrder(p) {
+  if (p === 'urgent') return 0;
+  if (p === 'thisweek') return 1;
+  return 2;
+}
+
+function selectAssigneeClass(assignee) {
+  if (assignee === 'Ben') return 'select-assignee-ben';
+  if (assignee === 'Alice') return 'select-assignee-ea';
+  return 'select-assignee-delegate';
+}
+
+function selectStatusClass(status) {
+  if (status === 'done') return 'select-status-done';
+  if (status === 'inprogress') return 'select-status-inprogress';
+  if (status === 'waiting') return 'select-status-waiting';
+  return '';
+}
+
+// ====== VISIBILITY ======
+function isVisibleInView(action, view) {
+  const assignee = getAssignee(action);
+  const done = isDone(action);
+
+  if (view === 'all') return !done;
+  if (view === 'ben') {
+    // Ben sees: items assigned to Ben, unassigned, or delegate (things he communicates)
+    if (done) return false;
+    return assignee === 'Ben' || isDelegate(assignee);
+  }
+  if (view === 'ea') {
+    // Alice sees only items assigned to Alice
+    if (done) return false;
+    return assignee === 'Alice';
+  }
+  return true;
 }
 
 // ====== RENDER ======
-function render(filter) {
-  const container = document.getElementById('sectionsContainer');
-  container.innerHTML = '';
+function renderAll() {
+  updateStats();
+  renderActions();
+}
 
-  let totalOpen = 0, overdue = 0, dueToday = 0, dueWeek = 0;
+function updateStats() {
+  let benOpen = 0, eaOpen = 0, overdue = 0;
 
-  // Calculate stats (always from all data)
-  people.forEach(p => {
-    p.actions.forEach(a => {
-      if (a.status === 'done') return;
-      totalOpen++;
-      if (a.deadline) {
-        if (a.deadline < TODAY) overdue++;
-        else if (a.deadline === TODAY) dueToday++;
-        // "this week" = TODAY through end of week (2026-04-05 is Sunday)
-        if (a.deadline >= TODAY && a.deadline <= '2026-04-05') dueWeek++;
-      }
-    });
+  ACTIONS.forEach(a => {
+    if (isDone(a)) return;
+    const assignee = getAssignee(a);
+    if (assignee === 'Ben' || isDelegate(assignee)) benOpen++;
+    if (assignee === 'Alice') eaOpen++;
+    if (a.deadline && a.deadline < TODAY) overdue++;
   });
 
-  document.getElementById('statTotal').textContent = totalOpen;
+  document.getElementById('statBen').textContent = benOpen;
+  document.getElementById('statEA').textContent = eaOpen;
   document.getElementById('statOverdue').textContent = overdue;
-  document.getElementById('statToday').textContent = dueToday;
-  document.getElementById('statWeek').textContent = dueWeek;
 
-  people.forEach(person => {
-    // Filter logic
-    let actions = person.actions;
-    if (filter === 'ben') {
-      if (person.category !== 'ben') return;
-      actions = actions.filter(a => a.status !== 'done');
-    } else if (filter === 'delegate') {
-      if (person.category !== 'delegate') return;
-      actions = actions.filter(a => a.status !== 'done' && a.status !== 'waiting');
-    } else if (filter === 'waiting') {
-      actions = actions.filter(a => a.status === 'waiting');
-      if (actions.length === 0) return;
-    } else if (filter === 'done') {
-      actions = actions.filter(a => a.status === 'done');
-      if (actions.length === 0) return;
-    } else {
-      // all - show non-done
-      actions = actions.filter(a => a.status !== 'done');
-    }
+  // Update action count badge
+  const totalOpen = ACTIONS.filter(a => !isDone(a)).length;
+  document.getElementById('actionCount').textContent = totalOpen + ' open';
+}
 
-    if (actions.length === 0) return;
+function renderActions() {
+  const container = document.getElementById('actionsContainer');
+  const completedContainer = document.getElementById('completedContainer');
+  container.innerHTML = '';
+  completedContainer.innerHTML = '';
 
-    const section = document.createElement('div');
-    section.className = 'person-section';
+  // Filter visible actions
+  const visible = ACTIONS.filter(a => isVisibleInView(a, currentView));
+  const completed = ACTIONS.filter(a => isDone(a));
 
-    section.innerHTML = `
-      <div class="person-header ${person.colorClass}">
-        ${person.name}
-        <span class="person-count">${actions.length} action${actions.length !== 1 ? 's' : ''}</span>
-      </div>
-      <div class="actions-list">
-        ${actions.map(a => {
-          const isDone = a.status === 'done';
-          return `
-            <div class="action-card${isDone ? ' done' : ''}">
-              <div class="action-checkbox"></div>
-              <div class="action-body">
-                <div class="action-desc">${a.desc}</div>
-                <div class="action-meta">
-                  <span class="tag tag-source">${a.source}</span>
-                  ${a.deadline ? `<span class="tag ${deadlineClass(a.deadline)}">${deadlineLabel(a.deadline)}</span>` : ''}
-                  ${priorityTag(a.priority)}
-                  ${statusBadge(a.status)}
-                </div>
-              </div>
-            </div>
-          `;
-        }).join('')}
-      </div>
-    `;
-    container.appendChild(section);
+  // Sort by priority then deadline
+  visible.sort((a, b) => {
+    const pa = priorityOrder(a.priority);
+    const pb = priorityOrder(b.priority);
+    if (pa !== pb) return pa - pb;
+    if (a.deadline && b.deadline) return a.deadline.localeCompare(b.deadline);
+    if (a.deadline) return -1;
+    if (b.deadline) return 1;
+    return 0;
   });
 
-  // If nothing rendered
-  if (container.children.length === 0) {
-    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:15px;">No actions match this filter.</div>';
+  // Group by priority
+  const groups = { urgent: [], thisweek: [], backlog: [] };
+  visible.forEach(a => {
+    const p = a.priority || 'backlog';
+    if (groups[p]) groups[p].push(a);
+    else groups.backlog.push(a);
+  });
+
+  // Also group overdue items separately for EA view
+  if (currentView === 'ea') {
+    const overdueItems = [];
+    const todayItems = [];
+    const weekItems = [];
+    const laterItems = [];
+
+    visible.forEach(a => {
+      if (a.deadline && a.deadline < TODAY) overdueItems.push(a);
+      else if (a.deadline === TODAY) todayItems.push(a);
+      else if (a.deadline && a.deadline <= '2026-04-05') weekItems.push(a);
+      else laterItems.push(a);
+    });
+
+    renderGroup(container, 'Overdue', overdueItems, '--red');
+    renderGroup(container, 'Due Today', todayItems, '--amber');
+    renderGroup(container, 'Due This Week', weekItems, '--blue');
+    renderGroup(container, 'Backlog', laterItems, '--grey');
+  } else {
+    renderGroup(container, 'Urgent', groups.urgent, '--red');
+    renderGroup(container, 'This Week', groups.thisweek, '--amber');
+    renderGroup(container, 'Backlog', groups.backlog, '--grey');
+  }
+
+  if (visible.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:14px;">No open actions in this view.</div>';
+  }
+
+  // Completed section
+  if (completed.length > 0) {
+    document.getElementById('completedSection').style.display = 'block';
+    document.getElementById('completedCount').textContent = completed.length;
+    completed.forEach(a => {
+      completedContainer.appendChild(createActionCard(a));
+    });
+  } else {
+    document.getElementById('completedSection').style.display = 'none';
   }
 }
 
-// ====== FILTER TAB CLICKS ======
-document.querySelectorAll('.filter-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    render(tab.dataset.filter);
+function renderGroup(container, title, items, colorVar) {
+  if (items.length === 0) return;
+
+  const group = document.createElement('div');
+  group.className = 'priority-group';
+  group.innerHTML = `
+    <div class="priority-group-header">
+      <h3 style="color: var(${colorVar})">${title}</h3>
+      <div class="group-line"></div>
+      <span class="group-count">${items.length} item${items.length !== 1 ? 's' : ''}</span>
+    </div>
+  `;
+
+  items.forEach(a => {
+    group.appendChild(createActionCard(a));
+  });
+
+  container.appendChild(group);
+}
+
+function createActionCard(action) {
+  const card = document.createElement('div');
+  const done = isDone(action);
+  const assignee = getAssignee(action);
+  const status = getStatus(action);
+
+  card.className = 'action-card' + (done ? ' is-done' : '');
+  card.id = 'card-' + action.id;
+
+  const showDelegateNote = isDelegate(assignee) && currentView !== 'ea';
+
+  card.innerHTML = `
+    <div class="action-checkbox ${done ? 'checked' : ''}" onclick="toggleDone('${action.id}', this)" title="Mark ${done ? 'incomplete' : 'complete'}"></div>
+    <div class="action-body">
+      <div class="action-desc">${action.desc}</div>
+      <div class="action-meta">
+        <span class="tag tag-source">${action.source}</span>
+        ${action.deadline ? `<span class="tag ${deadlineClass(action.deadline)}">${deadlineLabel(action.deadline)}</span>` : ''}
+        ${priorityTag(action.priority)}
+        <span class="assignee-badge ${assigneeBadgeClass(assignee)}">${assigneeBadgeLabel(assignee)}</span>
+        ${showDelegateNote ? '<span class="tag tag-delegate-note">Ben to communicate</span>' : ''}
+        ${action.person ? `<span class="tag tag-date">re: ${action.person}</span>` : ''}
+      </div>
+    </div>
+    <div class="action-controls">
+      <select class="custom-select ${selectAssigneeClass(assignee)}" onchange="changeAssignee('${action.id}', this.value, this)" title="Assignee">
+        ${TEAM_MEMBERS.map(m => `<option value="${m}" ${m === assignee ? 'selected' : ''}>${m}${m === 'Alice' ? ' (EA)' : ''}</option>`).join('')}
+      </select>
+      <select class="custom-select ${selectStatusClass(status)}" onchange="changeStatus('${action.id}', this.value, this)" title="Status">
+        <option value="open" ${status === 'open' ? 'selected' : ''}>Open</option>
+        <option value="inprogress" ${status === 'inprogress' ? 'selected' : ''}>In Progress</option>
+        <option value="waiting" ${status === 'waiting' ? 'selected' : ''}>Waiting</option>
+        <option value="done" ${status === 'done' ? 'selected' : ''}>Done</option>
+      </select>
+    </div>
+  `;
+
+  return card;
+}
+
+// ====== INTERACTIONS ======
+function toggleDone(id, checkboxEl) {
+  const current = getStatus(ACTIONS.find(a => a.id === id));
+  const newStatus = current === 'done' ? 'open' : 'done';
+  setItemState(id, 'status', newStatus);
+
+  const card = document.getElementById('card-' + id);
+  if (card && newStatus === 'done') {
+    card.classList.add('completing');
+    setTimeout(() => renderAll(), 350);
+  } else {
+    renderAll();
+  }
+}
+
+function changeAssignee(id, value, selectEl) {
+  setItemState(id, 'assignee', value);
+  const card = document.getElementById('card-' + id);
+  if (card) {
+    card.classList.add('reassigning');
+    setTimeout(() => renderAll(), 400);
+  } else {
+    renderAll();
+  }
+}
+
+function changeStatus(id, value, selectEl) {
+  setItemState(id, 'status', value);
+  if (value === 'done') {
+    const card = document.getElementById('card-' + id);
+    if (card) {
+      card.classList.add('completing');
+      setTimeout(() => renderAll(), 350);
+      return;
+    }
+  }
+  renderAll();
+}
+
+// ====== VIEW TOGGLE ======
+document.querySelectorAll('.view-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentView = btn.dataset.view;
+    renderAll();
   });
 });
 
-// Initial render
-render('all');
+// ====== COLLAPSIBLE SECTIONS ======
+function toggleSection(name) {
+  const content = document.getElementById(name + 'Content');
+  const chevron = document.getElementById(name + 'Chevron');
+  if (content && chevron) {
+    content.classList.toggle('collapsed');
+    chevron.classList.toggle('collapsed');
+  }
+}
+
+// ====== MEETINGS (expandable) ======
+function toggleMeeting(el) {
+  const details = el.closest('.meeting-card').querySelector('.meeting-details');
+  const icon = el.querySelector('.meeting-expand-icon');
+  if (details) details.classList.toggle('open');
+  if (icon) icon.classList.toggle('open');
+}
+
+// ====== INITIAL RENDER ======
+renderAll();
 </script>
 </body>
 </html>
