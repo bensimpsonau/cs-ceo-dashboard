@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CEO Action Tracker | Collective Shift</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --orange: #FC5C03;
+    --green: #08C394;
+    --dark: #1A1A2E;
+    --purple: #654FFC;
+    --blue: #3B82F6;
+    --red: #DC2626;
+    --grey: #6B7280;
+    --amber: #F59E0B;
+    --border: #E8E8EA;
+    --bg-card: #FFFFFF;
+    --bg-page: #F7F7F8;
+    --text-muted: #6B6B7B;
+    --light-orange: #FFF3ED;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--dark);
+    background: var(--bg-page);
+    padding-top: 56px !important;
+  }
+  h1, h2, h3, h4, h5 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    color: var(--dark);
+  }
+  .label {
+    font-family: 'Source Code Pro', monospace;
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ====== NAV BAR ====== */
+  :root {
+    --csn-h: 56px;
+    --csn-bg: #FFFFFF;
+    --csn-border: #E8E8EA;
+    --csn-text: #1B1925;
+    --csn-muted: #4D4C55;
+    --csn-orange: #FC5C03;
+    --csn-orange-bg: #FEEEE5;
+    --csn-dd-bg: #FFFFFF;
+    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    --csn-z: 9000;
+  }
+  .csn-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--csn-h);
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 0;
+    z-index: var(--csn-z);
+    font-family: 'Plus Jakarta Sans', 'Barlow', sans-serif;
+  }
+  .csn-logo {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--csn-orange);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin-right: 32px;
+    flex-shrink: 0;
+  }
+  .csn-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+  }
+  .csn-item { position: relative; }
+  .csn-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s, background 0.15s;
+    cursor: pointer;
+  }
+  .csn-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-item.active > .csn-link { color: var(--csn-orange); font-weight: 600; }
+  .csn-chevron { transition: transform 0.2s; flex-shrink: 0; }
+  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
+  .csn-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 240px;
+    background: var(--csn-dd-bg);
+    border: 1px solid var(--csn-border);
+    border-radius: 12px;
+    box-shadow: var(--csn-dd-shadow);
+    padding: 6px;
+    z-index: calc(var(--csn-z) + 1);
+  }
+  .csn-item.csn-has-dd { position: relative; }
+  .csn-item.csn-has-dd::after { content: ""; position: absolute; top: 100%; left: 0; width: 100%; height: 12px; }
+  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
+  .csn-dd-item {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+    white-space: nowrap;
+  }
+  .csn-dd-item:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-divider { height: 1px; background: var(--csn-border); margin: 4px 8px; }
+  .csn-hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--csn-muted);
+    padding: 4px;
+    margin-left: auto;
+  }
+  .csn-mobile-menu {
+    display: none;
+    position: fixed;
+    top: var(--csn-h);
+    left: 0; right: 0;
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    padding: 8px 16px 16px;
+    z-index: calc(var(--csn-z) - 1);
+    max-height: calc(100vh - var(--csn-h));
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .csn-mobile-menu.open { display: block; }
+  .csn-mob-link {
+    display: block;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
+  }
+  .csn-mob-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-mob-top { font-weight: 600; color: var(--csn-text); margin-top: 4px; }
+  .csn-mob-sub { font-size: 12px; padding-left: 20px; }
+  .csn-mob-active { color: var(--csn-orange) !important; font-weight: 600 !important; }
+  @media (max-width: 1023px) {
+    .csn-nav { display: none; }
+    .csn-hamburger { display: block; }
+  }
+  @media (max-width: 640px) {
+    .csn-logo { font-size: 13px; margin-right: 16px; }
+  }
+
+  /* ====== MAIN CONTENT ====== */
+  .document {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  /* ====== PAGE HEADER ====== */
+  .page-header {
+    background: var(--dark);
+    border-radius: var(--radius);
+    padding: 28px 32px 24px;
+    margin-bottom: 24px;
+    color: #fff;
+  }
+  .page-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .page-header .timestamp {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* ====== STATS BAR ====== */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    text-align: center;
+  }
+  .stat-value {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1.1;
+  }
+  .stat-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .stat-value.text-orange { color: var(--orange); }
+  .stat-value.text-red { color: var(--red); }
+  .stat-value.text-amber { color: var(--amber); }
+  .stat-value.text-green { color: var(--green); }
+
+  @media (max-width: 640px) {
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ====== FILTER TABS ====== */
+  .filter-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .filter-tab {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .filter-tab:hover { color: var(--orange); border-color: var(--orange); }
+  .filter-tab.active {
+    background: var(--orange);
+    color: #fff;
+    border-color: var(--orange);
+  }
+  .filter-tab .count {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    background: rgba(0,0,0,0.1);
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-left: 4px;
+  }
+  .filter-tab.active .count { background: rgba(255,255,255,0.25); }
+
+  /* ====== PERSON SECTION ====== */
+  .person-section {
+    margin-bottom: 28px;
+  }
+  .person-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    border-radius: var(--radius) var(--radius) 0 0;
+    color: #fff;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .person-header .person-count {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    background: rgba(255,255,255,0.2);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: auto;
+  }
+  .ph-orange { background: var(--orange); }
+  .ph-blue { background: var(--blue); }
+  .ph-purple { background: var(--purple); }
+  .ph-red { background: var(--red); }
+  .ph-green { background: var(--green); }
+  .ph-grey { background: var(--grey); }
+
+  /* ====== ACTION CARDS ====== */
+  .actions-list {
+    border: 1.5px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    overflow: hidden;
+  }
+  .action-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 18px;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+  .action-card:last-child { border-bottom: none; }
+  .action-card:hover { background: #FAFAFA; }
+  .action-card.done { opacity: 0.5; }
+  .action-card.done .action-desc { text-decoration: line-through; }
+
+  .action-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 5px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .action-card.done .action-checkbox {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .action-card.done .action-checkbox::after {
+    content: "\2713";
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .action-body { flex: 1; min-width: 0; }
+  .action-desc {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.45;
+    margin-bottom: 6px;
+    color: var(--dark);
+  }
+  .action-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+  }
+
+  /* Tags & Badges */
+  .tag {
+    display: inline-block;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .tag-source { background: #F3F4F6; color: #374151; }
+  .tag-date { background: #F3F4F6; color: var(--text-muted); }
+  .tag-urgent { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; font-weight: 600; }
+  .tag-thisweek { background: #FFF7ED; color: #92400E; border: 1px solid #FDE68A; }
+  .tag-backlog { background: #F3F4F6; color: #6B7280; border: 1px solid #E5E7EB; }
+
+  .badge-open { background: #DBEAFE; color: #1D4ED8; }
+  .badge-inprogress { background: #FFF7ED; color: #92400E; }
+  .badge-waiting { background: #F5F3FF; color: var(--purple); }
+  .badge-done { background: #D1FAE5; color: #065F46; }
+
+  /* Deadline colors */
+  .deadline-overdue { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; }
+  .deadline-today { background: #FFFBEB; color: #92400E; border: 1px solid #FDE68A; }
+  .deadline-future { background: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0; }
+  .deadline-past { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; }
+
+  /* ====== FOOTER ====== */
+  .page-footer {
+    margin-top: 40px;
+    padding: 20px 24px;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    text-align: center;
+  }
+  .page-footer .sync-time {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .page-footer .sync-note {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* ====== HIDDEN SECTIONS ====== */
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- ====== NAV BAR ====== -->
+<nav class="csn-bar" role="navigation" aria-label="Main navigation">
+  <a href="index.html" class="csn-logo">Collective Shift</a>
+  <div class="csn-nav">
+    <div class="csn-item"><a href="index.html" class="csn-link">CEO Dashboard</a></div>
+    <div class="csn-item csn-has-dd">
+      <a href="hub/operating-system.html" class="csn-link">The Collective Shift Operating System
+        <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="csn-dropdown">
+        <a href="hub/operating-system.html" class="csn-dd-item">Operating System Overview</a>
+        <a href="hub/modules/m1-foundations.html" class="csn-dd-item">Module 1: Foundations</a>
+        <a href="hub/modules/m2-bitcoin.html" class="csn-dd-item">Module 2: Bitcoin</a>
+        <a href="hub/modules/m3-altcoins.html" class="csn-dd-item">Module 3: Digital Assets</a>
+        <a href="hub/modules/m4-how-we-invest.html" class="csn-dd-item">Module 4: How We Invest</a>
+        <a href="hub/modules/m5-buy-sell.html" class="csn-dd-item">Module 5: Buy &amp; Sell</a>
+        <a href="hub/modules/m6-send-store.html" class="csn-dd-item">Module 6: Send &amp; Store</a>
+        <a href="hub/modules/m7-tax.html" class="csn-dd-item">Module 7: Tax</a>
+        <a href="hub/modules/m8-sell-strategy.html" class="csn-dd-item">Module 8: Exit Strategy</a>
+        <div class="csn-divider"></div>
+        <a href="8-step-strategy-workbook.html" class="csn-dd-item">8-Step Strategy Workbook</a>
+        <a href="portfolio-calculator.html" class="csn-dd-item">Portfolio Allocation Calculator</a>
+      </div>
+    </div>
+    <div class="csn-item csn-has-dd">
+      <a href="hub/products.html" class="csn-link">Product
+        <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="csn-dropdown">
+        <a href="hub/products.html#platinum" class="csn-dd-item">Platinum</a>
+        <a href="hub/products.html#accelerator" class="csn-dd-item">Accelerator</a>
+        <a href="hub/beginner-journey.html" class="csn-dd-item">Beginner's Journey</a>
+        <a href="hub/products.html#two-track" class="csn-dd-item">Two-Track System</a>
+      </div>
+    </div>
+    <div class="csn-item csn-has-dd">
+      <a href="hub/youtube-strategy.html" class="csn-link">Social Media
+        <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="csn-dropdown">
+        <a href="hub/youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a>
+        <a href="hub/social-strategy.html" class="csn-dd-item">Social Strategy</a>
+        <a href="hub/instagram-strategy.html" class="csn-dd-item">Instagram Strategy</a>
+        <div class="csn-divider"></div>
+        <a href="hub/brand.html" class="csn-dd-item">Brand &amp; Voice</a>
+        <a href="hub/positioning.html" class="csn-dd-item">Positioning &amp; ICP</a>
+        <a href="hub/competitors.html" class="csn-dd-item">Competitors</a>
+      </div>
+    </div>
+    <div class="csn-item csn-has-dd">
+      <a href="travis-briefing-2026-03-27.html" class="csn-link">Documents
+        <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="csn-dropdown">
+        <a href="travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a>
+        <a href="cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a>
+        <a href="q2-market-briefing.html" class="csn-dd-item">Q2 Market Briefing</a>
+      </div>
+    </div>
+    <div class="csn-item active"><a href="actions.html" class="csn-link">Action Tracker</a></div>
+  </div>
+  <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+<div id="csnMobileMenu" class="csn-mobile-menu">
+  <a href="index.html" class="csn-mob-link csn-mob-top">CEO Dashboard</a>
+  <a href="hub/operating-system.html" class="csn-mob-link csn-mob-top">Operating System</a>
+  <a href="hub/products.html" class="csn-mob-link csn-mob-top">Product</a>
+  <a href="hub/youtube-strategy.html" class="csn-mob-link csn-mob-top">Social Media</a>
+  <a href="travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-top">Documents</a>
+  <a href="actions.html" class="csn-mob-link csn-mob-top csn-mob-active">Action Tracker</a>
+</div>
+
+<!-- ====== MAIN CONTENT ====== -->
+<div class="document">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1>CEO Action Tracker</h1>
+    <div class="timestamp">Last updated: 31 March 2026, 2:15pm AEST</div>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-card">
+      <div class="stat-value text-orange" id="statTotal">-</div>
+      <div class="stat-label">Open Actions</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value text-red" id="statOverdue">-</div>
+      <div class="stat-label">Overdue</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value text-amber" id="statToday">-</div>
+      <div class="stat-label">Due Today</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value text-green" id="statWeek">-</div>
+      <div class="stat-label">Due This Week</div>
+    </div>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs" id="filterTabs">
+    <button class="filter-tab active" data-filter="all">All</button>
+    <button class="filter-tab" data-filter="ben">Ben Only</button>
+    <button class="filter-tab" data-filter="delegate">To Delegate</button>
+    <button class="filter-tab" data-filter="waiting">Waiting On</button>
+    <button class="filter-tab" data-filter="done">Completed</button>
+  </div>
+
+  <!-- Action Sections Container -->
+  <div id="sectionsContainer"></div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <div class="sync-time">Last synced: 31 March 2026, 2:15pm AEST</div>
+    <div class="sync-note">Actions are updated by BenBot from meetings, conversations, and heartbeat checks. Drop meeting recordings in #executive-assistant to auto-populate.</div>
+  </div>
+
+</div>
+
+<script>
+// ====== ACTION DATA ======
+const TODAY = '2026-03-31';
+
+const people = [
+  {
+    name: 'Ben Simpson (CEO)',
+    colorClass: 'ph-orange',
+    category: 'ben',
+    actions: [
+      { desc: 'URGENT: Call Aaron re API security', source: 'Aaron video message', deadline: '2026-03-31', priority: 'urgent', status: 'open' },
+      { desc: 'URGENT: Change Pipedrive password', source: 'Aaron security flag', deadline: '2026-03-31', priority: 'urgent', status: 'open' },
+      { desc: 'Answer VTO questions (Core Values, Core Focus, 10-Year Target, 3-Year Picture, 1-Year Plan)', source: 'VTO doc build', deadline: '2026-03-30', priority: 'thisweek', status: 'open' },
+      { desc: 'Provide calendar rules, email triage rules, travel preferences', source: 'EA Bot setup', deadline: '2026-03-30', priority: 'thisweek', status: 'open' },
+      { desc: 'Send iPrefer screenshot for EA Bot', source: 'EA Bot browser', deadline: '2026-03-30', priority: 'thisweek', status: 'open' },
+      { desc: 'Meta Ads Manager re-auth (day 10)', source: 'Finance Bot', deadline: '2026-03-21', priority: 'urgent', status: 'open' },
+    ]
+  },
+  {
+    name: 'Aaron (CTO)',
+    colorClass: 'ph-red',
+    category: 'delegate',
+    actions: [
+      { desc: 'Request read-only WooCommerce API setup', source: 'API cleanup', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
+      { desc: 'Request read-only Whop API setup', source: 'API cleanup', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
+      { desc: 'Request read-only Notion API reconnect', source: 'API cleanup', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
+      { desc: 'Discuss API access protocol going forward', source: 'Aaron security conversation', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
+    ]
+  },
+  {
+    name: 'Tim (Tech)',
+    colorClass: 'ph-red',
+    category: 'delegate',
+    actions: []
+  },
+  {
+    name: 'Sanjay (Alchemy Scaling)',
+    colorClass: 'ph-purple',
+    category: 'delegate',
+    actions: [
+      { desc: 'URGENT: Fee negotiation - propose 15% flat or tiered structure', source: 'Unit economics analysis', deadline: '2026-03-31', priority: 'urgent', status: 'open' },
+      { desc: 'Confirm new scope (all channels, all geos vs US-only)', source: 'Alchemy contract review', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
+    ]
+  },
+  {
+    name: 'Kishan (Growth/Marketing)',
+    colorClass: 'ph-purple',
+    category: 'delegate',
+    actions: [
+      { desc: 'Meta Ads dashboard access for Kishan', source: 'Marketing Bot setup', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
+    ]
+  },
+  {
+    name: 'DT (Sales Closer)',
+    colorClass: 'ph-blue',
+    category: 'delegate',
+    actions: [
+      { desc: 'Commission restructure conversation (10% draw model)', source: 'Sales negotiation sheet', deadline: '2026-03-31', priority: 'urgent', status: 'open' },
+      { desc: 'AR collection follow-up ($112K overdue)', source: 'Finance Bot', deadline: '2026-03-31', priority: 'urgent', status: 'open' },
+      { desc: 'Stale pipeline cleanup in Pipedrive', source: 'Sales Bot', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
+    ]
+  },
+  {
+    name: 'Reece (Sales Closer)',
+    colorClass: 'ph-blue',
+    category: 'delegate',
+    actions: [
+      { desc: 'Commission restructure conversation (10% draw model)', source: 'Sales negotiation sheet', deadline: '2026-03-31', priority: 'urgent', status: 'open' },
+      { desc: 'AR collection follow-up ($55K due)', source: 'Finance Bot', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
+    ]
+  },
+  {
+    name: 'Travis (CGO)',
+    colorClass: 'ph-green',
+    category: 'delegate',
+    actions: [
+      { desc: 'Share updated unit economics (post Alchemy negotiation)', source: 'Fee negotiation', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
+      { desc: 'Align on restructure communication to wider team', source: 'Restructure plan', deadline: '2026-03-30', priority: 'urgent', status: 'open' },
+    ]
+  },
+  {
+    name: 'Pat Hynes (departing)',
+    colorClass: 'ph-grey',
+    category: 'delegate',
+    actions: [
+      { desc: 'URGENT: Deed of Release - draft and send', source: 'Restructure', deadline: '2026-03-31', priority: 'urgent', status: 'open' },
+      { desc: "Await Pat's decision by EOD tomorrow", source: 'Slack message', deadline: '2026-03-30', priority: 'urgent', status: 'waiting' },
+      { desc: 'Login/access handover', source: 'Separation agreement', deadline: '2026-03-30', priority: 'thisweek', status: 'waiting' },
+    ]
+  },
+  {
+    name: 'Josh (departing)',
+    colorClass: 'ph-grey',
+    category: 'delegate',
+    actions: [
+      { desc: 'URGENT: Deed of Release - draft and send', source: 'Restructure', deadline: '2026-03-31', priority: 'urgent', status: 'open' },
+      { desc: "Await Josh's decision by EOD tomorrow", source: 'Separation meeting', deadline: '2026-03-30', priority: 'urgent', status: 'waiting' },
+    ]
+  },
+  {
+    name: 'Zen (Setter)',
+    colorClass: 'ph-blue',
+    category: 'delegate',
+    actions: [
+      { desc: 'Confirm 5% setter commission in new structure', source: 'Commission restructure', deadline: '2026-03-31', priority: 'thisweek', status: 'open' },
+    ]
+  },
+  {
+    name: 'Alicia (EA - departing)',
+    colorClass: 'ph-grey',
+    category: 'delegate',
+    actions: [
+      { desc: 'Get current task list / job description from Alicia', source: 'EA Bot setup', deadline: '2026-03-30', priority: 'thisweek', status: 'open' },
+    ]
+  },
+];
+
+// ====== HELPERS ======
+function deadlineClass(d) {
+  if (!d) return '';
+  if (d < TODAY) return 'deadline-overdue';
+  if (d === TODAY) return 'deadline-today';
+  return 'deadline-future';
+}
+
+function deadlineLabel(d) {
+  if (!d) return '';
+  if (d < TODAY) return 'OVERDUE';
+  if (d === TODAY) return 'TODAY';
+  return d;
+}
+
+function priorityTag(p) {
+  if (p === 'urgent') return '<span class="tag tag-urgent">URGENT</span>';
+  if (p === 'thisweek') return '<span class="tag tag-thisweek">THIS WEEK</span>';
+  return '<span class="tag tag-backlog">BACKLOG</span>';
+}
+
+function statusBadge(s) {
+  const map = {
+    'open': '<span class="tag badge-open">Open</span>',
+    'inprogress': '<span class="tag badge-inprogress">In Progress</span>',
+    'waiting': '<span class="tag badge-waiting">Waiting</span>',
+    'done': '<span class="tag badge-done">Done</span>',
+  };
+  return map[s] || map['open'];
+}
+
+function formatDate(d) {
+  if (!d) return '';
+  const parts = d.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return parseInt(parts[2]) + ' ' + months[parseInt(parts[1])-1];
+}
+
+// ====== RENDER ======
+function render(filter) {
+  const container = document.getElementById('sectionsContainer');
+  container.innerHTML = '';
+
+  let totalOpen = 0, overdue = 0, dueToday = 0, dueWeek = 0;
+
+  // Calculate stats (always from all data)
+  people.forEach(p => {
+    p.actions.forEach(a => {
+      if (a.status === 'done') return;
+      totalOpen++;
+      if (a.deadline) {
+        if (a.deadline < TODAY) overdue++;
+        else if (a.deadline === TODAY) dueToday++;
+        // "this week" = TODAY through end of week (2026-04-05 is Sunday)
+        if (a.deadline >= TODAY && a.deadline <= '2026-04-05') dueWeek++;
+      }
+    });
+  });
+
+  document.getElementById('statTotal').textContent = totalOpen;
+  document.getElementById('statOverdue').textContent = overdue;
+  document.getElementById('statToday').textContent = dueToday;
+  document.getElementById('statWeek').textContent = dueWeek;
+
+  people.forEach(person => {
+    // Filter logic
+    let actions = person.actions;
+    if (filter === 'ben') {
+      if (person.category !== 'ben') return;
+      actions = actions.filter(a => a.status !== 'done');
+    } else if (filter === 'delegate') {
+      if (person.category !== 'delegate') return;
+      actions = actions.filter(a => a.status !== 'done' && a.status !== 'waiting');
+    } else if (filter === 'waiting') {
+      actions = actions.filter(a => a.status === 'waiting');
+      if (actions.length === 0) return;
+    } else if (filter === 'done') {
+      actions = actions.filter(a => a.status === 'done');
+      if (actions.length === 0) return;
+    } else {
+      // all - show non-done
+      actions = actions.filter(a => a.status !== 'done');
+    }
+
+    if (actions.length === 0) return;
+
+    const section = document.createElement('div');
+    section.className = 'person-section';
+
+    section.innerHTML = `
+      <div class="person-header ${person.colorClass}">
+        ${person.name}
+        <span class="person-count">${actions.length} action${actions.length !== 1 ? 's' : ''}</span>
+      </div>
+      <div class="actions-list">
+        ${actions.map(a => {
+          const isDone = a.status === 'done';
+          return `
+            <div class="action-card${isDone ? ' done' : ''}">
+              <div class="action-checkbox"></div>
+              <div class="action-body">
+                <div class="action-desc">${a.desc}</div>
+                <div class="action-meta">
+                  <span class="tag tag-source">${a.source}</span>
+                  ${a.deadline ? `<span class="tag ${deadlineClass(a.deadline)}">${deadlineLabel(a.deadline)}</span>` : ''}
+                  ${priorityTag(a.priority)}
+                  ${statusBadge(a.status)}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+    container.appendChild(section);
+  });
+
+  // If nothing rendered
+  if (container.children.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:15px;">No actions match this filter.</div>';
+  }
+}
+
+// ====== FILTER TAB CLICKS ======
+document.querySelectorAll('.filter-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    render(tab.dataset.filter);
+  });
+});
+
+// Initial render
+render('all');
+</script>
+</body>
+</html>
