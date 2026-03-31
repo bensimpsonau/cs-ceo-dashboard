@@ -777,61 +777,76 @@
 // ====== DATA ======
 const TODAY = '2026-03-31';
 
-// All action items with unique IDs
+// State versioning - clear stale localStorage on schema change
+const DATA_VERSION = '2';
+const STORAGE_KEY = 'ceo-action-tracker-state';
+if (localStorage.getItem('ceo-tracker-version') !== DATA_VERSION) {
+  localStorage.removeItem(STORAGE_KEY);
+  localStorage.setItem('ceo-tracker-version', DATA_VERSION);
+}
+
+// All action items with unique IDs (deduplicated, merged, cleaned)
 const ACTIONS = [
-  // Ben Simpson (CEO)
-  { id: 'ben-1', desc: 'URGENT: Call Aaron re API security', source: 'Aaron video message', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Ben Simpson' },
-  { id: 'ben-2', desc: 'URGENT: Change Pipedrive password', source: 'Aaron security flag', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Ben Simpson' },
-  { id: 'ben-3', desc: 'Answer VTO questions (Core Values, Core Focus, 10-Year Target, 3-Year Picture, 1-Year Plan)', source: 'VTO doc build', deadline: '2026-03-30', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Ben Simpson' },
-  { id: 'ben-4', desc: 'Provide calendar rules, email triage rules, travel preferences', source: 'EA Bot setup', deadline: '2026-03-30', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Ben Simpson' },
-  { id: 'ben-5', desc: 'Send iPrefer screenshot for EA Bot', source: 'EA Bot browser', deadline: '2026-03-30', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Ben Simpson' },
-  { id: 'ben-6', desc: 'Meta Ads Manager re-auth (day 10 overdue)', source: 'Finance Bot', deadline: '2026-03-21', priority: 'urgent', defaultAssignee: 'Ben', person: 'Ben Simpson' },
+  // Ben Simpson (CEO) - Personal
+  { id: 'ben-1', desc: 'Call Aaron re API security and apologise for Pipedrive/Whop incident', source: 'Aaron video message', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Aaron' },
+  { id: 'ben-2', desc: 'Change Pipedrive password immediately', source: 'Aaron security flag', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Self' },
+  { id: 'ben-3', desc: 'Meta Ads Manager re-auth (day 10 overdue)', source: 'Finance Bot', deadline: '2026-03-21', priority: 'urgent', defaultAssignee: 'Ben', person: 'Self' },
+  { id: 'ben-4', desc: 'Answer VTO questions (Core Values, Core Focus, 10-Year Target, 3-Year Picture, 1-Year Plan)', source: 'VTO doc build', deadline: '2026-03-30', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Self' },
+  { id: 'ben-5', desc: 'Provide calendar rules, email triage rules, travel preferences for EA Bot', source: 'EA Bot setup', deadline: '2026-03-30', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Alice' },
+  { id: 'ben-6', desc: 'Send iPrefer screenshot for EA Bot browser setup', source: 'EA Bot browser', deadline: '2026-03-30', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Self' },
 
-  // Aaron / Tim
-  { id: 'aaron-1', desc: 'Request read-only WooCommerce API setup', source: 'API cleanup', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Aaron / Tim' },
-  { id: 'aaron-2', desc: 'Request read-only Whop API setup', source: 'API cleanup', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Aaron / Tim' },
-  { id: 'aaron-3', desc: 'Request read-only Notion API reconnect', source: 'API cleanup', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Aaron / Tim' },
-  { id: 'aaron-4', desc: 'Discuss API access protocol going forward', source: 'Aaron security conversation', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Aaron / Tim' },
+  // Aaron / Tim - API Cleanup (merged into one item)
+  { id: 'aaron-1', desc: 'Request read-only API access: WooCommerce, Whop, Notion (propose protocol to Aaron)', source: 'API cleanup + security conversation', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Aaron / Tim' },
 
-  // Sanjay & Kishan
-  { id: 'sanjay-1', desc: 'URGENT: Fee negotiation - propose 15% flat or tiered', source: 'Unit economics analysis', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Sanjay & Kishan' },
-  { id: 'sanjay-2', desc: 'Confirm new scope (all channels vs US-only)', source: 'Alchemy contract review', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Sanjay & Kishan' },
+  // Sanjay & Kishan - Fee Negotiation
+  { id: 'sanjay-1', desc: 'Fee negotiation: propose retainer + tiered rev share model (doc being built)', source: 'Unit economics analysis', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Sanjay & Kishan' },
+  { id: 'sanjay-2', desc: 'Confirm new scope: all channels (organic + paid, AU + US) vs current US-only', source: 'Alchemy contract review', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Sanjay & Kishan' },
   { id: 'sanjay-3', desc: 'Meta Ads dashboard access for Kishan', source: 'Marketing Bot setup', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Sanjay & Kishan' },
 
-  // DT
-  { id: 'dt-1', desc: 'Commission restructure conversation (10% draw model)', source: 'Sales negotiation sheet', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'DT' },
-  { id: 'dt-2', desc: 'AR collection follow-up ($112K overdue)', source: 'Finance Bot', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'DT' },
-  { id: 'dt-3', desc: 'Stale pipeline cleanup in Pipedrive', source: 'Sales Bot', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'DT' },
+  // DT & Reece - Commission (merged into one since it is one conversation)
+  { id: 'sales-1', desc: 'Commission restructure conversation with DT and Reece (10% draw model, Q2 trial)', source: 'Sales negotiation sheet', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'DT & Reece' },
+  { id: 'dt-3', desc: 'Stale pipeline cleanup in Pipedrive (discuss with DT)', source: 'Sales Bot', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'DT' },
 
-  // Reece
-  { id: 'reece-1', desc: 'Commission restructure conversation (10% draw model)', source: 'Sales negotiation sheet', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Reece' },
-  { id: 'reece-2', desc: 'AR collection follow-up ($55K due)', source: 'Finance Bot', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Reece' },
+  // Pat Hynes (departing) - merged deed of release
+  { id: 'pat-1', desc: 'Deed of Release for Pat - draft and send', source: 'Restructure', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Pat Hynes' },
+  { id: 'pat-2', desc: "Await Pat's decision by EOD", source: 'Slack message', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Pat Hynes' },
+  { id: 'pat-3', desc: 'Pat login/access handover once agreed (coordinate with Tim)', source: 'Separation agreement', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Alice', person: 'Pat Hynes' },
 
-  // Pat Hynes (departing)
-  { id: 'pat-1', desc: 'URGENT: Deed of Release - draft and send', source: 'Restructure', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Pat Hynes (departing)' },
-  { id: 'pat-2', desc: "Await Pat's decision by EOD", source: 'Slack message', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Pat Hynes (departing)' },
-  { id: 'pat-3', desc: 'Login/access handover once agreed', source: 'Separation agreement', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Pat Hynes (departing)' },
-
-  // Josh (departing)
-  { id: 'josh-1', desc: 'URGENT: Deed of Release - draft and send', source: 'Restructure', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Josh (departing)' },
-  { id: 'josh-2', desc: "Await Josh's decision by EOD", source: 'Separation meeting', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Josh (departing)' },
+  // Josh (departing) - merged deed of release
+  { id: 'josh-1', desc: 'Deed of Release for Josh - draft and send', source: 'Restructure', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Josh' },
+  { id: 'josh-2', desc: "Await Josh's decision by EOD", source: 'Separation meeting', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Ben', person: 'Josh' },
 
   // Travis
-  { id: 'travis-1', desc: 'Share updated unit economics post negotiation', source: 'Fee negotiation', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Travis' },
+  { id: 'travis-1', desc: 'Share updated unit economics with Travis post Sanjay negotiation', source: 'Fee negotiation', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Travis' },
   { id: 'travis-2', desc: 'Align on restructure comms to wider team', source: 'Restructure plan', deadline: '2026-03-30', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Travis' },
 
   // Alice
-  { id: 'alice-1', desc: 'Get current task list / job description', source: 'EA Bot setup', deadline: '2026-03-30', priority: 'thisweek', defaultAssignee: 'Alice', person: 'Alice' },
+  { id: 'alice-1', desc: "Get Alice's current task list / job description for EA Bot", source: 'EA Bot setup', deadline: '2026-03-30', priority: 'thisweek', defaultAssignee: 'Alice', person: 'Alice' },
+  { id: 'alice-2', desc: 'Schedule intro meeting: Tim + Kishan + Sanjay + Ben (before Wed 5am departure)', source: 'Tim catch-up meeting', deadline: '2026-03-31', priority: 'urgent', defaultAssignee: 'Alice', person: 'Alice' },
+  { id: 'alice-3', desc: 'Org chart + RACI matrix update', source: 'Executive quarterly', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Alice', person: 'Alice' },
+
+  // Tim
+  { id: 'tim-1', desc: 'Split Calendly into AU/US round robins', source: 'DT & Reece meeting', deadline: '2026-04-04', priority: 'thisweek', defaultAssignee: 'Tim', person: 'Tim' },
+  { id: 'tim-2', desc: 'JustCall auto-dialer setup for setters (Kishan request)', source: 'Tim catch-up', deadline: '2026-04-04', priority: 'thisweek', defaultAssignee: 'Tim', person: 'Tim' },
+  { id: 'tim-3', desc: 'Sandbox/staging environment for AI bot access', source: 'Tim catch-up', deadline: '2026-04-04', priority: 'thisweek', defaultAssignee: 'Tim', person: 'Tim' },
 
   // Zen
   { id: 'zen-1', desc: 'Confirm 5% setter commission in new structure', source: 'Commission restructure', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Zen' },
+
+  // Sarn
+  { id: 'sarn-1', desc: 'Start pre-recorded beginner modules (Level 1 content)', source: 'Product overhaul', deadline: '2026-04-04', priority: 'thisweek', defaultAssignee: 'Sarn', person: 'Sarn' },
+
+  // Matt member follow-up
+  { id: 'matt-1', desc: 'Send Matt the MVRV ratio chart link (Bitcoin Magazine)', source: 'Matt strategy session', deadline: '2026-03-31', priority: 'thisweek', defaultAssignee: 'Ben', person: 'Matt (member)' },
+
+  // Lead magnet funnel
+  { id: 'marketing-1', desc: 'Build lead magnet funnel strategy (free guide to VSL to intake to setter)', source: 'Sanjay meeting', deadline: '2026-04-07', priority: 'thisweek', defaultAssignee: 'Sanjay', person: 'Sanjay' },
 ];
 
 // Team members for assignee dropdown
-const TEAM_MEMBERS = ['Ben', 'Alice', 'DT', 'Reece', 'Kishan', 'Travis', 'Aaron', 'Sanjay', 'Zen'];
+const TEAM_MEMBERS = ['Ben', 'Alice', 'Travis', 'DT', 'Reece', 'Tim', 'Sanjay', 'Kishan', 'Aaron', 'Zen', 'Sarn', 'Barnsley', 'Bec', 'James', 'Matt', 'Simon'];
 
 // ====== STATE MANAGEMENT ======
-const STORAGE_KEY = 'ceo-action-tracker-state';
 
 function loadState() {
   try {
