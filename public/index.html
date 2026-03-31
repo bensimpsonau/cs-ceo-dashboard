@@ -461,6 +461,23 @@ tailwind.config = {
 <!-- MAIN CONTENT -->
 <main class="lg:ml-[240px] max-w-[1600px] mx-auto px-4 sm:px-6 py-5">
 
+  <!-- ═══ VIEW TABS ═══ -->
+  <div class="flex items-center gap-1 mb-5 border-b border-[#E8E8EA] pb-0">
+    <button id="tab-metrics" onclick="switchView('metrics')" class="view-tab active px-5 py-2.5 text-sm font-semibold font-jakarta rounded-t-lg border border-b-0 border-[#E8E8EA] bg-[#FFFFFF] text-cs-orange relative -mb-px transition-all">
+      📊 Metrics
+    </button>
+    <button id="tab-tasks" onclick="switchView('tasks')" class="view-tab px-5 py-2.5 text-sm font-semibold font-jakarta rounded-t-lg border border-b-0 border-transparent text-[#807F86] hover:text-[#4D4C55] hover:bg-[#F9F9F9] relative -mb-px transition-all">
+      📋 Tasks & Projects
+    </button>
+  </div>
+  <style>
+    .view-tab.active { color: #FC5C03; border-color: #E8E8EA; background: #FFFFFF; z-index: 1; }
+    .view-tab:not(.active) { border-color: transparent; }
+  </style>
+
+  <!-- ═══ METRICS VIEW ═══ -->
+  <div id="view-metrics">
+
   <!-- ═══ KPI METRICS DASHBOARD ═══ -->
   <section id="kpi-dashboard" class="mb-6">
     <div class="flex items-center justify-between mb-3">
@@ -893,6 +910,12 @@ tailwind.config = {
   </section>
   <!-- ═══ END KPI METRICS DASHBOARD ═══ -->
 
+  </div>
+  <!-- ═══ END METRICS VIEW ═══ -->
+
+  <!-- ═══ TASKS VIEW ═══ -->
+  <div id="view-tasks" style="display:none">
+
   <div class="flex flex-col xl:flex-row gap-5">
 
     <!-- LEFT COLUMN -->
@@ -1151,6 +1174,10 @@ tailwind.config = {
       </div>
     </div>
   </div>
+
+  </div>
+  <!-- ═══ END TASKS VIEW ═══ -->
+
 </main>
 
 <script>
@@ -1451,6 +1478,19 @@ function sendBenBot() {
   window.open('https://discord.com/channels/1482990760692420690/1482993283838771322', '_blank');
   setTimeout(() => { confirm.classList.add('hidden'); ta.value = ''; }, 3000);
 }
+
+// ===== VIEW TABS =====
+function switchView(view) {
+  document.getElementById('view-metrics').style.display = view === 'metrics' ? 'block' : 'none';
+  document.getElementById('view-tasks').style.display = view === 'tasks' ? 'block' : 'none';
+  document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + view).classList.add('active');
+  localStorage.setItem('cs-active-view', view);
+}
+
+// Restore last tab
+const savedView = localStorage.getItem('cs-active-view');
+if (savedView) switchView(savedView);
 
 // ===== INIT =====
 renderPriorities();
