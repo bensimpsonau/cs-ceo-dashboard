@@ -1009,6 +1009,22 @@ tailwind.config = {
         <div class="space-y-2" id="priorities-list"></div>
       </div>
 
+      <!-- COMPLETED TASKS -->
+      <div id="completed-section" style="display:none">
+        <div class="flex items-center justify-between mb-3 mt-6">
+          <h2 class="font-oswald text-base uppercase tracking-wider text-[#807F86] flex items-center gap-2 cursor-pointer" onclick="toggleCompletedSection()">
+            <span class="text-cs-green">▎</span>Completed
+            <span class="text-[10px] font-mono text-[#4D4C55] bg-[#FFFFFF] px-2 py-0.5 rounded" id="completed-count"></span>
+            <svg id="completed-chevron" class="w-4 h-4 text-[#807F86] transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </h2>
+          <button onclick="clearCompleted()" class="text-[11px] text-red-400/60 hover:text-red-400 transition-colors flex items-center gap-1">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            Clear All
+          </button>
+        </div>
+        <div class="space-y-2" id="completed-list"></div>
+      </div>
+
       <!-- Quick Links: Documents -->
       <div class="bg-white border border-[#E8E8EA] rounded-xl p-5 mt-6">
         <div class="flex items-center justify-between mb-4">
@@ -1274,11 +1290,65 @@ const STATUS_MAP = {
 
 let dragSrcIndex = null;
 
-function renderPriorities() {
-  const list = document.getElementById('priorities-list');
-  document.getElementById('priority-count').textContent = priorities.length + ' items';
+let completedCollapsed = localStorage.getItem('cs-completed-collapsed') === 'true';
 
-  list.innerHTML = priorities.map((p, i) => {
+function toggleCompletedSection() {
+  completedCollapsed = !completedCollapsed;
+  localStorage.setItem('cs-completed-collapsed', completedCollapsed);
+  const list = document.getElementById('completed-list');
+  const chev = document.getElementById('completed-chevron');
+  list.style.display = completedCollapsed ? 'none' : 'block';
+  chev.style.transform = completedCollapsed ? 'rotate(-90deg)' : '';
+}
+
+function clearCompleted() {
+  const doneCount = priorities.filter(p => p.status === 'done').length;
+  if (!doneCount || !confirm(`Remove all ${doneCount} completed tasks?`)) return;
+  priorities = priorities.filter(p => p.status !== 'done');
+  savePriorities(priorities);
+  renderPriorities();
+}
+
+function renderPriorities() {
+  const activePriorities = priorities.filter(p => p.status !== 'done');
+  const completedPriorities = priorities.filter(p => p.status === 'done');
+  const list = document.getElementById('priorities-list');
+  const completedList = document.getElementById('completed-list');
+  const completedSection = document.getElementById('completed-section');
+  document.getElementById('priority-count').textContent = activePriorities.length + ' items';
+  document.getElementById('completed-count').textContent = completedPriorities.length + ' done';
+
+  // Show/hide completed section
+  completedSection.style.display = completedPriorities.length > 0 ? 'block' : 'none';
+  completedList.style.display = completedCollapsed ? 'none' : 'block';
+  const chev = document.getElementById('completed-chevron');
+  if (chev) chev.style.transform = completedCollapsed ? 'rotate(-90deg)' : '';
+
+  // Render completed items
+  completedList.innerHTML = completedPriorities.map((p) => {
+    const i = priorities.indexOf(p);
+    return `
+      <div class="bg-[#FFFFFF] border border-cs-green/20 rounded-lg overflow-hidden opacity-70">
+        <div class="flex items-center gap-2 px-3 py-2.5">
+          <span class="text-sm flex-shrink-0">✅</span>
+          <div class="min-w-0 flex-1">
+            <span class="font-semibold text-sm text-[#1B1925] line-through opacity-60">${escHtml(p.name)}</span>
+          </div>
+          <select class="text-cs-green bg-cs-green/10 text-[10px] font-semibold px-2 py-0.5 rounded-full border-0 bg-transparent focus:outline-none"
+                  onchange="changeStatus(${i}, this.value)">
+            <option value="urgent">🔴 Urgent</option>
+            <option value="progress">🟡 In Progress</option>
+            <option value="done" selected>✅ Done</option>
+          </select>
+          <button onclick="deletePriority(${i})" class="flex-shrink-0 p-1 text-red-400/40 hover:text-red-400 transition-colors">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+        </div>
+      </div>`;
+  }).join('');
+
+  list.innerHTML = activePriorities.map((p) => {
+    const i = priorities.indexOf(p);
     const s = STATUS_MAP[p.status] || STATUS_MAP.progress;
     const todayStr = new Date().toISOString().split('T')[0];
     const isOverdue = p.due && p.due < todayStr && p.status !== 'done';
@@ -1510,7 +1580,7 @@ function switchView(view) {
 
 // Force reset on this deploy - clear all stale localStorage
 (function() {
-  const RESET_VERSION = 'v10-apr1';
+  const RESET_VERSION = 'v11-completed';
   if (localStorage.getItem('cs-reset-version') !== RESET_VERSION) {
     localStorage.removeItem('cs-priorities-v9');
     localStorage.removeItem('cs-priorities-v8');
