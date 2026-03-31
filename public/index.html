@@ -1167,6 +1167,21 @@ tailwind.config = {
     <!-- RIGHT COLUMN -->
     <div class="w-full xl:w-[38%] space-y-5">
 
+      <!-- PROJECTS -->
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="font-oswald text-base uppercase tracking-wider text-[#807F86] flex items-center gap-2">
+            <span class="text-cs-purple">▎</span>Projects
+            <span class="text-[10px] font-mono text-[#4D4C55] bg-[#FFFFFF] px-2 py-0.5 rounded" id="project-count"></span>
+          </h2>
+          <button onclick="addProject()" class="text-xs bg-cs-purple/10 border border-cs-purple/30 text-cs-purple px-3 py-1.5 rounded-lg hover:bg-cs-purple/20 transition-all flex items-center gap-1.5">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            Add
+          </button>
+        </div>
+        <div class="space-y-2" id="projects-list"></div>
+      </div>
+
       <!-- BOT TEAM STATUS -->
       <div>
         <h2 class="font-oswald text-base uppercase tracking-wider text-\[#807F86\] mb-3 flex items-center gap-2">
@@ -1504,6 +1519,100 @@ function onDragEnd(e) {
   dragSrcIndex = null;
 }
 
+// ===== PROJECTS =====
+const DEFAULT_PROJECTS = [
+  { id: 'pj1', name: 'Pre-Series A Raise (A$3M)', status: 'progress', progress: 70, notes: 'Closing this month. Steve meetings being booked for US trip.' },
+  { id: 'pj2', name: 'Alchemy Fee Renegotiation', status: 'progress', progress: 50, notes: 'Analysis doc complete. Meeting with Sanjay/Kishan pending.' },
+  { id: 'pj3', name: 'AI Agent Team (11 bots)', status: 'progress', progress: 40, notes: 'Core bots active. EA, Marketing, Social, Video still need full setup.' },
+  { id: 'pj4', name: 'US Expansion & Sales Team', status: 'progress', progress: 30, notes: 'US sales team training & onboarding. Kishan managing.' },
+  { id: 'pj5', name: 'YouTube Content Engine', status: 'progress', progress: 25, notes: 'Jeremy Haynes framework adopted. Need content pipeline board.' },
+  { id: 'pj6', name: 'Platinum Onboarding Revamp', status: 'progress', progress: 20, notes: 'New onboarding strategy in design phase.' },
+  { id: 'pj7', name: 'Cayman Islands Restructure', status: 'progress', progress: 10, notes: 'Legal audit ongoing. Offshore entity structure.' },
+  { id: 'pj8', name: 'Black Tier Launch', status: 'progress', progress: 35, notes: 'Bec + Ben outreach. ~$33K per upsell.' },
+];
+
+function loadProjects() {
+  const saved = localStorage.getItem('cs-projects-v1');
+  if (saved) { try { return JSON.parse(saved); } catch(e) {} }
+  return JSON.parse(JSON.stringify(DEFAULT_PROJECTS));
+}
+function saveProjects(p) { localStorage.setItem('cs-projects-v1', JSON.stringify(p)); }
+let projects = loadProjects();
+
+const PROJ_STATUS = {
+  progress: { label: 'In Progress', color: 'text-cs-purple', bg: 'bg-cs-purple/10', barColor: 'bg-cs-purple' },
+  done: { label: 'Complete', color: 'text-cs-green', bg: 'bg-cs-green/10', barColor: 'bg-cs-green' },
+  blocked: { label: 'Blocked', color: 'text-red-400', bg: 'bg-red-400/10', barColor: 'bg-red-400' },
+};
+
+function renderProjects() {
+  const list = document.getElementById('projects-list');
+  const activeProjects = projects.filter(p => p.status !== 'done');
+  const doneProjects = projects.filter(p => p.status === 'done');
+  document.getElementById('project-count').textContent = activeProjects.length + ' active';
+
+  const renderCard = (p, i) => {
+    const s = PROJ_STATUS[p.status] || PROJ_STATUS.progress;
+    return `
+      <div class="bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg overflow-hidden">
+        <div class="px-3 py-2.5 cursor-pointer" onclick="toggleProject(${i})">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="font-semibold text-sm text-[#1B1925] ${p.status === 'done' ? 'line-through opacity-60' : ''}">${escHtml(p.name)}</span>
+            <span class="${s.color} ${s.bg} text-[10px] font-semibold px-2 py-0.5 rounded-full">${s.label}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="flex-1 bg-[#E8E8EA] rounded-full h-1.5">
+              <div class="${s.barColor} rounded-full h-1.5 transition-all" style="width:${p.progress}%"></div>
+            </div>
+            <span class="text-[10px] font-mono text-[#807F86]">${p.progress}%</span>
+          </div>
+        </div>
+        <div class="project-detail px-3 pb-1" id="proj-detail-${i}" style="display:none">
+          <div class="space-y-2 pb-2">
+            <div class="text-xs text-[#4D4C55]">${escHtml(p.notes)}</div>
+            <div class="flex flex-wrap items-center gap-2">
+              <label class="text-[10px] font-semibold text-[#807F86] uppercase">Progress:</label>
+              <input type="range" min="0" max="100" step="5" value="${p.progress}" onchange="changeProjectProgress(${i}, this.value)"
+                class="flex-1 h-1 accent-[#654FFC]" style="max-width:120px">
+              <select class="text-[10px] px-2 py-0.5 rounded border border-[#E8E8EA] bg-white focus:outline-none" onchange="changeProjectStatus(${i}, this.value)">
+                <option value="progress" ${p.status==='progress'?'selected':''}>In Progress</option>
+                <option value="blocked" ${p.status==='blocked'?'selected':''}>Blocked</option>
+                <option value="done" ${p.status==='done'?'selected':''}>Complete</option>
+              </select>
+              <button onclick="deleteProject(${i})" class="text-[10px] text-red-400/50 hover:text-red-400 ml-auto">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  };
+
+  list.innerHTML = activeProjects.map(p => renderCard(p, projects.indexOf(p))).join('') +
+    (doneProjects.length > 0 ? `
+      <div class="mt-3 pt-3 border-t border-[#E8E8EA]">
+        <div class="text-[10px] font-mono text-[#807F86] uppercase tracking-wider mb-2 cursor-pointer flex items-center gap-1" onclick="document.getElementById('done-projects').style.display = document.getElementById('done-projects').style.display === 'none' ? 'block' : 'none'">
+          ✅ ${doneProjects.length} Completed <svg class="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </div>
+        <div id="done-projects" style="display:none" class="space-y-2">
+          ${doneProjects.map(p => renderCard(p, projects.indexOf(p))).join('')}
+        </div>
+      </div>` : '');
+}
+
+function toggleProject(i) {
+  const d = document.getElementById('proj-detail-' + i);
+  if (d) d.style.display = d.style.display === 'none' ? 'block' : 'none';
+}
+function changeProjectProgress(i, val) { projects[i].progress = parseInt(val); saveProjects(projects); renderProjects(); }
+function changeProjectStatus(i, val) { projects[i].status = val; if (val === 'done') projects[i].progress = 100; saveProjects(projects); renderProjects(); }
+function deleteProject(i) { if (!confirm(`Delete "${projects[i].name}"?`)) return; projects.splice(i, 1); saveProjects(projects); renderProjects(); }
+function addProject() {
+  const name = prompt('New project name:');
+  if (!name || !name.trim()) return;
+  projects.push({ id: 'pj' + Date.now(), name: name.trim(), status: 'progress', progress: 0, notes: '' });
+  saveProjects(projects);
+  renderProjects();
+}
+
 // ===== BOT TEAM STATUS =====
 const botTeam = [
   { name: 'Finance Bot', channel: '#finance-bot', status: 'green', activity: 'Today' },
@@ -1598,6 +1707,7 @@ if (savedView) switchView(savedView);
 
 // ===== INIT =====
 renderPriorities();
+renderProjects();
 renderBotTeam();
 </script>
 </body>
