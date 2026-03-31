@@ -469,6 +469,9 @@ tailwind.config = {
     <button id="tab-tasks" onclick="switchView('tasks')" class="view-tab px-5 py-2.5 text-sm font-semibold font-jakarta rounded-t-lg border border-b-0 border-transparent text-[#807F86] hover:text-[#4D4C55] hover:bg-[#F9F9F9] relative -mb-px transition-all">
       📋 Tasks & Projects
     </button>
+    <button id="tab-actions" onclick="switchView('actions')" class="view-tab px-5 py-2.5 text-sm font-semibold font-jakarta rounded-t-lg border border-b-0 border-transparent text-[#807F86] hover:text-[#4D4C55] hover:bg-[#F9F9F9] relative -mb-px transition-all">
+      ✅ Action List
+    </button>
   </div>
   <style>
     .view-tab.active { color: #FC5C03; border-color: #E8E8EA; background: #FFFFFF; z-index: 1; }
@@ -1178,6 +1181,12 @@ tailwind.config = {
   </div>
   <!-- ═══ END TASKS VIEW ═══ -->
 
+  <!-- ═══ ACTIONS VIEW ═══ -->
+  <div id="view-actions" style="display:none">
+    <iframe id="actions-frame" src="" style="width:100%;height:calc(100vh - 140px);border:none;border-radius:8px;" loading="lazy"></iframe>
+  </div>
+  <!-- ═══ END ACTIONS VIEW ═══ -->
+
 </main>
 
 <script>
@@ -1481,11 +1490,22 @@ function sendBenBot() {
 
 // ===== VIEW TABS =====
 function switchView(view) {
-  document.getElementById('view-metrics').style.display = view === 'metrics' ? 'block' : 'none';
-  document.getElementById('view-tasks').style.display = view === 'tasks' ? 'block' : 'none';
+  const views = ['metrics', 'tasks', 'actions'];
+  views.forEach(v => {
+    const el = document.getElementById('view-' + v);
+    if (el) el.style.display = v === view ? 'block' : 'none';
+  });
   document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + view).classList.add('active');
   localStorage.setItem('cs-active-view', view);
+
+  // Lazy-load actions iframe on first switch
+  if (view === 'actions') {
+    const frame = document.getElementById('actions-frame');
+    if (frame && !frame.src.includes('actions.html')) {
+      frame.src = 'actions.html';
+    }
+  }
 }
 
 // Restore last tab
