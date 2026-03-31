@@ -1508,7 +1508,21 @@ function switchView(view) {
   }
 }
 
-// Restore last tab
+// Force reset on this deploy - clear all stale localStorage
+(function() {
+  const RESET_VERSION = 'v10-apr1';
+  if (localStorage.getItem('cs-reset-version') !== RESET_VERSION) {
+    localStorage.removeItem('cs-priorities-v9');
+    localStorage.removeItem('cs-priorities-v8');
+    localStorage.removeItem('cs-priorities-v7');
+    localStorage.removeItem('cs-active-view');
+    localStorage.removeItem('ceo-action-tracker-state');
+    localStorage.removeItem('ceo-tracker-version');
+    localStorage.setItem('cs-reset-version', RESET_VERSION);
+  }
+})();
+
+// Restore last tab (defaults to metrics after reset)
 const savedView = localStorage.getItem('cs-active-view');
 if (savedView) switchView(savedView);
 
