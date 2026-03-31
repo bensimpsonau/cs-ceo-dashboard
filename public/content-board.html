@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Content Pipeline — Collective Shift</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cs: {
+          orange: '#FC5C03',
+          'orange-light': '#FC8C4E',
+          'orange-bg': '#FEDECC',
+          'orange-hover': '#FEEEE5',
+          green: '#08C394',
+          purple: '#654FFC',
+          border: '#E8E8EA',
+          text: '#1B1925',
+          secondary: '#4D4C55',
+          muted: '#807F86',
+        }
+      },
+      fontFamily: {
+        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+        barlow: ['Barlow', 'sans-serif'],
+        mono: ['Source Code Pro', 'monospace'],
+      }
+    }
+  }
+}
+</script>
+<style>
+  :root {
+    --csn-h: 56px;
+    --csn-bg: #FFFFFF;
+    --csn-border: #E8E8EA;
+    --csn-text: #1B1925;
+    --csn-muted: #4D4C55;
+    --csn-orange: #FC5C03;
+    --csn-orange-bg: #FEEEE5;
+    --csn-dd-bg: #FFFFFF;
+    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    --csn-z: 9000;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Barlow', sans-serif; background: #F7F7F8; color: #1B1925; }
+
+  /* NAV */
+  .csn-bar { position: fixed; top: 0; left: 0; right: 0; height: var(--csn-h); background: var(--csn-bg); border-bottom: 1px solid var(--csn-border); display: flex; align-items: center; padding: 0 24px; z-index: var(--csn-z); font-family: 'Plus Jakarta Sans', sans-serif; }
+  .csn-logo { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 15px; color: var(--csn-orange); text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; margin-right: 32px; flex-shrink: 0; }
+  .csn-nav { display: flex; align-items: center; gap: 2px; flex: 1; }
+  .csn-item { position: relative; }
+  .csn-link { display: flex; align-items: center; gap: 5px; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--csn-muted); text-decoration: none; white-space: nowrap; transition: color 0.15s, background 0.15s; cursor: pointer; }
+  .csn-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-chevron { transition: transform 0.2s; flex-shrink: 0; }
+  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
+  .csn-dropdown { display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 240px; background: var(--csn-dd-bg); border: 1px solid var(--csn-border); border-radius: 12px; box-shadow: var(--csn-dd-shadow); padding: 6px; z-index: calc(var(--csn-z) + 1); }
+  .csn-item.csn-has-dd { position: relative; }
+  .csn-item.csn-has-dd::after { content: ""; position: absolute; top: 100%; left: 0; width: 100%; height: 12px; }
+  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
+  .csn-dd-item { display: block; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--csn-muted); text-decoration: none; transition: color 0.12s, background 0.12s; white-space: nowrap; }
+  .csn-dd-item:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-hamburger { display: none; background: none; border: none; cursor: pointer; color: var(--csn-muted); padding: 4px; margin-left: auto; }
+  @media (max-width: 768px) {
+    .csn-nav { display: none; }
+    .csn-hamburger { display: block; }
+    .csn-nav.open { display: flex; flex-direction: column; position: fixed; top: var(--csn-h); left: 0; right: 0; background: #fff; border-bottom: 1px solid var(--csn-border); padding: 12px; z-index: var(--csn-z); }
+    .csn-dropdown { position: static; box-shadow: none; border: none; padding-left: 12px; display: block; }
+    .csn-item.csn-has-dd::after { display: none; }
+  }
+
+  /* BOARD */
+  .board-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 20px 24px 12px; }
+  .board-container { display: flex; gap: 16px; padding: 0 24px 24px; overflow-x: auto; min-height: calc(100vh - 160px); align-items: flex-start; }
+  .column { min-width: 280px; max-width: 320px; flex: 1 0 280px; background: #fff; border: 1px solid #E8E8EA; border-radius: 12px; display: flex; flex-direction: column; max-height: calc(100vh - 160px); }
+  .column-header { padding: 14px 16px 10px; border-bottom: 1px solid #E8E8EA; position: sticky; top: 0; background: #fff; border-radius: 12px 12px 0 0; z-index: 1; }
+  .column-body { padding: 8px; overflow-y: auto; flex: 1; min-height: 60px; }
+  .column-body.drag-over { background: #FEEEE5; }
+
+  /* CARDS */
+  .card { background: #FAFAFA; border: 1px solid #E8E8EA; border-radius: 10px; padding: 12px; margin-bottom: 8px; cursor: grab; transition: box-shadow 0.15s, transform 0.15s, opacity 0.15s; }
+  .card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .card.dragging { opacity: 0.4; transform: scale(0.97); }
+  .card-thumb { width: 100%; aspect-ratio: 16/9; background: #E8E8EA; border-radius: 6px; overflow: hidden; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; color: #807F86; font-size: 28px; }
+  .card-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .card-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 13px; line-height: 1.4; color: #1B1925; margin-bottom: 6px; }
+  .card-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .stage-badge { font-family: 'Source Code Pro', monospace; font-size: 10px; font-weight: 500; letter-spacing: 0.04em; padding: 2px 8px; border-radius: 100px; text-transform: uppercase; }
+  .due-badge { font-family: 'Source Code Pro', monospace; font-size: 10px; color: #807F86; }
+  .expand-btn { background: none; border: none; cursor: pointer; color: #807F86; font-size: 11px; font-family: 'Source Code Pro', monospace; padding: 4px 0; margin-top: 6px; transition: color 0.15s; }
+  .expand-btn:hover { color: #FC5C03; }
+  .card-detail { display: none; margin-top: 10px; border-top: 1px solid #E8E8EA; padding-top: 10px; }
+  .card-detail.open { display: block; }
+  .card-detail label { font-family: 'Source Code Pro', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #807F86; display: block; margin-bottom: 4px; margin-top: 10px; }
+  .card-detail label:first-child { margin-top: 0; }
+  .card-detail textarea, .card-detail input[type="text"] { width: 100%; border: 1px solid #E8E8EA; border-radius: 6px; padding: 8px; font-family: 'Barlow', sans-serif; font-size: 12px; resize: vertical; background: #fff; }
+  .card-detail textarea:focus, .card-detail input[type="text"]:focus { outline: none; border-color: #FC5C03; }
+  .checklist-item { display: flex; align-items: center; gap: 6px; font-size: 12px; padding: 3px 0; }
+  .checklist-item input[type="checkbox"] { accent-color: #FC5C03; }
+
+  /* Stage colors */
+  .stage-script { background: #EDE9FE; color: #654FFC; }
+  .stage-filming { background: #FEF3C7; color: #D97706; }
+  .stage-editing { background: #DBEAFE; color: #2563EB; }
+  .stage-review { background: #FEDECC; color: #FC5C03; }
+  .stage-seo { background: #D1FAE5; color: #059669; }
+  .stage-social { background: #FCE7F3; color: #DB2777; }
+  .stage-published { background: #D1FAE5; color: #08C394; }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 10000; align-items: center; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: #fff; border-radius: 16px; padding: 28px; width: 90%; max-width: 480px; box-shadow: 0 16px 48px rgba(0,0,0,0.15); }
+  .modal h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 18px; margin-bottom: 16px; }
+  .modal label { font-family: 'Source Code Pro', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #807F86; display: block; margin-bottom: 4px; margin-top: 12px; }
+  .modal input, .modal select { width: 100%; border: 1px solid #E8E8EA; border-radius: 8px; padding: 10px; font-family: 'Barlow', sans-serif; font-size: 13px; }
+  .modal input:focus, .modal select:focus { outline: none; border-color: #FC5C03; }
+  .btn-primary { background: #FC5C03; color: #fff; border: none; border-radius: 8px; padding: 10px 20px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 13px; cursor: pointer; transition: background 0.15s; }
+  .btn-primary:hover { background: #e04d00; }
+  .btn-secondary { background: #F7F7F8; color: #4D4C55; border: 1px solid #E8E8EA; border-radius: 8px; padding: 10px 20px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 13px; cursor: pointer; }
+  .btn-danger { background: #FEE2E2; color: #DC2626; border: none; border-radius: 8px; padding: 6px 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 11px; cursor: pointer; }
+  .btn-danger:hover { background: #FECACA; }
+
+  /* FILTER */
+  .filter-btn { padding: 6px 14px; border-radius: 100px; font-family: 'Source Code Pro', monospace; font-size: 11px; font-weight: 500; border: 1px solid #E8E8EA; background: #fff; color: #807F86; cursor: pointer; transition: all 0.15s; }
+  .filter-btn:hover, .filter-btn.active { background: #FC5C03; color: #fff; border-color: #FC5C03; }
+
+  @media print {
+    .csn-bar, .board-header { display: none !important; }
+    body { background: #fff; }
+    .board-container { flex-wrap: wrap; overflow: visible; padding-top: 0; }
+    .column { break-inside: avoid; page-break-inside: avoid; max-height: none; }
+  }
+
+  @media (max-width: 768px) {
+    .board-container { flex-direction: column; }
+    .column { min-width: 100%; max-width: 100%; max-height: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="csn-bar" role="navigation" aria-label="Main navigation">
+  <a href="index.html" class="csn-logo">Collective Shift</a>
+  <button class="csn-hamburger" onclick="document.querySelector('.csn-nav').classList.toggle('open')" aria-label="Menu">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+  <div class="csn-nav">
+    <div class="csn-item"><a href="index.html" class="csn-link">CEO Dashboard</a></div>
+    <div class="csn-item csn-has-dd">
+      <a href="#" class="csn-link">Documents
+        <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="csn-dropdown">
+        <a href="content-board.html" class="csn-dd-item" style="color: var(--csn-orange); font-weight: 600;">Content Pipeline</a>
+        <a href="alchemy-negotiation.html" class="csn-dd-item">Alchemy Fee Negotiation</a>
+        <a href="travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a>
+        <a href="cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<div style="margin-top: var(--csn-h);">
+  <div class="board-header">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:20px;color:#1B1925;">📺 Content Pipeline</h1>
+      <span id="totalCount" style="font-family:'Source Code Pro',monospace;font-size:11px;color:#807F86;background:#F7F7F8;padding:2px 10px;border-radius:100px;border:1px solid #E8E8EA;"></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <div id="filterBar" style="display:flex;gap:4px;flex-wrap:wrap;"></div>
+      <button class="btn-primary" onclick="openAddModal()" style="padding:8px 16px;">+ New Content</button>
+      <button class="btn-secondary" onclick="window.print()" style="padding:8px 16px;display:flex;align-items:center;gap:4px;">🖨️ Print</button>
+    </div>
+  </div>
+
+  <!-- BOARD -->
+  <div class="board-container" id="board"></div>
+</div>
+
+<!-- ADD MODAL -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <h3>New Content</h3>
+    <label>Title</label>
+    <input type="text" id="newTitle" placeholder="Video title...">
+    <label>Stage</label>
+    <select id="newStage">
+      <option value="script">📝 Script</option>
+      <option value="filming">🎬 Filming</option>
+      <option value="editing">✂️ Editing</option>
+      <option value="review">🖼️ Review</option>
+      <option value="seo">📋 SEO & Copy</option>
+      <option value="social">📱 Social Clips</option>
+      <option value="published">✅ Published</option>
+    </select>
+    <label>Due Date (optional)</label>
+    <input type="date" id="newDue">
+    <label>Thumbnail URL (optional)</label>
+    <input type="text" id="newThumb" placeholder="https://...">
+    <div style="display:flex;gap:8px;margin-top:20px;justify-content:flex-end;">
+      <button class="btn-secondary" onclick="closeAddModal()">Cancel</button>
+      <button class="btn-primary" onclick="addCard()">Add Content</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STAGES = [
+  { id: 'script',    emoji: '📝', label: 'Script',       cls: 'stage-script' },
+  { id: 'filming',   emoji: '🎬', label: 'Filming',      cls: 'stage-filming' },
+  { id: 'editing',   emoji: '✂️', label: 'Editing',      cls: 'stage-editing' },
+  { id: 'review',    emoji: '🖼️', label: 'Review',       cls: 'stage-review' },
+  { id: 'seo',       emoji: '📋', label: 'SEO & Copy',   cls: 'stage-seo' },
+  { id: 'social',    emoji: '📱', label: 'Social Clips',  cls: 'stage-social' },
+  { id: 'published', emoji: '✅', label: 'Published',     cls: 'stage-published' },
+];
+
+const SOCIALS = ['YouTube (long-form)', 'X/Twitter thread', 'LinkedIn post', 'Instagram Reel', 'TikTok', 'Newsletter excerpt', 'Facebook'];
+const STORAGE_KEY = 'cs-content-board-v1';
+
+const DEFAULT_CARDS = [{
+  id: 'card-' + Date.now(),
+  title: 'Bitcoin Is Down 48%. Is Now the Time to Buy? (What the Data Actually Shows)',
+  stage: 'review',
+  thumb: '',
+  due: '',
+  description: `Bitcoin has now fallen roughly 48% from its all-time high. This update walks through what the data actually shows: historical context, onchain signals, institutional flows, and where I personally stand.
+
+Key takeaways:
+• A 48% correction is historically normal for Bitcoin
+• Onchain data shows early accumulation signs
+• Institutions haven't stopped buying - ETF flows stabilising
+• We're earning yield on stablecoins while waiting for confirmation
+• The smart move is having a plan ready, not acting impulsively
+
+📊 Join Collective Shift: https://collectiveshift.io
+🐦 Follow on X: https://x.com/baboracle
+
+#Bitcoin #BTC #Crypto #BitcoinCrash #Investing`,
+  tags: 'Bitcoin, BTC, crypto, Bitcoin crash, investing, digital assets, Bitcoin price, Bitcoin analysis, onchain data, Bitcoin ETF',
+  socials: { 'YouTube (long-form)': false, 'X/Twitter thread': false, 'LinkedIn post': false, 'Instagram Reel': false, 'TikTok': false, 'Newsletter excerpt': false, 'Facebook': false },
+  notes: ''
+}];
+
+let cards = [];
+let activeFilter = 'all';
+let dragCardId = null;
+
+function loadCards() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw) { try { cards = JSON.parse(raw); } catch(e) { cards = [...DEFAULT_CARDS]; } }
+  else { cards = [...DEFAULT_CARDS]; }
+}
+
+function saveCards() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+}
+
+function render() {
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+
+  const filteredStages = activeFilter === 'all' ? STAGES : STAGES.filter(s => s.id === activeFilter);
+
+  // Update filter bar
+  const filterBar = document.getElementById('filterBar');
+  filterBar.innerHTML = `<button class="filter-btn ${activeFilter === 'all' ? 'active' : ''}" onclick="setFilter('all')">All</button>`;
+  STAGES.forEach(s => {
+    const count = cards.filter(c => c.stage === s.id).length;
+    filterBar.innerHTML += `<button class="filter-btn ${activeFilter === s.id ? 'active' : ''}" onclick="setFilter('${s.id}')">${s.emoji} ${count}</button>`;
+  });
+
+  document.getElementById('totalCount').textContent = cards.length + ' video' + (cards.length !== 1 ? 's' : '');
+
+  filteredStages.forEach(stage => {
+    const stageCards = cards.filter(c => c.stage === stage.id);
+    const col = document.createElement('div');
+    col.className = 'column';
+    col.innerHTML = `
+      <div class="column-header">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;">${stage.emoji} ${stage.label}</span>
+          <span style="font-family:'Source Code Pro',monospace;font-size:11px;color:#807F86;background:#F7F7F8;padding:1px 8px;border-radius:100px;">${stageCards.length}</span>
+        </div>
+      </div>
+      <div class="column-body" data-stage="${stage.id}"></div>
+    `;
+
+    const body = col.querySelector('.column-body');
+
+    body.addEventListener('dragover', e => { e.preventDefault(); body.classList.add('drag-over'); });
+    body.addEventListener('dragleave', () => body.classList.remove('drag-over'));
+    body.addEventListener('drop', e => {
+      e.preventDefault();
+      body.classList.remove('drag-over');
+      if (dragCardId) {
+        const card = cards.find(c => c.id === dragCardId);
+        if (card) { card.stage = stage.id; saveCards(); render(); }
+      }
+    });
+
+    stageCards.forEach(card => {
+      body.appendChild(createCardEl(card, stage));
+    });
+
+    board.appendChild(col);
+  });
+}
+
+function createCardEl(card, stage) {
+  const el = document.createElement('div');
+  el.className = 'card';
+  el.draggable = true;
+  el.dataset.id = card.id;
+
+  el.addEventListener('dragstart', e => { dragCardId = card.id; el.classList.add('dragging'); });
+  el.addEventListener('dragend', () => { dragCardId = null; el.classList.remove('dragging'); });
+
+  const stageInfo = STAGES.find(s => s.id === card.stage);
+  const thumbHTML = card.thumb
+    ? `<img src="${escHtml(card.thumb)}" alt="Thumbnail">`
+    : `<span>🎬</span>`;
+
+  const socialsHTML = SOCIALS.map(s => {
+    const checked = card.socials && card.socials[s] ? 'checked' : '';
+    return `<div class="checklist-item"><input type="checkbox" ${checked} onchange="toggleSocial('${card.id}','${s}',this.checked)"><span>${s}</span></div>`;
+  }).join('');
+
+  const stageOptions = STAGES.map(s =>
+    `<option value="${s.id}" ${s.id === card.stage ? 'selected' : ''}>${s.emoji} ${s.label}</option>`
+  ).join('');
+
+  el.innerHTML = `
+    <div class="card-thumb">${thumbHTML}</div>
+    <div class="card-title">${escHtml(card.title)}</div>
+    <div class="card-meta">
+      <span class="stage-badge ${stageInfo.cls}">${stageInfo.emoji} ${stageInfo.label}</span>
+      ${card.due ? `<span class="due-badge">📅 ${card.due}</span>` : ''}
+    </div>
+    <button class="expand-btn" onclick="toggleDetail('${card.id}',this)">▼ Details</button>
+    <div class="card-detail" id="detail-${card.id}">
+      <label>Move to Stage</label>
+      <select style="width:100%;border:1px solid #E8E8EA;border-radius:6px;padding:6px;font-size:12px;font-family:'Barlow',sans-serif;" onchange="moveCard('${card.id}',this.value)">
+        ${stageOptions}
+      </select>
+      <label>Title</label>
+      <input type="text" value="${escAttr(card.title)}" onchange="updateField('${card.id}','title',this.value)">
+      <label>Due Date</label>
+      <input type="date" value="${card.due || ''}" onchange="updateField('${card.id}','due',this.value)">
+      <label>Thumbnail URL</label>
+      <input type="text" value="${escAttr(card.thumb || '')}" onchange="updateField('${card.id}','thumb',this.value)" placeholder="https://...">
+      <label>YouTube Description</label>
+      <textarea rows="5" onchange="updateField('${card.id}','description',this.value)">${escHtml(card.description || '')}</textarea>
+      <label>Tags</label>
+      <input type="text" value="${escAttr(card.tags || '')}" onchange="updateField('${card.id}','tags',this.value)">
+      <label>Social Redistribution</label>
+      ${socialsHTML}
+      <label>Notes</label>
+      <textarea rows="3" onchange="updateField('${card.id}','notes',this.value)">${escHtml(card.notes || '')}</textarea>
+      <div style="margin-top:12px;text-align:right;">
+        <button class="btn-danger" onclick="deleteCard('${card.id}')">Delete Card</button>
+      </div>
+    </div>
+  `;
+  return el;
+}
+
+function toggleDetail(id, btn) {
+  const detail = document.getElementById('detail-' + id);
+  if (detail) {
+    detail.classList.toggle('open');
+    btn.textContent = detail.classList.contains('open') ? '▲ Close' : '▼ Details';
+  }
+}
+
+function updateField(id, field, value) {
+  const card = cards.find(c => c.id === id);
+  if (card) { card[field] = value; saveCards(); render(); }
+}
+
+function moveCard(id, newStage) {
+  const card = cards.find(c => c.id === id);
+  if (card) { card.stage = newStage; saveCards(); render(); }
+}
+
+function toggleSocial(id, social, checked) {
+  const card = cards.find(c => c.id === id);
+  if (card) {
+    if (!card.socials) card.socials = {};
+    card.socials[social] = checked;
+    saveCards();
+  }
+}
+
+function deleteCard(id) {
+  if (confirm('Delete this content card?')) {
+    cards = cards.filter(c => c.id !== id);
+    saveCards();
+    render();
+  }
+}
+
+function setFilter(stage) {
+  activeFilter = stage;
+  render();
+}
+
+function openAddModal() { document.getElementById('addModal').classList.add('open'); }
+function closeAddModal() { document.getElementById('addModal').classList.remove('open'); }
+
+function addCard() {
+  const title = document.getElementById('newTitle').value.trim();
+  if (!title) { alert('Title is required'); return; }
+  cards.push({
+    id: 'card-' + Date.now(),
+    title: title,
+    stage: document.getElementById('newStage').value,
+    thumb: document.getElementById('newThumb').value.trim(),
+    due: document.getElementById('newDue').value,
+    description: '',
+    tags: '',
+    socials: {},
+    notes: ''
+  });
+  saveCards();
+  render();
+  closeAddModal();
+  document.getElementById('newTitle').value = '';
+  document.getElementById('newDue').value = '';
+  document.getElementById('newThumb').value = '';
+}
+
+function escHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function escAttr(s) { return s.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+// Init
+loadCards();
+render();
+</script>
+</body>
+</html>
