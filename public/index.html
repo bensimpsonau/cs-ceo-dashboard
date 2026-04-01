@@ -1059,16 +1059,18 @@ tailwind.config = {
 
       <!-- ACTIVE PRIORITIES (HERO FEATURE) -->
       <div>
-        <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center justify-between mb-1">
           <h2 class="font-oswald text-base uppercase tracking-wider text-\[#807F86\] flex items-center gap-2">
             <span class="text-cs-orange">▎</span>Active Priorities
             <span class="text-[10px] font-mono text-\[#4D4C55\] bg-[#FFFFFF] px-2 py-0.5 rounded" id="priority-count"></span>
+            <button id="refresh-tasks-btn" onclick="refreshTasks()" class="text-sm hover:opacity-70 transition-opacity" title="Refresh tasks">🔄</button>
           </h2>
           <button onclick="addPriority()" class="text-xs bg-cs-orange/10 border border-cs-orange/30 text-cs-orange px-3 py-1.5 rounded-lg hover:bg-cs-orange/20 transition-all flex items-center gap-1.5">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
             Add Priority
           </button>
         </div>
+        <div class="text-[10px] text-[#807F86] font-mono mb-3" id="tasks-updated"></div>
         <!-- Filter tabs -->
         <div class="flex items-center gap-1 mb-3" id="task-filters">
           <button class="task-filter-tab active-filter" onclick="filterTasks('all')">All</button>
@@ -1241,66 +1243,68 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 
-// ===== PRIORITIES DATA & LOCALSTORAGE =====
-const DEFAULT_PRIORITIES = [
-  // ===== COMPLETED (March) =====
-  { id: 'd1', name: '✅ Josh exit - Marketing Growth Lead', status: 'done', due: '2026-03-31', notes: 'Terminated March 31. Redundancy: $2,633 (AL balance only). Kishan replaces.' },
-  { id: 'd2', name: '✅ Pat exit - Social Media Manager', status: 'done', due: '2026-03-31', notes: 'Terminated March 31. Redundancy: $3,580 (AL balance only). Social Media Bot + VA replaces.' },
-  { id: 'd3', name: '✅ DT & Reece: Commission-only (salary removed)', status: 'done', due: '2026-03-31', notes: '10% commission on net revenue, salary hurdle. No base salary. Saves $23,137/mo fixed cost.' },
-  { id: 'd4', name: '✅ Meta $270K deferred bill - PAID', status: 'done', due: '2026-03-31', notes: 'Biggest March obligation cleared. Removes from survivor line.' },
-  { id: 'd5', name: '✅ Renewal target $180K - EXCEEDED', status: 'done', due: '2026-03-31', notes: '$186,155 won vs $180K target. 21 closed won, 35% contact rate.' },
-  { id: 'd6', name: '✅ Restructure savings confirmed - $58.7K/mo', status: 'done', due: '2026-03-31', notes: '5 salaries + Sanjay/Kishan fee cut - US closers. $704K/yr annual saving.' },
+// ===== PRIORITIES DATA (loaded from tasks.json) =====
+let priorities = [];
+let tasksLastUpdated = null;
 
-  // ===== URGENT - This Week =====
-  { id: 'u1', name: '🔴 Alicia exit conversation (after Easter)', status: 'urgent', due: '2026-04-14', notes: 'Currently on holiday. Tell remotely when she returns. Redundancy: $394 (AL only). EA Bot replaces.' },
-  { id: 'u2', name: '🔴 Sanjay/Kishan: Fee negotiation 25% to 15% GP', status: 'urgent', due: '2026-04-04', notes: 'Still discussing but they will change. Doc: /alchemy-negotiation.html. Saves $14,940/mo.' },
-  { id: 'u3', name: '🔴 Tim + Kishan + Sanjay intro meeting', status: 'urgent', due: '2026-04-02', notes: 'Needs to happen before Ben leaves for Vietnam Wed 5am.' },
-  { id: 'u4', name: '🔴 Aaron: API security protocol', status: 'urgent', due: '2026-04-02', notes: 'Read-only via their service API, sandbox for bots, no credential sharing.' },
-  { id: 'u5', name: '🔴 Pat & Josh: Deed of Release - send both', status: 'urgent', due: '2026-04-02', notes: 'Both told. Need formal deed signed.' },
-  { id: 'u6', name: '🔴 Hire YouTube long-form editor', status: 'urgent', due: '2026-04-04', notes: 'Top picks: Alidoesmotion ($50/vid), Neel N (Upwork), EditVideo.io ($295/mo). Test with 1 video.' },
-  { id: 'u7', name: '🔴 Hire short-form + reels editor', status: 'urgent', due: '2026-04-04', notes: 'Top picks: Markksantos ($100/vid), Cloudbranding ($40/vid), Triyogi A (Upwork).' },
+// Status emoji mapping for task names from JSON (no emoji prefix in JSON)
+const STATUS_EMOJI = { urgent: '🔴 ', progress: '📋 ', done: '✅ ' };
+const CATEGORY_EMOJI = { 'ai-bots': '🤖 ', 'travel': '✈️ ', 'operations': '', 'revenue': '', 'product': '' };
 
-  // ===== ACTIVE PROJECTS =====
-  { id: 'p1', name: '📋 VSL Call Funnel - Kishan priority', status: 'progress', due: '2026-04-14', notes: 'Least variables, runs 24/7, starting to see results. Kishan managing (was Josh).' },
-  { id: 'p2', name: '📋 Pre-Series A raise - A$3M', status: 'progress', due: '2026-04-30', notes: 'Ben in US for meetings. Steve being booked. Investor memo + pitch deck ready.' },
-  { id: 'p3', name: '📋 Content Calendar + Social Media Production System', status: 'progress', due: '2026-04-07', notes: 'Replace Pat. 1 video to 17+ pieces pipeline. 7-day posting cadence. /content-calendar.html' },
-  { id: 'p4', name: '📋 YouTube strategy execution', status: 'progress', due: '', notes: '40 video ideas + 12-week calendar. Jeremy Haynes 90/10 framework. Need long-form editor hired.' },
-  { id: 'p5', name: '📋 Lead Magnet Strategy - Digital Asset Wealth Blueprint', status: 'progress', due: '2026-04-14', notes: 'Quiz funnel + 1hr masterclass + blueprint. Doc: /lead-magnet-strategy.html. 6-week implementation.' },
-  { id: 'p6', name: '📋 Product overhaul - Two-track system (Beginner/Advanced)', status: 'progress', due: '2026-04-21', notes: '8 modules each level = 16 total. Sarn builds Level 1. Weekly coaching split. Pre-recorded modules needed.' },
-  { id: 'p7', name: '📋 Wealth Shift Podcast production workflow', status: 'progress', due: '2026-04-14', notes: 'Riverside evaluation. Auto-publish to YouTube + podcast platforms. Redistribution pipeline.' },
-  { id: 'p8', name: '📋 US Sales Team onboarding', status: 'progress', due: '2026-04-14', notes: 'US closers being brought on. New contractor cost: $32K/5wk. Ben in same timezone as Kishan during US trip.' },
-  { id: 'p9', name: '📋 CEO Dashboard + Firebase real-time sync', status: 'progress', due: '2026-04-07', notes: 'Dashboard live: cs-ceo-dashboard.onrender.com. Adding: Firebase sync, Alice EA view, login gate.' },
-  { id: 'p10', name: '📋 Black Tier outreach', status: 'progress', due: '2026-04-14', notes: 'Bec + Ben. Invitation campaign + video. Highest margin play ($22K net per upsell).' },
-  { id: 'p11', name: '📋 Legal audit (Aston) - Caymans restructure', status: 'progress', due: '', notes: 'Offshore entity restructure. Longer-term legal complexity.' },
-  { id: 'p12', name: '📋 Renewals - continue pipeline (Q2)', status: 'progress', due: '', notes: '258 not yet contacted (65% of pipeline). DT + Ben pushing. 73.5% retention on contacted members.' },
+function addStatusEmoji(task) {
+  // Add emoji prefix to name for display based on category or status
+  const catEmoji = CATEGORY_EMOJI[task.category] || '';
+  const statusEmoji = catEmoji || STATUS_EMOJI[task.status] || '';
+  return { ...task, name: statusEmoji + task.name };
+}
 
-  // ===== BOT TEAM SETUP =====
-  { id: 'b1', name: '🤖 EA Bot setup for Alice', status: 'progress', due: '2026-04-07', notes: 'Need: task list, calendar rules, email triage rules, travel preferences.' },
-  { id: 'b2', name: '🤖 Marketing Bot - Kishan integration', status: 'progress', due: '2026-04-07', notes: 'Kishan taking lead (replaces Josh). Need Meta Ads access, campaign dashboards.' },
-  { id: 'b3', name: '🤖 Social Media Bot - replace Pat workflow', status: 'progress', due: '2026-04-07', notes: 'Ben records content. Bot transcribes + repurposes. VA uploads. Travis reviews.' },
-
-  // ===== HIRING =====
-  { id: 'h1', name: '👤 Hire graphic designer for social', status: 'progress', due: '2026-04-10', notes: 'Fiverr ($5-15/post) or Penji ($499/mo unlimited). Build Canva template system first.' },
-  { id: 'h2', name: '👤 Hire VA for content uploading/scheduling', status: 'progress', due: '2026-04-10', notes: 'OnlineJobs.ph or Upwork. $600-1200/mo. Needs SOPs for each platform.' },
-
-  // ===== BEN TRAVEL =====
-  { id: 't1', name: '✈️ Vietnam holiday (1 week)', status: 'progress', due: '2026-04-02', notes: 'Departs Wed April 2, 5am.' },
-  { id: 't2', name: '✈️ US trip - capital raise meetings', status: 'progress', due: '2026-04-14', notes: 'After Vietnam. Same timezone as Kishan. Steve meetings being booked.' },
-];
-
-function loadPriorities() {
-  const saved = localStorage.getItem('cs-priorities-v9');
-  if (saved) {
-    try { return JSON.parse(saved); } catch(e) {}
+async function fetchTasks() {
+  try {
+    const res = await fetch('tasks.json?_=' + Date.now());
+    const data = await res.json();
+    tasksLastUpdated = data.updated;
+    priorities = data.tasks.map(addStatusEmoji);
+    savePriorities(priorities);
+    updateTasksTimestamp();
+    renderPriorities();
+  } catch(e) {
+    console.error('Failed to load tasks.json:', e);
+    // Fall back to localStorage
+    const saved = localStorage.getItem('cs-priorities-v9');
+    if (saved) { try { priorities = JSON.parse(saved); } catch(e2) {} }
+    renderPriorities();
   }
-  return JSON.parse(JSON.stringify(DEFAULT_PRIORITIES));
 }
 
-function savePriorities(priorities) {
-  localStorage.setItem('cs-priorities-v9', JSON.stringify(priorities));
+function updateTasksTimestamp() {
+  const el = document.getElementById('tasks-updated');
+  if (!el || !tasksLastUpdated) return;
+  const updated = new Date(tasksLastUpdated);
+  const now = new Date();
+  const diffMs = now - updated;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+  let label;
+  if (diffMins < 1) label = 'just now';
+  else if (diffMins < 60) label = diffMins + 'm ago';
+  else if (diffHours < 24) label = diffHours + 'h ago';
+  else label = diffDays + 'd ago';
+  el.textContent = 'Updated ' + label;
+  el.title = updated.toLocaleString();
 }
 
-let priorities = loadPriorities();
+function refreshTasks() {
+  const btn = document.getElementById('refresh-tasks-btn');
+  if (btn) { btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none'; }
+  fetchTasks().finally(() => {
+    if (btn) { btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; }
+  });
+}
+
+function savePriorities(p) {
+  localStorage.setItem('cs-priorities-v9', JSON.stringify(p));
+}
 
 const STATUS_MAP = {
   urgent: { emoji: '🔴', label: 'Urgent', color: 'text-red-400', bg: 'bg-red-400/10', border: 'border-red-400/20' },
@@ -1756,7 +1760,7 @@ function loadRecentlyUpdated() {
 }
 
 // ===== INIT =====
-renderPriorities();
+fetchTasks();
 renderProjects();
 renderBotTeam();
 loadRecentlyUpdated();
