@@ -38,7 +38,7 @@
 
   body {
     font-family: 'Barlow', sans-serif;
-    background: var(--bg);
+    
     color: var(--text);
     line-height: 1.6;
     min-height: 100vh;
@@ -1329,8 +1329,176 @@
     .flow-arrow { transform: rotate(90deg); }
   }
 </style>
+<style>
+  /* ══ DASHBOARD SHELL v2 ══ */
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap');
+  * { box-sizing: border-box; }
+  body { background: #F7F7F8 !important; color: #1B1925; font-family: 'Barlow', sans-serif; margin: 0; padding: 0 !important; }
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #4D4C55; border-radius: 3px; }
+
+  .ds-sidebar {
+    width: 220px; height: 100vh; position: fixed; top: 0; left: 0;
+    background: #1A1A2E; color: #fff; z-index: 100;
+    display: flex; flex-direction: column;
+    overflow-y: auto; overflow-x: hidden;
+  }
+  .ds-sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); }
+  .ds-sidebar-section {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 1.6px;
+    color: rgba(255,255,255,0.35); padding: 20px 16px 6px; font-weight: 600;
+  }
+  .ds-sidebar-link {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 16px; margin: 1px 8px; border-radius: 6px;
+    color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500;
+    transition: all 0.12s ease; cursor: pointer; text-decoration: none;
+    border-left: 3px solid transparent;
+  }
+  .ds-sidebar-link:hover { color: #fff; background: rgba(255,255,255,0.07); }
+  .ds-sidebar-link.active {
+    color: #FC5C03; background: rgba(252,92,3,0.08);
+    border-left-color: #FC5C03; font-weight: 600;
+  }
+  .ds-sidebar-link .ds-icon { width: 18px; text-align: center; font-size: 14px; flex-shrink: 0; }
+
+  .ds-topbar {
+    height: 48px; position: fixed; top: 0; left: 220px; right: 0;
+    background: #fff; border-bottom: 1px solid #E8E8EA;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; z-index: 90;
+  }
+  .ds-topbar-search {
+    background: #F7F7F8; border: 1px solid #E8E8EA; border-radius: 8px;
+    padding: 6px 12px 6px 32px; font-size: 13px; width: 280px;
+    outline: none; transition: border-color 0.15s; font-family: 'Barlow', sans-serif;
+  }
+  .ds-topbar-search:focus { border-color: #FC5C03; }
+
+  .ds-main-content {
+    margin-left: 220px; padding-top: 48px; min-height: 100vh;
+  }
+  .ds-page-body {
+    padding: 24px 32px; max-width: 100%;
+  }
+
+  /* Mobile */
+  .ds-mobile-hamburger { display: none; }
+  .ds-sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 95; }
+  @media (max-width: 1023px) {
+    .ds-sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+    .ds-sidebar.open { transform: translateX(0); }
+    .ds-sidebar-overlay.open { display: block; }
+    .ds-topbar { left: 0; }
+    .ds-main-content { margin-left: 0; }
+    .ds-mobile-hamburger { display: flex; }
+    .ds-page-body { padding: 16px; }
+    .ds-topbar-search { width: 160px; }
+  }
+  </style>
 </head>
 <body>
+
+<!-- ═══ SIDEBAR OVERLAY (mobile) ═══ -->
+<div class="ds-sidebar-overlay" id="dsSidebarOverlay" onclick="document.getElementById('dsSidebar').classList.remove('open');this.classList.remove('open');"></div>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="ds-sidebar" id="dsSidebar">
+  <div style="padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+    <a href="../index.html" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
+      <div style="width:32px; height:32px; border-radius:8px; background:rgba(252,92,3,0.15); display:flex; align-items:center; justify-content:center;">
+        <span style="color:#FC5C03; font-weight:800; font-size:13px; font-family:'Plus Jakarta Sans',sans-serif;">CS</span>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; color:#fff; letter-spacing:0.3px;">Collective Shift</div>
+        <div style="font-size:10px; color:rgba(255,255,255,0.35); font-family:'Source Code Pro',monospace;">CEO Dashboard</div>
+      </div>
+    </a>
+  </div>
+  <nav style="flex:1; padding: 8px 0;">
+    <div class="ds-sidebar-section">Home</div>
+    <a class="ds-sidebar-link" id="nav-brief" href="../index.html">
+      <span class="ds-icon">⭐</span> Morning Brief
+    </a>
+    <a class="ds-sidebar-link" id="nav-tasks" href="../index.html#tasks">
+      <span class="ds-icon">✓</span> Tasks
+    </a>
+    <a class="ds-sidebar-link" id="nav-actions" href="../actions.html">
+      <span class="ds-icon">⚡</span> Actions
+    </a>
+
+    <div class="ds-sidebar-section">Metrics</div>
+    <a class="ds-sidebar-link" id="nav-kpis" href="../index.html#metrics">
+      <span class="ds-icon">📊</span> KPIs
+    </a>
+    <a class="ds-sidebar-link" id="nav-cash" href="../team-cost.html">
+      <span class="ds-icon">💰</span> Cash &amp; Costs
+    </a>
+    <a class="ds-sidebar-link" id="nav-members" href="../hub/products.html">
+      <span class="ds-icon">👥</span> Members
+    </a>
+
+    <div class="ds-sidebar-section">Content</div>
+    <a class="ds-sidebar-link" id="nav-content-board" href="../content-board.html">
+      <span class="ds-icon">🎬</span> Content Board
+    </a>
+    <a class="ds-sidebar-link" id="nav-calendar" href="../asana-board-mockup.html">
+      <span class="ds-icon">📅</span> Calendar
+    </a>
+    <a class="ds-sidebar-link active" id="nav-youtube" href="../hub/youtube-strategy.html">
+      <span class="ds-icon">▶</span> YouTube
+    </a>
+
+    <div class="ds-sidebar-section">Strategy</div>
+    <a class="ds-sidebar-link" id="nav-strategy" href="../hub/operating-system.html">
+      <span class="ds-icon">🧭</span> Strategy Hub
+    </a>
+    <a class="ds-sidebar-link" id="nav-docs" href="../hub/brand.html">
+      <span class="ds-icon">📄</span> Docs
+    </a>
+
+    <div class="ds-sidebar-section">Team</div>
+    <a class="ds-sidebar-link" id="nav-team" href="../team-cost.html">
+      <span class="ds-icon">👤</span> Team
+    </a>
+    <a class="ds-sidebar-link" id="nav-bots" href="../index.html#bots">
+      <span class="ds-icon">🤖</span> Bot Fleet
+    </a>
+  </nav>
+  <div style="padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 10px; color: rgba(255,255,255,0.25); font-family: 'Source Code Pro', monospace;">
+    v2.0 · April 2026
+  </div>
+</aside>
+
+<!-- ═══ TOP BAR ═══ -->
+<header class="ds-topbar">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <button class="ds-mobile-hamburger" onclick="document.getElementById('dsSidebar').classList.toggle('open');document.getElementById('dsSidebarOverlay').classList.toggle('open');" style="background:none; border:none; cursor:pointer; color:#807F86; padding:4px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    </button>
+    <div style="position:relative;">
+      <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:#807F86;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" class="ds-topbar-search" placeholder="Search dashboard...">
+    </div>
+  </div>
+  <div style="display:flex; align-items:center; gap:16px;">
+    <button style="background:none; border:none; cursor:pointer; color:#807F86; position:relative;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span style="position:absolute; top:-2px; right:-2px; width:8px; height:8px; background:#FC5C03; border-radius:50%; border:2px solid #fff;"></span>
+    </button>
+    <div style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+      <div style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #FC5C03, #FC8C4E); display:flex; align-items:center; justify-content:center;">
+        <span style="color:#fff; font-size:11px; font-weight:700; font-family:'Plus Jakarta Sans',sans-serif;">BB</span>
+      </div>
+      <span style="font-size:13px; font-weight:500; color:#1B1925;">BenBot</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ MAIN CONTENT ═══ -->
+<div class="ds-main-content">
+  <div class="ds-page-body">
 <!-- ═══ COLLECTIVE SHIFT TOP NAV ═══ -->
 <style>
   :root {
@@ -1475,10 +1643,7 @@
     .csn-logo { font-size: 13px; margin-right: 16px; }
   }
 </style>
-<nav class="csn-bar" role="navigation" aria-label="Main navigation">
-  <a href="../index.html" class="csn-logo">Collective Shift</a>
-  <div class="csn-nav">
-      <div class="csn-item "><a href="../index.html" class="csn-link">CEO Dashboard</a></div>
+
       <div class="csn-item csn-has-dd ">
         <a href="../hub/operating-system.html" class="csn-link">The Collective Shift Operating System
           <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
@@ -1557,11 +1722,7 @@
 </div>
 
 <!-- Sidebar -->
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-logo">
-    <a href="index.html">COLLECTIVE SHIFT</a>
-    <span>Strategy Hub</span>
-  </div>
+
   <nav>
     <a href="/" class="nav-link"><span class="nav-icon"><i class="ph ph-chart-bar"></i></span> Dashboard</a>
     <a href="index.html" class="nav-link"><span class="nav-icon"><i class="ph ph-house"></i></span> Home</a>
@@ -1574,9 +1735,7 @@
     <a href="brand.html" class="nav-link"><span class="nav-icon"><i class="ph ph-paint-brush"></i></span> Brand &amp; Voice</a>
     <a href="beginner-journey.html" class="nav-link"><span class="nav-icon"><i class="ph ph-compass"></i></span> Beginner Journey</a>
   </nav>
-  <div class="sidebar-footer">
-    <p>v2.1 · March 2026</p>
-  </div>
+  
 </aside>
 
 <!-- Main Content -->
@@ -2698,6 +2857,7 @@
     }
   }
 </script>
-
+  </div>
+</div>
 </body>
 </html>
