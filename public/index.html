@@ -6,7 +6,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
 
-<title>Collective Shift — CEO Command Centre v7</title>
+<title>Collective Shift — CEO Command Centre v8</title>
 <script src="https://cdn.tailwindcss.com"></script>
 
 <script>
@@ -103,6 +103,26 @@ tailwind.config = {
 
   .intel-item { transition: all 0.15s ease; }
   .intel-item:hover { background: #F2F2F2; }
+
+  /* Task filter tabs */
+  .task-filter-tab { padding: 6px 14px; font-size: 12px; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.15s ease; color: #807F86; background: transparent; border: 1px solid transparent; }
+  .task-filter-tab:hover { color: #1B1925; background: #F2F2F2; }
+  .task-filter-tab.active-filter { color: #FC5C03; background: rgba(252,92,3,0.08); border-color: rgba(252,92,3,0.25); }
+
+  /* Task status borders */
+  .priority-card[data-status="urgent"] { border-left: 3px solid #ef4444; }
+  .priority-card[data-status="progress"] { border-left: 3px solid #f59e0b; }
+  .priority-card[data-status="done"] { border-left: 3px solid #08C394; }
+  .priority-card[data-status="done"] .task-name { text-decoration: line-through; opacity: 0.6; }
+
+  /* Task hover elevation */
+  .priority-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); transform: translateY(-1px); }
+
+  /* Recently Updated widget */
+  .recent-file-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid #E8E8EA; transition: background 0.12s; }
+  .recent-file-row:last-child { border-bottom: none; }
+  .recent-file-row:hover { background: #F9F9F9; }
+  .recent-label { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 100px; background: rgba(252,92,3,0.08); color: #FC5C03; white-space: nowrap; }
 </style>
 </head>
 <body class="min-h-screen">
@@ -304,7 +324,38 @@ tailwind.config = {
         <a href="travis-briefing-2026-03-27.html" class="csn-link">Documents
           <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
         </a>
-        <div class="csn-dropdown"><a href="content-board.html" class="csn-dd-item" style="color: var(--csn-orange); font-weight: 600;">Content Pipeline</a><a href="youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a><a href="travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a><a href="q1-exec-briefing-2026-03-30.html" class="csn-dd-item">Q1 Exec Briefing (March 30)</a><a href="cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a><a href="q2-market-briefing.html" class="csn-dd-item">Q2 Market Briefing</a><a href="webinar-q2-2026-is-now-the-time.html" class="csn-dd-item">Webinar: Is Now The Time?</a><div class="csn-divider"></div><a href="restructure-playbook.html" class="csn-dd-item">Q2 Restructure Plan</a><a href="content-takeover-playbook.html" class="csn-dd-item">Content Takeover Playbook</a><a href="april-marketing-plan-2026.html" class="csn-dd-item">April Marketing Plan</a><a href="asana-board-mockup.html" class="csn-dd-item">Content Production Board</a><a href="digital-asset-shift-newsletter.html" class="csn-dd-item">The Digital Asset Shift (Newsletter)</a><div class="csn-divider"></div><a href="youtube-script-bitcoin-down-48.html" class="csn-dd-item">YT Script: Bitcoin Down 48%</a><a href="instagram-content-strategy.html" class="csn-dd-item">Instagram Content Strategy</a></div>
+        <div class="csn-dropdown">
+          <div style="display:block;padding:6px 12px 2px;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;">Operations</div>
+          <a href="content-board.html" class="csn-dd-item" style="color: var(--csn-orange); font-weight: 600;">Content Pipeline</a>
+          <a href="actions.html" class="csn-dd-item">Action Tracker</a>
+          <a href="asana-board-mockup.html" class="csn-dd-item">Content Production Board</a>
+          <div class="csn-divider"></div>
+          <div style="display:block;padding:6px 12px 2px;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;">Strategy</div>
+          <a href="alchemy-negotiation.html" class="csn-dd-item">Alchemy Fee Negotiation</a>
+          <a href="lead-magnet-strategy.html" class="csn-dd-item">Lead Magnet Strategy</a>
+          <a href="travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a>
+          <a href="cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a>
+          <div class="csn-divider"></div>
+          <div style="display:block;padding:6px 12px 2px;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;">Briefings & Reports</div>
+          <a href="q1-exec-briefing-2026-03-30.html" class="csn-dd-item">Q1 Exec Briefing (March 30)</a>
+          <a href="q2-market-briefing.html" class="csn-dd-item">Q2 Market Briefing</a>
+          <a href="webinar-q2-2026-is-now-the-time.html" class="csn-dd-item">Webinar: Is Now The Time?</a>
+          <div class="csn-divider"></div>
+          <div style="display:block;padding:6px 12px 2px;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;">Playbooks & Plans</div>
+          <a href="restructure-playbook.html" class="csn-dd-item">Q2 Restructure Plan</a>
+          <a href="content-takeover-playbook.html" class="csn-dd-item">Content Takeover Playbook</a>
+          <a href="april-marketing-plan-2026.html" class="csn-dd-item">April Marketing Plan</a>
+          <a href="digital-asset-shift-newsletter.html" class="csn-dd-item">The Digital Asset Shift (Newsletter)</a>
+          <div class="csn-divider"></div>
+          <a href="youtube-script-bitcoin-down-48.html" class="csn-dd-item">YT Script: Bitcoin Down 48%</a>
+          <a href="instagram-content-strategy.html" class="csn-dd-item">Instagram Content Strategy</a>
+          <div class="csn-divider"></div>
+          <div style="display:block;padding:6px 12px 2px;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;">Hub Pages</div>
+          <a href="hub/operating-system.html" class="csn-dd-item">The Collective Shift OS</a>
+          <a href="hub/youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a>
+          <a href="hub/social-strategy.html" class="csn-dd-item">Social Media Strategy</a>
+          <a href="hub/instagram-strategy.html" class="csn-dd-item">Instagram Strategy</a>
+        </div>
       </div>
   </div>
   <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
@@ -351,12 +402,24 @@ tailwind.config = {
 <a href="hub/positioning.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Positioning & ICP</a>
 <a href="hub/competitors.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Competitors</a>
 <a href="travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-top">Documents</a>
+<div style="font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;padding:8px 12px 2px 20px;">Operations</div>
+<a href="content-board.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Content Pipeline</a>
+<a href="actions.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Action Tracker</a>
+<a href="asana-board-mockup.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Content Production Board</a>
+<div style="font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;padding:8px 12px 2px 20px;">Strategy</div>
+<a href="alchemy-negotiation.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Alchemy Fee Negotiation</a>
+<a href="lead-magnet-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Lead Magnet Strategy</a>
 <a href="travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Travis CGO Briefing</a>
-<a href="q1-exec-briefing-2026-03-30.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Q1 Exec Briefing (March 30)</a>
 <a href="cs-education-system-overview.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Education System Overview</a>
+<div style="font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;padding:8px 12px 2px 20px;">Briefings &amp; Reports</div>
+<a href="q1-exec-briefing-2026-03-30.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Q1 Exec Briefing (March 30)</a>
 <a href="q2-market-briefing.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Q2 Market Briefing</a>
 <a href="webinar-q2-2026-is-now-the-time.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Webinar: Is Now The Time?</a>
+<div style="font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;padding:8px 12px 2px 20px;">Playbooks &amp; Plans</div>
+<a href="restructure-playbook.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Q2 Restructure Plan</a>
+<a href="content-takeover-playbook.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Content Takeover Playbook</a>
 <a href="april-marketing-plan-2026.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;April Marketing Plan</a>
+<a href="digital-asset-shift-newsletter.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;The Digital Asset Shift (Newsletter)</a>
 </div>
 <!-- ═══ END TOP NAV ═══ -->
 
@@ -1006,6 +1069,13 @@ tailwind.config = {
             Add Priority
           </button>
         </div>
+        <!-- Filter tabs -->
+        <div class="flex items-center gap-1 mb-3" id="task-filters">
+          <button class="task-filter-tab active-filter" onclick="filterTasks('all')">All</button>
+          <button class="task-filter-tab" onclick="filterTasks('urgent')">Urgent</button>
+          <button class="task-filter-tab" onclick="filterTasks('progress')">In Progress</button>
+          <button class="task-filter-tab" onclick="filterTasks('done')">Done</button>
+        </div>
         <div class="space-y-2" id="priorities-list"></div>
       </div>
 
@@ -1023,88 +1093,6 @@ tailwind.config = {
           </button>
         </div>
         <div class="space-y-2" id="completed-list"></div>
-      </div>
-
-      <!-- Quick Links: Documents -->
-      <div class="bg-white border border-[#E8E8EA] rounded-xl p-5 mt-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-2">
-            <span class="text-cs-orange">▎</span>
-            <h2 class="font-jakarta font-semibold text-base text-[#1B1925]">Documents & Tools</h2>
-          </div>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          <a href="content-board.html" class="flex items-center gap-3 p-3 rounded-lg border border-[#E8E8EA] hover:border-cs-orange/40 hover:bg-[#FEEEE5]/30 transition-all">
-            <span class="text-xl">📺</span>
-            <div>
-              <div class="font-semibold text-sm text-[#1B1925]">Content Pipeline</div>
-              <div class="text-[11px] text-[#807F86]">YouTube content lifecycle, social redistribution</div>
-            </div>
-          </a>
-          <a href="actions.html" class="flex items-center gap-3 p-3 rounded-lg border border-[#E8E8EA] hover:border-cs-orange/40 hover:bg-[#FEEEE5]/30 transition-all">
-            <span class="text-xl">✅</span>
-            <div>
-              <div class="font-semibold text-sm text-[#1B1925]">Action Tracker</div>
-              <div class="text-[11px] text-[#807F86]">Tasks, assignments, Ben/Alice views</div>
-            </div>
-          </a>
-          <a href="alchemy-negotiation.html" class="flex items-center gap-3 p-3 rounded-lg border border-[#E8E8EA] hover:border-cs-orange/40 hover:bg-[#FEEEE5]/30 transition-all">
-            <span class="text-xl">💰</span>
-            <div>
-              <div class="font-semibold text-sm text-[#1B1925]">Alchemy Fee Negotiation</div>
-              <div class="text-[11px] text-[#807F86]">4 options compared, talking points, BATNA</div>
-            </div>
-          </a>
-          <a href="lead-magnet-strategy.html" class="flex items-center gap-3 p-3 rounded-lg border border-[#E8E8EA] hover:border-cs-orange/40 hover:bg-[#FEEEE5]/30 transition-all">
-            <span class="text-xl">🧲</span>
-            <div>
-              <div class="font-semibold text-sm text-[#1B1925]">Lead Magnet Strategy</div>
-              <div class="text-[11px] text-[#807F86]">Quiz funnel, ad creatives, blueprint system</div>
-            </div>
-          </a>
-          <a href="travis-briefing-2026-03-27.html" class="flex items-center gap-3 p-3 rounded-lg border border-[#E8E8EA] hover:border-cs-orange/40 hover:bg-[#FEEEE5]/30 transition-all">
-            <span class="text-xl">📊</span>
-            <div>
-              <div class="font-semibold text-sm text-[#1B1925]">Travis CGO Briefing</div>
-              <div class="text-[11px] text-[#807F86]">Unit economics, restructure, growth plan</div>
-            </div>
-          </a>
-          <a href="cs-education-system-overview.html" class="flex items-center gap-3 p-3 rounded-lg border border-[#E8E8EA] hover:border-cs-orange/40 hover:bg-[#FEEEE5]/30 transition-all">
-            <span class="text-xl">🎓</span>
-            <div>
-              <div class="font-semibold text-sm text-[#1B1925]">Education System Overview</div>
-              <div class="text-[11px] text-[#807F86]">Two-track system, Shift OS, modules</div>
-            </div>
-          </a>
-          <a href="hub/operating-system.html" class="flex items-center gap-3 p-3 rounded-lg border border-[#E8E8EA] hover:border-cs-orange/40 hover:bg-[#FEEEE5]/30 transition-all">
-            <span class="text-xl">⚙️</span>
-            <div>
-              <div class="font-semibold text-sm text-[#1B1925]">The Collective Shift OS</div>
-              <div class="text-[11px] text-[#807F86]">Full operating system, 8 modules</div>
-            </div>
-          </a>
-          <a href="hub/youtube-strategy.html" class="flex items-center gap-3 p-3 rounded-lg border border-[#E8E8EA] hover:border-cs-orange/40 hover:bg-[#FEEEE5]/30 transition-all">
-            <span class="text-xl">📺</span>
-            <div>
-              <div class="font-semibold text-sm text-[#1B1925]">YouTube Strategy</div>
-              <div class="text-[11px] text-[#807F86]">Jeremy Haynes framework, 40 video ideas</div>
-            </div>
-          </a>
-          <a href="hub/social-strategy.html" class="flex items-center gap-3 p-3 rounded-lg border border-[#E8E8EA] hover:border-cs-orange/40 hover:bg-[#FEEEE5]/30 transition-all">
-            <span class="text-xl">📱</span>
-            <div>
-              <div class="font-semibold text-sm text-[#1B1925]">Social Media Strategy</div>
-              <div class="text-[11px] text-[#807F86]">Redistribution system, House of Brands</div>
-            </div>
-          </a>
-          <a href="hub/instagram-strategy.html" class="flex items-center gap-3 p-3 rounded-lg border border-[#E8E8EA] hover:border-cs-orange/40 hover:bg-[#FEEEE5]/30 transition-all">
-            <span class="text-xl">📸</span>
-            <div>
-              <div class="font-semibold text-sm text-[#1B1925]">Instagram Strategy</div>
-              <div class="text-[11px] text-[#807F86]">DM keywords, content pillars, growth</div>
-            </div>
-          </a>
-        </div>
       </div>
 
       <!-- QUICK ACTIONS -->
@@ -1187,6 +1175,16 @@ tailwind.config = {
           </button>
         </div>
         <div class="space-y-2" id="projects-list"></div>
+      </div>
+
+      <!-- RECENTLY UPDATED -->
+      <div>
+        <h2 class="font-oswald text-base uppercase tracking-wider text-[#807F86] mb-3 flex items-center gap-2">
+          <span class="text-cs-orange">▎</span>Recently Updated
+        </h2>
+        <div class="bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg overflow-hidden" id="recently-updated">
+          <div class="px-4 py-3 text-xs text-[#807F86]">Loading...</div>
+        </div>
       </div>
 
       <!-- BOT TEAM STATUS -->
@@ -1378,6 +1376,7 @@ function renderPriorities() {
 
     return `
       <div class="priority-card bg-[#FFFFFF] border ${s.border} rounded-lg overflow-hidden"
+           data-status="${p.status}"
            draggable="true"
            data-index="${i}"
            ondragstart="onDragStart(event, ${i})"
@@ -1712,10 +1711,55 @@ function switchView(view) {
 const savedView = localStorage.getItem('cs-active-view');
 if (savedView) switchView(savedView);
 
+// ===== TASK FILTER =====
+let activeFilter = 'all';
+function filterTasks(filter) {
+  activeFilter = filter;
+  document.querySelectorAll('#task-filters .task-filter-tab').forEach(t => t.classList.remove('active-filter'));
+  event.currentTarget.classList.add('active-filter');
+  const cards = document.querySelectorAll('#priorities-list .priority-card');
+  cards.forEach(c => {
+    const status = c.getAttribute('data-status');
+    c.style.display = (filter === 'all' || status === filter) ? '' : 'none';
+  });
+  // Also handle completed section visibility
+  const completedSection = document.getElementById('completed-section');
+  if (filter === 'all' || filter === 'done') {
+    if (completedSection) completedSection.style.display = priorities.filter(p => p.status === 'done').length > 0 ? 'block' : 'none';
+  } else {
+    if (completedSection) completedSection.style.display = 'none';
+  }
+}
+
+// ===== RECENTLY UPDATED WIDGET =====
+function loadRecentlyUpdated() {
+  fetch('activity.json')
+    .then(r => r.json())
+    .then(data => {
+      const container = document.getElementById('recently-updated');
+      const today = new Date().toISOString().split('T')[0];
+      container.innerHTML = data.files.map(f => {
+        const diff = Math.floor((new Date(today) - new Date(f.updated)) / 86400000);
+        const dateLabel = diff === 0 ? 'Today' : diff === 1 ? 'Yesterday' : diff + ' days ago';
+        return `<a href="${f.path}" class="recent-file-row">
+          <div class="min-w-0">
+            <div class="text-sm font-medium text-[#1B1925]">${f.name}</div>
+            <div class="text-[10px] text-[#807F86] font-mono">${dateLabel}</div>
+          </div>
+          <span class="recent-label">${f.label}</span>
+        </a>`;
+      }).join('');
+    })
+    .catch(() => {
+      document.getElementById('recently-updated').innerHTML = '<div class="px-4 py-3 text-xs text-[#807F86]">Could not load activity data.</div>';
+    });
+}
+
 // ===== INIT =====
 renderPriorities();
 renderProjects();
 renderBotTeam();
+loadRecentlyUpdated();
 </script>
 </body>
 </html>
