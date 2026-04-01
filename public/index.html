@@ -902,10 +902,12 @@ async function fetchTasks() {
       if (ov) { try { Object.assign(t, JSON.parse(ov)); } catch(e) {} }
     });
     savePriorities(priorities);
+    _allTasks = priorities;
   } catch(e) {
     console.error('Failed to load tasks.json:', e);
     const saved = localStorage.getItem('cs-priorities-v10');
     if (saved) try { priorities = JSON.parse(saved); } catch(e2) {}
+    _allTasks = priorities;
   }
   renderTasks();
   renderBriefTasks();
@@ -1141,6 +1143,112 @@ if (savedView && savedView !== 'metrics') { // Old 'metrics' default → brief
 fetchTasks();
 renderProjects();
 renderBotFleet();
+
+// ═══════════════════════════════════════════
+// TASK PANEL
+// ═══════════════════════════════════════════
+let _allTasks = [];
+let _currentTaskIdx = null;
+
+const STATUS_COLORS = { todo:'#9CA3AF', urgent:'#EF4444', progress:'#3B82F6', done:'#22C55E', 'on-hold':'#F59E0B', blocked:'#EF4444' };
+const STATUS_LABELS = { todo:'To Do', urgent:'Urgent', progress:'In Progress', done:'Done', 'on-hold':'On Hold', blocked:'Blocked' };
+const STATUS_CYCLE = ['todo','progress','done','on-hold'];
+
+function openTaskPanel(idx) {
+  _currentTaskIdx = idx;
+  const t = _allTasks[idx];
+  if (!t) return;
+
+  // Load overrides from localStorage
+  const stored = JSON.parse(localStorage.getItem('cs-task-' + t.id) || '{}');
+  const task = Object.assign({}, t, stored);
+
+  document.getElementById('tpName').value = task.name || '';
+  const sel = document.getElementById('tpStatus');
+  sel.value = task.status || 'todo';
+  sel.style.borderColor = STATUS_COLORS[task.status] || '#9CA3AF';
+
+  document.getElementById('tpCategory').textContent = task.category || '';
+  document.getElementById('tpDue').value = task.due || '';
+  document.getElementById('tpCompleted').value = task.completedAt || '';
+  document.getElementById('tpCompletedWrap').style.display = task.status === 'done' ? 'flex' : 'none';
+  document.getElementById('tpNotes').value = task.notes || '';
+
+  // Files
+  const filesEl = document.getElementById('tpFiles');
+  if (task.files && task.files.length) {
+    filesEl.innerHTML = task.files.map(f =>
+      `<a href="${f.url}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;background:#F3F4F6;border-radius:6px;padding:4px 10px;font-size:12px;color:#1A1A2E;text-decoration:none;margin:2px;border:1px solid #E8E8EA;">🔗 ${f.label}</a>`
+    ).join('');
+  } else {
+    filesEl.innerHTML = '<span style="color:#9CA3AF;font-size:12px;">No files linked</span>';
+  }
+
+  // Activity log
+  const log = JSON.parse(localStorage.getItem('cs-task-log-' + t.id) || '[]');
+  const actEl = document.getElementById('tpActivity');
+  if (log.length) {
+    actEl.innerHTML = log.slice(-5).reverse().map(e =>
+      `<div style="font-size:11px;color:#807F86;padding:2px 0;">${e.time} - ${e.msg}</div>`
+    ).join('');
+  } else {
+    actEl.innerHTML = '<span style="color:#9CA3AF;font-size:12px;">No activity yet</span>';
+  }
+
+  document.getElementById('taskPanel').classList.add('open');
+  document.getElementById('tpBackdrop').classList.add('open');
+}
+
+function closeTaskPanel() {
+  if (_currentTaskIdx === null) return;
+  const t = _allTasks[_currentTaskIdx];
+  if (t) saveTaskPanel(t);
+  document.getElementById('taskPanel').classList.remove('open');
+  document.getElementById('tpBackdrop').classList.remove('open');
+  _currentTaskIdx = null;
+}
+
+function saveTaskPanel(t) {
+  const status = document.getElementById('tpStatus').value;
+  const prev = JSON.parse(localStorage.getItem('cs-task-' + t.id) || '{}');
+  const updates = {
+    name: document.getElementById('tpName').value,
+    status: status,
+    due: document.getElementById('tpDue').value,
+    completedAt: document.getElementById('tpCompleted').value,
+    notes: document.getElementById('tpNotes').value
+  };
+  localStorage.setItem('cs-task-' + t.id, JSON.stringify(updates));
+
+  // Log status change
+  if (prev.status && prev.status !== status) {
+    const log = JSON.parse(localStorage.getItem('cs-task-log-' + t.id) || '[]');
+    log.push({ time: new Date().toLocaleString('en-AU', {hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'}), msg: `Status changed: ${STATUS_LABELS[prev.status] || prev.status} → ${STATUS_LABELS[status] || status}` });
+    localStorage.setItem('cs-task-log-' + t.id, JSON.stringify(log));
+  }
+
+  // Refresh task list
+  fetchTasks();
+}
+
+function cycleStatus(idx) {
+  const t = _allTasks[idx];
+  if (!t) return;
+  const stored = JSON.parse(localStorage.getItem('cs-task-' + t.id) || '{}');
+  const current = stored.status || t.status || 'todo';
+  const next = STATUS_CYCLE[(STATUS_CYCLE.indexOf(current) + 1) % STATUS_CYCLE.length];
+  const log = JSON.parse(localStorage.getItem('cs-task-log-' + t.id) || '[]');
+  log.push({ time: new Date().toLocaleString('en-AU', {hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'}), msg: `Status changed: ${STATUS_LABELS[current]} → ${STATUS_LABELS[next]}` });
+  localStorage.setItem('cs-task-log-' + t.id, JSON.stringify(Object.assign(stored, { status: next })));
+  localStorage.setItem('cs-task-log-' + t.id, JSON.stringify(log));
+  fetchTasks();
+}
+
+// Status dropdown colour update
+document.getElementById('tpStatus').addEventListener('change', function() {
+  this.style.borderColor = STATUS_COLORS[this.value] || '#9CA3AF';
+  document.getElementById('tpCompletedWrap').style.display = this.value === 'done' ? 'flex' : 'none';
+});
 </script>
 </body>
 </html>
