@@ -993,6 +993,7 @@ function renderTasks() {
       html += `<div class="task-row" data-status="${p.status}" onclick="openTaskPanel(${globalIdx})">
         <button class="status-pill" data-st="${p.status}" title="Click to change status" onclick="event.stopPropagation(); cycleStatus(${globalIdx})">${STATUS_LABELS[p.status] || '?'}</button>
         <span class="task-name ${p.status === 'done' ? 'done' : ''}">${escHtml(p.name)}</span>
+        ${p.source === 'meeting' ? `<span class="category-badge" style="background:#EFF6FF; color:#3B82F6;" title="From meeting: ${escHtml(p.meetingDate||'')}">📋 meeting</span>` : ''}
         ${p.category ? `<span class="category-badge" style="background:${cat.bg}; color:${cat.text};">${p.category}</span>` : ''}
         ${dueLabel ? `<span class="task-due ${isOverdue ? 'overdue' : ''}">${dueLabel}</span>` : ''}
       </div>`;
