@@ -3,1937 +3,527 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
-<title>Content Board — Collective Shift</title>
+<title>Content Distribution Board — CS</title>
 <style>
-  :root {
-    --csn-h: 56px;
-    --csn-bg: #FFFFFF;
-    --csn-border: #E8E8EA;
-    --csn-text: #1B1925;
-    --csn-muted: #4D4C55;
-    --csn-orange: #FC5C03;
-    --csn-orange-light: #FC8C4E;
-    --csn-orange-bg: #FEEEE5;
-    --csn-green: #08C394;
-    --csn-purple: #654FFC;
-    --csn-dd-bg: #FFFFFF;
-    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
-    --csn-z: 9000;
-    --pillar-conviction: #2563EB;
-    --pillar-framework: #7C3AED;
-    --pillar-proof: #08C394;
-    --pillar-magnet: #FC5C03;
-    --pillar-education: #D97706;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Barlow', sans-serif; background: #F7F7F8; color: #1B1925; }
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #D1D1D6; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #807F86; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --orange:#FC5C03;--navy:#1A1A2E;--navy-light:#16213E;--navy-mid:#0F3460;
+  --card-bg:#1e2a42;--card-hover:#253553;--col-bg:#131a2e;--text:#e8e8e8;
+  --text-muted:#8892a4;--border:#2a3550;--shadow:0 2px 8px rgba(0,0,0,.35);
+  --yt-red:#FF0000;--yt-shorts:#FF4444;--tiktok:#EE1D52;--ig-purple:#C13584;
+  --li-blue:#0A66C2;--x-black:#ffffff;--news-orange:#FC5C03;--pod-green:#1DB954;
+}
+html{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--navy);color:var(--text);font-size:14px}
+body{min-height:100vh;display:flex;flex-direction:column}
 
-  /* ANIMATIONS */
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-  @keyframes pulseGlow { 0%,100% { box-shadow: 0 0 0 0 rgba(252,92,3,0.3); } 50% { box-shadow: 0 0 0 8px rgba(252,92,3,0); } }
-  .fade-in { animation: fadeIn 0.2s ease; }
-  .slide-up { animation: slideUp 0.25s ease; }
+/* ── Header ── */
+.header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);border-bottom:2px solid var(--orange);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:100}
+.header h1{font-size:1.35rem;font-weight:700;letter-spacing:-.3px}
+.header h1 span{color:var(--orange)}
+.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.btn{background:var(--orange);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:600;font-size:.82rem;transition:all .15s}
+.btn:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.btn-secondary{background:var(--navy-mid);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--card-hover)}
+.btn-sm{padding:5px 10px;font-size:.75rem}
 
-  /* NAV */
-  .csn-bar { position: fixed; top: 0; left: 0; right: 0; height: var(--csn-h); background: var(--csn-bg); border-bottom: 1px solid var(--csn-border); display: flex; align-items: center; padding: 0 24px; z-index: var(--csn-z); font-family: 'Plus Jakarta Sans', sans-serif; }
-  .csn-logo { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 15px; color: var(--csn-orange); text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; margin-right: 32px; flex-shrink: 0; }
-  .csn-nav { display: flex; align-items: center; gap: 2px; flex: 1; }
-  .csn-item { position: relative; }
-  .csn-link { display: flex; align-items: center; gap: 5px; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--csn-muted); text-decoration: none; white-space: nowrap; transition: color 0.15s, background 0.15s; cursor: pointer; }
-  .csn-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
-  .csn-link.active { color: var(--csn-orange); font-weight: 600; }
-  .csn-chevron { transition: transform 0.2s; flex-shrink: 0; }
-  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
-  .csn-dropdown { display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 240px; background: var(--csn-dd-bg); border: 1px solid var(--csn-border); border-radius: 12px; box-shadow: var(--csn-dd-shadow); padding: 6px; z-index: calc(var(--csn-z) + 1); }
-  .csn-item.csn-has-dd { position: relative; }
-  .csn-item.csn-has-dd::after { content: ""; position: absolute; top: 100%; left: 0; width: 100%; height: 12px; }
-  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
-  .csn-dd-item { display: block; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--csn-muted); text-decoration: none; transition: color 0.12s, background 0.12s; white-space: nowrap; }
-  .csn-dd-item:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
-  .csn-hamburger { display: none; background: none; border: none; cursor: pointer; color: var(--csn-muted); padding: 4px; margin-left: auto; }
+/* ── Filters ── */
+.filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.filter-chip{padding:4px 10px;border-radius:12px;font-size:.72rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text-muted);transition:all .15s;user-select:none}
+.filter-chip:hover,.filter-chip.active{background:var(--orange);color:#fff;border-color:var(--orange)}
 
-  /* TOOLBAR */
-  .toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .search-box { border: 1px solid #E8E8EA; border-radius: 8px; padding: 7px 12px 7px 34px; font-family: 'Barlow', sans-serif; font-size: 13px; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23807F86' viewBox='0 0 256 256'%3E%3Cpath d='M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z'/%3E%3C/svg%3E") no-repeat 10px center; width: 200px; transition: border-color 0.15s; }
-  .search-box:focus { outline: none; border-color: #FC5C03; }
-  .filter-pill { padding: 5px 12px; border-radius: 100px; font-family: 'Source Code Pro', monospace; font-size: 11px; font-weight: 500; border: 1px solid #E8E8EA; background: #fff; color: #807F86; cursor: pointer; transition: all 0.15s; white-space: nowrap; user-select: none; }
-  .filter-pill:hover { border-color: #FC5C03; color: #FC5C03; }
-  .filter-pill.active { background: #FC5C03; color: #fff; border-color: #FC5C03; }
-  .view-toggle { display: flex; border: 1px solid #E8E8EA; border-radius: 8px; overflow: hidden; }
-  .view-btn { padding: 6px 14px; font-family: 'Source Code Pro', monospace; font-size: 11px; font-weight: 500; background: #fff; color: #807F86; border: none; cursor: pointer; transition: all 0.15s; }
-  .view-btn.active { background: #FC5C03; color: #fff; }
-  .view-btn:not(:last-child) { border-right: 1px solid #E8E8EA; }
+/* ── Video Info Bar ── */
+.video-bar{background:var(--navy-light);padding:10px 24px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);font-size:.82rem;flex-wrap:wrap}
+.video-bar .label{color:var(--text-muted)}
+.video-bar a{color:var(--orange);text-decoration:none}
+.video-bar a:hover{text-decoration:underline}
+.progress-summary{margin-left:auto;display:flex;gap:14px;align-items:center}
+.progress-summary .ps-item{color:var(--text-muted)}
+.progress-summary .ps-item strong{color:var(--text)}
 
-  /* BOARD */
-  .board-container { display: flex; gap: 12px; padding: 0 20px 20px; overflow-x: auto; align-items: flex-start; }
-  .column { min-width: 260px; max-width: 280px; flex: 1 0 260px; background: #fff; border: 1px solid #E8E8EA; border-radius: 12px; display: flex; flex-direction: column; max-height: calc(100vh - 260px); }
-  .column-header { padding: 12px 14px 10px; border-bottom: 1px solid #E8E8EA; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: #fff; border-radius: 12px 12px 0 0; z-index: 1; }
-  .column-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; }
-  .column-count { font-family: 'Source Code Pro', monospace; font-size: 10px; color: #807F86; background: #F7F7F8; padding: 1px 7px; border-radius: 100px; }
-  .column-body { padding: 6px; overflow-y: auto; flex: 1; min-height: 40px; transition: background 0.15s; }
-  .column-body.drag-over { background: #FEEEE5; border-radius: 0 0 12px 12px; }
+/* ── Board ── */
+.board-wrap{flex:1;overflow-x:auto;overflow-y:hidden;padding:16px}
+.board{display:flex;gap:14px;min-height:calc(100vh - 140px);align-items:flex-start}
+.column{background:var(--col-bg);border-radius:10px;min-width:230px;width:230px;flex-shrink:0;display:flex;flex-direction:column;max-height:calc(100vh - 150px);border:1px solid var(--border)}
+.col-header{padding:12px 14px 8px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--col-bg);border-radius:10px 10px 0 0;z-index:2}
+.col-title{font-weight:700;font-size:.85rem}
+.col-count{background:var(--navy-mid);color:var(--text-muted);font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:600}
+.col-cards{padding:6px 10px 14px;flex:1;overflow-y:auto;min-height:60px}
+.col-cards::-webkit-scrollbar{width:4px}
+.col-cards::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 
-  /* CARD */
-  .card { background: #FAFAFA; border: 1px solid #E8E8EA; border-radius: 10px; padding: 10px 12px; margin-bottom: 6px; cursor: grab; transition: box-shadow 0.15s, transform 0.15s, opacity 0.15s, border-color 0.15s; position: relative; animation: slideUp 0.2s ease; }
-  .card:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.06); border-color: #D1D1D6; }
-  .card.dragging { opacity: 0.35; transform: scale(0.96); }
-  .card.selected { border-color: #FC5C03; box-shadow: 0 0 0 2px rgba(252,92,3,0.2); }
-  .card.priority-high { border-left: 3px solid #DC2626; }
-  .card.priority-medium { border-left: 3px solid #D97706; }
-  .card.priority-low { border-left: 3px solid #08C394; }
-  .card-select { position: absolute; top: 8px; left: 8px; width: 16px; height: 16px; accent-color: #FC5C03; cursor: pointer; display: none; z-index: 2; }
-  .card:hover .card-select, .card.selected .card-select, .bulk-mode .card-select { display: block; }
-  .card-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 12.5px; line-height: 1.4; color: #1B1925; margin-bottom: 6px; cursor: pointer; }
-  .card-title:hover { color: #FC5C03; }
-  .card-meta { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
-  .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; }
-  .card-age { font-family: 'Source Code Pro', monospace; font-size: 9px; color: #B0AFB5; }
-  .card-repurpose-badge { font-family: 'Source Code Pro', monospace; font-size: 9px; color: #807F86; background: #F3F4F6; padding: 2px 6px; border-radius: 4px; margin-top: 4px; display: inline-block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .card-actions { display: none; position: absolute; top: 6px; right: 6px; gap: 2px; }
-  .card:hover .card-actions { display: flex; }
-  .card-action-btn { width: 24px; height: 24px; border-radius: 6px; border: none; background: #fff; color: #807F86; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.15s; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-  .card-action-btn:hover { background: var(--csn-orange-bg); color: var(--csn-orange); }
+/* ── Cards ── */
+.card{background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px;cursor:grab;transition:all .15s;position:relative}
+.card:hover{background:var(--card-hover);border-color:var(--orange);transform:translateY(-1px);box-shadow:var(--shadow)}
+.card.dragging{opacity:.4;transform:rotate(2deg)}
+.card-number{font-size:.65rem;color:var(--text-muted);margin-bottom:4px;font-weight:600}
+.card-title{font-size:.8rem;font-weight:600;line-height:1.35;margin-bottom:8px}
+.card-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.badge{padding:2px 8px;border-radius:4px;font-size:.65rem;font-weight:700;color:#fff;white-space:nowrap}
+.badge-yt{background:#FF0000}
+.badge-yts{background:#FF4444}
+.badge-tt{background:linear-gradient(135deg,#EE1D52,#000)}
+.badge-ig{background:linear-gradient(135deg,#833AB4,#FD1D1D,#F77737)}
+.badge-li{background:#0A66C2}
+.badge-x{background:#333;border:1px solid #555}
+.badge-news{background:var(--orange)}
+.badge-pod{background:#1DB954}
+.stage-tag{font-size:.63rem;color:var(--text-muted);background:var(--navy);padding:2px 6px;border-radius:3px}
+.card-actions{display:flex;gap:4px;margin-top:8px}
+.card-btn{background:none;border:1px solid var(--border);color:var(--text-muted);padding:3px 7px;border-radius:4px;cursor:pointer;font-size:.65rem;transition:all .12s}
+.card-btn:hover{border-color:var(--orange);color:var(--orange)}
+.card-btn.done-btn:hover{border-color:#1DB954;color:#1DB954}
 
-  .tag { font-family: 'Source Code Pro', monospace; font-size: 9.5px; font-weight: 500; padding: 2px 7px; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.03em; white-space: nowrap; }
-  .tag-type { background: #F3F4F6; color: #4D4C55; }
-  .card-due { font-family: 'Source Code Pro', monospace; font-size: 10px; color: #807F86; }
-  .card-due.overdue { color: #DC2626; font-weight: 600; }
-  .card-assignee { font-family: 'Source Code Pro', monospace; font-size: 10px; color: #807F86; display: flex; align-items: center; gap: 3px; }
-  .platform-dots { display: flex; gap: 3px; margin-top: 6px; }
-  .platform-dot { width: 18px; height: 18px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 9px; border: 1px solid #E8E8EA; background: #F7F7F8; color: #807F86; cursor: pointer; transition: all 0.15s; }
-  .platform-dot.posted { background: #D1FAE5; border-color: #08C394; color: #059669; }
-  .thumb-indicator { font-size: 9px; padding: 1px 5px; border-radius: 4px; font-family: 'Source Code Pro', monospace; font-weight: 500; }
-  .thumb-needed { background: #FEE2E2; color: #DC2626; }
-  .thumb-progress { background: #FEF3C7; color: #D97706; }
-  .thumb-done { background: #D1FAE5; color: #059669; }
+/* drop indicator */
+.drop-indicator{height:4px;background:var(--orange);border-radius:2px;margin:4px 0;transition:all .15s}
 
-  /* MODAL */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
-  .modal-overlay.open { display: flex; animation: fadeIn 0.15s ease; }
-  .modal { background: #fff; border-radius: 16px; width: 95%; max-width: 640px; box-shadow: 0 16px 48px rgba(0,0,0,0.18); max-height: 90vh; overflow-y: auto; animation: scaleIn 0.2s ease; transition: max-width 0.3s ease; }
-  .modal.expanded { max-width: 95vw; max-height: 95vh; }
-  .modal-header { padding: 20px 24px 0; display: flex; align-items: center; justify-content: space-between; }
-  .modal-header h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 18px; }
-  .modal-body { padding: 16px 24px 24px; }
-  .modal-close { background: none; border: none; cursor: pointer; color: #807F86; font-size: 20px; padding: 4px; border-radius: 6px; transition: all 0.15s; }
-  .modal-close:hover { background: #F7F7F8; color: #1B1925; }
-  .form-label { font-family: 'Source Code Pro', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #807F86; display: block; margin-bottom: 4px; margin-top: 14px; }
-  .form-label:first-child { margin-top: 0; }
-  .form-input, .form-select, .form-textarea { width: 100%; border: 1px solid #E8E8EA; border-radius: 8px; padding: 9px 12px; font-family: 'Barlow', sans-serif; font-size: 13px; transition: border-color 0.15s; background: #fff; }
-  .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: #FC5C03; }
-  .form-textarea { resize: vertical; min-height: 70px; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .platform-checks { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-  .platform-check { display: flex; align-items: center; gap: 5px; padding: 5px 10px; border: 1px solid #E8E8EA; border-radius: 8px; font-size: 12px; cursor: pointer; transition: all 0.15s; user-select: none; }
-  .platform-check:hover { border-color: #FC5C03; }
-  .platform-check.checked { background: #FEEEE5; border-color: #FC5C03; color: #FC5C03; }
-  .platform-check input { display: none; }
+/* ── Modal ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;justify-content:center;align-items:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--navy-light);border:1px solid var(--border);border-radius:12px;width:100%;max-width:600px;max-height:85vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.modal-head{padding:18px 22px 12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start}
+.modal-head h2{font-size:1.05rem;font-weight:700;line-height:1.3}
+.modal-close{background:none;border:none;color:var(--text-muted);font-size:1.4rem;cursor:pointer;padding:0 4px}
+.modal-close:hover{color:var(--orange)}
+.modal-body{padding:18px 22px}
+.modal-body .field{margin-bottom:14px}
+.modal-body .field label{display:block;font-size:.75rem;color:var(--text-muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.modal-body .field p,.modal-body .field div{font-size:.88rem;line-height:1.5}
+.modal-body .brief-section{background:var(--navy);padding:12px 14px;border-radius:8px;border:1px solid var(--border);margin-top:8px}
+.modal-body .brief-section h4{color:var(--orange);font-size:.78rem;margin-bottom:6px}
+.modal-body .brief-section p{font-size:.82rem;color:var(--text-muted);line-height:1.55}
+.modal-body input,.modal-body textarea,.modal-body select{width:100%;background:var(--navy);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:6px;font-size:.85rem}
+.modal-body textarea{min-height:80px;resize:vertical}
+.modal-foot{padding:12px 22px 18px;display:flex;gap:8px;justify-content:flex-end}
+.move-select{display:flex;gap:6px;align-items:center;margin-top:10px}
+.move-select label{font-size:.75rem;color:var(--text-muted);font-weight:600}
+.move-select select{width:auto;padding:5px 8px}
 
-  /* TABS */
-  .tab-bar { display: flex; gap: 0; border-bottom: 1px solid #E8E8EA; margin-bottom: 16px; }
-  .tab-btn { padding: 10px 18px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 13px; color: #807F86; background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: all 0.15s; }
-  .tab-btn:hover { color: var(--csn-orange); }
-  .tab-btn.active { color: var(--csn-orange); border-bottom-color: var(--csn-orange); }
-  .tab-content { display: none; }
-  .tab-content.active { display: block; animation: fadeIn 0.15s ease; }
-
-  /* SCRIPT EDITOR */
-  .script-editor-wrap { border: 1px solid #E8E8EA; border-radius: 10px; overflow: hidden; background: #fff; }
-  .script-toolbar { display: flex; gap: 2px; padding: 8px 10px; background: #FAFAFA; border-bottom: 1px solid #E8E8EA; flex-wrap: wrap; }
-  .script-toolbar button { width: 32px; height: 32px; border: none; background: none; border-radius: 6px; cursor: pointer; color: #4D4C55; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: all 0.12s; font-weight: 600; }
-  .script-toolbar button:hover { background: #E8E8EA; color: #1B1925; }
-  .script-toolbar .sep { width: 1px; height: 24px; background: #E8E8EA; margin: 4px 4px; }
-  .script-editor { min-height: 300px; padding: 20px 24px; font-family: 'Barlow', sans-serif; font-size: 15px; line-height: 1.7; color: #1B1925; outline: none; overflow-y: auto; }
-  .script-editor h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 700; margin: 16px 0 8px; }
-  .script-editor h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 600; margin: 14px 0 6px; }
-  .script-editor h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 600; margin: 12px 0 4px; }
-  .script-editor ul, .script-editor ol { padding-left: 24px; margin: 8px 0; }
-  .script-editor li { margin-bottom: 4px; }
-  .script-editor p { margin-bottom: 8px; }
-  .script-word-count { padding: 8px 12px; background: #FAFAFA; border-top: 1px solid #E8E8EA; font-family: 'Source Code Pro', monospace; font-size: 11px; color: #807F86; display: flex; justify-content: space-between; align-items: center; }
-  .ai-draft-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; border: 1px solid #E8E8EA; background: linear-gradient(135deg, #FEEEE5, #EDE9FE); color: #654FFC; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 12px; cursor: pointer; transition: all 0.2s; }
-  .ai-draft-btn:hover { box-shadow: 0 2px 12px rgba(101,79,252,0.2); border-color: #654FFC; transform: translateY(-1px); }
-  .expand-btn { padding: 5px 10px; border-radius: 6px; border: 1px solid #E8E8EA; background: #fff; color: #807F86; font-size: 11px; cursor: pointer; font-family: 'Source Code Pro', monospace; transition: all 0.15s; }
-  .expand-btn:hover { border-color: var(--csn-orange); color: var(--csn-orange); }
-
-  .btn-primary { background: #FC5C03; color: #fff; border: none; border-radius: 8px; padding: 10px 20px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.15s; }
-  .btn-primary:hover { background: #e04d00; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(252,92,3,0.25); }
-  .btn-secondary { background: #F7F7F8; color: #4D4C55; border: 1px solid #E8E8EA; border-radius: 8px; padding: 10px 20px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.15s; }
-  .btn-secondary:hover { background: #E8E8EA; }
-  .btn-danger { background: #FEE2E2; color: #DC2626; border: none; border-radius: 8px; padding: 8px 16px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 12px; cursor: pointer; }
-  .btn-danger:hover { background: #FECACA; }
-  .btn-sm { padding: 5px 12px; font-size: 11px; }
-  .btn-icon { width: 34px; height: 34px; border-radius: 8px; border: 1px solid #E8E8EA; background: #fff; color: #807F86; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; font-size: 14px; }
-  .btn-icon:hover { border-color: var(--csn-orange); color: var(--csn-orange); background: var(--csn-orange-bg); }
-
-  /* ANALYTICS STRIP */
-  .analytics-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; padding: 0 20px 12px; }
-  .stat-card { background: #fff; border: 1px solid #E8E8EA; border-radius: 10px; padding: 12px 14px; transition: all 0.15s; }
-  .stat-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-  .stat-card-label { font-family: 'Source Code Pro', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #807F86; margin-bottom: 4px; }
-  .stat-card-value { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 22px; color: #1B1925; }
-  .stat-card-sub { font-family: 'Source Code Pro', monospace; font-size: 10px; color: #807F86; margin-top: 2px; }
-  .mini-bar-chart { display: flex; gap: 3px; align-items: flex-end; height: 28px; margin-top: 6px; }
-  .mini-bar { border-radius: 3px; min-width: 16px; transition: height 0.3s ease; position: relative; }
-  .mini-bar-label { position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%); font-family: 'Source Code Pro', monospace; font-size: 8px; color: #807F86; white-space: nowrap; }
-  .pillar-dist { display: flex; gap: 2px; align-items: center; margin-top: 6px; }
-  .pillar-dist-bar { height: 6px; border-radius: 3px; transition: width 0.3s ease; }
-  .pillar-dist-legend { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
-  .pillar-legend-item { display: flex; align-items: center; gap: 3px; font-family: 'Source Code Pro', monospace; font-size: 9px; color: #807F86; }
-  .pillar-legend-dot { width: 6px; height: 6px; border-radius: 2px; }
-
-  /* BULK BAR */
-  .bulk-bar { display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1B1925; color: #fff; border-radius: 12px; padding: 10px 20px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 500; box-shadow: 0 8px 32px rgba(0,0,0,0.3); z-index: 9500; align-items: center; gap: 12px; animation: slideUp 0.2s ease; }
-  .bulk-bar.show { display: flex; }
-  .bulk-bar button { padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; font-family: 'Plus Jakarta Sans', sans-serif; }
-  .bulk-bar .bulk-move { background: #FC5C03; color: #fff; }
-  .bulk-bar .bulk-delete { background: rgba(255,255,255,0.1); color: #FCA5A5; }
-  .bulk-bar .bulk-cancel { background: rgba(255,255,255,0.1); color: #fff; }
-  .bulk-bar select { background: #33313F; color: #fff; border: none; border-radius: 6px; padding: 5px 8px; font-size: 12px; font-family: 'Barlow', sans-serif; }
-
-  /* CALENDAR */
-  .calendar-view { display: none; padding: 0 20px 20px; }
-  .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: #E8E8EA; border: 1px solid #E8E8EA; border-radius: 12px; overflow: hidden; }
-  .cal-header { background: #F7F7F8; padding: 10px; text-align: center; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 600; color: #807F86; text-transform: uppercase; letter-spacing: 0.05em; }
-  .cal-day { background: #fff; min-height: 100px; padding: 6px; vertical-align: top; }
-  .cal-day.other-month { background: #FAFAFA; }
-  .cal-day.today { background: #FEEEE5; }
-  .cal-day-num { font-family: 'Source Code Pro', monospace; font-size: 11px; color: #807F86; margin-bottom: 4px; }
-  .cal-day.today .cal-day-num { color: #FC5C03; font-weight: 600; }
-  .cal-item { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 10px; font-weight: 500; padding: 3px 6px; border-radius: 4px; margin-bottom: 2px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: all 0.15s; }
-  .cal-item:hover { transform: scale(1.02); }
-  .cal-nav { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-  .cal-nav button { background: none; border: 1px solid #E8E8EA; border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 13px; color: #4D4C55; transition: all 0.15s; }
-  .cal-nav button:hover { border-color: #FC5C03; color: #FC5C03; }
-  .cal-nav h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 16px; }
-
-  /* LIST VIEW */
-  .list-view { display: none; padding: 0 20px 20px; }
-  .list-table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border: 1px solid #E8E8EA; border-radius: 12px; overflow: hidden; }
-  .list-table th { font-family: 'Source Code Pro', monospace; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #807F86; text-align: left; padding: 10px 14px; background: #FAFAFA; border-bottom: 1px solid #E8E8EA; cursor: pointer; user-select: none; white-space: nowrap; transition: color 0.15s; }
-  .list-table th:hover { color: var(--csn-orange); }
-  .list-table th.sorted { color: var(--csn-orange); }
-  .list-table td { padding: 10px 14px; border-bottom: 1px solid #F3F3F5; font-size: 13px; vertical-align: middle; }
-  .list-table tr:last-child td { border-bottom: none; }
-  .list-table tr:hover td { background: #FAFAFA; }
-  .list-row-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 13px; color: #1B1925; cursor: pointer; }
-  .list-row-title:hover { color: var(--csn-orange); }
-
-  /* CREATOR VIEW */
-  .creator-view { display: none; padding: 0 20px 20px; }
-  .creator-lane { background: #fff; border: 1px solid #E8E8EA; border-radius: 12px; margin-bottom: 16px; overflow: hidden; }
-  .creator-lane-header { padding: 14px 18px; border-bottom: 1px solid #E8E8EA; display: flex; align-items: center; gap: 12px; background: #FAFAFA; }
-  .creator-lane-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif; flex-shrink: 0; }
-  .creator-lane-info { flex: 1; }
-  .creator-lane-name { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 15px; }
-  .creator-lane-angle { font-family: 'Source Code Pro', monospace; font-size: 11px; color: #807F86; }
-  .creator-lane-stats { font-family: 'Source Code Pro', monospace; font-size: 11px; color: #807F86; display: flex; gap: 12px; }
-  .creator-lane-body { display: flex; gap: 8px; padding: 12px; overflow-x: auto; }
-  .creator-mini-col { min-width: 180px; flex: 1; }
-  .creator-mini-col-title { font-family: 'Source Code Pro', monospace; font-size: 10px; font-weight: 600; color: #807F86; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; padding: 0 4px; }
-
-  /* QUICK CAPTURE FAB */
-  .fab { position: fixed; bottom: 28px; right: 28px; width: 56px; height: 56px; border-radius: 50%; background: var(--csn-orange); color: #fff; border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(252,92,3,0.35); display: flex; align-items: center; justify-content: center; font-size: 28px; z-index: 9400; transition: all 0.2s; }
-  .fab:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(252,92,3,0.45); }
-  .fab:active { transform: scale(0.95); }
-
-  /* QUICK CAPTURE MODAL */
-  .quick-capture { position: fixed; bottom: 96px; right: 28px; width: 360px; background: #fff; border-radius: 14px; box-shadow: 0 12px 40px rgba(0,0,0,0.15); z-index: 9401; display: none; animation: slideUp 0.2s ease; overflow: hidden; }
-  .quick-capture.open { display: block; }
-  .quick-capture-header { padding: 14px 16px 0; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 14px; color: #1B1925; }
-  .quick-capture-body { padding: 10px 16px 14px; }
-  .quick-capture-input { width: 100%; border: 1px solid #E8E8EA; border-radius: 10px; padding: 12px 14px; font-family: 'Barlow', sans-serif; font-size: 14px; resize: none; outline: none; transition: border-color 0.15s; }
-  .quick-capture-input:focus { border-color: var(--csn-orange); }
-  .quick-capture-footer { display: flex; align-items: center; justify-content: space-between; padding: 0 16px 14px; }
-  .quick-capture-hint { font-family: 'Source Code Pro', monospace; font-size: 10px; color: #B0AFB5; }
-
-  /* REPURPOSE MODAL */
-  .repurpose-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-  .repurpose-opt { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border: 1px solid #E8E8EA; border-radius: 10px; cursor: pointer; transition: all 0.15s; user-select: none; font-size: 13px; }
-  .repurpose-opt:hover { border-color: var(--csn-orange); }
-  .repurpose-opt.selected { background: var(--csn-orange-bg); border-color: var(--csn-orange); }
-  .repurpose-opt input { accent-color: var(--csn-orange); }
-
-  /* TEMPLATES MODAL */
-  .template-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .template-card { border: 1px solid #E8E8EA; border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.15s; }
-  .template-card:hover { border-color: var(--csn-orange); box-shadow: 0 2px 8px rgba(252,92,3,0.1); transform: translateY(-1px); }
-  .template-card-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 13px; margin-bottom: 4px; }
-  .template-card-desc { font-family: 'Source Code Pro', monospace; font-size: 10px; color: #807F86; }
-
-  /* PILLAR TAGS */
-  .pillar-tag { font-family: 'Source Code Pro', monospace; font-size: 9px; font-weight: 600; padding: 2px 7px; border-radius: 100px; white-space: nowrap; }
-  .pillar-conviction { background: #DBEAFE; color: #2563EB; }
-  .pillar-framework { background: #EDE9FE; color: #7C3AED; }
-  .pillar-proof { background: #D1FAE5; color: #059669; }
-  .pillar-magnet { background: #FEDECC; color: #FC5C03; }
-  .pillar-education { background: #FEF3C7; color: #D97706; }
-
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    .csn-nav { display: none; }
-    .csn-hamburger { display: block; }
-    .csn-nav.open { display: flex; flex-direction: column; position: fixed; top: var(--csn-h); left: 0; right: 0; background: #fff; border-bottom: 1px solid var(--csn-border); padding: 12px; z-index: var(--csn-z); }
-    .board-container { flex-direction: column; }
-    .column { min-width: 100%; max-width: 100%; max-height: none; }
-    .form-row { grid-template-columns: 1fr; }
-    .analytics-strip { grid-template-columns: repeat(2, 1fr); }
-    .template-grid { grid-template-columns: 1fr; }
-    .repurpose-options { grid-template-columns: 1fr; }
-    .quick-capture { right: 16px; left: 16px; width: auto; }
-    .fab { bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 24px; }
-    .list-table { font-size: 12px; }
-    .list-table th, .list-table td { padding: 8px 10px; }
-  }
+/* ── Responsive ── */
+@media(max-width:768px){
+  .header{padding:10px 14px}
+  .header h1{font-size:1.1rem}
+  .board-wrap{padding:10px}
+  .column{min-width:200px;width:200px}
+  .video-bar{padding:8px 14px;font-size:.78rem}
+  .progress-summary{margin-left:0;width:100%}
+}
+@media(max-width:480px){
+  .column{min-width:85vw;width:85vw}
+  .filters{gap:4px}
+}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav class="csn-bar" role="navigation" aria-label="Main navigation">
-  <a href="index.html" class="csn-logo">Collective Shift</a>
-  <button class="csn-hamburger" onclick="document.querySelector('.csn-nav').classList.toggle('open')" aria-label="Menu">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-  </button>
-  <div class="csn-nav">
-    <div class="csn-item"><a href="index.html" class="csn-link">Dashboard</a></div>
-    <div class="csn-item"><a href="content-board.html" class="csn-link active">Content Board</a></div>
-    <div class="csn-item"><a href="alchemy-negotiation.html" class="csn-link">Alchemy Analysis</a></div>
-    <div class="csn-item csn-has-dd">
-      <a href="#" class="csn-link">More
-        <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-      </a>
-      <div class="csn-dropdown">
-        <a href="content-calendar.html" class="csn-dd-item">Content Calendar</a>
-        <a href="cs-youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a>
-        <a href="strategy-hub.html" class="csn-dd-item">Strategy Hub</a>
-        <a href="q2-market-briefing.html" class="csn-dd-item">Q2 Market Briefing</a>
-      </div>
+<div class="header">
+  <h1>📋 <span>Content</span> Distribution Board</h1>
+  <div class="header-right">
+    <div class="filters">
+      <span class="filter-chip active" data-filter="all">All</span>
+      <span class="filter-chip" data-filter="YouTube">YouTube</span>
+      <span class="filter-chip" data-filter="YouTube Shorts">Shorts</span>
+      <span class="filter-chip" data-filter="Instagram">Instagram</span>
+      <span class="filter-chip" data-filter="TikTok">TikTok</span>
+      <span class="filter-chip" data-filter="LinkedIn">LinkedIn</span>
+      <span class="filter-chip" data-filter="X/Twitter">X</span>
+      <span class="filter-chip" data-filter="Newsletter">Newsletter</span>
+      <span class="filter-chip" data-filter="Podcast">Podcast</span>
     </div>
+    <button class="btn" id="addVideoBtn">+ New Video</button>
   </div>
-</nav>
-
-<!-- MAIN -->
-<div style="margin-top: var(--csn-h); padding-top: 16px;">
-
-  <!-- HEADER -->
-  <div style="padding: 0 20px 10px; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
-    <div>
-      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-        <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:22px;color:#1B1925;">Content Board</h1>
-        <span id="totalCount" style="font-family:'Source Code Pro',monospace;font-size:11px;color:#807F86;background:#F7F7F8;padding:2px 10px;border-radius:100px;border:1px solid #E8E8EA;"></span>
-      </div>
-    </div>
-    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-      <div class="view-toggle">
-        <button class="view-btn active" onclick="switchView('board')" id="viewBoard" title="Kanban Board">🗂 Board</button>
-        <button class="view-btn" onclick="switchView('calendar')" id="viewCalendar" title="Calendar">📅 Calendar</button>
-        <button class="view-btn" onclick="switchView('list')" id="viewList" title="List View">📋 List</button>
-        <button class="view-btn" onclick="switchView('creator')" id="viewCreator" title="Creator View">👤 Creator</button>
-      </div>
-      <button class="btn-icon" onclick="openTemplatesModal()" title="Templates">📝</button>
-      <button class="btn-icon" onclick="exportCards()" title="Export JSON">📤</button>
-      <button class="btn-icon" onclick="document.getElementById('importFile').click()" title="Import JSON">📥</button>
-      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importCards(event)">
-      <button class="btn-primary" onclick="openModal()" style="padding: 8px 16px; display: flex; align-items: center; gap: 5px;">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-        New Content
-      </button>
-    </div>
-  </div>
-
-  <!-- ANALYTICS STRIP -->
-  <div class="analytics-strip" id="analyticsStrip"></div>
-
-  <!-- FILTERS -->
-  <div style="padding: 0 20px 12px;">
-    <div class="toolbar">
-      <input type="text" class="search-box" id="searchBox" placeholder="Search content..." oninput="renderAll()">
-      <div style="display: flex; gap: 4px; flex-wrap: wrap;" id="filterPlatforms"></div>
-      <div style="width: 1px; height: 20px; background: #E8E8EA;"></div>
-      <div style="display: flex; gap: 4px; flex-wrap: wrap;" id="filterPriorities"></div>
-      <div style="width: 1px; height: 20px; background: #E8E8EA;"></div>
-      <div style="display: flex; gap: 4px; flex-wrap: wrap;" id="filterTypes"></div>
-      <div style="width: 1px; height: 20px; background: #E8E8EA;"></div>
-      <div style="display: flex; gap: 4px; flex-wrap: wrap;" id="filterCreators"></div>
-      <div style="width: 1px; height: 20px; background: #E8E8EA;"></div>
-      <div style="display: flex; gap: 4px; flex-wrap: wrap;" id="filterPillars"></div>
-    </div>
-  </div>
-
-  <!-- VIEWS -->
-  <div class="board-container" id="boardView"></div>
-  <div class="calendar-view" id="calendarView">
-    <div class="cal-nav">
-      <button onclick="calNav(-1)">← Prev</button>
-      <h2 id="calTitle"></h2>
-      <button onclick="calNav(1)">Next →</button>
-      <button onclick="calToday()" style="margin-left: 8px;">Today</button>
-    </div>
-    <div class="calendar-grid" id="calGrid"></div>
-  </div>
-  <div class="list-view" id="listView"></div>
-  <div class="creator-view" id="creatorView"></div>
 </div>
 
-<!-- EDIT MODAL -->
-<div class="modal-overlay" id="contentModal">
-  <div class="modal" id="contentModalInner">
-    <div class="modal-header">
-      <h3 id="modalTitle">New Content</h3>
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <button class="expand-btn" id="expandModalBtn" onclick="toggleExpandModal()">⤢ Expand</button>
-        <button class="modal-close" onclick="closeModal()">✕</button>
-      </div>
+<div class="video-bar">
+  <span class="label">Current Video:</span>
+  <strong>Bitcoin Is Down 48%. Is Now the Time to Buy? (Data Only)</strong>
+  <a href="https://youtu.be/KZIjRzlLEvI" target="_blank">▶ Watch</a>
+  <div class="progress-summary" id="progressSummary"></div>
+</div>
+
+<div class="board-wrap">
+  <div class="board" id="board"></div>
+</div>
+
+<!-- Card Detail Modal -->
+<div class="modal-overlay" id="cardModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modalTitle"></h2>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot">
+      <button class="btn-secondary btn" onclick="closeModal()">Close</button>
+      <button class="btn done-btn-modal btn" id="modalDoneBtn">✓ Mark Posted</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Video Modal -->
+<div class="modal-overlay" id="newVideoModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Add New Video</h2>
+      <button class="modal-close" onclick="closeNewVideoModal()">&times;</button>
     </div>
     <div class="modal-body">
-      <input type="hidden" id="editId">
-
-      <!-- TABS -->
-      <div class="tab-bar">
-        <button class="tab-btn active" onclick="switchTab('details')">Details</button>
-        <button class="tab-btn" onclick="switchTab('script')" id="scriptTabBtn">Script</button>
-      </div>
-
-      <!-- DETAILS TAB -->
-      <div class="tab-content active" id="tabDetails">
-        <label class="form-label">Title</label>
-        <input type="text" class="form-input" id="fTitle" placeholder="Content title...">
-
-        <label class="form-label">Creator / Brand</label>
-        <select class="form-select" id="fCreator" required>
-          <option value="">Select creator...</option>
+      <div class="field"><label>Video Title</label><input type="text" id="nvTitle" placeholder="e.g. Why Bitcoin Will Hit $200K"></div>
+      <div class="field"><label>YouTube URL</label><input type="text" id="nvUrl" placeholder="https://youtu.be/..."></div>
+      <div class="field"><label>Starting Column</label>
+        <select id="nvColumn">
+          <option value="Raw Video">Raw Video</option>
+          <option value="In Edit">In Edit</option>
+          <option value="Redistribution" selected>Redistribution</option>
         </select>
-
-        <label class="form-label">Description</label>
-        <textarea class="form-textarea" id="fDesc" placeholder="Brief description or notes..." rows="2"></textarea>
-
-        <div class="form-row">
-          <div>
-            <label class="form-label">Content Type</label>
-            <select class="form-select" id="fType">
-              <option value="long-form video">Long-form Video</option>
-              <option value="short clip">Short Clip</option>
-              <option value="thread">Thread</option>
-              <option value="post">Post</option>
-              <option value="story">Story</option>
-              <option value="reel">Reel</option>
-              <option value="podcast">Podcast</option>
-              <option value="newsletter">Newsletter</option>
-              <option value="carousel">Carousel</option>
-            </select>
-          </div>
-          <div>
-            <label class="form-label">Priority</label>
-            <select class="form-select" id="fPriority">
-              <option value="high">High</option>
-              <option value="medium">Medium</option>
-              <option value="low">Low</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div>
-            <label class="form-label">Due Date</label>
-            <input type="date" class="form-input" id="fDue">
-          </div>
-          <div>
-            <label class="form-label">Assigned To</label>
-            <input type="text" class="form-input" id="fAssignee" placeholder="Name...">
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div>
-            <label class="form-label">Status</label>
-            <select class="form-select" id="fStatus">
-              <option value="ideas">Ideas</option>
-              <option value="script">Script / Draft</option>
-              <option value="recording">Recording</option>
-              <option value="editing">Editing</option>
-              <option value="review">Review</option>
-              <option value="scheduled">Scheduled</option>
-              <option value="published">Published</option>
-            </select>
-          </div>
-          <div>
-            <label class="form-label">Content Pillar</label>
-            <select class="form-select" id="fPillar">
-              <option value="">No pillar</option>
-              <option value="conviction">Conviction Builders (40%)</option>
-              <option value="framework">Framework Teasers (25%)</option>
-              <option value="proof">Proof & Transparency (20%)</option>
-              <option value="magnet">DM Magnets (10%)</option>
-              <option value="education">Education (5%)</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div>
-            <label class="form-label">Thumbnail Status</label>
-            <select class="form-select" id="fThumbStatus">
-              <option value="">N/A</option>
-              <option value="needed">Needed</option>
-              <option value="progress">In Progress</option>
-              <option value="done">Done</option>
-            </select>
-          </div>
-          <div>
-            <label class="form-label">Thumbnail URL</label>
-            <input type="text" class="form-input" id="fThumb" placeholder="https://...">
-          </div>
-        </div>
-
-        <label class="form-label">Platforms</label>
-        <div class="platform-checks" id="fPlatforms"></div>
-
-        <label class="form-label">Notes</label>
-        <textarea class="form-textarea" id="fNotes" placeholder="Quick notes..." rows="2"></textarea>
-
-        <label class="form-label">Links (one per line)</label>
-        <textarea class="form-textarea" id="fLinks" placeholder="https://youtube.com/..." rows="2"></textarea>
-
-        <div style="display: flex; gap: 8px; margin-top: 20px; justify-content: space-between;">
-          <div style="display: flex; gap: 8px;">
-            <button class="btn-danger" id="deleteBtn" onclick="deleteCard()" style="display:none;">Delete</button>
-            <button class="btn-secondary btn-sm" id="repurposeBtn" onclick="openRepurposeModal()" style="display:none;">↗ Repurpose</button>
-          </div>
-          <div style="display: flex; gap: 8px;">
-            <button class="btn-secondary" onclick="closeModal()">Cancel</button>
-            <button class="btn-primary" onclick="saveCard()">Save</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- SCRIPT TAB -->
-      <div class="tab-content" id="tabScript">
-        <div class="script-editor-wrap">
-          <div class="script-toolbar">
-            <button onclick="execCmd('formatBlock','H2')" title="Heading 2"><b>H2</b></button>
-            <button onclick="execCmd('formatBlock','H3')" title="Heading 3"><b>H3</b></button>
-            <div class="sep"></div>
-            <button onclick="execCmd('bold')" title="Bold"><b>B</b></button>
-            <button onclick="execCmd('italic')" title="Italic"><i>I</i></button>
-            <div class="sep"></div>
-            <button onclick="execCmd('insertUnorderedList')" title="Bullet List">•≡</button>
-            <button onclick="execCmd('insertOrderedList')" title="Numbered List">1.</button>
-            <div class="sep"></div>
-            <button onclick="execCmd('formatBlock','P')" title="Paragraph">¶</button>
-          </div>
-          <div class="script-editor" id="scriptEditor" contenteditable="true" oninput="updateWordCount()"></div>
-          <div class="script-word-count">
-            <span id="wordCount">0 words</span>
-            <div style="display: flex; gap: 8px;">
-              <button class="ai-draft-btn" onclick="generateAIDraft()">✨ AI Draft</button>
-              <button class="expand-btn" onclick="toggleExpandModal()">⤢ Fullscreen</button>
-            </div>
-          </div>
-        </div>
-        <div style="display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end;">
-          <button class="btn-secondary" onclick="closeModal()">Cancel</button>
-          <button class="btn-primary" onclick="saveCard()">Save</button>
-        </div>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- REPURPOSE MODAL -->
-<div class="modal-overlay" id="repurposeModal">
-  <div class="modal" style="max-width: 480px;">
-    <div class="modal-header">
-      <h3>↗ Repurpose Content</h3>
-      <button class="modal-close" onclick="closeRepurposeModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <p style="font-size: 13px; color: #807F86; margin-bottom: 12px;">Select platforms to create adapted versions of this content:</p>
-      <div class="repurpose-options" id="repurposePlatforms"></div>
-      <div style="display: flex; gap: 8px; margin-top: 20px; justify-content: flex-end;">
-        <button class="btn-secondary" onclick="closeRepurposeModal()">Cancel</button>
-        <button class="btn-primary" onclick="doRepurpose()">Create Cards</button>
-      </div>
+    <div class="modal-foot">
+      <button class="btn-secondary btn" onclick="closeNewVideoModal()">Cancel</button>
+      <button class="btn" onclick="createNewVideo()">Create 17 Cards</button>
     </div>
   </div>
-</div>
-
-<!-- TEMPLATES MODAL -->
-<div class="modal-overlay" id="templatesModal">
-  <div class="modal" style="max-width: 560px;">
-    <div class="modal-header">
-      <h3>📝 Content Templates</h3>
-      <button class="modal-close" onclick="closeTemplatesModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <p style="font-size: 13px; color: #807F86; margin-bottom: 14px;">Choose a template to create a pre-filled content card:</p>
-      <div class="template-grid" id="templateGrid"></div>
-    </div>
-  </div>
-</div>
-
-<!-- QUICK CAPTURE -->
-<div class="quick-capture" id="quickCapture">
-  <div class="quick-capture-header">⚡ Quick Capture</div>
-  <div class="quick-capture-body">
-    <textarea class="quick-capture-input" id="quickCaptureInput" placeholder="Type an idea and hit Enter..." rows="2"></textarea>
-  </div>
-  <div class="quick-capture-footer">
-    <span class="quick-capture-hint">Enter to save · Esc to close</span>
-    <button class="btn-primary btn-sm" onclick="submitQuickCapture()">Add Idea</button>
-  </div>
-</div>
-
-<!-- FAB -->
-<button class="fab" id="fabBtn" onclick="toggleQuickCapture()" title="Quick Capture (+)">+</button>
-
-<!-- BULK BAR -->
-<div class="bulk-bar" id="bulkBar">
-  <span id="bulkCount">0 selected</span>
-  <select id="bulkStatus">
-    <option value="">Move to...</option>
-    <option value="ideas">Ideas</option>
-    <option value="script">Script / Draft</option>
-    <option value="recording">Recording</option>
-    <option value="editing">Editing</option>
-    <option value="review">Review</option>
-    <option value="scheduled">Scheduled</option>
-    <option value="published">Published</option>
-  </select>
-  <button class="bulk-move" onclick="bulkMove()">Move</button>
-  <button class="bulk-delete" onclick="bulkDelete()">Delete</button>
-  <button class="bulk-cancel" onclick="clearSelection()">Cancel</button>
 </div>
 
 <script>
-// ════════════════════════════════════════════════════════
-// CONSTANTS
-// ════════════════════════════════════════════════════════
-const STATUSES = [
-  { id: 'ideas',     emoji: '💡', label: 'Ideas',        color: '#F3F4F6', textColor: '#4D4C55' },
-  { id: 'script',    emoji: '📝', label: 'Script / Draft', color: '#EDE9FE', textColor: '#654FFC' },
-  { id: 'recording', emoji: '🎬', label: 'Recording',    color: '#FEF3C7', textColor: '#D97706' },
-  { id: 'editing',   emoji: '✂️', label: 'Editing',       color: '#DBEAFE', textColor: '#2563EB' },
-  { id: 'review',    emoji: '👁️', label: 'Review',        color: '#FEDECC', textColor: '#FC5C03' },
-  { id: 'scheduled', emoji: '📅', label: 'Scheduled',    color: '#FCE7F3', textColor: '#DB2777' },
-  { id: 'published', emoji: '✅', label: 'Published',     color: '#D1FAE5', textColor: '#08C394' },
-];
+// ── Data ──
+const COLUMNS = ['Raw Video','In Edit','Redistribution','Formatting','Ben Review','Ready to Post','Posted'];
 
-const CREATORS = [
-  { id: 'ben-simpson',   name: 'Ben Simpson',    handle: '@bensimpsonau',      angle: 'Digital asset strategy, entrepreneurship, wealth building', initials: 'BS', color: '#FC5C03' },
-  { id: 'travis-thomas', name: 'Travis Thomas',  handle: '',                   angle: 'Mindset, strategy, corporate lens',                         initials: 'TT', color: '#654FFC' },
-  { id: 'sarn-zen',      name: 'Sarn (Zen)',     handle: '',                   angle: 'Beginner education, approachable',                          initials: 'SZ', color: '#08C394' },
-  { id: 'wealth-shift',  name: 'The Wealth Shift', handle: '@wealthshiftpodcast', angle: 'Ben & Bergs podcast',                                   initials: 'WS', color: '#D97706' },
-];
-
-const PLATFORMS = ['YouTube', 'X/Twitter', 'LinkedIn', 'Instagram', 'TikTok', 'Facebook', 'Email'];
-const PLATFORM_ICONS = { YouTube: 'YT', 'X/Twitter': '𝕏', LinkedIn: 'in', Instagram: 'IG', TikTok: 'TT', Facebook: 'FB', Email: '✉' };
-const PLATFORM_COLORS = {
-  YouTube:     { bg: '#FEE2E2', color: '#DC2626' },
-  'X/Twitter': { bg: '#DBEAFE', color: '#1D4ED8' },
-  LinkedIn:    { bg: '#DBEAFE', color: '#2563EB' },
-  Instagram:   { bg: '#FCE7F3', color: '#DB2777' },
-  TikTok:      { bg: '#F3F4F6', color: '#1B1925' },
-  Facebook:    { bg: '#DBEAFE', color: '#1D4ED8' },
-  Email:       { bg: '#FEF3C7', color: '#D97706' },
+const PLATFORM_BADGES = {
+  'YouTube':       { cls:'badge-yt',   label:'YouTube' },
+  'YouTube Shorts':{ cls:'badge-yts',  label:'YT Shorts' },
+  'TikTok':        { cls:'badge-tt',   label:'TikTok' },
+  'TikTok/Reels':  { cls:'badge-tt',   label:'TikTok/Reels' },
+  'Instagram':     { cls:'badge-ig',   label:'Instagram' },
+  'Reels':         { cls:'badge-ig',   label:'Reels' },
+  'LinkedIn':      { cls:'badge-li',   label:'LinkedIn' },
+  'X/Twitter':     { cls:'badge-x',    label:'X/Twitter' },
+  'Newsletter':    { cls:'badge-news', label:'Newsletter' },
+  'Podcast':       { cls:'badge-pod',  label:'Podcast' },
 };
-const CONTENT_TYPES = ['long-form video', 'short clip', 'thread', 'post', 'story', 'reel', 'podcast', 'newsletter', 'carousel'];
-const PRIORITIES = ['high', 'medium', 'low'];
-const PRIORITY_COLORS = { high: { bg: '#FEE2E2', color: '#DC2626' }, medium: { bg: '#FEF3C7', color: '#D97706' }, low: { bg: '#D1FAE5', color: '#059669' } };
 
-const PILLARS = [
-  { id: 'conviction', label: 'Conviction Builders', target: 40, color: '#2563EB', css: 'pillar-conviction', desc: 'Data-backed, make ICP believe crypto belongs in portfolio' },
-  { id: 'framework',  label: 'Framework Teasers',   target: 25, color: '#7C3AED', css: 'pillar-framework',  desc: 'Show the Shift OS system exists without full HOW' },
-  { id: 'proof',      label: 'Proof & Transparency', target: 20, color: '#08C394', css: 'pillar-proof',     desc: 'Portfolio updates, member stories, BTS' },
-  { id: 'magnet',     label: 'DM Magnets',          target: 10, color: '#FC5C03', css: 'pillar-magnet',    desc: 'Direct CTA content with keyword triggers' },
-  { id: 'education',  label: 'Education',            target: 5,  color: '#D97706', css: 'pillar-education', desc: 'Beginner-friendly explanations' },
+const BRIEFS = {
+  1: { hook:"Open with the 48% stat — viewers in the value zone.", angle:"Show the historical drawdown chart. Every major dip preceded a new ATH. This is data, not hopium.", cta:"Like if you're buying the dip." },
+  2: { hook:"Bitcoin is down 48% from ATH — here's what that actually means.", angle:"Context the % drop vs previous cycles. 2018 was 84%. 2022 was 77%. 48% is mild.", cta:"Follow for data-driven crypto takes." },
+  3: { hook:"I started buying at $63K and here's why I'm not worried.", angle:"DCA strategy — show the math of buying through volatility vs trying to time the bottom.", cta:"Save this for when you're panicking." },
+  4: { hook:"Whatever you do, don't go all in right now.", angle:"Risk management. Position sizing. Why 5-10% portfolio allocation makes sense even if bullish.", cta:"Share with someone who needs to hear this." },
+  5: { hook:"Bitcoin is NOT the same as altcoins — stop treating them the same.", angle:"BTC vs ALT drawdown comparison. BTC recovers, many alts don't. Flight to quality.", cta:"Comment your biggest alt L." },
+  6: { hook:"BlackRock, Fidelity, and sovereign funds are all buying. Why?", angle:"Institutional accumulation data from on-chain analytics. Smart money is loading.", cta:"This is the signal retail ignores." },
+  7: { hook:"Community poll + key stat from the video.", angle:"Quick engagement post: 'Bitcoin is down 48%. Are you: A) Buying more B) Holding C) Selling D) Waiting'. Include one compelling chart.", cta:"Vote and share your strategy." },
+  8: { hook:"Slide 1: Bold stat headline. Slides 2-9: Data story. Slide 10: CTA.", angle:"Visual data storytelling — each slide one clear point with chart/graphic. Carousel format for saves.", cta:"Save this carousel. Share with a friend who's panicking." },
+  9: { hook:"The Weekly Shift: What 48% Down Really Means For Your Portfolio", angle:"Long-form newsletter section. Historical context, DCA math, institutional signals, risk framework. This is the 'smart money' analysis for subscribers.", cta:"Forward this to someone sitting on the sidelines." },
+  10:{ hook:"Thread: Bitcoin is down 48% from ATH. Here's what the data says (not opinions). 🧵", angle:"8-tweet thread. Each tweet = one data point. Charts where possible. Build the case methodically.", cta:"Repost if this helped you think clearly. Follow for weekly data threads." },
+  11:{ hook:"Bitcoin is down 48%. Here's what I see when I look at the data.", angle:"Professional/analytical tone. Institutional framing. Connect to macro trends and portfolio theory. LinkedIn audience wants sophistication.", cta:"What's your read on the current drawdown? Drop your take below." },
+  12:{ hook:"POV: You see Bitcoin is down 48% and everyone is panicking", angle:"Greenscreen over the video/chart. React in real-time. Casual, confident energy. 'Let me show you what this actually means.'", cta:"Follow for reactions to the biggest crypto moments." },
+  13:{ hook:"Story 1: Question hook. Stories 2-4: Key data points. Story 5: CTA.", angle:"Vertical story format. Bold text overlays on dark backgrounds. Swipe-up to full video. Quick dopamine hits of data.", cta:"Swipe up to watch the full breakdown." },
+  14:{ hook:"Bitcoin is down 48%. Everyone's panicking. Here's what I see... 👇", angle:"Instagram caption optimized. Emoji-rich, scannable. Pair with a chart or data graphic. Hashtag strategy included.", cta:"Save this post. You'll want it when we hit a new ATH. Link in bio for the full analysis." },
+  15:{ hook:"What a 48% Bitcoin Drawdown Teaches Us About Market Psychology", angle:"Long-form LinkedIn article format. 800-1200 words. Academic/analytical tone. Reference market psychology, behavioral economics, institutional theory.", cta:"Follow me for weekly data-driven analysis of digital assets and market structure." },
+  16:{ hook:"One chart that explains everything about Bitcoin's 48% drop.", angle:"Quote card — single powerful visual. Clean design with one stat and one insight. Made for reposting.", cta:"Repost this." },
+  17:{ hook:"Clip from the video discussion — the most compelling 60-90 seconds.", angle:"Audio/video clip optimized for podcast promo. Tease the full analysis. Works as a standalone insight.", cta:"Full episode linked in bio. Subscribe so you never miss a weekly breakdown." },
+};
+
+let cardIdCounter = 100;
+let cards = [];
+let activeFilter = 'all';
+let dragCard = null;
+
+function generateId(){ return ++cardIdCounter; }
+
+const TEMPLATE_CARDS = [
+  { num:1,  title:'Short Clip 1 — The Value Zone',         platform:'YouTube Shorts', stage:'Stage 1' },
+  { num:2,  title:'Short Clip 2 — 48% Reality Check',      platform:'YouTube Shorts', stage:'Stage 1' },
+  { num:3,  title:'Short Clip 3 — Why I Started Buying at $63K', platform:'TikTok', stage:'Stage 1-2' },
+  { num:4,  title:'Short Clip 4 — Don\'t Go All In',       platform:'Reels',          stage:'Stage 1' },
+  { num:5,  title:'Short Clip 5 — Bitcoin ≠ Altcoins',     platform:'TikTok',         stage:'Stage 1' },
+  { num:6,  title:'Short Clip 6 — The Institutional Signal',platform:'Reels',         stage:'Stage 1' },
+  { num:7,  title:'YouTube Community Post',                  platform:'YouTube',        stage:'Stage 1' },
+  { num:8,  title:'Instagram Carousel (10 slides)',          platform:'Instagram',      stage:'Stage 1-2' },
+  { num:9,  title:'Newsletter — The Weekly Shift',           platform:'Newsletter',     stage:'Stage 2' },
+  { num:10, title:'X/Twitter Thread (8 tweets)',             platform:'X/Twitter',      stage:'Stage 1' },
+  { num:11, title:'LinkedIn Post',                           platform:'LinkedIn',       stage:'Stage 1-2' },
+  { num:12, title:'Greenscreen Reaction Script',             platform:'TikTok/Reels',   stage:'Stage 1' },
+  { num:13, title:'Instagram Story Sequence (5 stories)',    platform:'Instagram',      stage:'Stage 1' },
+  { num:14, title:'Platform Variant — Instagram caption',    platform:'Instagram',      stage:'Stage 1' },
+  { num:15, title:'Platform Variant — LinkedIn long-form',   platform:'LinkedIn',       stage:'Stage 2' },
+  { num:16, title:'Platform Variant — X quote card',         platform:'X/Twitter',      stage:'Stage 1' },
+  { num:17, title:'Podcast Clip/Promo',                      platform:'Podcast',        stage:'Stage 5' },
 ];
 
-const STORAGE_KEY = 'cs-content-board-v2';
+// Init pre-loaded cards
+TEMPLATE_CARDS.forEach(t => {
+  cards.push({
+    id: generateId(),
+    num: t.num,
+    title: t.title,
+    platform: t.platform,
+    stage: t.stage,
+    column: 'Redistribution',
+    video: 'Bitcoin Is Down 48%. Is Now the Time to Buy? (Data Only)',
+    url: 'https://youtu.be/KZIjRzlLEvI'
+  });
+});
 
-// ════════════════════════════════════════════════════════
-// STATE
-// ════════════════════════════════════════════════════════
-let cards = [];
-let selectedIds = new Set();
-let activeFilters = { platform: null, priority: null, type: null, creator: null, pillar: null };
-let currentView = 'board';
-let calMonth = new Date().getMonth();
-let calYear = new Date().getFullYear();
-let dragCardId = null;
-let listSortCol = 'title';
-let listSortDir = 1;
-let repurposeCardId = null;
+// ── Render ──
+function render(){
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+  const summary = document.getElementById('progressSummary');
 
-// ════════════════════════════════════════════════════════
-// DEFAULT DATA
-// ════════════════════════════════════════════════════════
-const DEFAULT_CARDS = [{
-  id: 'card-1711900000000',
-  title: 'Bitcoin Is Down 48%. Is Now the Time to Buy?',
-  description: 'Bitcoin has fallen roughly 48% from its ATH. This video walks through what the data actually shows.',
-  type: 'long-form video',
-  priority: 'high',
-  status: 'editing',
-  platforms: ['YouTube', 'X/Twitter', 'LinkedIn'],
-  postedTo: [],
-  due: '2026-04-05',
-  assignee: 'Ben',
-  creator: 'ben-simpson',
-  thumbnail: '',
-  pillar: 'conviction',
-  thumbStatus: 'needed',
-  notes: '',
-  links: '',
-  script: '',
-  repurposedFrom: '',
-  createdAt: '2026-03-28T09:00:00Z',
-}];
+  COLUMNS.forEach(col => {
+    const colCards = cards.filter(c => c.column === col && matchesFilter(c));
+    const allColCards = cards.filter(c => c.column === col);
 
-// ════════════════════════════════════════════════════════
-// PERSISTENCE
-// ════════════════════════════════════════════════════════
-function loadCards() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      cards = JSON.parse(raw);
-      // Migrate old cards
-      cards.forEach(c => {
-        if (!c.pillar) c.pillar = '';
-        if (!c.thumbStatus) c.thumbStatus = '';
-        if (!c.notes) c.notes = '';
-        if (!c.links) c.links = '';
-        if (!c.script) c.script = '';
-        if (!c.repurposedFrom) c.repurposedFrom = '';
-        if (!c.createdAt) c.createdAt = new Date().toISOString();
-      });
-    } else {
-      cards = JSON.parse(JSON.stringify(DEFAULT_CARDS));
-    }
-  } catch(e) { cards = JSON.parse(JSON.stringify(DEFAULT_CARDS)); }
-}
+    const colEl = document.createElement('div');
+    colEl.className = 'column';
+    colEl.dataset.column = col;
 
-function saveCards() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
-}
+    colEl.innerHTML = `
+      <div class="col-header">
+        <span class="col-title">${col}</span>
+        <span class="col-count">${allColCards.length}</span>
+      </div>
+      <div class="col-cards" data-column="${col}"></div>
+    `;
 
-// ════════════════════════════════════════════════════════
-// FILTERS
-// ════════════════════════════════════════════════════════
-function initFilters() {
-  const platContainer = document.getElementById('filterPlatforms');
-  const prioContainer = document.getElementById('filterPriorities');
-  const typeContainer = document.getElementById('filterTypes');
-  const creatorContainer = document.getElementById('filterCreators');
-  const pillarContainer = document.getElementById('filterPillars');
+    const cardsContainer = colEl.querySelector('.col-cards');
+    setupDropZone(cardsContainer);
 
-  PLATFORMS.forEach(p => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-pill';
-    btn.textContent = p;
-    btn.onclick = () => toggleFilter('platform', p, btn);
-    platContainer.appendChild(btn);
+    colCards.forEach(card => {
+      cardsContainer.appendChild(renderCard(card));
+    });
+
+    board.appendChild(colEl);
   });
 
-  PRIORITIES.forEach(p => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-pill';
-    btn.textContent = p.charAt(0).toUpperCase() + p.slice(1);
-    btn.dataset.value = p;
-    btn.onclick = () => toggleFilter('priority', p, btn);
-    prioContainer.appendChild(btn);
-  });
-
-  CONTENT_TYPES.forEach(t => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-pill';
-    btn.textContent = t.charAt(0).toUpperCase() + t.slice(1);
-    btn.dataset.value = t;
-    btn.onclick = () => toggleFilter('type', t, btn);
-    typeContainer.appendChild(btn);
-  });
-
-  CREATORS.forEach(cr => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-pill';
-    btn.style.display = 'flex';
-    btn.style.alignItems = 'center';
-    btn.style.gap = '5px';
-    btn.innerHTML = `<span style="display:inline-flex;width:16px;height:16px;border-radius:50%;background:${cr.color};color:#fff;font-size:8px;font-weight:700;align-items:center;justify-content:center;flex-shrink:0;">${cr.initials}</span>${cr.name}`;
-    btn.dataset.value = cr.id;
-    btn.onclick = () => toggleFilter('creator', cr.id, btn);
-    creatorContainer.appendChild(btn);
-  });
-
-  PILLARS.forEach(pl => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-pill';
-    btn.style.display = 'flex';
-    btn.style.alignItems = 'center';
-    btn.style.gap = '5px';
-    btn.innerHTML = `<span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${pl.color};flex-shrink:0;"></span>${pl.label}`;
-    btn.dataset.value = pl.id;
-    btn.onclick = () => toggleFilter('pillar', pl.id, btn);
-    pillarContainer.appendChild(btn);
-  });
-}
-
-function toggleFilter(kind, value, btn) {
-  if (activeFilters[kind] === value) {
-    activeFilters[kind] = null;
-    btn.classList.remove('active');
-  } else {
-    btn.parentElement.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
-    activeFilters[kind] = value;
-    btn.classList.add('active');
-  }
-  renderAll();
-}
-
-function getFilteredCards() {
-  const q = document.getElementById('searchBox').value.toLowerCase().trim();
-  return cards.filter(c => {
-    if (q && !c.title.toLowerCase().includes(q) && !(c.description||'').toLowerCase().includes(q) && !(c.notes||'').toLowerCase().includes(q)) return false;
-    if (activeFilters.platform && !(c.platforms||[]).includes(activeFilters.platform)) return false;
-    if (activeFilters.priority && c.priority !== activeFilters.priority) return false;
-    if (activeFilters.type && c.type !== activeFilters.type) return false;
-    if (activeFilters.creator && c.creator !== activeFilters.creator) return false;
-    if (activeFilters.pillar && c.pillar !== activeFilters.pillar) return false;
-    return true;
-  });
-}
-
-// ════════════════════════════════════════════════════════
-// RENDER ALL
-// ════════════════════════════════════════════════════════
-function renderAll() {
-  const filtered = getFilteredCards();
-  document.getElementById('totalCount').textContent = `${filtered.length} item${filtered.length !== 1 ? 's' : ''}`;
-  renderAnalytics(filtered);
-  if (currentView === 'board') renderBoard(filtered);
-  else if (currentView === 'calendar') renderCalendar();
-  else if (currentView === 'list') renderListView(filtered);
-  else if (currentView === 'creator') renderCreatorView(filtered);
-  updateBulkBar();
-}
-
-// ════════════════════════════════════════════════════════
-// ANALYTICS STRIP
-// ════════════════════════════════════════════════════════
-function renderAnalytics(filtered) {
-  const strip = document.getElementById('analyticsStrip');
-  const total = filtered.length;
-  const inPipeline = filtered.filter(c => c.status !== 'published').length;
-  const now = new Date();
-  const weekAgo = new Date(now); weekAgo.setDate(weekAgo.getDate() - 7);
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-  const pubThisWeek = filtered.filter(c => c.status === 'published' && c.due && new Date(c.due) >= weekAgo).length;
-  const pubThisMonth = filtered.filter(c => c.status === 'published' && c.due && new Date(c.due) >= monthStart).length;
-
-  // Creator counts
-  const creatorCounts = {};
-  CREATORS.forEach(cr => creatorCounts[cr.id] = 0);
-  filtered.forEach(c => { if (creatorCounts[c.creator] !== undefined) creatorCounts[c.creator]++; });
-  const maxCreator = Math.max(1, ...Object.values(creatorCounts));
-
-  // Pillar counts
-  const pillarCounts = {};
-  PILLARS.forEach(p => pillarCounts[p.id] = 0);
-  let pillarTotal = 0;
-  filtered.forEach(c => { if (c.pillar && pillarCounts[c.pillar] !== undefined) { pillarCounts[c.pillar]++; pillarTotal++; } });
-
-  // Platform counts
-  const platCounts = {};
-  PLATFORMS.forEach(p => platCounts[p] = 0);
-  filtered.forEach(c => (c.platforms||[]).forEach(p => { if (platCounts[p] !== undefined) platCounts[p]++; }));
-  const maxPlat = Math.max(1, ...Object.values(platCounts));
-
-  strip.innerHTML = `
-    <div class="stat-card">
-      <div class="stat-card-label">Total Content</div>
-      <div class="stat-card-value">${total}</div>
-      <div class="stat-card-sub">${inPipeline} in pipeline</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-card-label">Published</div>
-      <div class="stat-card-value">${pubThisMonth}</div>
-      <div class="stat-card-sub">${pubThisWeek} this week · ${pubThisMonth} this month</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-card-label">By Creator</div>
-      <div class="mini-bar-chart">${CREATORS.map(cr => `<div class="mini-bar" style="background:${cr.color};width:${100/CREATORS.length}%;height:${Math.max(4, (creatorCounts[cr.id]/maxCreator)*28)}px;" title="${cr.name}: ${creatorCounts[cr.id]}"><span class="mini-bar-label">${cr.initials}</span></div>`).join('')}</div>
-      <div style="height:12px;"></div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-card-label">Pillar Mix</div>
-      <div class="pillar-dist" style="width:100%;">${PILLARS.map(p => {
-        const pct = pillarTotal > 0 ? (pillarCounts[p.id] / pillarTotal * 100) : 0;
-        return `<div class="pillar-dist-bar" style="background:${p.color};width:${Math.max(2, pct)}%;flex-shrink:0;" title="${p.label}: ${pct.toFixed(0)}% (target ${p.target}%)"></div>`;
-      }).join('')}</div>
-      <div class="pillar-dist-legend">${PILLARS.map(p => {
-        const pct = pillarTotal > 0 ? (pillarCounts[p.id] / pillarTotal * 100).toFixed(0) : 0;
-        return `<span class="pillar-legend-item"><span class="pillar-legend-dot" style="background:${p.color};"></span>${pct}%/${p.target}%</span>`;
-      }).join('')}</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-card-label">Platform Coverage</div>
-      <div class="mini-bar-chart">${PLATFORMS.map(p => {
-        const pc = PLATFORM_COLORS[p];
-        return `<div class="mini-bar" style="background:${pc.color};width:${100/PLATFORMS.length}%;height:${Math.max(4, (platCounts[p]/maxPlat)*28)}px;" title="${p}: ${platCounts[p]}"><span class="mini-bar-label">${PLATFORM_ICONS[p]}</span></div>`;
-      }).join('')}</div>
-      <div style="height:12px;"></div>
-    </div>
+  // Update progress summary
+  const total = cards.length;
+  const posted = cards.filter(c => c.column === 'Posted').length;
+  const inProgress = total - posted;
+  summary.innerHTML = `
+    <span class="ps-item"><strong>${total}</strong> total</span>
+    <span class="ps-item"><strong>${posted}</strong> posted</span>
+    <span class="ps-item"><strong>${inProgress}</strong> in progress</span>
   `;
 }
 
-// ════════════════════════════════════════════════════════
-// KANBAN BOARD
-// ════════════════════════════════════════════════════════
-function renderBoard(filtered) {
-  if (!filtered) filtered = getFilteredCards();
-  const board = document.getElementById('boardView');
-  board.innerHTML = '';
-
-  STATUSES.forEach(status => {
-    const colCards = filtered.filter(c => c.status === status.id);
-    const col = document.createElement('div');
-    col.className = 'column';
-    col.innerHTML = `
-      <div class="column-header">
-        <div class="column-title">
-          <span>${status.emoji}</span>
-          <span>${status.label}</span>
-          <span class="column-count">${colCards.length}</span>
-        </div>
-        <button onclick="openModal(null, '${status.id}')" style="background:none;border:none;cursor:pointer;color:#807F86;font-size:18px;line-height:1;transition:color 0.15s;" onmouseover="this.style.color='#FC5C03'" onmouseout="this.style.color='#807F86'">+</button>
-      </div>
-      <div class="column-body" data-status="${status.id}"
-           ondragover="handleDragOver(event)"
-           ondragleave="handleDragLeave(event)"
-           ondrop="handleDrop(event, '${status.id}')">
-      </div>
-    `;
-    const body = col.querySelector('.column-body');
-    colCards.forEach(card => body.appendChild(createCardEl(card)));
-    board.appendChild(col);
-  });
+function matchesFilter(card){
+  if(activeFilter === 'all') return true;
+  return card.platform.includes(activeFilter);
 }
 
-function createCardEl(card) {
+function renderCard(card){
   const el = document.createElement('div');
-  el.className = 'card priority-' + (card.priority||'medium') + (selectedIds.has(card.id) ? ' selected' : '');
+  el.className = 'card';
   el.draggable = true;
   el.dataset.id = card.id;
-  el.ondragstart = (e) => handleDragStart(e, card.id);
-  el.ondragend = handleDragEnd;
 
-  const isOverdue = card.due && new Date(card.due) < new Date() && card.status !== 'published';
-  const creatorObj = CREATORS.find(cr => cr.id === card.creator);
-  const pillarObj = PILLARS.find(p => p.id === card.pillar);
-
-  // Card age
-  const age = card.createdAt ? Math.floor((Date.now() - new Date(card.createdAt).getTime()) / 86400000) : 0;
-
-  let thumbHtml = '';
-  if (card.thumbnail) {
-    thumbHtml = `<div style="width:100%;aspect-ratio:16/9;border-radius:6px;overflow:hidden;margin-bottom:8px;background:#E8E8EA;"><img src="${escHtml(card.thumbnail)}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;color:#807F86;font-size:24px;\\'>🎬</div>'"></div>`;
-  }
-
-  const platformTags = (card.platforms||[]).map(p => {
-    const pc = PLATFORM_COLORS[p] || { bg: '#F3F4F6', color: '#4D4C55' };
-    return `<span class="tag" style="background:${pc.bg};color:${pc.color};">${PLATFORM_ICONS[p]||p}</span>`;
-  }).join('');
-
-  const priColor = PRIORITY_COLORS[card.priority] || PRIORITY_COLORS.medium;
-
-  const creatorBadge = creatorObj
-    ? `<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-        <div style="width:20px;height:20px;border-radius:50%;background:${creatorObj.color};color:#fff;font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${creatorObj.initials}</div>
-        <span style="font-family:'Source Code Pro',monospace;font-size:10px;color:#807F86;">${escHtml(creatorObj.name)}</span>
-      </div>` : '';
-
-  const pillarTag = pillarObj ? `<span class="pillar-tag ${pillarObj.css}">${pillarObj.label}</span>` : '';
-
-  let thumbIndicator = '';
-  if (card.thumbStatus === 'needed') thumbIndicator = '<span class="thumb-indicator thumb-needed">🖼 Needed</span>';
-  else if (card.thumbStatus === 'progress') thumbIndicator = '<span class="thumb-indicator thumb-progress">🖼 WIP</span>';
-  else if (card.thumbStatus === 'done') thumbIndicator = '<span class="thumb-indicator thumb-done">🖼 Done</span>';
-
-  const repurposeBadge = card.repurposedFrom ? `<div class="card-repurpose-badge" title="Repurposed from original">↗ ${escHtml(card.repurposedFrom)}</div>` : '';
-
-  let postedDots = '';
-  if ((card.platforms||[]).length > 0 && card.status === 'published') {
-    postedDots = '<div class="platform-dots">' + (card.platforms||[]).map(p => {
-      const isPosted = (card.postedTo||[]).includes(p);
-      const pc = PLATFORM_COLORS[p] || { bg: '#F3F4F6', color: '#4D4C55' };
-      return `<div class="platform-dot ${isPosted ? 'posted' : ''}" title="${p}: ${isPosted ? 'Posted' : 'Not posted'}" onclick="event.stopPropagation();togglePosted('${card.id}','${p}')" style="${isPosted ? 'background:'+pc.bg+';border-color:'+pc.color+';color:'+pc.color : ''}">${PLATFORM_ICONS[p]||p[0]}</div>`;
-    }).join('') + '</div>';
-  }
+  const badge = PLATFORM_BADGES[card.platform] || { cls:'badge-news', label:card.platform };
+  const colIdx = COLUMNS.indexOf(card.column);
 
   el.innerHTML = `
-    <input type="checkbox" class="card-select" ${selectedIds.has(card.id)?'checked':''} onclick="event.stopPropagation();toggleSelect('${card.id}')">
-    <div class="card-actions">
-      <button class="card-action-btn" onclick="event.stopPropagation();openRepurposeFromCard('${card.id}')" title="Repurpose">↗</button>
-    </div>
-    ${thumbHtml}
-    ${creatorBadge}
-    <div class="card-title" onclick="openModal('${card.id}')">${escHtml(card.title)}</div>
-    ${repurposeBadge}
+    <div class="card-number">#${card.num} · ${card.video ? card.video.substring(0,35)+'…' : ''}</div>
+    <div class="card-title">${card.title}</div>
     <div class="card-meta">
-      <span class="tag" style="background:${priColor.bg};color:${priColor.color};">${card.priority}</span>
-      <span class="tag tag-type">${card.type||'post'}</span>
-      ${platformTags}
+      <span class="badge ${badge.cls}">${badge.label}</span>
+      <span class="stage-tag">${card.stage}</span>
     </div>
-    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;">
-      ${pillarTag}
-      ${thumbIndicator}
+    <div class="card-actions">
+      ${colIdx < COLUMNS.length - 1 ? `<button class="card-btn" onclick="moveCard(${card.id},'next')" title="Move right">→ Next</button>` : ''}
+      ${colIdx > 0 ? `<button class="card-btn" onclick="moveCard(${card.id},'prev')" title="Move left">← Back</button>` : ''}
+      ${card.column !== 'Posted' ? `<button class="card-btn done-btn" onclick="moveCard(${card.id},'done')" title="Mark posted">✓</button>` : ''}
     </div>
-    <div class="card-footer">
-      <div style="display:flex;align-items:center;gap:8px;">
-        ${card.due ? `<span class="card-due ${isOverdue?'overdue':''}">${isOverdue?'⚠️ ':''}${formatDate(card.due)}</span>` : ''}
-        ${card.assignee ? `<span class="card-assignee">👤 ${escHtml(card.assignee)}</span>` : ''}
-      </div>
-      <span class="card-age">${age}d</span>
-    </div>
-    ${postedDots}
   `;
+
+  // Click to open detail (not on buttons)
+  el.addEventListener('click', e => {
+    if(e.target.tagName === 'BUTTON') return;
+    openCardModal(card.id);
+  });
+
+  // Drag events
+  el.addEventListener('dragstart', e => {
+    dragCard = card.id;
+    el.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  el.addEventListener('dragend', () => {
+    el.classList.remove('dragging');
+    dragCard = null;
+    document.querySelectorAll('.drop-indicator').forEach(d => d.remove());
+  });
+
   return el;
 }
 
-// ════════════════════════════════════════════════════════
-// DRAG & DROP
-// ════════════════════════════════════════════════════════
-function handleDragStart(e, id) {
-  dragCardId = id;
-  e.target.classList.add('dragging');
-  e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/plain', id);
-}
-function handleDragEnd(e) {
-  e.target.classList.remove('dragging');
-  document.querySelectorAll('.column-body').forEach(b => b.classList.remove('drag-over'));
-  dragCardId = null;
-}
-function handleDragOver(e) {
-  e.preventDefault();
-  e.dataTransfer.dropEffect = 'move';
-  e.currentTarget.classList.add('drag-over');
-}
-function handleDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
-function handleDrop(e, newStatus) {
-  e.preventDefault();
-  e.currentTarget.classList.remove('drag-over');
-  const id = e.dataTransfer.getData('text/plain');
-  if (!id) return;
-  if (selectedIds.has(id) && selectedIds.size > 1) {
-    cards.forEach(c => { if (selectedIds.has(c.id)) c.status = newStatus; });
-    clearSelection();
-  } else {
-    const card = cards.find(c => c.id === id);
-    if (card) card.status = newStatus;
-  }
-  saveCards(); renderAll();
-}
-
-// ════════════════════════════════════════════════════════
-// SELECTION / BULK
-// ════════════════════════════════════════════════════════
-function toggleSelect(id) {
-  if (selectedIds.has(id)) selectedIds.delete(id); else selectedIds.add(id);
-  renderAll();
-}
-function clearSelection() {
-  selectedIds.clear();
-  document.body.classList.remove('bulk-mode');
-  renderAll();
-}
-function updateBulkBar() {
-  const bar = document.getElementById('bulkBar');
-  if (selectedIds.size > 0) {
-    bar.classList.add('show');
-    document.body.classList.add('bulk-mode');
-    document.getElementById('bulkCount').textContent = `${selectedIds.size} selected`;
-  } else {
-    bar.classList.remove('show');
-    document.body.classList.remove('bulk-mode');
-  }
-}
-function bulkMove() {
-  const status = document.getElementById('bulkStatus').value;
-  if (!status) return;
-  cards.forEach(c => { if (selectedIds.has(c.id)) c.status = status; });
-  saveCards(); clearSelection();
-}
-function bulkDelete() {
-  if (!confirm(`Delete ${selectedIds.size} item(s)?`)) return;
-  cards = cards.filter(c => !selectedIds.has(c.id));
-  saveCards(); clearSelection();
-}
-
-// ════════════════════════════════════════════════════════
-// POSTED TRACKER
-// ════════════════════════════════════════════════════════
-function togglePosted(cardId, platform) {
-  const card = cards.find(c => c.id === cardId);
-  if (!card) return;
-  if (!card.postedTo) card.postedTo = [];
-  const idx = card.postedTo.indexOf(platform);
-  if (idx >= 0) card.postedTo.splice(idx, 1); else card.postedTo.push(platform);
-  saveCards(); renderAll();
-}
-
-// ════════════════════════════════════════════════════════
-// VIEWS
-// ════════════════════════════════════════════════════════
-function switchView(view) {
-  currentView = view;
-  document.getElementById('boardView').style.display = view === 'board' ? 'flex' : 'none';
-  document.getElementById('calendarView').style.display = view === 'calendar' ? 'block' : 'none';
-  document.getElementById('listView').style.display = view === 'list' ? 'block' : 'none';
-  document.getElementById('creatorView').style.display = view === 'creator' ? 'block' : 'none';
-  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('view' + view.charAt(0).toUpperCase() + view.slice(1)).classList.add('active');
-  renderAll();
-}
-
-// ─── CALENDAR ───
-function calNav(delta) {
-  calMonth += delta;
-  if (calMonth > 11) { calMonth = 0; calYear++; }
-  if (calMonth < 0) { calMonth = 11; calYear--; }
-  renderCalendar();
-}
-function calToday() {
-  const now = new Date(); calMonth = now.getMonth(); calYear = now.getFullYear(); renderCalendar();
-}
-function renderCalendar() {
-  const grid = document.getElementById('calGrid');
-  const title = document.getElementById('calTitle');
-  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  title.textContent = `${months[calMonth]} ${calYear}`;
-  const firstDay = new Date(calYear, calMonth, 1);
-  const lastDay = new Date(calYear, calMonth + 1, 0);
-  const startDay = firstDay.getDay();
-  const daysInMonth = lastDay.getDate();
-  const today = new Date();
-  const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-  const filtered = getFilteredCards().filter(c => c.due);
-  let html = '';
-  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => { html += `<div class="cal-header">${d}</div>`; });
-  const prevMonth = new Date(calYear, calMonth, 0);
-  for (let i = startDay - 1; i >= 0; i--) { html += `<div class="cal-day other-month"><div class="cal-day-num">${prevMonth.getDate() - i}</div></div>`; }
-  for (let d = 1; d <= daysInMonth; d++) {
-    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isToday = dateStr === todayStr;
-    const dayCards = filtered.filter(c => c.due === dateStr);
-    html += `<div class="cal-day ${isToday ? 'today' : ''}"><div class="cal-day-num">${d}</div>${dayCards.map(c => {
-      const s = STATUSES.find(st => st.id === c.status);
-      return `<div class="cal-item" style="background:${s?s.color:'#F3F4F6'};color:${s?s.textColor:'#4D4C55'};" onclick="openModal('${c.id}')" title="${escHtml(c.title)}">${escHtml(c.title)}</div>`;
-    }).join('')}</div>`;
-  }
-  const totalCells = startDay + daysInMonth;
-  const remaining = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
-  for (let d = 1; d <= remaining; d++) { html += `<div class="cal-day other-month"><div class="cal-day-num">${d}</div></div>`; }
-  grid.innerHTML = html;
-}
-
-// ─── LIST VIEW ───
-function renderListView(filtered) {
-  if (!filtered) filtered = getFilteredCards();
-  const sorted = [...filtered].sort((a, b) => {
-    let va = a[listSortCol] || '', vb = b[listSortCol] || '';
-    if (typeof va === 'string') va = va.toLowerCase();
-    if (typeof vb === 'string') vb = vb.toLowerCase();
-    if (va < vb) return -1 * listSortDir;
-    if (va > vb) return 1 * listSortDir;
-    return 0;
-  });
-
-  const cols = [
-    { key: 'title', label: 'Title' },
-    { key: 'creator', label: 'Creator' },
-    { key: 'status', label: 'Status' },
-    { key: 'priority', label: 'Priority' },
-    { key: 'type', label: 'Type' },
-    { key: 'pillar', label: 'Pillar' },
-    { key: 'due', label: 'Due' },
-    { key: 'assignee', label: 'Assignee' },
-  ];
-
-  const container = document.getElementById('listView');
-  container.innerHTML = `<div style="overflow-x:auto;"><table class="list-table">
-    <thead><tr>${cols.map(c => `<th class="${listSortCol===c.key?'sorted':''}" onclick="sortList('${c.key}')">${c.label} ${listSortCol===c.key?(listSortDir===1?'↑':'↓'):''}</th>`).join('')}</tr></thead>
-    <tbody>${sorted.map(card => {
-      const creatorObj = CREATORS.find(cr => cr.id === card.creator);
-      const statusObj = STATUSES.find(s => s.id === card.status);
-      const pillarObj = PILLARS.find(p => p.id === card.pillar);
-      const priColor = PRIORITY_COLORS[card.priority] || PRIORITY_COLORS.medium;
-      return `<tr>
-        <td><span class="list-row-title" onclick="openModal('${card.id}')">${escHtml(card.title)}</span></td>
-        <td>${creatorObj ? `<span style="display:inline-flex;align-items:center;gap:4px;"><span style="display:inline-flex;width:18px;height:18px;border-radius:50%;background:${creatorObj.color};color:#fff;font-size:8px;font-weight:700;align-items:center;justify-content:center;">${creatorObj.initials}</span><span style="font-size:12px;">${creatorObj.name}</span></span>` : ''}</td>
-        <td><span class="tag" style="background:${statusObj?statusObj.color:'#F3F4F6'};color:${statusObj?statusObj.textColor:'#4D4C55'};">${statusObj?statusObj.label:card.status}</span></td>
-        <td><span class="tag" style="background:${priColor.bg};color:${priColor.color};">${card.priority}</span></td>
-        <td style="font-size:12px;">${card.type||''}</td>
-        <td>${pillarObj ? `<span class="pillar-tag ${pillarObj.css}">${pillarObj.label}</span>` : '<span style="color:#B0AFB5;">-</span>'}</td>
-        <td style="font-family:'Source Code Pro',monospace;font-size:11px;">${card.due ? formatDate(card.due) : '-'}</td>
-        <td style="font-size:12px;">${card.assignee||'-'}</td>
-      </tr>`;
-    }).join('')}</tbody>
-  </table></div>`;
-}
-
-function sortList(col) {
-  if (listSortCol === col) listSortDir *= -1;
-  else { listSortCol = col; listSortDir = 1; }
-  renderAll();
-}
-
-// ─── CREATOR VIEW ───
-function renderCreatorView(filtered) {
-  if (!filtered) filtered = getFilteredCards();
-  const container = document.getElementById('creatorView');
-  container.innerHTML = '';
-
-  CREATORS.forEach(cr => {
-    const crCards = filtered.filter(c => c.creator === cr.id);
-    if (crCards.length === 0 && !activeFilters.creator) return; // Hide empty creators unless filtering
-
-    const lane = document.createElement('div');
-    lane.className = 'creator-lane';
-
-    const statusCounts = {};
-    STATUSES.forEach(s => statusCounts[s.id] = 0);
-    crCards.forEach(c => statusCounts[c.status]++);
-
-    lane.innerHTML = `
-      <div class="creator-lane-header">
-        <div class="creator-lane-avatar" style="background:${cr.color};">${cr.initials}</div>
-        <div class="creator-lane-info">
-          <div class="creator-lane-name">${cr.name}${cr.handle ? ' <span style="font-weight:400;font-size:12px;color:#807F86;">' + cr.handle + '</span>' : ''}</div>
-          <div class="creator-lane-angle">${cr.angle}</div>
-        </div>
-        <div class="creator-lane-stats">${STATUSES.map(s => statusCounts[s.id] > 0 ? `<span>${s.emoji} ${statusCounts[s.id]}</span>` : '').filter(Boolean).join('')}</div>
-      </div>
-      <div class="creator-lane-body" id="creator-lane-${cr.id}"></div>
-    `;
-    container.appendChild(lane);
-
-    const laneBody = lane.querySelector('.creator-lane-body');
-    STATUSES.forEach(status => {
-      const statusCards = crCards.filter(c => c.status === status.id);
-      if (statusCards.length === 0) return;
-      const miniCol = document.createElement('div');
-      miniCol.className = 'creator-mini-col';
-      miniCol.innerHTML = `<div class="creator-mini-col-title">${status.emoji} ${status.label} (${statusCards.length})</div>`;
-      statusCards.forEach(card => {
-        const mini = document.createElement('div');
-        mini.className = 'card priority-' + (card.priority||'medium');
-        mini.style.cursor = 'pointer';
-        mini.onclick = () => openModal(card.id);
-        const priColor = PRIORITY_COLORS[card.priority] || PRIORITY_COLORS.medium;
-        mini.innerHTML = `<div class="card-title" style="font-size:11.5px;">${escHtml(card.title)}</div>
-          <div class="card-meta"><span class="tag" style="background:${priColor.bg};color:${priColor.color};font-size:9px;">${card.priority}</span>
-          ${(card.platforms||[]).slice(0,3).map(p => { const pc = PLATFORM_COLORS[p]||{bg:'#F3F4F6',color:'#4D4C55'}; return `<span class="tag" style="background:${pc.bg};color:${pc.color};font-size:9px;">${PLATFORM_ICONS[p]}</span>`; }).join('')}</div>`;
-        miniCol.appendChild(mini);
-      });
-      laneBody.appendChild(miniCol);
-    });
-  });
-}
-
-// ════════════════════════════════════════════════════════
-// MODAL (ADD/EDIT)
-// ════════════════════════════════════════════════════════
-function openModal(editId, defaultStatus) {
-  const modal = document.getElementById('contentModal');
-  modal.classList.add('open');
-  document.getElementById('editId').value = editId || '';
-  document.getElementById('modalTitle').textContent = editId ? 'Edit Content' : 'New Content';
-  document.getElementById('deleteBtn').style.display = editId ? 'inline-block' : 'none';
-  document.getElementById('repurposeBtn').style.display = editId ? 'inline-block' : 'none';
-  document.getElementById('contentModalInner').classList.remove('expanded');
-
-  // Reset tabs
-  switchTab('details');
-
-  // Platform checkboxes
-  const platDiv = document.getElementById('fPlatforms');
-  platDiv.innerHTML = '';
-  PLATFORMS.forEach(p => {
-    const label = document.createElement('label');
-    label.className = 'platform-check';
-    label.innerHTML = `<input type="checkbox" value="${p}"><span>${PLATFORM_ICONS[p]}</span> ${p}`;
-    label.onclick = () => { setTimeout(() => label.classList.toggle('checked', label.querySelector('input').checked), 0); };
-    platDiv.appendChild(label);
-  });
-
-  // Creator dropdown
-  const creatorSelect = document.getElementById('fCreator');
-  creatorSelect.innerHTML = '<option value="">Select creator...</option>';
-  CREATORS.forEach(cr => {
-    const opt = document.createElement('option');
-    opt.value = cr.id;
-    opt.textContent = cr.name + (cr.handle ? ' (' + cr.handle + ')' : '');
-    creatorSelect.appendChild(opt);
-  });
-
-  if (editId) {
-    const card = cards.find(c => c.id === editId);
-    if (!card) return;
-    document.getElementById('fTitle').value = card.title;
-    document.getElementById('fCreator').value = card.creator || '';
-    document.getElementById('fDesc').value = card.description || '';
-    document.getElementById('fType').value = card.type || 'post';
-    document.getElementById('fPriority').value = card.priority || 'medium';
-    document.getElementById('fDue').value = card.due || '';
-    document.getElementById('fAssignee').value = card.assignee || '';
-    document.getElementById('fStatus').value = card.status;
-    document.getElementById('fThumb').value = card.thumbnail || '';
-    document.getElementById('fPillar').value = card.pillar || '';
-    document.getElementById('fThumbStatus').value = card.thumbStatus || '';
-    document.getElementById('fNotes').value = card.notes || '';
-    document.getElementById('fLinks').value = card.links || '';
-    document.getElementById('scriptEditor').innerHTML = card.script || '';
-    updateWordCount();
-    (card.platforms||[]).forEach(p => {
-      const chk = platDiv.querySelector(`input[value="${p}"]`);
-      if (chk) { chk.checked = true; chk.closest('.platform-check').classList.add('checked'); }
-    });
-  } else {
-    document.getElementById('fTitle').value = '';
-    document.getElementById('fDesc').value = '';
-    document.getElementById('fType').value = 'long-form video';
-    document.getElementById('fPriority').value = 'medium';
-    document.getElementById('fDue').value = '';
-    document.getElementById('fAssignee').value = '';
-    document.getElementById('fStatus').value = defaultStatus || 'ideas';
-    document.getElementById('fThumb').value = '';
-    document.getElementById('fCreator').value = '';
-    document.getElementById('fPillar').value = '';
-    document.getElementById('fThumbStatus').value = '';
-    document.getElementById('fNotes').value = '';
-    document.getElementById('fLinks').value = '';
-    document.getElementById('scriptEditor').innerHTML = '';
-    updateWordCount();
-  }
-
-  setTimeout(() => document.getElementById('fTitle').focus(), 100);
-}
-
-function closeModal() {
-  document.getElementById('contentModal').classList.remove('open');
-  document.getElementById('contentModalInner').classList.remove('expanded');
-}
-
-function switchTab(tab) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  if (tab === 'details') {
-    document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
-    document.getElementById('tabDetails').classList.add('active');
-  } else {
-    document.getElementById('scriptTabBtn').classList.add('active');
-    document.getElementById('tabScript').classList.add('active');
-  }
-}
-
-function toggleExpandModal() {
-  document.getElementById('contentModalInner').classList.toggle('expanded');
-}
-
-function saveCard() {
-  const editId = document.getElementById('editId').value;
-  const title = document.getElementById('fTitle').value.trim();
-  if (!title) { document.getElementById('fTitle').style.borderColor = '#DC2626'; return; }
-
-  const platforms = [];
-  document.querySelectorAll('#fPlatforms input:checked').forEach(cb => platforms.push(cb.value));
-
-  const data = {
-    title,
-    creator: document.getElementById('fCreator').value,
-    description: document.getElementById('fDesc').value.trim(),
-    type: document.getElementById('fType').value,
-    priority: document.getElementById('fPriority').value,
-    due: document.getElementById('fDue').value,
-    assignee: document.getElementById('fAssignee').value.trim(),
-    status: document.getElementById('fStatus').value,
-    platforms,
-    thumbnail: document.getElementById('fThumb').value.trim(),
-    pillar: document.getElementById('fPillar').value,
-    thumbStatus: document.getElementById('fThumbStatus').value,
-    notes: document.getElementById('fNotes').value.trim(),
-    links: document.getElementById('fLinks').value.trim(),
-    script: document.getElementById('scriptEditor').innerHTML,
-  };
-
-  if (editId) {
-    const card = cards.find(c => c.id === editId);
-    if (card) Object.assign(card, data);
-  } else {
-    cards.push({
-      id: 'card-' + Date.now(),
-      ...data,
-      postedTo: [],
-      repurposedFrom: '',
-      createdAt: new Date().toISOString(),
-    });
-  }
-
-  saveCards(); closeModal(); renderAll();
-}
-
-function deleteCard() {
-  const editId = document.getElementById('editId').value;
-  if (!editId || !confirm('Delete this content item?')) return;
-  cards = cards.filter(c => c.id !== editId);
-  saveCards(); closeModal(); renderAll();
-}
-
-// ════════════════════════════════════════════════════════
-// SCRIPT EDITOR
-// ════════════════════════════════════════════════════════
-function execCmd(cmd, val) {
-  document.execCommand(cmd, false, val || null);
-  document.getElementById('scriptEditor').focus();
-  updateWordCount();
-}
-
-function updateWordCount() {
-  const text = document.getElementById('scriptEditor').innerText.trim();
-  const words = text ? text.split(/\s+/).length : 0;
-  document.getElementById('wordCount').textContent = `${words} word${words !== 1 ? 's' : ''}`;
-}
-
-// ════════════════════════════════════════════════════════
-// AI DRAFT
-// ════════════════════════════════════════════════════════
-function generateAIDraft() {
-  const title = document.getElementById('fTitle').value.trim() || 'Untitled Content';
-  const desc = document.getElementById('fDesc').value.trim() || '';
-  const type = document.getElementById('fType').value;
-  const platforms = [];
-  document.querySelectorAll('#fPlatforms input:checked').forEach(cb => platforms.push(cb.value));
-  const platform = platforms[0] || 'YouTube';
-
-  const draft = getAIDraftTemplate(title, desc, type, platform);
-  document.getElementById('scriptEditor').innerHTML = draft;
-  updateWordCount();
-}
-
-function getAIDraftTemplate(title, desc, type, platform) {
-  const header = `<p style="background:#FEF3C7;padding:8px 12px;border-radius:6px;font-size:12px;color:#D97706;margin-bottom:16px;"><em>✨ AI-generated draft template - edit to match your voice</em></p>`;
-  const descLine = desc ? `<p><em>${escHtml(desc)}</em></p>` : '';
-
-  if (platform === 'YouTube' || type === 'long-form video' || type === 'podcast') {
-    return header + `
-<h2>🎬 ${escHtml(title)}</h2>
-${descLine}
-<h3>🪝 HOOK (0:00 - 0:30)</h3>
-<p>Open with a bold statement or question that stops the scroll. What's the one thing that makes this topic urgent right now?</p>
-<ul><li>"Most people think [common misconception]... but the data tells a completely different story."</li></ul>
-
-<h3>📖 STORY (0:30 - 3:00)</h3>
-<p>Share a personal experience or relatable scenario that connects emotionally. Why does this matter to YOU?</p>
-<ul><li>Set the scene - what happened?</li><li>What was the turning point?</li><li>How does this connect to the teaching?</li></ul>
-
-<h3>📚 TEACHING POINT (3:00 - 8:00)</h3>
-<p>This is where you deliver the value. Break it into 3 key points:</p>
-<ol>
-<li><strong>Point 1:</strong> [Data/evidence] - What does the data show?</li>
-<li><strong>Point 2:</strong> [Framework] - How should people think about this?</li>
-<li><strong>Point 3:</strong> [Action] - What can they actually do?</li>
-</ol>
-
-<h3>📣 CTA (8:00 - 9:00)</h3>
-<p>Strong close with a clear next step:</p>
-<ul><li>"If you found this valuable, hit subscribe - I release new research like this every week."</li><li>"Comment below: [engagement question]"</li><li>"Link in description to [lead magnet/resource]"</li></ul>`;
-  }
-
-  if (platform === 'X/Twitter' || type === 'thread') {
-    return header + `
-<h2>🧵 ${escHtml(title)}</h2>
-${descLine}
-<p><strong>Tweet 1 (Hook):</strong></p>
-<p>${escHtml(title)}</p>
-<p>Here's what the data actually shows 🧵👇</p>
-
-<p><strong>Tweet 2 (Context):</strong></p>
-<p>Most people are looking at this wrong. Here's why...</p>
-
-<p><strong>Tweet 3 (Data Point 1):</strong></p>
-<p>📊 [Key statistic or insight]</p>
-
-<p><strong>Tweet 4 (Data Point 2):</strong></p>
-<p>📈 [Supporting evidence]</p>
-
-<p><strong>Tweet 5 (Framework):</strong></p>
-<p>Here's how I think about it:</p>
-<p>→ Step 1<br>→ Step 2<br>→ Step 3</p>
-
-<p><strong>Tweet 6 (CTA):</strong></p>
-<p>If this was helpful:</p>
-<p>1. Follow @handle for more insights<br>2. Repost Tweet 1 to help others<br>3. Comment "KEYWORD" and I'll send you [resource]</p>`;
-  }
-
-  if (platform === 'LinkedIn') {
-    return header + `
-<h2>💼 ${escHtml(title)}</h2>
-${descLine}
-<p>[Opening hook - personal story or contrarian take. 1-2 sentences max]</p>
-<p>---</p>
-<p>Here's what I learned:</p>
-<p>1️⃣ <strong>[First insight]</strong></p>
-<p>[2-3 sentences explaining]</p>
-<p>2️⃣ <strong>[Second insight]</strong></p>
-<p>[2-3 sentences explaining]</p>
-<p>3️⃣ <strong>[Third insight]</strong></p>
-<p>[2-3 sentences explaining]</p>
-<p>---</p>
-<p>The bottom line: [One powerful sentence summary]</p>
-<p>What's your take? Drop a comment below 👇</p>
-<p>#Bitcoin #DigitalAssets #WealthBuilding #Investing</p>`;
-  }
-
-  if (platform === 'Instagram' || type === 'carousel' || type === 'reel') {
-    return header + `
-<h2>📸 ${escHtml(title)}</h2>
-${descLine}
-<p><strong>Caption:</strong></p>
-<p>[Hook line that stops the scroll] 🔥</p>
-<p></p>
-<p>[2-3 sentences of value. Keep it punchy and scannable.]</p>
-<p></p>
-<p>[Key takeaway or call to action]</p>
-<p></p>
-<p>💡 Save this for later</p>
-<p>📤 Share with someone who needs to see this</p>
-<p>🔗 Link in bio for [resource]</p>
-<p></p>
-<p>#Bitcoin #DigitalAssets #WealthBuilding #CryptoEducation #Investing #PersonalFinance #BTC #CollectiveShift</p>`;
-  }
-
-  if (platform === 'TikTok' || type === 'short clip') {
-    return header + `
-<h2>🎵 ${escHtml(title)}</h2>
-${descLine}
-<p><strong>[0:00-0:03] HOOK</strong></p>
-<p>"Stop scrolling if you [target audience identifier]"</p>
-
-<p><strong>[0:03-0:15] SETUP</strong></p>
-<p>[Quick context. 2-3 short sentences. Visual on screen.]</p>
-
-<p><strong>[0:15-0:45] VALUE</strong></p>
-<p>[Main point. Keep it simple. One concept only.]</p>
-<ul><li>Point 1 (on screen text)</li><li>Point 2 (on screen text)</li><li>Point 3 (on screen text)</li></ul>
-
-<p><strong>[0:45-0:55] CLOSE</strong></p>
-<p>"Follow for more [topic]"</p>
-<p>[Engagement prompt: "Comment KEYWORD for my free guide"]</p>`;
-  }
-
-  if (platform === 'Email' || type === 'newsletter') {
-    return header + `
-<h2>✉️ ${escHtml(title)}</h2>
-${descLine}
-<p><strong>Subject Line Options:</strong></p>
-<ul>
-<li>Option A: [Curiosity-driven subject]</li>
-<li>Option B: [Benefit-driven subject]</li>
-<li>Option C: [Urgency-driven subject]</li>
-</ul>
-
-<p><strong>Preview Text:</strong> [First 90 chars that show in inbox]</p>
-
-<h3>Body:</h3>
-<p>Hey [first_name],</p>
-<p>[Personal opening - 1-2 sentences connecting to the reader]</p>
-<p>[Transition to the main topic]</p>
-
-<h3>The Key Insight:</h3>
-<p>[2-3 paragraphs of the main value]</p>
-
-<h3>What This Means For You:</h3>
-<p>[Practical application - what should the reader do?]</p>
-
-<h3>CTA:</h3>
-<p><strong>[Primary CTA button text]</strong></p>
-<p>[Link or action]</p>
-
-<p>Talk soon,<br>Ben</p>
-<p><em>P.S. [Bonus tip or secondary CTA]</em></p>`;
-  }
-
-  // Default
-  return header + `<h2>${escHtml(title)}</h2>${descLine}<p>[Start writing your content here...]</p>`;
-}
-
-// ════════════════════════════════════════════════════════
-// REPURPOSE ENGINE
-// ════════════════════════════════════════════════════════
-function openRepurposeFromCard(cardId) {
-  repurposeCardId = cardId;
-  openRepurposeModal();
-}
-
-function openRepurposeModal() {
-  const editId = document.getElementById('editId').value;
-  repurposeCardId = repurposeCardId || editId;
-  if (!repurposeCardId) return;
-
-  const card = cards.find(c => c.id === repurposeCardId);
-  if (!card) return;
-
-  const modal = document.getElementById('repurposeModal');
-  modal.classList.add('open');
-
-  const container = document.getElementById('repurposePlatforms');
-  container.innerHTML = '';
-  PLATFORMS.forEach(p => {
-    const already = (card.platforms||[]).includes(p);
-    const opt = document.createElement('label');
-    opt.className = 'repurpose-opt';
-    opt.innerHTML = `<input type="checkbox" value="${p}" ${already ? 'disabled' : ''}><span>${PLATFORM_ICONS[p]}</span> ${p} ${already ? '<span style="font-size:10px;color:#807F86;">(original)</span>' : ''}`;
-    opt.onclick = () => { if (!already) setTimeout(() => opt.classList.toggle('selected', opt.querySelector('input').checked), 0); };
-    container.appendChild(opt);
-  });
-}
-
-function closeRepurposeModal() {
-  document.getElementById('repurposeModal').classList.remove('open');
-  repurposeCardId = null;
-}
-
-function doRepurpose() {
-  if (!repurposeCardId) return;
-  const card = cards.find(c => c.id === repurposeCardId);
-  if (!card) return;
-
-  const selectedPlatforms = [];
-  document.querySelectorAll('#repurposePlatforms input:checked:not(:disabled)').forEach(cb => selectedPlatforms.push(cb.value));
-  if (selectedPlatforms.length === 0) return;
-
-  selectedPlatforms.forEach(platform => {
-    const newCard = {
-      id: 'card-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5),
-      title: `[${platform}] ${card.title}`,
-      description: card.description || '',
-      type: platformToType(platform),
-      priority: card.priority,
-      status: 'script',
-      platforms: [platform],
-      postedTo: [],
-      due: '',
-      assignee: card.assignee || '',
-      creator: card.creator,
-      thumbnail: '',
-      pillar: card.pillar || '',
-      thumbStatus: '',
-      notes: `Repurposed from: ${card.title}`,
-      links: '',
-      script: getAIDraftTemplate(card.title, card.description, platformToType(platform), platform),
-      repurposedFrom: card.title,
-      createdAt: new Date().toISOString(),
-    };
-    cards.push(newCard);
-  });
-
-  saveCards();
-  closeRepurposeModal();
-  closeModal();
-  renderAll();
-}
-
-function platformToType(platform) {
-  const map = { 'YouTube': 'long-form video', 'X/Twitter': 'thread', 'LinkedIn': 'post', 'Instagram': 'carousel', 'TikTok': 'short clip', 'Facebook': 'post', 'Email': 'newsletter' };
-  return map[platform] || 'post';
-}
-
-// ════════════════════════════════════════════════════════
-// TEMPLATES
-// ════════════════════════════════════════════════════════
-const TEMPLATES = [
-  {
-    name: 'YouTube Long-form Video',
-    desc: "Ben's style: Hook → Story → Teach → CTA",
-    icon: '🎬',
-    data: { type: 'long-form video', platforms: ['YouTube'], pillar: 'conviction', creator: 'ben-simpson' },
-    scriptPlatform: 'YouTube',
-  },
-  {
-    name: 'Wealth Shift Podcast',
-    desc: 'Ben & Bergs podcast episode',
-    icon: '🎙️',
-    data: { type: 'podcast', platforms: ['YouTube', 'Instagram', 'X/Twitter'], pillar: 'framework', creator: 'wealth-shift' },
-    scriptPlatform: 'YouTube',
-  },
-  {
-    name: 'Twitter/X Thread',
-    desc: '5-10 tweet thread with data points',
-    icon: '🧵',
-    data: { type: 'thread', platforms: ['X/Twitter'], pillar: 'conviction', creator: 'ben-simpson' },
-    scriptPlatform: 'X/Twitter',
-  },
-  {
-    name: 'LinkedIn Thought Leadership',
-    desc: 'Professional story format post',
-    icon: '💼',
-    data: { type: 'post', platforms: ['LinkedIn'], pillar: 'proof', creator: 'ben-simpson' },
-    scriptPlatform: 'LinkedIn',
-  },
-  {
-    name: 'Instagram Carousel',
-    desc: 'Visual educational slides',
-    icon: '📸',
-    data: { type: 'carousel', platforms: ['Instagram'], pillar: 'education', creator: 'sarn-zen' },
-    scriptPlatform: 'Instagram',
-  },
-  {
-    name: 'TikTok Short-form',
-    desc: 'Quick value clip with timing markers',
-    icon: '🎵',
-    data: { type: 'short clip', platforms: ['TikTok', 'Instagram'], pillar: 'magnet', creator: 'sarn-zen' },
-    scriptPlatform: 'TikTok',
-  },
-  {
-    name: 'Weekly Email Newsletter',
-    desc: 'Subject line, preview, body, CTA',
-    icon: '✉️',
-    data: { type: 'newsletter', platforms: ['Email'], pillar: 'conviction', creator: 'ben-simpson' },
-    scriptPlatform: 'Email',
-  },
-];
-
-function openTemplatesModal() {
-  const modal = document.getElementById('templatesModal');
-  modal.classList.add('open');
-  const grid = document.getElementById('templateGrid');
-  grid.innerHTML = TEMPLATES.map((t, i) => `
-    <div class="template-card" onclick="useTemplate(${i})">
-      <div class="template-card-title">${t.icon} ${t.name}</div>
-      <div class="template-card-desc">${t.desc}</div>
-    </div>
-  `).join('');
-}
-
-function closeTemplatesModal() {
-  document.getElementById('templatesModal').classList.remove('open');
-}
-
-function useTemplate(idx) {
-  const tmpl = TEMPLATES[idx];
-  closeTemplatesModal();
-
-  const title = prompt('Content title:', tmpl.name + ' - ') || tmpl.name;
-  const script = getAIDraftTemplate(title, '', tmpl.data.type, tmpl.scriptPlatform);
-
-  const newCard = {
-    id: 'card-' + Date.now(),
-    title,
-    description: '',
-    ...tmpl.data,
-    postedTo: [],
-    due: '',
-    assignee: '',
-    thumbnail: '',
-    thumbStatus: '',
-    notes: `Created from template: ${tmpl.name}`,
-    links: '',
-    script,
-    repurposedFrom: '',
-    createdAt: new Date().toISOString(),
-    status: 'ideas',
-  };
-
-  cards.push(newCard);
-  saveCards();
-  renderAll();
-  openModal(newCard.id);
-}
-
-// ════════════════════════════════════════════════════════
-// QUICK CAPTURE
-// ════════════════════════════════════════════════════════
-function toggleQuickCapture() {
-  const qc = document.getElementById('quickCapture');
-  qc.classList.toggle('open');
-  if (qc.classList.contains('open')) {
-    document.getElementById('quickCaptureInput').focus();
-  }
-}
-
-function submitQuickCapture() {
-  const input = document.getElementById('quickCaptureInput');
-  const val = input.value.trim();
-  if (!val) return;
-
-  cards.push({
-    id: 'card-' + Date.now(),
-    title: val,
-    description: '',
-    type: 'post',
-    priority: 'medium',
-    status: 'ideas',
-    platforms: [],
-    postedTo: [],
-    due: '',
-    assignee: '',
-    creator: '',
-    thumbnail: '',
-    pillar: '',
-    thumbStatus: '',
-    notes: '',
-    links: '',
-    script: '',
-    repurposedFrom: '',
-    createdAt: new Date().toISOString(),
-  });
-
-  saveCards();
-  renderAll();
-  input.value = '';
-  // Brief flash feedback
-  const fab = document.getElementById('fabBtn');
-  fab.style.background = '#08C394';
-  fab.textContent = '✓';
-  setTimeout(() => { fab.style.background = ''; fab.textContent = '+'; }, 600);
-}
-
-document.getElementById('quickCaptureInput').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && !e.shiftKey) {
+function setupDropZone(container){
+  container.addEventListener('dragover', e => {
     e.preventDefault();
-    submitQuickCapture();
-  }
-  if (e.key === 'Escape') {
-    toggleQuickCapture();
-  }
-});
-
-// ════════════════════════════════════════════════════════
-// IMPORT / EXPORT
-// ════════════════════════════════════════════════════════
-function exportCards() {
-  const data = JSON.stringify(cards, null, 2);
-  const blob = new Blob([data], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `content-board-backup-${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function importCards(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const imported = JSON.parse(e.target.result);
-      if (!Array.isArray(imported)) { alert('Invalid format: expected an array of cards.'); return; }
-      if (!confirm(`Import ${imported.length} cards? This will REPLACE all current content.`)) return;
-      cards = imported;
-      // Migrate
-      cards.forEach(c => {
-        if (!c.pillar) c.pillar = '';
-        if (!c.thumbStatus) c.thumbStatus = '';
-        if (!c.notes) c.notes = '';
-        if (!c.links) c.links = '';
-        if (!c.script) c.script = '';
-        if (!c.repurposedFrom) c.repurposedFrom = '';
-        if (!c.createdAt) c.createdAt = new Date().toISOString();
-      });
-      saveCards();
-      renderAll();
-      alert(`Imported ${imported.length} cards successfully.`);
-    } catch(err) {
-      alert('Failed to parse JSON: ' + err.message);
+    e.dataTransfer.dropEffect = 'move';
+    // Show indicator
+    const afterEl = getDragAfterElement(container, e.clientY);
+    const existing = container.querySelector('.drop-indicator');
+    if(!existing){
+      const ind = document.createElement('div');
+      ind.className = 'drop-indicator';
+      if(afterEl) container.insertBefore(ind, afterEl);
+      else container.appendChild(ind);
     }
-  };
-  reader.readAsText(file);
-  event.target.value = '';
-}
-
-// ════════════════════════════════════════════════════════
-// UTILITIES
-// ════════════════════════════════════════════════════════
-function escHtml(s) {
-  if (!s) return '';
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function formatDate(dateStr) {
-  if (!dateStr) return '';
-  const d = new Date(dateStr + 'T00:00:00');
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  return `${months[d.getMonth()]} ${d.getDate()}`;
-}
-
-// ════════════════════════════════════════════════════════
-// KEYBOARD SHORTCUTS
-// ════════════════════════════════════════════════════════
-document.addEventListener('keydown', (e) => {
-  const isInput = e.target.closest('input,textarea,select,[contenteditable]');
-
-  if (e.key === 'Escape') {
-    const qc = document.getElementById('quickCapture');
-    if (qc.classList.contains('open')) { qc.classList.remove('open'); return; }
-    const repModal = document.getElementById('repurposeModal');
-    if (repModal.classList.contains('open')) { closeRepurposeModal(); return; }
-    const templModal = document.getElementById('templatesModal');
-    if (templModal.classList.contains('open')) { closeTemplatesModal(); return; }
-    const modal = document.getElementById('contentModal');
-    if (modal.classList.contains('open')) { closeModal(); return; }
-    if (selectedIds.size > 0) { clearSelection(); return; }
-  }
-
-  if (e.key === 'n' && !e.ctrlKey && !e.metaKey && !isInput) {
+  });
+  container.addEventListener('dragleave', e => {
+    if(!container.contains(e.relatedTarget)){
+      container.querySelectorAll('.drop-indicator').forEach(d => d.remove());
+    }
+  });
+  container.addEventListener('drop', e => {
     e.preventDefault();
-    openModal();
-  }
+    container.querySelectorAll('.drop-indicator').forEach(d => d.remove());
+    if(dragCard === null) return;
+    const targetCol = container.dataset.column;
+    const card = cards.find(c => c.id === dragCard);
+    if(card){
+      card.column = targetCol;
+      save();
+      render();
+    }
+  });
+}
 
-  // Quick capture with Q key
-  if (e.key === 'q' && !e.ctrlKey && !e.metaKey && !isInput) {
-    e.preventDefault();
-    toggleQuickCapture();
-  }
+function getDragAfterElement(container, y){
+  const els = [...container.querySelectorAll('.card:not(.dragging)')];
+  return els.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height / 2;
+    if(offset < 0 && offset > closest.offset) return { offset, element: child };
+    return closest;
+  }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+// ── Actions ──
+function moveCard(id, direction){
+  const card = cards.find(c => c.id === id);
+  if(!card) return;
+  const idx = COLUMNS.indexOf(card.column);
+  if(direction === 'next' && idx < COLUMNS.length - 1) card.column = COLUMNS[idx + 1];
+  else if(direction === 'prev' && idx > 0) card.column = COLUMNS[idx - 1];
+  else if(direction === 'done') card.column = 'Posted';
+  save(); render();
+}
+
+// ── Card Modal ──
+function openCardModal(id){
+  const card = cards.find(c => c.id === id);
+  if(!card) return;
+  const modal = document.getElementById('cardModal');
+  const badge = PLATFORM_BADGES[card.platform] || { cls:'badge-news', label:card.platform };
+  const brief = BRIEFS[card.num] || { hook:'—', angle:'—', cta:'—' };
+
+  document.getElementById('modalTitle').innerHTML = `#${card.num} ${card.title}`;
+  document.getElementById('modalBody').innerHTML = `
+    <div class="field">
+      <label>Platform</label>
+      <div><span class="badge ${badge.cls}">${badge.label}</span> <span class="stage-tag">${card.stage}</span></div>
+    </div>
+    <div class="field">
+      <label>Source Video</label>
+      <p>${card.video || '—'} ${card.url ? `<a href="${card.url}" target="_blank" style="color:var(--orange)">[Watch]</a>` : ''}</p>
+    </div>
+    <div class="field">
+      <label>Current Column</label>
+      <div class="move-select">
+        <select id="modalMoveSelect" onchange="moveCardToColumn(${card.id}, this.value)">
+          ${COLUMNS.map(c => `<option value="${c}" ${c===card.column?'selected':''}>${c}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="brief-section">
+      <h4>🎯 Hook</h4>
+      <p>${brief.hook}</p>
+    </div>
+    <div class="brief-section" style="margin-top:8px">
+      <h4>📐 Angle / Brief</h4>
+      <p>${brief.angle}</p>
+    </div>
+    <div class="brief-section" style="margin-top:8px">
+      <h4>📢 CTA</h4>
+      <p>${brief.cta}</p>
+    </div>
+  `;
+
+  document.getElementById('modalDoneBtn').onclick = () => { moveCard(id, 'done'); closeModal(); };
+  modal.classList.add('open');
+}
+
+function moveCardToColumn(id, col){
+  const card = cards.find(c => c.id === id);
+  if(card){ card.column = col; save(); render(); }
+}
+
+function closeModal(){ document.getElementById('cardModal').classList.remove('open'); }
+
+// ── New Video Modal ──
+document.getElementById('addVideoBtn').onclick = () => {
+  document.getElementById('newVideoModal').classList.add('open');
+};
+function closeNewVideoModal(){ document.getElementById('newVideoModal').classList.remove('open'); }
+
+function createNewVideo(){
+  const title = document.getElementById('nvTitle').value.trim();
+  const url = document.getElementById('nvUrl').value.trim();
+  const col = document.getElementById('nvColumn').value;
+  if(!title){ alert('Please enter a video title.'); return; }
+
+  TEMPLATE_CARDS.forEach(t => {
+    cards.push({
+      id: generateId(),
+      num: t.num,
+      title: t.title.replace(/Bitcoin Is Down.*$/,'').trim() || t.title,
+      platform: t.platform,
+      stage: t.stage,
+      column: col,
+      video: title,
+      url: url
+    });
+  });
+  save(); render();
+  closeNewVideoModal();
+  document.getElementById('nvTitle').value = '';
+  document.getElementById('nvUrl').value = '';
+}
+
+// ── Filters ──
+document.querySelectorAll('.filter-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    activeFilter = chip.dataset.filter;
+    render();
+  });
 });
 
-// Close modals on overlay click
-document.getElementById('contentModal').addEventListener('click', (e) => {
-  if (e.target === document.getElementById('contentModal')) closeModal();
-});
-document.getElementById('repurposeModal').addEventListener('click', (e) => {
-  if (e.target === document.getElementById('repurposeModal')) closeRepurposeModal();
-});
-document.getElementById('templatesModal').addEventListener('click', (e) => {
-  if (e.target === document.getElementById('templatesModal')) closeTemplatesModal();
-});
+// ── Persistence (localStorage) ──
+function save(){
+  try { localStorage.setItem('cs_content_board', JSON.stringify(cards)); } catch(e){}
+}
+function load(){
+  try {
+    const d = localStorage.getItem('cs_content_board');
+    if(d){
+      const parsed = JSON.parse(d);
+      if(parsed && parsed.length){ cards = parsed; cardIdCounter = Math.max(...cards.map(c=>c.id)) + 1; }
+    }
+  } catch(e){}
+}
 
-// Close quick capture when clicking outside
-document.addEventListener('click', (e) => {
-  const qc = document.getElementById('quickCapture');
-  const fab = document.getElementById('fabBtn');
-  if (qc.classList.contains('open') && !qc.contains(e.target) && e.target !== fab) {
-    qc.classList.remove('open');
-  }
-});
+// ── Close modals on overlay click ──
+document.getElementById('cardModal').addEventListener('click', e => { if(e.target === e.currentTarget) closeModal(); });
+document.getElementById('newVideoModal').addEventListener('click', e => { if(e.target === e.currentTarget) closeNewVideoModal(); });
 
-// ════════════════════════════════════════════════════════
-// INIT
-// ════════════════════════════════════════════════════════
-loadCards();
-initFilters();
-renderAll();
+// ── Keyboard ──
+document.addEventListener('keydown', e => { if(e.key === 'Escape'){ closeModal(); closeNewVideoModal(); }});
+
+// ── Init ──
+load();
+render();
 </script>
 </body>
 </html>
