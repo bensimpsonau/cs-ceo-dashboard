@@ -918,19 +918,26 @@ function renderTasks() {
   const groups = {
     urgent: priorities.filter(p => p.status === 'urgent'),
     progress: priorities.filter(p => p.status === 'progress'),
+    'on-hold': priorities.filter(p => p.status === 'on-hold'),
+    blocked: priorities.filter(p => p.status === 'blocked'),
     done: priorities.filter(p => p.status === 'done'),
+    todo: priorities.filter(p => p.status === 'todo'),
   };
   const todayStr = new Date().toISOString().split('T')[0];
 
   let html = '';
   const groupMeta = [
     { key: 'urgent', label: 'Urgent', color: '#EF4444', icon: '🔴' },
-    { key: 'progress', label: 'In Progress', color: '#F59E0B', icon: '🟡' },
+    { key: 'progress', label: 'In Progress', color: '#3B82F6', icon: '🔵' },
+    { key: 'on-hold', label: 'On Hold', color: '#F59E0B', icon: '🟡' },
+    { key: 'blocked', label: 'Blocked', color: '#EF4444', icon: '🚫' },
     { key: 'done', label: 'Completed', color: '#08C394', icon: '✅' },
+    { key: 'todo', label: 'Todo', color: '#9CA3AF', icon: '⚪' },
   ];
 
   groupMeta.forEach(g => {
     const items = groups[g.key] || [];
+    if (items.length === 0) return;
     html += `<div class="task-group" data-group="${g.key}">
       <div class="task-group-header">
         <span style="color:${g.color};">${g.icon}</span>
@@ -939,19 +946,17 @@ function renderTasks() {
       </div>
       <div style="background:#fff; border:1px solid #E8E8EA; border-radius:10px; overflow:hidden;">`;
 
-    items.forEach((p, idx) => {
+    items.forEach(p => {
       const globalIdx = priorities.indexOf(p);
       const isOverdue = p.due && p.due < todayStr && p.status !== 'done';
       const dueLabel = p.due ? (p.due === todayStr ? 'Today' : new Date(p.due + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })) : '';
       const cat = CATEGORY_COLORS[p.category] || CATEGORY_COLORS.operations;
 
-      html += `<div class="task-row" data-status="${p.status}">
-        <div class="task-checkbox ${p.status === 'done' ? 'checked' : ''} ${p.status === 'urgent' ? 'urgent-ring' : ''}"
-             onclick="toggleTaskDone(${globalIdx})"></div>
+      html += `<div class="task-row" data-status="${p.status}" onclick="openTaskPanel(${globalIdx})">
+        <button class="status-pill" data-st="${p.status}" title="Click to change status" onclick="event.stopPropagation(); cycleStatus(${globalIdx})">${STATUS_LABELS[p.status] || '?'}</button>
         <span class="task-name ${p.status === 'done' ? 'done' : ''}">${escHtml(p.name)}</span>
         ${p.category ? `<span class="category-badge" style="background:${cat.bg}; color:${cat.text};">${p.category}</span>` : ''}
         ${dueLabel ? `<span class="task-due ${isOverdue ? 'overdue' : ''}">${dueLabel}</span>` : ''}
-        <div class="status-dot" style="background:${STATUS_COLORS[p.status] || '#807F86'};"></div>
       </div>`;
     });
 
