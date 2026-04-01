@@ -4,11 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-
-<title>Collective Shift — CEO Command Centre v8</title>
+<title>Collective Shift — CEO Dashboard</title>
 <script src="https://cdn.tailwindcss.com"></script>
-
 <script>
 tailwind.config = {
   theme: {
@@ -21,10 +18,13 @@ tailwind.config = {
           'orange-hover': '#FEEEE5',
           green: '#08C394',
           purple: '#654FFC',
+          navy: '#1A1A2E',
+          'navy-light': '#252540',
           border: '#E8E8EA',
           text: '#1B1925',
           secondary: '#4D4C55',
           muted: '#807F86',
+          page: '#F7F7F8',
         }
       },
       fontFamily: {
@@ -32,1738 +32,975 @@ tailwind.config = {
         barlow: ['Barlow', 'sans-serif'],
         mono: ['Source Code Pro', 'monospace'],
       },
-      borderRadius: {
-        pill: '100px',
-      }
     }
   }
 }
 </script>
 <style>
-  * { box-sizing: border-box; }
-  body { background: #FFFFFF; color: #1B1925; font-family: 'Barlow', sans-serif; }
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: #FFFFFF; }
-  ::-webkit-scrollbar-thumb { background: #33313F; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #4D4C55; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #F7F7F8; color: #1B1925; font-family: 'Barlow', sans-serif; }
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #4D4C55; border-radius: 3px; }
 
-  /* Sidebar */
-  .sidebar { width: 240px; min-height: 100vh; background: #F9F9F9; border-right: 1px solid #E8E8EA; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); z-index: 60; position: fixed; top: 56px; left: 0; height: calc(100vh - 56px); overflow-y: auto; }
-  .sidebar-link { display: flex; align-items: center; gap: 12px; padding: 10px 20px; color: #807F86; font-size: 14px; font-weight: 500; transition: all 0.15s ease; border-left: 3px solid transparent; }
-  .sidebar-link:hover { color: #1B1925; background: #FFFFFF; }
-  .sidebar-link.active { color: #FC5C03; border-left-color: #FC5C03; background: rgba(252,92,3,0.06); }
-  .sidebar-section { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #4D4C55; padding: 20px 20px 8px; font-weight: 600; }
-  @media (max-width: 1023px) {
-    .sidebar { position: fixed; left: 0; top: 0; transform: translateX(-100%); }
-    .sidebar.open { transform: translateX(0); }
-    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 55; }
-    .sidebar-overlay.open { display: block; }
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 220px; height: 100vh; position: fixed; top: 0; left: 0;
+    background: #1A1A2E; color: #fff; z-index: 100;
+    display: flex; flex-direction: column;
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    overflow-y: auto; overflow-x: hidden;
+  }
+  .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); }
+  .sidebar-section {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 1.6px;
+    color: rgba(255,255,255,0.35); padding: 20px 16px 6px; font-weight: 600;
+  }
+  .sidebar-link {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 16px; margin: 1px 8px; border-radius: 6px;
+    color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500;
+    transition: all 0.12s ease; cursor: pointer; text-decoration: none;
+    border-left: 3px solid transparent;
+  }
+  .sidebar-link:hover { color: #fff; background: rgba(255,255,255,0.07); }
+  .sidebar-link.active {
+    color: #FC5C03; background: rgba(252,92,3,0.08);
+    border-left-color: #FC5C03; font-weight: 600;
+  }
+  .sidebar-link .sidebar-icon { width: 18px; text-align: center; font-size: 14px; flex-shrink: 0; }
+
+  /* ── Top Bar ── */
+  .topbar {
+    height: 48px; position: fixed; top: 0; left: 220px; right: 0;
+    background: #fff; border-bottom: 1px solid #E8E8EA;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; z-index: 90;
+  }
+  .topbar-search {
+    background: #F7F7F8; border: 1px solid #E8E8EA; border-radius: 8px;
+    padding: 6px 12px 6px 32px; font-size: 13px; width: 280px;
+    outline: none; transition: border-color 0.15s;
+  }
+  .topbar-search:focus { border-color: #FC5C03; }
+
+  /* ── Main Content ── */
+  .main-content {
+    margin-left: 220px; padding-top: 48px; min-height: 100vh;
+  }
+  .content-area { max-width: 1200px; margin: 0 auto; padding: 24px 32px; }
+
+  /* ── Cards ── */
+  .card {
+    background: #fff; border: 1px solid #E8E8EA; border-radius: 10px;
+    padding: 20px; transition: box-shadow 0.15s;
+  }
+  .card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+  .card-title {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
+    font-size: 13px; color: #807F86; text-transform: uppercase;
+    letter-spacing: 0.8px; margin-bottom: 12px;
   }
 
-  /* Priority cards */
-  .priority-card { transition: all 0.2s ease; }
-  .priority-card:hover { background: #F2F2F2; border-color: #4D4C55; }
-  .priority-card.dragging { opacity: 0.5; transform: scale(0.98); }
-  .priority-card.drag-over { border-top: 2px solid #FC5C03; }
-  .priority-detail { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease; opacity: 0; }
-  .priority-detail.open { max-height: 800px; opacity: 1; }
-  .chevron { transition: transform 0.3s ease; }
-  .chevron.rotated { transform: rotate(180deg); }
+  /* ── Alert Banner ── */
+  .alert-banner {
+    background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%);
+    border: 1px solid #FECACA; border-radius: 10px; padding: 14px 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
 
-  /* Animations */
-  .badge-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  /* ── KPI Mini Cards ── */
+  .kpi-mini {
+    background: #fff; border: 1px solid #E8E8EA; border-radius: 10px;
+    padding: 16px; transition: transform 0.12s, box-shadow 0.12s;
+  }
+  .kpi-mini:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+
+  /* ── Task Rows (Asana-style) ── */
+  .task-group-header {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
+    font-size: 14px; padding: 10px 0 6px; display: flex;
+    align-items: center; gap: 8px;
+  }
+  .task-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 12px; border-bottom: 1px solid #F0F0F2;
+    transition: background 0.1s; cursor: pointer;
+  }
+  .task-row:hover { background: #F7F7F8; }
+  .task-row:last-child { border-bottom: none; }
+  .task-checkbox {
+    width: 18px; height: 18px; border-radius: 50%; border: 2px solid #D1D1D6;
+    flex-shrink: 0; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; transition: all 0.15s;
+  }
+  .task-checkbox:hover { border-color: #FC5C03; }
+  .task-checkbox.checked { background: #08C394; border-color: #08C394; }
+  .task-checkbox.checked::after { content: '✓'; color: #fff; font-size: 11px; font-weight: 700; }
+  .task-checkbox.urgent-ring { border-color: #EF4444; }
+  .task-name { font-size: 14px; font-weight: 500; color: #1B1925; flex: 1; min-width: 0; }
+  .task-name.done { text-decoration: line-through; color: #807F86; }
+  .category-badge {
+    font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 100px;
+    white-space: nowrap; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .task-due { font-size: 11px; font-family: 'Source Code Pro', monospace; color: #807F86; white-space: nowrap; }
+  .task-due.overdue { color: #EF4444; font-weight: 600; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .add-task-btn {
+    display: flex; align-items: center; gap: 6px; padding: 8px 12px;
+    color: #807F86; font-size: 13px; cursor: pointer; transition: color 0.12s;
+  }
+  .add-task-btn:hover { color: #FC5C03; }
+
+  /* ── View Tabs ── */
+  .view-tab {
+    padding: 8px 20px; font-size: 13px; font-weight: 600; cursor: pointer;
+    color: #807F86; border-bottom: 2px solid transparent;
+    transition: all 0.15s; font-family: 'Plus Jakarta Sans', sans-serif;
+    background: none; border-top: none; border-left: none; border-right: none;
+  }
+  .view-tab:hover { color: #1B1925; }
+  .view-tab.active { color: #FC5C03; border-bottom-color: #FC5C03; }
+
+  /* ── Animations ── */
   .pulse { animation: pulse-glow 2s ease-in-out infinite; }
-  @keyframes pulse-glow { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse-glow { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
   .fade-in { animation: fadeIn 0.3s ease; }
 
-  /* KPI sparklines */
-  .sparkline { display: flex; align-items: flex-end; gap: 2px; height: 24px; }
-  .sparkline-bar { width: 4px; border-radius: 2px; transition: height 0.5s ease; }
+  /* ── Mobile ── */
+  .mobile-hamburger { display: none; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 95; }
+  .bottom-tab-bar { display: none; }
 
-  /* Status select */
-  .status-select { appearance: none; -webkit-appearance: none; cursor: pointer; }
+  @media (max-width: 1023px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-overlay.open { display: block; }
+    .topbar { left: 0; }
+    .main-content { margin-left: 0; padding-bottom: 64px; }
+    .mobile-hamburger { display: flex; }
+    .content-area { padding: 16px; }
+    .topbar-search { width: 160px; }
 
-  /* Drag handle */
-  .drag-handle { cursor: grab; opacity: 0.3; transition: opacity 0.15s; }
-  .drag-handle:hover { opacity: 0.8; }
-  .priority-card:active .drag-handle { cursor: grabbing; }
+    .bottom-tab-bar {
+      display: flex; position: fixed; bottom: 0; left: 0; right: 0;
+      height: 56px; background: #fff; border-top: 1px solid #E8E8EA;
+      z-index: 90; align-items: center; justify-content: space-around;
+    }
+    .bottom-tab {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      font-size: 10px; color: #807F86; cursor: pointer; padding: 4px 8px;
+      transition: color 0.12s; text-decoration: none;
+    }
+    .bottom-tab.active { color: #FC5C03; }
+    .bottom-tab .btab-icon { font-size: 18px; }
+  }
 
-  /* Notes textarea */
-  .notes-field { transition: height 0.2s ease; }
-
-  .kpi-card { backdrop-filter: blur(8px); transition: transform 0.15s ease, border-color 0.15s ease; }
-  .kpi-card:hover { transform: translateY(-2px); border-color: #4D4C55; }
-
-  .nav-btn { transition: all 0.2s ease; }
-  .nav-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(252,92,3,0.2); }
-
-  .bot-card { transition: all 0.15s ease; }
-  .bot-card:hover { background: #F2F2F2; border-color: #4D4C55; }
-
-  .intel-item { transition: all 0.15s ease; }
-  .intel-item:hover { background: #F2F2F2; }
-
-  /* Task filter tabs */
-  .task-filter-tab { padding: 6px 14px; font-size: 12px; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.15s ease; color: #807F86; background: transparent; border: 1px solid transparent; }
-  .task-filter-tab:hover { color: #1B1925; background: #F2F2F2; }
-  .task-filter-tab.active-filter { color: #FC5C03; background: rgba(252,92,3,0.08); border-color: rgba(252,92,3,0.25); }
-
-  /* Task status borders */
-  .priority-card[data-status="urgent"] { border-left: 3px solid #ef4444; }
-  .priority-card[data-status="progress"] { border-left: 3px solid #f59e0b; }
-  .priority-card[data-status="done"] { border-left: 3px solid #08C394; }
-  .priority-card[data-status="done"] .task-name { text-decoration: line-through; opacity: 0.6; }
-
-  /* Task hover elevation */
-  .priority-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); transform: translateY(-1px); }
-
-  /* Recently Updated widget */
-  .recent-file-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid #E8E8EA; transition: background 0.12s; }
-  .recent-file-row:last-child { border-bottom: none; }
-  .recent-file-row:hover { background: #F9F9F9; }
-  .recent-label { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 100px; background: rgba(252,92,3,0.08); color: #FC5C03; white-space: nowrap; }
+  @media (max-width: 640px) {
+    .topbar-search { width: 120px; font-size: 12px; }
+  }
 </style>
 </head>
-<body class="min-h-screen">
-<!-- ═══ COLLECTIVE SHIFT TOP NAV ═══ -->
-<style>
-  :root {
-    --csn-h: 56px;
-    --csn-bg: #FFFFFF;
-    --csn-border: #E8E8EA;
-    --csn-text: #1B1925;
-    --csn-muted: #4D4C55;
-    --csn-orange: #FC5C03;
-    --csn-orange-bg: #FEEEE5;
-    --csn-dd-bg: #FFFFFF;
-    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
-    --csn-z: 9000;
-  }
-  .csn-bar {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    height: var(--csn-h);
-    background: var(--csn-bg);
-    border-bottom: 1px solid var(--csn-border);
-    display: flex;
-    align-items: center;
-    padding: 0 24px;
-    gap: 0;
-    z-index: var(--csn-z);
-    font-family: 'Plus Jakarta Sans', 'Barlow', sans-serif;
-  }
-  .csn-logo {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    color: var(--csn-orange);
-    text-decoration: none;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    margin-right: 32px;
-    flex-shrink: 0;
-  }
-  .csn-nav {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    flex: 1;
-  }
-  .csn-item {
-    position: relative;
-  }
-  .csn-link {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--csn-muted);
-    text-decoration: none;
-    white-space: nowrap;
-    transition: color 0.15s, background 0.15s;
-    cursor: pointer;
-  }
-  .csn-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
-  .csn-item.active > .csn-link { color: var(--csn-orange); font-weight: 600; }
-  .csn-chevron { transition: transform 0.2s; flex-shrink: 0; }
-  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
-  /* Dropdown */
-  .csn-dropdown {
-    display: none;
-    position: absolute;
-    top: calc(100% + 6px);
-    left: 0;
-    min-width: 240px;
-    background: var(--csn-dd-bg);
-    border: 1px solid var(--csn-border);
-    border-radius: 12px;
-    box-shadow: var(--csn-dd-shadow);
-    padding: 6px;
-    z-index: calc(var(--csn-z) + 1);
-  }
-  .csn-item.csn-has-dd { position: relative; }
-  .csn-item.csn-has-dd::after { content: ""; position: absolute; top: 100%; left: 0; width: 100%; height: 12px; }
-  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
-  .csn-dd-item {
-    display: block;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--csn-muted);
-    text-decoration: none;
-    transition: color 0.12s, background 0.12s;
-    white-space: nowrap;
-  }
-  .csn-dd-item:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
-  .csn-divider { height: 1px; background: var(--csn-border); margin: 4px 8px; }
-  /* Mobile hamburger */
-  .csn-hamburger {
-    display: none;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--csn-muted);
-    padding: 4px;
-    margin-left: auto;
-  }
-  /* Mobile drawer */
-  .csn-mobile-menu {
-    display: none;
-    position: fixed;
-    top: var(--csn-h);
-    left: 0; right: 0;
-    background: var(--csn-bg);
-    border-bottom: 1px solid var(--csn-border);
-    padding: 8px 16px 16px;
-    z-index: calc(var(--csn-z) - 1);
-    max-height: calc(100vh - var(--csn-h));
-    overflow-y: auto;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-  }
-  .csn-mobile-menu.open { display: block; }
-  .csn-mob-link {
-    display: block;
-    padding: 9px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--csn-muted);
-    text-decoration: none;
-    transition: color 0.12s, background 0.12s;
-  }
-  .csn-mob-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
-  .csn-mob-top { font-weight: 600; color: var(--csn-text); margin-top: 4px; }
-  .csn-mob-sub { font-size: 12px; padding-left: 20px; }
-  /* Body offset */
-  body { padding-top: var(--csn-h) !important; }
-  @media (max-width: 1023px) {
-    .csn-nav { display: none; }
-    .csn-hamburger { display: block; }
-  }
-  @media (max-width: 640px) {
-    .csn-logo { font-size: 13px; margin-right: 16px; }
-  }
-</style>
-<nav class="csn-bar" role="navigation" aria-label="Main navigation">
-  <a href="index.html" class="csn-logo">Collective Shift</a>
-  <div class="csn-nav">
-      <div class="csn-item active"><a href="index.html" class="csn-link">CEO Dashboard</a></div>
-      <div class="csn-item"><a href="team-cost.html" class="csn-link">Team Cost</a></div>
-      <div class="csn-item csn-has-dd ">
-        <a href="hub/operating-system.html" class="csn-link">The Collective Shift Operating System
-          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </a>
-        <div class="csn-dropdown">
-          <a href="hub/operating-system.html" class="csn-dd-item">Operating System Overview</a>
-          <div class="csn-divider"></div>
-          <div style="display:block;padding:6px 12px 2px;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;">Level 1 — Beginner</div>
-          <a href="hub/l1/m1-beginner-foundations.html" class="csn-dd-item">Step 1: Foundations</a>
-          <a href="hub/l1/m2-beginner-bitcoin.html" class="csn-dd-item">Step 2: Bitcoin</a>
-          <a href="hub/l1/m3-beginner-altcoins.html" class="csn-dd-item">Step 3: Altcoins</a>
-          <a href="hub/l1/m4-beginner-how-we-invest.html" class="csn-dd-item">Step 4: How We Invest</a>
-          <a href="hub/l1/m5-beginner-buy-sell.html" class="csn-dd-item">Step 5: Buy &amp; Sell</a>
-          <a href="hub/l1/m6-beginner-send-store.html" class="csn-dd-item">Step 6: Send &amp; Store</a>
-          <a href="hub/l1/m7-beginner-tax.html" class="csn-dd-item">Step 7: Tax</a>
-          <a href="hub/l1/m8-beginner-sell-strategy.html" class="csn-dd-item">Step 8: Sell Strategy</a>
-          <div class="csn-divider"></div>
-          <div style="display:block;padding:6px 12px 2px;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;">Level 2 — Advanced</div>
-          <a href="hub/l2/m1-advanced-foundations.html" class="csn-dd-item">Step 1: Advanced Foundations</a>
-          <a href="hub/l2/m2-advanced-bitcoin.html" class="csn-dd-item">Step 2: Advanced Bitcoin</a>
-          <a href="hub/l2/m3-advanced-altcoins.html" class="csn-dd-item">Step 3: Advanced Altcoins</a>
-          <a href="hub/l2/m4-advanced-how-we-invest.html" class="csn-dd-item">Step 4: Advanced How We Invest</a>
-          <a href="hub/l2/m5-advanced-buy-sell.html" class="csn-dd-item">Step 5: Advanced Buy &amp; Sell</a>
-          <a href="hub/l2/m6-advanced-send-store.html" class="csn-dd-item">Step 6: Advanced Send &amp; Store</a>
-          <a href="hub/l2/m7-advanced-tax.html" class="csn-dd-item">Step 7: Advanced Tax</a>
-          <a href="hub/l2/m8-advanced-sell-strategy.html" class="csn-dd-item">Step 8: Advanced Sell Strategy</a>
-          <div class="csn-divider"></div>
-          <a href="8-step-strategy-workbook.html" class="csn-dd-item">8-Step Strategy Workbook</a>
-          <a href="8-step-strategy-workbook-L1.html" class="csn-dd-item">↳ Level 1 Workbook</a>
-          <a href="8-step-strategy-workbook-L2.html" class="csn-dd-item">↳ Level 2 Workbook</a>
-          <a href="portfolio-calculator.html" class="csn-dd-item">Portfolio Allocation Calculator</a>
-        </div>
-      </div>
-      <div class="csn-item csn-has-dd ">
-        <a href="hub/products.html" class="csn-link">Product
-          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </a>
-        <div class="csn-dropdown"><a href="hub/products.html#platinum" class="csn-dd-item">Platinum</a><a href="hub/products.html#accelerator" class="csn-dd-item">Accelerator</a><a href="hub/beginner-journey.html" class="csn-dd-item">Beginner's Journey</a><a href="hub/products.html#two-track" class="csn-dd-item">Two-Track System</a></div>
-      </div>
-      <div class="csn-item csn-has-dd ">
-        <a href="hub/youtube-strategy.html" class="csn-link">Social Media
-          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </a>
-        <div class="csn-dropdown"><a href="hub/youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a><a href="hub/social-strategy.html" class="csn-dd-item">Social Strategy</a><a href="hub/instagram-strategy.html" class="csn-dd-item">Instagram Strategy</a><div class="csn-divider"></div><a href="hub/brand.html" class="csn-dd-item">Brand & Voice</a><a href="hub/positioning.html" class="csn-dd-item">Positioning & ICP</a><a href="hub/competitors.html" class="csn-dd-item">Competitors</a></div>
-      </div>
-      <div class="csn-item csn-has-dd ">
-        <a href="travis-briefing-2026-03-27.html" class="csn-link">Documents
-          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </a>
-        <div class="csn-dropdown">
-          <div style="display:block;padding:6px 12px 2px;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;">Operations</div>
-          <a href="content-board.html" class="csn-dd-item" style="color: var(--csn-orange); font-weight: 600;">Content Pipeline</a>
-          <a href="actions.html" class="csn-dd-item">Action Tracker</a>
-          <a href="asana-board-mockup.html" class="csn-dd-item">Content Production Board</a>
-          <div class="csn-divider"></div>
-          <div style="display:block;padding:6px 12px 2px;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;">Strategy</div>
-          <a href="alchemy-negotiation.html" class="csn-dd-item">Alchemy Fee Negotiation</a>
-          <a href="lead-magnet-strategy.html" class="csn-dd-item">Lead Magnet Strategy</a>
-          <a href="travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a>
-          <a href="cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a>
-          <div class="csn-divider"></div>
-          <div style="display:block;padding:6px 12px 2px;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;">Briefings & Reports</div>
-          <a href="q1-exec-briefing-2026-03-30.html" class="csn-dd-item">Q1 Exec Briefing (March 30)</a>
-          <a href="q2-market-briefing.html" class="csn-dd-item">Q2 Market Briefing</a>
-          <a href="webinar-q2-2026-is-now-the-time.html" class="csn-dd-item">Webinar: Is Now The Time?</a>
-          <div class="csn-divider"></div>
-          <div style="display:block;padding:6px 12px 2px;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;">Playbooks & Plans</div>
-          <a href="restructure-playbook.html" class="csn-dd-item">Q2 Restructure Plan</a>
-          <a href="content-takeover-playbook.html" class="csn-dd-item">Content Takeover Playbook</a>
-          <a href="april-marketing-plan-2026.html" class="csn-dd-item">April Marketing Plan</a>
-          <a href="digital-asset-shift-newsletter.html" class="csn-dd-item">The Digital Asset Shift (Newsletter)</a>
-          <div class="csn-divider"></div>
-          <a href="youtube-script-bitcoin-down-48.html" class="csn-dd-item">YT Script: Bitcoin Down 48%</a>
-          <a href="instagram-content-strategy.html" class="csn-dd-item">Instagram Content Strategy</a>
-          <div class="csn-divider"></div>
-          <div style="display:block;padding:6px 12px 2px;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;">Hub Pages</div>
-          <a href="hub/operating-system.html" class="csn-dd-item">The Collective Shift OS</a>
-          <a href="hub/youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a>
-          <a href="hub/social-strategy.html" class="csn-dd-item">Social Media Strategy</a>
-          <a href="hub/instagram-strategy.html" class="csn-dd-item">Instagram Strategy</a>
-        </div>
-      </div>
-  </div>
-  <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-  </button>
-</nav>
-<div id="csnMobileMenu" class="csn-mobile-menu">
-  <a href="index.html" class="csn-mob-link csn-mob-top">CEO Dashboard</a>
-<a href="team-cost.html" class="csn-mob-link csn-mob-top">Team Cost Tracker</a>
-<a href="hub/operating-system.html" class="csn-mob-link csn-mob-top">The Collective Shift Operating System</a>
-<a href="hub/operating-system.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Operating System Overview</a>
-<div style="font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;padding:8px 12px 2px 20px;">Level 1 — Beginner</div>
-<a href="hub/l1/m1-beginner-foundations.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 1: Foundations</a>
-<a href="hub/l1/m2-beginner-bitcoin.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 2: Bitcoin</a>
-<a href="hub/l1/m3-beginner-altcoins.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 3: Altcoins</a>
-<a href="hub/l1/m4-beginner-how-we-invest.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 4: How We Invest</a>
-<a href="hub/l1/m5-beginner-buy-sell.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 5: Buy &amp; Sell</a>
-<a href="hub/l1/m6-beginner-send-store.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 6: Send &amp; Store</a>
-<a href="hub/l1/m7-beginner-tax.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 7: Tax</a>
-<a href="hub/l1/m8-beginner-sell-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 8: Sell Strategy</a>
-<div style="font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;padding:8px 12px 2px 20px;">Level 2 — Advanced</div>
-<a href="hub/l2/m1-advanced-foundations.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 1: Advanced Foundations</a>
-<a href="hub/l2/m2-advanced-bitcoin.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 2: Advanced Bitcoin</a>
-<a href="hub/l2/m3-advanced-altcoins.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 3: Advanced Altcoins</a>
-<a href="hub/l2/m4-advanced-how-we-invest.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 4: Advanced How We Invest</a>
-<a href="hub/l2/m5-advanced-buy-sell.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 5: Advanced Buy &amp; Sell</a>
-<a href="hub/l2/m6-advanced-send-store.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 6: Advanced Send &amp; Store</a>
-<a href="hub/l2/m7-advanced-tax.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 7: Advanced Tax</a>
-<a href="hub/l2/m8-advanced-sell-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 8: Advanced Sell Strategy</a>
-<a href="8-step-strategy-workbook.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;8-Step Strategy Workbook</a>
-<a href="8-step-strategy-workbook-L1.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;↳ Level 1 Workbook</a>
-<a href="8-step-strategy-workbook-L2.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;↳ Level 2 Workbook</a>
-<a href="portfolio-calculator.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Portfolio Allocation Calculator</a>
-<a href="hub/products.html" class="csn-mob-link csn-mob-top">Product</a>
-<a href="hub/products.html#platinum" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Platinum</a>
-<a href="hub/products.html#accelerator" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Accelerator</a>
-<a href="hub/beginner-journey.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Beginner's Journey</a>
-<a href="hub/products.html#two-track" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Two-Track System</a>
-<a href="hub/youtube-strategy.html" class="csn-mob-link csn-mob-top">Social Media</a>
-<a href="hub/youtube-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;YouTube Strategy</a>
-<a href="hub/social-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Social Strategy</a>
-<a href="hub/instagram-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Instagram Strategy</a>
-<a href="hub/brand.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Brand & Voice</a>
-<a href="hub/positioning.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Positioning & ICP</a>
-<a href="hub/competitors.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Competitors</a>
-<a href="travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-top">Documents</a>
-<div style="font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;padding:8px 12px 2px 20px;">Operations</div>
-<a href="content-board.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Content Pipeline</a>
-<a href="actions.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Action Tracker</a>
-<a href="asana-board-mockup.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Content Production Board</a>
-<div style="font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;padding:8px 12px 2px 20px;">Strategy</div>
-<a href="alchemy-negotiation.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Alchemy Fee Negotiation</a>
-<a href="lead-magnet-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Lead Magnet Strategy</a>
-<a href="travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Travis CGO Briefing</a>
-<a href="cs-education-system-overview.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Education System Overview</a>
-<div style="font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;padding:8px 12px 2px 20px;">Briefings &amp; Reports</div>
-<a href="q1-exec-briefing-2026-03-30.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Q1 Exec Briefing (March 30)</a>
-<a href="q2-market-briefing.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Q2 Market Briefing</a>
-<a href="webinar-q2-2026-is-now-the-time.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Webinar: Is Now The Time?</a>
-<div style="font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;padding:8px 12px 2px 20px;">Playbooks &amp; Plans</div>
-<a href="restructure-playbook.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Q2 Restructure Plan</a>
-<a href="content-takeover-playbook.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Content Takeover Playbook</a>
-<a href="april-marketing-plan-2026.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;April Marketing Plan</a>
-<a href="digital-asset-shift-newsletter.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;The Digital Asset Shift (Newsletter)</a>
-</div>
-<!-- ═══ END TOP NAV ═══ -->
+<body>
 
+<!-- ═══ SIDEBAR OVERLAY (mobile) ═══ -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
-<!-- SIDEBAR OVERLAY (mobile) -->
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-
-<!-- SIDEBAR -->
-<aside class="sidebar fixed top-0 left-0" id="sidebar">
-  <div class="px-5 py-5 border-b border-\[#E8E8EA\]">
-    <div class="flex items-center gap-3">
-      <div class="w-8 h-8 rounded-lg bg-cs-orange/15 flex items-center justify-center">
-        <span class="text-cs-orange text-sm font-bold">CS</span>
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar" id="sidebar">
+  <!-- Logo -->
+  <div style="padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <div style="width:32px; height:32px; border-radius:8px; background:rgba(252,92,3,0.15); display:flex; align-items:center; justify-content:center;">
+        <span style="color:#FC5C03; font-weight:800; font-size:13px; font-family:'Plus Jakarta Sans',sans-serif;">CS</span>
       </div>
       <div>
-        <div class="font-oswald text-sm font-600 text-\[#1B1925\] tracking-wide">COLLECTIVE SHIFT</div>
-        <div class="text-[10px] text-\[#807F86\] font-mono">CEO Command Centre</div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; color:#fff; letter-spacing:0.3px;">Collective Shift</div>
+        <div style="font-size:10px; color:rgba(255,255,255,0.35); font-family:'Source Code Pro',monospace;">CEO Dashboard</div>
       </div>
     </div>
   </div>
 
-  <nav class="py-4">
-    <div class="sidebar-section">Navigation</div>
-    <a href="/" class="sidebar-link active">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-      Dashboard
+  <!-- Nav Items -->
+  <nav style="flex:1; padding: 8px 0;">
+    <div class="sidebar-section">Home</div>
+    <a class="sidebar-link active" data-view="brief" onclick="switchView('brief')">
+      <span class="sidebar-icon">⭐</span> Morning Brief
     </a>
-    <a href="/hub/" class="sidebar-link">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-      Strategy Hub
+    <a class="sidebar-link" data-view="tasks" onclick="switchView('tasks')">
+      <span class="sidebar-icon">✓</span> Tasks
     </a>
-    <a href="/projects/" class="sidebar-link">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-      Projects
+    <a class="sidebar-link" data-view="actions" onclick="switchView('actions')">
+      <span class="sidebar-icon">⚡</span> Actions
     </a>
 
-    <div class="sidebar-section mt-4">Quick Links</div>
-    <a href="https://notion.so" target="_blank" class="sidebar-link">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" rx="2"/><path d="M8 8v8"/><path d="M8 8l8 8"/><path d="M16 8v8"/></svg>
-      Notion
+    <div class="sidebar-section">Metrics</div>
+    <a class="sidebar-link" data-view="metrics" onclick="switchView('metrics')">
+      <span class="sidebar-icon">📊</span> KPIs
     </a>
-    <a href="https://pipedrive.com" target="_blank" class="sidebar-link">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-      Pipedrive
+    <a class="sidebar-link" href="team-cost.html">
+      <span class="sidebar-icon">💰</span> Cash & Costs
     </a>
-    <a href="https://slack.com" target="_blank" class="sidebar-link">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="8" height="2" rx="1"/><rect x="13" y="11" width="8" height="2" rx="1"/><rect x="11" y="3" width="2" height="8" rx="1"/><rect x="11" y="13" width="2" height="8" rx="1"/></svg>
-      Slack
-    </a>
-    <a href="https://discord.com/channels/1482990760692420690" target="_blank" class="sidebar-link">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" fill="currentColor"/><path d="M15 12a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" fill="currentColor"/><path d="M7.5 7.2c1.5-.8 3-1.2 4.5-1.2s3 .4 4.5 1.2"/><path d="M7.5 16.8c1.5.8 3 1.2 4.5 1.2s3-.4 4.5-1.2"/><path d="M4 12c0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8-8-3.6-8-8z"/></svg>
-      Discord
+    <a class="sidebar-link" href="hub/products.html">
+      <span class="sidebar-icon">👥</span> Members
     </a>
 
-    <div class="sidebar-section mt-4">Documents</div>
-    <a href="/hub/positioning.html" class="sidebar-link">
-      <span class="text-xs">🎯</span> Positioning & ICP
+    <div class="sidebar-section">Content</div>
+    <a class="sidebar-link" href="content-board.html">
+      <span class="sidebar-icon">🎬</span> Content Board
     </a>
-    <a href="/hub/operating-system.html" class="sidebar-link">
-      <span class="text-xs">⚙️</span> Operating System
+    <a class="sidebar-link" href="asana-board-mockup.html">
+      <span class="sidebar-icon">📅</span> Calendar
     </a>
-    <a href="/hub/products.html" class="sidebar-link">
-      <span class="text-xs">📦</span> Products
+    <a class="sidebar-link" href="hub/youtube-strategy.html">
+      <span class="sidebar-icon">▶</span> YouTube
     </a>
-    <a href="/hub/social-strategy.html" class="sidebar-link">
-      <span class="text-xs">📱</span> Social Strategy
+
+    <div class="sidebar-section">Strategy</div>
+    <a class="sidebar-link" href="hub/operating-system.html">
+      <span class="sidebar-icon">🧭</span> Strategy Hub
     </a>
-    <a href="/hub/competitors.html" class="sidebar-link">
-      <span class="text-xs">🔍</span> Competitive Intel
+    <a class="sidebar-link" href="hub/brand.html">
+      <span class="sidebar-icon">📄</span> Docs
     </a>
-    <a href="/hub/brand.html" class="sidebar-link">
-      <span class="text-xs">🎨</span> Brand & Voice
+
+    <div class="sidebar-section">Team</div>
+    <a class="sidebar-link" href="team-cost.html">
+      <span class="sidebar-icon">👤</span> Team
+    </a>
+    <a class="sidebar-link" data-view="bots" onclick="switchView('bots')">
+      <span class="sidebar-icon">🤖</span> Bot Fleet
     </a>
   </nav>
+
+  <!-- Sidebar Footer -->
+  <div style="padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 10px; color: rgba(255,255,255,0.25); font-family: 'Source Code Pro', monospace;">
+    v2.0 · April 2026
+  </div>
 </aside>
 
-<!-- TOP BAR -->
-<header class="sticky top-[56px] z-50 bg-white/95 backdrop-blur-md border-b border-\[#E8E8EA\] lg:ml-[240px]">
-  <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <!-- Hamburger (mobile) -->
-      <button class="lg:hidden text-\[#807F86\] hover:text-\[#1B1925\] p-1" onclick="toggleSidebar()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-      </button>
-      <h1 class="font-oswald text-lg sm:text-xl font-600 tracking-wide uppercase">
-        <span class="text-cs-orange">Collective Shift</span>
-        <span class="text-\[#807F86\] mx-1">—</span>
-        <span class="text-\[#1B1925\]">CEO Command Centre</span>
-      </h1>
-      <span class="text-[10px] font-mono text-\[#4D4C55\] bg-[#FFFFFF] px-2 py-0.5 rounded hidden sm:inline">v7</span>
+<!-- ═══ TOP BAR ═══ -->
+<header class="topbar">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <!-- Mobile hamburger -->
+    <button class="mobile-hamburger" onclick="toggleSidebar()" style="background:none; border:none; cursor:pointer; color:#807F86; padding:4px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    </button>
+    <!-- Search -->
+    <div style="position:relative;">
+      <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:#807F86;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" class="topbar-search" placeholder="Search dashboard...">
     </div>
-    <div class="flex items-center gap-4 sm:gap-6">
-      <div id="clock" class="text-\[#807F86\] text-sm font-mono hidden sm:block"></div>
-      <div class="flex items-center gap-2">
-        <span class="badge-dot bg-cs-green pulse"></span>
-        <span class="text-xs font-medium text-cs-green">BenBot Online</span>
+  </div>
+  <div style="display:flex; align-items:center; gap:16px;">
+    <div id="clock" style="font-size:12px; color:#807F86; font-family:'Source Code Pro',monospace;"></div>
+    <!-- Notification bell -->
+    <button style="background:none; border:none; cursor:pointer; color:#807F86; position:relative;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span style="position:absolute; top:-2px; right:-2px; width:8px; height:8px; background:#FC5C03; border-radius:50%; border:2px solid #fff;"></span>
+    </button>
+    <!-- Avatar -->
+    <div style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+      <div style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #FC5C03, #FC8C4E); display:flex; align-items:center; justify-content:center;">
+        <span style="color:#fff; font-size:11px; font-weight:700; font-family:'Plus Jakarta Sans',sans-serif;">BB</span>
       </div>
+      <span style="font-size:13px; font-weight:500; color:#1B1925;">BenBot</span>
     </div>
   </div>
 </header>
 
-<!-- MAIN CONTENT -->
-<main class="lg:ml-[240px] max-w-[1600px] mx-auto px-4 sm:px-6 py-5">
+<!-- ═══ MAIN CONTENT ═══ -->
+<div class="main-content">
+  <div class="content-area">
 
-  <!-- ═══ VIEW TABS ═══ -->
-  <div class="flex items-center gap-1 mb-5 border-b border-[#E8E8EA] pb-0">
-    <button id="tab-metrics" onclick="switchView('metrics')" class="view-tab active px-5 py-2.5 text-sm font-semibold font-jakarta rounded-t-lg border border-b-0 border-[#E8E8EA] bg-[#FFFFFF] text-cs-orange relative -mb-px transition-all">
-      📊 Metrics
-    </button>
-    <button id="tab-tasks" onclick="switchView('tasks')" class="view-tab px-5 py-2.5 text-sm font-semibold font-jakarta rounded-t-lg border border-b-0 border-transparent text-[#807F86] hover:text-[#4D4C55] hover:bg-[#F9F9F9] relative -mb-px transition-all">
-      📋 Tasks & Projects
-    </button>
-    <button id="tab-actions" onclick="switchView('actions')" class="view-tab px-5 py-2.5 text-sm font-semibold font-jakarta rounded-t-lg border border-b-0 border-transparent text-[#807F86] hover:text-[#4D4C55] hover:bg-[#F9F9F9] relative -mb-px transition-all">
-      ✅ Action List
-    </button>
-  </div>
-  <style>
-    .view-tab.active { color: #FC5C03; border-color: #E8E8EA; background: #FFFFFF; z-index: 1; }
-    .view-tab:not(.active) { border-color: transparent; }
-  </style>
-
-  <!-- ═══ METRICS VIEW ═══ -->
-  <div id="view-metrics">
-
-  <!-- ═══ KPI METRICS DASHBOARD ═══ -->
-  <section id="kpi-dashboard" class="mb-6">
-    <div class="flex items-center justify-between mb-3">
-      <h2 class="font-oswald text-base uppercase tracking-wider text-[#807F86] flex items-center gap-2">
-        <span class="text-cs-orange">▎</span>📊 KPI Dashboard — Data as of April 1, 2026
-      </h2>
-    </div>
-
-    <!-- Row 1: Revenue & Sales -->
-    <div class="text-[10px] uppercase tracking-widest text-[#807F86] font-mono font-semibold mb-2 mt-1">Revenue &amp; Sales</div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Monthly Revenue (B2C)</div>
-        <div class="text-2xl font-jakarta font-700 text-[#1B1925]">A$341,985</div>
-        <div class="text-xs text-[#4D4C55] mt-1">188 orders</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Source: WooCommerce</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Monthly Revenue (B2B)</div>
-        <div class="text-2xl font-jakarta font-700 text-[#1B1925]">A$8,250</div>
-        <div class="text-xs text-[#4D4C55] mt-1">&nbsp;</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Source: EOS Scorecard</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Call Conversion Rate (March)</div>
-        <div class="text-2xl font-jakarta font-700 text-red-500">16.7%</div>
-        <div class="text-xs text-[#4D4C55] mt-1">13 won / 78 closed — <span class="font-semibold text-red-400">↓ from 56.1% Feb</span></div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Source: Pipedrive Export</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Hyros Attributed Sales</div>
-        <div class="text-2xl font-jakarta font-700 text-cs-purple">A$356,783</div>
-        <div class="text-xs text-[#4D4C55] mt-1">41 sales</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Source: Hyros</div>
-      </div>
-    </div>
-
-    <!-- Row 1b: Revenue Attribution -->
-    <div class="text-[10px] uppercase tracking-widest text-[#807F86] font-mono font-semibold mb-2">Revenue Attribution (Hyros + CRM Cross-Ref)</div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4" style="border-left: 3px solid #3B82F6;">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Paid (Meta Ads)</div>
-        <div class="text-2xl font-jakarta font-700 text-[#1B1925]">A$238,605</div>
-        <div class="text-xs text-[#4D4C55] mt-1">19 new sales — <span class="font-semibold text-[#3B82F6]">67%</span> of Hyros total</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Source: Hyros (renewals deducted)</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4" style="border-left: 3px solid #10B981;">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Renewals (CRM Confirmed)</div>
-        <div class="text-2xl font-jakarta font-700 text-[#10B981]">A$143,364</div>
-        <div class="text-xs text-[#4D4C55] mt-1">17 confirmed — <span class="font-semibold text-[#10B981]">Reece: 12 | David: 5</span></div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Source: Renewal CRM spreadsheet ✅</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4" style="border-left: 3px solid #8B5CF6;">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Organic (incl. Unattributed)</div>
-        <div class="text-2xl font-jakarta font-700 text-[#1B1925]">A$64,257</div>
-        <div class="text-xs text-[#4D4C55] mt-1">15 sales — <span class="font-semibold text-[#8B5CF6]">14%</span> of total</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Source: Hyros (Stacy moved to Renewals)</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#FC5C03] rounded-lg p-4" style="border-left: 3px solid #FC5C03; background: linear-gradient(135deg, #FFFFFF 90%, #FEEEE5 100%);">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Meta ROAS (Ad Sales Only)</div>
-        <div class="text-2xl font-jakarta font-700 text-[#FC5C03]">4.13x</div>
-        <div class="text-xs text-[#4D4C55] mt-1">A$238,605 sales ÷ A$57,827 spend</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Paid new sales only (renewals excluded)</div>
-      </div>
-    </div>
-
-    <!-- Row 1c: Gross Profit & Expenses -->
-    <div class="text-[10px] uppercase tracking-widest text-[#807F86] font-mono font-semibold mb-2">Gross Profit vs Expenses (March)</div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4" style="border-left: 3px solid #10B981;">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Total Revenue (All Channels)</div>
-        <div class="text-2xl font-jakarta font-700 text-[#1B1925]">A$454,476</div>
-        <div class="text-xs text-[#4D4C55] mt-1">Paid + Renewals + Organic + B2B</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Incl. A$97K CRM renewals not in Metorik</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4" style="border-left: 3px solid #10B981;">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Gross Profit (After Variable Costs)</div>
-        <div class="text-2xl font-jakarta font-700 text-[#10B981]">A$274,071</div>
-        <div class="text-xs text-[#4D4C55] mt-1">60.3% blended margin</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">After GST, refunds, commissions, ad spend</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4" style="border-left: 3px solid #EF4444;">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Total Outgoings (EOS Forecast)</div>
-        <div class="text-2xl font-jakarta font-700 text-red-500">A$504,228</div>
-        <div class="text-xs text-[#4D4C55] mt-1">Wages, contractors, rent, ATO, loans, software</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Source: EOS Scorecard (cash out forecast)</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-red-200/60 rounded-lg p-4" style="border-left: 3px solid #EF4444; background: linear-gradient(135deg, #FFFFFF 90%, #FEE2E2 100%);">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Net Cash Position (Forecast)</div>
-        <div class="text-2xl font-jakarta font-700 text-red-500">-A$49,752</div>
-        <div class="text-xs text-[#4D4C55] mt-1">⚠️ Revenue A$454K vs Outgoings A$504K</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Gap: need A$50K more revenue or cut costs</div>
-      </div>
-    </div>
-    <!-- Margin by channel mini-table -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Paid GP</div>
-        <div class="text-lg font-jakarta font-700 text-[#1B1925]">A$118,741</div>
-        <div class="text-xs text-[#4D4C55]">49.8% margin — after ad spend</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Renewal GP</div>
-        <div class="text-lg font-jakarta font-700 text-[#10B981]">A$100,355</div>
-        <div class="text-xs text-[#4D4C55]">70.0% margin — highest yield</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Organic GP</div>
-        <div class="text-lg font-jakarta font-700 text-[#8B5CF6]">A$47,550</div>
-        <div class="text-xs text-[#4D4C55]">74.0% margin — best margin</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">B2B GP</div>
-        <div class="text-lg font-jakarta font-700 text-[#1B1925]">A$7,425</div>
-        <div class="text-xs text-[#4D4C55]">90.0% margin</div>
-      </div>
-    </div>
-
-    <!-- Row 2: Sales Performance -->
-    <div class="text-[10px] uppercase tracking-widest text-[#807F86] font-mono font-semibold mb-2">Sales Performance</div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Q1 Close Rate</div>
-        <div class="text-2xl font-jakarta font-700 text-[#1B1925]">39.3%</div>
-        <div class="text-xs text-[#4D4C55] mt-1">103 won / 262 total</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Source: Pipedrive Export</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-red-300/60 rounded-lg p-4" style="background: linear-gradient(135deg, #FFFFFF 90%, #FEE2E2 100%);">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">March Close Rate ⚠️</div>
-        <div class="text-2xl font-jakarta font-700 text-red-500">16.7%</div>
-        <div class="text-xs text-red-400 mt-1">13 won / 78 total — <span class="font-semibold">↓ from 56.1% Feb</span></div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Source: Pipedrive Export</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Calls Booked (March)</div>
-        <div class="text-2xl font-jakarta font-700 text-[#1B1925]">74</div>
-        <div class="text-xs text-[#4D4C55] mt-1">Deals created</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Source: Pipedrive Export</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Refunds MTD</div>
-        <div class="text-2xl font-jakarta font-700 text-red-400">A$18,699</div>
-        <div class="text-xs text-[#4D4C55] mt-1">2 refunds</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Source: EOS</div>
-      </div>
-    </div>
-
-    <!-- Row 3: Cash & Spend -->
-    <div class="text-[10px] uppercase tracking-widest text-[#807F86] font-mono font-semibold mb-2">Cash &amp; Spend</div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Cash at Bank</div>
-        <div class="text-2xl font-jakarta font-700 text-cs-green">A$846,187</div>
-        <div class="text-xs text-[#4D4C55] mt-1">&nbsp;</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Source: EOS Weekly Report</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Ad Spend (March)</div>
-        <div class="text-2xl font-jakarta font-700 text-cs-orange">A$57,827</div>
-        <div class="text-xs text-[#4D4C55] mt-1">&nbsp;</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Source: Hyros</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Cash Received MTD</div>
-        <div class="text-2xl font-jakarta font-700 text-[#1B1925]">A$102,501</div>
-        <div class="text-xs text-[#4D4C55] mt-1">&nbsp;</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Source: EOS</div>
-      </div>
-    </div>
-
-    <!-- Row 3b: Debts & Liabilities -->
-    <div class="text-[10px] uppercase tracking-widest text-[#807F86] font-mono font-semibold mb-2">Debts &amp; Liabilities</div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
-      <div class="kpi-card bg-[#FFFFFF] border border-cs-green/40 rounded-lg p-4" style="border-left: 3px solid #08C394; background: linear-gradient(135deg, #FFFFFF 90%, #ECFDF5 100%);">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">FB Ads Payable</div>
-        <div class="text-2xl font-jakarta font-700 text-cs-green">PAID ✅</div>
-        <div class="text-xs text-cs-green mt-1">A$270K Meta bill cleared March 31</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Biggest March obligation removed</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-red-200/60 rounded-lg p-4" style="border-left: 3px solid #EF4444;">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Total Loans</div>
-        <div class="text-2xl font-jakarta font-700 text-red-500">A$741,971</div>
-        <div class="text-xs text-[#4D4C55] mt-1">Banjo $500K + Payoneer $142K USD + Director $100K</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Source: EOS Scorecard</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4" style="border-left: 3px solid #F59E0B;">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">AP (Next 4 Weeks)</div>
-        <div class="text-2xl font-jakarta font-700 text-[#1B1925]">A$229,474</div>
-        <div class="text-xs text-[#4D4C55] mt-1">Salaries, PAYG, Super, Commissions</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Source: EOS Scorecard</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4" style="border-left: 3px solid #F59E0B;">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">ATO Debt</div>
-        <div class="text-2xl font-jakarta font-700 text-[#1B1925]">A$17,219</div>
-        <div class="text-xs text-[#4D4C55] mt-1">Director personal liability</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Source: EOS Scorecard</div>
-      </div>
-    </div>
-
-    <!-- Row 4: Sales Team Performance -->
-    <div class="text-[10px] uppercase tracking-widest text-[#807F86] font-mono font-semibold mb-2">Sales Team Performance</div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3 mb-4" style="max-width: 50%;">
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4 flex items-center gap-4">
-        <div class="w-10 h-10 rounded-full bg-cs-orange/15 flex items-center justify-center flex-shrink-0">
-          <span class="text-cs-orange font-bold text-sm">RH</span>
-        </div>
+    <!-- ═══ VIEW: MORNING BRIEF ═══ -->
+    <div id="view-brief">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
         <div>
-          <div class="text-sm font-semibold text-[#1B1925]">Reece Hobson</div>
-          <div class="text-2xl font-jakarta font-700 text-[#1B1925]">58 <span class="text-sm font-normal text-[#807F86]">deals won</span></div>
-          <div class="text-[9px] text-[#807F86] font-mono mt-1">2026 YTD</div>
+          <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:24px; font-weight:700; color:#1B1925;">Good afternoon, Ben 👋</h1>
+          <p style="font-size:14px; color:#807F86; margin-top:4px;">Tuesday, April 1, 2026 · Here's what needs your attention today.</p>
         </div>
       </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4 flex items-center gap-4">
-        <div class="w-10 h-10 rounded-full bg-cs-purple/15 flex items-center justify-center flex-shrink-0">
-          <span class="text-cs-purple font-bold text-sm">DT</span>
-        </div>
+
+      <!-- Alert Banner -->
+      <div class="alert-banner" style="margin-bottom:20px;" id="alert-banner">
+        <span style="font-size:20px;">🚨</span>
         <div>
-          <div class="text-sm font-semibold text-[#1B1925]">David Tran</div>
-          <div class="text-2xl font-jakarta font-700 text-[#1B1925]">45 <span class="text-sm font-normal text-[#807F86]">deals won</span></div>
-          <div class="text-[9px] text-[#807F86] font-mono mt-1">2026 YTD</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Row 5: Renewal Pipeline - Contact Progress -->
-    <div class="text-[10px] uppercase tracking-widest text-[#807F86] font-mono font-semibold mb-2 mt-4">Renewal Pipeline - Contact Progress (Updated March 31)</div>
-    
-    <!-- Revenue Target vs Won -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
-      <div class="kpi-card bg-[#FFFFFF] border border-cs-green/40 rounded-lg p-4" style="border-left: 3px solid #08C394; background: linear-gradient(135deg, #FFFFFF 90%, #ECFDF5 100%);">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Revenue Won ✅</div>
-        <div class="text-2xl font-jakarta font-700 text-cs-green">A$186,155</div>
-        <div class="text-xs text-cs-green mt-1">Target: A$180,000 - exceeded by A$6,155</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Source: Renewal CRM</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Total Pipeline</div>
-        <div class="text-2xl font-jakarta font-700 text-[#1B1925]">397</div>
-        <div class="text-xs text-[#4D4C55] mt-1">Active members (excl. 23 blacklisted)</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">Pipeline value: A$5.58M</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Overall Contact Rate</div>
-        <div class="text-2xl font-jakarta font-700 text-cs-orange">35%</div>
-        <div class="text-xs text-[#4D4C55] mt-1">139 of 397 contacted</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">258 not yet reached</div>
-      </div>
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Not Renewing Rate</div>
-        <div class="text-2xl font-jakarta font-700 text-red-500">26.5%</div>
-        <div class="text-xs text-[#4D4C55] mt-1">28 closed lost of 106 engaged</div>
-        <div class="text-[9px] text-[#807F86] font-mono mt-2">73.5% retention on contacted</div>
-      </div>
-    </div>
-
-    <!-- Contact Progress by Priority - Progress Bars -->
-    <div class="bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4 mb-3">
-      <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-semibold mb-3">% Contacted by Priority Tier</div>
-      
-      <!-- P1 -->
-      <div class="mb-3">
-        <div class="flex justify-between items-center mb-1">
-          <span class="text-xs font-semibold text-[#1B1925]">P1 - Priority</span>
-          <span class="text-xs font-mono text-cs-green font-semibold">8/8 - 100%</span>
-        </div>
-        <div class="w-full bg-[#F2F2F2] rounded-full h-3">
-          <div class="bg-cs-green h-3 rounded-full transition-all" style="width: 100%"></div>
-        </div>
-      </div>
-      
-      <!-- P2 -->
-      <div class="mb-3">
-        <div class="flex justify-between items-center mb-1">
-          <span class="text-xs font-semibold text-[#1B1925]">P2 - High</span>
-          <span class="text-xs font-mono text-cs-orange font-semibold">23/29 - 79%</span>
-        </div>
-        <div class="w-full bg-[#F2F2F2] rounded-full h-3">
-          <div class="bg-cs-orange h-3 rounded-full transition-all" style="width: 79%"></div>
-        </div>
-      </div>
-      
-      <!-- P3 -->
-      <div class="mb-3">
-        <div class="flex justify-between items-center mb-1">
-          <span class="text-xs font-semibold text-[#1B1925]">P3 - Medium</span>
-          <span class="text-xs font-mono text-cs-green font-semibold">5/5 - 100%</span>
-        </div>
-        <div class="w-full bg-[#F2F2F2] rounded-full h-3">
-          <div class="bg-cs-green h-3 rounded-full transition-all" style="width: 100%"></div>
-        </div>
-      </div>
-      
-      <!-- P4 -->
-      <div class="mb-3">
-        <div class="flex justify-between items-center mb-1">
-          <span class="text-xs font-semibold text-[#1B1925]">P4 - General</span>
-          <span class="text-xs font-mono text-red-500 font-semibold">80/332 - 24%</span>
-        </div>
-        <div class="w-full bg-[#F2F2F2] rounded-full h-3">
-          <div class="bg-red-400 h-3 rounded-full transition-all" style="width: 24%"></div>
-        </div>
-      </div>
-      
-      <!-- Total -->
-      <div class="pt-2 border-t border-[#E8E8EA]">
-        <div class="flex justify-between items-center mb-1">
-          <span class="text-xs font-bold text-[#1B1925]">TOTAL PIPELINE</span>
-          <span class="text-xs font-mono text-cs-orange font-bold">139/397 - 35%</span>
-        </div>
-        <div class="w-full bg-[#F2F2F2] rounded-full h-3">
-          <div class="bg-cs-orange h-3 rounded-full transition-all" style="width: 35%"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Pipeline Funnel -->
-    <div class="bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4 mb-4">
-      <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-semibold mb-3">Pipeline Funnel</div>
-      <div class="space-y-2">
-        <!-- Not Contacted -->
-        <div class="flex items-center gap-3">
-          <div class="w-36 text-xs text-[#4D4C55] text-right">Not Contacted</div>
-          <div class="flex-1 bg-[#F2F2F2] rounded-full h-6 relative overflow-hidden">
-            <div class="bg-[#807F86]/30 h-6 rounded-full flex items-center px-3" style="width: 100%">
-              <span class="text-[10px] font-mono font-semibold text-[#1B1925]">258</span>
-            </div>
-          </div>
-        </div>
-        <!-- Contacted -->
-        <div class="flex items-center gap-3">
-          <div class="w-36 text-xs text-[#4D4C55] text-right">Contacted</div>
-          <div class="flex-1 bg-[#F2F2F2] rounded-full h-6 relative overflow-hidden">
-            <div class="bg-blue-300 h-6 rounded-full flex items-center px-3" style="width: 21.7%">
-              <span class="text-[10px] font-mono font-semibold text-[#1B1925]">56</span>
-            </div>
-          </div>
-        </div>
-        <!-- Consultation Booked -->
-        <div class="flex items-center gap-3">
-          <div class="w-36 text-xs text-[#4D4C55] text-right">Consultation Booked</div>
-          <div class="flex-1 bg-[#F2F2F2] rounded-full h-6 relative overflow-hidden">
-            <div class="bg-cs-orange/60 h-6 rounded-full flex items-center px-3" style="width: 11.6%">
-              <span class="text-[10px] font-mono font-semibold text-[#1B1925]">30</span>
-            </div>
-          </div>
-        </div>
-        <!-- Invoice Sent -->
-        <div class="flex items-center gap-3">
-          <div class="w-36 text-xs text-[#4D4C55] text-right">Invoice Sent</div>
-          <div class="flex-1 bg-[#F2F2F2] rounded-full h-6 relative overflow-hidden">
-            <div class="bg-yellow-400 h-6 rounded-full flex items-center px-3" style="width: 3%">
-              <span class="text-[10px] font-mono font-semibold text-[#1B1925]">4</span>
-            </div>
-          </div>
-        </div>
-        <!-- Closed Won -->
-        <div class="flex items-center gap-3">
-          <div class="w-36 text-xs text-[#4D4C55] text-right font-semibold text-cs-green">Closed Won ✅</div>
-          <div class="flex-1 bg-[#F2F2F2] rounded-full h-6 relative overflow-hidden">
-            <div class="bg-cs-green h-6 rounded-full flex items-center px-3" style="width: 8.1%">
-              <span class="text-[10px] font-mono font-semibold text-white">21</span>
-            </div>
-          </div>
-        </div>
-        <!-- Closed Lost -->
-        <div class="flex items-center gap-3">
-          <div class="w-36 text-xs text-[#4D4C55] text-right text-red-400">Not Renewing</div>
-          <div class="flex-1 bg-[#F2F2F2] rounded-full h-6 relative overflow-hidden">
-            <div class="bg-red-400 h-6 rounded-full flex items-center px-3" style="width: 10.9%">
-              <span class="text-[10px] font-mono font-semibold text-white">28</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="mt-3 pt-2 border-t border-[#E8E8EA] grid grid-cols-3 gap-3">
-        <div class="text-center">
-          <div class="text-lg font-jakarta font-bold text-[#1B1925]">77</div>
-          <div class="text-[9px] text-[#807F86] font-mono">Zen Calls Made</div>
-        </div>
-        <div class="text-center">
-          <div class="text-lg font-jakarta font-bold text-cs-green">72.7%</div>
-          <div class="text-[9px] text-[#807F86] font-mono">Contact Rate (Zen)</div>
-        </div>
-        <div class="text-center">
-          <div class="text-lg font-jakarta font-bold text-cs-orange">53.6%</div>
-          <div class="text-[9px] text-[#807F86] font-mono">Consultation Book Rate</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Row 6: Monthly Trend -->
-    <div class="text-[10px] uppercase tracking-widest text-[#807F86] font-mono font-semibold mb-2">Monthly Trend — Q1 2026</div>
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
-      <!-- January -->
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-semibold mb-2">January</div>
-        <div class="space-y-1.5">
-          <div class="flex justify-between text-xs"><span class="text-[#807F86]">Won Deals</span><span class="font-semibold text-[#1B1925]">44</span></div>
-          <div class="flex justify-between text-xs"><span class="text-[#807F86]">Lost Deals</span><span class="font-semibold text-[#1B1925]">58</span></div>
-          <div class="flex justify-between text-xs"><span class="text-[#807F86]">Close Rate</span><span class="font-semibold text-cs-green">43.1%</span></div>
-          <div class="flex justify-between text-xs"><span class="text-[#807F86]">Won Value</span><span class="font-semibold text-[#1B1925]">A$523K</span></div>
-          <div class="flex justify-between text-xs"><span class="text-[#807F86]">Deals Created</span><span class="font-semibold text-[#1B1925]">176</span></div>
-        </div>
-      </div>
-      <!-- February -->
-      <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-semibold mb-2">February</div>
-        <div class="space-y-1.5">
-          <div class="flex justify-between text-xs"><span class="text-[#807F86]">Won Deals</span><span class="font-semibold text-[#1B1925]">46</span></div>
-          <div class="flex justify-between text-xs"><span class="text-[#807F86]">Lost Deals</span><span class="font-semibold text-[#1B1925]">36</span></div>
-          <div class="flex justify-between text-xs"><span class="text-[#807F86]">Close Rate</span><span class="font-semibold text-cs-green">56.1%</span></div>
-          <div class="flex justify-between text-xs"><span class="text-[#807F86]">Won Value</span><span class="font-semibold text-[#1B1925]">A$415K</span></div>
-          <div class="flex justify-between text-xs"><span class="text-[#807F86]">Deals Created</span><span class="font-semibold text-[#1B1925]">133</span></div>
-        </div>
-      </div>
-      <!-- March -->
-      <div class="kpi-card bg-[#FFFFFF] border border-red-200/60 rounded-lg p-4">
-        <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-semibold mb-2">March ⚠️</div>
-        <div class="space-y-1.5">
-          <div class="flex justify-between text-xs"><span class="text-[#807F86]">Won Deals</span><span class="font-semibold text-red-500">13</span></div>
-          <div class="flex justify-between text-xs"><span class="text-[#807F86]">Lost Deals</span><span class="font-semibold text-red-500">65</span></div>
-          <div class="flex justify-between text-xs"><span class="text-[#807F86]">Close Rate</span><span class="font-semibold text-red-500">16.7%</span></div>
-          <div class="flex justify-between text-xs"><span class="text-[#807F86]">Won Value</span><span class="font-semibold text-red-500">A$180K</span></div>
-          <div class="flex justify-between text-xs"><span class="text-[#807F86]">Deals Created</span><span class="font-semibold text-[#1B1925]">74</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="text-[9px] text-[#807F86] font-mono">Data sources: WooCommerce API, Pipedrive Export, Hyros CSV, EOS Scorecard</div>
-  </section>
-  <!-- ═══ END KPI METRICS DASHBOARD ═══ -->
-
-  </div>
-  <!-- ═══ END METRICS VIEW ═══ -->
-
-  <!-- ═══ TASKS VIEW ═══ -->
-  <div id="view-tasks" style="display:none">
-
-  <div class="flex flex-col xl:flex-row gap-5">
-
-    <!-- LEFT COLUMN -->
-    <div class="w-full xl:w-[62%] space-y-5">
-
-      <!-- KPI STRIP -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div class="kpi-card bg-[#FFFFFF] border border-\[#E8E8EA\] rounded-lg p-3 text-center">
-          <div class="text-[10px] uppercase tracking-wider text-\[#807F86\] font-mono font-medium mb-1">Members</div>
-          <div class="text-xl font-oswald font-600 text-\[#1B1925\]">1,163</div>
-          <div class="sparkline justify-center mt-2">
-            <div class="sparkline-bar bg-cs-green/40" style="height:40%"></div>
-            <div class="sparkline-bar bg-cs-green/40" style="height:55%"></div>
-            <div class="sparkline-bar bg-cs-green/50" style="height:50%"></div>
-            <div class="sparkline-bar bg-cs-green/50" style="height:65%"></div>
-            <div class="sparkline-bar bg-cs-green/60" style="height:70%"></div>
-            <div class="sparkline-bar bg-cs-green/60" style="height:75%"></div>
-            <div class="sparkline-bar bg-cs-green/70" style="height:80%"></div>
-            <div class="sparkline-bar bg-cs-green" style="height:90%"></div>
-          </div>
-        </div>
-        <div class="kpi-card bg-[#FFFFFF] border border-\[#E8E8EA\] rounded-lg p-3 text-center">
-          <div class="text-[10px] uppercase tracking-wider text-\[#807F86\] font-mono font-medium mb-1">Platinum</div>
-          <div class="text-xl font-oswald font-600 text-cs-turquoise">402</div>
-          <div class="sparkline justify-center mt-2">
-            <div class="sparkline-bar bg-cs-turquoise/30" style="height:30%"></div>
-            <div class="sparkline-bar bg-cs-turquoise/40" style="height:45%"></div>
-            <div class="sparkline-bar bg-cs-turquoise/40" style="height:50%"></div>
-            <div class="sparkline-bar bg-cs-turquoise/50" style="height:60%"></div>
-            <div class="sparkline-bar bg-cs-turquoise/50" style="height:55%"></div>
-            <div class="sparkline-bar bg-cs-turquoise/60" style="height:70%"></div>
-            <div class="sparkline-bar bg-cs-turquoise/70" style="height:80%"></div>
-            <div class="sparkline-bar bg-cs-turquoise" style="height:95%"></div>
-          </div>
-        </div>
-        <div class="kpi-card bg-[#FFFFFF] border border-\[#E8E8EA\] rounded-lg p-3 text-center">
-          <div class="text-[10px] uppercase tracking-wider text-\[#807F86\] font-mono font-medium mb-1">ARR</div>
-          <div class="text-xl font-oswald font-600 text-cs-green">A$7.3M</div>
-          <div class="sparkline justify-center mt-2">
-            <div class="sparkline-bar bg-cs-green/30" style="height:25%"></div>
-            <div class="sparkline-bar bg-cs-green/40" style="height:35%"></div>
-            <div class="sparkline-bar bg-cs-green/40" style="height:45%"></div>
-            <div class="sparkline-bar bg-cs-green/50" style="height:55%"></div>
-            <div class="sparkline-bar bg-cs-green/60" style="height:65%"></div>
-            <div class="sparkline-bar bg-cs-green/70" style="height:78%"></div>
-            <div class="sparkline-bar bg-cs-green/80" style="height:88%"></div>
-            <div class="sparkline-bar bg-cs-green" style="height:100%"></div>
-          </div>
-        </div>
-        <div class="kpi-card bg-[#FFFFFF] border border-\[#E8E8EA\] rounded-lg p-3 text-center">
-          <div class="text-[10px] uppercase tracking-wider text-\[#807F86\] font-mono font-medium mb-1">YoY Growth</div>
-          <div class="text-xl font-oswald font-600 text-cs-orange">203%</div>
-          <div class="flex items-center justify-center gap-1 mt-2">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FC5C03" stroke-width="2.5"><path d="M7 17l5-5 5 5"/><path d="M7 11l5-5 5 5"/></svg>
-            <span class="text-[10px] text-cs-orange font-mono">+203%</span>
-          </div>
-        </div>
-        <div class="kpi-card bg-[#FFFFFF] border border-\[#E8E8EA\] rounded-lg p-3 text-center">
-          <div class="text-[10px] uppercase tracking-wider text-\[#807F86\] font-mono font-medium mb-1">ROAS</div>
-          <div class="text-xl font-oswald font-600 text-\[#1B1925\]">3.18x</div>
-          <div class="text-[10px] text-\[#807F86\] mt-1">8-month avg</div>
-          <div class="w-full bg-cs-border rounded-full h-1 mt-1.5">
-            <div class="bg-cs-green rounded-full h-1" style="width:79%"></div>
-          </div>
-        </div>
-        <div class="kpi-card bg-[#FFFFFF] border border-\[#E8E8EA\] rounded-lg p-3 text-center">
-          <div class="text-[10px] uppercase tracking-wider text-\[#807F86\] font-mono font-medium mb-1">Retention</div>
-          <div class="text-xl font-oswald font-600 text-cs-turquoise">68%</div>
-          <div class="text-[10px] text-\[#807F86\] mt-1">Y2, 2023 cohort</div>
-          <div class="w-full bg-cs-border rounded-full h-1 mt-1.5">
-            <div class="bg-cs-turquoise rounded-full h-1" style="width:68%"></div>
-          </div>
+          <div style="font-weight:600; font-size:14px; color:#991B1B;">March close rate dropped to 16.7%</div>
+          <div style="font-size:12px; color:#7F1D1D; margin-top:2px;">Down from 56.1% in Feb — 13 won / 78 closed. Net cash forecast is -A$50K. Pipeline P4 tier only 24% contacted.</div>
         </div>
       </div>
 
-      <!-- ACTIVE PRIORITIES (HERO FEATURE) -->
-      <div>
-        <div class="flex items-center justify-between mb-1">
-          <h2 class="font-oswald text-base uppercase tracking-wider text-\[#807F86\] flex items-center gap-2">
-            <span class="text-cs-orange">▎</span>Active Priorities
-            <span class="text-[10px] font-mono text-\[#4D4C55\] bg-[#FFFFFF] px-2 py-0.5 rounded" id="priority-count"></span>
-            <button id="refresh-tasks-btn" onclick="refreshTasks()" class="text-sm hover:opacity-70 transition-opacity" title="Refresh tasks">🔄</button>
-          </h2>
-          <button onclick="addPriority()" class="text-xs bg-cs-orange/10 border border-cs-orange/30 text-cs-orange px-3 py-1.5 rounded-lg hover:bg-cs-orange/20 transition-all flex items-center gap-1.5">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-            Add Priority
-          </button>
+      <!-- Cash Pulse -->
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-bottom:20px;">
+        <div class="kpi-mini">
+          <div style="font-size:11px; color:#807F86; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; margin-bottom:6px;">💰 Bank Balance</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:28px; font-weight:700; color:#08C394;">A$846,187</div>
+          <div style="font-size:11px; color:#807F86; margin-top:4px;">FB Ads A$270K cleared ✅</div>
         </div>
-        <div class="text-[10px] text-[#807F86] font-mono mb-3" id="tasks-updated"></div>
-        <!-- Filter tabs -->
-        <div class="flex items-center gap-1 mb-3" id="task-filters">
-          <button class="task-filter-tab active-filter" onclick="filterTasks('all')">All</button>
-          <button class="task-filter-tab" onclick="filterTasks('urgent')">Urgent</button>
-          <button class="task-filter-tab" onclick="filterTasks('progress')">In Progress</button>
-          <button class="task-filter-tab" onclick="filterTasks('done')">Done</button>
+        <div class="kpi-mini">
+          <div style="font-size:11px; color:#807F86; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; margin-bottom:6px;">🔥 Monthly Burn</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:28px; font-weight:700; color:#EF4444;">A$504,228</div>
+          <div style="font-size:11px; color:#807F86; margin-top:4px;">Wages + contractors + ads + ops</div>
         </div>
-        <div class="space-y-2" id="priorities-list"></div>
-      </div>
-
-      <!-- COMPLETED TASKS -->
-      <div id="completed-section" style="display:none">
-        <div class="flex items-center justify-between mb-3 mt-6">
-          <h2 class="font-oswald text-base uppercase tracking-wider text-[#807F86] flex items-center gap-2 cursor-pointer" onclick="toggleCompletedSection()">
-            <span class="text-cs-green">▎</span>Completed
-            <span class="text-[10px] font-mono text-[#4D4C55] bg-[#FFFFFF] px-2 py-0.5 rounded" id="completed-count"></span>
-            <svg id="completed-chevron" class="w-4 h-4 text-[#807F86] transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </h2>
-          <button onclick="clearCompleted()" class="text-[11px] text-red-400/60 hover:text-red-400 transition-colors flex items-center gap-1">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-            Clear All
-          </button>
-        </div>
-        <div class="space-y-2" id="completed-list"></div>
-      </div>
-
-      <!-- QUICK ACTIONS -->
-      <div>
-        <h2 class="font-oswald text-base uppercase tracking-wider text-\[#807F86\] mb-3 flex items-center gap-2">
-          <span class="text-cs-orange">▎</span>Quick Actions
-        </h2>
-        <div class="flex flex-wrap gap-3">
-          <a href="/hub/" class="nav-btn inline-flex items-center gap-2 bg-cs-orange/10 border border-cs-orange/30 text-cs-orange px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-cs-orange/20">
-            📊 Strategy Hub
-          </a>
-          <a href="#intelligence" class="nav-btn inline-flex items-center gap-2 bg-[#FFFFFF] border border-\[#E8E8EA\] text-\[#1B1925\] px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-[#F2F2F2]">
-            🔍 Sales Intelligence
-          </a>
-          <a href="#intelligence" class="nav-btn inline-flex items-center gap-2 bg-[#FFFFFF] border border-\[#E8E8EA\] text-\[#1B1925\] px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-[#F2F2F2]">
-            🎓 Education Intel
-          </a>
-          <a href="https://discord.com/channels/1482990760692420690/1482993283838771322" target="_blank" class="nav-btn inline-flex items-center gap-2 bg-[#FFFFFF] border border-\[#E8E8EA\] text-\[#1B1925\] px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-[#F2F2F2]">
-            💬 Message BenBot
-          </a>
-          <a href="https://app.pipedrive.com" target="_blank" class="nav-btn inline-flex items-center gap-2 bg-[#FFFFFF] border border-\[#E8E8EA\] text-\[#1B1925\] px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-[#F2F2F2]">
-            📈 CRM Pipeline
-          </a>
+        <div class="kpi-mini">
+          <div style="font-size:11px; color:#807F86; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; margin-bottom:6px;">📆 Runway</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:28px; font-weight:700; color:#1B1925;">~1.7 months</div>
+          <div style="font-size:11px; color:#807F86; margin-top:4px;">At current burn rate (no new revenue)</div>
         </div>
       </div>
 
-      <!-- LATEST INTELLIGENCE -->
-      <div id="intelligence">
-        <h2 class="font-oswald text-base uppercase tracking-wider text-\[#807F86\] mb-3 flex items-center gap-2">
-          <span class="text-cs-turquoise">▎</span>Latest Intelligence
-        </h2>
-        <div class="bg-[#FFFFFF] border border-\[#E8E8EA\] rounded-lg divide-y divide-cs-border">
-          <a href="/hub/" class="intel-item flex items-center justify-between px-4 py-3 group">
-            <div class="flex items-center gap-3">
-              <span class="w-8 h-8 rounded-lg bg-cs-green/10 flex items-center justify-center text-sm">📊</span>
+      <!-- Two-column: Calendar + Tasks -->
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:20px;">
+        <!-- Calendar -->
+        <div class="card">
+          <div class="card-title">📅 Today's Schedule</div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid #F0F0F2;">
+              <div style="font-size:11px; font-family:'Source Code Pro',monospace; color:#FC5C03; font-weight:600; min-width:50px;">09:00</div>
               <div>
-                <div class="text-sm font-medium text-\[#1B1925\] group-hover:text-cs-turquoise transition-colors">Strategy Hub</div>
-                <div class="text-xs text-\[#807F86\]">7 pages live — full company strategy</div>
+                <div style="font-size:14px; font-weight:500; color:#1B1925;">Q2 Planning Sync — Strategy Team</div>
+                <div style="font-size:11px; color:#807F86;">Google Meet · 60 min</div>
               </div>
             </div>
-            <span class="text-[10px] font-mono text-cs-green bg-cs-green/10 px-2 py-0.5 rounded">Complete ✅</span>
-          </a>
-          <a href="#" class="intel-item flex items-center justify-between px-4 py-3 group">
-            <div class="flex items-center gap-3">
-              <span class="w-8 h-8 rounded-lg bg-cs-orange/10 flex items-center justify-center text-sm">🔍</span>
+            <div style="display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid #F0F0F2;">
+              <div style="font-size:11px; font-family:'Source Code Pro',monospace; color:#FC5C03; font-weight:600; min-width:50px;">11:30</div>
               <div>
-                <div class="text-sm font-medium text-\[#1B1925\] group-hover:text-cs-turquoise transition-colors">Sales Intelligence Report</div>
-                <div class="text-xs text-\[#807F86\]">Pipeline analysis, conversion data, forecasts</div>
+                <div style="font-size:14px; font-weight:500; color:#1B1925;">Alchemy Fee Renegotiation Call</div>
+                <div style="font-size:11px; color:#807F86;">Zoom · Sanjay & Kishan · 30 min</div>
               </div>
             </div>
-            <span class="text-[10px] font-mono text-cs-green bg-cs-green/10 px-2 py-0.5 rounded">Complete ✅</span>
-          </a>
-          <a href="#" class="intel-item flex items-center justify-between px-4 py-3 group">
-            <div class="flex items-center gap-3">
-              <span class="w-8 h-8 rounded-lg bg-cs-turquoise/10 flex items-center justify-center text-sm">🎓</span>
+            <div style="display:flex; align-items:flex-start; gap:10px; padding:8px 0;">
+              <div style="font-size:11px; font-family:'Source Code Pro',monospace; color:#FC5C03; font-weight:600; min-width:50px;">14:00</div>
               <div>
-                <div class="text-sm font-medium text-\[#1B1925\] group-hover:text-cs-turquoise transition-colors">Education Call Intelligence</div>
-                <div class="text-xs text-\[#807F86\]">Member call transcripts and action items</div>
+                <div style="font-size:14px; font-weight:500; color:#1B1925;">Pre-Series A Investor Check-in</div>
+                <div style="font-size:11px; color:#807F86;">Zoom · Steve · 45 min</div>
               </div>
             </div>
-            <span class="text-[10px] font-mono text-cs-green bg-cs-green/10 px-2 py-0.5 rounded">Complete ✅</span>
-          </a>
+          </div>
+        </div>
+
+        <!-- Top 5 Tasks -->
+        <div class="card">
+          <div class="card-title">✅ Priority Tasks</div>
+          <div id="brief-tasks" style="display:flex; flex-direction:column;">
+            <!-- Populated by JS -->
+          </div>
+          <a onclick="switchView('tasks')" style="display:block; text-align:center; padding:10px; font-size:12px; color:#FC5C03; font-weight:600; cursor:pointer; margin-top:4px;">View all tasks →</a>
+        </div>
+      </div>
+
+      <!-- KPI Row -->
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-bottom:20px;">
+        <div class="kpi-mini">
+          <div style="font-size:11px; color:#807F86; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; margin-bottom:6px;">📊 ARR</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:28px; font-weight:700; color:#1B1925;">A$7.3M</div>
+          <div style="font-size:11px; color:#08C394; font-weight:600; margin-top:4px;">↑ 203% YoY</div>
+        </div>
+        <div class="kpi-mini">
+          <div style="font-size:11px; color:#807F86; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; margin-bottom:6px;">👥 Active Members</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:28px; font-weight:700; color:#1B1925;">1,163</div>
+          <div style="font-size:11px; color:#807F86; margin-top:4px;">402 Platinum · 68% Y2 retention</div>
+        </div>
+        <div class="kpi-mini">
+          <div style="font-size:11px; color:#807F86; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; margin-bottom:6px;">🔄 May Renewals Pipeline</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:28px; font-weight:700; color:#FC5C03;">397</div>
+          <div style="font-size:11px; color:#807F86; margin-top:4px;">35% contacted · A$186K won (target A$180K ✅)</div>
+        </div>
+      </div>
+
+      <!-- Bot Fleet Summary -->
+      <div class="card" style="margin-bottom:20px;">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <div class="card-title" style="margin-bottom:0;">🤖 Bot Fleet</div>
+          <a onclick="switchView('bots')" style="font-size:12px; color:#FC5C03; font-weight:600; cursor:pointer;">View all →</a>
+        </div>
+        <div style="margin-top:10px; font-size:14px; color:#1B1925; line-height:1.7;">
+          <div><span style="font-weight:600; color:#08C394;">6 of 11 agents active</span> — Finance, EA, Sales, CSM, Crypto Analyst, Ben Analyst all online today.</div>
+          <div style="color:#807F86; font-size:12px;">5 pending setup: Marketing, Social Media, Email, SEO, Video Clipper.</div>
         </div>
       </div>
     </div>
+    <!-- ═══ END MORNING BRIEF ═══ -->
 
-    <!-- RIGHT COLUMN -->
-    <div class="w-full xl:w-[38%] space-y-5">
+    <!-- ═══ VIEW: TASKS (Asana-style) ═══ -->
+    <div id="view-tasks" style="display:none;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+        <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#1B1925;">My Tasks</h1>
+        <button onclick="addPriority()" style="display:flex; align-items:center; gap:6px; background:#FC5C03; color:#fff; border:none; padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; font-family:'Barlow',sans-serif;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Add Task
+        </button>
+      </div>
 
-      <!-- PROJECTS -->
-      <div>
-        <div class="flex items-center justify-between mb-3">
-          <h2 class="font-oswald text-base uppercase tracking-wider text-[#807F86] flex items-center gap-2">
-            <span class="text-cs-purple">▎</span>Projects
-            <span class="text-[10px] font-mono text-[#4D4C55] bg-[#FFFFFF] px-2 py-0.5 rounded" id="project-count"></span>
-          </h2>
-          <button onclick="addProject()" class="text-xs bg-cs-purple/10 border border-cs-purple/30 text-cs-purple px-3 py-1.5 rounded-lg hover:bg-cs-purple/20 transition-all flex items-center gap-1.5">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-            Add
+      <!-- Task Filter Tabs -->
+      <div style="display:flex; gap:4px; border-bottom:1px solid #E8E8EA; margin-bottom:16px;">
+        <button class="view-tab active" data-filter="all" onclick="filterTasks('all', this)">All</button>
+        <button class="view-tab" data-filter="urgent" onclick="filterTasks('urgent', this)">Urgent</button>
+        <button class="view-tab" data-filter="progress" onclick="filterTasks('progress', this)">In Progress</button>
+        <button class="view-tab" data-filter="done" onclick="filterTasks('done', this)">Done</button>
+      </div>
+
+      <!-- Task Groups -->
+      <div id="tasks-container"></div>
+
+      <!-- Projects Section -->
+      <div style="margin-top:32px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+          <h2 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:18px; font-weight:700; color:#1B1925;">Projects</h2>
+          <button onclick="addProject()" style="display:flex; align-items:center; gap:6px; background:rgba(101,79,252,0.08); color:#654FFC; border:1px solid rgba(101,79,252,0.2); padding:6px 14px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; font-family:'Barlow',sans-serif;">
+            + Add
           </button>
         </div>
-        <div class="space-y-2" id="projects-list"></div>
-      </div>
-
-      <!-- RECENTLY UPDATED -->
-      <div>
-        <h2 class="font-oswald text-base uppercase tracking-wider text-[#807F86] mb-3 flex items-center gap-2">
-          <span class="text-cs-orange">▎</span>Recently Updated
-        </h2>
-        <div class="bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg overflow-hidden" id="recently-updated">
-          <div class="px-4 py-3 text-xs text-[#807F86]">Loading...</div>
-        </div>
-      </div>
-
-      <!-- BOT TEAM STATUS -->
-      <div>
-        <h2 class="font-oswald text-base uppercase tracking-wider text-\[#807F86\] mb-3 flex items-center gap-2">
-          <span class="text-cs-green">▎</span>Bot Team Status
-          <span class="text-[10px] font-mono text-\[#4D4C55\] bg-[#FFFFFF] px-2 py-0.5 rounded">11 agents</span>
-        </h2>
-        <div class="space-y-2" id="bot-team-list"></div>
-      </div>
-
-      <!-- BENBOT CHAT PANEL -->
-      <div class="bg-[#FFFFFF] border border-\[#E8E8EA\] rounded-lg p-4">
-        <h3 class="font-oswald text-sm uppercase tracking-wider text-\[#1B1925\] mb-3 flex items-center gap-2">
-          💬 Message BenBot
-        </h3>
-        <textarea id="benbot-msg" rows="3" placeholder="Type a message for BenBot..."
-          class="w-full bg-white border border-\[#E8E8EA\] rounded-lg px-3 py-2 text-sm text-\[#1B1925\] placeholder:text-\[#4D4C55\] focus:outline-none focus:border-cs-orange/50 resize-none"></textarea>
-        <div class="flex items-center justify-between mt-2">
-          <span class="text-[11px] text-\[#807F86\]">Opens Discord #ceo-benbot</span>
-          <button onclick="sendBenBot()" class="bg-cs-orange hover:bg-cs-orange/90 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors">
-            Send
-          </button>
-        </div>
-        <div id="msg-confirm" class="hidden mt-2"></div>
+        <div id="projects-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:12px;"></div>
       </div>
     </div>
-  </div>
+    <!-- ═══ END TASKS ═══ -->
+
+    <!-- ═══ VIEW: METRICS ═══ -->
+    <div id="view-metrics" style="display:none;">
+      <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#1B1925; margin-bottom:20px;">📊 KPI Dashboard</h1>
+      <p style="font-size:12px; color:#807F86; margin-bottom:20px; font-family:'Source Code Pro',monospace;">Data as of April 1, 2026</p>
+
+      <!-- Revenue & Sales -->
+      <div style="font-size:11px; color:#807F86; text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:8px;">Revenue & Sales</div>
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin-bottom:24px;">
+        <div class="kpi-mini">
+          <div style="font-size:10px; color:#807F86; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; margin-bottom:4px;">Monthly Revenue (B2C)</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#1B1925;">A$341,985</div>
+          <div style="font-size:11px; color:#807F86; margin-top:2px;">188 orders · WooCommerce</div>
+        </div>
+        <div class="kpi-mini">
+          <div style="font-size:10px; color:#807F86; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; margin-bottom:4px;">Monthly Revenue (B2B)</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#1B1925;">A$8,250</div>
+          <div style="font-size:11px; color:#807F86; margin-top:2px;">EOS Scorecard</div>
+        </div>
+        <div class="kpi-mini" style="border-left: 3px solid #EF4444;">
+          <div style="font-size:10px; color:#807F86; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; margin-bottom:4px;">Call Conversion (March) ⚠️</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#EF4444;">16.7%</div>
+          <div style="font-size:11px; color:#EF4444; margin-top:2px;">↓ from 56.1% Feb · 13/78</div>
+        </div>
+        <div class="kpi-mini">
+          <div style="font-size:10px; color:#807F86; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; margin-bottom:4px;">Meta ROAS (Paid Only)</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#FC5C03;">4.13x</div>
+          <div style="font-size:11px; color:#807F86; margin-top:2px;">A$238K sales / A$58K spend</div>
+        </div>
+      </div>
+
+      <!-- Revenue Attribution -->
+      <div style="font-size:11px; color:#807F86; text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:8px;">Revenue Attribution</div>
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin-bottom:24px;">
+        <div class="kpi-mini" style="border-left:3px solid #3B82F6;">
+          <div style="font-size:10px; color:#807F86; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; margin-bottom:4px;">Paid (Meta Ads)</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700;">A$238,605</div>
+          <div style="font-size:11px; color:#3B82F6; margin-top:2px;">67% of total · 19 new sales</div>
+        </div>
+        <div class="kpi-mini" style="border-left:3px solid #10B981;">
+          <div style="font-size:10px; color:#807F86; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; margin-bottom:4px;">Renewals</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#10B981;">A$143,364</div>
+          <div style="font-size:11px; color:#807F86; margin-top:2px;">17 confirmed · Reece 12, David 5</div>
+        </div>
+        <div class="kpi-mini" style="border-left:3px solid #8B5CF6;">
+          <div style="font-size:10px; color:#807F86; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; margin-bottom:4px;">Organic</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700;">A$64,257</div>
+          <div style="font-size:11px; color:#8B5CF6; margin-top:2px;">14% of total · 15 sales</div>
+        </div>
+        <div class="kpi-mini" style="border-left:3px solid #F59E0B;">
+          <div style="font-size:10px; color:#807F86; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; margin-bottom:4px;">Hyros Attributed</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700;">A$356,783</div>
+          <div style="font-size:11px; color:#807F86; margin-top:2px;">41 sales total</div>
+        </div>
+      </div>
+
+      <!-- Gross Profit vs Expenses -->
+      <div style="font-size:11px; color:#807F86; text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:8px;">Gross Profit vs Expenses (March)</div>
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin-bottom:24px;">
+        <div class="kpi-mini" style="border-left:3px solid #10B981;">
+          <div style="font-size:10px; color:#807F86; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; margin-bottom:4px;">Total Revenue</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700;">A$454,476</div>
+          <div style="font-size:11px; color:#807F86; margin-top:2px;">All channels combined</div>
+        </div>
+        <div class="kpi-mini" style="border-left:3px solid #10B981;">
+          <div style="font-size:10px; color:#807F86; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; margin-bottom:4px;">Gross Profit</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#10B981;">A$274,071</div>
+          <div style="font-size:11px; color:#807F86; margin-top:2px;">60.3% blended margin</div>
+        </div>
+        <div class="kpi-mini" style="border-left:3px solid #EF4444;">
+          <div style="font-size:10px; color:#807F86; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; margin-bottom:4px;">Total Outgoings</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#EF4444;">A$504,228</div>
+          <div style="font-size:11px; color:#807F86; margin-top:2px;">Wages, rent, ATO, loans, software</div>
+        </div>
+        <div class="kpi-mini" style="border-left:3px solid #EF4444; background:linear-gradient(135deg, #fff 90%, #FEE2E2 100%);">
+          <div style="font-size:10px; color:#807F86; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; margin-bottom:4px;">Net Cash (Forecast)</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#EF4444;">-A$49,752</div>
+          <div style="font-size:11px; color:#EF4444; margin-top:2px;">Need A$50K more or cut costs</div>
+        </div>
+      </div>
+
+      <!-- GP by Channel -->
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin-bottom:24px;">
+        <div class="kpi-mini"><div style="font-size:10px; color:#807F86; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Paid GP</div><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:18px; font-weight:700;">A$118,741</div><div style="font-size:11px; color:#807F86;">49.8% margin</div></div>
+        <div class="kpi-mini"><div style="font-size:10px; color:#807F86; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Renewal GP</div><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:18px; font-weight:700; color:#10B981;">A$100,355</div><div style="font-size:11px; color:#807F86;">70% margin</div></div>
+        <div class="kpi-mini"><div style="font-size:10px; color:#807F86; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Organic GP</div><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:18px; font-weight:700; color:#8B5CF6;">A$47,550</div><div style="font-size:11px; color:#807F86;">74% margin</div></div>
+        <div class="kpi-mini"><div style="font-size:10px; color:#807F86; text-transform:uppercase; font-weight:600; margin-bottom:4px;">B2B GP</div><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:18px; font-weight:700;">A$7,425</div><div style="font-size:11px; color:#807F86;">90% margin</div></div>
+      </div>
+
+      <!-- Sales Performance -->
+      <div style="font-size:11px; color:#807F86; text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:8px;">Sales Performance</div>
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin-bottom:24px;">
+        <div class="kpi-mini"><div style="font-size:10px; color:#807F86; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Q1 Close Rate</div><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700;">39.3%</div><div style="font-size:11px; color:#807F86;">103/262 total</div></div>
+        <div class="kpi-mini" style="border-left:3px solid #EF4444;"><div style="font-size:10px; color:#807F86; text-transform:uppercase; font-weight:600; margin-bottom:4px;">March Close ⚠️</div><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#EF4444;">16.7%</div><div style="font-size:11px; color:#EF4444;">↓ from 56.1% Feb</div></div>
+        <div class="kpi-mini"><div style="font-size:10px; color:#807F86; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Calls Booked</div><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700;">74</div><div style="font-size:11px; color:#807F86;">March deals created</div></div>
+        <div class="kpi-mini"><div style="font-size:10px; color:#807F86; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Refunds MTD</div><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#EF4444;">A$18,699</div><div style="font-size:11px; color:#807F86;">2 refunds</div></div>
+      </div>
+
+      <!-- Cash & Debts -->
+      <div style="font-size:11px; color:#807F86; text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:8px;">Cash & Debts</div>
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin-bottom:24px;">
+        <div class="kpi-mini" style="border-left:3px solid #08C394;"><div style="font-size:10px; color:#807F86; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Cash at Bank</div><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#08C394;">A$846,187</div><div style="font-size:11px; color:#807F86;">EOS Weekly</div></div>
+        <div class="kpi-mini"><div style="font-size:10px; color:#807F86; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Ad Spend (March)</div><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#FC5C03;">A$57,827</div><div style="font-size:11px; color:#807F86;">Hyros</div></div>
+        <div class="kpi-mini" style="border-left:3px solid #EF4444;"><div style="font-size:10px; color:#807F86; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Total Loans</div><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#EF4444;">A$741,971</div><div style="font-size:11px; color:#807F86;">Banjo + Payoneer + Director</div></div>
+        <div class="kpi-mini"><div style="font-size:10px; color:#807F86; text-transform:uppercase; font-weight:600; margin-bottom:4px;">AP (Next 4wk)</div><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700;">A$229,474</div><div style="font-size:11px; color:#807F86;">Salaries, PAYG, Super</div></div>
+      </div>
+
+      <!-- Sales Team -->
+      <div style="font-size:11px; color:#807F86; text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:8px;">Sales Team Performance (YTD)</div>
+      <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; margin-bottom:24px; max-width:600px;">
+        <div class="kpi-mini" style="display:flex; align-items:center; gap:12px;">
+          <div style="width:40px; height:40px; border-radius:50%; background:rgba(252,92,3,0.12); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span style="color:#FC5C03; font-weight:700; font-size:13px;">RH</span></div>
+          <div><div style="font-size:14px; font-weight:600;">Reece Hobson</div><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700;">58 <span style="font-size:13px; font-weight:400; color:#807F86;">deals won</span></div></div>
+        </div>
+        <div class="kpi-mini" style="display:flex; align-items:center; gap:12px;">
+          <div style="width:40px; height:40px; border-radius:50%; background:rgba(101,79,252,0.12); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span style="color:#654FFC; font-weight:700; font-size:13px;">DT</span></div>
+          <div><div style="font-size:14px; font-weight:600;">David Tran</div><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700;">45 <span style="font-size:13px; font-weight:400; color:#807F86;">deals won</span></div></div>
+        </div>
+      </div>
+
+      <!-- Renewal Pipeline -->
+      <div style="font-size:11px; color:#807F86; text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:8px;">Renewal Pipeline (March 31)</div>
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin-bottom:16px;">
+        <div class="kpi-mini" style="border-left:3px solid #08C394; background:linear-gradient(135deg,#fff 90%,#ECFDF5 100%);"><div style="font-size:10px; color:#807F86; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Revenue Won ✅</div><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#08C394;">A$186,155</div><div style="font-size:11px; color:#08C394;">Target A$180K exceeded</div></div>
+        <div class="kpi-mini"><div style="font-size:10px; color:#807F86; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Total Pipeline</div><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700;">397</div><div style="font-size:11px; color:#807F86;">A$5.58M value</div></div>
+        <div class="kpi-mini"><div style="font-size:10px; color:#807F86; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Contact Rate</div><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#FC5C03;">35%</div><div style="font-size:11px; color:#807F86;">139/397 contacted</div></div>
+        <div class="kpi-mini"><div style="font-size:10px; color:#807F86; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Not Renewing</div><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#EF4444;">26.5%</div><div style="font-size:11px; color:#807F86;">28/106 engaged</div></div>
+      </div>
+
+      <!-- Contact Progress Bars -->
+      <div class="card" style="margin-bottom:24px;">
+        <div class="card-title">% Contacted by Priority Tier</div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="font-size:12px; font-weight:600;">P1 - Priority</span><span style="font-size:11px; font-family:'Source Code Pro',monospace; color:#08C394; font-weight:600;">8/8 · 100%</span></div><div style="background:#F0F0F2; border-radius:999px; height:8px; overflow:hidden;"><div style="background:#08C394; height:100%; border-radius:999px; width:100%;"></div></div></div>
+          <div><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="font-size:12px; font-weight:600;">P2 - High</span><span style="font-size:11px; font-family:'Source Code Pro',monospace; color:#FC5C03; font-weight:600;">23/29 · 79%</span></div><div style="background:#F0F0F2; border-radius:999px; height:8px; overflow:hidden;"><div style="background:#FC5C03; height:100%; border-radius:999px; width:79%;"></div></div></div>
+          <div><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="font-size:12px; font-weight:600;">P3 - Medium</span><span style="font-size:11px; font-family:'Source Code Pro',monospace; color:#08C394; font-weight:600;">5/5 · 100%</span></div><div style="background:#F0F0F2; border-radius:999px; height:8px; overflow:hidden;"><div style="background:#08C394; height:100%; border-radius:999px; width:100%;"></div></div></div>
+          <div><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="font-size:12px; font-weight:600;">P4 - General</span><span style="font-size:11px; font-family:'Source Code Pro',monospace; color:#EF4444; font-weight:600;">80/332 · 24%</span></div><div style="background:#F0F0F2; border-radius:999px; height:8px; overflow:hidden;"><div style="background:#EF4444; height:100%; border-radius:999px; width:24%;"></div></div></div>
+          <div style="border-top:1px solid #E8E8EA; padding-top:8px;"><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="font-size:12px; font-weight:700;">TOTAL</span><span style="font-size:11px; font-family:'Source Code Pro',monospace; color:#FC5C03; font-weight:700;">139/397 · 35%</span></div><div style="background:#F0F0F2; border-radius:999px; height:8px; overflow:hidden;"><div style="background:#FC5C03; height:100%; border-radius:999px; width:35%;"></div></div></div>
+        </div>
+      </div>
+
+      <!-- Pipeline Funnel -->
+      <div class="card" style="margin-bottom:24px;">
+        <div class="card-title">Pipeline Funnel</div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; align-items:center; gap:12px;"><span style="width:110px; text-align:right; font-size:12px; color:#807F86;">Not Contacted</span><div style="flex:1; background:#F0F0F2; border-radius:999px; height:24px; overflow:hidden;"><div style="background:rgba(128,127,134,0.25); height:100%; border-radius:999px; width:100%; display:flex; align-items:center; padding-left:8px;"><span style="font-size:10px; font-weight:600;">258</span></div></div></div>
+          <div style="display:flex; align-items:center; gap:12px;"><span style="width:110px; text-align:right; font-size:12px; color:#807F86;">Contacted</span><div style="flex:1; background:#F0F0F2; border-radius:999px; height:24px; overflow:hidden;"><div style="background:#93C5FD; height:100%; border-radius:999px; width:22%; display:flex; align-items:center; padding-left:8px;"><span style="font-size:10px; font-weight:600;">56</span></div></div></div>
+          <div style="display:flex; align-items:center; gap:12px;"><span style="width:110px; text-align:right; font-size:12px; color:#807F86;">Consult Booked</span><div style="flex:1; background:#F0F0F2; border-radius:999px; height:24px; overflow:hidden;"><div style="background:rgba(252,92,3,0.5); height:100%; border-radius:999px; width:12%; display:flex; align-items:center; padding-left:8px;"><span style="font-size:10px; font-weight:600;">30</span></div></div></div>
+          <div style="display:flex; align-items:center; gap:12px;"><span style="width:110px; text-align:right; font-size:12px; color:#807F86;">Invoice Sent</span><div style="flex:1; background:#F0F0F2; border-radius:999px; height:24px; overflow:hidden;"><div style="background:#FDE68A; height:100%; border-radius:999px; width:3%; min-width:32px; display:flex; align-items:center; padding-left:8px;"><span style="font-size:10px; font-weight:600;">4</span></div></div></div>
+          <div style="display:flex; align-items:center; gap:12px;"><span style="width:110px; text-align:right; font-size:12px; color:#08C394; font-weight:600;">Closed Won ✅</span><div style="flex:1; background:#F0F0F2; border-radius:999px; height:24px; overflow:hidden;"><div style="background:#08C394; height:100%; border-radius:999px; width:8%; min-width:32px; display:flex; align-items:center; padding-left:8px;"><span style="font-size:10px; font-weight:600; color:#fff;">21</span></div></div></div>
+          <div style="display:flex; align-items:center; gap:12px;"><span style="width:110px; text-align:right; font-size:12px; color:#EF4444;">Not Renewing</span><div style="flex:1; background:#F0F0F2; border-radius:999px; height:24px; overflow:hidden;"><div style="background:#F87171; height:100%; border-radius:999px; width:11%; min-width:32px; display:flex; align-items:center; padding-left:8px;"><span style="font-size:10px; font-weight:600; color:#fff;">28</span></div></div></div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:16px; padding-top:12px; border-top:1px solid #E8E8EA;">
+          <div style="text-align:center;"><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:18px; font-weight:700;">77</div><div style="font-size:10px; color:#807F86;">Zen Calls Made</div></div>
+          <div style="text-align:center;"><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:18px; font-weight:700; color:#08C394;">72.7%</div><div style="font-size:10px; color:#807F86;">Contact Rate (Zen)</div></div>
+          <div style="text-align:center;"><div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:18px; font-weight:700; color:#FC5C03;">53.6%</div><div style="font-size:10px; color:#807F86;">Consult Book Rate</div></div>
+        </div>
+      </div>
+
+      <!-- Monthly Trend -->
+      <div style="font-size:11px; color:#807F86; text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:8px;">Q1 2026 Monthly Trend</div>
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; margin-bottom:16px;">
+        <div class="card">
+          <div style="font-size:12px; font-weight:600; margin-bottom:8px;">January</div>
+          <div style="display:flex; flex-direction:column; gap:4px; font-size:12px;">
+            <div style="display:flex; justify-content:space-between;"><span style="color:#807F86;">Won</span><span style="font-weight:600;">44</span></div>
+            <div style="display:flex; justify-content:space-between;"><span style="color:#807F86;">Close Rate</span><span style="font-weight:600; color:#08C394;">43.1%</span></div>
+            <div style="display:flex; justify-content:space-between;"><span style="color:#807F86;">Value</span><span style="font-weight:600;">A$523K</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div style="font-size:12px; font-weight:600; margin-bottom:8px;">February</div>
+          <div style="display:flex; flex-direction:column; gap:4px; font-size:12px;">
+            <div style="display:flex; justify-content:space-between;"><span style="color:#807F86;">Won</span><span style="font-weight:600;">46</span></div>
+            <div style="display:flex; justify-content:space-between;"><span style="color:#807F86;">Close Rate</span><span style="font-weight:600; color:#08C394;">56.1%</span></div>
+            <div style="display:flex; justify-content:space-between;"><span style="color:#807F86;">Value</span><span style="font-weight:600;">A$415K</span></div>
+          </div>
+        </div>
+        <div class="card" style="border-left:3px solid #EF4444;">
+          <div style="font-size:12px; font-weight:600; margin-bottom:8px;">March ⚠️</div>
+          <div style="display:flex; flex-direction:column; gap:4px; font-size:12px;">
+            <div style="display:flex; justify-content:space-between;"><span style="color:#807F86;">Won</span><span style="font-weight:600; color:#EF4444;">13</span></div>
+            <div style="display:flex; justify-content:space-between;"><span style="color:#807F86;">Close Rate</span><span style="font-weight:600; color:#EF4444;">16.7%</span></div>
+            <div style="display:flex; justify-content:space-between;"><span style="color:#807F86;">Value</span><span style="font-weight:600; color:#EF4444;">A$180K</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size:10px; color:#807F86; font-family:'Source Code Pro',monospace;">Sources: WooCommerce, Pipedrive, Hyros, EOS Scorecard</div>
+    </div>
+    <!-- ═══ END METRICS ═══ -->
+
+    <!-- ═══ VIEW: ACTIONS ═══ -->
+    <div id="view-actions" style="display:none;">
+      <iframe id="actions-frame" src="" style="width:100%;height:calc(100vh - 100px);border:none;border-radius:8px;" loading="lazy"></iframe>
+    </div>
+    <!-- ═══ END ACTIONS ═══ -->
+
+    <!-- ═══ VIEW: BOTS ═══ -->
+    <div id="view-bots" style="display:none;">
+      <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#1B1925; margin-bottom:4px;">🤖 Bot Fleet</h1>
+      <p style="font-size:13px; color:#807F86; margin-bottom:20px;">11 agents configured · 6 active today</p>
+      <div id="bot-fleet-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:12px;"></div>
+    </div>
+    <!-- ═══ END BOTS ═══ -->
 
   </div>
-  <!-- ═══ END TASKS VIEW ═══ -->
+</div>
 
-  <!-- ═══ ACTIONS VIEW ═══ -->
-  <div id="view-actions" style="display:none">
-    <iframe id="actions-frame" src="" style="width:100%;height:calc(100vh - 140px);border:none;border-radius:8px;" loading="lazy"></iframe>
-  </div>
-  <!-- ═══ END ACTIONS VIEW ═══ -->
-
-</main>
+<!-- ═══ MOBILE BOTTOM TAB BAR ═══ -->
+<div class="bottom-tab-bar">
+  <a class="bottom-tab active" data-view="brief" onclick="switchView('brief')">
+    <span class="btab-icon">⭐</span> Brief
+  </a>
+  <a class="bottom-tab" data-view="tasks" onclick="switchView('tasks')">
+    <span class="btab-icon">✓</span> Tasks
+  </a>
+  <a class="bottom-tab" data-view="metrics" onclick="switchView('metrics')">
+    <span class="btab-icon">📊</span> KPIs
+  </a>
+  <a class="bottom-tab" data-view="actions" onclick="switchView('actions')">
+    <span class="btab-icon">⚡</span> Actions
+  </a>
+  <a class="bottom-tab" data-view="bots" onclick="switchView('bots')">
+    <span class="btab-icon">🤖</span> Bots
+  </a>
+</div>
 
 <script>
-// ===== SIDEBAR =====
+// ═══════════════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════════════
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('sidebarOverlay').classList.toggle('open');
 }
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
 
-// ===== CLOCK =====
+// ═══════════════════════════════════════════
+// CLOCK
+// ═══════════════════════════════════════════
 function updateClock() {
   const now = new Date();
-  const opts = { timeZone: 'Australia/Melbourne', weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+  const opts = { timeZone: 'Australia/Melbourne', weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false };
   document.getElementById('clock').textContent = now.toLocaleString('en-AU', opts);
 }
-updateClock();
-setInterval(updateClock, 1000);
+updateClock(); setInterval(updateClock, 1000);
 
-// ===== PRIORITIES DATA (loaded from tasks.json) =====
-let priorities = [];
-let tasksLastUpdated = null;
+// ═══════════════════════════════════════════
+// VIEW SWITCHING
+// ═══════════════════════════════════════════
+function switchView(view) {
+  const views = ['brief', 'tasks', 'metrics', 'actions', 'bots'];
+  views.forEach(v => {
+    const el = document.getElementById('view-' + v);
+    if (el) el.style.display = v === view ? 'block' : 'none';
+  });
 
-// Status emoji mapping for task names from JSON (no emoji prefix in JSON)
-const STATUS_EMOJI = { urgent: '🔴 ', progress: '📋 ', done: '✅ ' };
-const CATEGORY_EMOJI = { 'ai-bots': '🤖 ', 'travel': '✈️ ', 'operations': '', 'revenue': '', 'product': '' };
+  // Update sidebar active state
+  document.querySelectorAll('.sidebar-link').forEach(l => {
+    l.classList.remove('active');
+    if (l.dataset.view === view) l.classList.add('active');
+  });
 
-function addStatusEmoji(task) {
-  // Add emoji prefix to name for display based on category or status
-  const catEmoji = CATEGORY_EMOJI[task.category] || '';
-  const statusEmoji = catEmoji || STATUS_EMOJI[task.status] || '';
-  return { ...task, name: statusEmoji + task.name };
+  // Update bottom tab bar
+  document.querySelectorAll('.bottom-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.view === view);
+  });
+
+  localStorage.setItem('cs-active-view', view);
+  closeSidebar();
+
+  // Lazy load actions iframe
+  if (view === 'actions') {
+    const frame = document.getElementById('actions-frame');
+    if (frame && !frame.src.includes('actions.html')) frame.src = 'actions.html';
+  }
 }
+
+// ═══════════════════════════════════════════
+// TASKS DATA
+// ═══════════════════════════════════════════
+let priorities = [];
+const CATEGORY_COLORS = {
+  'operations': { bg: '#F0F0F2', text: '#4D4C55' },
+  'revenue': { bg: '#ECFDF5', text: '#059669' },
+  'ai-bots': { bg: '#EDE9FE', text: '#7C3AED' },
+  'product': { bg: '#FEF3C7', text: '#D97706' },
+  'travel': { bg: '#DBEAFE', text: '#2563EB' },
+  'content': { bg: '#FCE7F3', text: '#DB2777' },
+  'strategy': { bg: '#FFF7ED', text: '#EA580C' },
+};
+const STATUS_COLORS = {
+  urgent: '#EF4444',
+  progress: '#F59E0B',
+  done: '#08C394',
+};
+
+function escHtml(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
 
 async function fetchTasks() {
   try {
     const res = await fetch('tasks.json?_=' + Date.now());
     const data = await res.json();
-    tasksLastUpdated = data.updated;
-    priorities = data.tasks.map(addStatusEmoji);
+    priorities = data.tasks || [];
     savePriorities(priorities);
-    updateTasksTimestamp();
-    renderPriorities();
   } catch(e) {
     console.error('Failed to load tasks.json:', e);
-    // Fall back to localStorage
-    const saved = localStorage.getItem('cs-priorities-v9');
-    if (saved) { try { priorities = JSON.parse(saved); } catch(e2) {} }
-    renderPriorities();
+    const saved = localStorage.getItem('cs-priorities-v10');
+    if (saved) try { priorities = JSON.parse(saved); } catch(e2) {}
   }
+  renderTasks();
+  renderBriefTasks();
 }
 
-function updateTasksTimestamp() {
-  const el = document.getElementById('tasks-updated');
-  if (!el || !tasksLastUpdated) return;
-  const updated = new Date(tasksLastUpdated);
-  const now = new Date();
-  const diffMs = now - updated;
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
-  let label;
-  if (diffMins < 1) label = 'just now';
-  else if (diffMins < 60) label = diffMins + 'm ago';
-  else if (diffHours < 24) label = diffHours + 'h ago';
-  else label = diffDays + 'd ago';
-  el.textContent = 'Updated ' + label;
-  el.title = updated.toLocaleString();
-}
+function savePriorities(p) { localStorage.setItem('cs-priorities-v10', JSON.stringify(p)); }
 
-function refreshTasks() {
-  const btn = document.getElementById('refresh-tasks-btn');
-  if (btn) { btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none'; }
-  fetchTasks().finally(() => {
-    if (btn) { btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; }
+function renderTasks() {
+  const container = document.getElementById('tasks-container');
+  const groups = {
+    urgent: priorities.filter(p => p.status === 'urgent'),
+    progress: priorities.filter(p => p.status === 'progress'),
+    done: priorities.filter(p => p.status === 'done'),
+  };
+  const todayStr = new Date().toISOString().split('T')[0];
+
+  let html = '';
+  const groupMeta = [
+    { key: 'urgent', label: 'Urgent', color: '#EF4444', icon: '🔴' },
+    { key: 'progress', label: 'In Progress', color: '#F59E0B', icon: '🟡' },
+    { key: 'done', label: 'Completed', color: '#08C394', icon: '✅' },
+  ];
+
+  groupMeta.forEach(g => {
+    const items = groups[g.key] || [];
+    html += `<div class="task-group" data-group="${g.key}">
+      <div class="task-group-header">
+        <span style="color:${g.color};">${g.icon}</span>
+        ${g.label}
+        <span style="font-size:12px; font-weight:400; color:#807F86;">${items.length}</span>
+      </div>
+      <div style="background:#fff; border:1px solid #E8E8EA; border-radius:10px; overflow:hidden;">`;
+
+    items.forEach((p, idx) => {
+      const globalIdx = priorities.indexOf(p);
+      const isOverdue = p.due && p.due < todayStr && p.status !== 'done';
+      const dueLabel = p.due ? (p.due === todayStr ? 'Today' : new Date(p.due + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })) : '';
+      const cat = CATEGORY_COLORS[p.category] || CATEGORY_COLORS.operations;
+
+      html += `<div class="task-row" data-status="${p.status}">
+        <div class="task-checkbox ${p.status === 'done' ? 'checked' : ''} ${p.status === 'urgent' ? 'urgent-ring' : ''}"
+             onclick="toggleTaskDone(${globalIdx})"></div>
+        <span class="task-name ${p.status === 'done' ? 'done' : ''}">${escHtml(p.name)}</span>
+        ${p.category ? `<span class="category-badge" style="background:${cat.bg}; color:${cat.text};">${p.category}</span>` : ''}
+        ${dueLabel ? `<span class="task-due ${isOverdue ? 'overdue' : ''}">${dueLabel}</span>` : ''}
+        <div class="status-dot" style="background:${STATUS_COLORS[p.status] || '#807F86'};"></div>
+      </div>`;
+    });
+
+    html += `<div class="add-task-btn" onclick="addTaskToGroup('${g.key}')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Add task
+      </div>
+      </div></div>`;
   });
+
+  container.innerHTML = html;
 }
 
-function savePriorities(p) {
-  localStorage.setItem('cs-priorities-v9', JSON.stringify(p));
-}
+function renderBriefTasks() {
+  const container = document.getElementById('brief-tasks');
+  if (!container) return;
+  // Show top 5 urgent/progress tasks
+  const top5 = priorities.filter(p => p.status !== 'done').slice(0, 5);
+  const todayStr = new Date().toISOString().split('T')[0];
 
-const STATUS_MAP = {
-  urgent: { emoji: '🔴', label: 'Urgent', color: 'text-red-400', bg: 'bg-red-400/10', border: 'border-red-400/20' },
-  progress: { emoji: '🟡', label: 'In Progress', color: 'text-yellow-400', bg: 'bg-yellow-400/10', border: 'border-\[#E8E8EA\]' },
-  done: { emoji: '✅', label: 'Done', color: 'text-cs-green', bg: 'bg-cs-green/10', border: 'border-cs-green/20' },
-};
-
-let dragSrcIndex = null;
-
-let completedCollapsed = localStorage.getItem('cs-completed-collapsed') === 'true';
-
-function toggleCompletedSection() {
-  completedCollapsed = !completedCollapsed;
-  localStorage.setItem('cs-completed-collapsed', completedCollapsed);
-  const list = document.getElementById('completed-list');
-  const chev = document.getElementById('completed-chevron');
-  list.style.display = completedCollapsed ? 'none' : 'block';
-  chev.style.transform = completedCollapsed ? 'rotate(-90deg)' : '';
-}
-
-function clearCompleted() {
-  const doneCount = priorities.filter(p => p.status === 'done').length;
-  if (!doneCount || !confirm(`Remove all ${doneCount} completed tasks?`)) return;
-  priorities = priorities.filter(p => p.status !== 'done');
-  savePriorities(priorities);
-  renderPriorities();
-}
-
-function renderPriorities() {
-  const activePriorities = priorities.filter(p => p.status !== 'done');
-  const completedPriorities = priorities.filter(p => p.status === 'done');
-  const list = document.getElementById('priorities-list');
-  const completedList = document.getElementById('completed-list');
-  const completedSection = document.getElementById('completed-section');
-  document.getElementById('priority-count').textContent = activePriorities.length + ' items';
-  document.getElementById('completed-count').textContent = completedPriorities.length + ' done';
-
-  // Show/hide completed section
-  completedSection.style.display = completedPriorities.length > 0 ? 'block' : 'none';
-  completedList.style.display = completedCollapsed ? 'none' : 'block';
-  const chev = document.getElementById('completed-chevron');
-  if (chev) chev.style.transform = completedCollapsed ? 'rotate(-90deg)' : '';
-
-  // Render completed items
-  completedList.innerHTML = completedPriorities.map((p) => {
-    const i = priorities.indexOf(p);
-    return `
-      <div class="bg-[#FFFFFF] border border-cs-green/20 rounded-lg overflow-hidden opacity-70">
-        <div class="flex items-center gap-2 px-3 py-2.5">
-          <span class="text-sm flex-shrink-0">✅</span>
-          <div class="min-w-0 flex-1">
-            <span class="font-semibold text-sm text-[#1B1925] line-through opacity-60">${escHtml(p.name)}</span>
-          </div>
-          <select class="text-cs-green bg-cs-green/10 text-[10px] font-semibold px-2 py-0.5 rounded-full border-0 bg-transparent focus:outline-none"
-                  onchange="changeStatus(${i}, this.value)">
-            <option value="urgent">🔴 Urgent</option>
-            <option value="progress">🟡 In Progress</option>
-            <option value="done" selected>✅ Done</option>
-          </select>
-          <button onclick="deletePriority(${i})" class="flex-shrink-0 p-1 text-red-400/40 hover:text-red-400 transition-colors">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-          </button>
-        </div>
-      </div>`;
-  }).join('');
-
-  list.innerHTML = activePriorities.map((p) => {
-    const i = priorities.indexOf(p);
-    const s = STATUS_MAP[p.status] || STATUS_MAP.progress;
-    const todayStr = new Date().toISOString().split('T')[0];
-    const isOverdue = p.due && p.due < todayStr && p.status !== 'done';
-    const dueDisplay = p.due ? (p.due === todayStr ? 'Today' : new Date(p.due + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })) : '';
-
-    return `
-      <div class="priority-card bg-[#FFFFFF] border ${s.border} rounded-lg overflow-hidden"
-           data-status="${p.status}"
-           draggable="true"
-           data-index="${i}"
-           ondragstart="onDragStart(event, ${i})"
-           ondragover="onDragOver(event, ${i})"
-           ondragleave="onDragLeave(event)"
-           ondrop="onDrop(event, ${i})"
-           ondragend="onDragEnd(event)">
-        <div class="flex items-center gap-2 px-3 py-3">
-          <!-- Drag handle -->
-          <div class="drag-handle flex-shrink-0 text-\[#807F86\]" title="Drag to reorder">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
-          </div>
-          <!-- Status emoji -->
-          <span class="text-sm flex-shrink-0">${s.emoji}</span>
-          <!-- Name -->
-          <div class="min-w-0 flex-1 cursor-pointer" onclick="togglePriority(${i})">
-            <span class="font-semibold text-sm text-\[#1B1925\] ${p.status === 'done' ? 'line-through opacity-60' : ''}">${escHtml(p.name)}</span>
-            ${dueDisplay ? `<span class="ml-2 text-[10px] font-mono ${isOverdue ? 'text-red-400' : 'text-\[#807F86\]'}">${dueDisplay}</span>` : ''}
-          </div>
-          <!-- Status badge -->
-          <select class="status-select ${s.color} ${s.bg} text-[10px] font-semibold px-2 py-0.5 rounded-full border-0 bg-transparent focus:outline-none"
-                  onchange="changeStatus(${i}, this.value)"
-                  title="Change status">
-            <option value="urgent" ${p.status === 'urgent' ? 'selected' : ''}>🔴 Urgent</option>
-            <option value="progress" ${p.status === 'progress' ? 'selected' : ''}>🟡 In Progress</option>
-            <option value="done" ${p.status === 'done' ? 'selected' : ''}>✅ Done</option>
-          </select>
-          <!-- Expand/Delete -->
-          <button onclick="togglePriority(${i})" class="flex-shrink-0 p-1">
-            <svg class="chevron w-4 h-4 text-\[#807F86\]" id="chev-${i}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </button>
-        </div>
-        <div class="priority-detail px-4 pb-1" id="detail-${i}">
-          <div class="space-y-3 pb-3">
-            <div class="flex flex-wrap items-start gap-4">
-              <div>
-                <label class="text-[10px] font-semibold text-\[#807F86\] uppercase tracking-wide block mb-1">Due Date</label>
-                <input type="date" value="${p.due || ''}" onchange="changeDue(${i}, this.value)"
-                  class="bg-white border border-\[#E8E8EA\] rounded px-2 py-1 text-xs text-\[#1B1925\] focus:outline-none focus:border-cs-orange/50">
-              </div>
-              <div class="flex-1 min-w-[200px]">
-                <label class="text-[10px] font-semibold text-\[#807F86\] uppercase tracking-wide block mb-1">Notes</label>
-                <textarea rows="2" placeholder="Add notes..."
-                  onchange="changeNotes(${i}, this.value)"
-                  class="notes-field w-full bg-white border border-\[#E8E8EA\] rounded px-2 py-1 text-xs text-\[#1B1925\] placeholder:text-\[#4D4C55\] focus:outline-none focus:border-cs-orange/50 resize-none">${escHtml(p.notes)}</textarea>
-              </div>
-            </div>
-            <div class="flex items-center gap-2">
-              <button onclick="deletePriority(${i})" class="text-[11px] text-red-400/60 hover:text-red-400 transition-colors flex items-center gap-1">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>`;
+  container.innerHTML = top5.map(p => {
+    const isOverdue = p.due && p.due < todayStr;
+    const dueLabel = p.due ? (p.due === todayStr ? 'Today' : new Date(p.due + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })) : '';
+    return `<div style="display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid #F0F0F2;">
+      <div style="width:8px; height:8px; border-radius:50%; background:${STATUS_COLORS[p.status] || '#807F86'}; flex-shrink:0;"></div>
+      <span style="font-size:13px; font-weight:500; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escHtml(p.name)}</span>
+      ${dueLabel ? `<span style="font-size:10px; font-family:'Source Code Pro',monospace; color:${isOverdue ? '#EF4444' : '#807F86'}; white-space:nowrap;">${dueLabel}</span>` : ''}
+    </div>`;
   }).join('');
 }
 
-function escHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
-
-function togglePriority(i) {
-  const detail = document.getElementById(`detail-${i}`);
-  const chev = document.getElementById(`chev-${i}`);
-  if (detail && chev) {
-    detail.classList.toggle('open');
-    chev.classList.toggle('rotated');
+function toggleTaskDone(idx) {
+  if (priorities[idx].status === 'done') {
+    priorities[idx].status = 'progress';
+  } else {
+    priorities[idx].status = 'done';
   }
-}
-
-function changeStatus(i, val) {
-  priorities[i].status = val;
   savePriorities(priorities);
-  renderPriorities();
-}
-
-function changeDue(i, val) {
-  priorities[i].due = val;
-  savePriorities(priorities);
-}
-
-function changeNotes(i, val) {
-  priorities[i].notes = val;
-  savePriorities(priorities);
+  renderTasks();
+  renderBriefTasks();
 }
 
 function addPriority() {
-  const name = prompt('New priority name:');
+  const name = prompt('New task name:');
   if (!name || !name.trim()) return;
-  priorities.push({
-    id: 'p' + Date.now(),
-    name: name.trim(),
-    status: 'progress',
-    due: '',
-    notes: '',
+  priorities.unshift({ id: 'p' + Date.now(), name: name.trim(), status: 'progress', due: '', notes: '', category: 'operations' });
+  savePriorities(priorities);
+  renderTasks();
+  renderBriefTasks();
+}
+
+function addTaskToGroup(status) {
+  const name = prompt('New task:');
+  if (!name || !name.trim()) return;
+  priorities.push({ id: 'p' + Date.now(), name: name.trim(), status: status, due: '', notes: '', category: 'operations' });
+  savePriorities(priorities);
+  renderTasks();
+  renderBriefTasks();
+}
+
+function filterTasks(filter, btn) {
+  // Update tab active state
+  document.querySelectorAll('#view-tasks .view-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  document.querySelectorAll('.task-group').forEach(g => {
+    if (filter === 'all') { g.style.display = ''; return; }
+    g.style.display = g.dataset.group === filter ? '' : 'none';
   });
-  savePriorities(priorities);
-  renderPriorities();
 }
 
-function deletePriority(i) {
-  if (!confirm(`Delete "${priorities[i].name}"?`)) return;
-  priorities.splice(i, 1);
-  savePriorities(priorities);
-  renderPriorities();
-}
-
-// Drag and Drop
-function onDragStart(e, i) {
-  dragSrcIndex = i;
-  e.currentTarget.classList.add('dragging');
-  e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/plain', i);
-}
-
-function onDragOver(e, i) {
-  e.preventDefault();
-  e.dataTransfer.dropEffect = 'move';
-  if (i !== dragSrcIndex) {
-    e.currentTarget.classList.add('drag-over');
-  }
-}
-
-function onDragLeave(e) {
-  e.currentTarget.classList.remove('drag-over');
-}
-
-function onDrop(e, i) {
-  e.preventDefault();
-  e.currentTarget.classList.remove('drag-over');
-  if (dragSrcIndex === null || dragSrcIndex === i) return;
-  const moved = priorities.splice(dragSrcIndex, 1)[0];
-  priorities.splice(i, 0, moved);
-  savePriorities(priorities);
-  renderPriorities();
-  dragSrcIndex = null;
-}
-
-function onDragEnd(e) {
-  e.currentTarget.classList.remove('dragging');
-  document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
-  dragSrcIndex = null;
-}
-
-// ===== PROJECTS =====
+// ═══════════════════════════════════════════
+// PROJECTS
+// ═══════════════════════════════════════════
 const DEFAULT_PROJECTS = [
-  { id: 'pj1', name: 'Pre-Series A Raise (A$3M)', status: 'progress', progress: 70, notes: 'Closing this month. Steve meetings being booked for US trip.' },
-  { id: 'pj2', name: 'Alchemy Fee Renegotiation', status: 'progress', progress: 50, notes: 'Analysis doc complete. Meeting with Sanjay/Kishan pending.' },
-  { id: 'pj3', name: 'AI Agent Team (11 bots)', status: 'progress', progress: 40, notes: 'Core bots active. EA, Marketing, Social, Video still need full setup.' },
-  { id: 'pj4', name: 'US Expansion & Sales Team', status: 'progress', progress: 30, notes: 'US sales team training & onboarding. Kishan managing.' },
-  { id: 'pj5', name: 'YouTube Content Engine', status: 'progress', progress: 25, notes: 'Jeremy Haynes framework adopted. Need content pipeline board.' },
-  { id: 'pj6', name: 'Platinum Onboarding Revamp', status: 'progress', progress: 20, notes: 'New onboarding strategy in design phase.' },
-  { id: 'pj7', name: 'Cayman Islands Restructure', status: 'progress', progress: 10, notes: 'Legal audit ongoing. Offshore entity structure.' },
-  { id: 'pj8', name: 'Black Tier Launch', status: 'progress', progress: 35, notes: 'Bec + Ben outreach. ~$33K per upsell.' },
+  { id:'pj1', name:'Pre-Series A Raise (A$3M)', status:'progress', progress:70, notes:'Closing this month. Steve meetings being booked for US trip.' },
+  { id:'pj2', name:'Alchemy Fee Renegotiation', status:'progress', progress:50, notes:'Analysis doc complete. Meeting pending.' },
+  { id:'pj3', name:'AI Agent Team (11 bots)', status:'progress', progress:40, notes:'Core bots active. 5 still need setup.' },
+  { id:'pj4', name:'US Expansion & Sales Team', status:'progress', progress:30, notes:'US sales team training. Kishan managing.' },
+  { id:'pj5', name:'YouTube Content Engine', status:'progress', progress:25, notes:'Jeremy Haynes framework adopted.' },
+  { id:'pj6', name:'Platinum Onboarding Revamp', status:'progress', progress:20, notes:'New onboarding in design.' },
+  { id:'pj7', name:'Cayman Islands Restructure', status:'progress', progress:10, notes:'Legal audit ongoing.' },
+  { id:'pj8', name:'Black Tier Launch', status:'progress', progress:35, notes:'Bec + Ben outreach. ~$33K per upsell.' },
 ];
 
 function loadProjects() {
   const saved = localStorage.getItem('cs-projects-v1');
-  if (saved) { try { return JSON.parse(saved); } catch(e) {} }
+  if (saved) try { return JSON.parse(saved); } catch(e) {}
   return JSON.parse(JSON.stringify(DEFAULT_PROJECTS));
 }
 function saveProjects(p) { localStorage.setItem('cs-projects-v1', JSON.stringify(p)); }
 let projects = loadProjects();
 
-const PROJ_STATUS = {
-  progress: { label: 'In Progress', color: 'text-cs-purple', bg: 'bg-cs-purple/10', barColor: 'bg-cs-purple' },
-  done: { label: 'Complete', color: 'text-cs-green', bg: 'bg-cs-green/10', barColor: 'bg-cs-green' },
-  blocked: { label: 'Blocked', color: 'text-red-400', bg: 'bg-red-400/10', barColor: 'bg-red-400' },
-};
-
 function renderProjects() {
   const list = document.getElementById('projects-list');
-  const activeProjects = projects.filter(p => p.status !== 'done');
-  const doneProjects = projects.filter(p => p.status === 'done');
-  document.getElementById('project-count').textContent = activeProjects.length + ' active';
+  const PROJ_COLORS = { progress: '#654FFC', done: '#08C394', blocked: '#EF4444' };
 
-  const renderCard = (p, i) => {
-    const s = PROJ_STATUS[p.status] || PROJ_STATUS.progress;
-    return `
-      <div class="bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg overflow-hidden">
-        <div class="px-3 py-2.5 cursor-pointer" onclick="toggleProject(${i})">
-          <div class="flex items-center justify-between mb-1.5">
-            <span class="font-semibold text-sm text-[#1B1925] ${p.status === 'done' ? 'line-through opacity-60' : ''}">${escHtml(p.name)}</span>
-            <span class="${s.color} ${s.bg} text-[10px] font-semibold px-2 py-0.5 rounded-full">${s.label}</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <div class="flex-1 bg-[#E8E8EA] rounded-full h-1.5">
-              <div class="${s.barColor} rounded-full h-1.5 transition-all" style="width:${p.progress}%"></div>
-            </div>
-            <span class="text-[10px] font-mono text-[#807F86]">${p.progress}%</span>
-          </div>
+  list.innerHTML = projects.filter(p => p.status !== 'done').map((p, i) => {
+    const color = PROJ_COLORS[p.status] || '#654FFC';
+    const idx = projects.indexOf(p);
+    return `<div class="card" style="padding:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+        <span style="font-size:14px; font-weight:600; color:#1B1925;">${escHtml(p.name)}</span>
+        <span style="font-size:10px; font-weight:600; color:${color}; background:${color}15; padding:2px 8px; border-radius:100px; white-space:nowrap;">${p.status === 'blocked' ? 'Blocked' : 'In Progress'}</span>
+      </div>
+      <div style="font-size:12px; color:#807F86; margin-bottom:8px;">${escHtml(p.notes)}</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div style="flex:1; background:#F0F0F2; border-radius:999px; height:6px; overflow:hidden;">
+          <div style="background:${color}; height:100%; border-radius:999px; width:${p.progress}%; transition:width 0.3s;"></div>
         </div>
-        <div class="project-detail px-3 pb-1" id="proj-detail-${i}" style="display:none">
-          <div class="space-y-2 pb-2">
-            <div class="text-xs text-[#4D4C55]">${escHtml(p.notes)}</div>
-            <div class="flex flex-wrap items-center gap-2">
-              <label class="text-[10px] font-semibold text-[#807F86] uppercase">Progress:</label>
-              <input type="range" min="0" max="100" step="5" value="${p.progress}" onchange="changeProjectProgress(${i}, this.value)"
-                class="flex-1 h-1 accent-[#654FFC]" style="max-width:120px">
-              <select class="text-[10px] px-2 py-0.5 rounded border border-[#E8E8EA] bg-white focus:outline-none" onchange="changeProjectStatus(${i}, this.value)">
-                <option value="progress" ${p.status==='progress'?'selected':''}>In Progress</option>
-                <option value="blocked" ${p.status==='blocked'?'selected':''}>Blocked</option>
-                <option value="done" ${p.status==='done'?'selected':''}>Complete</option>
-              </select>
-              <button onclick="deleteProject(${i})" class="text-[10px] text-red-400/50 hover:text-red-400 ml-auto">Delete</button>
-            </div>
-          </div>
-        </div>
-      </div>`;
-  };
-
-  list.innerHTML = activeProjects.map(p => renderCard(p, projects.indexOf(p))).join('') +
-    (doneProjects.length > 0 ? `
-      <div class="mt-3 pt-3 border-t border-[#E8E8EA]">
-        <div class="text-[10px] font-mono text-[#807F86] uppercase tracking-wider mb-2 cursor-pointer flex items-center gap-1" onclick="document.getElementById('done-projects').style.display = document.getElementById('done-projects').style.display === 'none' ? 'block' : 'none'">
-          ✅ ${doneProjects.length} Completed <svg class="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </div>
-        <div id="done-projects" style="display:none" class="space-y-2">
-          ${doneProjects.map(p => renderCard(p, projects.indexOf(p))).join('')}
-        </div>
-      </div>` : '');
-}
-
-function toggleProject(i) {
-  const d = document.getElementById('proj-detail-' + i);
-  if (d) d.style.display = d.style.display === 'none' ? 'block' : 'none';
-}
-function changeProjectProgress(i, val) { projects[i].progress = parseInt(val); saveProjects(projects); renderProjects(); }
-function changeProjectStatus(i, val) { projects[i].status = val; if (val === 'done') projects[i].progress = 100; saveProjects(projects); renderProjects(); }
-function deleteProject(i) { if (!confirm(`Delete "${projects[i].name}"?`)) return; projects.splice(i, 1); saveProjects(projects); renderProjects(); }
-function addProject() {
-  const name = prompt('New project name:');
-  if (!name || !name.trim()) return;
-  projects.push({ id: 'pj' + Date.now(), name: name.trim(), status: 'progress', progress: 0, notes: '' });
-  saveProjects(projects);
-  renderProjects();
-}
-
-// ===== BOT TEAM STATUS =====
-const botTeam = [
-  { name: 'Finance Bot', channel: '#finance-bot', status: 'green', activity: 'Today' },
-  { name: 'EA Bot', channel: '#executive-assistant', status: 'green', activity: 'Today' },
-  { name: 'Marketing Bot', channel: '#marketing-bot', status: 'amber', activity: 'Briefing sent' },
-  { name: 'Social Media Bot', channel: '#social-media-bot', status: 'amber', activity: 'Awaiting brief' },
-  { name: 'Email Bot', channel: '#email-marketing-bot', status: 'amber', activity: 'Awaiting brief' },
-  { name: 'SEO Bot', channel: '#seo-bot', status: 'amber', activity: 'Awaiting brief' },
-  { name: 'Sales Bot', channel: '#sales-bot', status: 'green', activity: 'Today' },
-  { name: 'CSM Bot', channel: '#client-success-bot', status: 'green', activity: 'Today' },
-  { name: 'Crypto Analyst Bot', channel: '#crypto-analyst-bot', status: 'green', activity: 'Today' },
-  { name: 'Ben Analyst Bot', channel: '#ben-analyst-bot', status: 'green', activity: 'Today' },
-  { name: 'Video Clipper Bot', channel: '#video-clipper-bot', status: 'amber', activity: 'Awaiting brief' },
-];
-
-function renderBotTeam() {
-  const list = document.getElementById('bot-team-list');
-  const statusColors = {
-    green: { dot: 'bg-cs-green', text: 'text-cs-green', label: 'Active' },
-    amber: { dot: 'bg-yellow-400', text: 'text-yellow-400', label: 'Pending' },
-    red: { dot: 'bg-red-400', text: 'text-red-400', label: 'Offline' },
-  };
-
-  list.innerHTML = botTeam.map(b => {
-    const s = statusColors[b.status];
-    return `
-      <div class="bot-card bg-[#FFFFFF] border border-\[#E8E8EA\] rounded-lg px-4 py-3 flex items-center justify-between">
-        <div class="flex items-center gap-3 min-w-0">
-          <span class="badge-dot ${s.dot} flex-shrink-0 ${b.status === 'green' ? 'pulse' : ''}"></span>
-          <div class="min-w-0">
-            <div class="text-sm font-medium text-\[#1B1925\]">${b.name}</div>
-            <div class="text-[10px] font-mono text-\[#4D4C55\]">${b.channel}</div>
-          </div>
-        </div>
-        <div class="text-right flex-shrink-0">
-          <div class="text-[10px] font-semibold ${s.text}">${s.label}</div>
-          <div class="text-[10px] text-\[#807F86\]">${b.activity}</div>
-        </div>
-      </div>`;
+        <span style="font-size:11px; font-family:'Source Code Pro',monospace; color:#807F86;">${p.progress}%</span>
+      </div>
+    </div>`;
   }).join('');
 }
 
-// ===== SEND TO BENBOT =====
-function sendBenBot() {
-  const ta = document.getElementById('benbot-msg');
-  const msg = ta.value.trim();
-  if (!msg) return;
-  const confirm = document.getElementById('msg-confirm');
-  confirm.innerHTML = '<p class="fade-in text-xs text-cs-green">Message sent to #ceo-benbot ✅</p>';
-  confirm.classList.remove('hidden');
-  window.open('https://discord.com/channels/1482990760692420690/1482993283838771322', '_blank');
-  setTimeout(() => { confirm.classList.add('hidden'); ta.value = ''; }, 3000);
+function addProject() {
+  const name = prompt('New project name:');
+  if (!name || !name.trim()) return;
+  projects.push({ id:'pj'+Date.now(), name:name.trim(), status:'progress', progress:0, notes:'' });
+  saveProjects(projects); renderProjects();
 }
 
-// ===== VIEW TABS =====
-function switchView(view) {
-  const views = ['metrics', 'tasks', 'actions'];
-  views.forEach(v => {
-    const el = document.getElementById('view-' + v);
-    if (el) el.style.display = v === view ? 'block' : 'none';
-  });
-  document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-' + view).classList.add('active');
-  localStorage.setItem('cs-active-view', view);
+// ═══════════════════════════════════════════
+// BOT FLEET
+// ═══════════════════════════════════════════
+const botTeam = [
+  { name:'Finance Bot', channel:'#finance-bot', status:'green', activity:'Active today' },
+  { name:'EA Bot', channel:'#executive-assistant', status:'green', activity:'Active today' },
+  { name:'Sales Bot', channel:'#sales-bot', status:'green', activity:'Active today' },
+  { name:'CSM Bot', channel:'#client-success-bot', status:'green', activity:'Active today' },
+  { name:'Crypto Analyst', channel:'#crypto-analyst-bot', status:'green', activity:'Active today' },
+  { name:'Ben Analyst', channel:'#ben-analyst-bot', status:'green', activity:'Active today' },
+  { name:'Marketing Bot', channel:'#marketing-bot', status:'amber', activity:'Briefing sent' },
+  { name:'Social Media Bot', channel:'#social-media-bot', status:'amber', activity:'Awaiting brief' },
+  { name:'Email Bot', channel:'#email-marketing-bot', status:'amber', activity:'Awaiting brief' },
+  { name:'SEO Bot', channel:'#seo-bot', status:'amber', activity:'Awaiting brief' },
+  { name:'Video Clipper', channel:'#video-clipper-bot', status:'amber', activity:'Awaiting brief' },
+];
 
-  // Lazy-load actions iframe on first switch
-  if (view === 'actions') {
-    const frame = document.getElementById('actions-frame');
-    if (frame && !frame.src.includes('actions.html')) {
-      frame.src = 'actions.html';
-    }
-  }
+function renderBotFleet() {
+  const grid = document.getElementById('bot-fleet-grid');
+  const colors = { green: { dot:'#08C394', label:'Active' }, amber: { dot:'#F59E0B', label:'Pending' }, red: { dot:'#EF4444', label:'Offline' } };
+
+  grid.innerHTML = botTeam.map(b => {
+    const c = colors[b.status];
+    return `<div class="card" style="padding:14px; display:flex; align-items:center; gap:12px;">
+      <div style="width:10px; height:10px; border-radius:50%; background:${c.dot}; flex-shrink:0; ${b.status === 'green' ? 'animation:pulse-glow 2s ease-in-out infinite;' : ''}"></div>
+      <div style="flex:1; min-width:0;">
+        <div style="font-size:14px; font-weight:600; color:#1B1925;">${b.name}</div>
+        <div style="font-size:11px; color:#807F86; font-family:'Source Code Pro',monospace;">${b.channel}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:11px; font-weight:600; color:${c.dot};">${c.label}</div>
+        <div style="font-size:10px; color:#807F86;">${b.activity}</div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-// Force reset on this deploy - clear all stale localStorage
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+
+// Force reset stale data on new deploy
 (function() {
-  const RESET_VERSION = 'v11-completed';
+  const RESET_VERSION = 'v2-asana-redesign';
   if (localStorage.getItem('cs-reset-version') !== RESET_VERSION) {
+    localStorage.removeItem('cs-priorities-v10');
     localStorage.removeItem('cs-priorities-v9');
-    localStorage.removeItem('cs-priorities-v8');
-    localStorage.removeItem('cs-priorities-v7');
     localStorage.removeItem('cs-active-view');
-    localStorage.removeItem('ceo-action-tracker-state');
-    localStorage.removeItem('ceo-tracker-version');
     localStorage.setItem('cs-reset-version', RESET_VERSION);
   }
 })();
 
-// Restore last tab (defaults to metrics after reset)
+// Restore last view or default to brief
 const savedView = localStorage.getItem('cs-active-view');
-if (savedView) switchView(savedView);
-
-// ===== TASK FILTER =====
-let activeFilter = 'all';
-function filterTasks(filter) {
-  activeFilter = filter;
-  document.querySelectorAll('#task-filters .task-filter-tab').forEach(t => t.classList.remove('active-filter'));
-  event.currentTarget.classList.add('active-filter');
-  const cards = document.querySelectorAll('#priorities-list .priority-card');
-  cards.forEach(c => {
-    const status = c.getAttribute('data-status');
-    c.style.display = (filter === 'all' || status === filter) ? '' : 'none';
-  });
-  // Also handle completed section visibility
-  const completedSection = document.getElementById('completed-section');
-  if (filter === 'all' || filter === 'done') {
-    if (completedSection) completedSection.style.display = priorities.filter(p => p.status === 'done').length > 0 ? 'block' : 'none';
-  } else {
-    if (completedSection) completedSection.style.display = 'none';
-  }
+if (savedView && savedView !== 'metrics') { // Old 'metrics' default → brief
+  switchView(savedView);
 }
 
-// ===== RECENTLY UPDATED WIDGET =====
-function loadRecentlyUpdated() {
-  fetch('activity.json')
-    .then(r => r.json())
-    .then(data => {
-      const container = document.getElementById('recently-updated');
-      const today = new Date().toISOString().split('T')[0];
-      container.innerHTML = data.files.map(f => {
-        const diff = Math.floor((new Date(today) - new Date(f.updated)) / 86400000);
-        const dateLabel = diff === 0 ? 'Today' : diff === 1 ? 'Yesterday' : diff + ' days ago';
-        return `<a href="${f.path}" class="recent-file-row">
-          <div class="min-w-0">
-            <div class="text-sm font-medium text-[#1B1925]">${f.name}</div>
-            <div class="text-[10px] text-[#807F86] font-mono">${dateLabel}</div>
-          </div>
-          <span class="recent-label">${f.label}</span>
-        </a>`;
-      }).join('');
-    })
-    .catch(() => {
-      document.getElementById('recently-updated').innerHTML = '<div class="px-4 py-3 text-xs text-[#807F86]">Could not load activity data.</div>';
-    });
-}
-
-// ===== INIT =====
 fetchTasks();
 renderProjects();
-renderBotTeam();
-loadRecentlyUpdated();
+renderBotFleet();
 </script>
 </body>
 </html>
