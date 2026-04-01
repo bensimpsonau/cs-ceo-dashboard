@@ -1119,7 +1119,7 @@ function addTaskToGroup(status) {
 function clearTaskCache() {
   // Clear all cs-task-* localStorage entries
   Object.keys(localStorage).filter(k => k.startsWith('cs-task-') || k === 'cs-priorities-v10').forEach(k => localStorage.removeItem(k));
-  loadData();
+  fetchTasks();
 }
 
 function filterTasks(filter, btn) {
@@ -1253,9 +1253,8 @@ renderBotFleet();
 let _allTasks = [];
 let _currentTaskIdx = null;
 
-const STATUS_COLORS = { todo:'#9CA3AF', urgent:'#EF4444', progress:'#3B82F6', done:'#22C55E', 'on-hold':'#F59E0B', blocked:'#EF4444' };
-const STATUS_LABELS = { todo:'To Do', urgent:'Urgent', progress:'In Progress', done:'Done', 'on-hold':'On Hold', blocked:'Blocked' };
-const STATUS_CYCLE = ['todo','progress','done','on-hold'];
+// TP_STATUS_LABELS: human-readable labels for activity log (avoids duplicate const with STATUS_LABELS above)
+const TP_STATUS_LABELS = { todo:'To Do', urgent:'Urgent', progress:'In Progress', done:'Done', 'on-hold':'On Hold', blocked:'Blocked' };
 
 function openTaskPanel(idx) {
   _currentTaskIdx = idx;
@@ -1273,8 +1272,10 @@ function openTaskPanel(idx) {
   const cat = task.category || '';
   const catEl = document.getElementById('tpCategory');
   catEl.textContent = cat;
-  const catColor = (window.CATEGORY_COLORS||{})[cat] || '#807F86';
-  catEl.style.background = catColor + '22';
+  const _catObj = CATEGORY_COLORS[cat];
+  const catColor = _catObj ? _catObj.text : '#807F86';
+  const catBg = _catObj ? _catObj.bg : '#F0F0F2';
+  catEl.style.background = catBg;
   catEl.style.color = catColor;
   catEl.style.padding = '2px 8px';
   catEl.style.borderRadius = '100px';
@@ -1378,7 +1379,7 @@ function saveAndClose() {
   const prevStatus = prev.status || t.status;
   if (prevStatus && prevStatus !== status) {
     const log = JSON.parse(localStorage.getItem('cs-task-log-' + t.id) || '[]');
-    log.push({ time: new Date().toLocaleString('en-AU', {hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'}), msg: `Status: ${STATUS_LABELS[prevStatus]||prevStatus} → ${STATUS_LABELS[status]||status}` });
+    log.push({ time: new Date().toLocaleString('en-AU', {hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'}), msg: `Status: ${TP_STATUS_LABELS[prevStatus]||prevStatus} → ${TP_STATUS_LABELS[status]||status}` });
     localStorage.setItem('cs-task-log-' + t.id, JSON.stringify(log));
   }
 
@@ -1406,7 +1407,7 @@ function cycleStatus(idx) {
   const current = stored.status || t.status || 'todo';
   const next = STATUS_CYCLE[(STATUS_CYCLE.indexOf(current) + 1) % STATUS_CYCLE.length];
   const log = JSON.parse(localStorage.getItem('cs-task-log-' + t.id) || '[]');
-  log.push({ time: new Date().toLocaleString('en-AU', {hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'}), msg: `Status: ${STATUS_LABELS[current]} → ${STATUS_LABELS[next]}` });
+  log.push({ time: new Date().toLocaleString('en-AU', {hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'}), msg: `Status: ${TP_STATUS_LABELS[current]||current} → ${TP_STATUS_LABELS[next]||next}` });
   localStorage.setItem('cs-task-' + t.id, JSON.stringify(Object.assign({}, stored, { status: next })));
   localStorage.setItem('cs-task-log-' + t.id, JSON.stringify(log));
   fetchTasks();
