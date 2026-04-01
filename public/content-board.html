@@ -10,11 +10,9 @@
   --orange:#FC5C03;--navy:#1A1A2E;--navy-light:#16213E;--navy-mid:#0F3460;
   --card-bg:#1e2a42;--card-hover:#253553;--col-bg:#131a2e;--text:#e8e8e8;
   --text-muted:#8892a4;--border:#2a3550;--shadow:0 2px 8px rgba(0,0,0,.35);
-  --yt-red:#FF0000;--yt-shorts:#FF4444;--tiktok:#EE1D52;--ig-purple:#C13584;
-  --li-blue:#0A66C2;--x-black:#ffffff;--news-orange:#FC5C03;--pod-green:#1DB954;
 }
-html{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--navy);color:var(--text);font-size:14px}
-body {min-height:100vh;display:flex;flex-direction:column}
+html{font-family:'Barlow',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--navy);color:var(--text);font-size:14px}
+body{min-height:100vh;display:flex;flex-direction:column}
 
 /* ── Header ── */
 .header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);border-bottom:2px solid var(--orange);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:100}
@@ -25,16 +23,21 @@ body {min-height:100vh;display:flex;flex-direction:column}
 .btn:hover{filter:brightness(1.15);transform:translateY(-1px)}
 .btn-secondary{background:var(--navy-mid);border:1px solid var(--border)}
 .btn-secondary:hover{background:var(--card-hover)}
-.btn-sm{padding:5px 10px;font-size:.75rem}
 
 /* ── Filters ── */
-.filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:10px 24px;background:var(--navy-light);border-bottom:1px solid var(--border)}
+.filter-group{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.filter-label{font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-right:4px}
+.filter-divider{width:1px;height:20px;background:var(--border);margin:0 8px}
 .filter-chip{padding:4px 10px;border-radius:12px;font-size:.72rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text-muted);transition:all .15s;user-select:none}
 .filter-chip:hover,.filter-chip.active{background:var(--orange);color:#fff;border-color:var(--orange)}
+.filter-chip.persona-chip{border-radius:6px}
+.filter-chip.persona-chip.active{background:transparent;border-color:var(--orange);color:var(--orange)}
 
-/* ── Video Info Bar ── */
+/* ── Video Selector Bar ── */
 .video-bar{background:var(--navy-light);padding:10px 24px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);font-size:.82rem;flex-wrap:wrap}
 .video-bar .label{color:var(--text-muted)}
+.video-bar select{background:var(--navy);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:6px;font-size:.82rem;max-width:400px}
 .video-bar a{color:var(--orange);text-decoration:none}
 .video-bar a:hover{text-decoration:underline}
 .progress-summary{margin-left:auto;display:flex;gap:14px;align-items:center}
@@ -43,10 +46,10 @@ body {min-height:100vh;display:flex;flex-direction:column}
 
 /* ── Board ── */
 .board-wrap{flex:1;overflow-x:auto;overflow-y:hidden;padding:16px}
-.board{display:flex;gap:14px;min-height:calc(100vh - 140px);align-items:flex-start}
-.column{background:var(--col-bg);border-radius:10px;min-width:230px;width:230px;flex-shrink:0;display:flex;flex-direction:column;max-height:calc(100vh - 150px);border:1px solid var(--border)}
+.board{display:flex;gap:14px;min-height:calc(100vh - 200px);align-items:flex-start}
+.column{background:var(--col-bg);border-radius:10px;min-width:210px;width:210px;flex-shrink:0;display:flex;flex-direction:column;max-height:calc(100vh - 210px);border:1px solid var(--border)}
 .col-header{padding:12px 14px 8px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--col-bg);border-radius:10px 10px 0 0;z-index:2}
-.col-title{font-weight:700;font-size:.85rem}
+.col-title{font-weight:700;font-size:.82rem}
 .col-count{background:var(--navy-mid);color:var(--text-muted);font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:600}
 .col-cards{padding:6px 10px 14px;flex:1;overflow-y:auto;min-height:60px}
 .col-cards::-webkit-scrollbar{width:4px}
@@ -56,10 +59,11 @@ body {min-height:100vh;display:flex;flex-direction:column}
 .card{background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px;cursor:grab;transition:all .15s;position:relative}
 .card:hover{background:var(--card-hover);border-color:var(--orange);transform:translateY(-1px);box-shadow:var(--shadow)}
 .card.dragging{opacity:.4;transform:rotate(2deg)}
-.card-number{font-size:.65rem;color:var(--text-muted);margin-bottom:4px;font-weight:600}
-.card-title{font-size:.8rem;font-weight:600;line-height:1.35;margin-bottom:8px}
-.card-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.badge{padding:2px 8px;border-radius:4px;font-size:.65rem;font-weight:700;color:#fff;white-space:nowrap}
+.card-number{font-size:.65rem;color:var(--text-muted);margin-bottom:3px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.card-persona{display:inline-flex;align-items:center;gap:3px;font-size:.63rem;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,.06)}
+.card-title{font-size:.78rem;font-weight:600;line-height:1.35;margin-bottom:6px}
+.card-meta{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.badge{padding:2px 7px;border-radius:4px;font-size:.63rem;font-weight:700;color:#fff;white-space:nowrap}
 .badge-yt{background:#FF0000}
 .badge-yts{background:#FF4444}
 .badge-tt{background:linear-gradient(135deg,#EE1D52,#000)}
@@ -68,53 +72,47 @@ body {min-height:100vh;display:flex;flex-direction:column}
 .badge-x{background:#333;border:1px solid #555}
 .badge-news{background:var(--orange)}
 .badge-pod{background:#1DB954}
-.stage-tag{font-size:.63rem;color:var(--text-muted);background:var(--navy);padding:2px 6px;border-radius:3px}
-.card-actions{display:flex;gap:4px;margin-top:8px}
+.icp-tag{font-size:.6rem;color:var(--text-muted);background:var(--navy);padding:2px 6px;border-radius:3px;white-space:nowrap}
+.pub-date{font-size:.6rem;color:var(--text-muted);margin-top:5px}
+.card-actions{display:flex;gap:4px;margin-top:6px}
 .card-btn{background:none;border:1px solid var(--border);color:var(--text-muted);padding:3px 7px;border-radius:4px;cursor:pointer;font-size:.65rem;transition:all .12s}
 .card-btn:hover{border-color:var(--orange);color:var(--orange)}
 .card-btn.done-btn:hover{border-color:#1DB954;color:#1DB954}
 
-/* drop indicator */
 .drop-indicator{height:4px;background:var(--orange);border-radius:2px;margin:4px 0;transition:all .15s}
 
 /* ── Modal ── */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;justify-content:center;align-items:center;padding:20px}
 .modal-overlay.open{display:flex}
-.modal{background:var(--navy-light);border:1px solid var(--border);border-radius:12px;width:100%;max-width:600px;max-height:85vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.modal{background:var(--navy-light);border:1px solid var(--border);border-radius:12px;width:100%;max-width:640px;max-height:85vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.5)}
 .modal-head{padding:18px 22px 12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start}
 .modal-head h2{font-size:1.05rem;font-weight:700;line-height:1.3}
 .modal-close{background:none;border:none;color:var(--text-muted);font-size:1.4rem;cursor:pointer;padding:0 4px}
 .modal-close:hover{color:var(--orange)}
-.modal-body {padding:18px 22px}
+.modal-body{padding:18px 22px}
 .modal-body .field{margin-bottom:14px}
 .modal-body .field label{display:block;font-size:.75rem;color:var(--text-muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
 .modal-body .field p,.modal-body .field div{font-size:.88rem;line-height:1.5}
-.modal-body .brief-section{background:var(--navy);padding:12px 14px;border-radius:8px;border:1px solid var(--border);margin-top:8px}
-.modal-body .brief-section h4{color:var(--orange);font-size:.78rem;margin-bottom:6px}
-.modal-body .brief-section p{font-size:.82rem;color:var(--text-muted);line-height:1.55}
+.brief-section{background:var(--navy);padding:12px 14px;border-radius:8px;border:1px solid var(--border);margin-top:8px}
+.brief-section h4{color:var(--orange);font-size:.78rem;margin-bottom:6px}
+.brief-section p{font-size:.82rem;color:var(--text-muted);line-height:1.55}
 .modal-body input,.modal-body textarea,.modal-body select{width:100%;background:var(--navy);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:6px;font-size:.85rem}
 .modal-body textarea{min-height:80px;resize:vertical}
 .modal-foot{padding:12px 22px 18px;display:flex;gap:8px;justify-content:flex-end}
-.move-select{display:flex;gap:6px;align-items:center;margin-top:10px}
-.move-select label{font-size:.75rem;color:var(--text-muted);font-weight:600}
-.move-select select{width:auto;padding:5px 8px}
+.persona-badge-lg{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:6px;font-size:.78rem;font-weight:700;border:1px solid var(--border)}
+.icp-explainer{font-size:.75rem;color:var(--text-muted);background:rgba(252,92,3,.08);padding:8px 12px;border-radius:6px;border-left:3px solid var(--orange);margin-top:4px}
 
-/* ── Responsive ── */
 @media(max-width:768px){
-  .header{padding:10px 14px}
-  .header h1{font-size:1.1rem}
+  .filters{padding:8px 14px}
   .board-wrap{padding:10px}
   .column{min-width:200px;width:200px}
   .video-bar{padding:8px 14px;font-size:.78rem}
-  .progress-summary{margin-left:0;width:100%}
 }
 @media(max-width:480px){
   .column{min-width:85vw;width:85vw}
-  .filters{gap:4px}
 }
 </style>
-
-  <link rel="stylesheet" href="/shell.css">
+<link rel="stylesheet" href="/shell.css">
 </head>
 <body>
 
@@ -136,56 +134,27 @@ body {min-height:100vh;display:flex;flex-direction:column}
   </div>
   <nav style="flex:1; padding: 8px 0;">
     <div class="ds-sidebar-section">Home</div>
-    <a class="ds-sidebar-link" id="nav-brief" href="index.html">
-      <span class="ds-icon">⭐</span> Morning Brief
-    </a>
-    <a class="ds-sidebar-link" id="nav-tasks" href="index.html#tasks">
-      <span class="ds-icon">✓</span> Tasks
-    </a>
-    <a class="ds-sidebar-link" id="nav-actions" href="actions.html">
-      <span class="ds-icon">⚡</span> Actions
-    </a>
-
+    <a class="ds-sidebar-link" href="index.html"><span class="ds-icon">⭐</span> Morning Brief</a>
+    <a class="ds-sidebar-link" href="index.html#tasks"><span class="ds-icon">✓</span> Tasks</a>
+    <a class="ds-sidebar-link" href="actions.html"><span class="ds-icon">⚡</span> Actions</a>
     <div class="ds-sidebar-section">Metrics</div>
-    <a class="ds-sidebar-link" id="nav-kpis" href="index.html#metrics">
-      <span class="ds-icon">📊</span> KPIs
-    </a>
-    <a class="ds-sidebar-link" id="nav-cash" href="team-cost.html">
-      <span class="ds-icon">💰</span> Cash &amp; Costs
-    </a>
-    <a class="ds-sidebar-link" id="nav-members" href="hub/products.html">
-      <span class="ds-icon">👥</span> Members
-    </a>
-
+    <a class="ds-sidebar-link" href="index.html#metrics"><span class="ds-icon">📊</span> KPIs</a>
+    <a class="ds-sidebar-link" href="team-cost.html"><span class="ds-icon">💰</span> Cash &amp; Costs</a>
+    <a class="ds-sidebar-link" href="hub/products.html"><span class="ds-icon">👥</span> Members</a>
     <div class="ds-sidebar-section">Content</div>
-    <a class="ds-sidebar-link active" id="nav-content-board" href="content-board.html">
-      <span class="ds-icon">🎬</span> Content Board
-    </a>
-    <a class="ds-sidebar-link" id="nav-calendar" href="asana-board-mockup.html">
-      <span class="ds-icon">📅</span> Calendar
-    </a>
-    <a class="ds-sidebar-link" id="nav-youtube" href="hub/youtube-strategy.html">
-      <span class="ds-icon">▶</span> YouTube
-    </a>
-
+    <a class="ds-sidebar-link active" href="content-board.html"><span class="ds-icon">🎬</span> Content Board</a>
+    <a class="ds-sidebar-link" href="instagram-qa.html"><span class="ds-icon">📸</span> IG Q&amp;A</a>
+    <a class="ds-sidebar-link" href="asana-board-mockup.html"><span class="ds-icon">📅</span> Calendar</a>
+    <a class="ds-sidebar-link" href="hub/youtube-strategy.html"><span class="ds-icon">▶</span> YouTube</a>
     <div class="ds-sidebar-section">Strategy</div>
-    <a class="ds-sidebar-link" id="nav-strategy" href="hub/operating-system.html">
-      <span class="ds-icon">🧭</span> Strategy Hub
-    </a>
-    <a class="ds-sidebar-link" id="nav-docs" href="hub/brand.html">
-      <span class="ds-icon">📄</span> Docs
-    </a>
-
+    <a class="ds-sidebar-link" href="hub/operating-system.html"><span class="ds-icon">🧭</span> Strategy Hub</a>
+    <a class="ds-sidebar-link" href="hub/brand.html"><span class="ds-icon">📄</span> Docs</a>
     <div class="ds-sidebar-section">Team</div>
-    <a class="ds-sidebar-link" id="nav-team" href="team-cost.html">
-      <span class="ds-icon">👤</span> Team
-    </a>
-    <a class="ds-sidebar-link" id="nav-bots" href="index.html#bots">
-      <span class="ds-icon">🤖</span> Bot Fleet
-    </a>
+    <a class="ds-sidebar-link" href="team-cost.html"><span class="ds-icon">👤</span> Team</a>
+    <a class="ds-sidebar-link" href="index.html#bots"><span class="ds-icon">🤖</span> Bot Fleet</a>
   </nav>
   <div style="padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 10px; color: rgba(255,255,255,0.25); font-family: 'Source Code Pro', monospace;">
-    v2.0 · April 2026
+    v2.1 · April 2026
   </div>
 </aside>
 
@@ -197,14 +166,11 @@ body {min-height:100vh;display:flex;flex-direction:column}
     </button>
     <div style="position:relative;">
       <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:#807F86;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input type="text" class="ds-topbar-search" placeholder="Search dashboard...">
+      <input type="text" class="ds-topbar-search" placeholder="Search content...">
     </div>
   </div>
   <div style="display:flex; align-items:center; gap:16px;">
-    <button style="background:none; border:none; cursor:pointer; color:#807F86; position:relative;">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      <span style="position:absolute; top:-2px; right:-2px; width:8px; height:8px; background:#FC5C03; border-radius:50%; border:2px solid #fff;"></span>
-    </button>
+    <button class="btn" id="addVideoBtn">+ New Video</button>
     <div style="display:flex; align-items:center; gap:8px; cursor:pointer;">
       <div style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #FC5C03, #FC8C4E); display:flex; align-items:center; justify-content:center;">
         <span style="color:#fff; font-size:11px; font-weight:700; font-family:'Plus Jakarta Sans',sans-serif;">BB</span>
@@ -216,20 +182,34 @@ body {min-height:100vh;display:flex;flex-direction:column}
 
 <!-- ═══ MAIN CONTENT ═══ -->
 <div class="ds-main-content">
-  <div class="ds-page-body">
-<button class="btn" id="addVideoBtn">+ New Video</button>
+  <div class="ds-page-body" style="padding-bottom:8px;">
+    <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:1.4rem; font-weight:700; margin-bottom:4px;">🎬 Content Distribution Board</h1>
+    <p style="font-size:.82rem; color:#807F86;">Drag cards across columns. Filter by platform, persona, or ICP stage. Data loaded from <code style="font-size:.72rem;background:#eee;padding:1px 5px;border-radius:3px;color:#333;">content-board.json</code></p>
   </div>
-</div>
 
-<div class="video-bar">
-  <span class="label">Current Video:</span>
-  <strong>Bitcoin Is Down 48%. Is Now the Time to Buy? (Data Only)</strong>
-  <a href="https://youtu.be/KZIjRzlLEvI" target="_blank">▶ Watch</a>
-  <div class="progress-summary" id="progressSummary"></div>
-</div>
+  <!-- Filters -->
+  <div class="filters" id="filterBar">
+    <span class="filter-label">Platform</span>
+    <div class="filter-group" id="platformFilters"></div>
+    <div class="filter-divider"></div>
+    <span class="filter-label">Owner</span>
+    <div class="filter-group" id="personaFilters"></div>
+    <div class="filter-divider"></div>
+    <span class="filter-label">ICP Stage</span>
+    <div class="filter-group" id="stageFilters"></div>
+  </div>
 
-<div class="board-wrap">
-  <div class="board" id="board"></div>
+  <!-- Video selector -->
+  <div class="video-bar">
+    <span class="label">Video:</span>
+    <select id="videoSelector"></select>
+    <a id="videoLink" href="#" target="_blank" style="display:none">▶ Watch</a>
+    <div class="progress-summary" id="progressSummary"></div>
+  </div>
+
+  <div class="board-wrap">
+    <div class="board" id="board"></div>
+  </div>
 </div>
 
 <!-- Card Detail Modal -->
@@ -242,7 +222,7 @@ body {min-height:100vh;display:flex;flex-direction:column}
     <div class="modal-body" id="modalBody"></div>
     <div class="modal-foot">
       <button class="btn-secondary btn" onclick="closeModal()">Close</button>
-      <button class="btn done-btn-modal btn" id="modalDoneBtn">✓ Mark Posted</button>
+      <button class="btn" id="modalDoneBtn">✓ Mark Posted</button>
     </div>
   </div>
 </div>
@@ -257,9 +237,14 @@ body {min-height:100vh;display:flex;flex-direction:column}
     <div class="modal-body">
       <div class="field"><label>Video Title</label><input type="text" id="nvTitle" placeholder="e.g. Why Bitcoin Will Hit $200K"></div>
       <div class="field"><label>YouTube URL</label><input type="text" id="nvUrl" placeholder="https://youtu.be/..."></div>
+      <div class="field"><label>Publish Date</label><input type="date" id="nvDate"></div>
+      <div class="field"><label>Primary Persona</label>
+        <select id="nvPersona"><option value="Ben">🎙️ Ben</option><option value="Matt">📊 Matt</option><option value="Travis">🎬 Travis</option><option value="Sarn">✍️ Sarn</option></select>
+      </div>
       <div class="field"><label>Starting Column</label>
         <select id="nvColumn">
-          <option value="Raw Video">Raw Video</option>
+          <option value="Idea">Idea</option>
+          <option value="Script">Script</option>
           <option value="In Edit">In Edit</option>
           <option value="Redistribution" selected>Redistribution</option>
         </select>
@@ -273,92 +258,150 @@ body {min-height:100vh;display:flex;flex-direction:column}
 </div>
 
 <script>
-// ── Data ──
-const COLUMNS = ['Raw Video','In Edit','Redistribution','Formatting','Ben Review','Ready to Post','Posted'];
-
-const PLATFORM_BADGES = {
-  'YouTube':       { cls:'badge-yt',   label:'YouTube' },
-  'YouTube Shorts':{ cls:'badge-yts',  label:'YT Shorts' },
-  'TikTok':        { cls:'badge-tt',   label:'TikTok' },
-  'TikTok/Reels':  { cls:'badge-tt',   label:'TikTok/Reels' },
-  'Instagram':     { cls:'badge-ig',   label:'Instagram' },
-  'Reels':         { cls:'badge-ig',   label:'Reels' },
-  'LinkedIn':      { cls:'badge-li',   label:'LinkedIn' },
-  'X/Twitter':     { cls:'badge-x',    label:'X/Twitter' },
-  'Newsletter':    { cls:'badge-news', label:'Newsletter' },
-  'Podcast':       { cls:'badge-pod',  label:'Podcast' },
-};
-
-const BRIEFS = {
-  1: { hook:"48% drawdown. The 200-week moving average just flashed the same signal it did before every Bitcoin recovery.", angle:"Show the historical drawdown chart. Every major dip preceded a new ATH. This is data, not speculation.", cta:"I mapped every signal in a 14-minute breakdown. Watch it on YouTube (link in description).", copy:"Script: Open on chart. 'Bitcoin just entered what I call the Value Zone. This is the price range below $70K where the 200-week moving average sits. In every previous cycle, this zone has been the accumulation window for long-term holders. Not financial advice. Just data. Full breakdown in the description.' [End card: Watch full analysis]" },
-  2: { hook:"Bitcoin is down 48% from ATH. Here is what that actually means.", angle:"Context the % drop vs previous cycles. 2018 was 84%. 2022 was 77%. 48% is mild.", cta:"Full data breakdown on YouTube. 14 minutes. No hype, just charts.", copy:"Script: On-screen stat overlay. 'Bitcoin is down 48% from ATH. Sounds catastrophic. But look at every previous cycle. 2012: down 90%. 2015: down 84%. 2019: down 82%. 2022: down 77%. 48% is the shallowest major drawdown in Bitcoin history. The pattern holds. Full data breakdown linked.' [Show drawdown comparison chart]" },
-  3: { hook:"I started buying at $63K and here is why I am not worried.", angle:"DCA strategy. Show the principle of buying through volatility vs trying to time the bottom.", cta:"I break down my full framework inside Collective Shift Platinum. Link in bio.", copy:"Script: 'I had not bought Bitcoin in months. Then I bought at $63K. Here is my reasoning. Multiple data signals aligned at once: price relative to long-term moving averages, sentiment indicators at historical extremes, and institutional flows shifting direction. When those three converge, I pay attention. This is not a recommendation. This is a framework. Full breakdown linked.'" },
-  4: { hook:"90% of investors get drawdowns wrong. The data shows why.", angle:"Risk management. Position sizing. Why a systematic approach makes sense even if you are constructive on the outlook.", cta:"I walk through the full risk framework on YouTube. 14 minutes, data only.", copy:"Script: 'The biggest mistake I see people make in a drawdown: going all in at the first sign of value. The principle that matters: systematic allocation, not emotional allocation. There is a framework for this. It is the difference between investors who survive drawdowns and investors who blow up. Not financial advice. A framework.'" },
-  5: { hook:"Bitcoin is NOT the same as altcoins. Stop treating them the same.", angle:"BTC vs ALT drawdown comparison. BTC recovers, many alts do not. Flight to quality.", cta:"The Bitcoin vs altcoin data breakdown is on YouTube. Link in description.", copy:"Script: 'Stop treating Bitcoin and altcoins as the same asset. In 2022, Bitcoin dropped 77% peak to trough. Ethereum dropped 82%. Most altcoins dropped 90-95% and never recovered. Bitcoin has a 15-year track record as a store of value. Altcoins are speculative technology bets. Different assets, different risk profiles, different frameworks. Know which one you own.'" },
-  6: { hook:"$4.2B in institutional inflows last month. BlackRock, Fidelity, sovereign funds. All buying.", angle:"Institutional accumulation data from on-chain analytics. Institutional capital is positioning.", cta:"Full on-chain data breakdown on YouTube. Link in description.", copy:"Script: 'While retail investors are selling, here is what institutions are doing. BlackRock Bitcoin ETF saw inflows reverse positive this week after months of outflows. 86% of institutional companies using stablecoins now hold USDC. Sovereign wealth funds have added Bitcoin to balance sheets. Institutional capital does not panic. It positions. Full on-chain data breakdown linked.'" },
-  7: { hook:"Fear and Greed just hit 8. Last time it was this low, Bitcoin rallied 340% within 18 months.", angle:"Quick engagement post: 'Bitcoin is down 48%. Are you: A) Buying more B) Holding C) Selling D) Waiting'. Include one compelling chart.", cta:"If you picked 'not sure', I just published the full data framework on YouTube. Link below.", copy:"Bitcoin is down 48% from ATH. Fear and Greed index: 8. Extreme fear.\n\nLong-term holders are accumulating according to on-chain data. ETF inflows just turned positive.\n\nWhat is your move right now?\n\n🟢 Accumulating (DCA)\n🟡 Waiting for confirmation above $79K\n🔴 Sitting in stablecoins\n🤔 Not sure. I need a framework.\n\nIf you picked 🤔, I just published a full data breakdown. Link below. No hype. Just data." },
-  8: { hook:"Bitcoin Is Down 48%. 15 Years of Cycle Data Says One Thing.", angle:"Visual data storytelling. Each slide one clear point with chart/graphic. Carousel format for saves.", cta:"Save this. Full 14-minute video breakdown on YouTube (link in bio). 1,100+ investors inside Platinum are building frameworks for the next cycle.", copy:"SLIDE 1: 'Bitcoin Is Down 48%. Here is What the Data Shows.' [Ben photo + BTC chart]\nSLIDE 2: 'Every major cycle has had a massive drawdown: 2012: -90% | 2015: -84% | 2019: -82% | 2022: -77% | 2025: -48% | Each one felt like the end. Each one was not.'\nSLIDE 3: 'Fear & Greed Index: 8/100. Extreme Fear. Historically, extreme fear has preceded every major Bitcoin accumulation window.'\nSLIDE 4: 'The Value Zone: Below $70K = 200-week moving average. This level has been the floor of every major cycle. We are below it now.'\nSLIDE 5: 'Institutional signal: ETF inflows turned positive. 86% of institutional companies hold USDC. BlackRock, Fidelity accumulating.'\nSLIDE 6: 'On-chain data: Long-term holders (1yr+) are accumulating. Retail is selling. The divergence is significant.'\nSLIDE 7: 'Key data points: The 200-week MA sits near $62K. This has historically acted as cycle support. $79K is the resistance level the market needs to reclaim for momentum.'\nSLIDE 8: 'The principle: staged allocation, not all at once. Systematic positioning over months, not minutes. Capital preservation is the foundation.'\nSLIDE 9: 'I started accumulating at $63K. Rest is in stablecoins. Watching $79K for the next signal.'\nSLIDE 10: 'I break this down in full in a 14-minute video. Data only. No hype. Watch it (link in bio). 1,100+ investors inside Collective Shift are building frameworks for the next cycle.'" },
-  9: { hook:"Bitcoin Is Down 48%. The Last 4 Times This Happened, Here Is What Followed.", angle:"Long-form newsletter section. Historical context, institutional signals, risk framework. This is the considered analysis for subscribers.", cta:"Watch the full chart breakdown on YouTube (14 min). Platinum members get the live portfolio framework.", copy:"HEADLINE: Bitcoin Down 48%: What the Data Says (Not the Headlines)\n\nBitcoin is down 48% from its all-time high. The Fear and Greed index hit 8, extreme fear territory. Your inbox is probably full of headlines telling you the bull market is over.\n\nHere is what the on-chain data actually shows.\n\nLong-term holders, people who have owned Bitcoin for more than a year, are accumulating at current prices. Not selling. Accumulating. ETF inflows, which had been negative for months, just turned positive. 86% of institutional companies now hold stablecoins, and institutional capital is rotating back toward Bitcoin exposure.\n\nHistorical context: every major Bitcoin cycle has had a drawdown of 65-90% before recovering to a new all-time high. The 2025 drawdown of 48% is the shallowest in Bitcoin history.\n\nThe framework I use centres on the 200-week moving average as a long-term value indicator. When price, sentiment, and institutional flows all align, I pay attention. I am not going all in. I am using a systematic, staged approach with a predetermined allocation.\n\nKey data points: $62K area is historical cycle support. $79K is the resistance level to watch.\n\n[Watch the full data breakdown]" },
-  10:{ hook:"Thread: Bitcoin is down 48% from ATH. Here is what the data says (not opinions). 🧵", angle:"8-tweet thread. Each tweet = one data point. Charts where possible. Build the case methodically.", cta:"Full chart-by-chart breakdown on YouTube. 14 minutes. Link below.", copy:"TWEET 1: Bitcoin is down 48% from ATH. Fear & Greed at 8. Everyone is asking: is it over? I looked at the data. Here is what I found 🧵\n\nTWEET 2: Every major Bitcoin cycle has had a massive drawdown:\n• 2012: -90%\n• 2015: -84%\n• 2019: -82%\n• 2022: -77%\n• Now: -48%\nEach one felt like the end. Each one was not.\n\nTWEET 3: On-chain data shows retail is panic-selling. But long-term holders (1yr+)? They are accumulating. ETF inflows just turned positive after months of outflows.\n\nTWEET 4: 86% of institutional companies now hold USDC. BlackRock and Fidelity ETFs are seeing renewed inflows. Institutional capital is not panicking. It is positioning.\n\nTWEET 5: My framework centres on when price, sentiment, and institutional flows align. The 200-week moving average and the Value Zone below $70K are the data points I watch. Context matters more than price targets.\n\nTWEET 6: Key data to watch:\n• 200-week MA near $62K (historical cycle support)\n• $79K resistance to reclaim\nI am using a staged, systematic approach. Not going all in.\n\nTWEET 7: The biggest mistake in a drawdown is not buying too early. It is going all in without a plan. Systematic positioning over months. Stay data-led.\n\nTWEET 8: I broke down all the charts, on-chain data, and key levels in a full video. Data only. No hype. No predictions. 14 minutes. 👇 [link]" },
-  11:{ hook:"Bitcoin is down 48%. Here is what I see when I look at the data.", angle:"Professional/analytical tone. Institutional framing. Connect to macro trends and portfolio theory. LinkedIn audience wants sophistication.", cta:"I recorded a 14-minute data breakdown. No hype, just charts. YouTube link in comments. Platinum members get the live allocation framework.", copy:"Bitcoin has drawn down 48% from its all-time high. The headlines are calling it a crash. The data tells a different story.\n\nHere is what I am seeing as someone who has tracked digital asset markets for 9 years:\n\n1. Historical context: Every major Bitcoin cycle has seen drawdowns of 65-90% before recovering to new highs. A 48% drawdown, while significant, is the shallowest major correction in Bitcoin history.\n\n2. Institutional positioning: ETF inflows turned positive this week after months of outflows. 86% of institutional companies are now using stablecoins. BlackRock and Fidelity are accumulating, not selling.\n\n3. On-chain data: Long-term holders, those with 1+ year holding periods, are accumulating at current prices. This divergence between retail behaviour and long-term holder behaviour has preceded every major recovery.\n\n4. Key levels: The 200-week moving average sits at approximately $62K. This level has historically been the floor of major corrections. A weekly close above $79K would signal renewed momentum.\n\nMy approach: I am dollar-cost averaging with a predetermined allocation, holding the remainder in stablecoins earning yield. Not timing the bottom. Building a position systematically.\n\nThis is not financial advice. It is a framework for thinking about a volatile asset class with a 15-year track record.\n\nI recorded a full 14-minute data breakdown. No hype, just charts and on-chain data. Link in comments for anyone doing their own research.\n\n#Bitcoin #DigitalAssets #Investing #DataAnalysis" },
-  12:{ hook:"'Bitcoin crashes to 2-year low.' I have seen this headline 3 times before. Here is what happened next.", angle:"Greenscreen over the drawdown chart. Walk through the data calmly. Educator energy, not reaction content.", cta:"Full data breakdown on YouTube. 14 minutes, every chart. Link in bio.", copy:"SETUP: Use a mainstream media headline like 'Bitcoin crashes to 2-year low' or 'Digital asset winter returns'\n\nSCRIPT: [Show headline on screen]\n'I have seen this headline before. Let me show you what they are not including.'\n[Cut to drawdown chart]\n'2018. Bitcoin dropped 84%. Same headlines. Then it recovered 2,000%.'\n'2022. Bitcoin dropped 77%. Same headlines. Then it recovered 600%.'\n'Now. Bitcoin is down 48%. Same headlines.'\n[Show on-chain data]\n'Here is what the data shows right now. Long-term holders are accumulating. Institutional ETF inflows just turned positive. Fear and Greed at extreme fear. Historically, this is when long-term positions are built.'\n'The media reports what happened. Data shows what is happening. Full breakdown linked.'\n[End card: Watch full analysis]" },
-  13:{ hook:"Fear and Greed just hit 8. Every single time this happened, Bitcoin recovered within 12 months.", angle:"Vertical story format. Bold text overlays on dark backgrounds. Swipe-up to full video. Concise data points.", cta:"Full data breakdown on YouTube. Every chart, every metric. 14 minutes. Link in bio.", copy:"STORY 1 [Question sticker]: 'Bitcoin is down 48%. Panicking or positioning? 🤔' Options: Panicking / Positioning / Both / Neither\nSTORY 2 [Data stat]: 'Fear & Greed Index: 8/100. Every time this has hit single digits, Bitcoin has recovered within 12 months. Historical fact.' [Swipe up indicator]\nSTORY 3 [Chart]: 'The Value Zone. Below $70K = 200-week moving average. Institutions are accumulating here.' [Source: On-chain data]\nSTORY 4 [Personal]: 'I started buying again at $63K after months on the sideline. Not all in. Staged approach. Rest in stablecoins.' [Poll: Are you using a systematic approach?]\nSTORY 5 [CTA]: 'Full data breakdown: every chart, every on-chain metric, and the framework I use. 14 minutes. Link in bio.' [Link sticker > YouTube video]" },
-  14:{ hook:"Bitcoin is down 48%. Everyone is panicking. Here is what I see... 👇", angle:"Instagram caption optimized. Emoji-rich, scannable. Pair with a chart or data graphic. Hashtag strategy included.", cta:"Save this post. You will want it when we hit a new ATH. Link in bio for the full analysis.", copy:"Bitcoin is down 48%. Everyone is panicking. Here is what I see when I look at the data 👇\n\n📊 Fear & Greed: 8/100 (extreme fear)\n📉 Drawdown: 48% from ATH\n🏦 ETF inflows: Turned positive this week\n🔗 Long-term holders: Accumulating, not selling\n\nEvery major Bitcoin cycle has seen deeper drawdowns than this before recovering to new highs.\n\nThe 200-week moving average sits around $62K. That has historically been the floor.\n\nI started accumulating at $63K. Not all in. Staged approach, rest in stablecoins earning yield.\n\nWatching $79K for confirmation of next leg.\n\nFull breakdown in the video (link in bio). 14 minutes. Data only. No hype.\n\n💾 Save this post. You will want it when we are at a new ATH asking 'why did I not act during the drawdown?'\n\n#Bitcoin #DigitalAssets #BitcoinAnalysis #Investing #DataDriven #Collectiveshift" },
-  15:{ hook:"Bitcoin Is Down 48%. Institutional Capital Is Doing the Opposite of Retail. Here Is Why.", angle:"Long-form LinkedIn article format. 800-1200 words. Academic/analytical tone. Reference market psychology, behavioral economics, institutional theory.", cta:"14-minute data breakdown on YouTube (link in comments). Inside Platinum, we map this framework to live portfolios.", copy:"HEADLINE: What a 48% Bitcoin Drawdown Teaches Us About Market Psychology (And Why the Data Matters More Than the Headlines)\n\nINTRO: There is a reliable pattern in every major Bitcoin market correction. First comes the price decline. Then come the headlines. Then comes the capitulation, the moment when enough retail investors sell at a loss that the market finds its floor.\n\nWe appear to be in the headline phase.\n\n[Continue with 4 sections: 1. The Historical Pattern, 2. What On-Chain Data Shows, 3. The Institutional Signal, 4. A Framework for Decision-Making Under Uncertainty]\n\nCONCLUSION: The decision of whether and how to allocate to digital assets is ultimately a personal one based on your risk tolerance, time horizon, and financial situation. What I can offer is a data-led framework for thinking about the current market conditions. Stripped of emotion, stripped of hype, grounded in on-chain metrics and historical precedent.\n\nI recorded a full 14-minute breakdown of the charts and data. Link in comments." },
-  16:{ hook:"One chart that explains everything about Bitcoin's 48% drop.", angle:"Quote card. Single powerful visual. Clean design with one stat and one insight. Made for reposting.", cta:"Full breakdown on YouTube. 14 minutes, data only. Link in bio.", copy:"VISUAL: Dark background, CS orange accent, clean typography\nMAIN STAT: '48%'\nSUBTEXT: 'Bitcoin current drawdown from ATH'\nCONTEXT LINE: '2018: -84% | 2022: -77% | 2025: -48%'\nBOTTOM LINE: 'Each cycle, the drawdown gets shallower.'\nATTRIBUTION: 'Ben Simpson | Collective Shift'\nDESIGN NOTE: White text on #1A1A2E background, #FC5C03 accent bar on left" },
-  17:{ hook:"Bitcoin is down 48% and the mainstream narrative is calling it a crash. The on-chain data tells a completely different story.", angle:"Audio/video clip optimized for podcast promo. Tease the full analysis. Works as a standalone insight.", cta:"Full 14-minute analysis on YouTube. Subscribe for weekly data-driven breakdowns. Link in description.", copy:"SCRIPT: 'On this week Wealth Shift breakdown, Bitcoin is down 48% from its all-time high and the mainstream narrative is calling it a crash. We went deep on the on-chain data, the institutional positioning signals, and the historical precedent. What we found might surprise you. Full analysis in the description. If you find this useful, subscribe. We drop one data-driven breakdown every week.' [Use most compelling 60-90 seconds from the video, ideally the institutional signal section or the historical drawdown comparison]" },
-};
-
-let cardIdCounter = 100;
-let cards = [];
-let activeFilter = 'all';
+// ── State ──
+let boardData = null;
+let COLUMNS = [];
+let activeFilters = { platform:'all', persona:'all', stage:'all' };
+let selectedVideoId = null;
 let dragCard = null;
 
-function generateId(){ return ++cardIdCounter; }
+// ── Load JSON ──
+async function loadData(){
+  try {
+    const resp = await fetch('content-board.json');
+    boardData = await resp.json();
+    COLUMNS = boardData.columns;
+    // Restore local overrides (column positions, etc.)
+    restoreLocal();
+    if(boardData.videos.length > 0){
+      selectedVideoId = boardData.videos[0].id;
+    }
+    buildFilters();
+    buildVideoSelector();
+    render();
+  } catch(e){
+    console.error('Failed to load content-board.json', e);
+    document.getElementById('board').innerHTML = '<p style="padding:20px;color:#ff6b6b;">Error loading content-board.json</p>';
+  }
+}
 
-const TEMPLATE_CARDS = [
-  { num:1,  title:'Short Clip 1 — The Value Zone',         platform:'YouTube Shorts', stage:'Stage 1' },
-  { num:2,  title:'Short Clip 2 — 48% Reality Check',      platform:'YouTube Shorts', stage:'Stage 1' },
-  { num:3,  title:'Short Clip 3 — Why I Started Buying at $63K', platform:'YouTube Shorts', stage:'Stage 1-2' },
-  { num:4,  title:'Short Clip 4 — Don\'t Go All In',       platform:'Reels',          stage:'Stage 1' },
-  { num:5,  title:'Short Clip 5 — Bitcoin ≠ Altcoins',     platform:'YouTube Shorts', stage:'Stage 1' },
-  { num:6,  title:'Short Clip 6 — The Institutional Signal',platform:'Reels',         stage:'Stage 1' },
-  { num:7,  title:'YouTube Community Post',                  platform:'YouTube',        stage:'Stage 1' },
-  { num:8,  title:'Instagram Carousel (10 slides)',          platform:'Instagram',      stage:'Stage 1-2' },
-  { num:9,  title:'Newsletter — The Weekly Shift',           platform:'Newsletter',     stage:'Stage 2' },
-  { num:10, title:'X/Twitter Thread (8 tweets)',             platform:'X/Twitter',      stage:'Stage 1' },
-  { num:11, title:'LinkedIn Post',                           platform:'LinkedIn',       stage:'Stage 1-2' },
-  { num:12, title:'Greenscreen Reaction Script',             platform:'Reels',          stage:'Stage 1' },
-  { num:13, title:'Instagram Story Sequence (5 stories)',    platform:'Instagram',      stage:'Stage 1' },
-  { num:14, title:'Platform Variant — Instagram caption',    platform:'Instagram',      stage:'Stage 1' },
-  { num:15, title:'Platform Variant — LinkedIn long-form',   platform:'LinkedIn',       stage:'Stage 2' },
-  { num:16, title:'Platform Variant — X quote card',         platform:'X/Twitter',      stage:'Stage 1' },
-  { num:17, title:'Podcast Clip/Promo',                      platform:'Podcast',        stage:'Stage 5' },
-];
+function restoreLocal(){
+  try {
+    const saved = localStorage.getItem('cs_cb_overrides');
+    if(!saved) return;
+    const overrides = JSON.parse(saved);
+    // overrides: { "vid-001": { "1": { column: "Posted", publishDate: "2025-03-26" }, ... } }
+    boardData.videos.forEach(v => {
+      if(overrides[v.id]){
+        v.cards.forEach(c => {
+          const ov = overrides[v.id][c.num];
+          if(ov){
+            if(ov.column) c.column = ov.column;
+            if(ov.publishDate) c.publishDate = ov.publishDate;
+          }
+        });
+      }
+    });
+  } catch(e){}
+}
 
-// Init pre-loaded cards
-TEMPLATE_CARDS.forEach(t => {
-  cards.push({
-    id: generateId(),
-    num: t.num,
-    title: t.title,
-    platform: t.platform,
-    stage: t.stage,
-    column: 'Redistribution',
-    video: 'Bitcoin Is Down 48%. Is Now the Time to Buy? (Data Only)',
-    url: 'https://youtu.be/KZIjRzlLEvI'
+function saveLocal(){
+  try {
+    const overrides = {};
+    boardData.videos.forEach(v => {
+      overrides[v.id] = {};
+      v.cards.forEach(c => {
+        overrides[v.id][c.num] = { column: c.column, publishDate: c.publishDate };
+      });
+    });
+    localStorage.setItem('cs_cb_overrides', JSON.stringify(overrides));
+  } catch(e){}
+}
+
+// ── Filters ──
+function buildFilters(){
+  // Platform chips
+  const platforms = ['all', ...Object.keys(boardData.platformBadges)];
+  const pf = document.getElementById('platformFilters');
+  pf.innerHTML = platforms.map(p =>
+    `<span class="filter-chip${p==='all'?' active':''}" data-type="platform" data-value="${p}">${p==='all'?'All':boardData.platformBadges[p]?.label||p}</span>`
+  ).join('');
+
+  // Persona chips
+  const personas = ['all', ...Object.keys(boardData.personas)];
+  const pe = document.getElementById('personaFilters');
+  pe.innerHTML = personas.map(p => {
+    const info = boardData.personas[p];
+    return `<span class="filter-chip persona-chip${p==='all'?' active':''}" data-type="persona" data-value="${p}">${p==='all'?'All':(info?.emoji+' '+p)}</span>`;
+  }).join('');
+
+  // Stage chips
+  const stages = ['all', ...Object.keys(boardData.icpStages)];
+  const sf = document.getElementById('stageFilters');
+  sf.innerHTML = stages.map(s => {
+    const short = s === 'all' ? 'All' : s.replace('Stage ','S').split(' –')[0];
+    return `<span class="filter-chip${s==='all'?' active':''}" data-type="stage" data-value="${s}">${short}</span>`;
+  }).join('');
+
+  // Event delegation
+  document.getElementById('filterBar').addEventListener('click', e => {
+    const chip = e.target.closest('.filter-chip');
+    if(!chip) return;
+    const type = chip.dataset.type;
+    const value = chip.dataset.value;
+    activeFilters[type] = value;
+    // Update active states within group
+    chip.parentElement.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    render();
   });
-});
+}
+
+function buildVideoSelector(){
+  const sel = document.getElementById('videoSelector');
+  sel.innerHTML = boardData.videos.map(v =>
+    `<option value="${v.id}">${v.title} (${v.publishDate || 'No date'})</option>`
+  ).join('');
+  sel.value = selectedVideoId;
+  sel.addEventListener('change', () => {
+    selectedVideoId = sel.value;
+    render();
+  });
+}
+
+function getSelectedVideo(){
+  return boardData.videos.find(v => v.id === selectedVideoId);
+}
+
+function matchesFilter(card){
+  if(activeFilters.platform !== 'all'){
+    if(card.platform !== activeFilters.platform) return false;
+  }
+  if(activeFilters.persona !== 'all'){
+    if(card.persona !== activeFilters.persona) return false;
+  }
+  if(activeFilters.stage !== 'all'){
+    if(card.icpStage !== activeFilters.stage) return false;
+  }
+  return true;
+}
 
 // ── Render ──
 function render(){
+  const video = getSelectedVideo();
+  if(!video){ document.getElementById('board').innerHTML='<p style="padding:20px">No video selected.</p>'; return; }
+
+  // Video link
+  const link = document.getElementById('videoLink');
+  if(video.url){ link.href = video.url; link.style.display = ''; }
+  else { link.style.display = 'none'; }
+
   const board = document.getElementById('board');
   board.innerHTML = '';
-  const summary = document.getElementById('progressSummary');
 
   COLUMNS.forEach(col => {
-    const colCards = cards.filter(c => c.column === col && matchesFilter(c));
-    const allColCards = cards.filter(c => c.column === col);
+    const allColCards = video.cards.filter(c => c.column === col);
+    const visibleCards = allColCards.filter(matchesFilter);
 
     const colEl = document.createElement('div');
     colEl.className = 'column';
@@ -372,64 +415,68 @@ function render(){
       <div class="col-cards" data-column="${col}"></div>
     `;
 
-    const cardsContainer = colEl.querySelector('.col-cards');
-    setupDropZone(cardsContainer);
-
-    colCards.forEach(card => {
-      cardsContainer.appendChild(renderCard(card));
-    });
-
+    const container = colEl.querySelector('.col-cards');
+    setupDropZone(container);
+    visibleCards.forEach(c => container.appendChild(renderCard(c, video)));
     board.appendChild(colEl);
   });
 
-  // Update progress summary
-  const total = cards.length;
-  const posted = cards.filter(c => c.column === 'Posted').length;
-  const inProgress = total - posted;
-  summary.innerHTML = `
+  // Progress
+  const total = video.cards.length;
+  const posted = video.cards.filter(c => c.column === 'Posted').length;
+  document.getElementById('progressSummary').innerHTML = `
     <span class="ps-item"><strong>${total}</strong> total</span>
     <span class="ps-item"><strong>${posted}</strong> posted</span>
-    <span class="ps-item"><strong>${inProgress}</strong> in progress</span>
+    <span class="ps-item"><strong>${total-posted}</strong> in progress</span>
   `;
 }
 
-function matchesFilter(card){
-  if(activeFilter === 'all') return true;
-  return card.platform.includes(activeFilter);
-}
-
-function renderCard(card){
+function renderCard(card, video){
   const el = document.createElement('div');
   el.className = 'card';
   el.draggable = true;
-  el.dataset.id = card.id;
+  el.dataset.num = card.num;
 
-  const badge = PLATFORM_BADGES[card.platform] || { cls:'badge-news', label:card.platform };
+  const badge = boardData.platformBadges[card.platform] || { cls:'badge-news', label:card.platform };
+  const persona = boardData.personas[card.persona];
   const colIdx = COLUMNS.indexOf(card.column);
+  const stageShort = (card.icpStage||'').replace('Stage ','S').split(' –')[0];
 
   el.innerHTML = `
-    <div class="card-number">#${card.num} · ${card.video ? card.video.substring(0,35)+'…' : ''}</div>
+    <div class="card-number">
+      <span>#${card.num}</span>
+      <span class="card-persona" style="color:${persona?.color||'#888'}">${persona?.emoji||''} ${card.persona}</span>
+    </div>
     <div class="card-title">${card.title}</div>
     <div class="card-meta">
       <span class="badge ${badge.cls}">${badge.label}</span>
-      <span class="stage-tag">${card.stage}</span>
+      <span class="icp-tag">${stageShort}</span>
     </div>
+    ${card.publishDate ? `<div class="pub-date">📅 ${card.publishDate}</div>` : ''}
     <div class="card-actions">
-      ${colIdx < COLUMNS.length - 1 ? `<button class="card-btn" onclick="moveCard(${card.id},'next')" title="Move right">→ Next</button>` : ''}
-      ${colIdx > 0 ? `<button class="card-btn" onclick="moveCard(${card.id},'prev')" title="Move left">← Back</button>` : ''}
-      ${card.column !== 'Posted' ? `<button class="card-btn done-btn" onclick="moveCard(${card.id},'done')" title="Mark posted">✓</button>` : ''}
+      ${colIdx < COLUMNS.length - 1 ? `<button class="card-btn" data-action="next" title="Move right">→</button>` : ''}
+      ${colIdx > 0 ? `<button class="card-btn" data-action="prev" title="Move left">←</button>` : ''}
+      ${card.column !== 'Posted' ? `<button class="card-btn done-btn" data-action="done" title="Mark posted">✓</button>` : ''}
     </div>
   `;
 
-  // Click to open detail (not on buttons)
-  el.addEventListener('click', e => {
-    if(e.target.tagName === 'BUTTON') return;
-    openCardModal(card.id);
+  // Card action buttons
+  el.querySelectorAll('.card-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      moveCard(card, btn.dataset.action);
+    });
   });
 
-  // Drag events
+  // Click to open detail
+  el.addEventListener('click', e => {
+    if(e.target.closest('.card-btn')) return;
+    openCardModal(card, video);
+  });
+
+  // Drag
   el.addEventListener('dragstart', e => {
-    dragCard = card.id;
+    dragCard = card;
     el.classList.add('dragging');
     e.dataTransfer.effectAllowed = 'move';
   });
@@ -446,14 +493,10 @@ function setupDropZone(container){
   container.addEventListener('dragover', e => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
-    // Show indicator
-    const afterEl = getDragAfterElement(container, e.clientY);
-    const existing = container.querySelector('.drop-indicator');
-    if(!existing){
+    if(!container.querySelector('.drop-indicator')){
       const ind = document.createElement('div');
       ind.className = 'drop-indicator';
-      if(afterEl) container.insertBefore(ind, afterEl);
-      else container.appendChild(ind);
+      container.appendChild(ind);
     }
   });
   container.addEventListener('dragleave', e => {
@@ -464,160 +507,161 @@ function setupDropZone(container){
   container.addEventListener('drop', e => {
     e.preventDefault();
     container.querySelectorAll('.drop-indicator').forEach(d => d.remove());
-    if(dragCard === null) return;
-    const targetCol = container.dataset.column;
-    const card = cards.find(c => c.id === dragCard);
-    if(card){
-      card.column = targetCol;
-      save();
-      render();
-    }
+    if(!dragCard) return;
+    dragCard.column = container.dataset.column;
+    saveLocal();
+    render();
   });
 }
 
-function getDragAfterElement(container, y){
-  const els = [...container.querySelectorAll('.card:not(.dragging)')];
-  return els.reduce((closest, child) => {
-    const box = child.getBoundingClientRect();
-    const offset = y - box.top - box.height / 2;
-    if(offset < 0 && offset > closest.offset) return { offset, element: child };
-    return closest;
-  }, { offset: Number.NEGATIVE_INFINITY }).element;
-}
-
-// ── Actions ──
-function moveCard(id, direction){
-  const card = cards.find(c => c.id === id);
-  if(!card) return;
+// ── Card Actions ──
+function moveCard(card, direction){
   const idx = COLUMNS.indexOf(card.column);
   if(direction === 'next' && idx < COLUMNS.length - 1) card.column = COLUMNS[idx + 1];
   else if(direction === 'prev' && idx > 0) card.column = COLUMNS[idx - 1];
   else if(direction === 'done') card.column = 'Posted';
-  save(); render();
+  saveLocal();
+  render();
 }
 
 // ── Card Modal ──
-function openCardModal(id){
-  const card = cards.find(c => c.id === id);
-  if(!card) return;
-  const modal = document.getElementById('cardModal');
-  const badge = PLATFORM_BADGES[card.platform] || { cls:'badge-news', label:card.platform };
-  const brief = BRIEFS[card.num] || { hook:'—', angle:'—', cta:'—' };
+function openCardModal(card, video){
+  const badge = boardData.platformBadges[card.platform] || { cls:'badge-news', label:card.platform };
+  const persona = boardData.personas[card.persona];
+  const stageDesc = boardData.icpStages[card.icpStage] || '';
+  const brief = card.brief || {};
 
   document.getElementById('modalTitle').innerHTML = `#${card.num} ${card.title}`;
   document.getElementById('modalBody').innerHTML = `
     <div class="field">
-      <label>Platform</label>
-      <div><span class="badge ${badge.cls}">${badge.label}</span> <span class="stage-tag">${card.stage}</span></div>
+      <label>Platform & Owner</label>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <span class="badge ${badge.cls}">${badge.label}</span>
+        <span class="persona-badge-lg" style="border-color:${persona?.color||'#555'};color:${persona?.color||'#888'}">${persona?.emoji||''} ${card.persona} <span style="font-weight:400;color:var(--text-muted);font-size:.7rem">(${persona?.role||''})</span></span>
+      </div>
+    </div>
+    <div class="field">
+      <label>ICP Stage</label>
+      <div><span class="icp-tag" style="font-size:.78rem">${card.icpStage}</span></div>
+      ${stageDesc ? `<div class="icp-explainer">${stageDesc}</div>` : ''}
     </div>
     <div class="field">
       <label>Source Video</label>
-      <p>${card.video || '—'} ${card.url ? `<a href="${card.url}" target="_blank" style="color:var(--orange)">[Watch]</a>` : ''}</p>
+      <p>${video.title} ${video.url ? `<a href="${video.url}" target="_blank" style="color:var(--orange)">[Watch]</a>` : ''}</p>
     </div>
     <div class="field">
-      <label>Current Column</label>
-      <div class="move-select">
-        <select id="modalMoveSelect" onchange="moveCardToColumn(${card.id}, this.value)">
-          ${COLUMNS.map(c => `<option value="${c}" ${c===card.column?'selected':''}>${c}</option>`).join('')}
-        </select>
-      </div>
+      <label>Publish Date</label>
+      <input type="date" id="modalPubDate" value="${card.publishDate||''}" onchange="updatePubDate(${card.num}, this.value)">
     </div>
-    <div class="brief-section">
-      <h4>🎯 Hook</h4>
-      <p>${brief.hook}</p>
+    <div class="field">
+      <label>Column</label>
+      <select id="modalMoveSelect" onchange="moveToColumn(${card.num}, this.value)">
+        ${COLUMNS.map(c => `<option value="${c}" ${c===card.column?'selected':''}>${c}</option>`).join('')}
+      </select>
     </div>
-    <div class="brief-section" style="margin-top:8px">
-      <h4>📐 Angle / Brief</h4>
-      <p>${brief.angle}</p>
-    </div>
-    <div class="brief-section" style="margin-top:8px">
-      <h4>📢 CTA</h4>
-      <p>${brief.cta}</p>
-    </div>
+    ${brief.hook ? `<div class="brief-section"><h4>🎯 Hook</h4><p>${esc(brief.hook)}</p></div>` : ''}
+    ${brief.angle ? `<div class="brief-section" style="margin-top:8px"><h4>📐 Angle / Brief</h4><p>${esc(brief.angle)}</p></div>` : ''}
+    ${brief.cta ? `<div class="brief-section" style="margin-top:8px"><h4>📢 CTA</h4><p>${esc(brief.cta)}</p></div>` : ''}
     ${brief.copy ? `<div class="brief-section" style="margin-top:12px">
       <h4>📋 READY TO POST COPY</h4>
-      <textarea readonly onclick="this.select()" style="width:100%;min-height:180px;background:#1a1a2e;color:#e0e0e0;border:1px solid #333;border-radius:6px;padding:10px;font-family:inherit;font-size:13px;line-height:1.5;resize:vertical;cursor:text;white-space:pre-wrap;">${brief.copy}</textarea>
+      <textarea readonly onclick="this.select()" style="width:100%;min-height:160px;background:#1a1a2e;color:#e0e0e0;border:1px solid #333;border-radius:6px;padding:10px;font-family:inherit;font-size:13px;line-height:1.5;resize:vertical;white-space:pre-wrap;">${esc(brief.copy)}</textarea>
       <button onclick="navigator.clipboard.writeText(this.previousElementSibling.value);this.textContent='Copied ✓';setTimeout(()=>this.textContent='Copy to Clipboard',1500)" style="margin-top:6px;padding:6px 14px;background:var(--orange);color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:13px;">Copy to Clipboard</button>
     </div>` : ''}
   `;
 
-  document.getElementById('modalDoneBtn').onclick = () => { moveCard(id, 'done'); closeModal(); };
-  modal.classList.add('open');
+  document.getElementById('modalDoneBtn').onclick = () => {
+    card.column = 'Posted';
+    saveLocal();
+    render();
+    closeModal();
+  };
+  document.getElementById('cardModal').classList.add('open');
 }
 
-function moveCardToColumn(id, col){
-  const card = cards.find(c => c.id === id);
-  if(card){ card.column = col; save(); render(); }
+function esc(str){ return (str||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function updatePubDate(num, val){
+  const video = getSelectedVideo();
+  const card = video.cards.find(c => c.num === num);
+  if(card){ card.publishDate = val || null; saveLocal(); }
+}
+
+function moveToColumn(num, col){
+  const video = getSelectedVideo();
+  const card = video.cards.find(c => c.num === num);
+  if(card){ card.column = col; saveLocal(); render(); }
 }
 
 function closeModal(){ document.getElementById('cardModal').classList.remove('open'); }
 
-// ── New Video Modal ──
-document.getElementById('addVideoBtn').onclick = () => {
-  document.getElementById('newVideoModal').classList.add('open');
-};
+// ── New Video ──
+document.getElementById('addVideoBtn').onclick = () => document.getElementById('newVideoModal').classList.add('open');
 function closeNewVideoModal(){ document.getElementById('newVideoModal').classList.remove('open'); }
 
 function createNewVideo(){
   const title = document.getElementById('nvTitle').value.trim();
   const url = document.getElementById('nvUrl').value.trim();
+  const date = document.getElementById('nvDate').value;
+  const persona = document.getElementById('nvPersona').value;
   const col = document.getElementById('nvColumn').value;
   if(!title){ alert('Please enter a video title.'); return; }
 
-  TEMPLATE_CARDS.forEach(t => {
-    cards.push({
-      id: generateId(),
+  const TEMPLATE = [
+    { num:1, title:'Short Clip 1', platform:'YouTube Shorts', icpStage:'Stage 1 – Awareness', persona:'Travis' },
+    { num:2, title:'Short Clip 2', platform:'YouTube Shorts', icpStage:'Stage 1 – Awareness', persona:'Travis' },
+    { num:3, title:'Short Clip 3', platform:'YouTube Shorts', icpStage:'Stage 1 – Awareness', persona:'Ben' },
+    { num:4, title:'Short Clip 4', platform:'Reels', icpStage:'Stage 1 – Awareness', persona:'Ben' },
+    { num:5, title:'Short Clip 5', platform:'YouTube Shorts', icpStage:'Stage 1 – Awareness', persona:'Ben' },
+    { num:6, title:'Short Clip 6', platform:'Reels', icpStage:'Stage 1 – Awareness', persona:'Ben' },
+    { num:7, title:'YouTube Community Post', platform:'YouTube', icpStage:'Stage 1 – Awareness', persona:'Sarn' },
+    { num:8, title:'Instagram Carousel', platform:'Instagram', icpStage:'Stage 2 – Education', persona:'Sarn' },
+    { num:9, title:'Newsletter — The Weekly Shift', platform:'Newsletter', icpStage:'Stage 2 – Education', persona:'Matt' },
+    { num:10, title:'X/Twitter Thread', platform:'X/Twitter', icpStage:'Stage 1 – Awareness', persona:'Ben' },
+    { num:11, title:'LinkedIn Post', platform:'LinkedIn', icpStage:'Stage 2 – Education', persona:'Ben' },
+    { num:12, title:'Greenscreen Reaction', platform:'Reels', icpStage:'Stage 1 – Awareness', persona:'Ben' },
+    { num:13, title:'Instagram Stories', platform:'Instagram', icpStage:'Stage 1 – Awareness', persona:'Sarn' },
+    { num:14, title:'Instagram Caption', platform:'Instagram', icpStage:'Stage 1 – Awareness', persona:'Sarn' },
+    { num:15, title:'LinkedIn Long-form', platform:'LinkedIn', icpStage:'Stage 2 – Education', persona:'Ben' },
+    { num:16, title:'X Quote Card', platform:'X/Twitter', icpStage:'Stage 1 – Awareness', persona:'Sarn' },
+    { num:17, title:'Podcast Clip/Promo', platform:'Podcast', icpStage:'Stage 5 – Retention', persona:'Travis' },
+  ];
+
+  const vid = {
+    id: 'vid-' + Date.now(),
+    title: title,
+    url: url,
+    publishDate: date || null,
+    persona: persona,
+    cards: TEMPLATE.map(t => ({
       num: t.num,
-      title: t.title.replace(/Bitcoin Is Down.*$/,'').trim() || t.title,
+      title: t.title,
       platform: t.platform,
-      stage: t.stage,
+      icpStage: t.icpStage,
+      persona: t.persona,
       column: col,
-      video: title,
-      url: url
-    });
-  });
-  save(); render();
+      publishDate: null,
+      brief: { hook:'', angle:'', cta:'', copy:'' }
+    }))
+  };
+
+  boardData.videos.push(vid);
+  selectedVideoId = vid.id;
+  buildVideoSelector();
+  document.getElementById('videoSelector').value = vid.id;
+  saveLocal();
+  render();
   closeNewVideoModal();
   document.getElementById('nvTitle').value = '';
   document.getElementById('nvUrl').value = '';
 }
 
-// ── Filters ──
-document.querySelectorAll('.filter-chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    activeFilter = chip.dataset.filter;
-    render();
-  });
-});
-
-// ── Persistence (localStorage) ──
-function save(){
-  try { localStorage.setItem('cs_content_board', JSON.stringify(cards)); } catch(e){}
-}
-function load(){
-  try {
-    const d = localStorage.getItem('cs_content_board');
-    if(d){
-      const parsed = JSON.parse(d);
-      if(parsed && parsed.length){ cards = parsed; cardIdCounter = Math.max(...cards.map(c=>c.id)) + 1; }
-    }
-  } catch(e){}
-}
-
-// ── Close modals on overlay click ──
+// ── Close modals ──
 document.getElementById('cardModal').addEventListener('click', e => { if(e.target === e.currentTarget) closeModal(); });
 document.getElementById('newVideoModal').addEventListener('click', e => { if(e.target === e.currentTarget) closeNewVideoModal(); });
-
-// ── Keyboard ──
 document.addEventListener('keydown', e => { if(e.key === 'Escape'){ closeModal(); closeNewVideoModal(); }});
 
 // ── Init ──
-load();
-render();
+loadData();
 </script>
-  </div>
-</div>
 </body>
 </html>

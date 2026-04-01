@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instagram Q&A → Story Slides — CS</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --orange:#FC5C03;--navy:#1A1A2E;--navy-light:#16213E;--navy-mid:#0F3460;
+  --card-bg:#1e2a42;--card-hover:#253553;--text:#e8e8e8;
+  --text-muted:#8892a4;--border:#2a3550;--shadow:0 2px 8px rgba(0,0,0,.35);
+  --green:#059E78;--ig-grad:linear-gradient(135deg,#833AB4,#FD1D1D,#F77737);
+}
+html{font-family:'Barlow',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--navy);color:var(--text);font-size:14px}
+body{min-height:100vh;display:flex;flex-direction:column}
+
+/* ── Topbar actions ── */
+.page-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--orange);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:600;font-size:.82rem;transition:all .15s}
+.btn:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.btn-secondary{background:var(--navy-mid);border:1px solid var(--border);color:var(--text)}
+.btn-secondary:hover{background:var(--card-hover)}
+.btn-sm{padding:5px 10px;font-size:.75rem}
+.btn-ig{background:var(--ig-grad)}
+.btn-danger{background:#c0392b}
+
+/* ── Layout: two-column ── */
+.main-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;padding:24px 32px;flex:1}
+@media(max-width:1024px){.main-grid{grid-template-columns:1fr;padding:16px}}
+
+/* ── Panel ── */
+.panel{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;display:flex;flex-direction:column;overflow:hidden}
+.panel-head{padding:16px 20px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.panel-head h2{font-size:1rem;font-weight:700}
+.panel-head h2 span{color:var(--orange)}
+.panel-body{padding:18px 20px;flex:1;display:flex;flex-direction:column;gap:14px}
+
+/* ── Form fields ── */
+.field label{display:block;font-size:.72rem;color:var(--text-muted);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.field textarea,.field input,.field select{width:100%;background:var(--navy);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-size:.88rem;font-family:inherit;resize:vertical;transition:border-color .15s;outline:none}
+.field textarea:focus,.field input:focus{border-color:var(--orange)}
+.field textarea{min-height:80px}
+#fResearch{min-height:160px}
+.char-hint{font-size:.7rem;color:var(--text-muted);margin-top:3px}
+
+/* ── Generate button ── */
+.generate-area{display:flex;flex-direction:column;gap:8px;align-items:stretch}
+.generate-area .btn{font-size:.9rem;padding:12px 20px;letter-spacing:.3px}
+.status-msg{font-size:.78rem;color:var(--text-muted);text-align:center;min-height:18px}
+.status-msg.ok{color:var(--green)}
+.status-msg.err{color:#e74c3c}
+
+/* ── Story slides preview ── */
+.slides-wrap{display:flex;flex-direction:column;gap:10px;overflow-y:auto;max-height:70vh;padding-right:4px}
+.slides-wrap::-webkit-scrollbar{width:4px}
+.slides-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+.story-card{background:var(--navy);border:1px solid var(--border);border-radius:10px;padding:14px 16px;position:relative;transition:border-color .15s}
+.story-card:hover{border-color:rgba(252,92,3,.4)}
+.story-card-num{font-size:.65rem;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.story-card-type{display:inline-block;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:2px 7px;border-radius:4px;margin-bottom:8px}
+.type-hook{background:rgba(252,92,3,.15);color:var(--orange)}
+.type-context{background:rgba(10,102,194,.2);color:#5fa8ff}
+.type-bull{background:rgba(5,158,120,.15);color:#1DB954}
+.type-bear{background:rgba(231,76,60,.15);color:#e74c3c}
+.type-framework{background:rgba(193,53,132,.15);color:#e060b0}
+.type-cta{background:rgba(252,92,3,.15);color:var(--orange)}
+.type-data{background:rgba(90,170,255,.15);color:#7ecfff}
+.type-quote{background:rgba(255,220,50,.1);color:#ffd700}
+.story-card-text{font-size:.85rem;line-height:1.55;white-space:pre-wrap;color:var(--text)}
+.story-card-actions{display:flex;gap:6px;margin-top:10px;justify-content:flex-end}
+.card-btn{background:none;border:1px solid var(--border);color:var(--text-muted);padding:3px 8px;border-radius:4px;cursor:pointer;font-size:.65rem;transition:all .12s}
+.card-btn:hover{border-color:var(--orange);color:var(--orange)}
+.card-btn.del:hover{border-color:#e74c3c;color:#e74c3c}
+
+/* ── Idea history sidebar feel ── */
+.history-list{display:flex;flex-direction:column;gap:8px;max-height:calc(100vh - 300px);overflow-y:auto;padding-right:4px}
+.history-list::-webkit-scrollbar{width:4px}
+.history-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.history-item{background:var(--navy);border:1px solid var(--border);border-radius:8px;padding:10px 14px;cursor:pointer;transition:all .15s}
+.history-item:hover,.history-item.active{border-color:var(--orange);background:var(--card-hover)}
+.history-item .hi-q{font-size:.82rem;font-weight:600;line-height:1.4;margin-bottom:3px}
+.history-item .hi-meta{font-size:.68rem;color:var(--text-muted);display:flex;gap:8px;align-items:center}
+.status-badge{font-size:.6rem;padding:1px 7px;border-radius:10px;font-weight:700}
+.status-ready{background:rgba(5,158,120,.2);color:var(--green)}
+.status-draft{background:rgba(252,92,3,.15);color:var(--orange)}
+
+/* ── Add slide form ── */
+.add-slide-form{background:var(--navy);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-top:8px}
+.add-slide-form h4{font-size:.78rem;color:var(--text-muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.4px}
+.add-slide-form .row{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap}
+.add-slide-form select,.add-slide-form textarea{background:var(--navy-mid);border:1px solid var(--border);color:var(--text);padding:7px 10px;border-radius:6px;font-size:.82rem;font-family:inherit;outline:none}
+.add-slide-form select{min-width:120px}
+.add-slide-form textarea{flex:1;min-height:60px;resize:vertical;min-width:200px}
+
+/* ── Export modal ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;justify-content:center;align-items:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--navy-light);border:1px solid var(--border);border-radius:12px;width:100%;max-width:560px;max-height:85vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.modal-head{padding:18px 22px 12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-head h2{font-size:1rem;font-weight:700}
+.modal-close{background:none;border:none;color:var(--text-muted);font-size:1.4rem;cursor:pointer}
+.modal-close:hover{color:var(--orange)}
+.modal-body{padding:18px 22px}
+.export-block{background:var(--navy);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:12px}
+.export-block h4{color:var(--orange);font-size:.8rem;margin-bottom:8px}
+.export-block pre{font-size:.8rem;line-height:1.55;white-space:pre-wrap;color:var(--text-muted);font-family:'Source Code Pro',monospace}
+.modal-foot{padding:12px 22px 18px;display:flex;gap:8px;justify-content:flex-end}
+
+/* ── Empty state ── */
+.empty-state{text-align:center;padding:40px 20px;color:var(--text-muted)}
+.empty-state .es-icon{font-size:2.5rem;margin-bottom:12px}
+.empty-state p{font-size:.88rem;line-height:1.6}
+
+/* ── IG Story Preview Modal ── */
+.story-preview-modal .modal{max-width:380px}
+.ig-story-preview{background:linear-gradient(180deg,#1a1a2e 0%,#0d0d1a 100%);border-radius:16px;overflow:hidden;position:relative;aspect-ratio:9/16;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px;text-align:center;border:2px solid rgba(255,255,255,.06)}
+.ig-story-preview .ig-logo{font-size:.65rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:20px}
+.ig-story-preview .ig-text{font-size:1.15rem;font-weight:700;line-height:1.5;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.5);white-space:pre-wrap}
+.ig-story-preview .ig-num{font-size:.65rem;color:rgba(255,255,255,.35);margin-top:20px}
+.ig-story-preview .ig-type-bar{position:absolute;top:12px;left:0;right:0;display:flex;justify-content:center;gap:4px;padding:0 16px}
+.ig-story-preview .ig-type-bar span{height:2px;border-radius:2px;background:rgba(255,255,255,.3);flex:1}
+.ig-story-preview .ig-type-bar span.active{background:rgba(255,255,255,.85)}
+
+/* gradient overlay based on type */
+.ig-bg-hook{background:linear-gradient(180deg,#1a0a02 0%,#3a1200 100%)!important}
+.ig-bg-bull{background:linear-gradient(180deg,#011a10 0%,#012e1a 100%)!important}
+.ig-bg-bear{background:linear-gradient(180deg,#1a0302 0%,#2e0a06 100%)!important}
+.ig-bg-framework{background:linear-gradient(180deg,#12001a 0%,#230a30 100%)!important}
+.ig-bg-cta{background:linear-gradient(180deg,#1a0a02 0%,#2a1000 100%)!important}
+.ig-bg-context{background:linear-gradient(180deg,#001226 0%,#001e3c 100%)!important}
+.ig-bg-data{background:linear-gradient(180deg,#001226 0%,#00122e 100%)!important}
+.ig-bg-quote{background:linear-gradient(180deg,#0a1000 0%,#141e00 100%)!important}
+</style>
+<link rel="stylesheet" href="/shell.css">
+</head>
+<body>
+
+<!-- ═══ SIDEBAR OVERLAY ═══ -->
+<div class="ds-sidebar-overlay" id="dsSidebarOverlay" onclick="document.getElementById('dsSidebar').classList.remove('open');this.classList.remove('open');"></div>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="ds-sidebar" id="dsSidebar">
+  <div style="padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+    <a href="index.html" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
+      <div style="width:32px; height:32px; border-radius:8px; background:rgba(252,92,3,0.15); display:flex; align-items:center; justify-content:center;">
+        <span style="color:#FC5C03; font-weight:800; font-size:13px; font-family:'Plus Jakarta Sans',sans-serif;">CS</span>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; color:#fff; letter-spacing:0.3px;">Collective Shift</div>
+        <div style="font-size:10px; color:rgba(255,255,255,0.35); font-family:'Source Code Pro',monospace;">CEO Dashboard</div>
+      </div>
+    </a>
+  </div>
+  <nav style="flex:1; padding: 8px 0;">
+    <div class="ds-sidebar-section">Home</div>
+    <a class="ds-sidebar-link" href="index.html"><span class="ds-icon">⭐</span> Morning Brief</a>
+    <a class="ds-sidebar-link" href="actions.html"><span class="ds-icon">⚡</span> Actions</a>
+    <div class="ds-sidebar-section">Metrics</div>
+    <a class="ds-sidebar-link" href="index.html#metrics"><span class="ds-icon">📊</span> KPIs</a>
+    <a class="ds-sidebar-link" href="team-cost.html"><span class="ds-icon">💰</span> Cash &amp; Costs</a>
+    <a class="ds-sidebar-link" href="hub/products.html"><span class="ds-icon">👥</span> Members</a>
+    <div class="ds-sidebar-section">Content</div>
+    <a class="ds-sidebar-link" href="content-board.html"><span class="ds-icon">🎬</span> Content Board</a>
+    <a class="ds-sidebar-link active" href="instagram-qa.html"><span class="ds-icon">📸</span> IG Q&amp;A</a>
+    <a class="ds-sidebar-link" href="asana-board-mockup.html"><span class="ds-icon">📅</span> Calendar</a>
+    <a class="ds-sidebar-link" href="hub/youtube-strategy.html"><span class="ds-icon">▶</span> YouTube</a>
+    <div class="ds-sidebar-section">Strategy</div>
+    <a class="ds-sidebar-link" href="hub/operating-system.html"><span class="ds-icon">🧭</span> Strategy Hub</a>
+    <a class="ds-sidebar-link" href="hub/brand.html"><span class="ds-icon">📄</span> Docs</a>
+    <div class="ds-sidebar-section">Team</div>
+    <a class="ds-sidebar-link" href="team-cost.html"><span class="ds-icon">👤</span> Team</a>
+    <a class="ds-sidebar-link" href="index.html#bots"><span class="ds-icon">🤖</span> Bot Fleet</a>
+  </nav>
+  <div style="padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 10px; color: rgba(255,255,255,0.25); font-family: 'Source Code Pro', monospace;">
+    v2.1 · April 2026
+  </div>
+</aside>
+
+<!-- ═══ TOP BAR ═══ -->
+<header class="ds-topbar">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <button class="ds-mobile-hamburger" onclick="document.getElementById('dsSidebar').classList.toggle('open');document.getElementById('dsSidebarOverlay').classList.toggle('open');" style="background:none;border:none;cursor:pointer;color:#807F86;padding:4px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    </button>
+    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:#1B1925;">📸 Instagram Q&amp;A → Story Slides</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <button class="btn btn-sm btn-secondary" onclick="openExportModal()">⬇ Export JSON</button>
+    <button class="btn btn-sm" onclick="newIdea()">+ New Q&amp;A</button>
+  </div>
+</header>
+
+<!-- ═══ MAIN ═══ -->
+<div class="ds-main-content">
+  <div style="padding:16px 32px 8px 32px;">
+    <p style="font-size:.82rem;color:#807F86;line-height:1.5;">Paste a follower question + your research notes. The tool generates 6 story slides ready to post on Instagram. Ideas auto-save to <code style="font-size:.72rem;background:#eee;padding:1px 5px;border-radius:3px;color:#333;">content-ideas.json</code></p>
+  </div>
+
+  <div class="main-grid">
+
+    <!-- LEFT: Input + History -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <!-- Input Panel -->
+      <div class="panel" id="inputPanel">
+        <div class="panel-head">
+          <h2>📥 Input <span id="editingLabel"></span></h2>
+          <div style="display:flex;gap:6px;">
+            <button class="btn btn-sm btn-secondary" onclick="clearForm()">Clear</button>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label>Follower Question</label>
+            <textarea id="fQuestion" rows="2" placeholder="e.g. Is Chainlink a good investment in 2026?"></textarea>
+          </div>
+          <div class="field">
+            <label>Your Research Notes</label>
+            <textarea id="fResearch" placeholder="Paste your research, data points, price levels, bull/bear case, key stats... The more detail the better."></textarea>
+            <div class="char-hint" id="researchCount">0 characters</div>
+          </div>
+          <div class="generate-area">
+            <button class="btn btn-ig" onclick="generateSlides()">✨ Generate Story Slides</button>
+            <div class="status-msg" id="statusMsg"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Idea History -->
+      <div class="panel">
+        <div class="panel-head">
+          <h2>📂 Saved Ideas <span style="font-size:.75rem;color:var(--text-muted);font-weight:400" id="ideaCount"></span></h2>
+          <button class="btn btn-sm btn-secondary" onclick="loadIdeas()">↺ Refresh</button>
+        </div>
+        <div class="panel-body" style="padding-top:12px">
+          <div class="history-list" id="historyList">
+            <div class="empty-state"><div class="es-icon">📭</div><p>No saved ideas yet.<br>Generate your first story above.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Story Slides Output -->
+    <div class="panel">
+      <div class="panel-head">
+        <h2>📱 Story Slides <span id="slidesCount" style="font-size:.75rem;color:var(--text-muted);font-weight:400"></span></h2>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button class="btn btn-sm btn-secondary" id="addSlideBtn" onclick="showAddSlideForm()" style="display:none">+ Add Slide</button>
+          <button class="btn btn-sm btn-secondary" id="copyAllBtn" onclick="copyAllSlides()" style="display:none">📋 Copy All</button>
+          <button class="btn btn-sm" id="saveIdeaBtn" onclick="saveCurrentIdea()" style="display:none">💾 Save Idea</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div id="slidesOutput">
+          <div class="empty-state">
+            <div class="es-icon">📱</div>
+            <p>Story slides will appear here.<br>Paste a question + research notes and hit<br><strong>Generate Story Slides</strong>.</p>
+          </div>
+        </div>
+        <!-- Add slide form (hidden) -->
+        <div class="add-slide-form" id="addSlideForm" style="display:none">
+          <h4>+ Add Custom Slide</h4>
+          <div class="row">
+            <select id="newSlideType">
+              <option value="hook">Hook</option>
+              <option value="context">Context</option>
+              <option value="data">Data</option>
+              <option value="bull">Bull Case</option>
+              <option value="bear">Bear Case</option>
+              <option value="framework">Framework</option>
+              <option value="quote">Quote</option>
+              <option value="cta">CTA</option>
+            </select>
+            <textarea id="newSlideText" placeholder="Slide copy..."></textarea>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:8px;justify-content:flex-end;">
+            <button class="btn btn-sm btn-secondary" onclick="document.getElementById('addSlideForm').style.display='none'">Cancel</button>
+            <button class="btn btn-sm" onclick="addCustomSlide()">Add Slide</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Export Modal -->
+<div class="modal-overlay" id="exportModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>⬇ Export content-ideas.json</h2>
+      <button class="modal-close" onclick="closeExportModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="exportBody"></div>
+    <div class="modal-foot">
+      <button class="btn-secondary btn" onclick="closeExportModal()">Close</button>
+      <button class="btn" onclick="downloadJson()">Download JSON</button>
+    </div>
+  </div>
+</div>
+
+<!-- Story Preview Modal -->
+<div class="modal-overlay story-preview-modal" id="previewModal">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-head">
+      <h2>📱 Story Preview</h2>
+      <button class="modal-close" onclick="closePreviewModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="previewBody" style="padding:12px"></div>
+    <div class="modal-foot">
+      <button class="btn-secondary btn" onclick="closePreviewModal()">Close</button>
+      <button class="btn" onclick="copyPreviewSlide()">Copy Text</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State ──
+let ideas = [];
+let currentSlides = [];
+let currentQuestion = '';
+let currentResearch = '';
+let currentIdeaId = null;
+let editingIdeaId = null;
+let previewSlideText = '';
+
+// ── Data file path (simulated via localStorage + fetch) ──
+const DATA_KEY = 'cs_ig_qa_ideas';
+
+// ── Load from JSON file (fetch) + localStorage fallback ──
+async function loadIdeas(){
+  try {
+    const resp = await fetch('content-ideas.json?' + Date.now());
+    const data = await resp.json();
+    ideas = data.ideas || [];
+    // Merge in any localStorage additions not yet pushed
+    const local = getLocalAdditions();
+    local.forEach(li => {
+      if(!ideas.find(i => i.id === li.id)) ideas.push(li);
+    });
+  } catch(e){
+    // Fallback to localStorage only
+    ideas = JSON.parse(localStorage.getItem(DATA_KEY) || '[]');
+  }
+  renderHistory();
+}
+
+function getLocalAdditions(){
+  try { return JSON.parse(localStorage.getItem(DATA_KEY+'_additions') || '[]'); } catch(e){ return []; }
+}
+function saveLocalAddition(idea){
+  const adds = getLocalAdditions();
+  const idx = adds.findIndex(a => a.id === idea.id);
+  if(idx >= 0) adds[idx] = idea; else adds.push(idea);
+  localStorage.setItem(DATA_KEY+'_additions', JSON.stringify(adds));
+  // Also update main list
+  const main = JSON.parse(localStorage.getItem(DATA_KEY) || '[]');
+  const mi = main.findIndex(a => a.id === idea.id);
+  if(mi >= 0) main[mi] = idea; else main.push(idea);
+  localStorage.setItem(DATA_KEY, JSON.stringify(main));
+}
+
+// ── Render history ──
+function renderHistory(){
+  const list = document.getElementById('historyList');
+  document.getElementById('ideaCount').textContent = `(${ideas.length})`;
+  if(!ideas.length){
+    list.innerHTML = '<div class="empty-state"><div class="es-icon">📭</div><p>No saved ideas yet.</p></div>';
+    return;
+  }
+  list.innerHTML = ideas.slice().reverse().map(idea => `
+    <div class="history-item${editingIdeaId===idea.id?' active':''}" onclick="loadIdea('${idea.id}')">
+      <div class="hi-q">${esc(idea.question)}</div>
+      <div class="hi-meta">
+        <span>${idea.slides?.length||0} slides</span>
+        <span>${idea.createdAt ? new Date(idea.createdAt).toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : ''}</span>
+        <span class="status-badge status-${idea.status||'draft'}">${idea.status||'draft'}</span>
+        <button class="card-btn del" style="margin-left:auto" onclick="deleteIdea(event,'${idea.id}')">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function loadIdea(id){
+  const idea = ideas.find(i => i.id === id);
+  if(!idea) return;
+  editingIdeaId = id;
+  document.getElementById('fQuestion').value = idea.question || '';
+  document.getElementById('fResearch').value = idea.research || '';
+  updateCharCount();
+  currentSlides = idea.slides ? JSON.parse(JSON.stringify(idea.slides)) : [];
+  currentQuestion = idea.question;
+  currentResearch = idea.research;
+  document.getElementById('editingLabel').innerHTML = `<span style="font-size:.72rem;color:var(--text-muted);font-weight:400"> — editing saved idea</span>`;
+  renderSlides();
+  renderHistory();
+}
+
+function deleteIdea(e, id){
+  e.stopPropagation();
+  if(!confirm('Delete this idea?')) return;
+  ideas = ideas.filter(i => i.id !== id);
+  if(editingIdeaId === id){ clearForm(); }
+  renderHistory();
+  // Remove from localStorage
+  const adds = getLocalAdditions().filter(a => a.id !== id);
+  localStorage.setItem(DATA_KEY+'_additions', JSON.stringify(adds));
+}
+
+// ── Character counter ──
+document.getElementById('fResearch').addEventListener('input', updateCharCount);
+function updateCharCount(){
+  const len = document.getElementById('fResearch').value.length;
+  document.getElementById('researchCount').textContent = len + ' characters';
+}
+
+// ── Generate slides ──
+function generateSlides(){
+  const q = document.getElementById('fQuestion').value.trim();
+  const r = document.getElementById('fResearch').value.trim();
+  if(!q){ setStatus('Please enter a question.','err'); return; }
+  if(r.length < 50){ setStatus('Add more research notes (at least 50 characters) for better slides.','err'); return; }
+
+  setStatus('Generating slides from your research...','');
+  currentQuestion = q;
+  currentResearch = r;
+  currentSlides = buildSlidesFromResearch(q, r);
+  renderSlides();
+  setStatus('✓ 6 story slides generated. Review and save.','ok');
+  document.getElementById('saveIdeaBtn').style.display = '';
+  document.getElementById('addSlideBtn').style.display = '';
+  document.getElementById('copyAllBtn').style.display = '';
+}
+
+// ── Smart slide builder ──
+function buildSlidesFromResearch(question, research){
+  const lines = research.split('\n').map(l => l.trim()).filter(Boolean);
+
+  // Extract bullet points
+  const bullets = lines.filter(l => l.startsWith('•') || l.startsWith('-') || l.startsWith('*'));
+  const bullBullets = bullets.filter(l => /bull|positive|upside|growth|adoption|partner|staking|revenue|inflow|institutional/i.test(l));
+  const bearBullets = bullets.filter(l => /bear|risk|unlock|competition|down|concern|negative/i.test(l));
+
+  // Extract price/data numbers
+  const priceMatch = research.match(/\$[\d,.]+[KkMmBb]?/g) || [];
+  const pctMatch = research.match(/[\d.]+%/g) || [];
+
+  // Clean question for hook
+  const hookQ = question.replace(/[?!]+$/, '').trim();
+
+  // Extract framework/approach section
+  const frameworkLines = lines.filter(l => /framework|approach|evaluate|position|allocation|satellite|core|hold/i.test(l));
+
+  // Extract CTA/conclusion
+  const ctaLines = lines.filter(l => /bull case|bear case|target|upside|downside/i.test(l));
+
+  const slides = [];
+
+  // Slide 1: Hook
+  slides.push({
+    slideNum: 1,
+    type: 'hook',
+    text: `${hookQ}?\n\nLet me show you what the data says. 📊`
+  });
+
+  // Slide 2: Context (first paragraph or summary)
+  const contextText = lines.slice(0, 3).join(' ').replace(/•|-|\*/g, '').trim().substring(0, 200);
+  slides.push({
+    slideNum: 2,
+    type: 'context',
+    text: contextText || `Here's the context on ${hookQ}.`
+  });
+
+  // Slide 3: Bull case
+  const bullText = bullBullets.length > 0
+    ? '🟢 BULL CASE\n\n' + bullBullets.slice(0, 4).join('\n')
+    : '🟢 BULL CASE\n\n' + lines.filter(l => /bull/i.test(l)).slice(0,3).join('\n') || '🟢 BULL CASE\n\n(Add bull case from your research)';
+  slides.push({ slideNum: 3, type: 'bull', text: bullText });
+
+  // Slide 4: Bear case
+  const bearText = bearBullets.length > 0
+    ? '🔴 BEAR CASE\n\n' + bearBullets.slice(0, 4).join('\n')
+    : '🔴 BEAR CASE\n\n' + lines.filter(l => /bear/i.test(l)).slice(0,3).join('\n') || '🔴 BEAR CASE\n\n(Add bear case from your research)';
+  slides.push({ slideNum: 4, type: 'bear', text: bearText });
+
+  // Slide 5: Framework
+  const fwLines = frameworkLines.length > 0
+    ? frameworkLines.slice(0, 3).join('\n')
+    : `Evaluate it systematically:\n\n• What's the competitive moat?\n• Is revenue growing?\n• What's your position sizing?\n\nDon't just buy the hype. Build a framework.`;
+  slides.push({
+    slideNum: 5,
+    type: 'framework',
+    text: '📐 THE FRAMEWORK\n\n' + fwLines
+  });
+
+  // Slide 6: CTA
+  slides.push({
+    slideNum: 6,
+    type: 'cta',
+    text: `This is not financial advice. It's a framework.\n\nWant live portfolio analysis on every major asset?\n\n1,100+ investors inside Collective Shift Platinum get this every week.\n\n🔗 Link in bio`
+  });
+
+  return slides;
+}
+
+// ── Render slides ──
+function renderSlides(){
+  const out = document.getElementById('slidesOutput');
+  if(!currentSlides.length){
+    out.innerHTML = '<div class="empty-state"><div class="es-icon">📱</div><p>No slides yet.</p></div>';
+    document.getElementById('slidesCount').textContent = '';
+    return;
+  }
+  document.getElementById('slidesCount').textContent = `(${currentSlides.length} slides)`;
+  out.innerHTML = `<div class="slides-wrap">${currentSlides.map((s,i) => renderSlideCard(s, i)).join('')}</div>`;
+}
+
+function renderSlideCard(slide, idx){
+  const typeCls = 'type-'+(slide.type||'context');
+  return `
+    <div class="story-card">
+      <div class="story-card-num">Slide ${slide.slideNum}</div>
+      <span class="story-card-type ${typeCls}">${slide.type}</span>
+      <div class="story-card-text">${esc(slide.text)}</div>
+      <div class="story-card-actions">
+        <button class="card-btn" onclick="previewSlide(${idx})" title="Preview as story">👁 Preview</button>
+        <button class="card-btn" onclick="copySlide(${idx})" title="Copy text">📋</button>
+        <button class="card-btn" onclick="editSlide(${idx})" title="Edit">✏️</button>
+        <button class="card-btn del" onclick="removeSlide(${idx})" title="Remove">✕</button>
+      </div>
+    </div>
+  `;
+}
+
+function editSlide(idx){
+  const slide = currentSlides[idx];
+  const newText = prompt('Edit slide text:', slide.text);
+  if(newText !== null){
+    slide.text = newText;
+    renderSlides();
+  }
+}
+
+function removeSlide(idx){
+  currentSlides.splice(idx, 1);
+  currentSlides.forEach((s, i) => s.slideNum = i + 1);
+  renderSlides();
+}
+
+function copySlide(idx){
+  navigator.clipboard.writeText(currentSlides[idx].text)
+    .then(() => setStatus('Slide copied!','ok'));
+}
+
+function copyAllSlides(){
+  const all = currentSlides.map((s,i) => `SLIDE ${s.slideNum} [${s.type.toUpperCase()}]\n${s.text}`).join('\n\n---\n\n');
+  navigator.clipboard.writeText(all)
+    .then(() => setStatus('All slides copied!','ok'));
+}
+
+// ── Preview ──
+function previewSlide(idx){
+  const slide = currentSlides[idx];
+  previewSlideText = slide.text;
+  const total = currentSlides.length;
+  const typeCls = 'ig-bg-'+(slide.type||'context');
+  const bars = currentSlides.map((s,i) =>
+    `<span class="${i===idx?'active':''}"></span>`
+  ).join('');
+
+  document.getElementById('previewBody').innerHTML = `
+    <div class="ig-story-preview ${typeCls}">
+      <div class="ig-type-bar">${bars}</div>
+      <div class="ig-logo">Collective Shift · Instagram</div>
+      <div class="ig-text">${esc(slide.text)}</div>
+      <div class="ig-num">Slide ${slide.slideNum} of ${total}</div>
+    </div>
+    <p style="font-size:.72rem;color:var(--text-muted);text-align:center;margin-top:10px">9:16 preview · actual design will vary</p>
+  `;
+  document.getElementById('previewModal').classList.add('open');
+}
+
+function closePreviewModal(){ document.getElementById('previewModal').classList.remove('open'); }
+function copyPreviewSlide(){
+  navigator.clipboard.writeText(previewSlideText)
+    .then(() => { setStatus('Copied!','ok'); closePreviewModal(); });
+}
+
+// ── Add custom slide ──
+function showAddSlideForm(){
+  document.getElementById('addSlideForm').style.display = '';
+}
+function addCustomSlide(){
+  const type = document.getElementById('newSlideType').value;
+  const text = document.getElementById('newSlideText').value.trim();
+  if(!text){ alert('Please add some text.'); return; }
+  currentSlides.push({ slideNum: currentSlides.length + 1, type, text });
+  document.getElementById('newSlideText').value = '';
+  document.getElementById('addSlideForm').style.display = 'none';
+  renderSlides();
+}
+
+// ── Save idea ──
+function saveCurrentIdea(){
+  const q = document.getElementById('fQuestion').value.trim();
+  const r = document.getElementById('fResearch').value.trim();
+  if(!q){ setStatus('Add a question first.','err'); return; }
+  if(!currentSlides.length){ setStatus('Generate slides first.','err'); return; }
+
+  let idea;
+  if(editingIdeaId){
+    idea = ideas.find(i => i.id === editingIdeaId);
+    if(idea){
+      idea.question = q;
+      idea.research = r;
+      idea.slides = JSON.parse(JSON.stringify(currentSlides));
+      idea.status = 'ready';
+    }
+  }
+  if(!idea){
+    idea = {
+      id: 'qa-' + Date.now(),
+      createdAt: new Date().toISOString(),
+      question: q,
+      research: r,
+      slides: JSON.parse(JSON.stringify(currentSlides)),
+      status: 'ready'
+    };
+    ideas.push(idea);
+    editingIdeaId = idea.id;
+  }
+
+  saveLocalAddition(idea);
+  setStatus('✓ Idea saved! (local cache — push to update content-ideas.json)','ok');
+  renderHistory();
+}
+
+// ── Clear form ──
+function newIdea(){
+  clearForm();
+  window.scrollTo(0,0);
+}
+function clearForm(){
+  document.getElementById('fQuestion').value = '';
+  document.getElementById('fResearch').value = '';
+  currentSlides = [];
+  currentQuestion = '';
+  currentResearch = '';
+  editingIdeaId = null;
+  document.getElementById('editingLabel').innerHTML = '';
+  document.getElementById('saveIdeaBtn').style.display = 'none';
+  document.getElementById('addSlideBtn').style.display = 'none';
+  document.getElementById('copyAllBtn').style.display = 'none';
+  renderSlides();
+  updateCharCount();
+  setStatus('','');
+  renderHistory();
+}
+
+// ── Export ──
+function openExportModal(){
+  const json = JSON.stringify({ ideas: ideas }, null, 2);
+  document.getElementById('exportBody').innerHTML = `
+    <div class="export-block">
+      <h4>content-ideas.json <span style="font-size:.7rem;color:var(--text-muted)">(${ideas.length} ideas)</span></h4>
+      <pre>${esc(json.substring(0,2000))}${json.length > 2000 ? '\n...(truncated)' : ''}</pre>
+    </div>
+    <p style="font-size:.78rem;color:var(--text-muted)">Download and replace <code>content-ideas.json</code> in the dashboard/public folder to persist all ideas.</p>
+  `;
+  document.getElementById('exportModal').classList.add('open');
+}
+function closeExportModal(){ document.getElementById('exportModal').classList.remove('open'); }
+function downloadJson(){
+  const json = JSON.stringify({ ideas: ideas }, null, 2);
+  const blob = new Blob([json], { type:'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'content-ideas.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── Helpers ──
+function setStatus(msg, type){
+  const el = document.getElementById('statusMsg');
+  el.textContent = msg;
+  el.className = 'status-msg' + (type ? ' '+type : '');
+}
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ── Modal close ──
+document.getElementById('exportModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeExportModal(); });
+document.getElementById('previewModal').addEventListener('click', e => { if(e.target===e.currentTarget) closePreviewModal(); });
+document.addEventListener('keydown', e => { if(e.key==='Escape'){ closeExportModal(); closePreviewModal(); }});
+
+// ── Init ──
+loadIdeas();
+</script>
+</body>
+</html>
