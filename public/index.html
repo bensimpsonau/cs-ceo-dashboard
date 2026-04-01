@@ -580,6 +580,7 @@ tailwind.config = {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
           Add Task
         </button>
+        <button onclick="clearTaskCache()" style="background:none;border:none;color:#9CA3AF;font-size:11px;cursor:pointer;padding:4px 8px;" title="Clear local cache if tasks not showing">↺ Reset view</button>
       </div>
 
       <!-- Task Filter Tabs -->
@@ -1114,14 +1115,21 @@ function addTaskToGroup(status) {
   renderBriefTasks();
 }
 
+
+function clearTaskCache() {
+  // Clear all cs-task-* localStorage entries
+  Object.keys(localStorage).filter(k => k.startsWith('cs-task-') || k === 'cs-priorities-v10').forEach(k => localStorage.removeItem(k));
+  loadData();
+}
+
 function filterTasks(filter, btn) {
   // Update tab active state
   document.querySelectorAll('#view-tasks .view-tab').forEach(t => t.classList.remove('active'));
   if (btn) btn.classList.add('active');
 
-  document.querySelectorAll('.task-group').forEach(g => {
-    if (filter === 'all') { g.style.display = ''; return; }
-    g.style.display = g.dataset.group === filter ? '' : 'none';
+  document.querySelectorAll('.task-row').forEach(row => {
+    if (filter === 'all') { row.style.display = ''; return; }
+    row.style.display = row.dataset.status === filter ? '' : 'none';
   });
 }
 
