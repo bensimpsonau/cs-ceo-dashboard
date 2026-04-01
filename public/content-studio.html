@@ -314,6 +314,68 @@ tailwind.config = {
     .my-content-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
+  /* Ideas Bank */
+  .ideas-bank-input { display: flex; gap: 8px; margin-bottom: 16px; }
+  .ideas-bank-input input { flex: 1; }
+  .ideas-bank-input select {
+    width: 160px; border: 1px solid #E8E8EA; border-radius: 8px;
+    padding: 8px 10px; font-size: 12px; font-family: 'Barlow', sans-serif; outline: none;
+  }
+  .ideas-bank-input select:focus { border-color: #FC5C03; }
+  .idea-item {
+    display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px;
+    border: 1px solid #E8E8EA; border-radius: 8px; margin-bottom: 8px;
+    background: #FAFAFA; transition: background 0.12s;
+  }
+  .idea-item:hover { background: #F3F3F5; }
+  .idea-item .idea-text { font-size: 13px; line-height: 1.5; color: #1B1925; }
+  .idea-item .idea-meta { font-size: 10px; color: #807F86; margin-top: 4px; display: flex; gap: 8px; align-items: center; }
+  .idea-source-tag {
+    font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 100px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .idea-source-tag.member-question { background: #DBEAFE; color: #1E40AF; }
+  .idea-source-tag.dm { background: #FCE7F3; color: #9D174D; }
+  .idea-source-tag.community { background: #D1FAE5; color: #065F46; }
+  .idea-source-tag.my-thought { background: #FEF3C7; color: #92400E; }
+  .idea-source-tag.market-event { background: #EDE9FE; color: #5B21B6; }
+  .idea-actions { display: flex; gap: 6px; flex-shrink: 0; align-items: center; }
+  .idea-actions button {
+    font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px;
+    border: 1px solid #E8E8EA; background: #fff; cursor: pointer; transition: all 0.12s;
+    white-space: nowrap;
+  }
+  .idea-actions button:hover { background: #F7F7F8; }
+  .idea-actions .btn-turn-video { color: #FC5C03; border-color: #FC5C03; }
+  .idea-actions .btn-turn-video:hover { background: #FEEEE5; }
+  .idea-actions .btn-delete-idea { color: #EF4444; border-color: #EF4444; }
+  .idea-actions .btn-delete-idea:hover { background: #FEE2E2; }
+
+  /* Thumbnail Reminder */
+  .thumb-reminder-card {
+    background: #FFFBF5; border: 1px solid #FDBA74; border-radius: 10px;
+    padding: 14px 16px; margin-top: 14px;
+  }
+  .thumb-reminder-card h4 {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
+    font-size: 13px; margin-bottom: 6px; color: #1B1925;
+  }
+  .thumb-reminder-card p { font-size: 12px; color: #4D4C55; line-height: 1.5; margin-bottom: 10px; }
+  .thumb-reminder-card .reminder-btn {
+    font-size: 12px; font-weight: 600; padding: 8px 16px; border-radius: 8px;
+    border: none; background: #FC5C03; color: #fff; cursor: pointer; transition: background 0.12s;
+  }
+  .thumb-reminder-card .reminder-btn:hover { background: #E04F00; }
+  .thumb-reminder-countdown {
+    font-family: 'Source Code Pro', monospace; font-size: 13px;
+    color: #FC5C03; font-weight: 600; margin-top: 8px;
+  }
+
+  /* Ad Potential Badges */
+  .badge-ad { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 100px; }
+  .badge-ad-high { background: #FED7AA; color: #C2410C; }
+  .badge-ad-medium { background: #DBEAFE; color: #1E40AF; }
+
   .input-card label {
     font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
     font-size: 12px; color: #4D4C55; display: block; margin-bottom: 6px;
@@ -471,6 +533,7 @@ tailwind.config = {
         <div class="source-tabs">
           <button class="source-tab active" data-tab="my-content" onclick="switchSourceTab('my-content')">📺 My Content</button>
           <button class="source-tab" data-tab="add-manually" onclick="switchSourceTab('add-manually')">✏️ Add Manually</button>
+          <button class="source-tab" data-tab="ideas-bank" onclick="switchSourceTab('ideas-bank')">💬 Ideas Bank</button>
         </div>
 
         <!-- Tab 1: My Content -->
@@ -494,7 +557,35 @@ tailwind.config = {
           <textarea id="videoTranscript" rows="8"></textarea>
 
           <button class="generate-btn" id="generateBtn" onclick="generateIdeas()">🎯 Generate Redistribution Ideas</button>
+
+          <!-- Thumbnail 72hr Reminder -->
+          <div class="thumb-reminder-card" id="thumbReminderCard">
+            <h4>📸 Thumbnail Review Reminder</h4>
+            <p>Upload your initial thumbnail now. Set a reminder to review CTR at 72 hours.<br>If CTR &lt; 4%, swap the thumbnail.</p>
+            <button class="reminder-btn" id="thumbReminderBtn" onclick="setThumbReminder()">Set 72hr Reminder</button>
+            <div class="thumb-reminder-countdown" id="thumbCountdown" style="display:none;"></div>
+          </div>
         </div>
+
+        <!-- Tab 3: Ideas Bank -->
+        <div class="source-tab-panel" id="tab-ideas-bank">
+          <div style="margin-bottom:16px;">
+            <p style="font-size:13px; color:#807F86; margin-bottom:12px;">Drop content ideas from conversations, DMs, and community threads. Each idea can become a future video topic.</p>
+            <div class="ideas-bank-input">
+              <input type="text" id="newIdeaText" placeholder="Drop an idea, member question, or DM insight...">
+              <select id="newIdeaSource">
+                <option value="Member Question">Member Question</option>
+                <option value="DM">DM</option>
+                <option value="Community">Community</option>
+                <option value="My Thought">My Thought</option>
+                <option value="Market Event">Market Event</option>
+              </select>
+              <button class="btn-orange" onclick="addIdea()" style="white-space:nowrap;">+ Add Idea</button>
+            </div>
+          </div>
+          <div id="ideasBankList"></div>
+        </div>
+
       </div>
     </div>
 
@@ -663,6 +754,14 @@ const formatLabels = {
 
 const effortDisplay = { very_low: '🟢 Very Low', low: '🟢 Low', medium: '🟡 Medium', high: '🔴 High' };
 
+function getDefaultAdPotential(platform, tier) {
+  if (platform === 'linkedin') return 'High';
+  if (platform === 'x_thread' && tier === '1_high') return 'High';
+  if (platform === 'youtube_clip') return 'Medium';
+  if (platform === 'ig_carousel') return 'Medium';
+  return 'Low';
+}
+
 function generateDefaultCards() {
   return [
     {
@@ -674,6 +773,7 @@ function generateDefaultCards() {
       cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
       effortLevel: 'medium', estimatedMinutes: 30, priority: 1, stage: 'idea',
       assignedTo: 'kishan',
+      adPotential: 'Medium',
       draftCopy: '[CLIP: 60-90 seconds]\n\nHook: "Bitcoin just entered a price zone that has marked the bottom of every major cycle since 2012."\n\nBody: Show the monthly chart with Bollinger Bands. Highlight the previous entries into the lower band — 2015, 2018, 2022 — and what happened in the 12-24 months that followed.\n\n"This isn\'t a prediction. It\'s a pattern. And the pattern is clear."\n\nEnd screen: Link to full video + subscribe.',
       mediaNeeded: 'Clip from full video — timestamp around the Bollinger Band discussion. Add lower-third text overlays.',
       notes: ''
@@ -687,6 +787,7 @@ function generateDefaultCards() {
       cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
       effortLevel: 'medium', estimatedMinutes: 30, priority: 2, stage: 'idea',
       assignedTo: 'kishan',
+      adPotential: 'Medium',
       draftCopy: '[CLIP: 60-90 seconds]\n\nHook: "While retail investors are selling, here\'s what institutional on-chain data is actually showing right now."\n\nBody: Walk through the on-chain accumulation metrics — wallet cohort analysis showing large wallets increasing positions while small wallets are distributing.\n\n"When the data says one thing and the headlines say another, I follow the data. Every time."\n\nEnd screen: Link to full breakdown in the video.',
       mediaNeeded: 'Clip from institutional data segment. Add on-chain chart overlays if not already in video.',
       notes: ''
@@ -700,6 +801,7 @@ function generateDefaultCards() {
       cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
       effortLevel: 'low', estimatedMinutes: 25, priority: 3, stage: 'idea',
       assignedTo: 'kishan',
+      adPotential: 'Medium',
       draftCopy: '[CLIP: 60-90 seconds]\n\nHook: "Bitcoin is down 48%. Sounds catastrophic. Here\'s what every previous drawdown of this magnitude led to."\n\nBody: Quick-fire data — 2014: -85%, then 12,000% recovery. 2018: -84%, then 1,600% recovery. 2022: -77%, then 350% recovery. 2025: -48%...\n\n"I\'m not saying history will repeat. I\'m saying ignoring historical data is not a strategy."\n\nEnd screen: Full data breakdown in the video.',
       mediaNeeded: 'Clip from drawdown comparison segment. Ensure historical chart is visible.',
       notes: ''
@@ -713,6 +815,7 @@ function generateDefaultCards() {
       cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
       effortLevel: 'medium', estimatedMinutes: 30, priority: 4, stage: 'idea',
       assignedTo: 'kishan',
+      adPotential: 'Medium',
       draftCopy: '[CLIP: 60-90 seconds]\n\nHook: "I started accumulating again at $63K. Not because I felt bullish. Because of this framework."\n\nBody: Walk through the decision checklist — value zone entry ✓, extreme fear reading ✓, institutional accumulation ✓, macro context reviewed ✓.\n\n"The framework tells me what to do so my emotions don\'t have to. That\'s the entire point."\n\nEnd screen: Full framework breakdown in the video.',
       mediaNeeded: 'Clip from the $63K discussion segment.',
       notes: ''
@@ -726,6 +829,7 @@ function generateDefaultCards() {
       cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
       effortLevel: 'low', estimatedMinutes: 20, priority: 5, stage: 'idea',
       assignedTo: 'kishan',
+      adPotential: 'Low',
       draftCopy: 'Subject: Bitcoin Down 48% — What the Data Actually Says\n\nPreview: The headlines say crash. The on-chain data says something different.\n\n---\n\nBitcoin has drawn down 48% from its all-time high.\n\nThe Fear & Greed Index hit 8 — extreme fear. This has happened only 5 times in Bitcoin\'s history.\n\nThe headlines are predictable: "crash," "bubble burst," "digital tulips." You\'ve heard it all before.\n\nBut here\'s what the headlines won\'t tell you:\n\n→ Every previous drawdown of this magnitude (45%+) has preceded a new all-time high within 12-24 months\n→ On-chain data shows institutional wallets are accumulating, not selling\n→ Bitcoin just entered the monthly Bollinger Band value zone — a level that has marked the bottom of every major cycle since 2012\n\nThis doesn\'t mean "buy everything now." It means the data deserves more attention than the headlines.\n\nI broke down all of this — the historical patterns, the on-chain signals, and the framework I use to make decisions during drawdowns — in this week\'s video.\n\n👉 Watch the full breakdown: [LINK]\n\nAs always, this is education — not financial advice. But the data is worth looking at before you make any decisions.\n\n— Ben',
       mediaNeeded: 'None — text email with video thumbnail and CTA button.',
       notes: ''
@@ -739,6 +843,7 @@ function generateDefaultCards() {
       cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
       effortLevel: 'medium', estimatedMinutes: 25, priority: 6, stage: 'idea',
       assignedTo: 'ben',
+      adPotential: 'High',
       draftCopy: '1/ Bitcoin is down 48% from ATH.\n\nFear & Greed Index at 8.\n\nI looked at the data. Here\'s what I found 🧵\n\n2/ First, context.\n\nBitcoin has had 5 drawdowns of 45%+ from ATH.\n\nEvery single one preceded a new all-time high within 12-24 months.\n\nNot sometimes. Every time.\n\n3/ The Fear & Greed Index has hit single digits only 5 times in its history.\n\nAverage 12-month return from those readings: well above what most asset classes deliver in a decade.\n\nFear is a data point, not a directive.\n\n4/ Here\'s what\'s happening on-chain:\n\nInstitutional wallets (1,000+ BTC) are accumulating.\nRetail wallets (<1 BTC) are distributing.\n\nWhen the smart money and the scared money diverge — I pay attention to the smart money.\n\n5/ Bitcoin just entered the monthly Bollinger Band "value zone."\n\nThis zone has marked the bottom of every major cycle since 2012.\n\nIt doesn\'t mean "bottom is in today." It means the asymmetric opportunity window is open.\n\n6/ The biggest mistake I see:\n\nGoing all in at one price during a drawdown.\n\nNo one picks the exact bottom. Dollar-cost averaging through the value zone is how you capture the opportunity without needing to be perfect.\n\n7/ Important distinction:\n\nThis analysis applies to Bitcoin specifically.\n\nAltcoins are a fundamentally different asset class with different risk profiles. Don\'t apply Bitcoin\'s historical patterns to tokens with 2 years of history.\n\n8/ I broke down all of this in detail — the historical data, the on-chain signals, and the exact framework I use to make decisions during drawdowns.\n\nFull video: [LINK]\n\nNot financial advice. But the data is worth your time.',
       mediaNeeded: 'None — text thread. Consider adding a chart image to tweet 5 (Bollinger Band visual).',
       notes: ''
@@ -752,6 +857,7 @@ function generateDefaultCards() {
       cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
       effortLevel: 'medium', estimatedMinutes: 20, priority: 7, stage: 'idea',
       assignedTo: 'ben',
+      adPotential: 'High',
       draftCopy: 'Bitcoin has drawn down 48% from its all-time high.\n\nThe headlines are calling it a crash. The data tells a different story.\n\nI\'ve spent 9 years in digital assets. Built a research and education business around helping high-net-worth investors navigate this asset class.\n\nHere\'s what I see when I look at the data (not the headlines):\n\n📊 Historical context: Every Bitcoin drawdown of 45%+ from ATH has preceded a new all-time high within 12-24 months. Not a guarantee — but a pattern worth understanding.\n\n📉 Sentiment: The Fear & Greed Index hit 8. This has happened only 5 times. Each time marked a significant inflection point.\n\n🏦 On-chain data: Institutional wallets are accumulating. Retail wallets are selling. When these diverge, the institutional signal has historically been the better indicator.\n\nDoes this mean "buy now"? No.\n\nIt means having a framework for making decisions during drawdowns is the difference between reacting emotionally and acting strategically.\n\nI cover the full data breakdown — historical patterns, on-chain signals, and the decision framework I use — in my latest analysis.\n\nLink in comments.\n\n#DigitalAssets #Bitcoin #InvestmentFramework',
       mediaNeeded: 'Professional chart graphic or video thumbnail. LinkedIn favours native images.',
       notes: ''
@@ -765,6 +871,7 @@ function generateDefaultCards() {
       cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
       effortLevel: 'medium', estimatedMinutes: 35, priority: 8, stage: 'idea',
       assignedTo: 'kishan',
+      adPotential: 'Low',
       draftCopy: '[REEL: 30-60 seconds, vertical format]\n\nHook (text on screen): "The #1 mistake in a drawdown"\n\nVoiceover: "Bitcoin is down 48% and I\'m seeing the same mistake everywhere. People going all in at the first sign of a dip."\n\n"Here\'s the thing — no one picks the exact bottom. No one. Not me, not the best analysts in the world."\n\n"So instead of trying to be perfect, here\'s the framework:"\n\n"When Bitcoin enters the value zone, I start dollar-cost averaging. Not all at once. Systematically. Over weeks."\n\n"This way, if it drops another 20%, I\'m still buying. If it bounces, I already have a position."\n\n"Frameworks beat feelings. Every time."\n\n[End screen: "Full framework breakdown — link in bio"]\n\nCaption: Bitcoin is down 48%. The biggest mistake? Going all in at one price. Here\'s the DCA framework I use instead → Full video in bio\n\n#Bitcoin #DigitalAssets #Investing #DCA',
       mediaNeeded: 'Vertical re-edit from full video or fresh talking-head clip. Add text overlays for key points.',
       notes: ''
@@ -778,6 +885,7 @@ function generateDefaultCards() {
       cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
       effortLevel: 'high', estimatedMinutes: 45, priority: 9, stage: 'idea',
       assignedTo: 'kishan',
+      adPotential: 'Medium',
       draftCopy: 'Slide 1 (Cover): "Bitcoin Down 48% — 10 Data Points Before You Decide"\n\nSlide 2: "48% drawdown from ATH — sounds catastrophic, right?"\n\nSlide 3: "But every Bitcoin drawdown of 45%+ has preceded a new ATH within 12-24 months"\n\nSlide 4: "Fear & Greed Index: 8 — Extreme Fear. This has happened only 5 times."\n\nSlide 5: "Each previous extreme fear reading marked a significant market bottom"\n\nSlide 6: "On-chain: institutional wallets (1,000+ BTC) are accumulating"\n\nSlide 7: "On-chain: retail wallets (<1 BTC) are distributing (panic selling)"\n\nSlide 8: "Bitcoin entered the monthly Bollinger Band value zone — bottomed every cycle since 2012"\n\nSlide 9: "The 2014 drawdown: -85%. What followed: 12,000% recovery. 2018: -84%, then 1,600%."\n\nSlide 10: "Headlines ≠ Data. Make decisions based on frameworks, not fear."\n\nSlide 11 (CTA): "Full breakdown with all the data → Link in bio"\n\nCaption: Bitcoin is down 48%. Before you make any decisions — look at the data, not the headlines. 10 data points that tell a very different story. Full analysis → link in bio.',
       mediaNeeded: 'Design 10 carousel slides in CS brand. Clean, data-focused, minimal text per slide. Use brand colours.',
       notes: ''
@@ -791,6 +899,7 @@ function generateDefaultCards() {
       cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
       effortLevel: 'medium', estimatedMinutes: 30, priority: 10, stage: 'idea',
       assignedTo: 'kishan',
+      adPotential: 'Low',
       draftCopy: '[REEL: 30-45 seconds, vertical format]\n\nHook (text on screen): "Bitcoin ≠ Altcoins"\n\nVoiceover: "I see this constantly. Someone looks at Bitcoin\'s historical drawdown data and then applies it to their altcoin portfolio."\n\n"Stop. These are fundamentally different asset classes."\n\n"Bitcoin has 15 years of cycle data. Multiple 45%+ drawdowns, each followed by new highs."\n\n"Most altcoins? 2-3 years of data. Many won\'t survive this cycle."\n\n"When I say Bitcoin is in a value zone — that\'s Bitcoin specifically. Not your favourite alt."\n\n"Different assets. Different frameworks. Different risk."\n\n[End: "Full breakdown → link in bio"]\n\nCaption: Bitcoin is not "crypto." When I share Bitcoin data, I mean Bitcoin. Different asset, different framework, different risk profile. Full analysis → link in bio.',
       mediaNeeded: 'Vertical talking-head clip or re-edit from full video. Text overlays for key distinction.',
       notes: ''
@@ -804,6 +913,7 @@ function generateDefaultCards() {
       cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
       effortLevel: 'low', estimatedMinutes: 10, priority: 11, stage: 'idea',
       assignedTo: 'kishan',
+      adPotential: 'Low',
       draftCopy: 'Bitcoin is down 48% from its all-time high.\n\nBefore you react, here\'s what the data actually shows:\n\n📊 Every Bitcoin drawdown of 45%+ from ATH has preceded a new all-time high within 12-24 months\n\n😱 The Fear & Greed Index hit 8 (extreme fear) — this has happened only 5 times. Each time was a significant turning point.\n\n🏦 On-chain data: institutional wallets are quietly accumulating while retail wallets are selling.\n\n📉 Bitcoin just entered the monthly "value zone" that has marked the bottom of every major cycle since 2012.\n\nThis doesn\'t mean rush out and buy. It means the data tells a very different story than the headlines.\n\nI break down all of this — historical patterns, on-chain signals, and my framework for making decisions during drawdowns — in this week\'s video.\n\n👉 Link in comments\n\nAs always: education, not financial advice. But the data is worth 20 minutes of your time.',
       mediaNeeded: 'Video thumbnail or chart graphic. Facebook favours native video clips if available.',
       notes: ''
@@ -817,6 +927,7 @@ function generateDefaultCards() {
       cta: 'comment', ctaLink: '',
       effortLevel: 'very_low', estimatedMinutes: 5, priority: 12, stage: 'idea',
       assignedTo: 'kishan',
+      adPotential: 'Low',
       draftCopy: '📊 Bitcoin is down 48% from its all-time high.\n\nWhat\'s your move?\n\n🔵 Accumulating (DCA)\n🟢 Holding — not selling, not buying\n🟡 Waiting for more data\n🔴 Reducing exposure\n\nI just published my full data breakdown on this drawdown — including the historical patterns and on-chain signals I\'m watching. Link to the video in my latest upload.\n\nCurious where everyone\'s head is at. 👇',
       mediaNeeded: 'None — YouTube community poll format.',
       notes: ''
@@ -830,6 +941,7 @@ function generateDefaultCards() {
       cta: 'visit_vsl', ctaLink: 'https://collectiveshift.com/vsl',
       effortLevel: 'high', estimatedMinutes: 90, priority: 13, stage: 'idea',
       assignedTo: 'kishan',
+      adPotential: 'Low',
       draftCopy: '# What a 48% Bitcoin Drawdown Teaches Us About Market Psychology\n\n*By Ben Simpson, Founder of Collective Shift*\n\nBitcoin has drawn down 48% from its all-time high. If you\'re reading this, you\'re likely feeling one of two things: fear or opportunity.\n\nBoth are valid emotional responses. Neither should drive your investment decisions.\n\nIn this analysis, I want to walk through what the data actually shows during drawdowns of this magnitude — and more importantly, what it reveals about the psychology that causes most investors to make their biggest mistakes at exactly the wrong time.\n\n## The Historical Pattern\n\nBitcoin has experienced five drawdowns of 45% or more from its all-time high...\n\n[Continue with full article covering: historical drawdowns, Fear & Greed psychology, institutional vs retail behaviour, the value zone framework, and why having a pre-built decision framework matters more than any single data point.]\n\n## The Framework\n\nI don\'t make investment decisions based on headlines. I use a systematic framework...\n\n[Share the WHAT of the framework without the specific HOW — drive to VSL for the detailed approach.]\n\n---\n\n*This article is for educational purposes only and does not constitute financial advice. For a deeper look at the frameworks I use, visit [Collective Shift](https://collectiveshift.com).*',
       mediaNeeded: 'Featured image, 2-3 in-article charts (drawdown comparison, Fear & Greed history, Bollinger Band chart).',
       notes: 'SEO target keywords: "Bitcoin drawdown", "Bitcoin crash 2025", "should I sell Bitcoin"'
@@ -843,6 +955,7 @@ function generateDefaultCards() {
       cta: 'none', ctaLink: '',
       effortLevel: 'very_low', estimatedMinutes: 10, priority: 14, stage: 'idea',
       assignedTo: 'kishan',
+      adPotential: 'Low',
       draftCopy: '[QUOTE CARD — CS branded]\n\n"Fear is a data point, not a directive.\n\nThe Fear & Greed Index hit 8. This has happened 5 times in Bitcoin\'s history. Each one was a turning point.\n\nDon\'t let a number designed to measure emotion become the emotion that drives your decisions."\n\n— Ben Simpson, Collective Shift\n\n[Accompanying message for Platinum community:]\nNew video dropped — full data breakdown on this 48% drawdown. Historical patterns, on-chain signals, and the framework for navigating it. Worth 20 minutes. Link: [VIDEO URL]',
       mediaNeeded: 'Branded quote card graphic — CS orange accent, clean typography, Ben\'s name.',
       notes: ''
@@ -856,6 +969,7 @@ function generateDefaultCards() {
       cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
       effortLevel: 'high', estimatedMinutes: 45, priority: 15, stage: 'idea',
       assignedTo: 'kishan',
+      adPotential: 'Medium',
       draftCopy: 'Slide 1 (Cover): "My Framework for Drawdown Decisions"\n\nSlide 2: "Step 1: Check the data, not the headlines" — What does on-chain data show? Are institutions buying or selling?\n\nSlide 3: "Step 2: Historical context" — How does this drawdown compare to previous cycles? What followed?\n\nSlide 4: "Step 3: Sentiment check" — Where is Fear & Greed? Extreme readings in either direction are signals.\n\nSlide 5: "Step 4: Value zone assessment" — Has Bitcoin entered a historically significant price zone?\n\nSlide 6: "Step 5: Position sizing" — Never go all-in. DCA through the zone systematically.\n\nSlide 7: "Step 6: Separate Bitcoin from altcoins" — Different assets, different frameworks, different risk.\n\nSlide 8: "Step 7: Review your timeline" — Are you investing for 6 months or 6 years? This changes everything.\n\nSlide 9 (CTA): "I walk through this entire framework with real data in my latest video → Link in bio"\n\nCaption: This is the exact framework I use when Bitcoin enters a drawdown. No emotion. No panic. Just a checklist. Full walkthrough with live data → link in bio.',
       mediaNeeded: 'Design 8-9 carousel slides. Clean, step-by-step format. CS brand colours.',
       notes: ''
@@ -869,6 +983,7 @@ function generateDefaultCards() {
       cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
       effortLevel: 'medium', estimatedMinutes: 20, priority: 16, stage: 'idea',
       assignedTo: 'ben',
+      adPotential: 'Low',
       draftCopy: '1/ 3 on-chain signals I watch when Bitcoin is in the red.\n\nNo hype. Just data. 🧵\n\n2/ Signal #1: Wallet cohort behaviour\n\nAre large wallets (1,000+ BTC) accumulating or distributing?\n\nRight now: accumulating. While retail sells in fear, institutions are adding.\n\nThis divergence has historically been one of the strongest signals.\n\n3/ Signal #2: Exchange flows\n\nIs Bitcoin flowing onto exchanges (selling pressure) or off exchanges (holding/accumulation)?\n\nCurrent data: net outflows from exchanges. Fewer coins available to sell.\n\n4/ Signal #3: Long-term holder behaviour\n\nAre long-term holders (1+ year) selling? Or are they sitting tight?\n\nRight now: long-term holders are not moving. The selling is almost entirely short-term holders and new entrants.\n\n5/ These three signals together paint a picture:\n\n→ Institutions buying\n→ Coins leaving exchanges\n→ Long-term holders not selling\n\nThe fear is real. But the on-chain data doesn\'t support panic.\n\n6/ I cover these signals (and more) with actual data and charts in my latest video.\n\nFull breakdown: [LINK]\n\nNot financial advice — just the data that\'s publicly available if you know where to look.',
       mediaNeeded: 'Consider adding chart screenshots for tweets 2-4.',
       notes: ''
@@ -882,6 +997,7 @@ function generateDefaultCards() {
       cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
       effortLevel: 'medium', estimatedMinutes: 20, priority: 17, stage: 'idea',
       assignedTo: 'ben',
+      adPotential: 'Low',
       draftCopy: '9 years in digital assets.\n\nThe most important lesson about bear markets:\n\nThe best decisions are made before they happen.\n\nWhen Bitcoin was at all-time highs, I wasn\'t celebrating. I was building a framework for exactly this moment.\n\nWhat price triggers my DCA strategy?\nWhat on-chain signals do I watch?\nWhat\'s my position sizing in a drawdown?\nWhen do I stop adding?\n\nEvery one of these questions was answered months ago. Not today. Not in the middle of a 48% drawdown.\n\nToday, I just follow the framework.\n\nThat\'s the lesson. The framework doesn\'t need to be complex. It needs to exist. And it needs to be built when you\'re thinking clearly — not when the Fear & Greed Index is at 8.\n\nIf you\'re making investment decisions based on today\'s headlines, you\'re already behind.\n\nBuild the framework. Then trust it.\n\n—\n\nI share the exact data and signals I\'m watching right now in my latest analysis. Link in comments.\n\n#DigitalAssets #Bitcoin #InvestmentFramework #WealthManagement',
       mediaNeeded: 'Professional headshot or branded graphic. LinkedIn favours personal imagery for authority posts.',
       notes: ''
@@ -966,11 +1082,17 @@ function renderCard(card) {
     actions = `<button class="btn-archive" onclick="event.stopPropagation(); archiveCard('${card.id}')">🗄️ Archive</button>`;
   }
 
+  // Ad potential badge
+  let adBadge = '';
+  if (card.adPotential === 'High') adBadge = '<span class="badge badge-ad badge-ad-high">🔥 Ad Ready</span>';
+  else if (card.adPotential === 'Medium') adBadge = '<span class="badge badge-ad badge-ad-medium">📊 Ad Potential</span>';
+
   return `<div class="content-card" draggable="true" ondragstart="handleDragStart(event, '${card.id}')" ondragend="handleDragEnd(event)" onclick="openModal('${card.id}')">
     <div class="badges">
       <span class="badge ${pm.badgeClass}">${pm.label}</span>
       <span class="badge badge-format">${fmt}</span>
       <span class="badge badge-tier ${tierClass}">${tierLabel}</span>
+      ${adBadge}
     </div>
     <div class="card-hook">${escHtml(card.hook)}</div>
     <div class="card-meta">
@@ -1187,6 +1309,162 @@ function saveNotes(id) {
   }
 }
 
+function saveAdPotential(id) {
+  const card = cards.find(c => c.id === id);
+  if (card) {
+    card.adPotential = document.getElementById('modalAdPotential').value;
+    saveState();
+    render();
+  }
+}
+
+// ══════════════════════════════════════
+// SOURCE TABS
+// ══════════════════════════════════════
+function switchSourceTab(tabId) {
+  document.querySelectorAll('.source-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.source-tab-panel').forEach(p => p.classList.remove('active'));
+  const panel = document.getElementById('tab-' + tabId);
+  if (panel) panel.classList.add('active');
+  document.querySelectorAll('.source-tab').forEach(t => {
+    if (t.dataset.tab === tabId) t.classList.add('active');
+  });
+  if (tabId === 'ideas-bank') renderIdeasBank();
+}
+
+// ══════════════════════════════════════
+// IDEAS BANK
+// ══════════════════════════════════════
+const IDEAS_STORAGE_KEY = 'cs_ideas_bank';
+
+function loadIdeas() {
+  try {
+    const saved = localStorage.getItem(IDEAS_STORAGE_KEY);
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  const defaults = [
+    { id: 'idea_1', text: "A member asked: what's the difference between Bitcoin and digital assets? Should I explain it?", source: 'Member Question', date: new Date().toISOString() },
+    { id: 'idea_2', text: 'Community thread blew up about the Fed rate decision - good video angle?', source: 'Community', date: new Date().toISOString() },
+    { id: 'idea_3', text: "DM: 'Ben how do you know when to sell? I have no exit strategy'", source: 'DM', date: new Date().toISOString() }
+  ];
+  localStorage.setItem(IDEAS_STORAGE_KEY, JSON.stringify(defaults));
+  return defaults;
+}
+
+function saveIdeas(ideas) {
+  localStorage.setItem(IDEAS_STORAGE_KEY, JSON.stringify(ideas));
+}
+
+function addIdea() {
+  const text = document.getElementById('newIdeaText').value.trim();
+  if (!text) return;
+  const source = document.getElementById('newIdeaSource').value;
+  const ideas = loadIdeas();
+  ideas.unshift({ id: 'idea_' + Date.now(), text, source, date: new Date().toISOString() });
+  saveIdeas(ideas);
+  document.getElementById('newIdeaText').value = '';
+  renderIdeasBank();
+}
+
+function deleteIdea(id) {
+  let ideas = loadIdeas();
+  ideas = ideas.filter(i => i.id !== id);
+  saveIdeas(ideas);
+  renderIdeasBank();
+}
+
+function turnIntoVideo(id) {
+  const ideas = loadIdeas();
+  const idea = ideas.find(i => i.id === id);
+  if (!idea) return;
+  switchSourceTab('add-manually');
+  document.getElementById('videoTitle').value = idea.text;
+}
+
+function sourceTagClass(source) {
+  const map = { 'Member Question': 'member-question', 'DM': 'dm', 'Community': 'community', 'My Thought': 'my-thought', 'Market Event': 'market-event' };
+  return map[source] || 'community';
+}
+
+function renderIdeasBank() {
+  const ideas = loadIdeas();
+  const container = document.getElementById('ideasBankList');
+  if (!ideas.length) {
+    container.innerHTML = '<p style="font-size:13px; color:#807F86; text-align:center; padding:20px;">No ideas yet. Drop one in above!</p>';
+    return;
+  }
+  container.innerHTML = ideas.map(idea => {
+    const d = new Date(idea.date);
+    const dateStr = d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+    return `<div class="idea-item">
+      <div style="flex:1;">
+        <div class="idea-text">${escHtml(idea.text)}</div>
+        <div class="idea-meta">
+          <span class="idea-source-tag ${sourceTagClass(idea.source)}">${idea.source}</span>
+          <span>${dateStr}</span>
+        </div>
+      </div>
+      <div class="idea-actions">
+        <button class="btn-turn-video" onclick="turnIntoVideo('${idea.id}')">Turn into video \u2192</button>
+        <button class="btn-delete-idea" onclick="deleteIdea('${idea.id}')">\u2715</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════
+// THUMBNAIL 72HR REMINDER
+// ══════════════════════════════════════
+const THUMB_REMINDER_KEY = 'cs_thumb_reminder';
+let thumbCountdownInterval = null;
+
+function setThumbReminder() {
+  const reminderTime = Date.now() + (72 * 60 * 60 * 1000);
+  localStorage.setItem(THUMB_REMINDER_KEY, reminderTime.toString());
+  startThumbCountdown();
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function startThumbCountdown() {
+  const reminderTime = localStorage.getItem(THUMB_REMINDER_KEY);
+  if (!reminderTime) return;
+  const target = parseInt(reminderTime);
+  const btn = document.getElementById('thumbReminderBtn');
+  const countdown = document.getElementById('thumbCountdown');
+  if (!btn || !countdown) return;
+
+  if (thumbCountdownInterval) clearInterval(thumbCountdownInterval);
+
+  function update() {
+    const remaining = target - Date.now();
+    if (remaining <= 0) {
+      countdown.textContent = '🔔 Review time! Check your thumbnail CTR now.';
+      countdown.style.display = 'block';
+      btn.textContent = 'Set New 72hr Reminder';
+      btn.style.background = '#08C394';
+      clearInterval(thumbCountdownInterval);
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('📸 Thumbnail Review', { body: 'Check your thumbnail CTR. If < 4%, swap it!' });
+      }
+      localStorage.removeItem(THUMB_REMINDER_KEY);
+      return;
+    }
+    const hours = Math.floor(remaining / (1000 * 60 * 60));
+    const mins = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+    countdown.textContent = `⏰ Review due in ${hours}h ${mins}m`;
+    countdown.style.display = 'block';
+    btn.textContent = '✅ Reminder Set';
+    btn.style.background = '#08C394';
+  }
+
+  update();
+  thumbCountdownInterval = setInterval(update, 60000);
+}
+
+startThumbCountdown();
+
 // Close modal on overlay click
 document.getElementById('cardModal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
@@ -1208,87 +1486,9 @@ function closeSidebar() {
 }
 
 // ══════════════════════════════════════
-// SOURCE TABS & MY CONTENT
-// ══════════════════════════════════════
-function switchSourceTab(tabId) {
-  document.querySelectorAll('.source-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tabId));
-  document.querySelectorAll('.source-tab-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('tab-' + tabId).classList.add('active');
-}
-
-function renderMyContent() {
-  const ytCards = MY_CONTENT.filter(c => c.platform === 'youtube');
-  const igCards = MY_CONTENT.filter(c => c.platform === 'instagram');
-
-  const igSvg = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>';
-
-  document.getElementById('ytGrid').innerHTML = ytCards.map(c => `
-    <div class="my-content-card" onclick="selectContent('${c.id}')">
-      <img class="thumb" src="https://img.youtube.com/vi/${c.videoId}/mqdefault.jpg" alt="${escHtml(c.title)}" loading="lazy">
-      <div class="card-info">
-        <div class="card-title">${escHtml(c.title)}</div>
-        <div class="card-bottom">
-          <span class="platform-badge yt">YouTube</span>
-          <span class="card-duration">${c.duration}</span>
-        </div>
-      </div>
-      <div class="hover-strip">Use for Redistribution →</div>
-    </div>
-  `).join('');
-
-  document.getElementById('igGrid').innerHTML = igCards.map(c => `
-    <div class="my-content-card" onclick="selectContent('${c.id}')">
-      <div class="thumb-placeholder">${igSvg}</div>
-      <div class="card-info">
-        <div class="card-title">${escHtml(c.title)}</div>
-        <div class="card-bottom">
-          <span class="platform-badge ig">Instagram</span>
-          <span class="card-duration">${c.duration}</span>
-        </div>
-      </div>
-      <div class="hover-strip">Use for Redistribution →</div>
-    </div>
-  `).join('');
-}
-
-function selectContent(contentId) {
-  const item = MY_CONTENT.find(c => c.id === contentId);
-  if (!item) return;
-
-  // Switch to Add Manually tab
-  switchSourceTab('add-manually');
-
-  // Auto-fill fields
-  document.getElementById('videoTitle').value = item.title;
-  document.getElementById('videoDesc').value = item.description;
-  document.getElementById('videoTranscript').value = 'Key points covered:\n- ' + item.keyPoints.split(', ').join('\n- ');
-
-  // Pulse the generate button
-  const btn = document.getElementById('generateBtn');
-  btn.classList.remove('pulse');
-  void btn.offsetWidth; // force reflow
-  btn.classList.add('pulse');
-
-  // Show generating banner
-  const banner = document.getElementById('generatingBanner');
-  banner.textContent = '🎯 Generating ideas for: ' + item.title + ' →';
-  banner.classList.add('visible');
-
-  // Ensure input body is expanded
-  document.getElementById('inputBody').classList.remove('collapsed');
-  document.getElementById('inputChevron').style.transform = 'rotate(0deg)';
-
-  // Smooth scroll to the manual tab
-  setTimeout(() => {
-    document.getElementById('tab-add-manually').scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, 100);
-}
-
-// ══════════════════════════════════════
 // INIT
 // ══════════════════════════════════════
 loadState();
-renderMyContent();
 if (boardVisible) {
   render();
   // Collapse input if board exists
