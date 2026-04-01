@@ -153,6 +153,80 @@ tailwind.config = {
   }
   .add-task-btn:hover { color: #FC5C03; }
 
+  /* ── Task Detail Panel ── */
+  .task-panel-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 200;
+    opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s;
+  }
+  .task-panel-backdrop.open { opacity: 1; visibility: visible; }
+  .task-panel {
+    position: fixed; top: 0; right: 0; width: 400px; height: 100vh; z-index: 210;
+    background: #FFFFFF; border-left: 3px solid #FC5C03;
+    transform: translateX(100%); transition: transform 0.25s ease;
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .task-panel.open { transform: translateX(0); }
+  @media (max-width: 640px) { .task-panel { width: 100%; } }
+  .tp-close {
+    position: absolute; top: 14px; right: 16px; background: none; border: none;
+    font-size: 20px; color: #807F86; cursor: pointer; line-height: 1; z-index: 5;
+  }
+  .tp-close:hover { color: #1B1925; }
+  .tp-body { flex: 1; overflow-y: auto; padding: 24px 20px 20px; }
+  .tp-label {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px;
+    color: #807F86; font-weight: 600; margin-bottom: 4px; margin-top: 16px;
+  }
+  .tp-label:first-child { margin-top: 0; }
+  .tp-task-name {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 700;
+    color: #1B1925; border: none; background: none; width: 100%; padding: 4px 0;
+    outline: none; border-bottom: 1px solid transparent;
+  }
+  .tp-task-name:hover { border-bottom-color: #E8E8EA; }
+  .tp-task-name:focus { border-bottom-color: #FC5C03; }
+  .tp-select {
+    font-size: 13px; padding: 6px 10px; border-radius: 6px; border: 1px solid #E8E8EA;
+    background: #F7F7F8; cursor: pointer; outline: none; font-family: 'Barlow', sans-serif;
+  }
+  .tp-select:focus { border-color: #FC5C03; }
+  .tp-date {
+    font-size: 13px; padding: 6px 10px; border-radius: 6px; border: 1px solid #E8E8EA;
+    background: #F7F7F8; font-family: 'Source Code Pro', monospace; outline: none;
+  }
+  .tp-date:focus { border-color: #FC5C03; }
+  .tp-notes {
+    width: 100%; font-size: 13px; padding: 8px 10px; border-radius: 6px;
+    border: 1px solid #E8E8EA; background: #F7F7F8; resize: none; min-height: 60px;
+    font-family: 'Barlow', sans-serif; outline: none; line-height: 1.5;
+  }
+  .tp-notes:focus { border-color: #FC5C03; }
+  .tp-file-chip {
+    display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px;
+    background: #F7F7F8; border: 1px solid #E8E8EA; border-radius: 100px;
+    font-size: 12px; color: #1B1925; text-decoration: none; margin: 3px 4px 3px 0;
+    transition: border-color 0.12s;
+  }
+  .tp-file-chip:hover { border-color: #FC5C03; color: #FC5C03; }
+  .tp-activity-item {
+    font-size: 11px; color: #807F86; padding: 3px 0; border-bottom: 1px solid #F0F0F2;
+    font-family: 'Source Code Pro', monospace;
+  }
+  /* ── Inline Status Pill ── */
+  .status-pill {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; cursor: pointer;
+    font-size: 9px; font-weight: 700; color: #fff; transition: transform 0.12s;
+    border: none; padding: 0;
+  }
+  .status-pill:hover { transform: scale(1.2); }
+  .status-pill[data-st='todo'] { background: #9CA3AF; }
+  .status-pill[data-st='urgent'] { background: #EF4444; }
+  .status-pill[data-st='progress'] { background: #3B82F6; }
+  .status-pill[data-st='done'] { background: #08C394; }
+  .status-pill[data-st='on-hold'] { background: #F59E0B; }
+  .status-pill[data-st='blocked'] { background: #EF4444; }
+
   /* ── View Tabs ── */
   .view-tab {
     padding: 8px 20px; font-size: 13px; font-weight: 600; cursor: pointer;
@@ -670,6 +744,54 @@ tailwind.config = {
   </div>
 </div>
 
+<!-- ═══ TASK DETAIL PANEL ═══ -->
+<div class="task-panel-backdrop" id="tpBackdrop" onclick="closeTaskPanel()"></div>
+<div class="task-panel" id="taskPanel">
+  <button class="tp-close" onclick="closeTaskPanel()">✕</button>
+  <div class="tp-body">
+    <div class="tp-label">Task Name</div>
+    <input class="tp-task-name" id="tpName" value="" />
+
+    <div style="display:flex; gap:16px; flex-wrap:wrap;">
+      <div style="flex:1; min-width:120px;">
+        <div class="tp-label">Status</div>
+        <select class="tp-select" id="tpStatus">
+          <option value="todo">Todo</option>
+          <option value="urgent">Urgent</option>
+          <option value="progress">In Progress</option>
+          <option value="done">Done</option>
+          <option value="on-hold">On Hold</option>
+          <option value="blocked">Blocked</option>
+        </select>
+      </div>
+      <div>
+        <div class="tp-label">Category</div>
+        <span class="category-badge" id="tpCategory" style="display:inline-block; margin-top:6px;"></span>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:16px; flex-wrap:wrap;">
+      <div style="flex:1; min-width:120px;">
+        <div class="tp-label">Due Date</div>
+        <input type="date" class="tp-date" id="tpDue" />
+      </div>
+      <div style="flex:1; min-width:120px;" id="tpCompletedWrap">
+        <div class="tp-label">Completed</div>
+        <input type="date" class="tp-date" id="tpCompleted" />
+      </div>
+    </div>
+
+    <div class="tp-label">Notes</div>
+    <textarea class="tp-notes" id="tpNotes"></textarea>
+
+    <div class="tp-label">Files & Links</div>
+    <div id="tpFiles" style="margin-top:4px;">—</div>
+
+    <div class="tp-label">Activity</div>
+    <div id="tpActivity" style="margin-top:4px;"></div>
+  </div>
+</div>
+
 <!-- ═══ MOBILE BOTTOM TAB BAR ═══ -->
 <div class="bottom-tab-bar">
   <a class="bottom-tab active" data-view="brief" onclick="switchView('brief')">
@@ -757,10 +879,15 @@ const CATEGORY_COLORS = {
   'strategy': { bg: '#FFF7ED', text: '#EA580C' },
 };
 const STATUS_COLORS = {
+  todo: '#9CA3AF',
   urgent: '#EF4444',
-  progress: '#F59E0B',
+  progress: '#3B82F6',
   done: '#08C394',
+  'on-hold': '#F59E0B',
+  blocked: '#EF4444',
 };
+const STATUS_LABELS = { todo:'T', urgent:'!', progress:'▶', done:'✓', 'on-hold':'⏸', blocked:'✕' };
+const STATUS_CYCLE = ['todo','progress','done','on-hold'];
 
 function escHtml(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
 
@@ -769,6 +896,11 @@ async function fetchTasks() {
     const res = await fetch('tasks.json?_=' + Date.now());
     const data = await res.json();
     priorities = data.tasks || [];
+    // Merge localStorage overrides per task
+    priorities.forEach(t => {
+      const ov = localStorage.getItem('cs-task-' + t.id);
+      if (ov) { try { Object.assign(t, JSON.parse(ov)); } catch(e) {} }
+    });
     savePriorities(priorities);
   } catch(e) {
     console.error('Failed to load tasks.json:', e);
