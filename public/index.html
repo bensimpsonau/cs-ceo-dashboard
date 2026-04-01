@@ -178,24 +178,57 @@ tailwind.config = {
   }
   .task-panel-backdrop.open { opacity: 1; visibility: visible; }
   .task-panel {
-    position: fixed; top: 0; right: 0; width: 400px; height: 100vh; z-index: 210;
+    position: fixed; top: 0; right: 0; width: 480px; height: 100vh; z-index: 210;
     background: #FFFFFF; border-left: 3px solid #FC5C03;
     transform: translateX(100%); transition: transform 0.25s ease;
     display: flex; flex-direction: column; overflow: hidden;
   }
   .task-panel.open { transform: translateX(0); }
   @media (max-width: 640px) { .task-panel { width: 100%; } }
+  .tp-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px 12px; border-bottom: 1px solid #F0F0F2; flex-shrink: 0;
+  }
+  .tp-header-title { font-size: 11px; font-weight: 700; color: #807F86; text-transform: uppercase; letter-spacing: 1px; }
   .tp-close {
-    position: absolute; top: 14px; right: 16px; background: none; border: none;
-    font-size: 20px; color: #807F86; cursor: pointer; line-height: 1; z-index: 5;
+    background: none; border: none; font-size: 20px; color: #807F86; cursor: pointer; line-height: 1; padding: 0;
   }
   .tp-close:hover { color: #1B1925; }
-  .tp-body { flex: 1; overflow-y: auto; padding: 24px 20px 20px; }
+  .tp-body { flex: 1; overflow-y: auto; padding: 20px 20px 8px; }
+  .tp-footer {
+    padding: 12px 20px 16px; border-top: 1px solid #F0F0F2; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .tp-save-btn {
+    background: #FC5C03; color: #fff; border: none; border-radius: 8px;
+    padding: 10px 24px; font-size: 14px; font-weight: 700; cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif; transition: opacity 0.15s;
+  }
+  .tp-save-btn:hover { opacity: 0.88; }
+  .tp-delete-btn {
+    background: none; border: none; color: #EF4444; font-size: 13px; cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif; padding: 0; text-decoration: underline;
+  }
+  .tp-delete-btn:hover { color: #B91C1C; }
   .tp-label {
     font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px;
     color: #807F86; font-weight: 600; margin-bottom: 4px; margin-top: 16px;
   }
   .tp-label:first-child { margin-top: 0; }
+  .tp-subtask-row {
+    display: flex; align-items: center; gap: 8px; padding: 6px 0;
+    border-bottom: 1px solid #F7F7F8;
+  }
+  .tp-subtask-row input[type=checkbox] { accent-color: #FC5C03; width: 15px; height: 15px; flex-shrink: 0; cursor: pointer; }
+  .tp-subtask-text { flex: 1; font-size: 13px; color: #1B1925; background: none; border: none; outline: none; font-family: 'Barlow', sans-serif; }
+  .tp-subtask-text.done-text { text-decoration: line-through; color: #9CA3AF; }
+  .tp-subtask-del { background: none; border: none; color: #D1D5DB; cursor: pointer; font-size: 15px; line-height: 1; padding: 0 2px; }
+  .tp-subtask-del:hover { color: #EF4444; }
+  .tp-add-subtask { background: none; border: 1px dashed #E8E8EA; border-radius: 6px; color: #807F86; font-size: 12px; cursor: pointer; padding: 6px 12px; width: 100%; margin-top: 8px; font-family: 'Plus Jakarta Sans', sans-serif; transition: border-color 0.15s; }
+  .tp-add-subtask:hover { border-color: #FC5C03; color: #FC5C03; }
+  .tp-progress-wrap { margin-top: 4px; }
+  .tp-progress-slider { width: 100%; accent-color: #FC5C03; cursor: pointer; }
+  .tp-progress-val { font-size: 12px; color: #FC5C03; font-weight: 700; margin-left: 8px; }
   .tp-task-name {
     font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 700;
     color: #1B1925; border: none; background: none; width: 100%; padding: 4px 0;
@@ -784,30 +817,34 @@ tailwind.config = {
 <!-- ═══ TASK DETAIL PANEL ═══ -->
 <div class="task-panel-backdrop" id="tpBackdrop" onclick="closeTaskPanel()"></div>
 <div class="task-panel" id="taskPanel">
-  <button class="tp-close" onclick="closeTaskPanel()">✕</button>
+  <div class="tp-header">
+    <span class="tp-header-title">Task Details</span>
+    <button class="tp-close" onclick="closeTaskPanel()">✕</button>
+  </div>
   <div class="tp-body">
-    <div class="tp-label">Task Name</div>
-    <input class="tp-task-name" id="tpName" value="" />
+    <div class="tp-label" style="margin-top:0;">Task Name</div>
+    <input class="tp-task-name" id="tpName" value="" placeholder="Task name..." />
 
-    <div style="display:flex; gap:16px; flex-wrap:wrap;">
+    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:14px;">
       <div style="flex:1; min-width:120px;">
-        <div class="tp-label">Status</div>
+        <div class="tp-label" style="margin-top:0;">Status</div>
         <select class="tp-select" id="tpStatus">
-          <option value="todo">Todo</option>
-          <option value="urgent">Urgent</option>
-          <option value="progress">In Progress</option>
-          <option value="done">Done</option>
-          <option value="on-hold">On Hold</option>
-          <option value="blocked">Blocked</option>
+          <option value="todo">To Do</option>
+          <option value="urgent">🔴 Urgent</option>
+          <option value="progress">🔵 In Progress</option>
+          <option value="blocked">⛔ Blocked</option>
+          <option value="on-hold">⏸ On Hold</option>
+          <option value="done">✅ Done</option>
         </select>
       </div>
-      <div>
-        <div class="tp-label">Category</div>
+      <div style="flex:1; min-width:120px;">
+        <div class="tp-label" style="margin-top:0;">Category</div>
         <span class="category-badge" id="tpCategory" style="display:inline-block; margin-top:6px;"></span>
+        <span id="tpSourceBadge" style="display:none; margin-left:6px; font-size:11px; color:#6366F1; background:#EEF2FF; padding:2px 7px; border-radius:100px; font-weight:600;">📋 Meeting</span>
       </div>
     </div>
 
-    <div style="display:flex; gap:16px; flex-wrap:wrap;">
+    <div style="display:flex; gap:12px; flex-wrap:wrap;">
       <div style="flex:1; min-width:120px;">
         <div class="tp-label">Due Date</div>
         <input type="date" class="tp-date" id="tpDue" />
@@ -818,14 +855,28 @@ tailwind.config = {
       </div>
     </div>
 
+    <div class="tp-label">Progress</div>
+    <div class="tp-progress-wrap" style="display:flex; align-items:center;">
+      <input type="range" class="tp-progress-slider" id="tpProgress" min="0" max="100" step="5" value="0" oninput="document.getElementById('tpProgressVal').textContent=this.value+'%'">
+      <span class="tp-progress-val" id="tpProgressVal">0%</span>
+    </div>
+
     <div class="tp-label">Notes</div>
-    <textarea class="tp-notes" id="tpNotes"></textarea>
+    <textarea class="tp-notes" id="tpNotes" placeholder="Add notes, context, or links..." rows="4" style="width:100%;box-sizing:border-box;"></textarea>
+
+    <div class="tp-label">Subtasks</div>
+    <div id="tpSubtasks" style="margin-top:4px;"></div>
+    <button class="tp-add-subtask" onclick="addSubtask()">+ Add subtask</button>
 
     <div class="tp-label">Files & Links</div>
     <div id="tpFiles" style="margin-top:4px;">—</div>
 
     <div class="tp-label">Activity</div>
-    <div id="tpActivity" style="margin-top:4px;"></div>
+    <div id="tpActivity" style="margin-top:4px; padding-bottom:8px;"></div>
+  </div>
+  <div class="tp-footer">
+    <button class="tp-delete-btn" onclick="deleteTask()">Delete task</button>
+    <button class="tp-save-btn" onclick="saveAndClose()">Save</button>
   </div>
 </div>
 
@@ -985,18 +1036,31 @@ function renderTasks() {
 
   sorted.forEach(p => {
     const globalIdx = priorities.indexOf(p);
-      const isOverdue = p.due && p.due < todayStr && p.status !== 'done';
-      const dueLabel = p.due ? (p.due === todayStr ? 'Today' : new Date(p.due + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })) : '';
-      const cat = CATEGORY_COLORS[p.category] || CATEGORY_COLORS.operations;
+    const stored = JSON.parse(localStorage.getItem('cs-task-' + p.id) || '{}');
+    if (stored._deleted) return; // skip deleted tasks
+    // Merge stored overrides
+    const effective = Object.assign({}, p, stored);
 
-      const st = STATUS_STYLE[p.status] || STATUS_STYLE.todo;
-      html += `<div class="task-row" data-status="${p.status}" onclick="openTaskPanel(${globalIdx})">
-        <button class="status-pill" data-st="${p.status}" title="Click to change status" onclick="event.stopPropagation(); cycleStatus(${globalIdx})">${STATUS_LABELS[p.status] || '?'}</button>
-        <span class="task-name ${p.status === 'done' ? 'done' : ''}">${escHtml(p.name)}</span>
-        ${p.source === 'meeting' ? `<span class="category-badge" style="background:#EFF6FF; color:#3B82F6;" title="From meeting: ${escHtml(p.meetingDate||'')}">📋 meeting</span>` : ''}
-        ${p.category ? `<span class="category-badge" style="background:${cat.bg}; color:${cat.text};">${p.category}</span>` : ''}
+    const isOverdue = effective.due && effective.due < todayStr && effective.status !== 'done';
+    const dueLabel = effective.due ? (effective.due === todayStr ? 'Today' : new Date(effective.due + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })) : '';
+    const cat = CATEGORY_COLORS[effective.category] || CATEGORY_COLORS.operations;
+    const prog = effective.progress || 0;
+    const subtaskCount = (effective.subtasks||[]).length;
+    const subtaskDone = (effective.subtasks||[]).filter(s=>s.done).length;
+
+    html += `<div class="task-row" data-status="${effective.status}" onclick="openTaskPanel(${globalIdx})">
+      <button class="status-pill" data-st="${effective.status}" title="Click to cycle status" onclick="event.stopPropagation(); cycleStatus(${globalIdx})">${STATUS_LABELS[effective.status] || '?'}</button>
+      <div style="flex:1; min-width:0;">
+        <span class="task-name ${effective.status === 'done' ? 'done' : ''}">${escHtml(effective.name)}</span>
+        ${prog > 0 ? `<div style="margin-top:4px; height:3px; background:#F0F0F2; border-radius:2px; overflow:hidden;"><div style="height:100%; width:${prog}%; background:#FC5C03; border-radius:2px;"></div></div>` : ''}
+      </div>
+      <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+        ${effective.source === 'meeting' ? `<span class="category-badge" style="background:#EFF6FF; color:#6366F1;">📋</span>` : ''}
+        ${subtaskCount > 0 ? `<span style="font-size:10px;color:#807F86;">${subtaskDone}/${subtaskCount}</span>` : ''}
+        ${effective.category ? `<span class="category-badge" style="background:${cat.bg}; color:${cat.text};">${effective.category}</span>` : ''}
         ${dueLabel ? `<span class="task-due ${isOverdue ? 'overdue' : ''}">${dueLabel}</span>` : ''}
-      </div>`;
+      </div>
+    </div>`;
   });
 
   html += `</div>`;
@@ -1190,7 +1254,6 @@ function openTaskPanel(idx) {
   const t = _allTasks[idx];
   if (!t) return;
 
-  // Load overrides from localStorage
   const stored = JSON.parse(localStorage.getItem('cs-task-' + t.id) || '{}');
   const task = Object.assign({}, t, stored);
 
@@ -1199,17 +1262,39 @@ function openTaskPanel(idx) {
   sel.value = task.status || 'todo';
   sel.style.borderColor = STATUS_COLORS[task.status] || '#9CA3AF';
 
-  document.getElementById('tpCategory').textContent = task.category || '';
+  const cat = task.category || '';
+  const catEl = document.getElementById('tpCategory');
+  catEl.textContent = cat;
+  const catColor = (window.CATEGORY_COLORS||{})[cat] || '#807F86';
+  catEl.style.background = catColor + '22';
+  catEl.style.color = catColor;
+  catEl.style.padding = '2px 8px';
+  catEl.style.borderRadius = '100px';
+  catEl.style.fontSize = '11px';
+  catEl.style.fontWeight = '600';
+
+  // Meeting badge
+  const srcBadge = document.getElementById('tpSourceBadge');
+  srcBadge.style.display = task.source === 'meeting' ? 'inline-block' : 'none';
+
   document.getElementById('tpDue').value = task.due || '';
   document.getElementById('tpCompleted').value = task.completedAt || '';
   document.getElementById('tpCompletedWrap').style.display = task.status === 'done' ? 'flex' : 'none';
   document.getElementById('tpNotes').value = task.notes || '';
 
+  const prog = task.progress || 0;
+  document.getElementById('tpProgress').value = prog;
+  document.getElementById('tpProgressVal').textContent = prog + '%';
+
+  // Subtasks
+  _currentSubtasks = JSON.parse(JSON.stringify(task.subtasks || []));
+  renderSubtasks();
+
   // Files
   const filesEl = document.getElementById('tpFiles');
   if (task.files && task.files.length) {
     filesEl.innerHTML = task.files.map(f =>
-      `<a href="${f.url}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;background:#F3F4F6;border-radius:6px;padding:4px 10px;font-size:12px;color:#1A1A2E;text-decoration:none;margin:2px;border:1px solid #E8E8EA;">🔗 ${f.label}</a>`
+      `<a href="${f.url}" target="_blank" class="tp-file-chip">🔗 ${f.label}</a>`
     ).join('');
   } else {
     filesEl.innerHTML = '<span style="color:#9CA3AF;font-size:12px;">No files linked</span>';
@@ -1219,8 +1304,8 @@ function openTaskPanel(idx) {
   const log = JSON.parse(localStorage.getItem('cs-task-log-' + t.id) || '[]');
   const actEl = document.getElementById('tpActivity');
   if (log.length) {
-    actEl.innerHTML = log.slice(-5).reverse().map(e =>
-      `<div style="font-size:11px;color:#807F86;padding:2px 0;">${e.time} - ${e.msg}</div>`
+    actEl.innerHTML = log.slice(-8).reverse().map(e =>
+      `<div class="tp-activity-item">${e.time} — ${e.msg}</div>`
     ).join('');
   } else {
     actEl.innerHTML = '<span style="color:#9CA3AF;font-size:12px;">No activity yet</span>';
@@ -1230,35 +1315,79 @@ function openTaskPanel(idx) {
   document.getElementById('tpBackdrop').classList.add('open');
 }
 
+let _currentSubtasks = [];
+
+function renderSubtasks() {
+  const el = document.getElementById('tpSubtasks');
+  if (!_currentSubtasks.length) {
+    el.innerHTML = '<div style="color:#9CA3AF;font-size:12px;padding:4px 0;">No subtasks</div>';
+    return;
+  }
+  el.innerHTML = _currentSubtasks.map((s, i) => `
+    <div class="tp-subtask-row">
+      <input type="checkbox" ${s.done ? 'checked' : ''} onchange="_currentSubtasks[${i}].done=this.checked; document.getElementById('tpSubtaskText${i}').className='tp-subtask-text'+(this.checked?' done-text':'');">
+      <input class="tp-subtask-text${s.done ? ' done-text' : ''}" id="tpSubtaskText${i}" value="${(s.text||'').replace(/"/g,'&quot;')}" oninput="_currentSubtasks[${i}].text=this.value" placeholder="Subtask...">
+      <button class="tp-subtask-del" onclick="_currentSubtasks.splice(${i},1);renderSubtasks()">✕</button>
+    </div>`).join('');
+}
+
+function addSubtask() {
+  _currentSubtasks.push({ text: '', done: false });
+  renderSubtasks();
+  // Focus the new input
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('.tp-subtask-text');
+    if (inputs.length) inputs[inputs.length-1].focus();
+  }, 50);
+}
+
 function closeTaskPanel() {
-  if (_currentTaskIdx === null) return;
-  const t = _allTasks[_currentTaskIdx];
-  if (t) saveTaskPanel(t);
   document.getElementById('taskPanel').classList.remove('open');
   document.getElementById('tpBackdrop').classList.remove('open');
   _currentTaskIdx = null;
 }
 
-function saveTaskPanel(t) {
+function saveAndClose() {
+  if (_currentTaskIdx === null) return;
+  const t = _allTasks[_currentTaskIdx];
+  if (!t) return;
+
   const status = document.getElementById('tpStatus').value;
   const prev = JSON.parse(localStorage.getItem('cs-task-' + t.id) || '{}');
+
   const updates = {
     name: document.getElementById('tpName').value,
-    status: status,
+    status,
     due: document.getElementById('tpDue').value,
     completedAt: document.getElementById('tpCompleted').value,
-    notes: document.getElementById('tpNotes').value
+    notes: document.getElementById('tpNotes').value,
+    progress: parseInt(document.getElementById('tpProgress').value) || 0,
+    subtasks: _currentSubtasks
   };
   localStorage.setItem('cs-task-' + t.id, JSON.stringify(updates));
 
   // Log status change
-  if (prev.status && prev.status !== status) {
+  const prevStatus = prev.status || t.status;
+  if (prevStatus && prevStatus !== status) {
     const log = JSON.parse(localStorage.getItem('cs-task-log-' + t.id) || '[]');
-    log.push({ time: new Date().toLocaleString('en-AU', {hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'}), msg: `Status changed: ${STATUS_LABELS[prev.status] || prev.status} → ${STATUS_LABELS[status] || status}` });
+    log.push({ time: new Date().toLocaleString('en-AU', {hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'}), msg: `Status: ${STATUS_LABELS[prevStatus]||prevStatus} → ${STATUS_LABELS[status]||status}` });
     localStorage.setItem('cs-task-log-' + t.id, JSON.stringify(log));
   }
 
-  // Refresh task list
+  closeTaskPanel();
+  fetchTasks();
+}
+
+function deleteTask() {
+  if (_currentTaskIdx === null) return;
+  const t = _allTasks[_currentTaskIdx];
+  if (!t) return;
+  if (!confirm(`Delete "${t.name}"? This cannot be undone.`)) return;
+  // Mark deleted in localStorage
+  const stored = JSON.parse(localStorage.getItem('cs-task-' + t.id) || '{}');
+  stored._deleted = true;
+  localStorage.setItem('cs-task-' + t.id, JSON.stringify(stored));
+  closeTaskPanel();
   fetchTasks();
 }
 
@@ -1269,8 +1398,8 @@ function cycleStatus(idx) {
   const current = stored.status || t.status || 'todo';
   const next = STATUS_CYCLE[(STATUS_CYCLE.indexOf(current) + 1) % STATUS_CYCLE.length];
   const log = JSON.parse(localStorage.getItem('cs-task-log-' + t.id) || '[]');
-  log.push({ time: new Date().toLocaleString('en-AU', {hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'}), msg: `Status changed: ${STATUS_LABELS[current]} → ${STATUS_LABELS[next]}` });
-  localStorage.setItem('cs-task-log-' + t.id, JSON.stringify(Object.assign(stored, { status: next })));
+  log.push({ time: new Date().toLocaleString('en-AU', {hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'}), msg: `Status: ${STATUS_LABELS[current]} → ${STATUS_LABELS[next]}` });
+  localStorage.setItem('cs-task-' + t.id, JSON.stringify(Object.assign({}, stored, { status: next })));
   localStorage.setItem('cs-task-log-' + t.id, JSON.stringify(log));
   fetchTasks();
 }
