@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Production Board — Collective Shift</title>
+<link rel="stylesheet" href="/shell.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── Tabs ── */
+  .tab-nav {
+    display: flex; gap: 4px; border-bottom: 2px solid #E8E8EA;
+    padding: 0 0 0 0; margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 10px 20px; font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px; font-weight: 600; border: none; background: none;
+    color: #807F86; cursor: pointer; border-bottom: 2px solid transparent;
+    margin-bottom: -2px; transition: all 0.15s; white-space: nowrap;
+  }
+  .tab-btn:hover { color: #1B1925; }
+  .tab-btn.active { color: #FC5C03; border-bottom-color: #FC5C03; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── Page Header ── */
+  .page-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+  }
+  .page-title {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px;
+    font-weight: 700; color: #1B1925;
+  }
+  .page-title span { color: #FC5C03; }
+  .page-subtitle { font-size: 13px; color: #807F86; margin-top: 2px; }
+  .btn-primary {
+    background: #FC5C03; color: #fff; border: none; padding: 9px 18px;
+    border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer;
+    transition: background 0.12s; font-family: 'Barlow', sans-serif;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-primary:hover { background: #E04F00; }
+  .btn-secondary {
+    background: #fff; color: #4D4C55; border: 1px solid #E8E8EA;
+    padding: 8px 16px; border-radius: 8px; font-weight: 500; font-size: 13px;
+    cursor: pointer; transition: all 0.12s; font-family: 'Barlow', sans-serif;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-secondary:hover { border-color: #FC5C03; color: #FC5C03; }
+
+  /* ── Kanban ── */
+  .kanban-wrap { overflow-x: auto; padding-bottom: 16px; }
+  .kanban-board {
+    display: flex; gap: 14px; min-width: 1100px; align-items: flex-start;
+  }
+  .kanban-col {
+    flex: 1; min-width: 180px; background: #F0F0F2; border-radius: 10px;
+    padding: 12px; min-height: 420px;
+  }
+  .kanban-col.drag-over { background: #E8E8EA; outline: 2px dashed #FC5C03; outline-offset: -2px; }
+  .kanban-col-header {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 12px;
+    padding: 7px 8px; display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px; border-radius: 6px;
+  }
+  .kh-script  { background: #EDE9FE; color: #4C1D95; border-top: 3px solid #7C3AED; }
+  .kh-record  { background: #FEF3C7; color: #78350F; border-top: 3px solid #F59E0B; }
+  .kh-edit    { background: #DBEAFE; color: #1E40AF; border-top: 3px solid #3B82F6; }
+  .kh-clips   { background: #FCE7F3; color: #831843; border-top: 3px solid #EC4899; }
+  .kh-scheduled { background: #D1FAE5; color: #065F46; border-top: 3px solid #10B981; }
+  .kh-published { background: #F3F4F6; color: #6B7280; border-top: 3px solid #9CA3AF; }
+  .kh-count {
+    font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 100px;
+    font-family: 'Source Code Pro', monospace;
+  }
+  .kh-script .kh-count   { background: #C4B5FD; color: #4C1D95; }
+  .kh-record .kh-count   { background: #FDE68A; color: #78350F; }
+  .kh-edit .kh-count     { background: #BFDBFE; color: #1E40AF; }
+  .kh-clips .kh-count    { background: #FBCFE8; color: #831843; }
+  .kh-scheduled .kh-count{ background: #A7F3D0; color: #065F46; }
+  .kh-published .kh-count{ background: #E5E7EB; color: #6B7280; }
+
+  /* ── Cards ── */
+  .k-card {
+    background: #fff; border: 1px solid #E8E8EA; border-radius: 8px;
+    padding: 11px 12px; margin-bottom: 8px; cursor: grab;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07); transition: box-shadow 0.15s;
+    position: relative;
+  }
+  .k-card:hover { box-shadow: 0 3px 12px rgba(0,0,0,0.1); }
+  .k-card.dragging { opacity: 0.45; transform: rotate(2deg); cursor: grabbing; }
+  .k-card-platform {
+    display: flex; align-items: center; gap: 6px; margin-bottom: 6px;
+  }
+  .plat-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .plat-yt    { background: #FF0000; }
+  .plat-x     { background: #000000; }
+  .plat-li    { background: #0077B5; }
+  .plat-ig    { background: #E1306C; }
+  .plat-nl    { background: #FC5C03; }
+  .plat-fb    { background: #1877F2; }
+  .plat-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; color: #807F86;
+  }
+  .plat-badge {
+    font-size: 10px; font-weight: 600; padding: 1px 7px; border-radius: 100px;
+    margin-left: auto;
+  }
+  .badge-yt  { background: #FF0000; color: #fff; }
+  .badge-x   { background: #111; color: #fff; }
+  .badge-li  { background: #0077B5; color: #fff; }
+  .badge-ig  { background: #E1306C; color: #fff; }
+  .badge-nl  { background: #FC5C03; color: #fff; }
+  .badge-fb  { background: #1877F2; color: #fff; }
+  .k-card-title {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 12px;
+    color: #1B1925; line-height: 1.4; margin-bottom: 7px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .k-card-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .k-card-assigned {
+    font-size: 10px; color: #4D4C55; background: #F7F7F8;
+    border-radius: 4px; padding: 2px 7px; font-weight: 500;
+  }
+  .k-card-due { font-size: 10px; color: #807F86; }
+  .k-card-due.overdue { color: #EF4444; font-weight: 600; }
+  .k-card-due.today { color: #F59E0B; font-weight: 600; }
+  .add-card-btn {
+    width: 100%; padding: 7px; border: 1px dashed #D1D1D6; border-radius: 6px;
+    background: none; color: #9CA3AF; font-size: 12px; cursor: pointer;
+    margin-top: 8px; transition: all 0.12s; font-family: 'Barlow', sans-serif;
+  }
+  .add-card-btn:hover { border-color: #FC5C03; color: #FC5C03; background: rgba(252,92,3,0.03); }
+
+  /* ── Calendar ── */
+  .cal-grid {
+    display: grid; grid-template-columns: 60px repeat(7, 1fr);
+    border: 1px solid #E8E8EA; border-radius: 10px; overflow: hidden;
+    background: #fff;
+  }
+  .cal-head {
+    background: #F7F7F8; border-bottom: 1px solid #E8E8EA; padding: 10px 8px;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 12px;
+    text-align: center; color: #1B1925;
+  }
+  .cal-head.today-head { background: #FEEEE5; color: #FC5C03; }
+  .cal-time-label {
+    border-right: 1px solid #E8E8EA; border-bottom: 1px solid #E8E8EA;
+    padding: 6px 4px; font-size: 10px; color: #9CA3AF; text-align: right; background: #F7F7F8;
+  }
+  .cal-cell {
+    border-right: 1px solid #E8E8EA; border-bottom: 1px solid #E8E8EA;
+    padding: 4px; min-height: 64px; vertical-align: top; cursor: pointer;
+    transition: background 0.1s;
+  }
+  .cal-cell:hover { background: #FEEEE5; }
+  .cal-cell:last-child { border-right: none; }
+  .cal-event {
+    background: #FC5C03; color: #fff; border-radius: 4px; padding: 3px 6px;
+    font-size: 10px; font-weight: 600; margin-bottom: 2px; line-height: 1.3;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .cal-event.ev-yt   { background: #FF0000; }
+  .cal-event.ev-x    { background: #111; }
+  .cal-event.ev-li   { background: #0077B5; }
+  .cal-event.ev-ig   { background: #E1306C; }
+  .cal-event.ev-nl   { background: #FC5C03; }
+  .cal-event.ev-fb   { background: #1877F2; }
+  .cal-event.ev-yt-short { background: #FF6B6B; }
+  .cal-nav { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .cal-nav .cal-week-label {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 16px; color: #1B1925;
+  }
+
+  /* ── Distribution Hub ── */
+  .dist-header {
+    background: linear-gradient(135deg, #1A1A2E 0%, #252540 100%);
+    border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; color: #fff;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .dist-header .dist-title {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 16px;
+  }
+  .dist-header .dist-sub { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+  .dist-input-row { display: flex; gap: 10px; align-items: center; flex: 1; min-width: 260px; }
+  .dist-input {
+    flex: 1; padding: 9px 14px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px; color: #fff; font-size: 13px; font-family: 'Barlow', sans-serif; outline: none;
+  }
+  .dist-input::placeholder { color: rgba(255,255,255,0.4); }
+  .dist-input:focus { border-color: #FC5C03; }
+  .dist-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;
+  }
+  .dist-card {
+    background: #fff; border: 1px solid #E8E8EA; border-radius: 10px;
+    padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .dist-card-head {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+  }
+  .dist-plat-icon {
+    width: 34px; height: 34px; border-radius: 8px; display: flex;
+    align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
+  }
+  .dist-card-name {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 13px; color: #1B1925;
+  }
+  .dist-card-type { font-size: 11px; color: #807F86; }
+  .dist-status {
+    display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700;
+    padding: 2px 9px; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.5px;
+    margin-left: auto; flex-shrink: 0;
+  }
+  .ds-not-started { background: #F3F4F6; color: #6B7280; }
+  .ds-drafted     { background: #DBEAFE; color: #1E40AF; }
+  .ds-approved    { background: #D1FAE5; color: #065F46; }
+  .ds-posted      { background: #1A1A2E; color: #fff; }
+  .dist-copy {
+    font-size: 12px; line-height: 1.6; color: #4D4C55; background: #F7F7F8;
+    border-radius: 6px; padding: 10px 12px; margin-bottom: 12px;
+    max-height: 90px; overflow-y: auto; font-family: 'Barlow', sans-serif;
+  }
+  .dist-actions { display: flex; gap: 8px; }
+  .dist-btn {
+    flex: 1; padding: 7px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;
+    border: 1px solid #E8E8EA; background: #fff; cursor: pointer; transition: all 0.12s;
+    font-family: 'Barlow', sans-serif;
+  }
+  .dist-btn:hover { background: #F7F7F8; }
+  .dist-btn.primary { background: #FC5C03; color: #fff; border-color: #FC5C03; }
+  .dist-btn.primary:hover { background: #E04F00; }
+
+  /* ── Ideas Bank ── */
+  .ideas-table {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+    background: #fff; border-radius: 10px; overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .ideas-table th {
+    background: #F7F7F8; padding: 11px 14px; text-align: left;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.7px; color: #807F86;
+    border-bottom: 1px solid #E8E8EA;
+  }
+  .ideas-table td {
+    padding: 12px 14px; border-bottom: 1px solid #F0F0F2; color: #1B1925;
+    vertical-align: middle;
+  }
+  .ideas-table tr:last-child td { border-bottom: none; }
+  .ideas-table tr:hover td { background: #FEEEE5; }
+  .priority-badge {
+    font-size: 10px; font-weight: 700; padding: 2px 9px; border-radius: 100px;
+    text-transform: uppercase; letter-spacing: 0.4px;
+  }
+  .pri-high   { background: #FEE2E2; color: #991B1B; }
+  .pri-medium { background: #FEF3C7; color: #92400E; }
+  .pri-low    { background: #F3F4F6; color: #6B7280; }
+  .idea-status {
+    font-size: 10px; font-weight: 600; padding: 2px 9px; border-radius: 100px;
+    text-transform: uppercase;
+  }
+  .is-new      { background: #DBEAFE; color: #1E40AF; }
+  .is-reviewed { background: #D1FAE5; color: #065F46; }
+  .is-parked   { background: #F3F4F6; color: #6B7280; }
+  .promote-btn {
+    background: #FC5C03; color: #fff; border: none; padding: 5px 12px;
+    border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;
+    transition: background 0.12s; white-space: nowrap;
+  }
+  .promote-btn:hover { background: #E04F00; }
+  .promote-btn.done { background: #10B981; }
+
+  /* ── Modal ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    z-index: 300; justify-content: center; align-items: flex-start; padding: 60px 24px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: #fff; border-radius: 12px; width: 100%; max-width: 520px;
+    padding: 28px; position: relative; max-height: 80vh; overflow-y: auto;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+  }
+  .modal-title {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 17px;
+    margin-bottom: 20px; color: #1B1925;
+  }
+  .modal-close {
+    position: absolute; top: 14px; right: 16px; background: none; border: none;
+    font-size: 20px; cursor: pointer; color: #807F86;
+  }
+  .modal-close:hover { color: #1B1925; }
+  .form-field { margin-bottom: 14px; }
+  .form-field label {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.7px; color: #807F86; display: block; margin-bottom: 4px;
+  }
+  .form-field input, .form-field select, .form-field textarea {
+    width: 100%; border: 1px solid #E8E8EA; border-radius: 8px; padding: 9px 12px;
+    font-size: 13px; font-family: 'Barlow', sans-serif; outline: none; background: #fff;
+  }
+  .form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: #FC5C03; }
+  .form-field textarea { resize: vertical; min-height: 80px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* ── Stats bar at top ── */
+  .stats-row {
+    display: flex; gap: 14px; margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .stat-card {
+    background: #fff; border: 1px solid #E8E8EA; border-radius: 8px;
+    padding: 12px 18px; flex: 1; min-width: 120px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .stat-val {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 22px; color: #1B1925;
+  }
+  .stat-label { font-size: 11px; color: #807F86; margin-top: 2px; font-weight: 500; }
+  .stat-card.orange { border-left: 3px solid #FC5C03; }
+  .stat-card.green  { border-left: 3px solid #10B981; }
+  .stat-card.blue   { border-left: 3px solid #3B82F6; }
+  .stat-card.purple { border-left: 3px solid #7C3AED; }
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="ds-sidebar" id="dsSidebar">
+  <div style="padding: 18px 16px 12px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+    <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700; color: #fff;">
+      ₿ Collective Shift
+    </div>
+    <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px;">CEO Command Centre</div>
+  </div>
+
+  <div class="ds-sidebar-section">Overview</div>
+  <a href="/dashboard.html" class="ds-sidebar-link"><span class="ds-icon">📊</span> Dashboard</a>
+  <a href="/ceo-briefing.html" class="ds-sidebar-link"><span class="ds-icon">🧠</span> CEO Briefing</a>
+
+  <div class="ds-sidebar-section">Business</div>
+  <a href="/kpi-tracker.html" class="ds-sidebar-link"><span class="ds-icon">🎯</span> KPI Tracker</a>
+  <a href="/revenue-dashboard.html" class="ds-sidebar-link"><span class="ds-icon">💰</span> Revenue</a>
+  <a href="/member-health.html" class="ds-sidebar-link"><span class="ds-icon">💚</span> Members</a>
+  <a href="/pipeline.html" class="ds-sidebar-link"><span class="ds-icon">🔥</span> Pipeline</a>
+
+  <div class="ds-sidebar-section">Content</div>
+  <a href="/content-production-board.html" class="ds-sidebar-link active"><span class="ds-icon">🎬</span> Production Board</a>
+  <a href="/content-studio.html" class="ds-sidebar-link"><span class="ds-icon">✂️</span> Content Studio</a>
+  <a href="/content-calendar.html" class="ds-sidebar-link"><span class="ds-icon">📅</span> Calendar</a>
+
+  <div class="ds-sidebar-section">Market</div>
+  <a href="/market-intelligence.html" class="ds-sidebar-link"><span class="ds-icon">📡</span> Intelligence</a>
+  <a href="/bitcoin-dashboard.html" class="ds-sidebar-link"><span class="ds-icon">₿</span> Bitcoin</a>
+  <a href="/on-chain.html" class="ds-sidebar-link"><span class="ds-icon">🔗</span> On-Chain</a>
+
+  <div class="ds-sidebar-section">Settings</div>
+  <a href="/agents.html" class="ds-sidebar-link"><span class="ds-icon">🤖</span> Agents</a>
+  <a href="/settings.html" class="ds-sidebar-link"><span class="ds-icon">⚙️</span> Settings</a>
+</aside>
+
+<!-- ══ OVERLAY (mobile) ══ -->
+<div class="ds-sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- ══ TOPBAR ══ -->
+<header class="ds-topbar">
+  <div style="display: flex; align-items: center; gap: 14px;">
+    <button class="ds-mobile-hamburger" onclick="openSidebar()" style="background:none;border:none;cursor:pointer;font-size:18px;">☰</button>
+    <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 14px; color: #1B1925;">
+      Content Production Board
+    </div>
+  </div>
+  <div style="display: flex; align-items: center; gap: 12px;">
+    <div style="font-size: 12px; color: #807F86;">Wed 1 Apr 2026</div>
+    <div style="width: 30px; height: 30px; background: #FC5C03; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: 700;">B</div>
+  </div>
+</header>
+
+<!-- ══ MAIN ══ -->
+<main class="ds-main-content">
+<div class="ds-page-body">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <div class="page-title">Content <span>Production Board</span></div>
+      <div class="page-subtitle">AI-powered content command centre · Replaces Pat · Apr 2026</div>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <button class="btn-secondary" onclick="openAddModal()">+ Add Content</button>
+      <button class="btn-primary">⚡ AI Generate</button>
+    </div>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="stats-row">
+    <div class="stat-card orange">
+      <div class="stat-val">12</div>
+      <div class="stat-label">Active Pieces</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-val">3</div>
+      <div class="stat-label">Publishing Today</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="stat-val">8</div>
+      <div class="stat-label">Ideas Queued</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-val">5</div>
+      <div class="stat-label">Clips In Progress</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('board', this)">🎬 Production Board</button>
+    <button class="tab-btn" onclick="switchTab('calendar', this)">📅 Content Calendar</button>
+    <button class="tab-btn" onclick="switchTab('dist', this)">📤 Distribution Hub</button>
+    <button class="tab-btn" onclick="switchTab('ideas', this)">💡 Ideas Bank</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- TAB 1: PRODUCTION BOARD -->
+  <!-- ══════════════════════════════════════════ -->
+  <div id="tab-board" class="tab-panel active">
+    <div class="kanban-wrap">
+      <div class="kanban-board" id="kanbanBoard">
+
+        <!-- SCRIPT -->
+        <div class="kanban-col" id="col-script" ondragover="onDragOver(event)" ondrop="onDrop(event,'script')" ondragleave="onDragLeave(event)">
+          <div class="kanban-col-header kh-script">
+            <span>📝 Script</span>
+            <span class="kh-count" id="cnt-script">1</span>
+          </div>
+          <div class="k-card" draggable="true" ondragstart="onDragStart(event)" data-col="script">
+            <div class="k-card-platform">
+              <span class="plat-dot plat-yt"></span>
+              <span class="plat-label">YouTube</span>
+              <span class="plat-badge badge-yt">YT</span>
+            </div>
+            <div class="k-card-title">Is $50K Bitcoin Still Possible in 2026? (Post-Halving Analysis)</div>
+            <div class="k-card-meta">
+              <span class="k-card-assigned">🤖 ContentBot</span>
+              <span class="k-card-due">Due Apr 5</span>
+            </div>
+          </div>
+          <button class="add-card-btn" onclick="openAddModal('script')">+ Add card</button>
+        </div>
+
+        <!-- RECORD -->
+        <div class="kanban-col" id="col-record" ondragover="onDragOver(event)" ondrop="onDrop(event,'record')" ondragleave="onDragLeave(event)">
+          <div class="kanban-col-header kh-record">
+            <span>🎙️ Record</span>
+            <span class="kh-count" id="cnt-record">1</span>
+          </div>
+          <div class="k-card" draggable="true" ondragstart="onDragStart(event)" data-col="record">
+            <div class="k-card-platform">
+              <span class="plat-dot plat-yt"></span>
+              <span class="plat-label">YouTube</span>
+              <span class="plat-badge badge-yt">YT</span>
+            </div>
+            <div class="k-card-title">Fear & Greed at 8 - What Extreme Fear Actually Means for Bitcoin</div>
+            <div class="k-card-meta">
+              <span class="k-card-assigned">👤 Ben</span>
+              <span class="k-card-due">Due Apr 3</span>
+            </div>
+          </div>
+          <button class="add-card-btn" onclick="openAddModal('record')">+ Add card</button>
+        </div>
+
+        <!-- EDIT -->
+        <div class="kanban-col" id="col-edit" ondragover="onDragOver(event)" ondrop="onDrop(event,'edit')" ondragleave="onDragLeave(event)">
+          <div class="kanban-col-header kh-edit">
+            <span>✂️ Edit</span>
+            <span class="kh-count" id="cnt-edit">1</span>
+          </div>
+          <div class="k-card" draggable="true" ondragstart="onDragStart(event)" data-col="edit">
+            <div class="k-card-platform">
+              <span class="plat-dot plat-yt"></span>
+              <span class="plat-label">YouTube</span>
+              <span class="plat-badge badge-yt">YT Long-form</span>
+            </div>
+            <div class="k-card-title">Bitcoin Is Down 48% - Here's What the Data Says</div>
+            <div class="k-card-meta">
+              <span class="k-card-assigned">🤖 EditBot</span>
+              <span class="k-card-due today">Due Today</span>
+            </div>
+          </div>
+          <button class="add-card-btn" onclick="openAddModal('edit')">+ Add card</button>
+        </div>
+
+        <!-- CLIPS -->
+        <div class="kanban-col" id="col-clips" ondragover="onDragOver(event)" ondrop="onDrop(event,'clips')" ondragleave="onDragLeave(event)">
+          <div class="kanban-col-header kh-clips">
+            <span>🎞️ Clips</span>
+            <span class="kh-count" id="cnt-clips">5</span>
+          </div>
+          <div class="k-card" draggable="true" ondragstart="onDragStart(event)" data-col="clips">
+            <div class="k-card-platform">
+              <span class="plat-dot plat-yt"></span>
+              <span class="plat-label">YouTube Short</span>
+              <span class="plat-badge badge-yt">YT Short</span>
+            </div>
+            <div class="k-card-title">Clip 1: "48% down — is this the bottom?" (60s)</div>
+            <div class="k-card-meta">
+              <span class="k-card-assigned">🤖 ClipsBot</span>
+              <span class="k-card-due today">Due Today</span>
+            </div>
+          </div>
+          <div class="k-card" draggable="true" ondragstart="onDragStart(event)" data-col="clips">
+            <div class="k-card-platform">
+              <span class="plat-dot plat-ig"></span>
+              <span class="plat-label">Instagram Reel</span>
+              <span class="plat-badge badge-ig">IG</span>
+            </div>
+            <div class="k-card-title">Clip 2: "Fear & Greed at 8 - last time this happened..." (45s)</div>
+            <div class="k-card-meta">
+              <span class="k-card-assigned">🤖 ClipsBot</span>
+              <span class="k-card-due today">Due Today</span>
+            </div>
+          </div>
+          <div class="k-card" draggable="true" ondragstart="onDragStart(event)" data-col="clips">
+            <div class="k-card-platform">
+              <span class="plat-dot plat-x"></span>
+              <span class="plat-label">X / Twitter</span>
+              <span class="plat-badge badge-x">X</span>
+            </div>
+            <div class="k-card-title">Clip 3: "Day 346 post-halving - here's the chart" (30s)</div>
+            <div class="k-card-meta">
+              <span class="k-card-assigned">🤖 ClipsBot</span>
+              <span class="k-card-due today">Due Today</span>
+            </div>
+          </div>
+          <div class="k-card" draggable="true" ondragstart="onDragStart(event)" data-col="clips">
+            <div class="k-card-platform">
+              <span class="plat-dot plat-fb"></span>
+              <span class="plat-label">Facebook</span>
+              <span class="plat-badge badge-fb">FB</span>
+            </div>
+            <div class="k-card-title">Clip 4: "MVRV mid-cycle signal explained simply" (60s)</div>
+            <div class="k-card-meta">
+              <span class="k-card-assigned">🤖 ClipsBot</span>
+              <span class="k-card-due">Due Apr 2</span>
+            </div>
+          </div>
+          <div class="k-card" draggable="true" ondragstart="onDragStart(event)" data-col="clips">
+            <div class="k-card-platform">
+              <span class="plat-dot plat-yt"></span>
+              <span class="plat-label">YouTube Short</span>
+              <span class="plat-badge badge-yt">YT Short</span>
+            </div>
+            <div class="k-card-title">Clip 5: "Should you be buying Bitcoin right now?" (45s)</div>
+            <div class="k-card-meta">
+              <span class="k-card-assigned">🤖 ClipsBot</span>
+              <span class="k-card-due">Due Apr 2</span>
+            </div>
+          </div>
+          <button class="add-card-btn" onclick="openAddModal('clips')">+ Add card</button>
+        </div>
+
+        <!-- SCHEDULED -->
+        <div class="kanban-col" id="col-scheduled" ondragover="onDragOver(event)" ondrop="onDrop(event,'scheduled')" ondragleave="onDragLeave(event)">
+          <div class="kanban-col-header kh-scheduled">
+            <span>🕐 Scheduled</span>
+            <span class="kh-count" id="cnt-scheduled">2</span>
+          </div>
+          <div class="k-card" draggable="true" ondragstart="onDragStart(event)" data-col="scheduled">
+            <div class="k-card-platform">
+              <span class="plat-dot plat-x"></span>
+              <span class="plat-label">X / Twitter</span>
+              <span class="plat-badge badge-x">X Thread</span>
+            </div>
+            <div class="k-card-title">Fear & Greed at 8/100 - 5-tweet thread with historical data</div>
+            <div class="k-card-meta">
+              <span class="k-card-assigned">🤖 SocialBot</span>
+              <span class="k-card-due today">Today 9am</span>
+            </div>
+          </div>
+          <div class="k-card" draggable="true" ondragstart="onDragStart(event)" data-col="scheduled">
+            <div class="k-card-platform">
+              <span class="plat-dot plat-li"></span>
+              <span class="plat-label">LinkedIn</span>
+              <span class="plat-badge badge-li">LI Post</span>
+            </div>
+            <div class="k-card-title">Bitcoin Is Down 48% - What Every Investor Needs to Know</div>
+            <div class="k-card-meta">
+              <span class="k-card-assigned">🤖 SocialBot</span>
+              <span class="k-card-due today">Today 11am</span>
+            </div>
+          </div>
+          <button class="add-card-btn" onclick="openAddModal('scheduled')">+ Add card</button>
+        </div>
+
+        <!-- PUBLISHED -->
+        <div class="kanban-col" id="col-published" ondragover="onDragOver(event)" ondrop="onDrop(event,'published')" ondragleave="onDragLeave(event)">
+          <div class="kanban-col-header kh-published">
+            <span>✅ Published</span>
+            <span class="kh-count" id="cnt-published">2</span>
+          </div>
+          <div class="k-card" draggable="true" ondragstart="onDragStart(event)" data-col="published" style="opacity: 0.75;">
+            <div class="k-card-platform">
+              <span class="plat-dot plat-nl"></span>
+              <span class="plat-label">Newsletter</span>
+              <span class="plat-badge badge-nl">Email</span>
+            </div>
+            <div class="k-card-title">April 1 Newsletter: Extreme Fear = Extreme Opportunity?</div>
+            <div class="k-card-meta">
+              <span class="k-card-assigned">🤖 EmailBot</span>
+              <span class="k-card-due">Published Apr 1</span>
+            </div>
+          </div>
+          <div class="k-card" draggable="true" ondragstart="onDragStart(event)" data-col="published" style="opacity: 0.75;">
+            <div class="k-card-platform">
+              <span class="plat-dot plat-x"></span>
+              <span class="plat-label">X / Twitter</span>
+              <span class="plat-badge badge-x">X Post</span>
+            </div>
+            <div class="k-card-title">Bitcoin is down 48% from its ATH. Fear & Greed: 8/100. (single post)</div>
+            <div class="k-card-meta">
+              <span class="k-card-assigned">🤖 SocialBot</span>
+              <span class="k-card-due">Published Apr 1</span>
+            </div>
+          </div>
+          <button class="add-card-btn" onclick="openAddModal('published')">+ Add card</button>
+        </div>
+
+      </div><!-- /kanban-board -->
+    </div><!-- /kanban-wrap -->
+  </div><!-- /tab-board -->
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- TAB 2: CONTENT CALENDAR -->
+  <!-- ══════════════════════════════════════════ -->
+  <div id="tab-calendar" class="tab-panel">
+    <div class="cal-nav">
+      <button class="btn-secondary" onclick="shiftWeek(-1)">‹ Prev</button>
+      <div class="cal-week-label" id="calWeekLabel">Apr 1 – Apr 7, 2026</div>
+      <button class="btn-secondary" onclick="shiftWeek(1)">Next ›</button>
+      <button class="btn-primary" style="margin-left: auto;" onclick="openAddModal()">+ Add</button>
+    </div>
+    <div style="overflow-x: auto;">
+      <div class="cal-grid" id="calGrid">
+        <!-- Headers -->
+        <div class="cal-head" style="background:#F7F7F8;border-right:1px solid #E8E8EA;">Time</div>
+        <div class="cal-head today-head">Mon<br><small>Apr 1</small></div>
+        <div class="cal-head">Tue<br><small>Apr 2</small></div>
+        <div class="cal-head">Wed<br><small>Apr 3</small></div>
+        <div class="cal-head">Thu<br><small>Apr 4</small></div>
+        <div class="cal-head">Fri<br><small>Apr 5</small></div>
+        <div class="cal-head">Sat<br><small>Apr 6</small></div>
+        <div class="cal-head">Sun<br><small>Apr 7</small></div>
+
+        <!-- 8am -->
+        <div class="cal-time-label">8am</div>
+        <div class="cal-cell">
+          <div class="cal-event ev-nl">📧 Newsletter — Apr 1 Issue</div>
+        </div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+
+        <!-- 9am -->
+        <div class="cal-time-label">9am</div>
+        <div class="cal-cell">
+          <div class="cal-event ev-x">𝕏 Thread — Fear &amp; Greed 8/100</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-event ev-yt-short">▶ YT Short — "48% down, the bottom?"</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-event ev-x">𝕏 Thread — MVRV mid-cycle</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-event ev-yt-short">▶ YT Short — Day 346 Halving</div>
+        </div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+
+        <!-- 11am -->
+        <div class="cal-time-label">11am</div>
+        <div class="cal-cell">
+          <div class="cal-event ev-li">in LinkedIn — Bitcoin 48% Post</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-event ev-ig">📸 IG Reel — Fear &amp; Greed clip</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-event ev-li">in LinkedIn — Educational post</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-event ev-fb">fb Facebook — Market update</div>
+        </div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+
+        <!-- 2pm -->
+        <div class="cal-time-label">2pm</div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell">
+          <div class="cal-event ev-fb">fb Facebook — Clip 4 MVRV</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-event ev-ig">📸 IG Post — on-chain graphic</div>
+        </div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell">
+          <div class="cal-event ev-yt">▶ YouTube — BTC 48% Long-form</div>
+        </div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+
+        <!-- 5pm -->
+        <div class="cal-time-label">5pm</div>
+        <div class="cal-cell">
+          <div class="cal-event ev-x">𝕏 Single post — market data</div>
+        </div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell">
+          <div class="cal-event ev-x">𝕏 Single post — halving chart</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-event ev-ig">📸 IG Reel — "Should you buy now?"</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-event ev-li">in LinkedIn — weekly wrap</div>
+        </div>
+        <div class="cal-cell"></div>
+        <div class="cal-cell"></div>
+
+      </div>
+    </div>
+    <div style="margin-top: 12px; font-size: 12px; color: #807F86;">
+      Click any slot to add content. Colour coded by platform.
+      <span style="display:inline-flex; gap:8px; margin-left:16px; flex-wrap: wrap;">
+        <span><span style="display:inline-block;width:10px;height:10px;background:#FF0000;border-radius:2px;margin-right:3px;"></span>YouTube</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#111;border-radius:2px;margin-right:3px;"></span>X</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#0077B5;border-radius:2px;margin-right:3px;"></span>LinkedIn</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#E1306C;border-radius:2px;margin-right:3px;"></span>Instagram</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#FC5C03;border-radius:2px;margin-right:3px;"></span>Newsletter</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#1877F2;border-radius:2px;margin-right:3px;"></span>Facebook</span>
+      </span>
+    </div>
+  </div><!-- /tab-calendar -->
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- TAB 3: DISTRIBUTION HUB -->
+  <!-- ══════════════════════════════════════════ -->
+  <div id="tab-dist" class="tab-panel">
+    <div class="dist-header">
+      <div>
+        <div class="dist-title">📤 Distribution Hub</div>
+        <div class="dist-sub">Enter a video title to generate a full cross-platform distribution plan</div>
+      </div>
+      <div class="dist-input-row">
+        <input type="text" class="dist-input" id="distVideoTitle" value="Bitcoin Is Down 48% - Here's What the Data Says" placeholder="Enter video title...">
+        <button class="btn-primary" onclick="generateDist()">Generate ⚡</button>
+      </div>
+    </div>
+
+    <div class="dist-grid" id="distGrid">
+
+      <!-- YouTube Long-form -->
+      <div class="dist-card">
+        <div class="dist-card-head">
+          <div class="dist-plat-icon" style="background:#FECACA;">▶️</div>
+          <div>
+            <div class="dist-card-name">YouTube</div>
+            <div class="dist-card-type">Long-form video (12-18 min)</div>
+          </div>
+          <span class="dist-status ds-drafted">Drafted</span>
+        </div>
+        <div class="dist-copy">Title: "Bitcoin Is Down 48% - Here's What the Data Says"\n\nDesc: In this video, I break down exactly what's happening with Bitcoin right now. We're 48% down from ATH, Fear & Greed is at extreme fear (8/100), and it's Day 346 post-halving. I show you the historical data on what happened last time we were here.\n\n#Bitcoin #BTC #CryptoAnalysis</div>
+        <div class="dist-actions">
+          <button class="dist-btn" onclick="copyText(this)">📋 Copy</button>
+          <button class="dist-btn primary">✅ Approve</button>
+        </div>
+      </div>
+
+      <!-- YouTube Short 1 -->
+      <div class="dist-card">
+        <div class="dist-card-head">
+          <div class="dist-plat-icon" style="background:#FECACA;">📱</div>
+          <div>
+            <div class="dist-card-name">YouTube Short #1</div>
+            <div class="dist-card-type">60-second vertical clip</div>
+          </div>
+          <span class="dist-status ds-drafted">Drafted</span>
+        </div>
+        <div class="dist-copy">Hook: "Bitcoin is down 48% from its all-time high. Is THIS the bottom?"\n\nCore: Show price chart, Fear & Greed at 8, compare to March 2020 and June 2022.\n\nCTA: "Watch the full breakdown - link in bio."</div>
+        <div class="dist-actions">
+          <button class="dist-btn" onclick="copyText(this)">📋 Copy</button>
+          <button class="dist-btn primary">✅ Approve</button>
+        </div>
+      </div>
+
+      <!-- YouTube Short 2 -->
+      <div class="dist-card">
+        <div class="dist-card-head">
+          <div class="dist-plat-icon" style="background:#FECACA;">📱</div>
+          <div>
+            <div class="dist-card-name">YouTube Short #2</div>
+            <div class="dist-card-type">45-second vertical clip</div>
+          </div>
+          <span class="dist-status ds-not-started">Not Started</span>
+        </div>
+        <div class="dist-copy">Hook: "Day 346 post-halving. Here's the chart."\n\nCore: Halving cycle overlay showing where we are vs 2016/2020 cycles. Historical price action.\n\nCTA: "Follow for daily Bitcoin data."</div>
+        <div class="dist-actions">
+          <button class="dist-btn" onclick="copyText(this)">📋 Copy</button>
+          <button class="dist-btn primary">✅ Approve</button>
+        </div>
+      </div>
+
+      <!-- X Thread -->
+      <div class="dist-card">
+        <div class="dist-card-head">
+          <div class="dist-plat-icon" style="background:#F3F4F6;">𝕏</div>
+          <div>
+            <div class="dist-card-name">X (Twitter) Thread</div>
+            <div class="dist-card-type">5-tweet thread</div>
+          </div>
+          <span class="dist-status ds-approved">Approved</span>
+        </div>
+        <div class="dist-copy">1/ Bitcoin is down 48% from its ATH. Fear & Greed: 8/100. Extreme fear.\n\n2/ Last time we saw F&G this low: June 2022 ($17.6K) and March 2020 ($3.8K). Both were generational buying opportunities.\n\n3/ Day 346 post-halving. Every previous halving cycle, this range was accumulation phase before the next leg up.\n\n4/ MVRV at mid-cycle. Historically a "fair value" signal - not cheap, not expensive. Watch for divergence.\n\n5/ What does this mean? Short-term pain, long-term signal. Not financial advice. Do your own research. 🧵</div>
+        <div class="dist-actions">
+          <button class="dist-btn" onclick="copyText(this)">📋 Copy</button>
+          <button class="dist-btn" style="background:#1A1A2E;color:#fff;border-color:#1A1A2E;">🚀 Post Now</button>
+        </div>
+      </div>
+
+      <!-- LinkedIn -->
+      <div class="dist-card">
+        <div class="dist-card-head">
+          <div class="dist-plat-icon" style="background:#DBEAFE;">in</div>
+          <div>
+            <div class="dist-card-name">LinkedIn</div>
+            <div class="dist-card-type">Long-form post (800-1200 chars)</div>
+          </div>
+          <span class="dist-status ds-approved">Approved</span>
+        </div>
+        <div class="dist-copy">Bitcoin Is Down 48%. Here's What the Data Actually Says.\n\nEvery time Bitcoin drops significantly, two things happen:\n1. Mainstream media declares it dead\n2. Data-driven investors quietly accumulate\n\nRight now: Fear & Greed Index is at 8/100 - extreme fear. We're on Day 346 post-halving.\n\nThe historical pattern is clear. I break down exactly what the on-chain data says in my latest video (link in comments).\n\nAre you buying, watching, or waiting? Comment below.\n\n#Bitcoin #DigitalAssets #Investing</div>
+        <div class="dist-actions">
+          <button class="dist-btn" onclick="copyText(this)">📋 Copy</button>
+          <button class="dist-btn" style="background:#0077B5;color:#fff;border-color:#0077B5;">🚀 Post Now</button>
+        </div>
+      </div>
+
+      <!-- Instagram Reel -->
+      <div class="dist-card">
+        <div class="dist-card-head">
+          <div class="dist-plat-icon" style="background:#FCE7F3;">📸</div>
+          <div>
+            <div class="dist-card-name">Instagram Reel</div>
+            <div class="dist-card-type">45-60 second vertical video</div>
+          </div>
+          <span class="dist-status ds-drafted">Drafted</span>
+        </div>
+        <div class="dist-copy">Hook: "Fear & Greed at 8. The last time this happened..."\n\nCaption: Bitcoin extreme fear = opportunity? 👀 Drop a 🔥 if you're still holding. Full analysis linked in bio.\n\n#bitcoin #btc #crypto #fearandgreed #investing #digitalassets</div>
+        <div class="dist-actions">
+          <button class="dist-btn" onclick="copyText(this)">📋 Copy</button>
+          <button class="dist-btn primary">✅ Approve</button>
+        </div>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="dist-card">
+        <div class="dist-card-head">
+          <div class="dist-plat-icon" style="background:#FFEDD5;">📧</div>
+          <div>
+            <div class="dist-card-name">Newsletter</div>
+            <div class="dist-card-type">Weekly email (500-800 words)</div>
+          </div>
+          <span class="dist-status ds-posted">Posted</span>
+        </div>
+        <div class="dist-copy">Subject: "Extreme Fear. What the Data Says." ✅ Sent Apr 1, 2026\n\nOpener: Fear & Greed at 8 — here's what this actually means...\nBody: BTC 48% down, halving cycle context, MVRV, what to watch\nCTA: Watch the full video breakdown\nFooter: Unsubscribe | Manage preferences</div>
+        <div class="dist-actions">
+          <button class="dist-btn" onclick="copyText(this)">📋 Copy</button>
+          <button class="dist-btn" style="color:#10B981;border-color:#10B981;" disabled>✅ Sent</button>
+        </div>
+      </div>
+
+      <!-- Facebook -->
+      <div class="dist-card">
+        <div class="dist-card-head">
+          <div class="dist-plat-icon" style="background:#DBEAFE;">fb</div>
+          <div>
+            <div class="dist-card-name">Facebook</div>
+            <div class="dist-card-type">Post + short video clip</div>
+          </div>
+          <span class="dist-status ds-not-started">Not Started</span>
+        </div>
+        <div class="dist-copy">Bitcoin just dropped 48% from its all-time high. 📉\n\nBefore you panic — let me show you the data.\n\nFear & Greed Index: 8/100 (extreme fear). Day 346 post-halving. MVRV mid-cycle.\n\nThe numbers actually paint a very different picture. Watch the full breakdown: [LINK]\n\n💬 Have you been buying the dip? Let us know in the comments.</div>
+        <div class="dist-actions">
+          <button class="dist-btn" onclick="copyText(this)">📋 Copy</button>
+          <button class="dist-btn primary">✅ Approve</button>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /tab-dist -->
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- TAB 4: IDEAS BANK -->
+  <!-- ══════════════════════════════════════════ -->
+  <div id="tab-ideas" class="tab-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:16px;">💡 Ideas Bank</div>
+        <div style="font-size:12px;color:#807F86;margin-top:2px;">8 ideas queued · Promote to Board when ready</div>
+      </div>
+      <button class="btn-primary" onclick="openAddIdea()">+ Add Idea</button>
+    </div>
+
+    <div style="overflow-x: auto;">
+      <table class="ideas-table" id="ideasTable">
+        <thead>
+          <tr>
+            <th style="width:35%;">Idea</th>
+            <th>Source</th>
+            <th>Platform</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Fear &amp; Greed at 8 - Historical Comparison Thread</strong><br><small style="color:#807F86;">When we hit extreme fear before, what happened next? 2020, 2022, 2026 comparison.</small></td>
+            <td><span style="font-size:11px;background:#DBEAFE;color:#1E40AF;padding:2px 8px;border-radius:4px;">Fear &amp; Greed Index</span></td>
+            <td><span style="font-size:11px;background:#111;color:#fff;padding:2px 8px;border-radius:4px;">X Thread</span></td>
+            <td><span class="priority-badge pri-high">High</span></td>
+            <td><span class="idea-status is-new">New</span></td>
+            <td><button class="promote-btn" onclick="promoteIdea(this)">Promote →</button></td>
+          </tr>
+          <tr>
+            <td><strong>Day 346 Post-Halving - Where Are We in the Cycle?</strong><br><small style="color:#807F86;">Overlay current cycle on 2016 and 2020 cycles. Show expected trajectory.</small></td>
+            <td><span style="font-size:11px;background:#DBEAFE;color:#1E40AF;padding:2px 8px;border-radius:4px;">Halving Counter</span></td>
+            <td><span style="font-size:11px;background:#FF0000;color:#fff;padding:2px 8px;border-radius:4px;">YouTube</span></td>
+            <td><span class="priority-badge pri-high">High</span></td>
+            <td><span class="idea-status is-new">New</span></td>
+            <td><button class="promote-btn" onclick="promoteIdea(this)">Promote →</button></td>
+          </tr>
+          <tr>
+            <td><strong>MVRV Ratio Mid-Cycle Signal Explained</strong><br><small style="color:#807F86;">Simple explainer: what MVRV is, what mid-cycle means, what to watch for.</small></td>
+            <td><span style="font-size:11px;background:#D1FAE5;color:#065F46;padding:2px 8px;border-radius:4px;">On-Chain Data</span></td>
+            <td><span style="font-size:11px;background:#FF0000;color:#fff;padding:2px 8px;border-radius:4px;">YouTube Short</span></td>
+            <td><span class="priority-badge pri-high">High</span></td>
+            <td><span class="idea-status is-reviewed">Reviewed</span></td>
+            <td><button class="promote-btn" onclick="promoteIdea(this)">Promote →</button></td>
+          </tr>
+          <tr>
+            <td><strong>"Bitcoin Is Dead" - Every Time Media Said This</strong><br><small style="color:#807F86;">Compilation of "Bitcoin is dead" headlines vs price action at that moment.</small></td>
+            <td><span style="font-size:11px;background:#FEF3C7;color:#92400E;padding:2px 8px;border-radius:4px;">Media Analysis</span></td>
+            <td><span style="font-size:11px;background:#E1306C;color:#fff;padding:2px 8px;border-radius:4px;">Instagram Reel</span></td>
+            <td><span class="priority-badge pri-medium">Medium</span></td>
+            <td><span class="idea-status is-new">New</span></td>
+            <td><button class="promote-btn" onclick="promoteIdea(this)">Promote →</button></td>
+          </tr>
+          <tr>
+            <td><strong>What $1,000 in Bitcoin at Peak Fear Would Be Worth Now</strong><br><small style="color:#807F86;">Calculator-style content. DCA into extreme fear periods. Real dollar returns.</small></td>
+            <td><span style="font-size:11px;background:#D1FAE5;color:#065F46;padding:2px 8px;border-radius:4px;">Historical Data</span></td>
+            <td><span style="font-size:11px;background:#0077B5;color:#fff;padding:2px 8px;border-radius:4px;">LinkedIn</span></td>
+            <td><span class="priority-badge pri-high">High</span></td>
+            <td><span class="idea-status is-new">New</span></td>
+            <td><button class="promote-btn" onclick="promoteIdea(this)">Promote →</button></td>
+          </tr>
+          <tr>
+            <td><strong>3 Metrics I Watch When Bitcoin Dumps Hard</strong><br><small style="color:#807F86;">Fear &amp; Greed, MVRV, Hash Rate divergence. Educational 3-point framework.</small></td>
+            <td><span style="font-size:11px;background:#D1FAE5;color:#065F46;padding:2px 8px;border-radius:4px;">On-Chain Data</span></td>
+            <td><span style="font-size:11px;background:#FC5C03;color:#fff;padding:2px 8px;border-radius:4px;">Newsletter</span></td>
+            <td><span class="priority-badge pri-medium">Medium</span></td>
+            <td><span class="idea-status is-reviewed">Reviewed</span></td>
+            <td><button class="promote-btn" onclick="promoteIdea(this)">Promote →</button></td>
+          </tr>
+          <tr>
+            <td><strong>Is the Bull Market Over? Cycle Analysis</strong><br><small style="color:#807F86;">Deep dive: cycle tops, current indicators, comparing to 2021 peak. Are we in a new regime?</small></td>
+            <td><span style="font-size:11px;background:#DBEAFE;color:#1E40AF;padding:2px 8px;border-radius:4px;">Member Question</span></td>
+            <td><span style="font-size:11px;background:#FF0000;color:#fff;padding:2px 8px;border-radius:4px;">YouTube</span></td>
+            <td><span class="priority-badge pri-high">High</span></td>
+            <td><span class="idea-status is-new">New</span></td>
+            <td><button class="promote-btn" onclick="promoteIdea(this)">Promote →</button></td>
+          </tr>
+          <tr>
+            <td><strong>Bitcoin Community AMA — Submit Your Questions</strong><br><small style="color:#807F86;">Engagement post. Collect questions for next video. Drive YouTube watch time.</small></td>
+            <td><span style="font-size:11px;background:#FEF3C7;color:#92400E;padding:2px 8px;border-radius:4px;">Engagement</span></td>
+            <td><span style="font-size:11px;background:#1877F2;color:#fff;padding:2px 8px;border-radius:4px;">Facebook</span></td>
+            <td><span class="priority-badge pri-low">Low</span></td>
+            <td><span class="idea-status is-parked">Parked</span></td>
+            <td><button class="promote-btn" onclick="promoteIdea(this)">Promote →</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div><!-- /tab-ideas -->
+
+</div><!-- /ds-page-body -->
+</main>
+
+<!-- ══ ADD CARD MODAL ══ -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal-box">
+    <div class="modal-title">+ Add Content Card</div>
+    <button class="modal-close" onclick="closeModal('addModal')">×</button>
+    <div class="form-row">
+      <div class="form-field">
+        <label>Platform</label>
+        <select id="newPlatform">
+          <option>YouTube</option>
+          <option>X / Twitter</option>
+          <option>LinkedIn</option>
+          <option>Instagram</option>
+          <option>Newsletter</option>
+          <option>Facebook</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Stage</label>
+        <select id="newStage">
+          <option value="script">Script</option>
+          <option value="record">Record</option>
+          <option value="edit">Edit</option>
+          <option value="clips">Clips</option>
+          <option value="scheduled">Scheduled</option>
+          <option value="published">Published</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-field">
+      <label>Title / Hook</label>
+      <input type="text" id="newTitle" placeholder="Enter content title or hook...">
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label>Assigned To</label>
+        <select id="newAssigned">
+          <option>🤖 ContentBot</option>
+          <option>🤖 SocialBot</option>
+          <option>🤖 EditBot</option>
+          <option>🤖 ClipsBot</option>
+          <option>🤖 EmailBot</option>
+          <option>👤 Ben</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Due Date</label>
+        <input type="date" id="newDue">
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:4px;">
+      <button class="btn-primary" onclick="addCard()" style="flex:1;">Add to Board</button>
+      <button class="btn-secondary" onclick="closeModal('addModal')" style="flex:0 0 auto;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ADD IDEA MODAL ══ -->
+<div class="modal-overlay" id="addIdeaModal">
+  <div class="modal-box">
+    <div class="modal-title">+ Add Idea</div>
+    <button class="modal-close" onclick="closeModal('addIdeaModal')">×</button>
+    <div class="form-field">
+      <label>Idea / Title</label>
+      <input type="text" id="ideaTitle" placeholder="What's the content idea?">
+    </div>
+    <div class="form-field">
+      <label>Description</label>
+      <textarea id="ideaDesc" placeholder="Brief description of the angle or format..."></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label>Source</label>
+        <input type="text" id="ideaSource" placeholder="e.g. On-Chain Data, Member Question">
+      </div>
+      <div class="form-field">
+        <label>Platform</label>
+        <select id="ideaPlatform">
+          <option>YouTube</option>
+          <option>X / Twitter</option>
+          <option>LinkedIn</option>
+          <option>Instagram</option>
+          <option>Newsletter</option>
+          <option>Facebook</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-field">
+      <label>Priority</label>
+      <select id="ideaPriority">
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:4px;">
+      <button class="btn-primary" onclick="addIdea()" style="flex:1;">Save Idea</button>
+      <button class="btn-secondary" onclick="closeModal('addIdeaModal')" style="flex:0 0 auto;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Tab switching ──
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ── Drag and drop ──
+  let draggedCard = null;
+
+  function onDragStart(e) {
+    draggedCard = e.currentTarget;
+    e.currentTarget.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  }
+
+  function onDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    e.currentTarget.classList.add('drag-over');
+  }
+
+  function onDragLeave(e) {
+    e.currentTarget.classList.remove('drag-over');
+  }
+
+  function onDrop(e, colName) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('drag-over');
+    if (!draggedCard) return;
+    draggedCard.classList.remove('dragging');
+    draggedCard.dataset.col = colName;
+    // Insert before the add-card-btn
+    const col = document.getElementById('col-' + colName);
+    const addBtn = col.querySelector('.add-card-btn');
+    col.insertBefore(draggedCard, addBtn);
+    draggedCard = null;
+    updateCounts();
+  }
+
+  document.addEventListener('dragend', () => {
+    if (draggedCard) draggedCard.classList.remove('dragging');
+    draggedCard = null;
+  });
+
+  function updateCounts() {
+    const cols = ['script','record','edit','clips','scheduled','published'];
+    cols.forEach(c => {
+      const col = document.getElementById('col-' + c);
+      if (!col) return;
+      const cards = col.querySelectorAll('.k-card').length;
+      const cnt = document.getElementById('cnt-' + c);
+      if (cnt) cnt.textContent = cards;
+    });
+  }
+
+  // ── Modals ──
+  let pendingStage = 'script';
+
+  function openAddModal(stage) {
+    pendingStage = stage || 'script';
+    document.getElementById('newStage').value = pendingStage;
+    document.getElementById('addModal').classList.add('open');
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+  }
+
+  function openAddIdea() {
+    document.getElementById('addIdeaModal').classList.add('open');
+  }
+
+  function addCard() {
+    const platform = document.getElementById('newPlatform').value;
+    const stage    = document.getElementById('newStage').value;
+    const title    = document.getElementById('newTitle').value.trim();
+    const assigned = document.getElementById('newAssigned').value;
+    const due      = document.getElementById('newDue').value;
+    if (!title) { alert('Please enter a title.'); return; }
+
+    const platMap = {
+      'YouTube': ['plat-yt','badge-yt','YT'],
+      'X / Twitter': ['plat-x','badge-x','X'],
+      'LinkedIn': ['plat-li','badge-li','LI'],
+      'Instagram': ['plat-ig','badge-ig','IG'],
+      'Newsletter': ['plat-nl','badge-nl','NL'],
+      'Facebook': ['plat-fb','badge-fb','FB'],
+    };
+    const [dotCls, badgeCls, shortName] = platMap[platform] || ['plat-yt','badge-yt','YT'];
+    const dueStr = due ? new Date(due).toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '';
+
+    const card = document.createElement('div');
+    card.className = 'k-card';
+    card.draggable = true;
+    card.dataset.col = stage;
+    card.addEventListener('dragstart', onDragStart);
+    card.innerHTML = `
+      <div class="k-card-platform">
+        <span class="plat-dot ${dotCls}"></span>
+        <span class="plat-label">${platform}</span>
+        <span class="plat-badge ${badgeCls}">${shortName}</span>
+      </div>
+      <div class="k-card-title">${title}</div>
+      <div class="k-card-meta">
+        <span class="k-card-assigned">${assigned}</span>
+        ${dueStr ? `<span class="k-card-due">${dueStr}</span>` : ''}
+      </div>`;
+
+    const col = document.getElementById('col-' + stage);
+    const addBtn = col.querySelector('.add-card-btn');
+    col.insertBefore(card, addBtn);
+    updateCounts();
+    closeModal('addModal');
+    document.getElementById('newTitle').value = '';
+  }
+
+  function addIdea() {
+    const title    = document.getElementById('ideaTitle').value.trim();
+    const desc     = document.getElementById('ideaDesc').value.trim();
+    const source   = document.getElementById('ideaSource').value.trim() || 'Manual';
+    const platform = document.getElementById('ideaPlatform').value;
+    const priority = document.getElementById('ideaPriority').value;
+    if (!title) { alert('Please enter an idea title.'); return; }
+
+    const platColors = {
+      'YouTube':'#FF0000','X / Twitter':'#111','LinkedIn':'#0077B5',
+      'Instagram':'#E1306C','Newsletter':'#FC5C03','Facebook':'#1877F2',
+    };
+    const priClass = {high:'pri-high',medium:'pri-medium',low:'pri-low'};
+
+    const tbody = document.querySelector('#ideasTable tbody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${title}</strong>${desc ? `<br><small style="color:#807F86;">${desc}</small>` : ''}</td>
+      <td><span style="font-size:11px;background:#DBEAFE;color:#1E40AF;padding:2px 8px;border-radius:4px;">${source}</span></td>
+      <td><span style="font-size:11px;background:${platColors[platform]};color:#fff;padding:2px 8px;border-radius:4px;">${platform}</span></td>
+      <td><span class="priority-badge ${priClass[priority]}">${priority.charAt(0).toUpperCase()+priority.slice(1)}</span></td>
+      <td><span class="idea-status is-new">New</span></td>
+      <td><button class="promote-btn" onclick="promoteIdea(this)">Promote →</button></td>`;
+    tbody.appendChild(tr);
+    closeModal('addIdeaModal');
+    document.getElementById('ideaTitle').value = '';
+    document.getElementById('ideaDesc').value = '';
+    document.getElementById('ideaSource').value = '';
+  }
+
+  function promoteIdea(btn) {
+    const row = btn.closest('tr');
+    const title = row.querySelector('strong').textContent;
+    btn.textContent = '✅ Promoted';
+    btn.classList.add('done');
+    btn.disabled = true;
+    // Switch to board tab and add a card in Script
+    switchTab('board', document.querySelector('.tab-btn'));
+    openAddModal('script');
+    document.getElementById('newTitle').value = title;
+  }
+
+  function copyText(btn) {
+    const card = btn.closest('.dist-card');
+    const text = card.querySelector('.dist-copy').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => btn.textContent = orig, 2000);
+    });
+  }
+
+  function generateDist() {
+    const title = document.getElementById('distVideoTitle').value.trim();
+    if (!title) return;
+    // Just flash the UI to show "regenerated"
+    const grid = document.getElementById('distGrid');
+    grid.style.opacity = '0.4';
+    setTimeout(() => { grid.style.opacity = '1'; }, 600);
+  }
+
+  // ── Mobile sidebar ──
+  function openSidebar() {
+    document.getElementById('dsSidebar').classList.add('open');
+    document.getElementById('sidebarOverlay').classList.add('open');
+  }
+  function closeSidebar() {
+    document.getElementById('dsSidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('open');
+  }
+
+  // ── Calendar slots ──
+  document.querySelectorAll('.cal-cell').forEach(cell => {
+    cell.addEventListener('click', () => openAddModal());
+  });
+
+  // ── Init ──
+  updateCounts();
+</script>
+</body>
+</html>
