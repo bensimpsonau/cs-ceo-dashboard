@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Content Distribution: Bitcoin Is Down 48%</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange: #FC5C03;
+      --navy: #1A1A2E;
+      --navy-light: #242440;
+      --navy-card: #1E1E38;
+      --text: #F0F0F0;
+      --text-muted: #9090B0;
+      --border: rgba(255,255,255,0.08);
+      --success: #22C55E;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--navy);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(135deg, #0f0f22 0%, #1A1A2E 60%, #1f1230 100%);
+      border-bottom: 2px solid var(--orange);
+      padding: 40px 24px 32px;
+      text-align: center;
+    }
+    .header-tag {
+      display: inline-block;
+      background: var(--orange);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+    .header h1 {
+      font-size: clamp(20px, 3.5vw, 28px);
+      font-weight: 800;
+      line-height: 1.3;
+      max-width: 780px;
+      margin: 0 auto 12px;
+    }
+    .header h1 span { color: var(--orange); }
+    .header-meta {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .header-meta span { display: flex; align-items: center; gap: 6px; }
+    .header-meta .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--orange);
+      flex-shrink: 0;
+    }
+
+    /* STATS BAR */
+    .stats-bar {
+      background: var(--navy-light);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+    .stat-value {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--orange);
+    }
+    .stat-value.white { color: var(--text); }
+
+    /* CONTENT */
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 40px 20px 0;
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 10px;
+    }
+
+    /* CARD */
+    .card {
+      background: var(--navy-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(252, 92, 3, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .copy-btn {
+      background: rgba(252, 92, 3, 0.12);
+      border: 1px solid rgba(252, 92, 3, 0.3);
+      color: var(--orange);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .copy-btn:hover {
+      background: rgba(252, 92, 3, 0.22);
+      border-color: var(--orange);
+    }
+    .copy-btn.copied {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: rgba(34, 197, 94, 0.4);
+      color: var(--success);
+    }
+
+    .card-content {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #d0d0e8;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* Multi-item cards (titles, EDM subjects) */
+    .item-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .item-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .item-num {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--orange);
+      background: rgba(252,92,3,0.12);
+      border-radius: 4px;
+      padding: 2px 7px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .item-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #d0d0e8;
+      flex: 1;
+    }
+    .item-copy {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .item-copy:hover {
+      border-color: var(--orange);
+      color: var(--orange);
+    }
+    .item-copy.copied {
+      color: var(--success);
+      border-color: rgba(34,197,94,0.4);
+    }
+
+    /* Story slides */
+    .story-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+    }
+    .story-slide {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      position: relative;
+    }
+    .slide-num {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--orange);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .slide-text {
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: #d0d0e8;
+    }
+
+    /* Calendar */
+    .calendar-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .cal-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .cal-day {
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--orange);
+      border-radius: 5px;
+      padding: 3px 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .cal-actions {
+      font-size: 13px;
+      line-height: 1.65;
+      color: #d0d0e8;
+    }
+    .cal-actions strong {
+      color: var(--text);
+    }
+
+    /* Thumbnail concepts */
+    .thumb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+    .thumb-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .thumb-concept {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--orange);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .thumb-detail {
+      font-size: 13px;
+      line-height: 1.65;
+      color: #c0c0d8;
+    }
+    .thumb-detail strong {
+      color: var(--text);
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-size: 10px;
+      margin-top: 8px;
+      margin-bottom: 2px;
+    }
+
+    /* X posts */
+    .x-posts {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .x-post {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .x-post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .x-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--orange);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .x-char {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .x-text {
+      font-size: 14px;
+      line-height: 1.65;
+      color: #d0d0e8;
+    }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 8px 0 20px;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 32px 20px 0;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .footer a { color: var(--orange); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      .story-grid { grid-template-columns: 1fr 1fr; }
+      .thumb-grid { grid-template-columns: 1fr; }
+      .stats-bar { gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-tag">Content Distribution Package</div>
+  <h1>"Bitcoin Is Down <span>48%.</span> Is Now the Time to Buy? <span>(What the Data Actually Shows)"</span></h1>
+  <div class="header-meta">
+    <span><span class="dot"></span>@BenCollectiveShift</span>
+    <span><span class="dot"></span>Published: April 1, 2026</span>
+    <span><span class="dot"></span>Collective Shift</span>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-label">BTC Price</div>
+    <div class="stat-value">$66,616</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Fear &amp; Greed</div>
+    <div class="stat-value">9 — Extreme Fear</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Days Extreme Fear</div>
+    <div class="stat-value white">46 days</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">BTC Dominance</div>
+    <div class="stat-value white">57%</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">ETF Flows</div>
+    <div class="stat-value" style="color:#ef4444;">-$296M</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Post-Halving Day</div>
+    <div class="stat-value white">346</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+  <!-- 1. YOUTUBE TITLES -->
+  <div class="section-label">01 / YouTube Title Options</div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon">▶</div>
+        YouTube Title Options (5)
+      </div>
+      <button class="copy-btn" onclick="copyAllTitles(this)">Copy All</button>
+    </div>
+    <div class="item-list" id="titles-list">
+      <div class="item-row">
+        <span class="item-num">DATA</span>
+        <span class="item-text">Bitcoin Is Down 48%. Here's What the On-Chain Data Says</span>
+        <button class="item-copy" onclick="copyItem(this)">Copy</button>
+      </div>
+      <div class="item-row">
+        <span class="item-num">FEAR</span>
+        <span class="item-text">46 Days of Extreme Fear. Is Bitcoin Actually in Trouble?</span>
+        <button class="item-copy" onclick="copyItem(this)">Copy</button>
+      </div>
+      <div class="item-row">
+        <span class="item-num">QUESTION</span>
+        <span class="item-text">Bitcoin Is Down 48%. Is Now the Time to Buy? (Data Only)</span>
+        <button class="item-copy" onclick="copyItem(this)">Copy</button>
+      </div>
+      <div class="item-row">
+        <span class="item-num">BOLD</span>
+        <span class="item-text">The Data Says Bitcoin's Correction Is Completely Normal</span>
+        <button class="item-copy" onclick="copyItem(this)">Copy</button>
+      </div>
+      <div class="item-row">
+        <span class="item-num">CONTRARIAN</span>
+        <span class="item-text">Everyone Is Panic Selling Bitcoin. I'm Looking at This Instead</span>
+        <button class="item-copy" onclick="copyItem(this)">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. YOUTUBE DESCRIPTION -->
+  <div class="section-label">02 / YouTube Description</div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon">📝</div>
+        YouTube Description (Final)
+      </div>
+      <button class="copy-btn" onclick="copyCard('yt-desc', this)">Copy</button>
+    </div>
+    <div class="card-content" id="yt-desc">Bitcoin is down 48% from its all-time high. The Fear and Greed Index has sat at 9 — Extreme Fear — for 46 consecutive days. ETF flows just printed -$296M. And everyone has an opinion.
+
+Here's what the actual data shows.
+
+In this video I walk through the on-chain metrics, institutional positioning, macro context, and historical drawdown patterns to give you a clear, evidence-based picture of where we are in this cycle — and what that actually means for your decision-making.
+
+No hype. No panic. Just the data.
+
+---
+CHAPTERS
+0:00 — Introduction
+2:00 — Why corrections like this are normal
+6:00 — On-chain data breakdown
+10:00 — What institutions are doing
+14:00 — Macro environment
+17:00 — What I am personally doing
+20:00 — A framework for making your own decision
+22:00 — How to get started with digital assets
+
+---
+KEY DATA POINTS
+- BTC: $66,616 | Fear &amp; Greed: 9 (46 days straight)
+- BTC Dominance: 57% | ETF Flows: -$296M
+- Historical drawdowns: 2013 (50%+), 2017 (40% x2), 2020 (63%), 2021 (53%), 2026 (48%)
+- Realized price ~$40K — currently 2.1x (historically tops at 3-4x)
+- Institutional targets: Bernstein $150K, Standard Chartered $112K
+- Day 346 post-halving — historical peak window: 12-18 months post-halving
+
+---
+FREE TRAINING: How to invest in Bitcoin and digital assets with confidence
+👉 https://collectiveshift.net/trainingvslv5
+
+---
+#Bitcoin #BTC #DigitalAssets #Investing #BitcoinDrawdown #FearAndGreed #OnChainAnalysis</div>
+  </div>
+
+  <!-- 3. X / TWITTER -->
+  <div class="section-label">03 / X / Twitter Posts</div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon">𝕏</div>
+        X / Twitter (3 Posts)
+      </div>
+    </div>
+    <div class="x-posts">
+      <div class="x-post">
+        <div class="x-post-header">
+          <span class="x-label">Post 1 — Thread Opener</span>
+          <span class="x-char">~230 chars</span>
+        </div>
+        <div class="x-text" id="x-post-1">Bitcoin Fear and Greed hit 9. Extreme Fear. 46 days straight.
+
+Last time this happened, Bitcoin was at a generational entry point.
+
+Here's what the on-chain data actually shows right now (thread):</div>
+        <div style="margin-top:10px;"><button class="item-copy" onclick="copyById('x-post-1', this)">Copy</button></div>
+      </div>
+      <div class="x-post">
+        <div class="x-post-header">
+          <span class="x-label">Post 2 — Data Insight</span>
+          <span class="x-char">~250 chars</span>
+        </div>
+        <div class="x-text" id="x-post-2">Bitcoin realized price is ~$40K. Current price is $66,616. That's 2.1x realized.
+
+Historically, cycle tops form at 3-4x realized price.
+
+We are Day 346 post-halving. Peak window is 12-18 months post-halving.
+
+The data does not support panic.</div>
+        <div style="margin-top:10px;"><button class="item-copy" onclick="copyById('x-post-2', this)">Copy</button></div>
+      </div>
+      <div class="x-post">
+        <div class="x-post-header">
+          <span class="x-label">Post 3 — CTA</span>
+          <span class="x-char">~200 chars</span>
+        </div>
+        <div class="x-text" id="x-post-3">I broke down the full picture in today's video.
+
+On-chain data. Institutional flows. Historical context. What I'm doing with my own portfolio.
+
+No hype. Just data. Watch here: [VIDEO LINK]</div>
+        <div style="margin-top:10px;"><button class="item-copy" onclick="copyById('x-post-3', this)">Copy</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. LINKEDIN -->
+  <div class="section-label">04 / LinkedIn Post</div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon">in</div>
+        LinkedIn Post
+      </div>
+      <button class="copy-btn" onclick="copyCard('linkedin-post', this)">Copy</button>
+    </div>
+    <div class="card-content" id="linkedin-post">Bitcoin has fallen 48% from its all-time high. The Fear and Greed Index has printed Extreme Fear (9/100) for 46 consecutive days. ETF flows are running at -$296M.
+
+Most people are either panicking or pretending it isn't happening.
+
+I want to share what the data actually shows.
+
+This week I published a full breakdown of where we are in the current Bitcoin cycle. Not based on sentiment. Not based on price action alone. Based on on-chain metrics, historical drawdown patterns, and institutional positioning.
+
+A few things stood out to me:
+
+1. Bitcoin's realized price sits around $40,000. The current price at $66,616 is 2.1x that. Historically, cycle tops form at 3-4x realized price. We are not there.
+
+2. We are on Day 346 post-halving. The historical peak window is 12-18 months post-halving. The data suggests we are mid-cycle, not at the top.
+
+3. Corrections of this magnitude are completely normal. 2013 saw 50%+. 2020 saw 63%. 2021 saw 53%. The structure of this correction is consistent with prior cycles.
+
+4. Institutions are still long. Bernstein has a target of $150K. Standard Chartered is at $112K. These are not retail calls.
+
+None of this means buying Bitcoin is without risk. It isn't. But making decisions based on fear rather than data is almost always the wrong move.
+
+My full video breakdown is linked in the comments. Free training for anyone new to digital assets is also there.
+
+Happy to answer questions.
+
+#Bitcoin #DigitalAssets #Investing #OnChainAnalysis</div>
+  </div>
+
+  <!-- 5. INSTAGRAM CAPTION -->
+  <div class="section-label">05 / Instagram Caption</div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon">📸</div>
+        Instagram Caption
+      </div>
+      <button class="copy-btn" onclick="copyCard('ig-caption', this)">Copy</button>
+    </div>
+    <div class="card-content" id="ig-caption">You've checked your portfolio at 3am. I know because I've done it too.
+
+Bitcoin is down 48%. The Fear and Greed Index is sitting at 9 out of 100. That's Extreme Fear — and it has been for 46 days straight.
+
+Here's what I want you to know: the data does not support panic.
+
+In the new video I walk through the actual on-chain numbers. Bitcoin's realized price is around $40K. We're currently 2.1x above that. Historically, cycle tops form at 3-4x. We are not there yet.
+
+Every major Bitcoin correction has felt like the end. 2020 was 63% down. 2021 was 53%. The people who sold at those moments missed some of the biggest recoveries in financial history.
+
+That doesn't mean buying blindly. It means making decisions with data, not emotion.
+
+New video is up. Link in bio.
+
+#Bitcoin #BTC #DigitalAssets #Investing #BitcoinDrawdown #FearAndGreed #OnChainAnalysis #BitcoinCycle #CollectiveShift</div>
+  </div>
+
+  <!-- 6. INSTAGRAM STORY SCRIPT -->
+  <div class="section-label">06 / Instagram Story Script</div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon">🎬</div>
+        Instagram Story Script (5 Slides)
+      </div>
+      <button class="copy-btn" onclick="copyCard('story-content', this)">Copy All</button>
+    </div>
+    <div id="story-content" style="display:none;">SLIDE 1 — HOOK
+Bitcoin Fear &amp; Greed: 9/100.
+46 days of Extreme Fear.
+Here's what that actually means.
+
+SLIDE 2 — DATA POINT
+Bitcoin's realized price is ~$40K.
+Current price: $66,616.
+That's 2.1x realized.
+Tops historically happen at 3-4x.
+We are not at the top.
+
+SLIDE 3 — HISTORICAL CONTEXT
+Every major Bitcoin correction felt like the end.
+2020: -63%
+2021: -53%
+2026: -48%
+Every single time, the data said the same thing.
+
+SLIDE 4 — WHAT THIS MEANS
+We are Day 346 post-halving.
+Peak window: 12-18 months post-halving.
+Institutions are still long.
+The data does not support panic.
+
+SLIDE 5 — CTA
+I broke it all down in today's video.
+On-chain data. Historical context.
+What I'm personally doing.
+Link in bio. Go watch it.</div>
+    <div class="story-grid">
+      <div class="story-slide">
+        <div class="slide-num">Slide 1 — Hook</div>
+        <div class="slide-text">Bitcoin Fear &amp; Greed: 9/100.
+
+46 days of Extreme Fear.
+
+Here's what that actually means.</div>
+      </div>
+      <div class="story-slide">
+        <div class="slide-num">Slide 2 — Data Point</div>
+        <div class="slide-text">Bitcoin's realized price is ~$40K.
+
+Current price: $66,616.
+
+That's 2.1x realized.
+
+Tops historically happen at 3-4x.
+
+We are not at the top.</div>
+      </div>
+      <div class="story-slide">
+        <div class="slide-num">Slide 3 — Historical Context</div>
+        <div class="slide-text">Every major Bitcoin correction felt like the end.
+
+2020: -63%
+2021: -53%
+2026: -48%
+
+Every single time, the data said the same thing.</div>
+      </div>
+      <div class="story-slide">
+        <div class="slide-num">Slide 4 — What This Means</div>
+        <div class="slide-text">We are Day 346 post-halving.
+
+Peak window: 12-18 months post-halving.
+
+Institutions are still long.
+
+The data does not support panic.</div>
+      </div>
+      <div class="story-slide">
+        <div class="slide-num">Slide 5 — CTA</div>
+        <div class="slide-text">I broke it all down in today's video.
+
+On-chain data. Historical context. What I'm personally doing.
+
+Link in bio. Go watch it.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. EDM SUBJECT LINES -->
+  <div class="section-label">07 / EDM Subject Lines</div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon">✉️</div>
+        EDM Subject Lines (5 Options)
+      </div>
+    </div>
+    <div class="item-list">
+      <div class="item-row">
+        <span class="item-num">1</span>
+        <span class="item-text">Bitcoin is down 48%. Here's what the data says.</span>
+        <button class="item-copy" onclick="copyItem(this)">Copy</button>
+      </div>
+      <div class="item-row">
+        <span class="item-num">2</span>
+        <span class="item-text">46 days of Extreme Fear. Is this the buying opportunity?</span>
+        <button class="item-copy" onclick="copyItem(this)">Copy</button>
+      </div>
+      <div class="item-row">
+        <span class="item-num">3</span>
+        <span class="item-text">What I'm actually doing while everyone else panics</span>
+        <button class="item-copy" onclick="copyItem(this)">Copy</button>
+      </div>
+      <div class="item-row">
+        <span class="item-num">4</span>
+        <span class="item-text">The on-chain data Bitcoin investors need to see right now</span>
+        <button class="item-copy" onclick="copyItem(this)">Copy</button>
+      </div>
+      <div class="item-row">
+        <span class="item-num">5</span>
+        <span class="item-text">New video: Bitcoin's 48% correction, explained with data</span>
+        <button class="item-copy" onclick="copyItem(this)">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. EDM BODY -->
+  <div class="section-label">08 / EDM Body</div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon">📧</div>
+        EDM Body (Short)
+      </div>
+      <button class="copy-btn" onclick="copyCard('edm-body', this)">Copy</button>
+    </div>
+    <div class="card-content" id="edm-body">Hey,
+
+Bitcoin is down 48% from its high. The Fear and Greed Index has been sitting at Extreme Fear for 46 days. I've had a lot of questions about what this actually means.
+
+So I made a video.
+
+It covers the on-chain data, what institutions are doing, where we are in the halving cycle, and how to think about this if you're trying to make a decision right now.
+
+No predictions. No hype. Just the data, laid out clearly.
+
+Watch it here: [VIDEO LINK]
+
+If you're new to digital assets and want a framework for investing with confidence, the free training is still available too: https://collectiveshift.net/trainingvslv5
+
+Ben</div>
+  </div>
+
+  <!-- 9. THUMBNAIL BRIEF -->
+  <div class="section-label">09 / Thumbnail Brief</div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon">🖼️</div>
+        Thumbnail Brief (3 Concepts)
+      </div>
+      <button class="copy-btn" onclick="copyCard('thumb-brief', this)">Copy All</button>
+    </div>
+    <div id="thumb-brief" style="display:none;">CONCEPT A — DATA SHOCK
+Background: Dark navy gradient (#1A1A2E) with subtle red candlestick chart bleeding down the right side.
+Text Overlay: "DOWN 48%" in massive bold white type, left-aligned. Subtext: "What The Data Shows" in orange (#FC5C03).
+Ben: Direct eye contact, calm but serious expression. Arms crossed or hands forward. CS-branded shirt.
+Colour Treatment: Navy base, red accent for fear, orange for the data/hope contrast.
+
+CONCEPT B — FEAR METER
+Background: Split screen. Left half: deep red/black with Fear &amp; Greed gauge showing 9. Right half: navy with upward chart overlay.
+Text Overlay: "FEAR = 9" on red side. "BUY SIGNAL?" on navy side. Both in heavy white type.
+Ben: Pointing at the Fear &amp; Greed number, eyebrows raised — conveying "look at this."
+Colour Treatment: Red and navy split. Orange on the question mark element.
+
+CONCEPT C — CONTRARIAN CALM
+Background: Clean dark navy. Minimal. Single large "48%" stat front and centre, slightly faded behind Ben.
+Text Overlay: "Everyone Is Panicking." in white. "Here's The Data." in orange below.
+Ben: Calm, slight smile, confident. Sitting or leaning slightly. Not reactive.
+Colour Treatment: All navy. White text. Orange accent on the key line. Feels authoritative.</div>
+    <div class="thumb-grid">
+      <div class="thumb-card">
+        <div class="thumb-concept">Concept A — Data Shock</div>
+        <div class="thumb-detail">
+          <strong>Background</strong>
+          Dark navy gradient with subtle red candlestick chart bleeding down the right side.
+          <strong>Text Overlay</strong>
+          "DOWN 48%" in massive bold white type, left-aligned. Subtext: "What The Data Shows" in orange.
+          <strong>Ben</strong>
+          Direct eye contact, calm but serious. Arms crossed or hands forward. CS-branded shirt.
+          <strong>Colour Treatment</strong>
+          Navy base, red accent for fear, orange for data/hope contrast.
+        </div>
+      </div>
+      <div class="thumb-card">
+        <div class="thumb-concept">Concept B — Fear Meter</div>
+        <div class="thumb-detail">
+          <strong>Background</strong>
+          Split screen. Left: deep red/black with Fear &amp; Greed gauge at 9. Right: navy with upward chart.
+          <strong>Text Overlay</strong>
+          "FEAR = 9" on red side. "BUY SIGNAL?" on navy side. Heavy white type.
+          <strong>Ben</strong>
+          Pointing at the Fear &amp; Greed number, eyebrows raised — "look at this" energy.
+          <strong>Colour Treatment</strong>
+          Red and navy split. Orange on question mark element.
+        </div>
+      </div>
+      <div class="thumb-card">
+        <div class="thumb-concept">Concept C — Contrarian Calm</div>
+        <div class="thumb-detail">
+          <strong>Background</strong>
+          Clean dark navy. Minimal. Large "48%" stat front and centre, slightly faded behind Ben.
+          <strong>Text Overlay</strong>
+          "Everyone Is Panicking." in white. "Here's The Data." in orange below.
+          <strong>Ben</strong>
+          Calm, slight smile, confident. Sitting or slightly leaning. Not reactive.
+          <strong>Colour Treatment</strong>
+          All navy. White text. Orange on the key line. Authoritative feel.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. 7-DAY DISTRIBUTION CALENDAR -->
+  <div class="section-label">10 / 7-Day Distribution Calendar</div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon">📅</div>
+        7-Day Distribution Calendar
+      </div>
+      <button class="copy-btn" onclick="copyCard('cal-content', this)">Copy</button>
+    </div>
+    <div id="cal-content" style="display:none;">DAY 0 (April 1) — LAUNCH DAY
+- YouTube: Publish video with final description and chapters. Pinned comment with free training link.
+- X/Twitter: Post all 3 posts as a thread. Pin thread to profile.
+- LinkedIn: Publish LinkedIn post. Add video link in first comment.
+
+DAY 1 (April 2) — INSTAGRAM POST
+- Instagram: Publish the Instagram caption with a strong visual (chart/data graphic). Link in bio updated to video.
+
+DAY 2 (April 3) — INSTAGRAM STORIES
+- Instagram Stories: Post all 5 story slides in sequence. Add a "Link in Bio" swipe-up sticker on Slide 5.
+
+DAY 3 (April 4) — EDM SEND
+- Email newsletter: Send to full list with chosen subject line and EDM body. Video link prominent.
+
+DAY 5 (April 6) — X FOLLOW-UP
+- X/Twitter: Post a standalone insight from the video (e.g., the halving cycle data point or realized price stat). Ref original thread in reply.
+
+DAY 7 (April 8) — LINKEDIN COMMENT
+- LinkedIn: Comment on your own post with a new data point or question to re-engage the thread. Something like: "One stat that keeps standing out to me from this video: we're at 2.1x realized price. Historically tops form at 3-4x. Where do you think we end up this cycle?"</div>
+    <div class="calendar-grid">
+      <div class="cal-row">
+        <span class="cal-day">Day 0</span>
+        <div class="cal-actions">
+          <strong>April 1 — Launch Day</strong><br>
+          - YouTube: Publish with full description and chapters. Pin a comment with free training link.<br>
+          - X/Twitter: Post all 3 posts as a thread. Pin thread to profile.<br>
+          - LinkedIn: Publish post. Drop video link in first comment.
+        </div>
+      </div>
+      <div class="cal-row">
+        <span class="cal-day">Day 1</span>
+        <div class="cal-actions">
+          <strong>April 2 — Instagram Post</strong><br>
+          - Instagram: Publish caption with strong visual (chart or data graphic).<br>
+          - Update link in bio to point to video.
+        </div>
+      </div>
+      <div class="cal-row">
+        <span class="cal-day">Day 2</span>
+        <div class="cal-actions">
+          <strong>April 3 — Instagram Stories</strong><br>
+          - Post all 5 story slides in sequence.<br>
+          - Add "Link in Bio" sticker on Slide 5.
+        </div>
+      </div>
+      <div class="cal-row">
+        <span class="cal-day">Day 3</span>
+        <div class="cal-actions">
+          <strong>April 4 — EDM Send</strong><br>
+          - Send newsletter to full list with chosen subject line and EDM body.<br>
+          - Video link prominent above the fold.
+        </div>
+      </div>
+      <div class="cal-row">
+        <span class="cal-day">Day 5</span>
+        <div class="cal-actions">
+          <strong>April 6 — X Follow-Up</strong><br>
+          - Post a standalone data insight (e.g., halving cycle stat or realized price figure).<br>
+          - Reference original thread in reply to link back.
+        </div>
+      </div>
+      <div class="cal-row">
+        <span class="cal-day">Day 7</span>
+        <div class="cal-actions">
+          <strong>April 8 — LinkedIn Comment</strong><br>
+          - Comment on your own post with a new data point or question to re-engage the thread.<br>
+          - Example: "Still thinking about this one stat: we're at 2.1x realized price. Historically tops form at 3-4x. Where do you think we end this cycle?"
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>Collective Shift Content Distribution Package &nbsp;|&nbsp; <a href="https://collectiveshift.net/trainingvslv5">Free Training Link</a> &nbsp;|&nbsp; Generated April 1, 2026</p>
+</div>
+
+<script>
+  function copyCard(id, btn) {
+    const el = document.getElementById(id);
+    const text = el.innerText || el.textContent;
+    navigator.clipboard.writeText(text.trim()).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  function copyById(id, btn) {
+    const el = document.getElementById(id);
+    const text = el.innerText || el.textContent;
+    navigator.clipboard.writeText(text.trim()).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  function copyItem(btn) {
+    const row = btn.closest('.item-row');
+    const textEl = row.querySelector('.item-text');
+    const text = textEl.innerText || textEl.textContent;
+    navigator.clipboard.writeText(text.trim()).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  function copyAllTitles(btn) {
+    const rows = document.querySelectorAll('#titles-list .item-text');
+    const text = Array.from(rows).map(r => r.innerText.trim()).join('\n');
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy All';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+</script>
+
+</body>
+</html>
