@@ -69,6 +69,24 @@ tailwind.config = {
     border-left-color: #FC5C03; font-weight: 600;
   }
   .sidebar-link .sidebar-icon { width: 18px; text-align: center; font-size: 14px; flex-shrink: 0; }
+  /* Sub-menu */
+  .sidebar-group { }
+  .sidebar-group-toggle {
+    display: flex; align-items: center; gap: 10px; justify-content: space-between;
+    padding: 8px 16px; margin: 1px 8px; border-radius: 6px;
+    color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500;
+    transition: all 0.12s ease; cursor: pointer; text-decoration: none;
+    border-left: 3px solid transparent; user-select: none;
+  }
+  .sidebar-group-toggle:hover { color: #fff; background: rgba(255,255,255,0.07); }
+  .sidebar-group-toggle .toggle-left { display:flex; align-items:center; gap:10px; }
+  .sidebar-group-toggle .toggle-arrow { font-size:10px; opacity:0.5; transition: transform 0.2s; }
+  .sidebar-group.open .toggle-arrow { transform: rotate(90deg); }
+  .sidebar-sub { display:none; padding-left: 14px; }
+  .sidebar-group.open .sidebar-sub { display:block; }
+  .sidebar-sub .sidebar-link { font-size: 12px; padding: 6px 16px; margin: 0 8px; color: rgba(255,255,255,0.5); }
+  .sidebar-sub .sidebar-link:hover { color: #fff; }
+  .sidebar-sub .sidebar-link::before { content: "—"; font-size:9px; margin-right:6px; opacity:0.4; }
 
   /* ── Top Bar ── */
   .topbar {
@@ -322,33 +340,49 @@ tailwind.config = {
     </a>
 
     <div class="sidebar-section">Content</div>
-    <a class="sidebar-link" href="content-board.html">
-      <span class="sidebar-icon">🎬</span> Content Board
-    </a>
-    <a class="sidebar-link" href="content-studio.html">
-      <span class="sidebar-icon">🎯</span> Content Studio
-    </a>
-    <a class="sidebar-link" href="asana-board-mockup.html">
-      <span class="sidebar-icon">📅</span> Calendar
-    </a>
-    <a class="sidebar-link" href="hub/youtube-strategy.html">
-      <span class="sidebar-icon">▶</span> YouTube
-    </a>
+    <div class="sidebar-group open" id="grp-content">
+      <div class="sidebar-group-toggle" onclick="toggleGroup('grp-content')">
+        <span class="toggle-left"><span class="sidebar-icon">🎬</span> Content</span>
+        <span class="toggle-arrow">▶</span>
+      </div>
+      <div class="sidebar-sub">
+        <a class="sidebar-link" href="content-board.html">Content Board</a>
+        <a class="sidebar-link" href="content-studio.html">Content Studio</a>
+        <a class="sidebar-link" href="asana-board-mockup.html">Calendar</a>
+        <a class="sidebar-link" href="digital-asset-shift-newsletter.html">Newsletter</a>
+      </div>
+    </div>
+    <div class="sidebar-group" id="grp-growth">
+      <div class="sidebar-group-toggle" onclick="toggleGroup('grp-growth')">
+        <span class="toggle-left"><span class="sidebar-icon">📈</span> Growth</span>
+        <span class="toggle-arrow">▶</span>
+      </div>
+      <div class="sidebar-sub">
+        <a class="sidebar-link" href="hub/youtube-strategy.html">YouTube Strategy</a>
+        <a class="sidebar-link" href="lead-magnet-strategy.html">Lead Magnet</a>
+        <a class="sidebar-link" href="hub/instagram-strategy.html">Instagram Strategy</a>
+        <a class="sidebar-link" href="hub/social-media-rollout.html">Social Rollout</a>
+      </div>
+    </div>
 
     <div class="sidebar-section">Strategy</div>
-    <a class="sidebar-link" href="house-of-brands.html">
-      <span class="sidebar-icon">🏛️</span> House of Brands
-    </a>
-    <a class="sidebar-link" href="hub/operating-system.html">
-      <span class="sidebar-icon">🧭</span> Strategy Hub
-    </a>
-    <a class="sidebar-link" href="hub/brand.html">
-      <span class="sidebar-icon">📄</span> Docs
-    </a>
+    <div class="sidebar-group open" id="grp-strategy">
+      <div class="sidebar-group-toggle" onclick="toggleGroup('grp-strategy')">
+        <span class="toggle-left"><span class="sidebar-icon">🧭</span> Strategy</span>
+        <span class="toggle-arrow">▶</span>
+      </div>
+      <div class="sidebar-sub">
+        <a class="sidebar-link" href="house-of-brands.html">House of Brands</a>
+        <a class="sidebar-link" href="hub/operating-system.html">Operating System</a>
+        <a class="sidebar-link" href="hub/positioning.html">Positioning</a>
+        <a class="sidebar-link" href="hub/competitors.html">Competitors</a>
+        <a class="sidebar-link" href="hub/brand.html">Brand Docs</a>
+      </div>
+    </div>
 
     <div class="sidebar-section">Team</div>
     <a class="sidebar-link" href="team-cost.html">
-      <span class="sidebar-icon">👤</span> Team
+      <span class="sidebar-icon">👤</span> Team & Costs
     </a>
     <a class="sidebar-link" data-view="bots" onclick="switchView('bots')">
       <span class="sidebar-icon">🤖</span> Bot Fleet
@@ -818,6 +852,9 @@ tailwind.config = {
 // ═══════════════════════════════════════════
 // SIDEBAR
 // ═══════════════════════════════════════════
+function toggleGroup(id) {
+  document.getElementById(id).classList.toggle('open');
+}
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('sidebarOverlay').classList.toggle('open');
