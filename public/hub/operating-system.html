@@ -57,6 +57,38 @@ tailwind.config = {
   .module-card { transition: all 0.2s ease; border: 1px solid #E8E8EA; }
   .module-card:hover { transform: translateY(-2px); border-color: #FC5C03; box-shadow: 0 4px 16px rgba(252,92,3,0.12); }
 
+  /* Accordion modules */
+  .mod-accordion { border: 1px solid #E8E8EA; border-radius: 12px; background: #fff; overflow: hidden; transition: border-color 0.2s; }
+  .mod-accordion:hover { border-color: #FC5C03; box-shadow: 0 4px 16px rgba(252,92,3,0.12); }
+  .mod-accordion.l2-card:hover { border-color: #654FFC; box-shadow: 0 4px 16px rgba(101,79,252,0.12); }
+  .mod-accordion-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; cursor: pointer; user-select: none; }
+  .mod-accordion-header .step-num { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 13px; }
+  .mod-accordion-header .step-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; color: #1B1925; font-size: 15px; }
+  .mod-accordion-header .step-brief { font-size: 12px; color: #807F86; margin-left: auto; max-width: 40%; text-align: right; }
+  .mod-accordion-chevron { margin-left: 12px; transition: transform 0.25s ease; flex-shrink: 0; }
+  .mod-accordion.open .mod-accordion-chevron { transform: rotate(180deg); }
+  .mod-accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+  .mod-accordion.open .mod-accordion-body { max-height: 500px; }
+  .mod-accordion-content { padding: 0 20px 20px; border-top: 1px solid #F0F0F2; }
+  .mod-accordion-content .mod-desc { font-size: 14px; color: #4D4C55; margin: 12px 0 8px; line-height: 1.5; }
+  .mod-accordion-content ul { margin: 0 0 12px; padding-left: 18px; }
+  .mod-accordion-content li { font-size: 13px; color: #4D4C55; margin-bottom: 4px; line-height: 1.5; }
+  .mod-status { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; }
+  .mod-status.live { background: #DCFCE7; color: #16A34A; }
+  .mod-status.coming-soon { background: #FEF9C3; color: #CA8A04; }
+  .mod-accordion-content .mod-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #FC5C03; text-decoration: none; margin-left: 12px; }
+  .mod-accordion-content .mod-link.l2 { color: #654FFC; }
+  .mod-accordion-content .mod-link:hover { text-decoration: underline; }
+
+  /* Two-track visual */
+  .two-track-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  @media (max-width: 768px) { .two-track-grid { grid-template-columns: 1fr; } }
+  .two-track-col { padding: 0; }
+  .two-track-step { display: flex; align-items: center; gap: 10px; padding: 10px 16px; font-size: 13px; color: #4D4C55; border-bottom: 1px solid #F0F0F2; }
+  .two-track-step .tt-num { font-weight: 700; font-size: 12px; width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .two-track-step .tt-num.l1 { background: #FC5C03; color: #fff; }
+  .two-track-step .tt-num.l2 { background: #654FFC; color: #fff; }
+
   :root {
     --csn-h: 56px;
     --csn-bg: #FFFFFF;
@@ -159,7 +191,7 @@ tailwind.config = {
     margin-left: 220px; padding-top: 48px; min-height: 100vh;
   }
   .ds-page-body {
-    padding: 24px 32px; max-width: 100%;
+    padding: 24px 32px; max-width: 100%; padding-top: calc(var(--csn-h, 56px) + 24px);
   }
 
   /* Mobile */
@@ -440,61 +472,207 @@ tailwind.config = {
     </a>
   </section>
 
+  <!-- TWO-TRACK OVERVIEW -->
+  <section class="mb-10">
+    <div class="flex items-center gap-3 mb-5">
+      <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#1A1A2E]/10 text-[#1A1A2E] uppercase tracking-wider">Overview</span>
+      <h2 class="font-jakarta text-xl font-bold text-[#1B1925]">Two-Track System at a Glance</h2>
+    </div>
+    <div class="module-card rounded-2xl bg-white overflow-hidden">
+      <div class="two-track-grid">
+        <div class="two-track-col" style="background:#FFFBF7;">
+          <div style="padding:14px 16px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:#FC5C03;border-bottom:2px solid #FC5C03;">🟠 Level 1 — Beginner</div>
+          <div class="two-track-step"><span class="tt-num l1">1</span> Foundations</div>
+          <div class="two-track-step"><span class="tt-num l1">2</span> Bitcoin</div>
+          <div class="two-track-step"><span class="tt-num l1">3</span> Altcoins</div>
+          <div class="two-track-step"><span class="tt-num l1">4</span> How We Invest</div>
+          <div class="two-track-step"><span class="tt-num l1">5</span> Buy &amp; Sell</div>
+          <div class="two-track-step"><span class="tt-num l1">6</span> Send &amp; Store</div>
+          <div class="two-track-step"><span class="tt-num l1">7</span> Tax</div>
+          <div class="two-track-step" style="border-bottom:none;"><span class="tt-num l1">8</span> Sell Strategy</div>
+        </div>
+        <div class="two-track-col" style="background:#F8F6FF;">
+          <div style="padding:14px 16px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:#654FFC;border-bottom:2px solid #654FFC;">🟣 Level 2 — Advanced</div>
+          <div class="two-track-step"><span class="tt-num l2">1</span> Advanced Foundations</div>
+          <div class="two-track-step"><span class="tt-num l2">2</span> Advanced Bitcoin</div>
+          <div class="two-track-step"><span class="tt-num l2">3</span> Advanced Altcoins</div>
+          <div class="two-track-step"><span class="tt-num l2">4</span> Advanced How We Invest</div>
+          <div class="two-track-step"><span class="tt-num l2">5</span> Advanced Buy &amp; Sell</div>
+          <div class="two-track-step"><span class="tt-num l2">6</span> Advanced Send &amp; Store</div>
+          <div class="two-track-step"><span class="tt-num l2">7</span> Advanced Tax</div>
+          <div class="two-track-step" style="border-bottom:none;"><span class="tt-num l2">8</span> Advanced Sell Strategy</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- LEVEL 1 — BEGINNER TRACK -->
   <section class="mb-10">
     <div class="flex items-center gap-3 mb-5">
       <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-cs-orange/10 text-cs-orange uppercase tracking-wider">Level 1</span>
       <h2 class="font-jakarta text-xl font-bold text-[#1B1925]">Beginner Track</h2>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="flex flex-col gap-3">
 
-      <a href="l1/m1-beginner-foundations.html" class="module-card rounded-xl p-5 bg-white block">
-        <div class="text-cs-orange font-jakarta font-bold text-sm mb-1">Step 1</div>
-        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Foundations</div>
-        <div class="text-xs text-[#807F86]">Crypto fundamentals, key concepts, and getting oriented.</div>
-      </a>
+      <div class="mod-accordion" onclick="this.classList.toggle('open')">
+        <div class="mod-accordion-header">
+          <span class="step-num text-cs-orange">Step 1</span>
+          <span class="step-title">Foundations</span>
+          <span class="step-brief">Crypto fundamentals &amp; key concepts</span>
+          <svg class="mod-accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#807F86" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="mod-accordion-body"><div class="mod-accordion-content">
+          <p class="mod-desc">Get oriented in the crypto landscape. Learn the fundamental concepts, terminology, and mental models you need before investing a single dollar.</p>
+          <ul>
+            <li>Understand what blockchain and cryptocurrency actually are</li>
+            <li>Learn key terminology (wallets, keys, tokens, protocols)</li>
+            <li>Grasp the difference between centralised and decentralised systems</li>
+            <li>Build a mental model for evaluating digital assets</li>
+          </ul>
+          <span class="mod-status live">● Live</span>
+          <a href="l1/m1-beginner-foundations.html" class="mod-link">Open full module →</a>
+        </div></div>
+      </div>
 
-      <a href="l1/m2-beginner-bitcoin.html" class="module-card rounded-xl p-5 bg-white block">
-        <div class="text-cs-orange font-jakarta font-bold text-sm mb-1">Step 2</div>
-        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Bitcoin</div>
-        <div class="text-xs text-[#807F86]">Why Bitcoin matters, how it works, and the investment case.</div>
-      </a>
+      <div class="mod-accordion" onclick="this.classList.toggle('open')">
+        <div class="mod-accordion-header">
+          <span class="step-num text-cs-orange">Step 2</span>
+          <span class="step-title">Bitcoin</span>
+          <span class="step-brief">Why Bitcoin matters &amp; the investment case</span>
+          <svg class="mod-accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#807F86" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="mod-accordion-body"><div class="mod-accordion-content">
+          <p class="mod-desc">Dive deep into Bitcoin — the original cryptocurrency. Understand why it exists, how it works technically, and the bull case for long-term investment.</p>
+          <ul>
+            <li>Understand Bitcoin's value proposition and monetary policy</li>
+            <li>Learn how proof-of-work and mining secure the network</li>
+            <li>Evaluate Bitcoin as a store of value and investment asset</li>
+            <li>Recognise key on-chain metrics and market cycles</li>
+          </ul>
+          <span class="mod-status live">● Live</span>
+          <a href="l1/m2-beginner-bitcoin.html" class="mod-link">Open full module →</a>
+        </div></div>
+      </div>
 
-      <a href="l1/m3-beginner-altcoins.html" class="module-card rounded-xl p-5 bg-white block">
-        <div class="text-cs-orange font-jakarta font-bold text-sm mb-1">Step 3</div>
-        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Altcoins</div>
-        <div class="text-xs text-[#807F86]">Digital assets beyond Bitcoin — evaluation frameworks.</div>
-      </a>
+      <div class="mod-accordion" onclick="this.classList.toggle('open')">
+        <div class="mod-accordion-header">
+          <span class="step-num text-cs-orange">Step 3</span>
+          <span class="step-title">Altcoins</span>
+          <span class="step-brief">Digital assets beyond Bitcoin</span>
+          <svg class="mod-accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#807F86" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="mod-accordion-body"><div class="mod-accordion-content">
+          <p class="mod-desc">Explore the broader digital asset ecosystem. Learn evaluation frameworks for altcoins, understand different token categories, and identify quality projects.</p>
+          <ul>
+            <li>Understand the major altcoin categories (L1s, DeFi, infrastructure)</li>
+            <li>Apply a framework for evaluating altcoin fundamentals</li>
+            <li>Recognise red flags and common pitfalls</li>
+            <li>Build conviction through research, not hype</li>
+          </ul>
+          <span class="mod-status live">● Live</span>
+          <a href="l1/m3-beginner-altcoins.html" class="mod-link">Open full module →</a>
+        </div></div>
+      </div>
 
-      <a href="l1/m4-beginner-how-we-invest.html" class="module-card rounded-xl p-5 bg-white block">
-        <div class="text-cs-orange font-jakarta font-bold text-sm mb-1">Step 4</div>
-        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">How We Invest</div>
-        <div class="text-xs text-[#807F86]">Portfolio construction, allocation, and risk management.</div>
-      </a>
+      <div class="mod-accordion" onclick="this.classList.toggle('open')">
+        <div class="mod-accordion-header">
+          <span class="step-num text-cs-orange">Step 4</span>
+          <span class="step-title">How We Invest</span>
+          <span class="step-brief">Portfolio construction &amp; risk management</span>
+          <svg class="mod-accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#807F86" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="mod-accordion-body"><div class="mod-accordion-content">
+          <p class="mod-desc">Learn the Collective Shift approach to building a crypto portfolio. Covers allocation strategy, risk management, and position sizing for beginners.</p>
+          <ul>
+            <li>Build a diversified crypto portfolio from scratch</li>
+            <li>Understand allocation tiers (core, satellite, speculative)</li>
+            <li>Set risk parameters based on your personal situation</li>
+            <li>Learn dollar-cost averaging and systematic investing</li>
+          </ul>
+          <span class="mod-status live">● Live</span>
+          <a href="l1/m4-beginner-how-we-invest.html" class="mod-link">Open full module →</a>
+        </div></div>
+      </div>
 
-      <a href="l1/m5-beginner-buy-sell.html" class="module-card rounded-xl p-5 bg-white block">
-        <div class="text-cs-orange font-jakarta font-bold text-sm mb-1">Step 5</div>
-        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Buy &amp; Sell</div>
-        <div class="text-xs text-[#807F86]">Exchanges, purchasing, and trading fundamentals.</div>
-      </a>
+      <div class="mod-accordion" onclick="this.classList.toggle('open')">
+        <div class="mod-accordion-header">
+          <span class="step-num text-cs-orange">Step 5</span>
+          <span class="step-title">Buy &amp; Sell</span>
+          <span class="step-brief">Exchanges &amp; trading fundamentals</span>
+          <svg class="mod-accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#807F86" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="mod-accordion-body"><div class="mod-accordion-content">
+          <p class="mod-desc">Master the practical mechanics of buying and selling crypto. Covers exchanges, order types, fees, and execution best practices.</p>
+          <ul>
+            <li>Choose the right exchange for your needs</li>
+            <li>Understand order types (market, limit, stop-loss)</li>
+            <li>Minimise fees and slippage on trades</li>
+            <li>Execute buys and sells with confidence</li>
+          </ul>
+          <span class="mod-status live">● Live</span>
+          <a href="l1/m5-beginner-buy-sell.html" class="mod-link">Open full module →</a>
+        </div></div>
+      </div>
 
-      <a href="l1/m6-beginner-send-store.html" class="module-card rounded-xl p-5 bg-white block">
-        <div class="text-cs-orange font-jakarta font-bold text-sm mb-1">Step 6</div>
-        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Send &amp; Store</div>
-        <div class="text-xs text-[#807F86]">Wallets, self-custody, and secure storage practices.</div>
-      </a>
+      <div class="mod-accordion" onclick="this.classList.toggle('open')">
+        <div class="mod-accordion-header">
+          <span class="step-num text-cs-orange">Step 6</span>
+          <span class="step-title">Send &amp; Store</span>
+          <span class="step-brief">Wallets &amp; secure storage</span>
+          <svg class="mod-accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#807F86" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="mod-accordion-body"><div class="mod-accordion-content">
+          <p class="mod-desc">Learn to safely store and transfer your crypto assets. Covers wallet types, self-custody fundamentals, and security best practices.</p>
+          <ul>
+            <li>Understand hot wallets, cold wallets, and hardware devices</li>
+            <li>Set up self-custody and back up your seed phrase</li>
+            <li>Send crypto between wallets safely</li>
+            <li>Protect yourself from phishing, scams, and loss</li>
+          </ul>
+          <span class="mod-status live">● Live</span>
+          <a href="l1/m6-beginner-send-store.html" class="mod-link">Open full module →</a>
+        </div></div>
+      </div>
 
-      <a href="l1/m7-beginner-tax.html" class="module-card rounded-xl p-5 bg-white block">
-        <div class="text-cs-orange font-jakarta font-bold text-sm mb-1">Step 7</div>
-        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Tax</div>
-        <div class="text-xs text-[#807F86]">Australian crypto tax obligations and reporting.</div>
-      </a>
+      <div class="mod-accordion" onclick="this.classList.toggle('open')">
+        <div class="mod-accordion-header">
+          <span class="step-num text-cs-orange">Step 7</span>
+          <span class="step-title">Tax</span>
+          <span class="step-brief">Australian crypto tax obligations</span>
+          <svg class="mod-accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#807F86" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="mod-accordion-body"><div class="mod-accordion-content">
+          <p class="mod-desc">Navigate Australia's crypto tax landscape. Understand your obligations, record-keeping requirements, and how to report crypto gains and income.</p>
+          <ul>
+            <li>Understand CGT events and how crypto is taxed in Australia</li>
+            <li>Learn record-keeping best practices</li>
+            <li>Use crypto tax tools to generate reports</li>
+            <li>Know when to engage a crypto-savvy accountant</li>
+          </ul>
+          <span class="mod-status live">● Live</span>
+          <a href="l1/m7-beginner-tax.html" class="mod-link">Open full module →</a>
+        </div></div>
+      </div>
 
-      <a href="l1/m8-beginner-sell-strategy.html" class="module-card rounded-xl p-5 bg-white block">
-        <div class="text-cs-orange font-jakarta font-bold text-sm mb-1">Step 8</div>
-        <div class="font-jakarta font-semibold text-[#1B1925] mb-2">Sell Strategy</div>
-        <div class="text-xs text-[#807F86]">When and how to take profits — exit planning.</div>
-      </a>
+      <div class="mod-accordion" onclick="this.classList.toggle('open')">
+        <div class="mod-accordion-header">
+          <span class="step-num text-cs-orange">Step 8</span>
+          <span class="step-title">Sell Strategy</span>
+          <span class="step-brief">Exit planning &amp; taking profits</span>
+          <svg class="mod-accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#807F86" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="mod-accordion-body"><div class="mod-accordion-content">
+          <p class="mod-desc">The most overlooked step — knowing when and how to sell. Build a personalised exit strategy before you need one.</p>
+          <ul>
+            <li>Set clear profit-taking targets and rules</li>
+            <li>Understand market cycle timing and signals</li>
+            <li>Build a sell ladder and stick to it</li>
+            <li>Manage emotions during euphoria and fear</li>
+          </ul>
+          <span class="mod-status live">● Live</span>
+          <a href="l1/m8-beginner-sell-strategy.html" class="mod-link">Open full module →</a>
+        </div></div>
+      </div>
 
     </div>
   </section>
