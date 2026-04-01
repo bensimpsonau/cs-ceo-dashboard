@@ -49,7 +49,7 @@
     justify-content: flex-end;
     gap: 12px;
     position: sticky;
-    top: 56px;
+    top: 0;
     z-index: 100;
   }
   .print-btn {
@@ -902,8 +902,6 @@
   @media print {
     body {   }
     .print-bar { display: none !important; }
-    .csn-bar { display: none !important; }
-    .csn-mobile-menu { display: none !important; }
     .document { padding: 20pt 24pt; box-shadow: none; }
     .section { page-break-inside: avoid; }
     .card { break-inside: avoid; }
@@ -1025,190 +1023,7 @@
 <!-- ═══ MAIN CONTENT ═══ -->
 <div class="ds-main-content">
   <div class="ds-page-body">
-<!-- ═══ COLLECTIVE SHIFT TOP NAV ═══ -->
-<style>
-  :root {
-    --csn-h: 56px;
-    --csn-bg: #FFFFFF;
-    --csn-border: #E8E8EA;
-    --csn-text: #1B1925;
-    --csn-muted: #4D4C55;
-    --csn-orange: #FC5C03;
-    --csn-orange-bg: #FEEEE5;
-    --csn-dd-bg: #FFFFFF;
-    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
-    --csn-z: 9000;
-  }
-  .csn-bar {
-    position: fixed;
-    top: 48px; left: 220px; right: 0;
-    height: var(--csn-h);
-    background: var(--csn-bg);
-    border-bottom: 1px solid var(--csn-border);
-    display: flex;
-    align-items: center;
-    padding: 0 24px;
-    gap: 0;
-    z-index: var(--csn-z);
-    font-family: 'Plus Jakarta Sans', 'Barlow', sans-serif;
-  }
-  .csn-logo {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    color: var(--csn-orange);
-    text-decoration: none;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    margin-right: 32px;
-    flex-shrink: 0;
-  }
-  .csn-nav {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    flex: 1;
-  }
-  .csn-item { position: relative; }
-  .csn-link {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--csn-muted);
-    text-decoration: none;
-    white-space: nowrap;
-    transition: color 0.15s, background 0.15s;
-    cursor: pointer;
-  }
-  .csn-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
-  .csn-item.active > .csn-link { color: var(--csn-orange); font-weight: 600; }
-  .csn-chevron { transition: transform 0.2s; flex-shrink: 0; }
-  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
-  .csn-dropdown {
-    display: none;
-    position: absolute;
-    top: calc(100% + 6px);
-    left: 0;
-    min-width: 240px;
-    background: var(--csn-dd-bg);
-    border: 1px solid var(--csn-border);
-    border-radius: 12px;
-    box-shadow: var(--csn-dd-shadow);
-    padding: 6px;
-    z-index: calc(var(--csn-z) + 1);
-  }
-  .csn-item.csn-has-dd { position: relative; }
-  .csn-item.csn-has-dd::after { content: ""; position: absolute; top: 100%; left: 0; width: 100%; height: 12px; }
-  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
-  .csn-dd-item {
-    display: block;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--csn-muted);
-    text-decoration: none;
-    transition: color 0.12s, background 0.12s;
-    white-space: nowrap;
-  }
-  .csn-dd-item:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
-  .csn-divider { height: 1px; background: var(--csn-border); margin: 4px 8px; }
-  .csn-hamburger {
-    display: none;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--csn-muted);
-    padding: 4px;
-    margin-left: auto;
-  }
-  .csn-mobile-menu {
-    display: none;
-    position: fixed;
-    top: calc(48px + var(--csn-h));
-    left: 0; right: 0;
-    background: var(--csn-bg);
-    border-bottom: 1px solid var(--csn-border);
-    padding: 8px 16px 16px;
-    z-index: calc(var(--csn-z) - 1);
-    max-height: calc(100vh - var(--csn-h));
-    overflow-y: auto;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-  }
-  .csn-mobile-menu.open { display: block; }
-  .csn-mob-link {
-    display: block;
-    padding: 9px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--csn-muted);
-    text-decoration: none;
-    transition: color 0.12s, background 0.12s;
-  }
-  .csn-mob-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
-  .csn-mob-top { font-weight: 600; color: var(--csn-text); margin-top: 4px; }
-  .csn-mob-sub { font-size: 12px; padding-left: 20px; }
-  body { padding-top: calc(48px + var(--csn-h)) !important; }
-  @media (max-width: 1023px) {
-    .csn-nav { display: none; }
-    .csn-hamburger { display: block; }
-  }
-  @media (max-width: 640px) {
-    .csn-logo { font-size: 13px; margin-right: 16px; }
-  }
 
-  @media (max-width: 1023px) {
-    .csn-bar { top: 48px !important; left: 0 !important; right: 0 !important; }
-    .csn-mobile-menu { top: calc(48px + var(--csn-h)) !important; left: 0 !important; }
-  }
-</style>
-
-      <div class="csn-item csn-has-dd">
-        <a href="hub/operating-system.html" class="csn-link">The Collective Shift Operating System
-          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </a>
-        <div class="csn-dropdown"><a href="hub/operating-system.html" class="csn-dd-item">Operating System Overview</a><a href="hub/modules/m1-foundations.html" class="csn-dd-item">Module 1: Foundations</a><a href="hub/modules/m2-bitcoin.html" class="csn-dd-item">Module 2: Bitcoin</a><a href="hub/modules/m3-altcoins.html" class="csn-dd-item">Module 3: Digital Assets</a><a href="hub/modules/m4-how-we-invest.html" class="csn-dd-item">Module 4: How We Invest</a><a href="hub/modules/m5-buy-sell.html" class="csn-dd-item">Module 5: Buy & Sell</a><a href="hub/modules/m6-send-store.html" class="csn-dd-item">Module 6: Send & Store</a><a href="hub/modules/m7-tax.html" class="csn-dd-item">Module 7: Tax</a><a href="hub/modules/m8-sell-strategy.html" class="csn-dd-item">Module 8: Exit Strategy</a><div class="csn-divider"></div><a href="8-step-strategy-workbook.html" class="csn-dd-item">8-Step Strategy Workbook</a><a href="8-step-strategy-workbook-L1.html" class="csn-dd-item">&darr; Level 1 Workbook</a><a href="8-step-strategy-workbook-L2.html" class="csn-dd-item">&darr; Level 2 Workbook</a><a href="portfolio-calculator.html" class="csn-dd-item">Portfolio Allocation Calculator</a></div>
-      </div>
-      <div class="csn-item csn-has-dd">
-        <a href="hub/products.html" class="csn-link">Product
-          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </a>
-        <div class="csn-dropdown"><a href="hub/products.html#platinum" class="csn-dd-item">Platinum</a><a href="hub/products.html#accelerator" class="csn-dd-item">Accelerator</a><a href="hub/beginner-journey.html" class="csn-dd-item">Beginner's Journey</a><a href="hub/products.html#two-track" class="csn-dd-item">Two-Track System</a></div>
-      </div>
-      <div class="csn-item csn-has-dd">
-        <a href="hub/youtube-strategy.html" class="csn-link">Social Media
-          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </a>
-        <div class="csn-dropdown"><a href="hub/youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a><a href="hub/social-strategy.html" class="csn-dd-item">Social Strategy</a><a href="hub/instagram-strategy.html" class="csn-dd-item">Instagram Strategy</a><div class="csn-divider"></div><a href="hub/brand.html" class="csn-dd-item">Brand & Voice</a><a href="hub/positioning.html" class="csn-dd-item">Positioning & ICP</a><a href="hub/competitors.html" class="csn-dd-item">Competitors</a></div>
-      </div>
-      <div class="csn-item csn-has-dd active">
-        <a href="#" class="csn-link">Documents
-          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </a>
-        <div class="csn-dropdown"><a href="lead-magnet-strategy.html" class="csn-dd-item">Lead Magnet Strategy</a><a href="travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a><a href="cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a><a href="q2-market-briefing.html" class="csn-dd-item">Q2 Market Briefing</a><a href="webinar-q2-2026-is-now-the-time.html" class="csn-dd-item">Webinar: Is Now The Time?</a></div>
-      </div>
-  </div>
-  <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-  </button>
-</nav>
-<div id="csnMobileMenu" class="csn-mobile-menu">
-  <a href="index.html" class="csn-mob-link csn-mob-top">CEO Dashboard</a>
-  <a href="hub/operating-system.html" class="csn-mob-link csn-mob-top">The Collective Shift Operating System</a>
-  <a href="hub/products.html" class="csn-mob-link csn-mob-top">Product</a>
-  <a href="hub/youtube-strategy.html" class="csn-mob-link csn-mob-top">Social Media</a>
-  <a href="lead-magnet-strategy.html" class="csn-mob-link csn-mob-top">Documents</a>
-  <a href="lead-magnet-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Lead Magnet Strategy</a>
-  <a href="travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Travis CGO Briefing</a>
-  <a href="cs-education-system-overview.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Education System Overview</a>
-</div>
-<!-- ═══ END TOP NAV ═══ -->
 
 <!-- STICKY PRINT BAR -->
 <div class="print-bar">
