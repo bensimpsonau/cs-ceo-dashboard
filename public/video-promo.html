@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Video Promo Generator — Collective Shift</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #F7F7F8; color: #1B1925; font-family: 'Barlow', sans-serif; }
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #4D4C55; border-radius: 3px; }
+
+  /* Sidebar */
+  .sidebar {
+    width: 220px; height: 100vh; position: fixed; top: 0; left: 0;
+    background: #1A1A2E; color: #fff; z-index: 100;
+    display: flex; flex-direction: column;
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    overflow-y: auto; overflow-x: hidden;
+  }
+  .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); }
+  .sidebar-section {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 1.6px;
+    color: rgba(255,255,255,0.35); padding: 20px 16px 6px; font-weight: 600;
+  }
+  .sidebar-link {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 16px; margin: 1px 8px; border-radius: 6px;
+    color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500;
+    transition: all 0.12s ease; cursor: pointer; text-decoration: none;
+    border-left: 3px solid transparent;
+  }
+  .sidebar-link:hover { color: #fff; background: rgba(255,255,255,0.07); }
+  .sidebar-link.active {
+    color: #FC5C03; background: rgba(252,92,3,0.08);
+    border-left-color: #FC5C03; font-weight: 600;
+  }
+  .sidebar-link .sidebar-icon { width: 18px; text-align: center; font-size: 14px; flex-shrink: 0; }
+  .sidebar-group { }
+  .sidebar-group-toggle {
+    display: flex; align-items: center; gap: 10px; justify-content: space-between;
+    padding: 8px 16px; margin: 1px 8px; border-radius: 6px;
+    color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500;
+    transition: all 0.12s ease; cursor: pointer; text-decoration: none;
+    border-left: 3px solid transparent; user-select: none;
+  }
+  .sidebar-group-toggle:hover { color: #fff; background: rgba(255,255,255,0.07); }
+  .sidebar-group-toggle .toggle-left { display:flex; align-items:center; gap:10px; }
+  .sidebar-group-toggle .toggle-arrow { font-size:10px; opacity:0.5; transition: transform 0.2s; }
+  .sidebar-group.open .toggle-arrow { transform: rotate(90deg); }
+  .sidebar-sub { display:none; padding-left: 14px; }
+  .sidebar-group.open .sidebar-sub { display:block; }
+  .sidebar-sub .sidebar-link { font-size: 12px; padding: 6px 16px; margin: 0 8px; color: rgba(255,255,255,0.5); }
+  .sidebar-sub .sidebar-link:hover { color: #fff; }
+  .sidebar-sub .sidebar-link::before { content: "—"; font-size:9px; margin-right:6px; opacity:0.4; }
+
+  /* Topbar */
+  .topbar {
+    height: 48px; position: fixed; top: 0; left: 220px; right: 0;
+    background: #fff; border-bottom: 1px solid #E8E8EA;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; z-index: 90;
+  }
+
+  /* Main */
+  .main-content { margin-left: 220px; padding-top: 48px; min-height: 100vh; }
+  .content-area { max-width: 1400px; margin: 0 auto; padding: 24px 32px; }
+
+  /* Cards */
+  .card {
+    background: #fff; border: 1px solid #E8E8EA; border-radius: 10px;
+    padding: 20px; transition: box-shadow 0.15s;
+  }
+  .card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+  .card-title {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
+    font-size: 13px; color: #807F86; text-transform: uppercase;
+    letter-spacing: 0.8px; margin-bottom: 12px;
+  }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: #807F86; margin-bottom: 16px;
+  }
+  .breadcrumb a { color: #FC5C03; text-decoration: none; font-weight: 500; }
+  .breadcrumb a:hover { text-decoration: underline; }
+
+  /* Form elements */
+  .form-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    color: #807F86; font-weight: 600; margin-bottom: 6px; display: block;
+  }
+  .form-input {
+    width: 100%; padding: 10px 12px; border: 1px solid #E8E8EA; border-radius: 8px;
+    font-size: 14px; font-family: 'Barlow', sans-serif; background: #F7F7F8;
+    outline: none; transition: border-color 0.15s; color: #1B1925;
+  }
+  .form-input:focus { border-color: #FC5C03; }
+  textarea.form-input { resize: vertical; min-height: 120px; line-height: 1.5; }
+  .btn-generate {
+    background: #FC5C03; color: #fff; border: none; border-radius: 8px;
+    padding: 12px 28px; font-size: 15px; font-weight: 700; cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif; transition: opacity 0.15s;
+    width: 100%; margin-top: 8px;
+  }
+  .btn-generate:hover { opacity: 0.88; }
+
+  /* Tabs */
+  .tab-bar {
+    display: flex; gap: 0; border-bottom: 1px solid #E8E8EA; margin-bottom: 20px;
+  }
+  .tab-btn {
+    padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer;
+    color: #807F86; border: none; background: none;
+    border-bottom: 2px solid transparent; transition: all 0.15s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .tab-btn:hover { color: #1B1925; }
+  .tab-btn.active { color: #FC5C03; border-bottom-color: #FC5C03; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* IG Story cards */
+  .story-grid {
+    display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px;
+  }
+  .story-card {
+    flex-shrink: 0; width: 180px; border-radius: 16px; overflow: hidden;
+    background: #0D0D1A; position: relative;
+  }
+  .story-inner {
+    width: 180px; height: 320px; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; padding: 16px;
+    text-align: center; position: relative;
+  }
+  .story-number {
+    position: absolute; top: 10px; left: 12px;
+    font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.3);
+    font-family: 'Source Code Pro', monospace;
+  }
+  .story-text {
+    color: #fff; font-size: 14px; font-weight: 600; line-height: 1.4;
+    font-family: 'Barlow', sans-serif;
+  }
+  .story-visual-dir {
+    position: absolute; bottom: 10px; left: 12px; right: 12px;
+    font-size: 9px; color: rgba(255,255,255,0.35); text-transform: uppercase;
+    letter-spacing: 0.8px; font-weight: 600;
+  }
+  .story-cta {
+    margin-top: 12px; background: #FC5C03; color: #fff; border: none;
+    border-radius: 20px; padding: 6px 16px; font-size: 11px; font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .story-actions {
+    padding: 8px 12px; background: #fff; border-top: 1px solid #E8E8EA;
+    display: flex; justify-content: flex-end;
+  }
+
+  /* Copy button */
+  .btn-copy {
+    background: none; border: 1px solid #E8E8EA; border-radius: 6px;
+    padding: 4px 12px; font-size: 11px; font-weight: 600; color: #807F86;
+    cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
+    transition: all 0.12s;
+  }
+  .btn-copy:hover { border-color: #FC5C03; color: #FC5C03; }
+  .btn-copy.copied { background: #08C394; color: #fff; border-color: #08C394; }
+
+  /* Tweet card */
+  .tweet-card {
+    background: #fff; border: 1px solid #E8E8EA; border-radius: 10px;
+    padding: 16px; margin-bottom: 12px; position: relative;
+  }
+  .tweet-number {
+    font-size: 11px; font-weight: 700; color: #FC5C03;
+    font-family: 'Source Code Pro', monospace; margin-bottom: 6px;
+  }
+  .tweet-text { font-size: 14px; line-height: 1.5; color: #1B1925; }
+  .tweet-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 10px; padding-top: 8px; border-top: 1px solid #F0F0F2;
+  }
+  .tweet-charcount { font-size: 11px; font-family: 'Source Code Pro', monospace; }
+  .tweet-charcount.over { color: #EF4444; font-weight: 700; }
+  .tweet-charcount.ok { color: #08C394; }
+
+  /* LinkedIn */
+  .linkedin-post {
+    background: #fff; border: 1px solid #E8E8EA; border-radius: 10px;
+    padding: 20px; font-size: 14px; line-height: 1.7; color: #1B1925;
+    white-space: pre-wrap;
+  }
+
+  /* Layout */
+  .two-col {
+    display: grid; grid-template-columns: 380px 1fr; gap: 24px;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; background: #1A1A2E; color: #fff;
+    padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 600;
+    font-family: 'Plus Jakarta Sans', sans-serif; z-index: 500;
+    opacity: 0; transform: translateY(10px); transition: all 0.3s ease;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* Mobile hamburger */
+  .mobile-hamburger { display: none; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 95; }
+
+  @media (max-width: 1023px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-overlay.open { display: block; }
+    .topbar { left: 0; }
+    .main-content { margin-left: 0; }
+    .mobile-hamburger { display: flex; }
+    .content-area { padding: 16px; }
+    .two-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div style="padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <div style="width:32px; height:32px; border-radius:8px; background:rgba(252,92,3,0.15); display:flex; align-items:center; justify-content:center;">
+        <span style="color:#FC5C03; font-weight:800; font-size:13px; font-family:'Plus Jakarta Sans',sans-serif;">CS</span>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; color:#fff; letter-spacing:0.3px;">Collective Shift</div>
+        <div style="font-size:10px; color:rgba(255,255,255,0.35); font-family:'Source Code Pro',monospace;">CEO Dashboard</div>
+      </div>
+    </div>
+  </div>
+  <nav style="flex:1; padding: 8px 0;">
+    <div class="sidebar-section">Home</div>
+    <a class="sidebar-link" href="index.html">
+      <span class="sidebar-icon">⭐</span> Morning Brief
+    </a>
+    <a class="sidebar-link" href="index.html">
+      <span class="sidebar-icon">✓</span> Tasks
+    </a>
+    <div class="sidebar-section">Metrics</div>
+    <a class="sidebar-link" href="index.html">
+      <span class="sidebar-icon">📊</span> KPIs
+    </a>
+    <a class="sidebar-link" href="team-cost.html">
+      <span class="sidebar-icon">💰</span> Cash & Costs
+    </a>
+    <a class="sidebar-link" href="hub/products.html">
+      <span class="sidebar-icon">👥</span> Members
+    </a>
+    <div class="sidebar-section">Content</div>
+    <div class="sidebar-group open" id="grp-content">
+      <div class="sidebar-group-toggle" onclick="toggleGroup('grp-content')">
+        <span class="toggle-left"><span class="sidebar-icon">🎬</span> Content</span>
+        <span class="toggle-arrow">▶</span>
+      </div>
+      <div class="sidebar-sub">
+        <a class="sidebar-link" href="content-board.html">Content Board</a>
+        <a class="sidebar-link" href="content-studio.html">Content Studio</a>
+        <a class="sidebar-link" href="asana-board-mockup.html">Calendar</a>
+        <a class="sidebar-link" href="digital-asset-shift-newsletter.html">Newsletter</a>
+        <a class="sidebar-link active" href="video-promo.html">Video Promo</a>
+      </div>
+    </div>
+    <div class="sidebar-group" id="grp-growth">
+      <div class="sidebar-group-toggle" onclick="toggleGroup('grp-growth')">
+        <span class="toggle-left"><span class="sidebar-icon">📈</span> Growth</span>
+        <span class="toggle-arrow">▶</span>
+      </div>
+      <div class="sidebar-sub">
+        <a class="sidebar-link" href="hub/youtube-strategy.html">YouTube Strategy</a>
+        <a class="sidebar-link" href="lead-magnet-strategy.html">Lead Magnet</a>
+        <a class="sidebar-link" href="hub/instagram-strategy.html">Instagram Strategy</a>
+        <a class="sidebar-link" href="hub/social-media-rollout.html">Social Rollout</a>
+      </div>
+    </div>
+    <div class="sidebar-section">Strategy</div>
+    <div class="sidebar-group" id="grp-strategy">
+      <div class="sidebar-group-toggle" onclick="toggleGroup('grp-strategy')">
+        <span class="toggle-left"><span class="sidebar-icon">🧭</span> Strategy</span>
+        <span class="toggle-arrow">▶</span>
+      </div>
+      <div class="sidebar-sub">
+        <a class="sidebar-link" href="house-of-brands.html">House of Brands</a>
+        <a class="sidebar-link" href="hub/operating-system.html">Operating System</a>
+        <a class="sidebar-link" href="hub/positioning.html">Positioning</a>
+        <a class="sidebar-link" href="hub/competitors.html">Competitors</a>
+        <a class="sidebar-link" href="hub/brand.html">Brand Docs</a>
+      </div>
+    </div>
+    <div class="sidebar-section">Team</div>
+    <a class="sidebar-link" href="team-cost.html">
+      <span class="sidebar-icon">👤</span> Team & Costs
+    </a>
+  </nav>
+  <div style="padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 10px; color: rgba(255,255,255,0.25); font-family: 'Source Code Pro', monospace;">
+    v2.0 · April 2026
+  </div>
+</aside>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <button class="mobile-hamburger" onclick="toggleSidebar()" style="background:none; border:none; cursor:pointer; color:#807F86; padding:4px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    </button>
+    <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:15px; color:#1B1925;">Video Promotion Generator</span>
+  </div>
+  <div style="display:flex; align-items:center; gap:16px;">
+    <div id="clock" style="font-size:12px; color:#807F86; font-family:'Source Code Pro',monospace;"></div>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <div style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #FC5C03, #FC8C4E); display:flex; align-items:center; justify-content:center;">
+        <span style="color:#fff; font-size:11px; font-weight:700; font-family:'Plus Jakarta Sans',sans-serif;">BB</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<div class="main-content">
+  <div class="content-area">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="index.html">Dashboard</a>
+      <span>›</span>
+      <span>Content</span>
+      <span>›</span>
+      <span style="color:#1B1925; font-weight:600;">Video Promo Generator</span>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:24px; font-weight:700; color:#1B1925;">🎬 Video Promotion Generator</h1>
+      <p style="font-size:14px; color:#807F86; margin-top:4px;">Paste a video title & description → get ready-to-use promo copy for Instagram, Twitter/X, and LinkedIn.</p>
+    </div>
+
+    <div class="two-col">
+
+      <!-- LEFT: Input Panel -->
+      <div>
+        <div class="card" style="position:sticky; top:72px;">
+          <div class="card-title">📝 Video Details</div>
+
+          <div style="margin-bottom:16px;">
+            <label class="form-label" for="videoTitle">Video Title</label>
+            <input type="text" class="form-input" id="videoTitle" placeholder="e.g. Bitcoin Is Down 48% — Here's What the Data Actually Shows">
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <label class="form-label" for="videoDesc">Video Description</label>
+            <textarea class="form-input" id="videoDesc" rows="6" placeholder="Paste your YouTube video description here..."></textarea>
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <label class="form-label" for="keyStats">Key Stats <span style="color:#B0B0B0; text-transform:none; letter-spacing:0; font-weight:400;">(optional)</span></label>
+            <input type="text" class="form-input" id="keyStats" placeholder="e.g. 48% drawdown, 46 days at Fear 9">
+          </div>
+
+          <button class="btn-generate" onclick="generateContent()" id="btnGenerate">🚀 Generate Promo Content</button>
+
+          <!-- Bot routing message (hidden by default) -->
+          <div id="botRouteMsg" style="display:none; margin-top:16px;">
+            <div style="background:linear-gradient(135deg, #1A1A2E, #252540); border-radius:10px; padding:16px; color:#fff;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                <span style="font-size:18px;">🤖</span>
+                <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px;">Route to Social Bot</span>
+              </div>
+              <p style="font-size:12px; color:rgba(255,255,255,0.7); line-height:1.5; margin-bottom:12px;">
+                Content is generated by the Social Bot & Marketing Bot using Jeremy Haynes' organic social framework. Copy the message below and send it to <strong style="color:#FC5C03;">BenBot in #ceo-benbot</strong>.
+              </p>
+              <div style="background:rgba(0,0,0,0.3); border-radius:8px; padding:12px; font-family:'Source Code Pro',monospace; font-size:12px; color:rgba(255,255,255,0.85); line-height:1.6; white-space:pre-wrap; max-height:200px; overflow-y:auto;" id="discordMessage"></div>
+              <button class="btn-copy" id="btnCopyDiscord" onclick="copyDiscordMsg()" style="margin-top:10px; width:100%; text-align:center; background:rgba(252,92,3,0.15); border-color:rgba(252,92,3,0.4); color:#FC5C03; padding:8px; font-size:13px;">📋 Copy Discord Message</button>
+            </div>
+          </div>
+
+          <div style="margin-top:12px; font-size:11px; color:#807F86; text-align:center;">
+            Powered by Social Bot + Marketing Bot · Jeremy Haynes framework
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Output Panel -->
+      <div>
+        <div class="card">
+          <div class="tab-bar">
+            <button class="tab-btn active" onclick="switchTab('ig', this)">📱 Instagram Stories</button>
+            <button class="tab-btn" onclick="switchTab('twitter', this)">🐦 Twitter/X Thread</button>
+            <button class="tab-btn" onclick="switchTab('linkedin', this)">💼 LinkedIn</button>
+          </div>
+
+          <!-- TAB: Instagram Stories -->
+          <div class="tab-content active" id="tab-ig">
+            <div class="story-grid" id="storyGrid">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- TAB: Twitter/X Thread -->
+          <div class="tab-content" id="tab-twitter">
+            <div id="tweetThread">
+              <!-- Populated by JS -->
+            </div>
+            <div style="margin-top:16px; display:flex; justify-content:flex-end;">
+              <button class="btn-copy" onclick="copyAllTweets()" id="btnCopyAllTweets">📋 Copy Entire Thread</button>
+            </div>
+          </div>
+
+          <!-- TAB: LinkedIn -->
+          <div class="tab-content" id="tab-linkedin">
+            <div class="linkedin-post" id="linkedinPost">
+              <!-- Populated by JS -->
+            </div>
+            <div style="margin-top:12px; display:flex; justify-content:flex-end; align-items:center; gap:12px;">
+              <span id="linkedinWordCount" style="font-size:11px; color:#807F86; font-family:'Source Code Pro',monospace;"></span>
+              <button class="btn-copy" onclick="copyLinkedin()" id="btnCopyLinkedin">📋 Copy Post</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════════
+function toggleGroup(id) { document.getElementById(id).classList.toggle('open'); }
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+
+// Clock
+function updateClock() {
+  const now = new Date();
+  const opts = { timeZone: 'Australia/Melbourne', weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false };
+  document.getElementById('clock').textContent = now.toLocaleString('en-AU', opts);
+}
+updateClock(); setInterval(updateClock, 1000);
+
+// ═══════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+// ═══════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ═══════════════════════════════════════
+// COPY HELPERS
+// ═══════════════════════════════════════
+function copyText(text, btnId) {
+  navigator.clipboard.writeText(text).then(() => {
+    if (btnId) {
+      const btn = document.getElementById(btnId);
+      btn.classList.add('copied');
+      btn.textContent = '✓ Copied';
+      setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '📋 Copy'; }, 1500);
+    }
+    showToast('Copied to clipboard!');
+  });
+}
+
+// ═══════════════════════════════════════
+// DEFAULT CONTENT (Bitcoin 48% drawdown)
+// ═══════════════════════════════════════
+const DEFAULT_IG_SLIDES = [
+  { text: "Bitcoin is down 48% from its all-time high.", visual: "Dark bg · Bold white text · Red arrow graphic" },
+  { text: "The Fear & Greed Index has been at 9 for 46 straight days. Extreme Fear.", visual: "Fear gauge visual · Red zone highlighted" },
+  { text: "Everyone has an opinion. I looked at the actual data.", visual: "Split screen · Opinions vs Data" },
+  { text: "On-chain metrics. Institutional positioning. Macro context. Historical drawdown patterns.", visual: "List layout · 4 data points" },
+  { text: "I broke it all down so you can make better decisions. Not louder ones.", visual: "Clean text · CTA below", cta: true }
+];
+
+const DEFAULT_TWEETS = [
+  "Bitcoin is down 48% from its all-time high. The Fear & Greed Index has been sitting at 9 - Extreme Fear - for 46 consecutive days. Everyone has a take. I looked at the data.",
+  "On-chain, long-term holders haven't moved. Accumulation addresses are up. The people who've been through cycles before aren't panicking. That's worth noting.",
+  "46 days at Extreme Fear is historically rare. When we've seen sustained readings this low before, the months that followed weren't defined by more selling. They were defined by positioning.",
+  "Institutional flows tell a different story to retail sentiment. Spot ETF inflows haven't dried up. That divergence matters when you're trying to read where the market actually is.",
+  "Historical drawdowns of this size - 40-50% from ATH - have occurred in every Bitcoin cycle. The pattern isn't a guarantee. But ignoring it isn't analysis, it's noise.",
+  "I mapped all of it in a 14-minute breakdown. On-chain, macro, institutional, historical. Watch it here: [YT_LINK] #Bitcoin #DigitalAssets"
+];
+
+const DEFAULT_LINKEDIN = `Bitcoin is down 48% from its all-time high. The Fear and Greed Index has sat at 9 - Extreme Fear - for 46 consecutive days.
+
+Most of the content you'll see right now is driven by that sentiment. Either panic or forced optimism.
+
+I took a different approach.
+
+In my latest video, I mapped the actual data - on-chain metrics, institutional positioning, macro context, and historical drawdown patterns - to give you a clear picture of where we are in this cycle.
+
+A few things stood out:
+
+Long-term holders haven't moved. Accumulation is happening at the wallet level. Institutional inflows haven't stopped despite the sentiment. And historically, drawdowns of this scale have been followed by some of the strongest recovery periods in Bitcoin's history.
+
+That's not a prediction. That's a pattern worth understanding before making any decisions.
+
+Full 14-minute breakdown here: [YT_LINK]
+
+#Bitcoin #DigitalAssets`;
+
+// ═══════════════════════════════════════
+// CURRENT STATE
+// ═══════════════════════════════════════
+let currentSlides = [...DEFAULT_IG_SLIDES];
+let currentTweets = [...DEFAULT_TWEETS];
+let currentLinkedin = DEFAULT_LINKEDIN;
+
+// ═══════════════════════════════════════
+// RENDER FUNCTIONS
+// ═══════════════════════════════════════
+function renderStories() {
+  const grid = document.getElementById('storyGrid');
+  grid.innerHTML = currentSlides.map((slide, i) => {
+    const num = i + 1;
+    const isLast = slide.cta;
+    return `<div class="story-card">
+      <div class="story-inner">
+        <div class="story-number">SLIDE ${num}</div>
+        <div class="story-text">${escHtml(slide.text)}</div>
+        ${isLast ? '<button class="story-cta">Link in bio →</button>' : ''}
+        <div class="story-visual-dir">📐 ${escHtml(slide.visual)}</div>
+      </div>
+      <div class="story-actions">
+        <button class="btn-copy" id="btnCopySlide${i}" onclick="copyText('${escJs(slide.text)}', 'btnCopySlide${i}')">📋 Copy</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderTweets() {
+  const container = document.getElementById('tweetThread');
+  container.innerHTML = currentTweets.map((tweet, i) => {
+    const len = tweet.length;
+    const isOver = len > 280;
+    return `<div class="tweet-card">
+      <div class="tweet-number">Tweet ${i + 1}/6</div>
+      <div class="tweet-text">${escHtml(tweet)}</div>
+      <div class="tweet-meta">
+        <span class="tweet-charcount ${isOver ? 'over' : 'ok'}">${len}/280 ${isOver ? '⚠️' : '✓'}</span>
+        <button class="btn-copy" id="btnCopyTweet${i}" onclick="copyText(currentTweets[${i}], 'btnCopyTweet${i}')">📋 Copy</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderLinkedin() {
+  const el = document.getElementById('linkedinPost');
+  el.textContent = currentLinkedin;
+  const words = currentLinkedin.trim().split(/\s+/).length;
+  document.getElementById('linkedinWordCount').textContent = `${words} words`;
+}
+
+function escHtml(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
+function escJs(str) { return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n'); }
+
+// ═══════════════════════════════════════
+// COPY ALL / LINKEDIN
+// ═══════════════════════════════════════
+function copyAllTweets() {
+  const text = currentTweets.map((t, i) => `${i + 1}/${currentTweets.length}\n${t}`).join('\n\n---\n\n');
+  copyText(text, 'btnCopyAllTweets');
+}
+
+function copyLinkedin() {
+  copyText(currentLinkedin, 'btnCopyLinkedin');
+}
+
+// ═══════════════════════════════════════
+// GENERATE (Routes to Social Bot via Discord)
+// ═══════════════════════════════════════
+function generateContent() {
+  const title = document.getElementById('videoTitle').value.trim();
+  const desc = document.getElementById('videoDesc').value.trim();
+  const stats = document.getElementById('keyStats').value.trim();
+
+  if (!title) {
+    showToast('⚠️ Please enter a video title');
+    return;
+  }
+
+  // Build Discord message template
+  let msg = `Generate video promo content for all 3 platforms (IG Stories, Twitter/X thread, LinkedIn post).\n\n`;
+  msg += `**Video Title:** ${title}\n`;
+  if (desc) msg += `\n**Video Description:**\n${desc}\n`;
+  if (stats) msg += `\n**Key Stats:** ${stats}\n`;
+  msg += `\nUse the Jeremy Haynes organic social framework. Format:\n`;
+  msg += `- IG Stories: 4-6 slides with visual direction\n`;
+  msg += `- Twitter/X: 6-tweet thread (max 280 chars each), [YT_LINK] on last tweet\n`;
+  msg += `- LinkedIn: ~150-200 word post, [YT_LINK] at end`;
+
+  // Show loading state briefly then reveal
+  const btn = document.getElementById('btnGenerate');
+  btn.textContent = '⏳ Generating via Social Bot...';
+  btn.style.opacity = '0.6';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    btn.textContent = '🚀 Generate Promo Content';
+    btn.style.opacity = '1';
+    btn.disabled = false;
+
+    document.getElementById('discordMessage').textContent = msg;
+    document.getElementById('botRouteMsg').style.display = 'block';
+    showToast('📋 Discord message ready — copy & send to BenBot');
+  }, 800);
+}
+
+function copyDiscordMsg() {
+  const msg = document.getElementById('discordMessage').textContent;
+  copyText(msg, 'btnCopyDiscord');
+}
+
+// ═══════════════════════════════════════
+// INIT - Render default content
+// ═══════════════════════════════════════
+renderStories();
+renderTweets();
+renderLinkedin();
+</script>
+</body>
+</html>
