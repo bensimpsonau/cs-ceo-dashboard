@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Lead Magnet Strategy Playbook — Collective Shift</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -152,13 +152,82 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 /* DIVIDER */
 hr.divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
 
+/* SECTION NAV */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #0d0d0d;
+  border-bottom: 1px solid #1e293b;
+  padding: 0 16px;
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  white-space: nowrap;
+}
+.section-nav::-webkit-scrollbar { display: none; }
+.section-nav a {
+  display: inline-block;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+}
+.section-nav a:hover { color: #f59e0b; }
+.section-nav a.active { color: #f59e0b; border-bottom-color: #f59e0b; }
+
 /* MOBILE */
 @media (max-width: 768px) {
+  body { overflow-x: hidden; }
+
+  /* Nav/topbar */
+  .topbar, .nav-bar, nav { flex-wrap: wrap; gap: 6px; padding: 10px 12px; }
+  .topbar-link, .nav-link, nav a { font-size: 12px; padding: 6px 10px; white-space: nowrap; }
+  .print-btn { display: none; }
+
+  /* Section nav */
+  .section-nav { padding: 0 8px; }
+  .section-nav a { padding: 10px 10px; font-size: 11px; }
+
+  /* Typography */
+  h1 { font-size: 22px !important; line-height: 1.2; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 15px !important; }
+  p, li, td, body { font-size: 14px; }
+
+  /* Layout */
+  .card-grid, .card-grid-2, .card-grid-3, [class*="grid"] { display: block !important; }
+  .card, [class*="card"] { width: 100% !important; max-width: 100% !important; box-sizing: border-box; margin-left: 0 !important; margin-right: 0 !important; }
+
+  /* Containers */
+  .container, main, .content, [class*="container"] { padding-left: 16px !important; padding-right: 16px !important; max-width: 100% !important; box-sizing: border-box; }
+
+  /* Document */
   .document { padding: 20px; }
-  .topbar { padding: 12px 20px; }
-  .card-grid-2 { grid-template-columns: 1fr; }
-  .stats-bar { flex-direction: column; }
+
+  /* Tables */
+  table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Flex */
+  [style*="display: flex"], [style*="display:flex"], .flex { flex-wrap: wrap !important; }
+
+  /* Stats bars */
+  .stats-bar, .metrics-bar, [class*="stats"] { flex-direction: column; gap: 12px; }
+
   .doc-title { font-size: 24px; }
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: 18px !important; }
+  h2 { font-size: 16px !important; }
+  .container, main { padding-left: 12px !important; padding-right: 12px !important; }
 }
 
 /* PRINT */
@@ -177,6 +246,9 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; 
 </style>
 </head>
 <body>
+
+<!-- SECTION NAV -->
+<nav class="section-nav" id="sectionNav"></nav>
 
 <!-- TOP BAR -->
 <div class="topbar">
@@ -1423,6 +1495,38 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; 
 </div>
 
 </div><!-- /document -->
+
+<script>
+(function() {
+  const nav = document.getElementById('sectionNav');
+  if (!nav) return;
+  const headings = document.querySelectorAll('h2');
+  headings.forEach((h2, i) => {
+    if (!h2.id) h2.id = 'section-' + i;
+    const label = h2.textContent.replace(/[^\w\s\-]/gu, '').trim();
+    if (!label || label.length > 60) return;
+    const a = document.createElement('a');
+    a.href = '#' + h2.id;
+    a.textContent = label.length > 28 ? label.substring(0, 27) + '…' : label;
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      h2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => window.scrollBy(0, -80), 350);
+    });
+    nav.appendChild(a);
+  });
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        nav.querySelectorAll('a').forEach(a => a.classList.remove('active'));
+        const active = nav.querySelector(`a[href="#${entry.target.id}"]`);
+        if (active) { active.classList.add('active'); active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); }
+      }
+    });
+  }, { rootMargin: '-80px 0px -60% 0px', threshold: 0 });
+  document.querySelectorAll('h2[id]').forEach(h => observer.observe(h));
+})();
+</script>
 
 </body>
 </html>
