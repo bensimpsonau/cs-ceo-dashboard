@@ -3,1728 +3,903 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
-<title>Fee Negotiation Analysis - Alchemy Scaling | April 2026</title>
+<title>Sales &amp; Negotiation Playbook — Collective Shift | April 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --orange: #FC5C03;
-    --green: #08C394;
-    --dark: #1A1A2E;
-    --light-orange: #FFF3ED;
-    --border: #E8E8EA;
-    --bg-card: #FFFFFF;
-    --bg-page: #F7F7F8;
-    --text-muted: #6B6B7B;
-    --radius: 12px;
-    --red: #EF4444;
-    --amber: #F59E0B;
-  }
+:root {
+  --orange: #FC5C03;
+  --green: #08C394;
+  --dark: #1A1A2E;
+  --light-orange: #FFF3ED;
+  --border: #E8E8EA;
+  --bg-card: #FFFFFF;
+  --bg-page: #F7F7F8;
+  --text-muted: #6B6B7B;
+  --radius: 12px;
+  --red: #EF4444;
+  --amber: #F59E0B;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Barlow', sans-serif; font-weight: 400; font-size: 14px; line-height: 1.65; color: var(--dark); background: var(--bg-page); }
+h1,h2,h3,h4,h5 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; color: var(--dark); }
+.label { font-family: 'Source Code Pro', monospace; font-weight: 400; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* Print bar */
+.print-bar { background: var(--dark); padding: 10px 40px; display: flex; align-items: center; justify-content: flex-end; gap: 12px; position: sticky; top: 0; z-index: 100; }
+.print-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 13px; background: var(--orange); color: #fff; border: none; border-radius: 8px; padding: 8px 20px; cursor: pointer; }
+.print-btn:hover { background: #e04d00; }
 
-  body {
-    font-family: 'Barlow', sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 1.65;
-    color: var(--dark);
-    background: var(--bg-page);
-  }
+/* Document */
+.document { max-width: 920px; margin: 0 auto; padding: 40px 40px 80px; background: #fff; min-height: 100vh; }
+.confidential-banner { background: var(--dark); color: #fff; text-align: center; padding: 7px 0; letter-spacing: 0.12em; font-size: 11px; font-family: 'Source Code Pro', monospace; border-radius: var(--radius) var(--radius) 0 0; }
+.doc-header { border: 1.5px solid var(--border); border-top: none; border-radius: 0 0 var(--radius) var(--radius); padding: 32px 36px 28px; margin-bottom: 36px; }
+.doc-title { font-size: 24px; font-weight: 700; line-height: 1.25; margin-bottom: 4px; }
+.doc-subtitle { font-size: 13px; color: var(--text-muted); font-family: 'Source Code Pro', monospace; }
+.orange-rule { height: 3px; background: var(--orange); border-radius: 2px; margin: 20px 0 0; }
 
-  h1, h2, h3, h4, h5 {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 600;
-    color: var(--dark);
-  }
+/* TOC */
+.toc { background: var(--bg-page); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 40px; }
+.toc h3 { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px; font-family: 'Source Code Pro', monospace; font-weight: 500; }
+.toc ol { list-style: none; counter-reset: toc-counter; padding: 0; }
+.toc ol li { counter-increment: toc-counter; display: flex; align-items: baseline; gap: 10px; padding: 5px 0; border-bottom: 1px dashed var(--border); }
+.toc ol li:last-child { border-bottom: none; }
+.toc ol li::before { content: "0" counter(toc-counter); font-family: 'Source Code Pro', monospace; font-size: 11px; color: var(--orange); flex-shrink: 0; width: 24px; }
+.toc ol li a { color: var(--dark); text-decoration: none; font-size: 14px; font-weight: 500; font-family: 'Plus Jakarta Sans', sans-serif; }
+.toc ol li a:hover { text-decoration: underline; color: var(--orange); }
 
-  .label {
-    font-family: 'Source Code Pro', monospace;
-    font-weight: 400;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
+/* Sections */
+.section { margin-bottom: 48px; }
+.section-label { font-family: 'Source Code Pro', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange); margin-bottom: 6px; }
+.section h2 { font-size: 20px; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+.section h3 { font-size: 16px; margin: 28px 0 12px; color: var(--dark); }
+.section h4 { font-size: 14px; margin: 20px 0 8px; color: var(--dark); font-weight: 600; }
+.section p { margin-bottom: 12px; }
 
-  /* PRINT BUTTON */
-  .print-bar {
-    background: var(--dark);
-    padding: 10px 40px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 12px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .print-btn {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    background: var(--orange);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 20px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .print-btn:hover { background: #e04d00; }
+/* Cards */
+.card { background: var(--bg-page); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 24px; margin: 20px 0; }
+.card-orange { background: var(--light-orange); border-color: var(--orange); }
+.card-green { background: #EEFBF6; border-color: var(--green); }
+.card-dark { background: var(--dark); color: #fff; border-color: var(--dark); }
+.card-dark h4, .card-dark strong { color: #fff; }
 
-  /* DOCUMENT WRAPPER */
-  .document {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 40px 40px 80px;
-    background: #fff;
-    min-height: 100vh;
-  }
+/* Metric grid */
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin: 20px 0; }
+.metric { background: var(--bg-page); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; }
+.metric-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; font-weight: 700; color: var(--orange); }
+.metric-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
 
-  /* CONFIDENTIAL BANNER */
-  .confidential-banner {
-    background: var(--dark);
-    color: #fff;
-    text-align: center;
-    padding: 7px 0;
-    letter-spacing: 0.12em;
-    font-size: 11px;
-    font-family: 'Source Code Pro', monospace;
-    border-radius: var(--radius) var(--radius) 0 0;
-    margin-bottom: 0;
-  }
+/* Script blocks */
+.script { background: #f8f8f4; border: 1px solid #e0ddd4; border-radius: 8px; padding: 20px 24px; margin: 16px 0; font-size: 14px; line-height: 1.8; }
+.script .role { font-family: 'Source Code Pro', monospace; font-size: 12px; font-weight: 600; color: var(--orange); text-transform: uppercase; letter-spacing: 0.06em; }
+.script .line { margin: 8px 0; padding-left: 16px; border-left: 2px solid var(--border); }
+.script .direction { font-style: italic; color: var(--text-muted); font-size: 13px; margin: 8px 0; }
 
-  /* HEADER */
-  .doc-header {
-    border: 1.5px solid var(--border);
-    border-top: none;
-    border-radius: 0 0 var(--radius) var(--radius);
-    padding: 32px 36px 28px;
-    margin-bottom: 36px;
-  }
-  .doc-header-meta {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px 32px;
-    margin-top: 20px;
-    font-size: 13px;
-    color: var(--text-muted);
-  }
-  .doc-header-meta strong { color: var(--dark); }
-  .doc-title {
-    font-size: 24px;
-    font-weight: 700;
-    line-height: 1.25;
-    color: var(--dark);
-    margin-bottom: 4px;
-  }
-  .doc-subtitle {
-    font-size: 13px;
-    color: var(--text-muted);
-    font-family: 'Source Code Pro', monospace;
-  }
-  .orange-rule {
-    height: 3px;
-    background: var(--orange);
-    border-radius: 2px;
-    margin: 20px 0 0;
-  }
+/* Objection table */
+.objection-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+.objection-table th { background: var(--dark); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 16px; text-align: left; }
+.objection-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 13px; }
+.objection-table tr:nth-child(even) td { background: var(--bg-page); }
 
-  /* TABLE OF CONTENTS */
-  .toc {
-    background: var(--bg-page);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px 28px;
-    margin-bottom: 40px;
-  }
-  .toc h3 {
-    font-size: 13px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 14px;
-    font-family: 'Source Code Pro', monospace;
-    font-weight: 500;
-  }
-  .toc ol { list-style: none; counter-reset: toc-counter; padding: 0; }
-  .toc ol li {
-    counter-increment: toc-counter;
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    padding: 5px 0;
-    border-bottom: 1px dashed var(--border);
-  }
-  .toc ol li:last-child { border-bottom: none; }
-  .toc ol li::before {
-    content: "0" counter(toc-counter);
-    font-family: 'Source Code Pro', monospace;
-    font-size: 11px;
-    color: var(--orange);
-    flex-shrink: 0;
-    width: 24px;
-  }
-  .toc ol li a {
-    color: var(--dark);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-  }
-  .toc ol li a:hover { text-decoration: underline; color: var(--orange); }
+/* Pipeline table */
+.pipeline-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+.pipeline-table th { background: var(--bg-page); font-family: 'Source Code Pro', monospace; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 14px; text-align: left; border-bottom: 2px solid var(--border); }
+.pipeline-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 13px; }
 
-  /* SECTIONS */
-  .section {
-    margin-bottom: 52px;
-    page-break-inside: avoid;
-  }
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 24px;
-    padding-bottom: 14px;
-    border-bottom: 2px solid var(--border);
-  }
-  .section-number {
-    font-family: 'Source Code Pro', monospace;
-    font-size: 11px;
-    color: #fff;
-    background: var(--orange);
-    border-radius: 6px;
-    padding: 3px 9px;
-    flex-shrink: 0;
-  }
-  .section-title {
-    font-size: 19px;
-    font-weight: 700;
-  }
+/* Checklist */
+.checklist { list-style: none; padding: 0; }
+.checklist li { padding: 6px 0 6px 28px; position: relative; border-bottom: 1px solid #f0f0f0; }
+.checklist li::before { content: '□'; position: absolute; left: 0; color: var(--orange); font-size: 16px; line-height: 1.4; }
 
-  /* CARDS */
-  .card {
-    background: var(--bg-card);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px 24px;
-    margin-bottom: 16px;
-  }
-  .card-title {
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: var(--dark);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .card-title .dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--orange);
-    flex-shrink: 0;
-  }
-  .card-title .dot-green { background: var(--green); }
-  .card-title .dot-red { background: var(--red); }
-  .card-title .dot-amber { background: var(--amber); }
+/* Funnel visual */
+.funnel { display: flex; flex-direction: column; align-items: center; gap: 0; margin: 24px 0; }
+.funnel-step { background: var(--dark); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 13px; padding: 14px 20px; text-align: center; position: relative; }
+.funnel-step:first-child { border-radius: var(--radius) var(--radius) 0 0; width: 100%; }
+.funnel-step:nth-child(2) { width: 88%; }
+.funnel-step:nth-child(3) { width: 76%; }
+.funnel-step:nth-child(4) { width: 64%; }
+.funnel-step:nth-child(5) { width: 52%; background: var(--orange); }
+.funnel-step:last-child { border-radius: 0 0 var(--radius) var(--radius); }
+.funnel-step .funnel-num { font-family: 'Source Code Pro', monospace; font-size: 11px; opacity: 0.6; margin-right: 8px; }
+.funnel-arrow { color: var(--text-muted); font-size: 18px; margin: 2px 0; }
 
-  /* CALLOUT BOXES */
-  .callout {
-    border-left: 3px solid var(--orange);
-    background: #FFF8F5;
-    border-radius: 0 8px 8px 0;
-    padding: 14px 18px;
-    margin: 14px 0;
-    font-size: 13.5px;
-    color: #3A2010;
-  }
-  .callout-green {
-    border-left-color: var(--green);
-    background: #F0FDF9;
-    color: #0A2E24;
-  }
-  .callout-red {
-    border-left-color: var(--red);
-    background: #FEF2F2;
-    color: #7F1D1D;
-  }
-  .callout-blue {
-    border-left-color: #654FFC;
-    background: #F5F3FF;
-    color: #3B2E8A;
-  }
-  .callout cite {
-    display: block;
-    font-style: normal;
-    font-size: 11px;
-    font-family: 'Source Code Pro', monospace;
-    color: var(--text-muted);
-    margin-top: 6px;
-  }
+/* Sequence */
+.sequence { display: flex; gap: 0; margin: 20px 0; flex-wrap: wrap; }
+.seq-step { flex: 1; min-width: 120px; padding: 16px; text-align: center; border: 1px solid var(--border); font-size: 12px; position: relative; }
+.seq-step:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+.seq-step:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+.seq-step .seq-time { font-family: 'Source Code Pro', monospace; font-size: 10px; color: var(--orange); font-weight: 600; display: block; margin-bottom: 4px; }
 
-  /* TABLES */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-    margin: 14px 0;
-  }
-  thead tr { background: var(--dark); color: #fff; }
-  thead th {
-    padding: 10px 14px;
-    text-align: left;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 600;
-    font-size: 12px;
-    letter-spacing: 0.03em;
-  }
-  tbody tr { border-bottom: 1px solid var(--border); }
-  tbody tr:nth-child(even) { background: #FAFAFA; }
-  tbody td { padding: 10px 14px; vertical-align: top; line-height: 1.5; }
-  tbody td:first-child { font-weight: 500; }
+/* Footer */
+.doc-footer { margin-top: 48px; padding-top: 20px; border-top: 2px solid var(--border); font-size: 12px; color: var(--text-muted); text-align: center; }
 
-  /* COLOR CODING */
-  .val-good { color: #065F46; font-weight: 600; }
-  .val-bad { color: #B91C1C; font-weight: 600; }
-  .val-warn { color: #92400E; font-weight: 600; }
-  .val-neutral { color: var(--text-muted); }
+@media print {
+  .print-bar { display: none; }
+  body { font-size: 11pt; }
+  .document { padding: 0; max-width: 100%; }
+  .section { page-break-inside: avoid; }
+  .card { page-break-inside: avoid; }
+}
 
-  .bg-good { background: #F0FDF9 !important; }
-  .bg-bad { background: #FEF2F2 !important; }
-  .bg-warn { background: #FFFBEB !important; }
-
-  /* TAGS */
-  .tag {
-    display: inline-block;
-    font-family: 'Source Code Pro', monospace;
-    font-size: 10px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    background: var(--border);
-    color: var(--dark);
-    margin: 2px;
-  }
-  .tag-orange { background: #FFF0E8; color: var(--orange); border: 1px solid #FFDCC7; }
-  .tag-green { background: #E6FAF5; color: #065F46; border: 1px solid #A7F3D0; }
-  .tag-red { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; }
-  .tag-amber { background: #FFFBEB; color: #92400E; border: 1px solid #FDE68A; }
-  .tag-blue { background: #EEF2FF; color: #3730A3; border: 1px solid #C7D2FE; }
-
-  /* GRID LAYOUTS */
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
-  .four-col { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; }
-
-  /* STAT BOXES */
-  .stat-box {
-    text-align: center;
-    padding: 14px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-  }
-  .stat-box .stat-value {
-    font-size: 28px;
-    font-weight: 700;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-  }
-  .stat-box .stat-label {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-top: 4px;
-  }
-
-  /* CHECKLIST */
-  ul.checklist { list-style: none; padding: 0; }
-  ul.checklist li {
-    padding: 5px 0 5px 22px;
-    position: relative;
-    font-size: 13.5px;
-  }
-  ul.checklist li::before {
-    content: "\2713";
-    position: absolute; left: 0;
-    color: var(--green);
-    font-weight: 700;
-  }
-
-  /* NUMBERED LIST */
-  .talk-point {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .talk-point:last-child { border-bottom: none; }
-  .talk-num {
-    font-family: 'Source Code Pro', monospace;
-    font-size: 12px;
-    color: #fff;
-    background: var(--dark);
-    border-radius: 5px;
-    padding: 2px 8px;
-    flex-shrink: 0;
-    min-width: 32px;
-    text-align: center;
-    margin-top: 2px;
-  }
-  .talk-body { flex: 1; }
-  .talk-headline { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
-  .talk-detail { font-size: 13px; color: var(--text-muted); }
-
-  /* COLLAPSIBLE SECTIONS */
-  details {
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    margin-bottom: 16px;
-    overflow: hidden;
-  }
-  details summary {
-    padding: 14px 20px;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    background: var(--bg-page);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    list-style: none;
-  }
-  details summary::-webkit-details-marker { display: none; }
-  details summary::before {
-    content: "\25B6";
-    font-size: 10px;
-    color: var(--orange);
-    transition: transform 0.2s;
-  }
-  details[open] summary::before {
-    transform: rotate(90deg);
-  }
-  details .detail-body {
-    padding: 16px 20px;
-    border-top: 1px solid var(--border);
-  }
-
-  /* RECOMMENDED BADGE */
-  .recommended {
-    display: inline-block;
-    font-family: 'Source Code Pro', monospace;
-    font-size: 10px;
-    padding: 3px 10px;
-    border-radius: 4px;
-    background: var(--green);
-    color: #fff;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-left: 8px;
-    vertical-align: middle;
-  }
-  .recommended-alt {
-    display: inline-block;
-    font-family: 'Source Code Pro', monospace;
-    font-size: 10px;
-    padding: 3px 10px;
-    border-radius: 4px;
-    background: #654FFC;
-    color: #fff;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-left: 8px;
-    vertical-align: middle;
-  }
-
-  /* HIGHLIGHT ROW */
-  .highlight-row { background: #F0FDF9 !important; border-left: 3px solid var(--green); }
-  .highlight-row-orange { background: #FFF8F5 !important; border-left: 3px solid var(--orange); }
-
-  /* PAGE DIVIDER */
-  .page-divider {
-    border: none;
-    border-top: 1px dashed var(--border);
-    margin: 48px 0;
-  }
-
-  /* OPTION CARD */
-  .option-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-  }
-  .option-title {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-  }
-
-  /* COMPARISON HIGHLIGHT */
-  .delta-positive {
-    color: #065F46;
-    font-weight: 600;
-    font-family: 'Source Code Pro', monospace;
-    font-size: 12px;
-  }
-  .delta-negative {
-    color: #B91C1C;
-    font-weight: 600;
-    font-family: 'Source Code Pro', monospace;
-    font-size: 12px;
-  }
-
-  /* BENBOT RECOMMENDATION BOX */
-  .benbot-rec {
-    background: linear-gradient(135deg, #1A1A2E 0%, #2D2D4A 100%);
-    border: 2px solid var(--orange);
-    border-radius: var(--radius);
-    padding: 24px 28px;
-    margin: 20px 0;
-    color: #fff;
-  }
-  .benbot-rec-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-  .benbot-rec-icon {
-    font-size: 20px;
-  }
-  .benbot-rec-title {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--orange);
-  }
-  .benbot-rec p {
-    font-size: 13.5px;
-    line-height: 1.75;
-    color: #CBD5E1;
-    margin-bottom: 8px;
-  }
-  .benbot-rec p:last-child { margin-bottom: 0; }
-  .benbot-rec strong { color: #fff; }
-
-  /* NAV BAR */
-  :root {
-    --csn-h: 56px;
-    --csn-bg: #FFFFFF;
-    --csn-border: #E8E8EA;
-    --csn-text: #1B1925;
-    --csn-muted: #4D4C55;
-    --csn-orange: #FC5C03;
-    --csn-orange-bg: #FEEEE5;
-    --csn-dd-bg: #FFFFFF;
-    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
-    --csn-z: 9000;
-  }
-  .csn-bar {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    height: var(--csn-h);
-    background: var(--csn-bg);
-    border-bottom: 1px solid var(--csn-border);
-    display: flex;
-    align-items: center;
-    padding: 0 24px;
-    gap: 0;
-    z-index: var(--csn-z);
-    font-family: 'Plus Jakarta Sans', 'Barlow', sans-serif;
-  }
-  .csn-logo {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    color: var(--csn-orange);
-    text-decoration: none;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    margin-right: 32px;
-    flex-shrink: 0;
-  }
-  .csn-nav {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    flex: 1;
-  }
-  .csn-item { position: relative; }
-  .csn-link {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--csn-muted);
-    text-decoration: none;
-    white-space: nowrap;
-    transition: color 0.15s, background 0.15s;
-    cursor: pointer;
-  }
-  .csn-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
-  .csn-item.active > .csn-link { color: var(--csn-orange); font-weight: 600; }
-  .csn-chevron { transition: transform 0.2s; flex-shrink: 0; }
-  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
-  .csn-dropdown {
-    display: none;
-    position: absolute;
-    top: calc(100% + 6px);
-    left: 0;
-    min-width: 240px;
-    background: var(--csn-dd-bg);
-    border: 1px solid var(--csn-border);
-    border-radius: 12px;
-    box-shadow: var(--csn-dd-shadow);
-    padding: 6px;
-    z-index: calc(var(--csn-z) + 1);
-  }
-  .csn-item.csn-has-dd { position: relative; }
-  .csn-item.csn-has-dd::after { content: ""; position: absolute; top: 100%; left: 0; width: 100%; height: 12px; }
-  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
-  .csn-dd-item {
-    display: block;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--csn-muted);
-    text-decoration: none;
-    transition: color 0.12s, background 0.12s;
-    white-space: nowrap;
-  }
-  .csn-dd-item:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
-  .csn-divider { height: 1px; background: var(--csn-border); margin: 4px 8px; }
-  .csn-hamburger {
-    display: none;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--csn-muted);
-    padding: 4px;
-    margin-left: auto;
-  }
-  .csn-mobile-menu {
-    display: none;
-    position: fixed;
-    top: calc(48px + var(--csn-h));
-    left: 0; right: 0;
-    background: var(--csn-bg);
-    border-bottom: 1px solid var(--csn-border);
-    padding: 8px 16px 16px;
-    z-index: calc(var(--csn-z) - 1);
-    max-height: calc(100vh - var(--csn-h));
-    overflow-y: auto;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-  }
-  .csn-mobile-menu.open { display: block; }
-  .csn-mob-link {
-    display: block;
-    padding: 9px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--csn-muted);
-    text-decoration: none;
-    transition: color 0.12s, background 0.12s;
-  }
-  .csn-mob-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
-  .csn-mob-top { font-weight: 600; color: var(--csn-text); margin-top: 4px; }
-  body { padding-top: calc(48px + var(--csn-h)) !important; }
-  @media (max-width: 1023px) {
-    .csn-nav { display: none; }
-    .csn-hamburger { display: block; }
-  }
-  @media (max-width: 640px) {
-    .csn-logo { font-size: 13px; margin-right: 16px; }
-    .two-col, .three-col, .four-col { grid-template-columns: 1fr; }
-    .document { padding: 20px 20px 60px; }
-  }
-
-  /* WATERMARK */
-  .document {
-    position: relative;
-  }
-  .document::before {
-    content: "CONFIDENTIAL";
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-45deg);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 100px;
-    font-weight: 700;
-    color: rgba(26, 26, 46, 0.03);
-    pointer-events: none;
-    z-index: 0;
-    letter-spacing: 0.1em;
-  }
-
-  /* PRINT STYLES */
-  @media print {
-    @page { margin: 18mm 15mm 20mm 15mm; size: A4; }
-    body { background: #fff; font-size: 10.5pt; line-height: 1.55; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .print-bar { display: none !important; }
-    .csn-bar { display: none !important; }
-    body { padding-top: 0 !important; }
-    .document { max-width: 100%; padding: 0; margin: 0; box-shadow: none; }
-    .document::before { position: absolute; font-size: 80pt; }
-    .section { page-break-inside: auto; margin-bottom: 12pt; }
-    .section-header { page-break-after: avoid; }
-    h2, h3, h4 { page-break-after: avoid; orphans: 3; widows: 3; }
-    p, li { orphans: 3; widows: 3; }
-    .page-break { page-break-before: always; }
-    .card { page-break-inside: auto; border: 1pt solid #ddd; margin-bottom: 8pt; }
-    table { page-break-inside: auto; font-size: 9.5pt; }
-    thead { display: table-header-group; }
-    tr { page-break-inside: avoid; }
-    .two-col { grid-template-columns: 1fr; gap: 8pt; }
-    details { break-inside: avoid; }
-    details[open] .detail-body { break-inside: auto; }
-    a { color: var(--dark) !important; }
-    .benbot-rec { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  }
-
-  @media (max-width: 1023px) {
-    .csn-bar { top: 48px !important; left: 0 !important; right: 0 !important; }
-    .csn-mobile-menu { top: calc(48px + var(--csn-h)) !important; left: 0 !important; }
-  }
+@media (max-width: 640px) {
+  .document { padding: 20px 16px 40px; }
+  .metrics { grid-template-columns: 1fr 1fr; }
+  .sequence { flex-direction: column; }
+  .seq-step { border-radius: 0 !important; }
+  .funnel-step { width: 100% !important; }
+}
 </style>
 </head>
 <body>
 
-<!-- NAV BAR -->
-<nav class="csn-bar" role="navigation" aria-label="Main navigation">
-  <a href="index.html" class="csn-logo">Collective Shift</a>
-  <div class="csn-nav">
-    <div class="csn-item"><a href="index.html" class="csn-link">CEO Dashboard</a></div>
-    <div class="csn-item csn-has-dd active">
-      <a href="#" class="csn-link">Documents
-        <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-      </a>
-      <div class="csn-dropdown">
-        <a href="content-board.html" class="csn-dd-item">Content Pipeline</a>
-        <a href="alchemy-negotiation.html" class="csn-dd-item" style="color: var(--csn-orange); font-weight: 600;">Alchemy Fee Negotiation</a>
-        <a href="travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a>
-        <a href="cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a>
-      </div>
-    </div>
-  </div>
-  <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-  </button>
-</nav>
-<div id="csnMobileMenu" class="csn-mobile-menu">
-  <a href="index.html" class="csn-mob-link csn-mob-top">CEO Dashboard</a>
-  <a href="alchemy-negotiation.html" class="csn-mob-link csn-mob-top">Alchemy Fee Negotiation</a>
-  <a href="travis-briefing-2026-03-27.html" class="csn-mob-link">Travis CGO Briefing</a>
-</div>
-
-<!-- STICKY PRINT BAR -->
 <div class="print-bar">
-  <button class="print-btn" onclick="window.print()">
-    Print / Save as PDF
-  </button>
+  <button class="print-btn" onclick="window.print()">⎙ Print / Export PDF</button>
 </div>
 
 <div class="document">
 
-  <!-- CONFIDENTIAL HEADER -->
-  <div class="confidential-banner label">CONFIDENTIAL - CEO EYES ONLY - DO NOT DISTRIBUTE</div>
+<div class="confidential-banner">INTERNAL — SALES TEAM ONLY — DO NOT DISTRIBUTE</div>
+<div class="doc-header">
+  <div class="doc-title">Sales &amp; Negotiation Playbook</div>
+  <div class="doc-subtitle">Collective Shift — Platinum $14,999/yr — Jeremy Haynes Framework</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 32px;margin-top:20px;font-size:13px;color:var(--text-muted);">
+    <div><strong style="color:var(--dark)">Prepared:</strong> April 2026</div>
+    <div><strong style="color:var(--dark)">Version:</strong> 2.0 (Jeremy Framework Rebuild)</div>
+    <div><strong style="color:var(--dark)">Target:</strong> 35 Platinums/month = $700K/month</div>
+    <div><strong style="color:var(--dark)">Close Rate Target:</strong> 30%</div>
+  </div>
+  <div class="orange-rule"></div>
+</div>
 
-  <!-- DOCUMENT HEADER -->
-  <div class="doc-header">
-    <div class="doc-subtitle label">Collective Shift - CEO Negotiation Prep</div>
-    <div class="doc-title">Fee Renegotiation Analysis - Alchemy Scaling</div>
-    <div class="orange-rule"></div>
-    <div class="doc-header-meta">
-      <div><span class="label" style="color:var(--text-muted)">Date</span><br><strong>April 2026 - 90-day term ends ~April 30</strong></div>
-      <div><span class="label" style="color:var(--text-muted)">Document Type</span><br><strong>Negotiation Preparation Brief</strong></div>
-      <div><span class="label" style="color:var(--text-muted)">Prepared For</span><br><strong>Ben Simpson - CEO</strong></div>
-      <div><span class="label" style="color:var(--text-muted)">Counterparties</span><br><strong>Sanjay (Marketing) &middot; Kishan (Sales)</strong></div>
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <h3>Contents</h3>
+  <ol>
+    <li><a href="#s1">Call Funnel Math and Financial Model</a></li>
+    <li><a href="#s2">Pixel Conditioning and Price Anchoring</a></li>
+    <li><a href="#s3">Show Rate Optimisation</a></li>
+    <li><a href="#s4">Setter Script: DM to Booked Call</a></li>
+    <li><a href="#s5">Closer Script: Platinum at $14,999</a></li>
+    <li><a href="#s6">Objection Handling Framework</a></li>
+    <li><a href="#s7">No-Show Recovery Sequence</a></li>
+    <li><a href="#s8">Deal Structures (Multi-Seat and Instalments)</a></li>
+    <li><a href="#s9">Daily Pipeline Triage and Tracking</a></li>
+    <li><a href="#s10">Weekly and Monthly Scorecard</a></li>
+  </ol>
+</div>
+
+<!-- ════════════════════ SECTION 1: CALL FUNNEL MATH ════════════════════ -->
+<div class="section" id="s1">
+  <div class="section-label">Section 01</div>
+  <h2>Call Funnel Math and Financial Model</h2>
+
+  <p>Everything starts with the math. If you do not know these numbers, you cannot diagnose problems, forecast revenue, or hold yourself accountable. Memorise them.</p>
+
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-value">35</div>
+      <div class="metric-label">New Platinums / month</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value">117</div>
+      <div class="metric-label">Calls needed / month<br>(35 / 0.30)</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value">4</div>
+      <div class="metric-label">Calls per day<br>(117 / ~28 working days)</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value">30%</div>
+      <div class="metric-label">Close rate target</div>
     </div>
   </div>
 
-  <!-- BENBOT RECOMMENDATION - TOP OF PAGE -->
-  <div class="benbot-rec">
-    <div class="benbot-rec-header">
-      <span class="benbot-rec-icon">&#8383;</span>
-      <span class="benbot-rec-title">BenBot Recommendation</span>
-    </div>
-    <p><strong>Primary recommendation: Option 4 (Hybrid Retainer + Tiered + Equity).</strong> This is the right play if Ben believes in the Alchemy relationship and the US market opportunity. The equity component aligns them for an exit. The tiered structure protects CS downside while rewarding outperformance. Best for long-term partnership.</p>
-    <p><strong>If Option 4 is too complex to negotiate in one meeting: go with Option 2 (Tiered by ROAS).</strong> Clean, performance-aligned, no fixed cost, and still reaches 25% if they deliver exceptional ROAS. Easiest to get them to yes quickly because the upside is clearly preserved.</p>
-    <p>Walk in with Option 4. If there's resistance to equity, pivot to Option 2. Have Option 1 as the floor offer you'll accept.</p>
+  <div class="card card-orange">
+    <h4 style="margin-top:0;color:var(--dark);">Financial Model</h4>
+    <table class="pipeline-table" style="margin-top:12px;">
+      <tr><td><strong>Revenue target</strong></td><td>$700,000/month</td></tr>
+      <tr><td><strong>New Platinums needed</strong></td><td>35/month ($14,999 base + upsells to hit $700K)</td></tr>
+      <tr><td><strong>Close rate</strong></td><td>30%</td></tr>
+      <tr><td><strong>Calls needed</strong></td><td>117/month = ~4/day</td></tr>
+      <tr><td><strong>Target show rate</strong></td><td>60-78% (with Hammer Them + confirmation page)</td></tr>
+      <tr><td><strong>Calls booked needed</strong></td><td>~150-195/month (to get 117 shows)</td></tr>
+      <tr><td><strong>Cost per call</strong></td><td>$600-700</td></tr>
+      <tr><td><strong>Monthly ad spend</strong></td><td>$70-82K</td></tr>
+      <tr><td><strong>Cost per Platinum acquisition</strong></td><td>~$2,171 ($82K / 35 closes - blended excl. organic)</td></tr>
+      <tr><td><strong>ROAS</strong></td><td>6.4x ($525K revenue / $82K spend) before upsells</td></tr>
+      <tr><td><strong>Breakeven ROAS</strong></td><td>1.81x</td></tr>
+    </table>
   </div>
 
-  <!-- TABLE OF CONTENTS -->
-  <div class="toc">
-    <h3>Contents</h3>
-    <ol>
-      <li><a href="#section-1">The Problem - Why the Current Deal Doesn't Work</a></li>
-      <li><a href="#section-2">Unit Economics - The Data Behind the Ask</a></li>
-      <li><a href="#section-3">4 Negotiation Options Modelled</a></li>
-      <li><a href="#section-4">Financial Comparison - Side by Side</a></li>
-      <li><a href="#section-5">Negotiation Talking Points</a></li>
-      <li><a href="#section-6">Key Contract Terms to Change</a></li>
-      <li><a href="#section-7">BATNA - Best Alternative if They Decline</a></li>
+  <div class="card">
+    <h4 style="margin-top:0;">Full Funnel Architecture</h4>
+    <div class="funnel">
+      <div class="funnel-step" style="width:100%"><span class="funnel-num">01</span> Cold Audience (Hammer Them content ads warm them)</div>
+      <div class="funnel-arrow">▼</div>
+      <div class="funnel-step" style="width:90%"><span class="funnel-num">02</span> VSL / Lead Magnet (price stated: $14,999)</div>
+      <div class="funnel-arrow">▼</div>
+      <div class="funnel-step" style="width:78%"><span class="funnel-num">03</span> ManyChat DM / Booking Page (~150-195 booked)</div>
+      <div class="funnel-arrow">▼</div>
+      <div class="funnel-step" style="width:66%"><span class="funnel-num">04</span> Setter Call (qualify + book closer) (~117 show)</div>
+      <div class="funnel-arrow">▼</div>
+      <div class="funnel-step" style="width:52%;background:var(--orange)"><span class="funnel-num">05</span> Closer Call = 35 Platinums = $525K+</div>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted);text-align:center;margin-top:8px;">Monthly Webinar "scoop up" catches leads who did not convert via Paths A or B</p>
+  </div>
+
+  <div class="card card-dark">
+    <h4 style="margin-top:0;">Key Insight from Jeremy Haynes</h4>
+    <p>The Hammer Them content ads are what make the call funnel work. Without content warming, cold traffic produces low show rates and bad close rates. WITH Hammer Them, prospects feel like they already know Ben when they hit the VSL. Show rates jump from 40-50% to 60-78%.</p>
+  </div>
+</div>
+
+<!-- ════════════════════ SECTION 2: PIXEL CONDITIONING ════════════════════ -->
+<div class="section" id="s2">
+  <div class="section-label">Section 02</div>
+  <h2>Pixel Conditioning and Price Anchoring</h2>
+
+  <p>This is the single highest-leverage change in the entire sales system. When you state the price before the call, everything changes.</p>
+
+  <div class="card card-orange">
+    <h4 style="margin-top:0;color:var(--dark);">What Pixel Conditioning Means</h4>
+    <p><strong>State $14,999 explicitly in:</strong></p>
+    <ul style="margin:8px 0 0 20px;">
+      <li>The VSL (Ben says the number on camera)</li>
+      <li>The landing page (visible on the page)</li>
+      <li>Pre-call email and SMS communications</li>
+      <li>The confirmation page after booking</li>
+    </ul>
+    <p style="margin-top:12px;"><strong>What happens:</strong> Unqualified people see $14,999 and bounce. They tell Meta's algorithm "I am not the right person." Qualified HNW investors see $14,999 and book. They tell Meta "find more people like me."</p>
+  </div>
+
+  <h3>The Conditioning Window</h3>
+  <p><strong>Weeks 1-4 after implementing price transparency:</strong> Fewer calls. This is normal. Push through.</p>
+  <p><strong>Weeks 4-6:</strong> Call quality transforms. Prospects arrive pre-sold, price-aware, and ready to buy.</p>
+  <p><strong>Weeks 6+:</strong> Salespeople become "cashiers" processing orders rather than convincing sceptics. Close rates go from 20% to 40%+. Show rates from 50% to 70%+.</p>
+
+  <div class="card">
+    <h4 style="margin-top:0;">Why This Works for HNW Investors</h4>
+    <p>HNW investors (35-60yo, $500K-$2M+ net worth) <strong>expect</strong> price transparency. Hiding the price signals you are a scam. Being upfront about $14,999 signals confidence and professionalism. It matches rich-person messaging: understated authority, no hype, direct.</p>
+    <p style="margin-top:8px;">Jeremy Haynes framework: "Rich-person messaging" means you speak TO them. Conservative claims, understated authority, no hype. "Digital assets" not "crypto." This is already the CS brand voice. Pixel conditioning reinforces it.</p>
+  </div>
+
+  <h3>How Price Anchoring Changes the Closer Call</h3>
+  <p>When a prospect has already seen $14,999 before they get on the call:</p>
+  <ul class="checklist">
+    <li>They have already self-qualified on price (they can afford it)</li>
+    <li>The "sticker shock" objection is eliminated</li>
+    <li>The closer can focus on fit, not justification</li>
+    <li>The conversation shifts from "is it worth it?" to "is this right for me?"</li>
+    <li>Close rate increases because only price-qualified leads get through</li>
+  </ul>
+
+  <div class="card card-dark">
+    <h4 style="margin-top:0;">Critical Rule</h4>
+    <p>Never use value stacks. Never. "This is worth $50K but you get it for $15K" is the fastest way to lose credibility with HNW buyers. They see right through it. Just state the price. State what they get. Let them decide.</p>
+  </div>
+</div>
+
+<!-- ════════════════════ SECTION 3: SHOW RATE OPTIMISATION ════════════════════ -->
+<div class="section" id="s3">
+  <div class="section-label">Section 03</div>
+  <h2>Show Rate Optimisation</h2>
+
+  <p>A 10% improvement in show rate at 117 calls/month = 12 more shows = potentially 3-4 more Platinums = $45-60K/month. This is the highest-ROI optimisation in the funnel.</p>
+
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-value">60-78%</div>
+      <div class="metric-label">Target show rate<br>(with Hammer Them)</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value">$45-60K</div>
+      <div class="metric-label">Revenue from 10%<br>show rate improvement</div>
+    </div>
+  </div>
+
+  <h3>The 5-Function Confirmation Page (Jeremy Haynes Framework)</h3>
+  <p>After someone books a Setter call, they see a confirmation page. This page must include all 5 elements:</p>
+
+  <div class="card">
+    <h4 style="margin-top:0;">1. Video from Ben (60-90 seconds)</h4>
+    <div class="script">
+      <div class="role">Ben (on camera)</div>
+      <div class="line">"You just made a smart decision. Here is exactly what is going to happen on our call.</div>
+      <div class="line">One of my team is going to review your current digital asset position. We will look at where you are, where the gaps are, and whether our Platinum membership is the right fit.</div>
+      <div class="line">Come prepared with your current portfolio summary and your top 3 questions. The more specific you are, the more value you will get from the conversation.</div>
+      <div class="line">I look forward to hearing how it goes."</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0;">2. Authority Assets</h4>
+    <p>Display prominently on the confirmation page:</p>
+    <ul style="margin:8px 0 0 20px;">
+      <li>"Ben Simpson has helped 1,000+ members build digital asset portfolios"</li>
+      <li>"9 years in digital asset education"</li>
+      <li>"Featured in [media logos]"</li>
+      <li>Number of active Platinum members</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0;">3. Expectation Setting</h4>
+    <p>"On this call, we will review your current digital asset position and show you exactly where the gaps are. Come prepared with your portfolio summary and your top 3 questions."</p>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:8px;">This pre-frames the call as a diagnostic, not a sales pitch. Critical for HNW audience.</p>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0;">4. Testimonial</h4>
+    <p>1-2 Platinum member testimonials. Must be HNW individuals, relatable, with specific results. Example: "I am a cardiologist. I had Bitcoin since 2017 but no framework. Within 90 days of joining Platinum, I had a complete allocation strategy and exit plan."</p>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0;">5. Calendar and Logistics</h4>
+    <ul style="margin:0 0 0 20px;">
+      <li>Clear time and timezone (AEST)</li>
+      <li>Zoom link</li>
+      <li>Add-to-calendar button (Google Cal, iCal, Outlook)</li>
+      <li>SMS reminder opt-in (via ManyChat or Twilio)</li>
+    </ul>
+  </div>
+
+  <h3>Reminder Sequence</h3>
+  <div class="sequence">
+    <div class="seq-step" style="background:var(--light-orange);">
+      <span class="seq-time">IMMEDIATELY</span>
+      Confirmation email + page with Ben video
+    </div>
+    <div class="seq-step">
+      <span class="seq-time">24 HRS BEFORE</span>
+      SMS: "Your strategy session with Collective Shift is tomorrow at [time] AEST. Here is your Zoom link."
+    </div>
+    <div class="seq-step">
+      <span class="seq-time">2 HRS BEFORE</span>
+      SMS: "Reminder: Your call is in 2 hours. Have your portfolio summary ready."
+    </div>
+    <div class="seq-step" style="background:var(--light-orange);">
+      <span class="seq-time">15 MIN BEFORE</span>
+      SMS: "Your call starts in 15 minutes. Click to join: [Zoom link]"
+    </div>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0;">Pre-Call Content Drip (Customer.io)</h4>
+    <p>Between booking and call, send 1-2 pieces of content that reinforce authority and build anticipation:</p>
+    <ul style="margin:8px 0 0 20px;">
+      <li><strong>Email 1 (Day of booking):</strong> "While you wait: The 3 biggest tax mistakes HNW digital asset investors make" (Hidden VSSL format)</li>
+      <li><strong>Email 2 (Day before call):</strong> Short Platinum member case study with specific results</li>
+    </ul>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:8px;">Goal: prospect arrives on the call already trusting Ben and understanding the value. They have seen the $14,999 price. They are mentally prepared.</p>
+  </div>
+</div>
+
+<!-- ════════════════════ SECTION 4: SETTER SCRIPT ════════════════════ -->
+<div class="section" id="s4">
+  <div class="section-label">Section 04</div>
+  <h2>Setter Script: DM to Booked Call</h2>
+
+  <p>The setter's job is to <strong>qualify and book</strong>. Not to sell. Not to explain the offer in detail. Qualify the lead and get them on the closer's calendar. Speed to lead is critical: from ManyChat DM engagement to setter contact in under 5 minutes during business hours.</p>
+
+  <div class="card card-orange">
+    <h4 style="margin-top:0;color:var(--dark);">Setter KPIs</h4>
+    <div class="metrics" style="margin-top:12px;">
+      <div class="metric" style="background:#fff;">
+        <div class="metric-value" style="font-size:20px;">&lt;5 min</div>
+        <div class="metric-label">Speed to lead</div>
+      </div>
+      <div class="metric" style="background:#fff;">
+        <div class="metric-value" style="font-size:20px;">60%+</div>
+        <div class="metric-label">Qualification rate</div>
+      </div>
+      <div class="metric" style="background:#fff;">
+        <div class="metric-value" style="font-size:20px;">70%+</div>
+        <div class="metric-label">Book rate (of qualified)</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Inbound DM Flow (ManyChat Lead)</h3>
+  <p>When someone comments a keyword (STRATEGY, SCORECARD, CALCULATOR, BLUEPRINT, TAX) and enters the ManyChat flow, the setter follows up with leads who engaged but did not book.</p>
+
+  <div class="script">
+    <div class="role">Setter (DM)</div>
+    <div class="direction">After lead engages with ManyChat tool but does not book a call:</div>
+    <div class="line">"Hey [Name], I saw you grabbed the [Strategy Tool/Scorecard/etc.]. How did you go with it?"</div>
+    <div class="direction">Wait for response. They will usually share their result or ask a question.</div>
+    <div class="line">"Makes sense. Quick question: are you currently holding any digital assets, or is this something you are looking to get started with?"</div>
+    <div class="direction">Qualification question 1: Do they have existing exposure? This tells you if they are a beginner or upgrader.</div>
+  </div>
+
+  <div class="script">
+    <div class="role">Setter (DM) — Qualification</div>
+    <div class="direction">After they respond about their current position:</div>
+    <div class="line">"Got it. And roughly, what is your investable asset range? Are you working with under $500K, $500K-$1M, or over $1M?"</div>
+    <div class="direction">This is the key qualifier. Platinum is $14,999/yr. You need people with $500K+ investable assets minimum.</div>
+    <div class="line">"And what is the main thing you are trying to solve? Is it building a framework, managing tax, or something else?"</div>
+    <div class="direction">This gives the closer context on which buying motive to lead with.</div>
+  </div>
+
+  <div class="script">
+    <div class="role">Setter (DM) — The Book</div>
+    <div class="direction">If qualified ($500K+ assets, genuine interest, not looking for tips/signals):</div>
+    <div class="line">"Based on what you have told me, I think a portfolio review call with our team would be genuinely useful for you. It is 30 minutes. We will look at your current position, identify the gaps, and give you honest feedback on whether we can help. No pressure. If it is not the right fit, we will tell you."</div>
+    <div class="line">"Would [Day] at [Time] AEST work for you?"</div>
+    <div class="direction">Book directly into the closer's calendar. Send confirmation page link immediately.</div>
+  </div>
+
+  <div class="script">
+    <div class="role">Setter (DM) — Not Qualified</div>
+    <div class="direction">If under $500K or looking for trading tips/signals:</div>
+    <div class="line">"Appreciate you sharing that. Based on where you are right now, I think our free content and the Weekly Shift newsletter would be the best fit. You will get Ben's weekly analysis and market commentary. Would you like me to add you?"</div>
+    <div class="direction">Redirect to free content. Do not waste closer time on unqualified leads.</div>
+  </div>
+
+  <h3>Outbound Setter Outreach (Warm Leads)</h3>
+  <p>Setters also do outbound to ManyChat leads who engaged but did not book. Priority order:</p>
+  <ol style="margin:8px 0 0 20px;">
+    <li>Watched VSL but did not book (highest intent)</li>
+    <li>Completed lead magnet tool (medium intent)</li>
+    <li>Engaged with Hammer Them content (lower intent, but warm)</li>
+    <li>Highly engaged free community members (warm, trust already built)</li>
+  </ol>
+
+  <div class="card card-dark">
+    <h4 style="margin-top:0;">Critical Rule: Setter to Closer Handoff</h4>
+    <p>When the setter books a closer call, they must brief the closer in the CRM notes:</p>
+    <ul style="margin:8px 0 0 20px;">
+      <li>Lead's investable asset range</li>
+      <li>Current digital asset exposure (if any)</li>
+      <li>Primary buying motive (framework, tax, portfolio review, exit strategy)</li>
+      <li>Any objections or concerns raised</li>
+      <li>How they found CS (ad, podcast, referral, community)</li>
+    </ul>
+    <p style="margin-top:8px;">Bad handoffs = wasted closer time. This is non-negotiable.</p>
+  </div>
+</div>
+
+<!-- ════════════════════ SECTION 5: CLOSER SCRIPT ════════════════════ -->
+<div class="section" id="s5">
+  <div class="section-label">Section 05</div>
+  <h2>Closer Script: Platinum at $14,999</h2>
+
+  <p>The closer's job is to close. By the time a prospect reaches the closer, they have: (1) consumed Hammer Them content, (2) engaged with a lead magnet or VSL, (3) been qualified by the setter, (4) seen the $14,999 price, and (5) received the confirmation page content. They are warm, price-aware, and qualified.</p>
+
+  <div class="card card-orange">
+    <h4 style="margin-top:0;color:var(--dark);">Closer Call Framework (30-45 minutes)</h4>
+    <p style="margin-top:8px;">This follows the Jeremy Haynes affluent-buyer VSL structure adapted for a live call. HNW investors are time-poor and decisive. Be direct, authoritative, certain. No filler.</p>
+  </div>
+
+  <h3>Phase 1: Rapport and Agenda (3 minutes)</h3>
+  <div class="script">
+    <div class="role">Closer</div>
+    <div class="line">"[Name], thanks for making the time. I have reviewed the notes from your conversation with [Setter Name]. Before we dive in, let me tell you exactly how this call works.</div>
+    <div class="line">I am going to ask you a few questions about your current situation. Then I will walk you through what we do at Collective Shift and specifically how Platinum works. If it is a fit, I will explain exactly how to get started. If it is not, I will tell you. Fair?"</div>
+    <div class="direction">Sets the frame: this is a two-way diagnostic, not a pitch. HNW buyers respect directness.</div>
+  </div>
+
+  <h3>Phase 2: Discovery (8-10 minutes)</h3>
+  <div class="script">
+    <div class="role">Closer</div>
+    <div class="line">"Tell me about your current portfolio. What does the big picture look like right now?"</div>
+    <div class="direction">Let them talk. Listen for: property-heavy, super-dependent, concentrated ASX, existing digital assets without framework.</div>
+    <div class="line">"And when it comes to digital assets specifically, what is your current position?"</div>
+    <div class="direction">Listen for: bought Bitcoin/crypto before, lost money, have some but no strategy, never bought but want to.</div>
+    <div class="line">"What prompted you to take the call today? What is the main thing you are trying to solve?"</div>
+    <div class="direction">This reveals their primary buying motive. Match to one of the three: (1) Framework/strategy, (2) Tax optimisation, (3) Exit planning/risk management.</div>
+    <div class="line">"And if you had that solved, if you had a complete digital asset framework that you trusted, what would that change for you?"</div>
+    <div class="direction">This is the "future state" question. Get them to articulate the value in their own words.</div>
+  </div>
+
+  <h3>Phase 3: Bridge (5 minutes)</h3>
+  <div class="script">
+    <div class="role">Closer</div>
+    <div class="line">"Based on what you have told me, here is what I am seeing. [Reflect their situation back to them]. The gap is [specific gap: no framework / no exit plan / tax exposure / concentrated in property with no digital asset allocation]."</div>
+    <div class="line">"This is exactly what Platinum is built for. Let me walk you through what it looks like."</div>
+    <div class="direction">The bridge connects their pain to the solution. Be specific to THEIR situation.</div>
+  </div>
+
+  <h3>Phase 4: The Offer (5-7 minutes)</h3>
+  <div class="script">
+    <div class="role">Closer</div>
+    <div class="line">"Platinum is our core membership. $14,999 per year. Here is what you get:</div>
+    <div class="line"><strong>Shift OS:</strong> Our complete digital asset operating system. Position sizing, asset selection, entry rules, exit planning, and review cadence. This is the framework you have been missing.</div>
+    <div class="line"><strong>Weekly Platinum Calls:</strong> Live with Ben and the research team. Market analysis, portfolio reviews, Q&A. Every week.</div>
+    <div class="line"><strong>Research Library:</strong> Every piece of analysis we produce. Asset reports, market updates, on-chain analysis, tax strategy guides.</div>
+    <div class="line"><strong>Community:</strong> 300+ serious investors sharing data, insights, and holding each other accountable. No noise. No memecoins. Just people like you doing this properly.</div>
+    <div class="line"><strong>Exit Planning Framework:</strong> The exact system for knowing when to take profits and when to hold. This is what most people get wrong, and it is what most of our members say was worth the membership alone."</div>
+    <div class="direction">State the deliverables. Do not use value stacks. Do not say "this is worth $50K." Just state what they get and let the quality speak.</div>
+  </div>
+
+  <h3>Phase 5: Close (5-7 minutes)</h3>
+  <div class="script">
+    <div class="role">Closer</div>
+    <div class="line">"Based on everything you have told me, and what you are trying to achieve, Platinum is designed for exactly where you are. Does this feel like the right fit?"</div>
+    <div class="direction">Pause. Let them respond. If yes, proceed to logistics. If hesitation, address the specific concern.</div>
+    <div class="line">"Great. The investment is $14,999 for the year. We accept card or bank transfer. Which works better for you?"</div>
+    <div class="direction">Assumptive close. Give a choice between payment methods, not between buying and not buying.</div>
+    <div class="line">"Once you are in, you will get an onboarding email within the hour. Welcome video from Ben, your Platinum portal access, and your first quick win: the portfolio review framework. You will have everything you need to get started immediately."</div>
+  </div>
+</div>
+
+<!-- ════════════════════ SECTION 6: OBJECTION HANDLING ════════════════════ -->
+<div class="section" id="s6">
+  <div class="section-label">Section 06</div>
+  <h2>Objection Handling Framework</h2>
+
+  <p>With pixel conditioning (price stated before the call), most price objections are pre-handled. The objections that remain are about timing, certainty, and fit. Here is the framework for each.</p>
+
+  <table class="objection-table">
+    <thead>
+      <tr>
+        <th style="width:25%;">Objection</th>
+        <th style="width:40%;">Response Framework</th>
+        <th style="width:35%;">Key Principle</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>"I need to think about it"</strong></td>
+        <td>
+          "I completely understand. Can I ask what specifically you want to think through? Is it the investment, whether this is the right time, or whether it is the right fit for your situation?"<br><br>
+          <em>Isolate the real objection. "Think about it" is never the real objection. It is always one of three: price, timing, or trust.</em><br><br>
+          Once isolated: "That makes sense. Let me address that directly..."
+        </td>
+        <td>Never let "think about it" stand unchallenged. Isolate the real concern. Then address it directly. If they still want to think, give them a specific timeframe: "When would you like me to follow up? Tomorrow at 2pm work?"</td>
+      </tr>
+      <tr>
+        <td><strong>"Too expensive"</strong></td>
+        <td>
+          "I hear you. $14,999 is a serious investment. Can I put it in context?"<br><br>
+          "If your portfolio is [$X], and our members typically improve their allocation strategy by even a small margin, the return on this membership pays for itself many times over. And that is before the tax optimisation, which alone saves most members thousands every year."<br><br>
+          "The question is not whether $14,999 is a lot of money. It is. The question is what it costs you to not have this framework for another 12 months."
+        </td>
+        <td>With pixel conditioning, this objection is rare (they already knew the price). When it comes up, it is usually about perceived value, not affordability. Frame the cost against the cost of inaction. Never discount. Never negotiate on price for the standard offer.</td>
+      </tr>
+      <tr>
+        <td><strong>"Not sure if it is right for me"</strong></td>
+        <td>
+          "That is a smart thing to be cautious about. Let me ask you: what would make it right for you? What would you need to see or hear to feel confident this is the right move?"<br><br>
+          <em>Let them tell you what they need. Then give it to them.</em><br><br>
+          "Our members are [describe ICP]. If that sounds like you, and the gap you described is real, this is exactly what it is built for. And if you get in and it is not the right fit, you will know quickly."
+        </td>
+        <td>This objection is about identity. They are asking "am I the type of person who does this?" Reflect their own words back. Show them they already described themselves as the ideal member. Social proof helps here: "We have dozens of members in a very similar situation to yours."</td>
+      </tr>
+      <tr>
+        <td><strong>"I need to talk to my partner/spouse"</strong></td>
+        <td>
+          "Of course. What do you think their main concern would be?"<br><br>
+          "Would it help if I sent you a summary of what we discussed? Something you could share with them that covers the key points?"<br><br>
+          "And would it make sense to book a follow-up for Thursday so we can address any questions they have?"
+        </td>
+        <td>Legitimate objection for HNW couples. Equip them to sell internally. Send a follow-up email with the key points. Book a specific follow-up time. Do not leave it open-ended.</td>
+      </tr>
+      <tr>
+        <td><strong>"I want to do more research first"</strong></td>
+        <td>
+          "Smart. What specifically do you want to research?"<br><br>
+          "The interesting thing is, most people who say that end up spending 3-6 months doing the same research our members get in week one. The framework, the asset selection criteria, the exit planning... that IS the research. You are not paying for information. You are paying for the 9 years of work that has already been done."
+        </td>
+        <td>Reframe: Platinum IS the research. They are not buying information. They are buying a framework that took 9 years to build. Time spent researching alone is time spent without the framework.</td>
+      </tr>
+      <tr>
+        <td><strong>"Can I start with Pro ($3K) first?"</strong></td>
+        <td>
+          "You can. But let me be straight with you. Pro gives you access to our research library and community. It is valuable. But it does not include Shift OS, the weekly Platinum calls with Ben, or the exit planning framework. Those are the things you told me you need."<br><br>
+          "If budget is the concern, we do have instalment options. But if it is about testing the water, I would rather you go all in on the thing that actually solves the problem."
+        </td>
+        <td>Do not let Pro cannibalise Platinum. If they have the budget and the need, Platinum is the right answer. Pro is a gateway for people who genuinely cannot afford Platinum yet.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="card card-dark">
+    <h4 style="margin-top:0;">The Meta-Rule on Objections</h4>
+    <p>If you have done the discovery properly, most objections will not come up. The closer who gets the most objections is the closer who did the worst discovery. When you understand their situation, their pain, and their buying motive, the offer presents itself as the obvious solution.</p>
+  </div>
+</div>
+
+<!-- ════════════════════ SECTION 7: NO-SHOW RECOVERY ════════════════════ -->
+<div class="section" id="s7">
+  <div class="section-label">Section 07</div>
+  <h2>No-Show Recovery Sequence</h2>
+
+  <p>Every no-show is a potential $14,999 sale that needs to be recovered. Not following up on no-shows is leaving money on the table.</p>
+
+  <div class="sequence">
+    <div class="seq-step" style="background:var(--light-orange);">
+      <span class="seq-time">5 MIN AFTER</span>
+      SMS: "Hey [Name], I was on the line for your call. Did something come up? Happy to reschedule. Here is my calendar link: [link]"
+    </div>
+    <div class="seq-step">
+      <span class="seq-time">2 HRS AFTER</span>
+      Email: "Missed you on our call today. No stress. Here is a link to rebook at a time that works: [link]. If you have any questions before then, just reply here."
+    </div>
+    <div class="seq-step">
+      <span class="seq-time">24 HRS AFTER</span>
+      DM (IG/ManyChat): "Hey [Name], we missed each other yesterday. Still interested in the portfolio review? Here is a fresh link: [link]"
+    </div>
+    <div class="seq-step" style="background:var(--light-orange);">
+      <span class="seq-time">72 HRS AFTER</span>
+      Final SMS: "Last check-in. If timing is not right, no worries. But if you still want to get your digital asset strategy sorted, I have a few spots this week: [link]"
+    </div>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0;">No-Show Recovery Rules</h4>
+    <ul class="checklist">
+      <li>First contact within 5 minutes of missed call (setter responsibility)</li>
+      <li>Use multiple channels: SMS, email, DM</li>
+      <li>Always offer a direct reschedule link (do not make them go through the booking flow again)</li>
+      <li>After 72 hours with no response, move to nurture sequence (monthly webinar invites, email sequence)</li>
+      <li>Track no-show recovery rate. Target: 30%+ of no-shows rebooked</li>
+      <li>Log all no-shows in Pipedrive with reason (if known) and recovery status</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════ SECTION 8: DEAL STRUCTURES ════════════════════ -->
+<div class="section" id="s8">
+  <div class="section-label">Section 08</div>
+  <h2>Deal Structures (Multi-Seat and Instalments)</h2>
+
+  <p>Reece/DT style deal structures for maximising revenue per conversation. These are not discounts. They are structured options that increase total deal value or reduce friction to close.</p>
+
+  <h3>Option 1: Standard Platinum</h3>
+  <div class="card">
+    <table class="pipeline-table">
+      <tr><td><strong>Price</strong></td><td>$14,999/year</td></tr>
+      <tr><td><strong>Payment</strong></td><td>Full payment (card or bank transfer)</td></tr>
+      <tr><td><strong>Access</strong></td><td>Immediate. Full Platinum including Shift OS, weekly calls, research, community.</td></tr>
+      <tr><td><strong>Best for</strong></td><td>Most closes. This is the default offer.</td></tr>
+    </table>
+  </div>
+
+  <h3>Option 2: Payment Plan</h3>
+  <div class="card">
+    <table class="pipeline-table">
+      <tr><td><strong>Price</strong></td><td>$16,499 total ($1,500 premium over full pay)</td></tr>
+      <tr><td><strong>Structure</strong></td><td>$4,125/quarter (4 payments)</td></tr>
+      <tr><td><strong>Access</strong></td><td>Immediate. Full Platinum. Payments collected quarterly.</td></tr>
+      <tr><td><strong>Best for</strong></td><td>Prospects who say "the budget is tight right now" but are clearly qualified. The premium covers payment risk.</td></tr>
+      <tr><td><strong>Rule</strong></td><td>Only offer if they cannot do full pay. Never lead with the payment plan. Always anchor on $14,999 full pay first.</td></tr>
+    </table>
+  </div>
+
+  <h3>Option 3: Multi-Seat (Couples/Partners)</h3>
+  <div class="card card-green">
+    <table class="pipeline-table">
+      <tr><td><strong>Price</strong></td><td>$24,999 for 2 seats (save $5,000 vs 2 individual memberships)</td></tr>
+      <tr><td><strong>Access</strong></td><td>Both partners get full Platinum access. Separate logins, shared portfolio view.</td></tr>
+      <tr><td><strong>Best for</strong></td><td>"I need to talk to my partner" objection. Reframe: "Actually, you could both join together. Most of our couples do. It is $24,999 for both of you, which saves $5,000 compared to joining separately."</td></tr>
+      <tr><td><strong>Revenue impact</strong></td><td>Increases average deal value by 67% ($14,999 to $24,999)</td></tr>
+    </table>
+  </div>
+
+  <h3>Option 4: Business/Team Seat</h3>
+  <div class="card">
+    <table class="pipeline-table">
+      <tr><td><strong>Price</strong></td><td>Custom pricing: $12,499/seat for 3+ seats</td></tr>
+      <tr><td><strong>Access</strong></td><td>Full Platinum for each team member.</td></tr>
+      <tr><td><strong>Best for</strong></td><td>SMSF trustees, business partners, investment clubs. "Your accountant, your SMSF adviser, and you could all be on the same page for less than the cost of one bad tax decision."</td></tr>
+      <tr><td><strong>Approval</strong></td><td>Requires sales manager approval for team pricing.</td></tr>
+    </table>
+  </div>
+
+  <div class="card card-dark">
+    <h4 style="margin-top:0;">Deal Structure Rules</h4>
+    <ul style="margin:0 0 0 20px;">
+      <li><strong>Never discount the standard offer.</strong> $14,999 is the price. Full stop.</li>
+      <li><strong>Payment plans have a premium.</strong> This is not a discount. It is a convenience fee.</li>
+      <li><strong>Multi-seat is a deal sweetener, not a discount.</strong> Both partners get full value. The savings are real but the total revenue is higher.</li>
+      <li><strong>Always anchor on full pay first.</strong> Only introduce alternatives if the prospect has a specific budget objection.</li>
+      <li><strong>Log deal structure in Pipedrive.</strong> Track which structures close at what rate.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════ SECTION 9: DAILY PIPELINE TRIAGE ════════════════════ -->
+<div class="section" id="s9">
+  <div class="section-label">Section 09</div>
+  <h2>Daily Pipeline Triage and Tracking</h2>
+
+  <p>15 minutes every morning. Non-negotiable. This is the difference between reactive and proactive sales.</p>
+
+  <div class="card card-orange">
+    <h4 style="margin-top:0;color:var(--dark);">Daily Triage Protocol (15 min, every morning)</h4>
+    <ol style="margin:12px 0 0 20px;">
+      <li><strong>How many calls booked today?</strong> (Target: 4. If under 4, setter outbound immediately.)</li>
+      <li><strong>Any no-shows from yesterday?</strong> Rebook immediately. Setter contacts within 5 min of no-show.</li>
+      <li><strong>Any hot leads not yet booked?</strong> Setter outreach NOW. VSL viewers, lead magnet completions, engaged DMs.</li>
+      <li><strong>Any closer deals stuck?</strong> What is the blocker? "Think about it" leads over 48 hours get a follow-up call.</li>
+      <li><strong>Pipeline temperature:</strong>
+        <ul style="margin-top:4px;">
+          <li>🟢 <strong>Green:</strong> On pace for 35/month</li>
+          <li>🟡 <strong>Yellow:</strong> Behind pace, recoverable with effort</li>
+          <li>🔴 <strong>Red:</strong> Significantly behind, needs intervention</li>
+        </ul>
+      </li>
     </ol>
   </div>
 
-  <!-- ============================================ -->
-  <!-- SECTION 1: THE PROBLEM -->
-  <!-- ============================================ -->
-  <div class="section" id="section-1">
-    <div class="section-header">
-      <span class="section-number">01</span>
-      <h2 class="section-title">The Problem - Why the Current Deal Doesn't Work</h2>
-    </div>
+  <h3>Lead Priority Matrix</h3>
+  <table class="pipeline-table">
+    <thead>
+      <tr>
+        <th>Priority</th>
+        <th>Lead Type</th>
+        <th>Action</th>
+        <th>Speed</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--red);font-weight:700;">HOT</td>
+        <td>VSL viewer, clicked book but did not complete</td>
+        <td>Setter DM/call immediately</td>
+        <td>&lt;5 min</td>
+      </tr>
+      <tr>
+        <td style="color:var(--red);font-weight:700;">HOT</td>
+        <td>No-show from yesterday</td>
+        <td>SMS + DM rebook</td>
+        <td>First thing AM</td>
+      </tr>
+      <tr>
+        <td style="color:var(--amber);font-weight:700;">WARM</td>
+        <td>Lead magnet completed, no book</td>
+        <td>Setter outreach within 24h</td>
+        <td>&lt;24 hrs</td>
+      </tr>
+      <tr>
+        <td style="color:var(--amber);font-weight:700;">WARM</td>
+        <td>"Think about it" from closer (48h+)</td>
+        <td>Closer follow-up call</td>
+        <td>Day 2-3</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-muted);font-weight:700;">COOL</td>
+        <td>Lead magnet completed, no engagement after</td>
+        <td>Email nurture sequence</td>
+        <td>Automated</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-muted);font-weight:700;">COLD</td>
+        <td>Old lead, no engagement 14+ days</td>
+        <td>Monthly webinar invite</td>
+        <td>Next webinar</td>
+      </tr>
+    </tbody>
+  </table>
 
-    <!-- Contract Context -->
-    <div class="card">
-      <div class="card-title"><span class="dot dot-amber"></span> Current Contract Terms (Signed Jan 31, 2026)</div>
-      <div class="three-col" style="margin-bottom: 16px;">
-        <div class="stat-box" style="background: #FEF2F2; border-color: #FECACA;">
-          <div class="stat-value" style="color: var(--red);">25%</div>
-          <div class="stat-label">of NET PROFIT on US VSL sales</div>
-        </div>
-        <div class="stat-box" style="background: #FFFBEB; border-color: #FDE68A;">
-          <div class="stat-value" style="color: #92400E;">90 day</div>
-          <div class="stat-label">initial term - ends ~April 30, 2026</div>
-        </div>
-        <div class="stat-box" style="background: var(--bg-page);">
-          <div class="stat-value" style="color: var(--dark);">60 day</div>
-          <div class="stat-label">written notice to terminate (month-to-month after)</div>
-        </div>
-      </div>
-      <p style="font-size: 13px; color: var(--text-muted);">Scope: US-based sales only, through Alchemy funnels and US sales team. Net profit = after ad spend, payment fees, sales commissions, refunds. Josh is now out. Kishan (sales) and Sanjay (marketing) are taking on a broader role. The 90-day initial term expires <strong>~April 30, 2026</strong> - now is the window to renegotiate.</p>
-    </div>
+  <h3>What to Track Daily</h3>
+  <ul class="checklist">
+    <li>Number of calls booked today</li>
+    <li>Number of calls completed today</li>
+    <li>Show rate (shows / booked)</li>
+    <li>Number of closes today</li>
+    <li>Revenue closed today</li>
+    <li>Number of no-shows and recovery status</li>
+    <li>Pipeline temperature (green/yellow/red)</li>
+  </ul>
 
-    <!-- The Math -->
-    <div class="card">
-      <div class="card-title"><span class="dot dot-red"></span> The Math - CS Cannot Afford Paid Ads at 25%</div>
+  <h3>CRM Hygiene Rules (Pipedrive)</h3>
+  <ul class="checklist">
+    <li>Every lead status updated within 24 hours of interaction</li>
+    <li>Leads with no activity for 14+ days moved from active pipeline to nurture</li>
+    <li>Every deal has: accurate status, next action date, setter/closer notes</li>
+    <li>Close reason logged for every won and lost deal</li>
+    <li>Weekly pipeline audit: remove phantom deals, update stale leads</li>
+  </ul>
+</div>
 
-      <div class="callout callout-red" style="margin-top: 8px;">
-        <strong>Current ROAS is 1.84x. At 25% of net profit, CS loses money on every paid member acquired.</strong> But the problem is worse than paid alone: the 25% fee applies to <strong>ALL sales — organic included</strong>. Organic (~$175K/month) has zero ad spend, yet still attracts a ~$33K/month fee at 25%. Breakeven on paid at 25% requires ~$700K/month. At 15%, that drops to ~$400K — achievable. On organic, the 25% fee costs CS ~$13K/month more than necessary with zero ROAS justification.
-      </div>
+<!-- ════════════════════ SECTION 10: WEEKLY/MONTHLY SCORECARD ════════════════════ -->
+<div class="section" id="s10">
+  <div class="section-label">Section 10</div>
+  <h2>Weekly and Monthly Scorecard</h2>
 
-      <table>
-        <thead>
-          <tr><th>Metric</th><th>Value</th><th>What It Means</th></tr>
-        </thead>
-        <tbody>
-          <tr class="bg-bad">
-            <td>Current ROAS (paid acquisition)</td>
-            <td class="val-bad">1.84x</td>
-            <td>Losing money on every paid sale after the 25% cut.</td>
-          </tr>
-          <tr class="bg-bad">
-            <td>Breakeven ROAS at 25% fee</td>
-            <td class="val-bad">~2.5x</td>
-            <td>CS needs 2.5x ROAS just to reach $0 margin on paid.</td>
-          </tr>
-          <tr>
-            <td>Monthly US sales needed to break even (25% fee)</td>
-            <td class="val-bad">~$700K/month</td>
-            <td>Unrealistic at current scale and ROAS.</td>
-          </tr>
-          <tr class="bg-good">
-            <td>Monthly US sales needed to break even (15% fee)</td>
-            <td class="val-good">~$400K/month</td>
-            <td>A stretch target but achievable with the US team performing.</td>
-          </tr>
-          <tr class="bg-bad">
-            <td>Organic fee cost at 25% (on ~$175K organic revenue)</td>
-            <td class="val-bad">~$33K/month</td>
-            <td>25% fee on organic sales with zero ad spend. No ROAS benefit — pure drag on margin.</td>
-          </tr>
-          <tr class="bg-good">
-            <td>Organic fee cost at 15% (on ~$175K organic revenue)</td>
-            <td class="val-good">~$20K/month</td>
-            <td>$13K/month saving on organic channel alone by moving to 15%.</td>
-          </tr>
-          <tr>
-            <td>Monthly OPEX (post-restructure)</td>
-            <td><strong>$308,000</strong></td>
-            <td>Core operating costs post-restructure.</td>
-          </tr>
-          <tr class="bg-warn">
-            <td>Survival line (OPEX + debt service)</td>
-            <td class="val-warn">~$384,000/month</td>
-            <td>$308K OPEX + ~$76K ATO/Banjo debt service. Does not include ad spend.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- What's Changed -->
-    <div class="card">
-      <div class="card-title"><span class="dot dot-green"></span> What's Changed Since Signing - The Opportunity to Restructure</div>
-      <ul class="checklist" style="font-size: 13.5px;">
-        <li><strong>Josh is out.</strong> Kishan and Sanjay are stepping up across broader scope - organic + paid, not just US VSL.</li>
-        <li><strong>90-day initial term expires ~April 30.</strong> Natural renegotiation window without triggering termination clause.</li>
-        <li><strong>Paid acquisition is bleeding cash</strong> at current ROAS. This is a data-driven conversation, not a negotiating tactic.</li>
-        <li><strong>Organic is working well</strong> at near-zero acquisition cost. The paid channel needs to earn its place.</li>
-        <li><strong>The ask is transparent:</strong> show the numbers, let them see the problem, find a structure that works for both sides.</li>
-      </ul>
-    </div>
+  <h3>Weekly Review (Every Monday, 30 min)</h3>
+  <div class="card">
+    <table class="pipeline-table">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Target</th>
+          <th>This Week</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Calls booked</td><td>~38/week</td><td>[fill]</td><td>[🟢🟡🔴]</td></tr>
+        <tr><td>Calls completed (shows)</td><td>~29/week</td><td>[fill]</td><td>[🟢🟡🔴]</td></tr>
+        <tr><td>Show rate</td><td>60-78%</td><td>[fill]</td><td>[🟢🟡🔴]</td></tr>
+        <tr><td>Closes</td><td>~9/week</td><td>[fill]</td><td>[🟢🟡🔴]</td></tr>
+        <tr><td>Close rate</td><td>30%</td><td>[fill]</td><td>[🟢🟡🔴]</td></tr>
+        <tr><td>Revenue</td><td>~$135K/week</td><td>[fill]</td><td>[🟢🟡🔴]</td></tr>
+        <tr><td>No-shows recovered</td><td>30%+ of no-shows</td><td>[fill]</td><td>[🟢🟡🔴]</td></tr>
+        <tr><td>Close rate by Closer A</td><td>30%+</td><td>[fill]</td><td>[🟢🟡🔴]</td></tr>
+        <tr><td>Close rate by Closer B</td><td>30%+</td><td>[fill]</td><td>[🟢🟡🔴]</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:12px;"><strong>Key diagnostic:</strong> If overall close rate is 30% but one closer is at 40% and another at 15%, the problem is the underperforming closer, not the funnel. Fix the person, not the system.</p>
   </div>
 
-  <hr class="page-divider">
-
-  <!-- ============================================ -->
-  <!-- SECTION 2: UNIT ECONOMICS -->
-  <!-- ============================================ -->
-  <div class="section" id="section-2">
-    <div class="section-header">
-      <span class="section-number">02</span>
-      <h2 class="section-title">Unit Economics - The Data Behind the Ask</h2>
-    </div>
-
-    <p style="margin-bottom: 16px; font-size: 13.5px;">Source: CS_Unit_Economics_Negotiation.xlsx - Fee Negotiation sheet. Assumes $20K average revenue per member, $150K monthly ad spend baseline. <strong>Note: total US sales are a blend of organic (~$150–200K/month, ~$175K midpoint) and paid (~$300–350K/month, ~$325K midpoint). The 25% fee applies to BOTH channels.</strong></p>
-
-    <!-- Per Member Margin Table -->
-    <div class="card">
-      <div class="card-title"><span class="dot dot-red"></span> Net Margin Per Member - ROAS vs Fee %</div>
-      <table>
-        <thead>
-          <tr>
-            <th>ROAS</th>
-            <th>Fee % to Alchemy</th>
-            <th>Net Margin / Member</th>
-            <th>Margin %</th>
-            <th>Verdict</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="bg-bad">
-            <td><strong>1.84x</strong> (current)</td>
-            <td>25%</td>
-            <td class="val-bad">-$1,952</td>
-            <td class="val-bad">-10%</td>
-            <td><span class="tag tag-red">BLEEDING</span></td>
-          </tr>
-          <tr class="bg-bad">
-            <td><strong>2.0x</strong></td>
-            <td>25%</td>
-            <td class="val-bad">-$1,300</td>
-            <td class="val-bad">-7%</td>
-            <td><span class="tag tag-red">LOSING</span></td>
-          </tr>
-          <tr class="bg-warn">
-            <td><strong>2.5x</strong></td>
-            <td>25%</td>
-            <td class="val-warn">+$200</td>
-            <td class="val-warn">+1%</td>
-            <td><span class="tag tag-amber">BARELY VIABLE</span></td>
-          </tr>
-          <tr class="bg-good">
-            <td><strong>3.0x</strong></td>
-            <td>25%</td>
-            <td class="val-good">+$1,200</td>
-            <td class="val-good">+6%</td>
-            <td><span class="tag tag-green">VIABLE</span></td>
-          </tr>
-          <tr style="border-top: 2px solid var(--orange);" class="bg-bad">
-            <td><strong>1.84x</strong> (current)</td>
-            <td>15%</td>
-            <td class="val-bad">-$1,679</td>
-            <td class="val-bad">-8%</td>
-            <td><span class="tag tag-red">STILL LOSING</span></td>
-          </tr>
-          <tr class="bg-warn">
-            <td><strong>2.5x</strong></td>
-            <td>15%</td>
-            <td class="val-warn">+$760</td>
-            <td class="val-warn">+4%</td>
-            <td><span class="tag tag-amber">GETTING THERE</span></td>
-          </tr>
-          <tr class="bg-good highlight-row">
-            <td><strong>3.0x</strong></td>
-            <td>15%</td>
-            <td class="val-good">+$1,893</td>
-            <td class="val-good">+9%</td>
-            <td><span class="tag tag-green">HEALTHY</span></td>
-          </tr>
-          <tr style="border-top: 2px solid var(--green);" class="bg-warn">
-            <td><strong>Organic member</strong> <span class="tag tag-green">NO AD SPEND</span></td>
-            <td>25%</td>
-            <td class="val-warn">+$11,565</td>
-            <td class="val-good">+57.8%</td>
-            <td><span class="tag tag-amber">PROFITABLE</span> <span style="font-size:11px; color:var(--text-muted)">but still pays 25% fee</span></td>
-          </tr>
-          <tr class="bg-good highlight-row">
-            <td><strong>Organic member</strong> <span class="tag tag-green">NO AD SPEND</span></td>
-            <td>15%</td>
-            <td class="val-good">+$13,107</td>
-            <td class="val-good">+65.5%</td>
-            <td><span class="tag tag-green">HIGH MARGIN</span></td>
-          </tr>
-        </tbody>
-      </table>
-      <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">Paid member rows: $20K revenue, ad cost allocation at given ROAS, payment fees (2.9%), sales commissions (15% total), refunds (5%). Organic member rows: $20K revenue, $0 ad spend, net profit basis = $15,420/member. At 25% fee, CS keeps $11,565 (57.8%). At 15%, CS keeps $13,107 (65.5%).</p>
-    </div>
-
-    <!-- Blended Revenue Model -->
-    <div class="card" style="border: 1.5px solid var(--orange);">
-      <div class="card-title"><span class="dot dot-amber"></span> Blended Revenue Model: Organic + Paid (~$500K/month AUD total)</div>
-      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">The 25% fee applies to <strong>ALL sales</strong> — organic and paid. At ~$500K/month blended revenue, organic (~$175K) has zero ad spend but still attracts the full performance fee. This materially changes the cost picture. Organic range: $150–200K/month (midpoint $175K used below).</p>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Channel</th>
-            <th>Revenue</th>
-            <th>Ad Spend</th>
-            <th>ROAS</th>
-            <th>Net Profit Basis</th>
-            <th>Fee @ 25%</th>
-            <th>Fee @ 15%</th>
-            <th>CS Margin @ 15%</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="bg-good">
-            <td><strong>Organic</strong></td>
-            <td>$175K</td>
-            <td class="val-good"><strong>$0</strong></td>
-            <td><span class="tag tag-green">No paid ads</span></td>
-            <td><strong>~$135K</strong></td>
-            <td class="val-bad">~$33K</td>
-            <td class="val-good">~$20K</td>
-            <td class="val-good">~$115K</td>
-          </tr>
-          <tr class="bg-warn">
-            <td><strong>Paid</strong></td>
-            <td>$325K</td>
-            <td class="val-warn">~$155K</td>
-            <td>~2.1x ROAS</td>
-            <td><strong>~$96K</strong></td>
-            <td class="val-bad">~$24K</td>
-            <td class="val-warn">~$14K</td>
-            <td class="val-warn">~$82K</td>
-          </tr>
-          <tr style="border-top: 2px solid var(--dark); background: #F0F0F4; font-weight: 700;">
-            <td><strong>Combined Total</strong></td>
-            <td><strong>$500K</strong></td>
-            <td><strong>~$155K</strong></td>
-            <td>-</td>
-            <td><strong>~$231K</strong></td>
-            <td class="val-bad"><strong>~$58K</strong></td>
-            <td class="val-good"><strong>~$35K</strong></td>
-            <td class="val-good"><strong>~$196K</strong></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="callout callout-red" style="margin-top: 16px;">
-        <strong>At 25%, the organic channel costs CS ~$33K/month in fees with zero ROAS benefit. At 15%, this drops to ~$20K — a $13K/month saving on organic alone.</strong> Total saving across the blended model: ~$23K/month (~$276K/year) moving from 25% to 15%.
-      </div>
-
-      <div class="two-col" style="margin-top: 16px;">
-        <div class="stat-box" style="background: #FEF2F2; border-color: #FECACA;">
-          <div class="stat-label" style="margin-bottom: 4px;">Total Alchemy fee @ 25% (blended $500K)</div>
-          <div class="stat-value" style="font-size: 24px; color: var(--red);">~$58K</div>
-          <div class="stat-label">CS margin after fee: <strong>~$173K/month</strong></div>
-        </div>
-        <div class="stat-box" style="background: #F0FDF9; border-color: #A7F3D0;">
-          <div class="stat-label" style="margin-bottom: 4px;">Total Alchemy fee @ 15% (blended $500K)</div>
-          <div class="stat-value" style="font-size: 24px; color: var(--green);">~$35K</div>
-          <div class="stat-label">CS margin after fee: <strong>~$196K/month</strong></div>
-        </div>
-      </div>
-      <p style="font-size: 11px; color: var(--text-muted); margin-top: 10px;">Net profit basis = revenue minus ad spend, payment fees (2.9%), sales commissions (15%), refunds (5%). Organic: $175K revenue, $0 ad spend, net profit basis ~$135K. Paid: $325K revenue, ~$155K ad spend (2.1x ROAS), net profit basis ~$96K. Combined net profit basis: ~$231K. All figures AUD.</p>
-    </div>
-
-    <!-- Monthly Impact Table -->
-    <div class="card">
-      <div class="card-title"><span class="dot dot-green"></span> Monthly Cost Saving: Reducing Fee from 25% to 15% (at $150K ad spend)</div>
-      <div class="two-col">
-        <div class="stat-box" style="background: #F0FDF9; border-color: #A7F3D0;">
-          <div class="stat-label" style="margin-bottom: 4px;">At 2.5x ROAS</div>
-          <div class="stat-value" style="font-size: 24px; color: var(--green);">$10,500</div>
-          <div class="stat-label">per month saving ($126K/year)</div>
-        </div>
-        <div class="stat-box" style="background: #F0FDF9; border-color: #A7F3D0;">
-          <div class="stat-label" style="margin-bottom: 4px;">At 3.0x ROAS</div>
-          <div class="stat-value" style="font-size: 24px; color: var(--green);">$15,600</div>
-          <div class="stat-label">per month saving ($187K/year)</div>
-        </div>
-      </div>
-      <div class="callout callout-green" style="margin-top: 16px;">
-        <strong>Key insight:</strong> Even at 15%, CS is still losing money at 1.84x ROAS on paid. The fee renegotiation is necessary but not sufficient — improving ROAS to 2.5x+ is the real lever. The conversation with Alchemy should cover both. <strong>Additionally, the 25% fee on organic (~$175K/month) costs CS ~$33K/month with zero ROAS justification. Moving to 15% saves ~$13K/month on organic alone regardless of ROAS improvements.</strong>
-      </div>
-    </div>
-
-    <!-- Breakeven Visual -->
-    <div class="card">
-      <div class="card-title"><span class="dot dot-amber"></span> Breakeven Monthly US Sales Required (Blended: ~$175K Organic + Paid)</div>
-      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Blended model: organic (~$175K/month) contributes ~$135K net profit basis at $0 ad spend regardless of ROAS. Figures below show total US revenue (organic + paid) needed to cover CS OPEX ($308K). Organic's consistent positive margin materially lowers the paid revenue needed vs a pure-paid model.</p>
-      <div class="four-col">
-        <div class="stat-box" style="background: #FEF2F2; border-color: #FECACA;">
-          <div class="stat-label" style="margin-bottom: 4px; font-size: 11px;">Current Deal (25%) — blended</div>
-          <div class="stat-value" style="font-size: 20px; color: var(--red);">~$900K</div>
-          <div class="stat-label">Unrealistic. Even with organic, paid can't carry this at 1.84x ROAS.</div>
-        </div>
-        <div class="stat-box" style="background: #FFFBEB; border-color: #FDE68A;">
-          <div class="stat-label" style="margin-bottom: 4px; font-size: 11px;">Option 1: Flat 15% — blended</div>
-          <div class="stat-value" style="font-size: 20px; color: #92400E;">~$580K</div>
-          <div class="stat-label">More achievable vs paid-only. Organic covers ~$115K/month at 15% fee.</div>
-        </div>
-        <div class="stat-box" style="background: #FFFBEB; border-color: #FDE68A;">
-          <div class="stat-label" style="margin-bottom: 4px; font-size: 11px;">Option 2: Tiered — blended</div>
-          <div class="stat-value" style="font-size: 20px; color: #92400E;">~$550K</div>
-          <div class="stat-label">Organic at 10-15% tier. Effective rate lowers overall breakeven.</div>
-        </div>
-        <div class="stat-box" style="background: #F0FDF9; border-color: #A7F3D0;">
-          <div class="stat-label" style="margin-bottom: 4px; font-size: 11px;">Option 4: Hybrid — blended</div>
-          <div class="stat-value" style="font-size: 20px; color: var(--green);">~$520K</div>
-          <div class="stat-label">Most achievable blended. Retainer offset by organic margin. $500K target is within reach.</div>
-        </div>
-      </div>
-      <div class="callout callout-green" style="margin-top: 14px;">
-        <strong>Blended model context:</strong> At $500K blended revenue ($175K organic + $325K paid at ~2.1x ROAS), net profit basis is ~$231K. At 25% fee: CS keeps ~$173K/month. At 15% fee: CS keeps ~$196K/month — ~$23K/month better. The organic channel alone accounts for ~$13K/month of that saving with zero ad spend justification.
-      </div>
-    </div>
+  <h3>Monthly Review</h3>
+  <div class="card">
+    <table class="pipeline-table">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Target</th>
+          <th>This Month</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>New Platinums</td><td>35</td><td>[fill]</td></tr>
+        <tr><td>Total revenue</td><td>$700K</td><td>[fill]</td></tr>
+        <tr><td>Cost per call</td><td>$600-700</td><td>[fill]</td></tr>
+        <tr><td>Cost per Platinum</td><td>~$2,171</td><td>[fill]</td></tr>
+        <tr><td>ROAS</td><td>6.4x+</td><td>[fill]</td></tr>
+        <tr><td>Ad spend</td><td>$70-82K</td><td>[fill]</td></tr>
+        <tr><td>Average deal value</td><td>$14,999+</td><td>[fill]</td></tr>
+        <tr><td>Multi-seat deals</td><td>Track</td><td>[fill]</td></tr>
+        <tr><td>Payment plan deals</td><td>Track</td><td>[fill]</td></tr>
+        <tr><td>Pipeline accuracy (stale leads removed)</td><td>Weekly audit done</td><td>[Y/N]</td></tr>
+      </tbody>
+    </table>
   </div>
 
-  <hr class="page-divider">
-
-  <!-- ============================================ -->
-  <!-- SECTION 3: 4 OPTIONS -->
-  <!-- ============================================ -->
-  <div class="section page-break" id="section-3">
-    <div class="section-header">
-      <span class="section-number">03</span>
-      <h2 class="section-title">4 Negotiation Options Modelled</h2>
-    </div>
-
-    <p style="margin-bottom: 20px; font-size: 13.5px; color: var(--text-muted);">All options below apply to <strong>all US sales — both organic and paid channels</strong> (current contract scope), on <strong>net profit</strong> as defined in the signed contract (revenue minus ad spend, payment fees, sales commissions, refunds). At ~$500K blended revenue, organic (~$175K) contributes ~$135K net profit basis with $0 ad spend. The current 25% fee applies equally to organic and paid — making the renegotiation even more important.</p>
-
-    <!-- OPTION 1 -->
-    <details>
-      <summary>Option 1: Flat 15% of Net Profit &nbsp;<span class="tag tag-amber">SIMPLE</span></summary>
-      <div class="detail-body">
-        <div class="option-header">
-          <div class="option-title">15% of net profit on all US VSL sales. Clean and predictable.</div>
-        </div>
-
-        <table>
-          <thead>
-            <tr><th>Parameter</th><th>Value</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Fee Structure</td><td><strong>15% flat</strong> of net profit on all US VSL sales</td></tr>
-            <tr><td>Scope</td><td>US-based VSL sales (same as current contract)</td></tr>
-            <tr><td>Retainer</td><td>None</td></tr>
-            <tr><td>Equity</td><td>None</td></tr>
-            <tr><td>Break-even ROAS for CS</td><td>~2.0x (down from 2.5x at 25%)</td></tr>
-            <tr><td>Break-even US sales/month</td><td>~$400K (down from ~$700K at 25%)</td></tr>
-          </tbody>
-        </table>
-
-        <div class="two-col" style="margin-top: 12px;">
-          <div>
-            <h4 style="font-size: 13px; color: var(--green); margin-bottom: 8px;">Pros</h4>
-            <ul class="checklist" style="font-size: 13px;">
-              <li>Simplest structure - easy to calculate and track</li>
-              <li>Dramatically lowers breakeven requirement</li>
-              <li>No fixed cost risk for CS</li>
-              <li>Performance-correlated - they earn more when CS earns more</li>
-            </ul>
-          </div>
-          <div>
-            <h4 style="font-size: 13px; color: var(--red); margin-bottom: 8px;">Cons</h4>
-            <ul style="font-size: 13px; padding-left: 18px; line-height: 2;">
-              <li>No upside sharing if CS crushes ROAS targets</li>
-              <li>Alchemy may feel this is a straight haircut with no reward potential</li>
-              <li>Doesn't protect CS when ROAS is below 2x</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="callout" style="margin-top: 12px;">
-          <strong>Use this as the floor offer.</strong> If Option 4 or Option 2 meets resistance, falling back to flat 15% is still a significant improvement. Savings: $10,500/mo at 2.5x ROAS, $15,600/mo at 3x ROAS.
-        </div>
-      </div>
-    </details>
-
-    <!-- OPTION 2 - RECOMMENDED ALT -->
-    <details>
-      <summary>Option 2: Tiered by ROAS &nbsp;<span class="recommended-alt">RECOMMENDED (clean)</span></summary>
-      <div class="detail-body">
-        <div class="option-header">
-          <div class="option-title">Fee % tied directly to ROAS performance. Shared risk, shared reward.</div>
-        </div>
-
-        <div class="callout callout-blue" style="margin-top: 0;">
-          <strong>BenBot: Best option for performance alignment.</strong> Alchemy can still earn 25% if they deliver exceptional ROAS. That's the pitch. Lower rate at low ROAS reflects shared risk when CS is losing money. Simple enough to track monthly from ad account data.
-        </div>
-
-        <table>
-          <thead>
-            <tr><th>ROAS Tier</th><th>Fee to Alchemy</th><th>CS Situation</th><th>Rationale</th></tr>
-          </thead>
-          <tbody>
-            <tr class="bg-bad">
-              <td><strong>Below 2x ROAS</strong></td>
-              <td class="val-bad"><strong>10%</strong></td>
-              <td>CS losing money on paid acquisition</td>
-              <td>Shared risk. We're all in the red.</td>
-            </tr>
-            <tr class="bg-warn">
-              <td><strong>2x - 3x ROAS</strong></td>
-              <td class="val-warn"><strong>15%</strong></td>
-              <td>Getting to profitability</td>
-              <td>Fair share as we start making money.</td>
-            </tr>
-            <tr class="bg-good">
-              <td><strong>3x - 5x ROAS</strong></td>
-              <td class="val-good"><strong>20%</strong></td>
-              <td>Healthy margins, strong performance</td>
-              <td>Reward for driving profitable volume.</td>
-            </tr>
-            <tr class="bg-good highlight-row">
-              <td><strong>5x+ ROAS</strong></td>
-              <td class="val-good"><strong>25%</strong></td>
-              <td>Exceptional - CS thriving</td>
-              <td>Full original rate. They earned it.</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="two-col" style="margin-top: 12px;">
-          <div>
-            <h4 style="font-size: 13px; color: var(--green); margin-bottom: 8px;">Pros</h4>
-            <ul class="checklist" style="font-size: 13px;">
-              <li>Aligns incentives perfectly - Alchemy motivated to improve ROAS</li>
-              <li>CS protected when margins are thin (below 2x)</li>
-              <li>Alchemy can earn 25% again if they deliver</li>
-              <li>No fixed cost. No retainer.</li>
-              <li>Easy pitch: "same deal, you just need to earn it"</li>
-            </ul>
-          </div>
-          <div>
-            <h4 style="font-size: 13px; color: var(--red); margin-bottom: 8px;">Cons</h4>
-            <ul style="font-size: 13px; padding-left: 18px; line-height: 2;">
-              <li>Slightly complex - need monthly ROAS calc and agreement on attribution</li>
-              <li>ROAS can fluctuate month to month</li>
-              <li>Alchemy may push back on the 10% tier as too low</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </details>
-
-    <!-- OPTION 3 -->
-    <details>
-      <summary>Option 3: Retainer + Lower % (Cost Certainty) &nbsp;<span class="tag tag-amber">PREDICTABLE</span></summary>
-      <div class="detail-body">
-        <div class="option-header">
-          <div class="option-title">Fixed monthly base + lower performance fee. Alchemy gets income certainty, CS gets a lower variable rate.</div>
-        </div>
-
-        <table>
-          <thead>
-            <tr><th>Component</th><th>Value</th><th>Notes</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Monthly Retainer</td><td><strong>$10,000 - $12,000 USD/month</strong></td><td>Their stated market rate for Sanjay + Kishan combined</td></tr>
-            <tr><td>Performance Fee</td><td><strong>10% of net profit</strong></td><td>Down from 25% - reflects retainer offsetting base</td></tr>
-            <tr><td>Equity</td><td>None in this option</td><td>-</td></tr>
-            <tr><td>Scope</td><td>US VSL sales (current contract scope)</td><td>-</td></tr>
-          </tbody>
-        </table>
-
-        <div class="two-col" style="margin-top: 12px;">
-          <div>
-            <h4 style="font-size: 13px; color: var(--green); margin-bottom: 8px;">Pros</h4>
-            <ul class="checklist" style="font-size: 13px;">
-              <li>Alchemy gets guaranteed income floor (predictable for them)</li>
-              <li>10% net profit fee is significantly lower than 25%</li>
-              <li>CS gets cost predictability - can model the total spend</li>
-              <li>Shows CS commitment by paying a retainer</li>
-            </ul>
-          </div>
-          <div>
-            <h4 style="font-size: 13px; color: var(--red); margin-bottom: 8px;">Cons</h4>
-            <ul style="font-size: 13px; padding-left: 18px; line-height: 2;">
-              <li>Retainer is a fixed cost even if ROAS tanks to zero</li>
-              <li>$10-12K/month retainer adds directly to OPEX pressure</li>
-              <li>No incentive alignment component (no upside for outperformance)</li>
-              <li>If US sales are low, CS pays retainer for little return</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="callout callout-red" style="margin-top: 12px;">
-          <strong>Caution:</strong> With OPEX already at $308K/month and a survival line of $384K, adding a $10-12K fixed retainer before US sales are proven adds risk. Only use this option if Alchemy is likely to reject a pure % play.
-        </div>
-      </div>
-    </details>
-
-    <!-- OPTION 4 - PRIMARY RECOMMENDED -->
-    <details open>
-      <summary>Option 4: Hybrid Retainer + Tiered + Equity &nbsp;<span class="recommended">PRIMARY RECOMMENDATION</span></summary>
-      <div class="detail-body">
-        <div class="option-header">
-          <div class="option-title">Below-market retainer + tiered performance fee + equity. Best for long-term alignment.</div>
-        </div>
-
-        <div class="callout callout-green" style="margin-top: 0;">
-          <strong>BenBot primary recommendation.</strong> This is the right structure if Ben believes in the Alchemy relationship and the US market long-term. Lower retainer recognises the equity component. Tiered fee protects CS downside. Equity makes them partners - they win big if CS raises and exits.
-        </div>
-
-        <table>
-          <thead>
-            <tr><th>Component</th><th>Value</th><th>Rationale</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Monthly Retainer</td><td><strong>$8,000 USD/month</strong></td><td>Below their stated market rate ($10-12K) - equity makes up the difference</td></tr>
-            <tr class="bg-warn"><td>Performance Fee (up to $500K US rev)</td><td><strong>10% of net profit</strong></td><td>Lower rate while CS is building to scale</td></tr>
-            <tr class="bg-good"><td>Performance Fee (above $500K US rev)</td><td><strong>15% of net profit</strong></td><td>Higher rate as US business becomes material</td></tr>
-            <tr class="highlight-row"><td>Equity</td><td><strong>0.5% - 1.0% options</strong></td><td>Vesting over 2 years. Strike price at current valuation.</td></tr>
-            <tr><td>Scope</td><td>US VSL sales (current contract scope)</td><td>Can expand scope as trust builds</td></tr>
-          </tbody>
-        </table>
-
-        <div style="margin-top: 16px; background: #F0FDF9; border-radius: 8px; padding: 16px; border: 1px solid #A7F3D0;">
-          <h4 style="font-size: 13px; margin-bottom: 10px; color: #065F46;">Why equity changes the conversation</h4>
-          <ul class="checklist" style="font-size: 13px;">
-            <li>If CS raises at $10M valuation, 1% = $100K. At exit $20M, = $200K. At $50M, = $500K.</li>
-            <li>This makes Alchemy genuinely invested in CS's success - not just their monthly cut.</li>
-            <li>Justifies the below-market retainer rate. "You're getting equity, so the retainer is below market on purpose."</li>
-            <li>Creates a 2-year lock-in dynamic. They don't want to walk away from unvested equity.</li>
-          </ul>
-        </div>
-
-        <div class="two-col" style="margin-top: 16px;">
-          <div>
-            <h4 style="font-size: 13px; color: var(--green); margin-bottom: 8px;">Pros</h4>
-            <ul class="checklist" style="font-size: 13px;">
-              <li>Alchemy wins big if CS raises and exits</li>
-              <li>10%/15% tiered fee protects CS downside vs current 25%</li>
-              <li>Below-market retainer justified by equity component</li>
-              <li>Long-term alignment - makes them partners not contractors</li>
-              <li>2-year vesting creates retention/commitment</li>
-            </ul>
-          </div>
-          <div>
-            <h4 style="font-size: 13px; color: var(--red); margin-bottom: 8px;">Cons</h4>
-            <ul style="font-size: 13px; padding-left: 18px; line-height: 2;">
-              <li>Most complex to negotiate (3 components)</li>
-              <li>Equity dilution (small but real)</li>
-              <li>Retainer is still a fixed cost ($8K/month)</li>
-              <li>Need legal to draft equity/options deed</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </details>
+  <h3>Funnel Diagnostic Checklist</h3>
+  <p>When you are behind target, diagnose the weakest point. Fix ONE thing at a time.</p>
+  <div class="card card-orange">
+    <table class="pipeline-table" style="background:#fff;">
+      <thead>
+        <tr>
+          <th>Problem</th>
+          <th>Likely Cause</th>
+          <th>Fix</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Not enough calls booked</td>
+          <td>Ad spend too low OR lead magnet not converting OR setter outbound too slow</td>
+          <td>Increase ad spend / Fix ManyChat flows / Speed up setter outreach</td>
+        </tr>
+        <tr>
+          <td>Low show rate (&lt;60%)</td>
+          <td>Confirmation page missing elements OR no SMS reminders OR too much time between book and call</td>
+          <td>Build 5-function confirmation page / Add SMS sequence / Shorten booking window</td>
+        </tr>
+        <tr>
+          <td>Low close rate (&lt;25%)</td>
+          <td>Poor discovery on calls OR wrong leads getting through OR price not conditioned</td>
+          <td>Review call recordings / Tighten setter qualification / State $14,999 in VSL</td>
+        </tr>
+        <tr>
+          <td>High cost per call (&gt;$800)</td>
+          <td>Ad targeting too broad OR creative fatigue OR no Hammer Them warming</td>
+          <td>Narrow targeting / Refresh creatives weekly / Launch content consumption ads</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
-  <hr class="page-divider">
-
-  <!-- ============================================ -->
-  <!-- SECTION 4: FINANCIAL COMPARISON -->
-  <!-- ============================================ -->
-  <div class="section page-break" id="section-4">
-    <div class="section-header">
-      <span class="section-number">04</span>
-      <h2 class="section-title">Financial Comparison - Side by Side</h2>
-    </div>
-
-    <p style="margin-bottom: 8px; font-size: 13px; color: var(--text-muted);">All figures USD. Based on US VSL net profit after ad spend, payment fees (2.9%), sales commissions (10% close + 5% set). "Current" = 25% of net profit. Options assume 2.0x ROAS baseline (below 2x tier for Options 2 and 4). OPEX = $308K/month.</p>
-
-    <!-- Alchemy Payout Comparison -->
-    <div class="card">
-      <div class="card-title"><span class="dot dot-red"></span> Alchemy Total Payout per Month (2.0x ROAS baseline)</div>
-      <table>
-        <thead>
-          <tr>
-            <th>Monthly US Revenue</th>
-            <th>Current (25%)</th>
-            <th>Opt 1 (15% flat)</th>
-            <th>Opt 2 (tiered 10%)</th>
-            <th>Opt 3 ($11K + 10%)</th>
-            <th style="background: var(--green); color: #fff;">Opt 4 ($8K + 10%)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>$200K</strong></td>
-            <td class="val-bad">~$8,500</td>
-            <td>~$5,100</td>
-            <td>~$3,400</td>
-            <td>~$14,400</td>
-            <td class="val-good">~$11,400</td>
-          </tr>
-          <tr>
-            <td><strong>$400K</strong></td>
-            <td class="val-bad">~$17,000</td>
-            <td>~$10,200</td>
-            <td>~$6,800</td>
-            <td>~$17,800</td>
-            <td class="val-good">~$14,800</td>
-          </tr>
-          <tr>
-            <td><strong>$600K</strong></td>
-            <td class="val-bad">~$25,500</td>
-            <td>~$15,300</td>
-            <td>~$10,200</td>
-            <td>~$21,200</td>
-            <td class="val-good">~$18,200</td>
-          </tr>
-          <tr>
-            <td><strong>$800K</strong></td>
-            <td class="val-bad">~$34,000</td>
-            <td>~$20,400</td>
-            <td>~$13,600</td>
-            <td>~$24,600</td>
-            <td class="val-good">~$21,600</td>
-          </tr>
-        </tbody>
-      </table>
-      <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">Net profit = approx 34% of revenue at 2.0x ROAS after ad cost, payment fees, and sales commissions. Opt 2 uses 10% tier (below 2x ROAS). Opt 3 includes $11K retainer + 10% of net profit. Opt 4 includes $8K retainer + 10% of net profit.</p>
-    </div>
-
-    <!-- Monthly Saving vs Current -->
-    <div class="card">
-      <div class="card-title"><span class="dot dot-green"></span> Monthly Saving for CS vs Current Deal (25%)</div>
-      <table>
-        <thead>
-          <tr>
-            <th>Monthly US Revenue</th>
-            <th>Opt 1 (15%) saves</th>
-            <th>Opt 2 (tiered) saves</th>
-            <th>Opt 3 (ret+10%) saves</th>
-            <th style="background: var(--green); color: #fff;">Opt 4 (hybrid) saves</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>$200K</strong></td>
-            <td class="delta-positive">+$3,400</td>
-            <td class="delta-positive">+$5,100</td>
-            <td class="delta-negative">-$5,900</td>
-            <td class="delta-negative">-$2,900</td>
-          </tr>
-          <tr>
-            <td><strong>$400K</strong></td>
-            <td class="delta-positive">+$6,800</td>
-            <td class="delta-positive">+$10,200</td>
-            <td class="delta-negative">-$800</td>
-            <td class="delta-positive">+$2,200</td>
-          </tr>
-          <tr>
-            <td><strong>$600K</strong></td>
-            <td class="delta-positive">+$10,200</td>
-            <td class="delta-positive">+$15,300</td>
-            <td class="delta-positive">+$4,300</td>
-            <td class="delta-positive">+$7,300</td>
-          </tr>
-          <tr class="highlight-row">
-            <td><strong>$800K</strong></td>
-            <td class="delta-positive">+$13,600</td>
-            <td class="delta-positive">+$20,400</td>
-            <td class="delta-positive">+$9,400</td>
-            <td class="delta-positive">+$12,400</td>
-          </tr>
-        </tbody>
-      </table>
-      <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">Note: Option 3 and Option 4 show negative savings at low revenue levels because the retainer component ($11K and $8K respectively) exceeds the saving from the lower % fee. Options 3 and 4 only outperform Option 1 at higher revenue if retainer is absorbed by volume.</p>
-    </div>
-
-    <!-- Sensitivity at Improving ROAS -->
-    <div class="card">
-      <div class="card-title"><span class="dot dot-amber"></span> If ROAS Improves - What Each Option Costs CS Per Month ($500K US Revenue)</div>
-      <table>
-        <thead>
-          <tr>
-            <th>ROAS</th>
-            <th>Net Profit (est.)</th>
-            <th>Current (25%)</th>
-            <th>Opt 1 (15%)</th>
-            <th>Opt 2 (tiered)</th>
-            <th style="background: var(--green); color: #fff;">Opt 4 (hybrid)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="bg-bad">
-            <td><strong>1.84x</strong></td>
-            <td>~$28K</td>
-            <td class="val-bad">~$7,000</td>
-            <td>~$4,200</td>
-            <td>~$2,800 (10%)</td>
-            <td class="val-good">~$10,800 ($8K+$2,800)</td>
-          </tr>
-          <tr class="bg-warn">
-            <td><strong>2.0x</strong></td>
-            <td>~$45K</td>
-            <td class="val-warn">~$11,250</td>
-            <td>~$6,750</td>
-            <td>~$4,500 (10%)</td>
-            <td class="val-good">~$12,500 ($8K+$4,500)</td>
-          </tr>
-          <tr class="bg-good">
-            <td><strong>2.5x</strong></td>
-            <td>~$85K</td>
-            <td>~$21,250</td>
-            <td>~$12,750</td>
-            <td>~$12,750 (15%)</td>
-            <td class="val-good">~$16,500 ($8K+$8,500)</td>
-          </tr>
-          <tr class="bg-good highlight-row">
-            <td><strong>3.0x</strong></td>
-            <td>~$120K</td>
-            <td>~$30,000</td>
-            <td>~$18,000</td>
-            <td>~$24,000 (20%)</td>
-            <td class="val-good">~$20,000 ($8K+$12K)</td>
-          </tr>
-        </tbody>
-      </table>
-      <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">Option 4 net profit estimate at $500K revenue. At 3.0x ROAS, Option 4 total cost is ~$20K vs current $30K - a $10K/month saving even with the retainer factored in.</p>
-    </div>
+  <div class="card card-dark">
+    <h4 style="margin-top:0;">The Jeremy Haynes Rule</h4>
+    <p>"The fastest way to more revenue is fixing the leakiest bucket. Do not optimise a funnel that is not yet working. Fix the single weakest conversion point before touching anything else."</p>
+    <p style="margin-top:8px;">Run the diagnostic. Find the one weakest point. Fix it. Then move to the next one. Sequential, not simultaneous.</p>
   </div>
+</div>
 
-  <hr class="page-divider">
+<!-- FOOTER -->
+<div class="doc-footer">
+  <p><strong>Collective Shift</strong> — Sales &amp; Negotiation Playbook v2.0</p>
+  <p style="margin-top:4px;">Built on Jeremy Haynes frameworks: Call Funnel Blueprint, Pixel Conditioning, Confirmation Page, Pipeline Triage, VSL Affluent Framework, Competitive Advantages.</p>
+  <p style="margin-top:4px;">&copy; 2026 Collective Shift Pty Ltd. Internal use only.</p>
+</div>
 
-  <!-- ============================================ -->
-  <!-- SECTION 5: TALKING POINTS -->
-  <!-- ============================================ -->
-  <div class="section page-break" id="section-5">
-    <div class="section-header">
-      <span class="section-number">05</span>
-      <h2 class="section-title">Negotiation Talking Points</h2>
-    </div>
-
-    <div class="callout callout-green" style="margin-bottom: 20px;">
-      <strong>Ben's framing:</strong> This is a transparent conversation, not a fight. Show the numbers. Explain the problem. Ask them to help solve it. People who help design the deal are more committed to making it work.
-    </div>
-
-    <div class="card" style="padding: 8px 20px;">
-      <div class="talk-point">
-        <span class="talk-num" style="background: var(--orange);">1</span>
-        <div class="talk-body">
-          <div class="talk-headline">"The current structure means we lose money on every paid member at 1.84x ROAS."</div>
-          <div class="talk-detail">Show the unit economics table. At $20K per member, 1.84x ROAS, 25% fee - CS makes -$1,952 per member. That's not a rounding error. We need 2.5x ROAS just to be at +1% margin. We're not there yet, and this structure makes it impossible to invest in getting there.</div>
-        </div>
-      </div>
-
-      <div class="talk-point">
-        <span class="talk-num" style="background: var(--orange);">2</span>
-        <div class="talk-body">
-          <div class="talk-headline">"The 90-day term is ending. Now is the natural moment to review the deal together."</div>
-          <div class="talk-detail">Not a crisis. Not a threat. The contract was always designed to be reviewed at 90 days. We've got data now that we didn't have in January. Let's use it to set the structure for the next phase.</div>
-        </div>
-      </div>
-
-      <div class="talk-point">
-        <span class="talk-num" style="background: var(--orange);">3</span>
-        <div class="talk-body">
-          <div class="talk-headline">"We want Kishan and Sanjay to be long-term partners, not contractors. Equity does that."</div>
-          <div class="talk-detail">Josh is out. Kishan and Sanjay are stepping up. We want to reward that with real skin in the game. Option 4 offers 0.5-1% equity vesting over 2 years. If CS raises at $10M, that's $50-100K. At an exit, significantly more. That's the trade - below-market retainer in exchange for real upside.</div>
-        </div>
-      </div>
-
-      <div class="talk-point">
-        <span class="talk-num" style="background: var(--orange);">4</span>
-        <div class="talk-body">
-          <div class="talk-headline">"Option 2 means you can still earn 25% - you just have to earn it with performance."</div>
-          <div class="talk-detail">The tiered model isn't a cut. It's a performance structure. Below 2x ROAS, we're both losing money - 10% reflects shared risk. At 5x+ ROAS, you get the full 25%. If they believe they can improve ROAS, this structure rewards them for doing it.</div>
-        </div>
-      </div>
-
-      <div class="talk-point">
-        <span class="talk-num" style="background: var(--dark);">5</span>
-        <div class="talk-body">
-          <div class="talk-headline">"Here's what we're proposing. What would you change?"</div>
-          <div class="talk-detail">After presenting the data and options, open it up. "Here are four structures that work for us at current ROAS. What does a deal look like from your side?" Let them propose. You'll learn what they value most - guaranteed income (retainer), upside (tiered), or ownership (equity).</div>
-        </div>
-      </div>
-
-      <div class="talk-point">
-        <span class="talk-num" style="background: var(--red);">6</span>
-        <div class="talk-body">
-          <div class="talk-headline">"If we can't find something that works, we pause paid and go organic-only."</div>
-          <div class="talk-detail">This is the BATNA - not a threat, just reality. Organic is already delivering quality leads at near-zero cost. If paid acquisition is structurally unprofitable under any deal we can reach, CS will redirect to organic. No agency needed. They need to understand the "no deal" scenario exists and is real.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <hr class="page-divider">
-
-  <!-- ============================================ -->
-  <!-- SECTION 6: CONTRACT TERMS -->
-  <!-- ============================================ -->
-  <div class="section page-break" id="section-6">
-    <div class="section-header">
-      <span class="section-number">06</span>
-      <h2 class="section-title">Key Contract Terms to Negotiate</h2>
-    </div>
-
-    <div class="card">
-      <table>
-        <thead>
-          <tr><th>Term</th><th>Current</th><th>Proposed</th><th>Priority</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Fee %</strong></td>
-            <td class="val-bad">25% of net profit</td>
-            <td class="val-good">Option 1, 2, 3, or 4 (see above)</td>
-            <td><span class="tag tag-red">CRITICAL</span></td>
-          </tr>
-          <tr>
-            <td><strong>Net Profit Definition</strong></td>
-            <td>After ad spend, fees, commissions, refunds</td>
-            <td>Confirm and document exact deductions</td>
-            <td><span class="tag tag-amber">HIGH</span></td>
-          </tr>
-          <tr>
-            <td><strong>ROAS Reporting</strong></td>
-            <td>Not specified in contract</td>
-            <td>Monthly ROAS report - agreed methodology, shared dashboard</td>
-            <td><span class="tag tag-amber">HIGH</span></td>
-          </tr>
-          <tr>
-            <td><strong>Attribution</strong></td>
-            <td>Undefined</td>
-            <td>Pipedrive CRM as single source of truth for US sales attribution</td>
-            <td><span class="tag tag-amber">HIGH</span></td>
-          </tr>
-          <tr>
-            <td><strong>Termination Notice</strong></td>
-            <td class="val-bad">60 days</td>
-            <td class="val-good">30 days (standard for contractor/agency)</td>
-            <td><span class="tag">MEDIUM</span></td>
-          </tr>
-          <tr>
-            <td><strong>Review Cadence</strong></td>
-            <td>Monthly</td>
-            <td>Quarterly formal review with shared data</td>
-            <td><span class="tag">MEDIUM</span></td>
-          </tr>
-          <tr>
-            <td><strong>Equity (Option 4 only)</strong></td>
-            <td>None in current contract</td>
-            <td>0.5-1% options, 2-year vest, current valuation strike, milestone gates</td>
-            <td><span class="tag tag-blue">IF OPT 4</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="dot dot-green"></span> Equity Vesting Structure (Option 4 Only)</div>
-      <table>
-        <thead>
-          <tr><th>Milestone</th><th>Vesting Amount</th><th>Condition</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>12 months (cliff)</td><td>0.25 - 0.5%</td><td>Still engaged, ROAS above 2x for 3+ of 12 months</td></tr>
-          <tr><td>18 months</td><td>0.125 - 0.25%</td><td>Revenue targets on track</td></tr>
-          <tr><td>24 months (full vest)</td><td>0.125 - 0.25%</td><td>Full scope delivery, relationship in good standing</td></tr>
-        </tbody>
-      </table>
-      <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">12-month cliff, monthly vesting after. Forfeiture on voluntary departure before full vest or termination for cause. Strike price at current company valuation (to be agreed). Legal deed required - add to legal bot task list.</p>
-    </div>
-  </div>
-
-  <hr class="page-divider">
-
-  <!-- ============================================ -->
-  <!-- SECTION 7: BATNA -->
-  <!-- ============================================ -->
-  <div class="section page-break" id="section-7">
-    <div class="section-header">
-      <span class="section-number">07</span>
-      <h2 class="section-title">BATNA - Best Alternative if They Decline</h2>
-    </div>
-
-    <div class="callout callout-red" style="margin-bottom: 20px;">
-      <strong>This is not a bluff.</strong> CS has a viable path without paid acquisition. The business ran before paid ads. It can again - and the organic channel is already performing.
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="dot"></span> Plan B: Pause Paid, Go Organic-First</div>
-      <ul class="checklist" style="font-size: 13.5px;">
-        <li><strong>Pause all paid acquisition.</strong> Stop the bleed. At 1.84x ROAS and 25% fee, every dollar spent on ads loses money.</li>
-        <li><strong>Go organic-first.</strong> Ben's YouTube and content is generating quality leads at near-zero cost. No agency needed for this channel.</li>
-        <li><strong>Hire a media buyer direct when ready.</strong> $5-8K/month salary vs 25% of net profit. When ROAS data improves, restart paid with a direct hire.</li>
-        <li><strong>Protect renewals.</strong> 65% margin, largest contribution to overhead. The business survives on renewals in the short term while organic builds.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="dot dot-amber"></span> Cost Comparison: Agency vs Direct Media Buyer</div>
-      <table>
-        <thead>
-          <tr><th>Metric</th><th>Alchemy at 25%</th><th>Direct Media Buyer</th><th>CS Saving</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Monthly cost at $400K US rev</td>
-            <td class="val-bad">~$17,000</td>
-            <td class="val-good">$5,000 - $8,000</td>
-            <td class="delta-positive">$9K - $12K/month</td>
-          </tr>
-          <tr>
-            <td>Monthly cost at $600K US rev</td>
-            <td class="val-bad">~$25,500</td>
-            <td class="val-good">$5,000 - $8,000</td>
-            <td class="delta-positive">$17.5K - $20.5K/month</td>
-          </tr>
-          <tr>
-            <td>Strategic value</td>
-            <td>Full team (sales + marketing strategy)</td>
-            <td>Media buying only</td>
-            <td>Alchemy brings more than ads</td>
-          </tr>
-          <tr>
-            <td>Risk</td>
-            <td>Variable, scales fast</td>
-            <td>Fixed, predictable</td>
-            <td>-</td>
-          </tr>
-        </tbody>
-      </table>
-      <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">A direct media buyer doesn't bring Kishan and Sanjay's full strategic value. But the economics at 25% don't work. The restructured deal makes Alchemy look like good value - which is the point.</p>
-    </div>
-
-    <!-- Final Summary -->
-    <div style="margin-top: 32px; background: var(--dark); border-radius: var(--radius); padding: 28px 32px; color: #fff;">
-      <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; color: var(--orange); margin-bottom: 16px;">Bottom Line</h3>
-      <div style="font-size: 14px; line-height: 1.8;">
-        <p style="margin-bottom: 12px;">The current 25% deal loses money at 1.84x ROAS. CS needs to reach ~$700K/month in US sales just to break even - that's not happening today. The fee structure needs to change before the 90-day term rolls to month-to-month on April 30.</p>
-        <p style="margin-bottom: 12px;"><strong style="color: var(--green);">Walk in with Option 4.</strong> Hybrid retainer ($8K) + tiered performance fee (10%/15%) + equity (0.5-1%). This is the long-term play. If they push back on equity, move to <strong style="color: #9B8FFF;">Option 2 (Tiered by ROAS)</strong> - same upside potential for them, clean and performance-aligned. Floor offer is Option 1 (flat 15%).</p>
-        <p style="margin-bottom: 0;">If no deal is possible, CS pauses paid and goes organic-only. The business survives. Alchemy earns zero. A deal that works for both parties is better than no deal.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <div style="margin-top: 60px; padding-top: 20px; border-top: 2px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; font-size: 11px; color: var(--text-muted); font-family: 'Source Code Pro', monospace;">
-    <div>
-      <div>COLLECTIVE SHIFT - CONFIDENTIAL</div>
-      <div>Alchemy Fee Renegotiation | April 2026 | v5 — Blended Organic+Paid Model</div>
-    </div>
-    <div style="text-align: right;">
-      <div>Prepared for: Ben Simpson, CEO</div>
-      <div>Counterparties: Sanjay &middot; Kishan (Alchemy Scaling)</div>
-    </div>
-  </div>
-
-</div><!-- /.document -->
-
+</div><!-- end .document -->
 </body>
 </html>

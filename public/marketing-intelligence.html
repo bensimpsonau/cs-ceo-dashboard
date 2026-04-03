@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Marketing Intelligence Hub — Collective Shift</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Marketing Intelligence Dashboard — Collective Shift</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
   --navy: #0a0e27;
@@ -12,7 +12,6 @@
   --navy-card: #161b3d;
   --navy-border: #1e2550;
   --orange: #f97316;
-  --orange-light: #fb923c;
   --orange-dim: rgba(249,115,22,0.12);
   --green: #22c55e;
   --green-dim: rgba(34,197,94,0.12);
@@ -36,131 +35,139 @@ body {
   line-height:1.6;
   min-height:100vh;
 }
-.container { max-width:1280px; margin:0 auto; padding:0 24px; }
+.container { max-width:1400px; margin:0 auto; padding:0 20px; }
+
+/* Header */
 header {
-  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);
-  border-bottom:1px solid var(--navy-border);
-  padding:32px 0;
+  background:linear-gradient(135deg,var(--navy) 0%,#0d1130 50%,var(--navy-light) 100%);
+  border-bottom:2px solid var(--orange);
+  padding:24px 0;
 }
-header h1 { font-size:28px; font-weight:800; color:var(--text-bright); }
+.header-top {
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;
+}
+header h1 { font-size:24px; font-weight:800; color:var(--text-bright); }
 header h1 span { color:var(--orange); }
-header .subtitle { color:var(--text-dim); font-size:14px; margin-top:4px; }
-.section { padding:40px 0; }
-.section-title {
-  font-size:20px; font-weight:700; color:var(--text-bright);
-  margin-bottom:24px; display:flex; align-items:center; gap:10px;
+.header-right {
+  display:flex; align-items:center; gap:12px;
 }
-.section-title .badge {
-  font-size:11px; font-weight:600; padding:3px 10px; border-radius:20px;
+.refresh-time {
+  font-family:'Source Code Pro',monospace; font-size:11px;
+  color:var(--text-dim); background:rgba(255,255,255,0.05);
+  padding:4px 10px; border-radius:6px; border:1px solid var(--navy-border);
+}
+.status-dot {
+  width:8px; height:8px; border-radius:50%; background:var(--green);
+  display:inline-block; animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+
+/* Section */
+.section { padding:28px 0; }
+.section-header {
+  display:flex; align-items:center; gap:10px; margin-bottom:16px;
+}
+.section-title { font-size:16px; font-weight:700; color:var(--text-bright); }
+.badge {
+  font-size:10px; font-weight:600; padding:2px 8px; border-radius:12px;
   text-transform:uppercase; letter-spacing:0.5px;
 }
-.badge-green { background:var(--green-dim); color:var(--green); }
 .badge-orange { background:var(--orange-dim); color:var(--orange); }
-.badge-blue { background:var(--blue-dim); color:var(--blue); }
+.badge-green { background:var(--green-dim); color:var(--green); }
 .badge-red { background:var(--red-dim); color:var(--red); }
-.badge-purple { background:var(--purple-dim); color:var(--purple); }
+.badge-blue { background:var(--blue-dim); color:var(--blue); }
 
-/* Stat Cards */
-.stat-grid { display:grid; gap:16px; margin-bottom:24px; }
-.stat-grid-3 { grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
-.stat-grid-4 { grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); }
-.stat-grid-2 { grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); }
-.stat-card {
+/* Metric cards */
+.metric-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; }
+.metric-card {
   background:var(--navy-card); border:1px solid var(--navy-border);
-  border-radius:12px; padding:20px; transition:border-color .2s;
+  border-radius:10px; padding:16px 18px;
 }
-.stat-card:hover { border-color:var(--orange); }
-.stat-card .label { font-size:12px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.5px; font-weight:600; }
-.stat-card .value { font-size:28px; font-weight:800; color:var(--text-bright); margin-top:4px; }
-.stat-card .note { font-size:12px; color:var(--text-dim); margin-top:6px; }
-.stat-card .value.green { color:var(--green); }
-.stat-card .value.orange { color:var(--orange); }
-.stat-card .value.red { color:var(--red); }
-.stat-card .value.blue { color:var(--blue); }
+.metric-card .label {
+  font-size:11px; font-weight:600; color:var(--text-dim);
+  text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;
+}
+.metric-card .value {
+  font-size:28px; font-weight:800; color:var(--text-bright); line-height:1.1;
+}
+.metric-card .target {
+  font-size:12px; color:var(--text-dim); margin-top:6px; display:flex; align-items:center; gap:6px;
+}
+.metric-card .delta {
+  font-size:12px; font-weight:600; padding:1px 6px; border-radius:4px;
+}
+.delta-up { background:var(--green-dim); color:var(--green); }
+.delta-down { background:var(--red-dim); color:var(--red); }
+.delta-flat { background:rgba(255,255,255,0.05); color:var(--text-dim); }
 
-/* Funnel Cards */
-.funnel-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
-.funnel-card {
+/* Highlight cards */
+.highlight-card {
   background:var(--navy-card); border:1px solid var(--navy-border);
-  border-radius:12px; padding:24px; position:relative; overflow:hidden;
+  border-radius:10px; padding:20px; border-top:3px solid var(--orange);
 }
-.funnel-card::before {
-  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+
+/* Progress bars */
+.progress-bar-bg {
+  width:100%; height:8px; background:rgba(255,255,255,0.06);
+  border-radius:4px; overflow:hidden; margin-top:8px;
 }
-.funnel-card.primary::before { background:var(--green); }
-.funnel-card.active::before { background:var(--orange); }
-.funnel-card.planned::before { background:var(--blue); }
-.funnel-card h3 { font-size:16px; font-weight:700; color:var(--text-bright); margin-bottom:8px; }
-.funnel-card .tag { display:inline-block; font-size:11px; font-weight:600; padding:2px 8px; border-radius:4px; margin-bottom:12px; }
-.funnel-card p { font-size:13px; color:var(--text-dim); }
-.funnel-card .metric { font-size:22px; font-weight:800; margin:8px 0 4px; }
+.progress-bar-fill {
+  height:100%; border-radius:4px; transition:width 0.5s ease;
+}
 
 /* Tables */
-.table-wrap { overflow-x:auto; margin-top:16px; }
+.table-wrap { overflow-x:auto; }
 table {
   width:100%; border-collapse:collapse; font-size:13px;
-  background:var(--navy-card); border-radius:12px; overflow:hidden;
 }
 thead { background:var(--navy-light); }
 th {
-  text-align:left; padding:12px 16px; font-weight:600; color:var(--text-dim);
-  text-transform:uppercase; font-size:11px; letter-spacing:0.5px;
+  text-align:left; padding:10px 14px; font-weight:600; color:var(--text-dim);
+  text-transform:uppercase; font-size:10px; letter-spacing:0.5px;
   border-bottom:1px solid var(--navy-border);
 }
 td {
-  padding:12px 16px; border-bottom:1px solid var(--navy-border);
-  color:var(--text);
+  padding:10px 14px; border-bottom:1px solid var(--navy-border);
+  color:var(--text); vertical-align:top;
 }
 tr:last-child td { border-bottom:none; }
-tr:hover td { background:rgba(249,115,22,0.04); }
-.text-right { text-align:right; }
-.text-green { color:var(--green); }
-.text-red { color:var(--red); }
-.text-orange { color:var(--orange); }
-.text-dim { color:var(--text-dim); }
 
-/* ICP Two Column */
-.icp-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); gap:20px; }
-.icp-card {
-  background:var(--navy-card); border:1px solid var(--navy-border);
-  border-radius:12px; padding:24px;
-}
-.icp-card h3 { font-size:16px; font-weight:700; color:var(--orange); margin-bottom:16px; }
-.icp-card ul { list-style:none; }
-.icp-card li { padding:6px 0; font-size:13px; color:var(--text); display:flex; gap:8px; }
-.icp-card li::before { content:'→'; color:var(--orange); font-weight:700; flex-shrink:0; }
-
-/* Note boxes */
-.note-box {
-  background:var(--navy-card); border-left:3px solid var(--orange);
-  border-radius:0 8px 8px 0; padding:16px 20px; margin:16px 0;
-  font-size:13px; color:var(--text-dim);
-}
-.note-box.green { border-left-color:var(--green); }
-.note-box.red { border-left-color:var(--red); }
-
-/* Recommendation cards */
-.rec-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); gap:16px; }
-.rec-card {
-  background:var(--navy-card); border:1px solid var(--navy-border);
-  border-radius:12px; padding:20px;
-}
-.rec-card .rec-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
-.rec-card h4 { font-size:14px; font-weight:700; color:var(--text-bright); }
-.rec-card p { font-size:13px; color:var(--text-dim); }
-.priority-tag { font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; text-transform:uppercase; }
-.priority-high { background:var(--red-dim); color:var(--red); }
-.priority-medium { background:var(--yellow-dim); color:var(--yellow); }
-.priority-low { background:var(--green-dim); color:var(--green); }
+/* Grid helpers */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+.grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
 
 .divider { border:none; border-top:1px solid var(--navy-border); margin:0; }
+.text-orange { color:var(--orange); }
+.text-green { color:var(--green); }
+.text-red { color:var(--red); }
+.text-blue { color:var(--blue); }
+.text-dim { color:var(--text-dim); }
+.text-bright { color:var(--text-bright); }
+.mono { font-family:'Source Code Pro',monospace; }
 
-/* Responsive */
-@media (max-width:768px) {
-  header h1 { font-size:22px; }
-  .stat-card .value { font-size:22px; }
-  .section { padding:28px 0; }
-  .icp-grid { grid-template-columns:1fr; }
+/* Health indicator */
+.health {
+  display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px;
+}
+.health-green { background:var(--green); }
+.health-yellow { background:var(--yellow); }
+.health-red { background:var(--red); }
+
+/* Card within section */
+.card {
+  background:var(--navy-card); border:1px solid var(--navy-border);
+  border-radius:10px; padding:20px;
+}
+
+@media (max-width:900px) {
+  .grid-2 { grid-template-columns:1fr; }
+  .grid-3 { grid-template-columns:1fr; }
+  .grid-4 { grid-template-columns:1fr 1fr; }
+  .metric-grid { grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); }
+}
+@media (max-width:500px) {
+  .grid-4 { grid-template-columns:1fr; }
 }
 </style>
 </head>
@@ -168,33 +175,107 @@ tr:hover td { background:rgba(249,115,22,0.04); }
 
 <header>
   <div class="container">
-    <h1>Marketing Intelligence Hub — <span>Collective Shift</span></h1>
-    <div class="subtitle">Updated April 2026 · Data: Pipedrive CRM, Facebook Ads, Call Transcripts, Funnel Analysis</div>
+    <div class="header-top">
+      <div>
+        <h1>Marketing <span>Intelligence</span></h1>
+        <div style="font-size:13px;color:var(--text-dim);margin-top:2px;">Collective Shift | Revenue target: $700K/month | 35 Platinums/month</div>
+      </div>
+      <div class="header-right">
+        <span class="status-dot"></span>
+        <span class="refresh-time" id="refreshTime">Last updated: --</span>
+      </div>
+    </div>
   </div>
 </header>
 
-<!-- SECTION 1: FUNNEL OVERVIEW -->
+<!-- ════════════════════════════════════════════════════ -->
+<!-- SECTION 1: CALL FUNNEL (FRONT AND CENTRE)           -->
+<!-- ════════════════════════════════════════════════════ -->
 <div class="section">
   <div class="container">
-    <div class="section-title">Funnel Overview</div>
-    <div class="funnel-grid">
-      <div class="funnel-card primary">
-        <div class="tag" style="background:var(--green-dim);color:var(--green);">PRIMARY</div>
-        <h3>Organic Content + Instagram DM</h3>
-        <div class="metric" style="color:var(--green);">$150k/mo</div>
-        <p>YouTube &amp; Instagram content → DM engagement → qualifier → call booking. Zero ad spend. Ben's personal brand is the moat. Single biggest revenue driver — protect and scale above all.</p>
+    <div class="section-header">
+      <div class="section-title">Call Funnel Performance</div>
+      <span class="badge badge-orange">Primary Revenue Engine</span>
+    </div>
+
+    <div class="metric-grid" style="margin-bottom:16px;">
+      <div class="metric-card" style="border-top:3px solid var(--orange);">
+        <div class="label">Calls Booked (Month)</div>
+        <div class="value" id="callsBooked">--</div>
+        <div class="target">Target: 117/mo (4/day) <span class="delta delta-flat" id="callsDelta">--</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="callsBar" style="width:0%;background:var(--orange);"></div></div>
       </div>
-      <div class="funnel-card active">
-        <div class="tag" style="background:var(--orange-dim);color:var(--orange);">ACTIVE — NEW</div>
-        <h3>VSL Call Funnel</h3>
-        <div class="metric" style="color:var(--orange);">Building</div>
-        <p>YouTube organic → VSL video (collectiveshift.net/trainingvslv5) → call booking → Platinum/Pro sale. Currently being built and validated.</p>
+
+      <div class="metric-card" style="border-top:3px solid var(--blue);">
+        <div class="label">Show Rate</div>
+        <div class="value" id="showRate">--%</div>
+        <div class="target">Target: 60-78% (Jeremy benchmark)</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="showBar" style="width:0%;background:var(--blue);"></div></div>
       </div>
-      <div class="funnel-card planned">
-        <div class="tag" style="background:var(--blue-dim);color:var(--blue);">PLANNED</div>
-        <h3>Lead Magnet Campaign</h3>
-        <div class="metric" style="color:var(--blue);">Next Priority</div>
-        <p>Lead magnet download → email nurture → call booking. Not yet running — needs design and build. This is the next priority after VSL validation.</p>
+
+      <div class="metric-card" style="border-top:3px solid var(--green);">
+        <div class="label">Close Rate</div>
+        <div class="value" id="closeRate">--%</div>
+        <div class="target">Target: 30%</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="closeBar" style="width:0%;background:var(--green);"></div></div>
+      </div>
+
+      <div class="metric-card" style="border-top:3px solid var(--green);">
+        <div class="label">Platinums Won (Month)</div>
+        <div class="value" id="platinumsWon" style="color:var(--green);">--</div>
+        <div class="target">Target: 35/mo</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="platBar" style="width:0%;background:var(--green);"></div></div>
+      </div>
+
+      <div class="metric-card">
+        <div class="label">Cost Per Call</div>
+        <div class="value" id="costPerCall">$--</div>
+        <div class="target">Target: $600-700</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="label">Cost Per Platinum</div>
+        <div class="value" id="costPerPlat">$--</div>
+        <div class="target">At 30% close: ~$2,171</div>
+      </div>
+    </div>
+
+    <!-- Weekly Tracker -->
+    <div class="highlight-card">
+      <div style="font-size:14px;font-weight:700;color:var(--text-bright);margin-bottom:12px;">Weekly Targets vs Actuals</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th>
+              <th>Week Total</th><th>Target</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Calls Booked</strong></td>
+              <td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>
+              <td><strong id="weekCalls">--</strong></td>
+              <td class="text-dim">20/wk (4/day)</td>
+              <td id="weekCallsStatus">--</td>
+            </tr>
+            <tr>
+              <td><strong>Calls Shown</strong></td>
+              <td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>
+              <td><strong id="weekShows">--</strong></td>
+              <td class="text-dim">13-16/wk</td>
+              <td id="weekShowsStatus">--</td>
+            </tr>
+            <tr>
+              <td><strong>Platinums Closed</strong></td>
+              <td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>
+              <td><strong id="weekCloses" style="color:var(--green);">--</strong></td>
+              <td class="text-dim">8-9/wk</td>
+              <td id="weekClosesStatus">--</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -202,99 +283,57 @@ tr:hover td { background:rgba(249,115,22,0.04); }
 
 <hr class="divider">
 
-<!-- SECTION 2: PAID EVENT PERFORMANCE -->
+<!-- ════════════════════════════════════════════════════ -->
+<!-- SECTION 2: CLOSER PERFORMANCE                       -->
+<!-- ════════════════════════════════════════════════════ -->
 <div class="section">
   <div class="container">
-    <div class="section-title">Paid Event Performance <span class="badge badge-green">January 2026 — 2-Day Wealth Blueprint</span></div>
-    
-    <div class="stat-grid stat-grid-4">
-      <div class="stat-card">
-        <div class="label">Ad Spend</div>
-        <div class="value">$148,267</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">Revenue</div>
-        <div class="value green">$270,658</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">ROAS</div>
-        <div class="value green">1.83x</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">Net Profit</div>
-        <div class="value green">$264,386</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">Total Sales</div>
-        <div class="value">613</div>
-        <div class="note">All conversions (event tickets + upsells)</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">Leads Generated</div>
-        <div class="value">3,137</div>
-        <div class="note">2,126 new leads</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">Cost per Lead</div>
-        <div class="value">$47.26</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">Best Audience</div>
-        <div class="value orange" style="font-size:20px;">Cold 1% LAL</div>
-        <div class="note">ROAS 3.0x — Platinum Lookalike AUNZ</div>
-      </div>
+    <div class="section-header">
+      <div class="section-title">Closer Performance</div>
+      <span class="badge badge-blue">Jeremy Skill #29</span>
     </div>
+    <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px;">Track close rate by closer. If aggregate looks fine but one closer is at 15% while another is at 40%, you need to see that. Below 25% after 30 days = not the right fit.</p>
 
-    <div class="note-box green">
-      <strong>LP2 Landing Page:</strong> ROAS 8.37x on $2,399 spend — small sample but extremely promising. Worth scaling. The $7 paid event model massively outperforms free webinars (1.83x vs 0.90x ROAS).
-    </div>
-
-    <h3 style="font-size:14px;font-weight:600;color:var(--text-dim);margin:20px 0 12px;text-transform:uppercase;letter-spacing:0.5px;">Top 5 Campaigns by Revenue</h3>
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>Campaign</th><th class="text-right">Spend</th><th class="text-right">Revenue</th><th class="text-right">ROAS</th><th class="text-right">Sales</th><th class="text-right">Calls</th></tr>
+          <tr>
+            <th>Closer</th>
+            <th>Calls Taken</th>
+            <th>Platinums Closed</th>
+            <th>Close Rate</th>
+            <th>Revenue Generated</th>
+            <th>Avg Deal Size</th>
+            <th>Health</th>
+          </tr>
         </thead>
         <tbody>
           <tr>
-            <td>COLD-1pLAL USCAAUNZ (Campaign 1)</td>
-            <td class="text-right">$21,497</td>
-            <td class="text-right text-green">$64,494</td>
-            <td class="text-right text-green">3.00x</td>
-            <td class="text-right">76</td>
-            <td class="text-right">10</td>
+            <td><strong>Closer A</strong></td>
+            <td id="closerACalls">--</td>
+            <td id="closerACloses">--</td>
+            <td id="closerARate">--%</td>
+            <td id="closerARev">$--</td>
+            <td id="closerAAvg">$--</td>
+            <td id="closerAHealth"><span class="health health-green"></span>--</td>
           </tr>
           <tr>
-            <td>COLD-1pLAL USCAAUNZ (Campaign 2)</td>
-            <td class="text-right">$17,242</td>
-            <td class="text-right text-green">$52,064</td>
-            <td class="text-right text-green">3.02x</td>
-            <td class="text-right">95</td>
-            <td class="text-right">13</td>
+            <td><strong>Closer B</strong></td>
+            <td id="closerBCalls">--</td>
+            <td id="closerBCloses">--</td>
+            <td id="closerBRate">--%</td>
+            <td id="closerBRev">$--</td>
+            <td id="closerBAvg">$--</td>
+            <td id="closerBHealth"><span class="health health-green"></span>--</td>
           </tr>
-          <tr>
-            <td>24Hr WARM-90D USCAAUNZ</td>
-            <td class="text-right">$42,606</td>
-            <td class="text-right">$44,557</td>
-            <td class="text-right text-orange">1.05x</td>
-            <td class="text-right">127</td>
-            <td class="text-right">6</td>
-          </tr>
-          <tr>
-            <td>Organic Source</td>
-            <td class="text-right text-dim">$0</td>
-            <td class="text-right text-green">$40,579</td>
-            <td class="text-right text-green">∞</td>
-            <td class="text-right">87</td>
-            <td class="text-right">8</td>
-          </tr>
-          <tr>
-            <td>WARM-90D USCAAUNZ (Campaign 1)</td>
-            <td class="text-right">$22,337</td>
-            <td class="text-right">$27,692</td>
-            <td class="text-right text-orange">1.24x</td>
-            <td class="text-right">44</td>
-            <td class="text-right">3</td>
+          <tr style="background:rgba(249,115,22,0.04);">
+            <td><strong style="color:var(--orange);">TEAM</strong></td>
+            <td id="teamCalls"><strong>--</strong></td>
+            <td id="teamCloses"><strong>--</strong></td>
+            <td id="teamRate"><strong>--%</strong></td>
+            <td id="teamRev"><strong style="color:var(--green);">$--</strong></td>
+            <td id="teamAvg"><strong>$--</strong></td>
+            <td>--</td>
           </tr>
         </tbody>
       </table>
@@ -304,352 +343,445 @@ tr:hover td { background:rgba(249,115,22,0.04); }
 
 <hr class="divider">
 
-<!-- SECTION 3: MASTERCLASS PERFORMANCE -->
+<!-- ════════════════════════════════════════════════════ -->
+<!-- SECTION 3: PAID ADS                                 -->
+<!-- ════════════════════════════════════════════════════ -->
 <div class="section">
   <div class="container">
-    <div class="section-title">Masterclass/Webinar Performance <span class="badge badge-orange">December 2025 — Free Webinar</span></div>
-    
-    <div class="stat-grid stat-grid-4">
-      <div class="stat-card">
-        <div class="label">Ad Spend</div>
-        <div class="value">$187,403</div>
+    <div class="section-header">
+      <div class="section-title">Paid Ads Performance</div>
+      <span class="badge badge-orange">Sanjay / Meta</span>
+    </div>
+
+    <div class="metric-grid" style="margin-bottom:16px;">
+      <div class="metric-card">
+        <div class="label">Monthly Ad Spend</div>
+        <div class="value" id="adSpend">$--</div>
+        <div class="target">Target: $70-82K/mo</div>
       </div>
-      <div class="stat-card">
-        <div class="label">Revenue (Attributed)</div>
-        <div class="value red">$167,973</div>
-        <div class="note">Direct attribution only — real revenue higher</div>
+
+      <div class="metric-card">
+        <div class="label">CPL (Cost Per Lead)</div>
+        <div class="value" id="cpl">$--</div>
+        <div class="target">Taki benchmark: $0.27</div>
       </div>
-      <div class="stat-card">
-        <div class="label">ROAS</div>
-        <div class="value red">0.90x</div>
-        <div class="note">Lagged attribution understates this</div>
+
+      <div class="metric-card">
+        <div class="label">Blended ROAS</div>
+        <div class="value text-orange" id="roas">--x</div>
+        <div class="target">Current: 1.84x | Breakeven: 1.81x</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="roasBar" style="width:0%;background:var(--orange);"></div></div>
       </div>
-      <div class="stat-card">
-        <div class="label">Leads Generated</div>
-        <div class="value">2,971</div>
-        <div class="note">2,287 new leads</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">Cost per Lead</div>
-        <div class="value">$63.08</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">Calls Generated</div>
-        <div class="value">43</div>
-        <div class="note">$4,358 per call</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">Total Sales</div>
-        <div class="value">34</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">Best Cold Audience</div>
-        <div class="value orange" style="font-size:20px;">1% LAL AUNZ</div>
-        <div class="note">ROAS 3.92x — $7,144 spend → $27,998 revenue</div>
+
+      <div class="metric-card">
+        <div class="label">Target ROAS</div>
+        <div class="value text-green">6.4x</div>
+        <div class="target">At 35 Platinums / $82K spend</div>
       </div>
     </div>
 
-    <div class="note-box">
-      <strong>Attribution Gap:</strong> Webinar ROAS (0.90x) understates true revenue — Platinum sales from webinar leads close weeks later. Reported attribution shows $233K vs $168K actual. Best cold audience (1% Platinum LAL AUNZ) at 3.92x ROAS suggests strong list quality. The masterclass is a lead gen play — revenue comes from downstream Platinum conversions.
+    <!-- Two-Track Breakdown -->
+    <div class="grid-2" style="margin-bottom:16px;">
+      <div class="card" style="border-left:3px solid var(--orange);">
+        <div style="font-size:14px;font-weight:700;color:var(--text-bright);margin-bottom:12px;">Track 1: Hammer Them (Content)</div>
+        <div class="metric-grid" style="grid-template-columns:1fr 1fr;">
+          <div>
+            <div style="font-size:11px;color:var(--text-dim);text-transform:uppercase;font-weight:600;">Spend</div>
+            <div style="font-size:20px;font-weight:800;color:var(--text-bright);" id="hammerSpend">$--</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text-dim);text-transform:uppercase;font-weight:600;">Cost/ThruPlay</div>
+            <div style="font-size:20px;font-weight:800;" id="hammerCPV">$--</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text-dim);text-transform:uppercase;font-weight:600;">ThruPlays</div>
+            <div style="font-size:20px;font-weight:800;color:var(--text-bright);" id="hammerViews">--</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text-dim);text-transform:uppercase;font-weight:600;">Warm Audience Built</div>
+            <div style="font-size:20px;font-weight:800;color:var(--blue);" id="warmAudience">--</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:12px;">Target: $0.25-0.50/ThruPlay | 30% of total budget</div>
+      </div>
+
+      <div class="card" style="border-left:3px solid var(--green);">
+        <div style="font-size:14px;font-weight:700;color:var(--text-bright);margin-bottom:12px;">Track 2: Direct Response (Calls)</div>
+        <div class="metric-grid" style="grid-template-columns:1fr 1fr;">
+          <div>
+            <div style="font-size:11px;color:var(--text-dim);text-transform:uppercase;font-weight:600;">Spend</div>
+            <div style="font-size:20px;font-weight:800;color:var(--text-bright);" id="drSpend">$--</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text-dim);text-transform:uppercase;font-weight:600;">Calls Booked</div>
+            <div style="font-size:20px;font-weight:800;" id="drCalls">--</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text-dim);text-transform:uppercase;font-weight:600;">Cost/Call</div>
+            <div style="font-size:20px;font-weight:800;color:var(--text-bright);" id="drCPC">$--</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text-dim);text-transform:uppercase;font-weight:600;">DR ROAS</div>
+            <div style="font-size:20px;font-weight:800;color:var(--green);" id="drROAS">--x</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:12px;">Target: $600-700/call | 70% of total budget</div>
+      </div>
+    </div>
+
+    <!-- Creative Performance -->
+    <div class="card">
+      <div style="font-size:14px;font-weight:700;color:var(--text-bright);margin-bottom:12px;">Creative Performance (Top 5)</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Creative</th>
+              <th>Type</th>
+              <th>Spend</th>
+              <th>CPL / CPC</th>
+              <th>ROAS</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="text-dim" colspan="6">Connect ad data source to populate. Track by creative family (Jeremy Skill #8).</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="font-size:12px;color:var(--text-dim);margin-top:8px;">Kill criteria: CPA > 2x target after $100 spent. Scale: ROAS > target after $200. Test: 3 new creatives/week.</div>
     </div>
   </div>
 </div>
 
 <hr class="divider">
 
-<!-- SECTION 4: Q1 2026 SALES PERFORMANCE -->
+<!-- ════════════════════════════════════════════════════ -->
+<!-- SECTION 4: ORGANIC METRICS                          -->
+<!-- ════════════════════════════════════════════════════ -->
 <div class="section">
   <div class="container">
-    <div class="section-title">Q1 2026 Sales Performance <span class="badge badge-purple">Pipedrive Verified</span></div>
-    
-    <div class="stat-grid stat-grid-4">
-      <div class="stat-card">
-        <div class="label">Total Revenue</div>
-        <div class="value green">$992,942</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">Deals Won</div>
-        <div class="value">94</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">Average Deal Size</div>
-        <div class="value">$10,563</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">Adjusted Win Rate</div>
-        <div class="value orange">31.0%</div>
-        <div class="note">94 won ÷ 303 decided (117 stale reclassified)</div>
-      </div>
+    <div class="section-header">
+      <div class="section-title">Organic Performance</div>
+      <span class="badge badge-green">Content Engine</span>
     </div>
 
-    <div class="stat-grid stat-grid-2">
-      <div class="stat-card">
-        <div class="label">Platinum Membership</div>
-        <div class="value green">$854,943</div>
-        <div class="note">57 deals at $14,999 · 86.1% of revenue</div>
+    <div class="metric-grid" style="margin-bottom:16px;">
+      <div class="metric-card">
+        <div class="label">IG Reach (Week)</div>
+        <div class="value" id="igReach">--</div>
+        <div class="target">Week-over-week trend</div>
       </div>
-      <div class="stat-card">
-        <div class="label">Pro Membership</div>
-        <div class="value blue">$135,000</div>
-        <div class="note">27 deals at $5,000 · 13.6% of revenue · Saved by Pro downgrade</div>
+      <div class="metric-card">
+        <div class="label">IG DM Triggers (Week)</div>
+        <div class="value text-orange" id="igDMs">--</div>
+        <div class="target">ManyChat keyword triggers from organic</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Calls from Organic</div>
+        <div class="value" id="organicCalls">--</div>
+        <div class="target">Setter calls booked via organic content</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">YouTube Views (Week)</div>
+        <div class="value" id="ytViews">--</div>
+        <div class="target">Long-form + Shorts</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">LinkedIn Impressions</div>
+        <div class="value" id="liImpressions">--</div>
+        <div class="target">Ben + Travis combined</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Newsletter Subs</div>
+        <div class="value" id="nlSubs">--</div>
+        <div class="target">Weekly Shift active subscribers</div>
       </div>
     </div>
+  </div>
+</div>
 
-    <h3 style="font-size:14px;font-weight:600;color:var(--text-dim);margin:20px 0 12px;text-transform:uppercase;letter-spacing:0.5px;">Rep Performance (Adjusted)</h3>
+<hr class="divider">
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- SECTION 5: LEAD MAGNET PERFORMANCE                  -->
+<!-- ════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-title">Lead Magnet Performance by Keyword</div>
+      <span class="badge badge-blue">Micromagnet Tracking</span>
+    </div>
+
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>Rep</th><th class="text-right">Won</th><th class="text-right">Revenue</th><th class="text-right">Avg Deal</th><th class="text-right">Close Rate</th><th class="text-right">Platinum</th><th class="text-right">Pro</th><th>CRM Hygiene</th></tr>
+          <tr>
+            <th>Keyword</th>
+            <th>Triggers (Month)</th>
+            <th>Email Captured</th>
+            <th>Capture Rate</th>
+            <th>Setter Calls</th>
+            <th>Conv to Call</th>
+            <th>Platinums</th>
+            <th>Revenue</th>
+            <th>CPL</th>
+          </tr>
         </thead>
         <tbody>
           <tr>
-            <td><strong>Reece Hobson</strong></td>
-            <td class="text-right">54</td>
-            <td class="text-right text-green">$539,970</td>
-            <td class="text-right">$10,000</td>
-            <td class="text-right text-orange">~31.4%</td>
-            <td class="text-right">30</td>
-            <td class="text-right">18</td>
-            <td><span style="color:var(--red);font-weight:600;">⚠ POOR</span> — 154 stale opens</td>
+            <td><strong style="color:var(--orange);">STRATEGY</strong></td>
+            <td id="stratTriggers">--</td>
+            <td id="stratEmails">--</td>
+            <td id="stratCapture">--%</td>
+            <td id="stratCalls">--</td>
+            <td id="stratConv">--%</td>
+            <td id="stratPlats">--</td>
+            <td id="stratRev">$--</td>
+            <td id="stratCPL">$--</td>
           </tr>
           <tr>
-            <td><strong>David Tran</strong></td>
-            <td class="text-right">40</td>
-            <td class="text-right text-green">$452,972</td>
-            <td class="text-right">$11,324</td>
-            <td class="text-right">30.8%</td>
-            <td class="text-right">27</td>
-            <td class="text-right">9</td>
-            <td><span style="color:var(--green);font-weight:600;">✓ GOOD</span> — reliable data</td>
+            <td><strong style="color:var(--green);">SCORECARD</strong></td>
+            <td id="scoreTriggers">--</td>
+            <td id="scoreEmails">--</td>
+            <td id="scoreCapture">--%</td>
+            <td id="scoreCalls">--</td>
+            <td id="scoreConv">--%</td>
+            <td id="scorePlats">--</td>
+            <td id="scoreRev">$--</td>
+            <td id="scoreCPL">$--</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--blue);">CALCULATOR</strong></td>
+            <td id="calcTriggers">--</td>
+            <td id="calcEmails">--</td>
+            <td id="calcCapture">--%</td>
+            <td id="calcCalls">--</td>
+            <td id="calcConv">--%</td>
+            <td id="calcPlats">--</td>
+            <td id="calcRev">$--</td>
+            <td id="calcCPL">$--</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--purple);">BLUEPRINT</strong></td>
+            <td id="blueTriggers">--</td>
+            <td id="blueEmails">--</td>
+            <td id="blueCapture">--%</td>
+            <td id="blueCalls">--</td>
+            <td id="blueConv">--%</td>
+            <td id="bluePlats">--</td>
+            <td id="blueRev">$--</td>
+            <td id="blueCPL">$--</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--red);">TAX</strong></td>
+            <td id="taxTriggers">--</td>
+            <td id="taxEmails">--</td>
+            <td id="taxCapture">--%</td>
+            <td id="taxCalls">--</td>
+            <td id="taxConv">--%</td>
+            <td id="taxPlats">--</td>
+            <td id="taxRev">$--</td>
+            <td id="taxCPL">$--</td>
+          </tr>
+          <tr style="background:rgba(249,115,22,0.04);">
+            <td><strong style="color:var(--orange);">TOTAL</strong></td>
+            <td id="totalTriggers"><strong>--</strong></td>
+            <td id="totalEmails"><strong>--</strong></td>
+            <td id="totalCapture"><strong>--%</strong></td>
+            <td id="totalLMCalls"><strong>--</strong></td>
+            <td id="totalConv"><strong>--%</strong></td>
+            <td id="totalLMPlats"><strong>--</strong></td>
+            <td id="totalLMRev"><strong style="color:var(--green);">$--</strong></td>
+            <td id="totalCPL"><strong>$--</strong></td>
           </tr>
         </tbody>
       </table>
     </div>
-
-    <div class="note-box red">
-      <strong>⚠ CRM ALERT:</strong> Reece's official close rate shows 98.2% — this is MISLEADING. 117 of his 154 open deals are >30 days stale with no activity. Adjusted close rate is ~31.4%. David's 30.8% is the reliable benchmark. CRM cleanup is Priority #1.
-    </div>
   </div>
 </div>
 
 <hr class="divider">
 
-<!-- SECTION 5: ICP & CREATIVE INTELLIGENCE -->
+<!-- ════════════════════════════════════════════════════ -->
+<!-- SECTION 6: CONTENT METRICS                          -->
+<!-- ════════════════════════════════════════════════════ -->
 <div class="section">
   <div class="container">
-    <div class="section-title">ICP &amp; Creative Intelligence</div>
-    
-    <div class="icp-grid">
-      <div class="icp-card">
-        <h3>🎯 ICP: "The Legacy Builder"</h3>
-        <ul>
-          <li><strong>Age 45–65, predominantly male, HNW</strong></li>
-          <li><strong>$100k–$500k+ portfolio</strong> in traditional assets (stocks, property)</li>
-          <li><strong>$250k+ annual income</strong>, 7-figure+ net worth</li>
-          <li><strong>5+ year time horizon</strong> — strategic, not speculative</li>
-          <li><strong>Goals:</strong> generational wealth, inflation hedge, financial sovereignty</li>
-          <li><strong>Fears:</strong> missing the crypto opportunity, volatility, making a mistake, information overload</li>
-          <li><strong>Desires:</strong> trusted guide, structured system, community of peers</li>
-          <li><strong>Key message:</strong> "You've succeeded in stocks &amp; property — here's the next logical step"</li>
-          <li><strong>Geography:</strong> Australia dominant, growing UK/NZ/US/CA pipeline</li>
-          <li><strong>Core tension:</strong> FOMO vs fear of making a costly mistake</li>
-        </ul>
-      </div>
-      <div class="icp-card">
-        <h3>🎨 Winning Creative Angles</h3>
-        <ul>
-          <li><strong>#1 Silent Thief</strong> (inflation angle) — Vid3.1-SilentThief_ClientCopy: 3,266x ROAS. "Your wealth is being stolen by inflation." Dramatic storytelling + client copy.</li>
-          <li><strong>#2 Building Legacy</strong> (generational wealth) — Vid3.3-BuildingLegacy: top revenue &amp; profit. "Build a digital legacy for your family."</li>
-          <li><strong>#3 Ben Simpson Authority</strong> — Video ads featuring Ben build deep trust. Years of content create a moat no competitor can replicate.</li>
-          <li><strong>#4 Platinum Member Testimonials</strong> — Video testimonials from members matching ICP. "I was a successful investor but completely lost in crypto."</li>
-          <li><strong>Underperformers:</strong> NIU series &amp; VidPod series — low ROAS, messaging didn't resonate.</li>
-          <li><strong>Key insight:</strong> Client-based copy outperforms generic. AUNZ targeting outperforms USCA for cold audiences.</li>
-          <li><strong>#1 hook theme:</strong> Exit strategy / "when to sell" — strongest desire across all prospects.</li>
-        </ul>
-      </div>
+    <div class="section-header">
+      <div class="section-title">Content Performance (This Week)</div>
+      <span class="badge badge-green">House of Brands</span>
     </div>
 
-    <h3 style="font-size:14px;font-weight:600;color:var(--text-dim);margin:24px 0 12px;text-transform:uppercase;letter-spacing:0.5px;">Prospect Archetypes</h3>
-    <div class="stat-grid stat-grid-4" style="margin-bottom:0;">
-      <div class="stat-card">
-        <div class="label">🔄 The Round-Tripper</div>
-        <div class="value orange">~40%</div>
-        <div class="note">Made money, watched it evaporate. Strongest conversion driver. Close with: Round-Trip Cost Calculator.</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">🚀 The Motivated Beginner</div>
-        <div class="value blue">~25%</div>
-        <div class="note">Following Ben for years. Has savings, zero crypto experience. Close with: structure, community.</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">🏦 The Sophisticated Investor</div>
-        <div class="value" style="color:var(--purple);">~20%</div>
-        <div class="note">Successful in traditional assets. Wants diversification. Close with: CAGR, allocation, DeFi yield.</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">⏰ The Life-Event Buyer</div>
-        <div class="value green">~15%</div>
-        <div class="note">House sale, inheritance, retirement. Has a lump sum. Built-in urgency. High deal value.</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<hr class="divider">
-
-<!-- SECTION 6: FUNNEL ECONOMICS -->
-<div class="section">
-  <div class="container">
-    <div class="section-title">Funnel Economics</div>
-    
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>Metric</th><th class="text-right">Paid Event (Jan '26)</th><th class="text-right">Masterclass (Dec '25)</th><th class="text-right">Organic</th></tr>
+          <tr>
+            <th>Post</th>
+            <th>Persona</th>
+            <th>Platform</th>
+            <th>Views</th>
+            <th>Saves</th>
+            <th>Shares</th>
+            <th>Comments</th>
+            <th>DM Triggers</th>
+            <th>Engagement Rate</th>
+          </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Ad Spend</td>
-            <td class="text-right">$148,267</td>
-            <td class="text-right">$187,403</td>
-            <td class="text-right text-green">$0</td>
-          </tr>
-          <tr>
-            <td>Revenue</td>
-            <td class="text-right text-green">$270,658</td>
-            <td class="text-right text-red">$167,973</td>
-            <td class="text-right text-green">~$150,000/mo</td>
-          </tr>
-          <tr>
-            <td>ROAS</td>
-            <td class="text-right text-green">1.83x</td>
-            <td class="text-right text-red">0.90x</td>
-            <td class="text-right text-green">∞</td>
-          </tr>
-          <tr>
-            <td>Cost per Lead</td>
-            <td class="text-right">$47</td>
-            <td class="text-right">$63</td>
-            <td class="text-right text-green">~$0</td>
-          </tr>
-          <tr>
-            <td>Cost per Call</td>
-            <td class="text-right">$4,007</td>
-            <td class="text-right">$4,358</td>
-            <td class="text-right text-green">~$0</td>
-          </tr>
-          <tr>
-            <td>Cost per Sale</td>
-            <td class="text-right">$242</td>
-            <td class="text-right text-red">$5,512</td>
-            <td class="text-right text-green">~$0</td>
-          </tr>
-          <tr>
-            <td>Total Leads</td>
-            <td class="text-right">3,137</td>
-            <td class="text-right">2,971</td>
-            <td class="text-right text-dim">N/A</td>
-          </tr>
-          <tr>
-            <td>Total Sales</td>
-            <td class="text-right">613</td>
-            <td class="text-right">34</td>
-            <td class="text-right text-dim">N/A</td>
-          </tr>
+          <tr><td class="text-dim" colspan="9">Connect IG / YouTube / LinkedIn APIs to populate. Track per-post metrics across all personas.</td></tr>
         </tbody>
       </table>
     </div>
 
-    <div class="note-box green">
-      <strong>Why Organic is King:</strong> At ~$150k/month with $0 ad spend, organic content is the single most valuable asset Collective Shift owns. It generates more revenue than both paid campaigns COMBINED — and it's free. Ben's YouTube + Instagram content, built over years, creates trust that no amount of ad spend can replicate. <strong>Protect and scale organic above all else.</strong> Paid campaigns should supplement, never replace.
-    </div>
-
-    <div class="note-box">
-      <strong>Paid Event vs Masterclass:</strong> The $7 paid event model (1.83x ROAS, $242/sale) massively outperforms the free webinar model (0.90x ROAS, $5,512/sale) on direct attribution. Paid events attract higher-intent leads. However, the masterclass generates significant downstream Platinum revenue not captured in direct attribution. Both models work best when targeting Cold 1% Platinum LAL audiences in AUNZ (3.0x–3.9x ROAS).
+    <div class="grid-3" style="margin-top:16px;">
+      <div class="card">
+        <div style="font-size:14px;font-weight:700;color:var(--text-bright);margin-bottom:8px;">Ben Simpson</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div><span class="text-dim" style="font-size:11px;">Avg Views/Reel</span><br><strong id="benViews">--</strong></div>
+          <div><span class="text-dim" style="font-size:11px;">Avg Saves/Post</span><br><strong id="benSaves">--</strong></div>
+          <div><span class="text-dim" style="font-size:11px;">DM Triggers</span><br><strong id="benDMs" style="color:var(--orange);">--</strong></div>
+          <div><span class="text-dim" style="font-size:11px;">Engagement Rate</span><br><strong id="benER">--%</strong></div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:14px;font-weight:700;color:var(--text-bright);margin-bottom:8px;">Travis Thomas</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div><span class="text-dim" style="font-size:11px;">Avg Views/Post</span><br><strong id="travisViews">--</strong></div>
+          <div><span class="text-dim" style="font-size:11px;">Avg Saves/Post</span><br><strong id="travisSaves">--</strong></div>
+          <div><span class="text-dim" style="font-size:11px;">LinkedIn Impressions</span><br><strong id="travisLI" style="color:var(--blue);">--</strong></div>
+          <div><span class="text-dim" style="font-size:11px;">Engagement Rate</span><br><strong id="travisER">--%</strong></div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:14px;font-weight:700;color:var(--text-bright);margin-bottom:8px;">Sarn Elliott</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div><span class="text-dim" style="font-size:11px;">Avg Views/Reel</span><br><strong id="sarnViews">--</strong></div>
+          <div><span class="text-dim" style="font-size:11px;">Avg Saves/Post</span><br><strong id="sarnSaves">--</strong></div>
+          <div><span class="text-dim" style="font-size:11px;">DM Triggers</span><br><strong id="sarnDMs" style="color:var(--purple);">--</strong></div>
+          <div><span class="text-dim" style="font-size:11px;">Engagement Rate</span><br><strong id="sarnER">--%</strong></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <hr class="divider">
 
-<!-- SECTION 7: RECOMMENDATIONS -->
+<!-- ════════════════════════════════════════════════════ -->
+<!-- SECTION 7: FINANCIAL MODEL                          -->
+<!-- ════════════════════════════════════════════════════ -->
 <div class="section">
   <div class="container">
-    <div class="section-title">Recommendations</div>
-    
-    <div class="rec-grid">
-      <div class="rec-card">
-        <div class="rec-header">
-          <h4>🔧 CRM Cleanup — Pipeline Audit</h4>
-          <span class="priority-tag priority-high">P1 — CRITICAL</span>
-        </div>
-        <p>Reece must review all 154 stale open deals and mark them lost with specific reasons. Target: reduce to &lt;40 genuine opens. Ban "not a fit" as a lost reason. Fix 9 $0-value deals. Enter missing leads (e.g., Yaddi). Implement weekly Friday hygiene checks.</p>
-        <p style="margin-top:8px;"><strong>Owner:</strong> Kishan (Sales Manager) + Reece</p>
+    <div class="section-header">
+      <div class="section-title">Financial Model</div>
+      <span class="badge badge-orange">Jeremy Skill #2 + #13</span>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:16px;">
+      <div class="card" style="border-top:3px solid var(--orange);">
+        <div style="font-size:14px;font-weight:700;color:var(--text-bright);margin-bottom:16px;">Target Model</div>
+        <table>
+          <tbody>
+            <tr><td class="text-dim">Monthly Revenue Target</td><td style="text-align:right;"><strong style="color:var(--green);">$700,000</strong></td></tr>
+            <tr><td class="text-dim">Platinum Price</td><td style="text-align:right;"><strong>$14,999/yr</strong></td></tr>
+            <tr><td class="text-dim">New Platinums Needed</td><td style="text-align:right;"><strong style="color:var(--orange);">35/month</strong></td></tr>
+            <tr><td class="text-dim">Close Rate Target</td><td style="text-align:right;"><strong>30%</strong></td></tr>
+            <tr><td class="text-dim">Calls Needed</td><td style="text-align:right;"><strong>117/month (~4/day)</strong></td></tr>
+            <tr><td class="text-dim">Cost Per Call</td><td style="text-align:right;"><strong>$600-700</strong></td></tr>
+            <tr><td class="text-dim">Monthly Ad Spend</td><td style="text-align:right;"><strong>$70-82K</strong></td></tr>
+            <tr><td class="text-dim">Target ROAS (Platinum only)</td><td style="text-align:right;"><strong style="color:var(--green);">6.4x</strong></td></tr>
+            <tr><td class="text-dim">Current Blended ROAS</td><td style="text-align:right;"><strong style="color:var(--yellow);">1.84x</strong></td></tr>
+            <tr><td class="text-dim">Breakeven ROAS</td><td style="text-align:right;"><strong style="color:var(--red);">1.81x</strong></td></tr>
+          </tbody>
+        </table>
       </div>
 
-      <div class="rec-card">
-        <div class="rec-header">
-          <h4>🎯 Double Down on Cold 1% Platinum LAL (AUNZ)</h4>
-          <span class="priority-tag priority-high">P1 — HIGH</span>
-        </div>
-        <p>This audience delivered 3.0x–3.9x ROAS across BOTH campaigns. It's the only consistently profitable cold audience. Scale budget to this audience for the next paid event. Kill WealthStack, Adv+, and USCA cold audiences.</p>
-        <p style="margin-top:8px;"><strong>Owner:</strong> Marketing Team</p>
-      </div>
-
-      <div class="rec-card">
-        <div class="rec-header">
-          <h4>💬 Lead with "Exit Strategy" Messaging</h4>
-          <span class="priority-tag priority-high">P1 — HIGH</span>
-        </div>
-        <p>"When to sell" is the #1 desire across all prospects by a massive margin. All content, ads, and landing pages should lead with exit strategy positioning. Create "Round-Trip Recovery" campaign targeting people who've lost money in previous cycles.</p>
-        <p style="margin-top:8px;"><strong>Owner:</strong> Marketing + Content Team</p>
-      </div>
-
-      <div class="rec-card">
-        <div class="rec-header">
-          <h4>📞 Build Partner Objection Kit</h4>
-          <span class="priority-tag priority-medium">P2 — MEDIUM</span>
-        </div>
-        <p>Spouse/partner is the #1 stall tactic (15-20% of calls). Build a shareable kit: email/WhatsApp template with audited returns, testimonials, short Ben video, and couples call CTA. Reps should surface this objection in the first 5 minutes.</p>
-        <p style="margin-top:8px;"><strong>Owner:</strong> Kishan + Sales Reps</p>
-      </div>
-
-      <div class="rec-card">
-        <div class="rec-header">
-          <h4>🎬 Scale Silent Thief + Legacy Creative</h4>
-          <span class="priority-tag priority-medium">P2 — MEDIUM</span>
-        </div>
-        <p>Vid3.1-SilentThief_ClientCopy (3,266x ROAS) and Vid3.3-BuildingLegacy are the proven winners. Create new variations with fresh narratives and updated data. Use client-based copy (outperforms generic). Build testimonial ads from ICP-matching Platinum members.</p>
-        <p style="margin-top:8px;"><strong>Owner:</strong> Marketing + Creative Team</p>
-      </div>
-
-      <div class="rec-card">
-        <div class="rec-header">
-          <h4>📊 Cross-Train Reps on Proven Techniques</h4>
-          <span class="priority-tag priority-medium">P2 — MEDIUM</span>
-        </div>
-        <p>David needs Reece's urgency/scarcity techniques and WhatsApp screenshare consistency. Reece needs David's consultative depth with HNW prospects. Formalise Zen's SDR role with structured handoff process. Moving close rate from 31% → 35% = ~$50K+ per quarter.</p>
-        <p style="margin-top:8px;"><strong>Owner:</strong> Kishan</p>
-      </div>
-
-      <div class="rec-card">
-        <div class="rec-header">
-          <h4>🏗️ Prefer Paid Events Over Free Webinars</h4>
-          <span class="priority-tag priority-low">P3 — STRATEGIC</span>
-        </div>
-        <p>The $7 paid event model (1.83x ROAS) dramatically outperforms the free webinar (0.90x). Paid events attract higher-intent leads and generate 20x more sales per lead. Next campaign should use the paid event format with the "Digital Legacy" theme.</p>
-        <p style="margin-top:8px;"><strong>Owner:</strong> Ben + Marketing Team</p>
+      <div class="card" style="border-top:3px solid var(--green);">
+        <div style="font-size:14px;font-weight:700;color:var(--text-bright);margin-bottom:16px;">Sensitivity Analysis</div>
+        <table>
+          <thead><tr><th>Scenario</th><th>Close Rate</th><th>Calls/Mo</th><th>Platinums</th><th>Revenue</th></tr></thead>
+          <tbody>
+            <tr class="text-dim"><td>Conservative</td><td>20%</td><td>117</td><td>23</td><td>$350K</td></tr>
+            <tr><td><strong>Target</strong></td><td><strong>30%</strong></td><td><strong>117</strong></td><td><strong style="color:var(--green);">35</strong></td><td><strong style="color:var(--green);">$525K+</strong></td></tr>
+            <tr><td>Optimistic</td><td>40%</td><td>117</td><td style="color:var(--green);">47</td><td style="color:var(--green);">$700K</td></tr>
+            <tr><td>With upsells</td><td>30%</td><td>117</td><td>35</td><td style="color:var(--green);"><strong>$700K</strong></td></tr>
+          </tbody>
+        </table>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:8px;">Revenue gap ($525K to $700K) closed by upsells (Pro upgrades, Black Tier, order bumps) and improved close rate via pixel conditioning.</div>
       </div>
     </div>
   </div>
 </div>
 
-<div style="padding:40px 0;text-align:center;">
+<hr class="divider">
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- SECTION 8: PIPELINE HEALTH                          -->
+<!-- ════════════════════════════════════════════════════ -->
+<div class="section">
   <div class="container">
-    <p style="font-size:12px;color:var(--text-dim);">CONFIDENTIAL — Internal Use Only · Collective Shift Marketing Intelligence · Data current as of April 2026</p>
-    <p style="font-size:11px;color:var(--text-dim);margin-top:4px;">Sources: Pipedrive CRM (383 Q1 deals), Facebook Ads Platform, 11 Call Transcript Files (~1M words), Manus AI Funnel Analysis</p>
+    <div class="section-header">
+      <div class="section-title">Pipeline Health</div>
+      <span class="badge badge-blue">Daily Triage (Skill #26)</span>
+    </div>
+
+    <div class="metric-grid" style="margin-bottom:16px;">
+      <div class="metric-card">
+        <div class="label">Pipeline Temperature</div>
+        <div class="value" id="pipeTemp" style="font-size:20px;">--</div>
+        <div class="target">Green = on pace | Yellow = behind | Red = critical</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Active Opportunities</div>
+        <div class="value" id="activeOpps">--</div>
+        <div class="target">Pipedrive active pipeline</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Speed to Lead</div>
+        <div class="value" id="speedToLead">--</div>
+        <div class="target">Target: under 5 min (biz hours)</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Stale Leads (14+ days)</div>
+        <div class="value text-red" id="staleLeads">--</div>
+        <div class="target">Move to nurture or re-engage</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">No-Shows (This Week)</div>
+        <div class="value" id="noShows">--</div>
+        <div class="target">Rebook immediately</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Setter Qualification Rate</div>
+        <div class="value" id="setterQual">--%</div>
+        <div class="target">% of setter calls -> closer handoff</div>
+      </div>
+    </div>
   </div>
 </div>
+
+<!-- FOOTER -->
+<div style="padding:32px 0;text-align:center;border-top:1px solid var(--navy-border);">
+  <div class="container">
+    <p style="font-size:12px;color:var(--text-dim);">CONFIDENTIAL | Collective Shift Marketing Intelligence Dashboard | April 2026</p>
+    <p style="font-size:11px;color:var(--text-dim);margin-top:4px;">Built on Jeremy Haynes Call Funnel (#2), Forester (#7), Pixel Conditioning (#27), Pipeline Triage (#26), and Financial Modelling (#13) frameworks.</p>
+    <p style="font-size:11px;color:var(--text-dim);margin-top:4px;">Connect Pipedrive, Meta Ads, ManyChat, and Customer.io APIs to populate live data.</p>
+  </div>
+</div>
+
+<script>
+// Auto-update refresh time
+document.getElementById('refreshTime').textContent = 'Layout ready | Connect data sources to populate';
+
+// Placeholder: When APIs are connected, this script will fetch and populate all -- fields
+// Data sources needed:
+// 1. Pipedrive API -> calls booked, show rate, close rate, pipeline data
+// 2. Meta Ads API -> spend, CPL, ROAS, creative performance
+// 3. ManyChat API -> keyword triggers, DM flows, email captures
+// 4. Customer.io API -> email sequence performance
+// 5. IG / YouTube / LinkedIn APIs -> organic metrics, content performance
+</script>
 
 </body>
 </html>
