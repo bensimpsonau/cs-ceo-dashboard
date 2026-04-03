@@ -1282,10 +1282,24 @@ const STATUS_CYCLE = ['todo','progress','done','on-hold'];
 
 function escHtml(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
 
+let _tasksJsonUpdated = null; // file-level "updated" from tasks.json
+
+function getTaskUpdatedLabel(task) {
+  // Best available: completedAt > due > file-level updated timestamp
+  const dateStr = task.completedAt || task.due || (_tasksJsonUpdated ? _tasksJsonUpdated.split('T')[0] : null);
+  if (!dateStr) return '';
+  try {
+    const d = new Date(dateStr + (dateStr.includes('T') ? '' : 'T00:00:00'));
+    if (isNaN(d)) return '';
+    return 'Updated ' + d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+  } catch(e) { return ''; }
+}
+
 async function fetchTasks() {
   try {
     const res = await fetch('tasks.json?_=' + Date.now());
     const data = await res.json();
+    _tasksJsonUpdated = data.updated || null;
     priorities = data.tasks || [];
     // Merge localStorage overrides per task
     priorities.forEach(t => {
@@ -1410,7 +1424,10 @@ function renderTasks() {
 
     html += `<div class="task-row" data-status="${effective.status}" onclick="toggleExpand(${globalIdx})">
       <button class="status-pill" data-st="${effective.status}" title="Click to cycle status" onclick="event.stopPropagation(); cycleStatus(${globalIdx})">${STATUS_LABELS[effective.status] || '?'}</button>
-      <span class="task-name ${effective.status === 'done' ? 'done' : ''}" style="flex:1; min-width:0;">${escHtml(effective.name)}</span>
+      <div style="flex:1; min-width:0;">
+        <span class="task-name ${effective.status === 'done' ? 'done' : ''}">${escHtml(effective.name)}</span>
+        ${getTaskUpdatedLabel(effective) ? `<div style="font-size:10px; color:#9CA3AF; margin-top:1px; font-family:'Source Code Pro',monospace;">${getTaskUpdatedLabel(effective)}</div>` : ''}
+      </div>
       <div class="task-row-meta" style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
         <button class="priority-selector" data-priority="${taskPrio}" onclick="cyclePriority('${effective.id}', event)" title="Click to change priority">${PRIORITY_LABELS[taskPrio] || '\u26AA Normal'}</button>
         ${effective.category ? `<span class="category-badge" style="background:${cat.bg}; color:${cat.text};">${effective.category}</span>` : ''}
@@ -1463,7 +1480,10 @@ function renderBriefTasks() {
     const dueLabel = p.due ? (p.due === todayStr ? 'Today' : new Date(p.due + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })) : '';
     return `<div style="display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid #F0F0F2;">
       <div style="width:8px; height:8px; border-radius:50%; background:${STATUS_COLORS[p.status] || '#807F86'}; flex-shrink:0;"></div>
-      <span class="brief-task-name" style="font-size:13px; font-weight:500; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escHtml(p.name)}</span>
+      <div style="flex:1; min-width:0;">
+        <span class="brief-task-name" style="font-size:13px; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block;">${escHtml(p.name)}</span>
+        ${getTaskUpdatedLabel(p) ? `<span style="font-size:10px; color:#9CA3AF; font-family:'Source Code Pro',monospace;">${getTaskUpdatedLabel(p)}</span>` : ''}
+      </div>
       ${dueLabel ? `<span style="font-size:10px; font-family:'Source Code Pro',monospace; color:${isOverdue ? '#EF4444' : '#807F86'}; white-space:nowrap;">${dueLabel}</span>` : ''}
     </div>`;
   }).join('');
