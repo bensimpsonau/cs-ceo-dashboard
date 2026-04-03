@@ -170,8 +170,46 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .kpi-red { color: var(--red); }
 
 /* PRINT */
+/* Section Nav */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #0d0d0d;
+  border-bottom: 1px solid #1e293b;
+  padding: 0 16px;
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  white-space: nowrap;
+}
+.section-nav::-webkit-scrollbar { display: none; }
+.section-nav a {
+  display: inline-block;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+}
+.section-nav a:hover { color: #f59e0b; }
+.section-nav a.active {
+  color: #f59e0b;
+  border-bottom-color: #f59e0b;
+}
+@media (max-width: 768px) {
+  .section-nav { padding: 0 8px; }
+  .section-nav a { padding: 10px 10px; font-size: 11px; }
+}
+
 @media print {
-  .topbar, .sidebar { display: none !important; }
+  .topbar, .sidebar, .section-nav { display: none !important; }
   .layout { display: block; }
   body { background: #fff; color: #1a1a2e; font-size: 11px; }
   .main { padding: 20px; max-width: 100%; }
@@ -525,6 +563,10 @@ tr:hover td { background: rgba(255,255,255,0.02); }
   </div>
 </div>
 
+<nav class="section-nav" id="sectionNav">
+  <!-- JS will populate this from sections found in page -->
+</nav>
+
 <!-- LAYOUT -->
 <div class="layout">
 
@@ -581,7 +623,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 <!-- ============================================== -->
 <div class="section" id="s00">
   <div class="section-label">00 / Executive Summary</div>
-  <h2 class="section-title">The Revenue Machine</h2>
+  <h2 class="section-title" id="exec-summary">The Revenue Machine</h2>
 
   <div class="stats-bar">
     <div class="stat">
@@ -702,7 +744,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 <!-- ============================================== -->
 <div class="section" id="s01">
   <div class="section-label">01 / House of Brands</div>
-  <h2 class="section-title">Brand Architecture</h2>
+  <h2 class="section-title" id="brand-architecture">Brand Architecture</h2>
   <p class="section-intro">Collective Shift is the parent brand. Three active personas operate as content channels, each reaching a different segment of the ICP. The parent brand sells. The personas build trust, reach, and authority across different audience segments. Every persona funnels to the same destination: Platinum.</p>
 
   <div class="card card-accent">
@@ -796,7 +838,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 <!-- ============================================== -->
 <div class="section" id="s02">
   <div class="section-label">02 / Integrated Marketing Strategy</div>
-  <h2 class="section-title">ICP, Funnel, and Jeremy's Framework</h2>
+  <h2 class="section-title" id="integrated-strategy">ICP, Funnel, and Jeremy's Framework</h2>
   <p class="section-intro">Every piece of marketing at CS serves one customer profile, one funnel, and one framework. This section defines who we are talking to, how they move from stranger to Platinum member, and the Jeremy Haynes frameworks that power every stage.</p>
 
   <div class="card card-accent">
@@ -896,7 +938,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 <!-- ============================================== -->
 <div class="section" id="s03">
   <div class="section-label">03 / Paid Ads</div>
-  <h2 class="section-title">Sanjay/Kishan Operating Brief</h2>
+  <h2 class="section-title" id="paid-ads">Sanjay/Kishan Operating Brief</h2>
   <p class="section-intro">Paid ads are the accelerant. The funnel must convert organically first, then paid amplifies what works. This section is the complete operating brief for Sanjay and Kishan, covering budget allocation, campaign architecture, creative direction, targeting, compliance, and scaling rules.</p>
 
   <div class="stats-bar">
@@ -1077,7 +1119,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 <!-- ============================================== -->
 <div class="section" id="s04">
   <div class="section-label">04 / Organic Engine</div>
-  <h2 class="section-title">Reel to Platinum Pipeline</h2>
+  <h2 class="section-title" id="organic-engine">Reel to Platinum Pipeline</h2>
   <p class="section-intro">The organic engine runs alongside paid. The path is: Reel captures attention, YouTube builds conviction, IG DM captures the lead, setter qualifies, closer converts to Platinum. One 2-3 hour batch session from Ben per week produces the entire content pipeline.</p>
 
   <div class="card card-accent">
@@ -1175,7 +1217,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 <!-- ============================================== -->
 <div class="section" id="s05">
   <div class="section-label">05 / Lead Magnet System</div>
-  <h2 class="section-title">5 Keywords, 5 Tools, 1 Pipeline</h2>
+  <h2 class="section-title" id="lead-magnets">5 Keywords, 5 Tools, 1 Pipeline</h2>
   <p class="section-intro">Five lead magnet variants, each triggered by a keyword comment on Instagram. ManyChat delivers the tool via DM. The tool creates a knowledge gap. The gap creates desire for Platinum. Full operational detail is in the <a href="lead-magnet-strategy.html" style="color:var(--orange);">Lead Magnet Strategy Playbook</a>.</p>
 
   <div class="card card-accent">
@@ -1327,7 +1369,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 <!-- ============================================== -->
 <div class="section" id="s06">
   <div class="section-label">06 / Content Distribution</div>
-  <h2 class="section-title">1-to-20 Repurpose Matrix</h2>
+  <h2 class="section-title" id="content-distribution">1-to-20 Repurpose Matrix</h2>
   <p class="section-intro">One 2-3 hour batch session from Ben produces 24-30 pieces of content per week across all platforms. The repurpose matrix multiplies one recording session into platform-native content everywhere. AI handles format adaptation. One part-time editor handles quality control.</p>
 
   <div class="card card-accent">
@@ -1453,7 +1495,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 <!-- ============================================== -->
 <div class="section" id="s07">
   <div class="section-label">07 / Metrics &amp; Reporting</div>
-  <h2 class="section-title">12-KPI Scorecard</h2>
+  <h2 class="section-title" id="metrics">12-KPI Scorecard</h2>
   <p class="section-intro">What gets measured gets managed. These 12 KPIs tell you whether the machine is working. Green means healthy. Amber means investigate. Red means stop and fix before spending more.</p>
 
   <div class="card card-accent">
@@ -1604,7 +1646,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 <!-- ============================================== -->
 <div class="section" id="s08">
   <div class="section-label">08 / 90-Day Roadmap</div>
-  <h2 class="section-title">April to June 2026</h2>
+  <h2 class="section-title" id="roadmap">April to June 2026</h2>
   <p class="section-intro">Three months. Three phases. Foundation, Scale, Optimise. Each month has a different bottleneck. Do not apply the same solution to every phase. Diagnose which phase you are in and focus all energy on that specific bottleneck.</p>
 
   <!-- MONTH 1 -->
@@ -1755,7 +1797,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 <!-- ============================================== -->
 <div class="section" id="s09">
   <div class="section-label">09 / Jeremy Skill Gaps</div>
-  <h2 class="section-title">What We Are Not Doing Yet</h2>
+  <h2 class="section-title" id="skill-gaps">What We Are Not Doing Yet</h2>
   <p class="section-intro">Of Jeremy Haynes' 38 skills, CS is actively implementing about 15. The remaining 23 are either not started, partially implemented, or not yet relevant. Here are the top 10 highest-priority unused skills with exact implementation steps for CS.</p>
 
   <div class="card card-accent">
@@ -1932,6 +1974,59 @@ window.addEventListener('scroll', () => {
     if (l.getAttribute('href') === '#' + current) l.classList.add('active');
   });
 });
+</script>
+
+<script>
+// Section nav — auto-populate from h2 elements with ids
+(function() {
+  const nav = document.getElementById('sectionNav');
+  if (!nav) return;
+
+  // Find all sections with ids (h2 or section tags)
+  const sections = Array.from(document.querySelectorAll('h2[id], section[id]'))
+    .filter(el => el.id && !el.id.startsWith('_'));
+
+  if (sections.length === 0) {
+    // Fallback: find all h2s, add ids, build nav
+    document.querySelectorAll('h2').forEach((h2, i) => {
+      const id = 'section-' + i;
+      h2.id = id;
+      sections.push(h2);
+    });
+  }
+
+  sections.forEach(section => {
+    const label = section.textContent.trim().replace(/[\u{1F3AF}\u{1F4CA}\u{1F4B0}\u{1F465}\u{1F5D3}\u{1F9F2}\u{1F4E3}\u{1F3E0}\u{1F4CB}\u{1F3AC}\u{1F4C5}\u{1F4E7}\u{1F4BC}\u{1F504}\u{1F3EA}\u{1F5FA}\u{1F3E2}\u{1F4DA}\u{1F4A1}\u{1F4B3}]/gu, '').trim();
+    if (!label || label.length > 50) return;
+    const a = document.createElement('a');
+    a.href = '#' + section.id;
+    a.textContent = label.length > 25 ? label.substring(0, 24) + '\u2026' : label;
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Offset for sticky nav height
+      setTimeout(() => window.scrollBy(0, -80), 350);
+    });
+    nav.appendChild(a);
+  });
+
+  // Highlight active section on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        nav.querySelectorAll('a').forEach(a => a.classList.remove('active'));
+        const activeLink = nav.querySelector(`a[href="#${entry.target.id}"]`);
+        if (activeLink) {
+          activeLink.classList.add('active');
+          // Scroll nav to show active button
+          activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      }
+    });
+  }, { rootMargin: '-80px 0px -60% 0px', threshold: 0 });
+
+  sections.forEach(s => observer.observe(s));
+})();
 </script>
 
 </body>
