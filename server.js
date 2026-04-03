@@ -14,6 +14,12 @@ const TASKS_PATH = path.join(__dirname, 'public', 'tasks.json');
 // 4. Once set, task completions and new tasks will post to #ceo-benbot automatically
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL || '';
 
+// GITHUB AUTO-SYNC SETUP:
+// Add GITHUB_TOKEN to Render env vars (a GitHub Personal Access Token with repo write permissions)
+// Generate at: github.com → Settings → Developer Settings → Personal Access Tokens → Fine-grained
+// Required permissions: Contents (read & write) on bensimpsonau/cs-ceo-dashboard
+// Once set, every task/content update on the dashboard auto-commits to GitHub
+
 // Basic auth for the entire CEO dashboard
 const AUTH_USER = process.env.AUTH_USER || 'ben';
 const AUTH_PASS = process.env.AUTH_PASS || 'cs2026ceo';
@@ -83,6 +89,72 @@ async function postToDiscord(content) {
   }
 }
 
+// ═══════════════════════════════════════════
+// GitHub Auto-Sync
+// Push tasks.json / content-board-data.json to GitHub on every write
+// Requires GITHUB_TOKEN env var in Render
+// ═══════════════════════════════════════════
+async function pushFileToGitHub(filePath, content, commitMessage) {
+  const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+  if (!GITHUB_TOKEN) {
+    console.log('GITHUB_TOKEN not set — skipping GitHub sync');
+    return;
+  }
+  
+  const repo = 'bensimpsonau/cs-ceo-dashboard';
+  const branch = 'main';
+  // Determine the relative path in the repo
+  const repoPath = filePath.includes('content-board-data') 
+    ? 'public/content-board-data.json'
+    : 'public/tasks.json';
+  const apiUrl = `https://api.github.com/repos/${repo}/contents/${repoPath}`;
+  
+  try {
+    // Get current file SHA (required for update)
+    const getRes = await fetch(apiUrl + `?ref=${branch}`, {
+      headers: {
+        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'cs-ceo-dashboard'
+      }
+    });
+    
+    if (!getRes.ok) {
+      console.log('GitHub API GET failed:', getRes.status, await getRes.text());
+      return;
+    }
+    
+    const fileData = await getRes.json();
+    const sha = fileData.sha;
+    const encodedContent = Buffer.from(JSON.stringify(content, null, 2)).toString('base64');
+    
+    // Update file via GitHub API
+    const putRes = await fetch(apiUrl, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'cs-ceo-dashboard'
+      },
+      body: JSON.stringify({
+        message: commitMessage,
+        content: encodedContent,
+        sha: sha,
+        branch: branch
+      })
+    });
+    
+    if (putRes.ok) {
+      console.log(`GitHub sync: ${repoPath} committed`);
+    } else {
+      console.log('GitHub API PUT failed:', putRes.status, await putRes.text());
+    }
+  } catch (err) {
+    console.log('GitHub sync error:', err.message);
+  }
+}
+
 function readTasks() {
   try {
     return JSON.parse(fs.readFileSync(TASKS_PATH, 'utf8'));
@@ -91,9 +163,11 @@ function readTasks() {
   }
 }
 
-function writeTasks(data) {
+async function writeTasks(data, commitMsg) {
   data.updated = new Date().toISOString();
   fs.writeFileSync(TASKS_PATH, JSON.stringify(data, null, 2));
+  // Fire-and-forget GitHub sync
+  pushFileToGitHub(TASKS_PATH, data, commitMsg || 'Auto-sync: tasks updated from dashboard').catch(e => console.log('GitHub sync failed:', e.message));
 }
 
 // ═══════════════════════════════════════════
@@ -122,7 +196,7 @@ app.post('/api/tasks/complete', async (req, res) => {
     task.status = 'done';
     task.completedAt = completedAt || new Date().toISOString().split('T')[0];
     task.updatedAt = new Date().toISOString().split('T')[0];
-    writeTasks(data);
+    await writeTasks(data, `Auto-sync: Task completed — ${task.name}`);
 
     // Post Discord notification
     await postToDiscord(
@@ -149,7 +223,7 @@ app.post('/api/tasks/update', async (req, res) => {
 
     const oldStatus = task.status;
     Object.assign(task, updates, { updatedAt: new Date().toISOString().split('T')[0] });
-    writeTasks(data);
+    await writeTasks(data, `Auto-sync: Task updated — ${task.name}`);
 
     // Notify Discord if status changed
     if (updates.status && updates.status !== oldStatus) {
@@ -190,7 +264,7 @@ app.post('/api/tasks/add', async (req, res) => {
 
     const data = readTasks();
     data.tasks.push(newTask);
-    writeTasks(data);
+    await writeTasks(data, `Auto-sync: Task added — ${name}`);
 
     // Post Discord notification
     await postToDiscord(
@@ -221,6 +295,7 @@ app.post('/api/content/status', async (req, res) => {
     card.status = status;
     card.updatedAt = updatedAt;
     fs.writeFileSync(CONTENT_BOARD_PATH, JSON.stringify(contentBoard, null, 2));
+    pushFileToGitHub(CONTENT_BOARD_PATH, contentBoard, `Auto-sync: Content ${status} — ${card ? card.title : 'updated'}`).catch(() => {});
     // Discord notification when content is posted
     if (DISCORD_WEBHOOK_URL && status === 'posted') {
       await postToDiscord(
@@ -248,6 +323,7 @@ app.post('/api/content/add', async (req, res) => {
   };
   contentBoard.cards.push(newCard);
   fs.writeFileSync(CONTENT_BOARD_PATH, JSON.stringify(contentBoard, null, 2));
+  pushFileToGitHub(CONTENT_BOARD_PATH, contentBoard, `Auto-sync: Content added — ${title}`).catch(() => {});
   if (DISCORD_WEBHOOK_URL) {
     await postToDiscord(
       `📋 New content added: **${title}**\nPlatform: ${platform} | Status: ${status || 'draft'}`
