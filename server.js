@@ -203,6 +203,64 @@ app.post('/api/tasks/add', async (req, res) => {
   }
 });
 
+// ═══════════════════════════════════════════
+// Content Board — API Endpoints
+// ═══════════════════════════════════════════
+const CONTENT_BOARD_PATH = path.join(__dirname, 'public', 'content-board-data.json');
+let contentBoard = { cards: [] };
+try { contentBoard = JSON.parse(fs.readFileSync(CONTENT_BOARD_PATH, 'utf8')); } catch(e) {
+  // Initialize with default cards if file doesn't exist
+  contentBoard = { cards: [] };
+}
+
+// POST /api/content/status
+app.post('/api/content/status', async (req, res) => {
+  const { cardId, status, updatedAt } = req.body;
+  const card = contentBoard.cards.find(c => c.id === cardId);
+  if (card) {
+    card.status = status;
+    card.updatedAt = updatedAt;
+    fs.writeFileSync(CONTENT_BOARD_PATH, JSON.stringify(contentBoard, null, 2));
+    // Discord notification when content is posted
+    if (DISCORD_WEBHOOK_URL && status === 'posted') {
+      await postToDiscord(
+        `📤 Content posted: **${card.title}**\nPlatform: ${card.platform} | Date: ${(updatedAt || '').split('T')[0]}`
+      );
+    }
+  }
+  res.json({ success: true });
+});
+
+// POST /api/content/add
+app.post('/api/content/add', async (req, res) => {
+  const { title, platform, type, copy, cta, status, scheduledDate } = req.body;
+  const newCard = {
+    id: 'c' + Date.now(),
+    title,
+    platform,
+    type,
+    copy: copy || '',
+    cta: cta || '',
+    status: status || 'draft',
+    scheduledDate: scheduledDate || '',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  contentBoard.cards.push(newCard);
+  fs.writeFileSync(CONTENT_BOARD_PATH, JSON.stringify(contentBoard, null, 2));
+  if (DISCORD_WEBHOOK_URL) {
+    await postToDiscord(
+      `📋 New content added: **${title}**\nPlatform: ${platform} | Status: ${status || 'draft'}`
+    );
+  }
+  res.json({ success: true, card: newCard });
+});
+
+// GET /api/content/cards
+app.get('/api/content/cards', (req, res) => {
+  res.json(contentBoard);
+});
+
 app.listen(PORT, () => {
   console.log(`CS CEO Dashboard running on http://localhost:${PORT}`);
 });

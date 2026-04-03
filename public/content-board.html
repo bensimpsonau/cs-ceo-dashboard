@@ -3,404 +3,208 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
 <title>Content Board — Collective Shift</title>
 <style>
-  /* ══ DASHBOARD SHELL v2 (inlined) ══ */
-  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap');
-  * { box-sizing: border-box; }
-  body { background: #F7F7F8 !important; color: #1B1925; font-family: 'Barlow', sans-serif; margin: 0; padding: 0 !important; }
-  ::-webkit-scrollbar { width: 5px; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f0f1a; color: #e8e8ea; font-family: 'Barlow', sans-serif; }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #4D4C55; border-radius: 3px; }
 
-  .ds-sidebar {
+  /* ── Sidebar ── */
+  .sidebar {
     width: 220px; height: 100vh; position: fixed; top: 0; left: 0;
     background: #1A1A2E; color: #fff; z-index: 100;
     display: flex; flex-direction: column;
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
     overflow-y: auto; overflow-x: hidden;
   }
-  .ds-sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); }
-  .ds-sidebar-section {
+  .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); }
+  .sidebar-section {
     font-size: 10px; text-transform: uppercase; letter-spacing: 1.6px;
     color: rgba(255,255,255,0.35); padding: 20px 16px 6px; font-weight: 600;
   }
-  .ds-sidebar-link {
+  .sidebar-link {
     display: flex; align-items: center; gap: 10px;
     padding: 8px 16px; margin: 1px 8px; border-radius: 6px;
     color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500;
     transition: all 0.12s ease; cursor: pointer; text-decoration: none;
     border-left: 3px solid transparent;
   }
-  .ds-sidebar-link:hover { color: #fff; background: rgba(255,255,255,0.07); }
-  .ds-sidebar-link.active {
+  .sidebar-link:hover { color: #fff; background: rgba(255,255,255,0.07); }
+  .sidebar-link.active {
     color: #FC5C03; background: rgba(252,92,3,0.08);
     border-left-color: #FC5C03; font-weight: 600;
   }
-  .ds-sidebar-link .ds-icon { width: 18px; text-align: center; font-size: 14px; flex-shrink: 0; }
+  .sidebar-link .sidebar-icon { width: 18px; text-align: center; font-size: 14px; flex-shrink: 0; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 95; }
 
-  .ds-topbar {
+  /* ── Topbar ── */
+  .topbar {
     height: 48px; position: fixed; top: 0; left: 220px; right: 0;
-    background: #fff; border-bottom: 1px solid #E8E8EA;
+    background: #16162a; border-bottom: 1px solid #2a2a45;
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 24px; z-index: 90;
   }
-  .ds-topbar-search {
-    background: #F7F7F8; border: 1px solid #E8E8EA; border-radius: 8px;
-    padding: 6px 12px 6px 32px; font-size: 13px; width: 280px;
-    outline: none; transition: border-color 0.15s; font-family: 'Barlow', sans-serif;
-  }
-  .ds-topbar-search:focus { border-color: #FC5C03; }
 
-  .ds-main-content {
-    margin-left: 220px; padding-top: 48px; min-height: 100vh;
-  }
-  .ds-page-body {
-    padding: 24px 32px; max-width: 100%;
+  /* ── Main ── */
+  .main-content { margin-left: 220px; padding-top: 48px; min-height: 100vh; }
+
+  /* ── Sync Banner ── */
+  .sync-banner {
+    background: #1a2a1a; border-bottom: 1px solid #2a4a2a;
+    padding: 8px 24px; font-size: 11px; color: #6bffb5; display: flex; align-items: center; gap: 8px;
   }
 
-  /* Mobile */
-  .ds-mobile-hamburger { display: none; }
-  .ds-sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 95; }
-  @media (max-width: 1023px) {
-    .ds-sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
-    .ds-sidebar.open { transform: translateX(0); }
-    .ds-sidebar-overlay.open { display: block; }
-    .ds-topbar { left: 0; }
-    .ds-main-content { margin-left: 0; }
-    .ds-mobile-hamburger { display: flex; }
-    .ds-page-body { padding: 16px; }
-    .ds-topbar-search { width: 160px; }
+  /* ── Kanban Board ── */
+  .kanban-wrap { padding: 20px 24px; overflow-x: auto; }
+  .kanban-board {
+    display: flex; gap: 14px; min-height: calc(100vh - 180px); align-items: flex-start;
   }
-</style>
-<style>
-/* ── Content Board Styles ── */
-:root {
-  --cs-orange: #FC5C03;
-  --cs-orange-light: #FC8C4E;
-  --cs-navy: #1A1A2E;
-  --cs-navy-light: #252540;
-  --cs-border: #E8E8EA;
-  --cs-text: #1B1925;
-  --cs-secondary: #4D4C55;
-  --cs-muted: #807F86;
-  --cs-page: #F7F7F8;
-  --cs-green: #08C394;
-  --cs-purple: #654FFC;
-}
+  .kanban-col {
+    background: #1a1a2e; border: 1px solid #2a2a45; border-radius: 12px;
+    min-width: 260px; width: 260px; flex-shrink: 0;
+    display: flex; flex-direction: column; max-height: calc(100vh - 180px);
+  }
+  .kanban-col-header {
+    padding: 14px 16px 10px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid #2a2a45; position: sticky; top: 0; background: #1a1a2e;
+    border-radius: 12px 12px 0 0; z-index: 2;
+  }
+  .kanban-col-title {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
+    font-size: 13px; color: #fff;
+  }
+  .kanban-col-count {
+    font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px;
+    background: #2a2a45; color: #807F86; font-family: 'Source Code Pro', monospace;
+  }
+  .kanban-col-cards { padding: 8px 10px 14px; flex: 1; overflow-y: auto; min-height: 60px; }
+  .kanban-col.drag-over { outline: 2px dashed #FC5C03; outline-offset: -2px; background: #1e1428; }
 
-/* ── Top Controls ── */
-.cb-controls {
-  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-  padding: 16px 32px; border-bottom: 1px solid var(--cs-border); background: #fff;
-}
-.cb-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 1.25rem; color: var(--cs-text); margin-right: auto; }
-.cb-title span { color: var(--cs-orange); }
+  /* ── Cards ── */
+  .content-card {
+    background: #12122a; border: 1px solid #2a2a45; border-radius: 10px;
+    padding: 14px; margin-bottom: 10px; cursor: pointer;
+    transition: all 0.15s; position: relative;
+  }
+  .content-card:hover { border-color: #FC5C03; box-shadow: 0 2px 12px rgba(252,92,3,0.12); transform: translateY(-1px); }
+  .content-card.dragging { opacity: 0.4; transform: rotate(2deg); }
 
-.cb-chips { display: flex; gap: 6px; flex-wrap: wrap; }
-.cb-chip {
-  padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
-  cursor: pointer; border: 1px solid var(--cs-border); background: #fff;
-  color: var(--cs-secondary); transition: all 0.15s; user-select: none;
-}
-.cb-chip:hover { border-color: var(--cs-orange); color: var(--cs-orange); }
-.cb-chip.active { background: var(--cs-orange); color: #fff; border-color: var(--cs-orange); }
+  .card-title {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
+    font-size: 13px; color: #fff; line-height: 1.4; margin-bottom: 8px;
+  }
+  .card-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
 
-.cb-btn {
-  padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600;
-  cursor: pointer; border: none; background: var(--cs-orange); color: #fff;
-  transition: all 0.15s; font-family: 'Barlow', sans-serif;
-}
-.cb-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
-.cb-btn-secondary { background: #fff; color: var(--cs-secondary); border: 1px solid var(--cs-border); }
-.cb-btn-secondary:hover { border-color: var(--cs-orange); color: var(--cs-orange); filter: none; }
+  .platform-badge {
+    font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 100px;
+    text-transform: uppercase; letter-spacing: 0.5px; color: #fff;
+  }
+  .plat-linkedin { background: #0A66C2; }
+  .plat-instagram { background: linear-gradient(135deg, #833AB4, #FD1D1D, #F77737); }
+  .plat-podcast { background: #1DB954; }
 
-/* ── Filter Bar ── */
-.cb-filter-bar {
-  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-  padding: 10px 32px; border-bottom: 1px solid var(--cs-border); background: #FAFAFA;
-}
-.cb-filter-label { font-size: 11px; color: var(--cs-muted); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; }
-.cb-filter-select {
-  padding: 5px 10px; border-radius: 6px; border: 1px solid var(--cs-border);
-  font-size: 12px; font-family: 'Barlow', sans-serif; background: #fff;
-  color: var(--cs-text); cursor: pointer; outline: none;
-}
-.cb-filter-select:focus { border-color: var(--cs-orange); }
-.cb-filter-divider { width: 1px; height: 20px; background: var(--cs-border); margin: 0 4px; }
-.cb-stats { margin-left: auto; display: flex; gap: 16px; font-size: 12px; color: var(--cs-muted); }
-.cb-stats strong { color: var(--cs-text); }
+  .card-date { font-size: 11px; color: #807F86; font-family: 'Source Code Pro', monospace; }
 
-/* ── Platform Badges ── */
-.plat-badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; color: #fff; white-space: nowrap;
-}
-.plat-yt { background: #FF0000; }
-.plat-yts { background: #FF4444; }
-.plat-ig { background: linear-gradient(135deg, #833AB4, #FD1D1D, #F77737); }
-.plat-reels { background: linear-gradient(135deg, #833AB4, #FD1D1D); }
-.plat-li { background: #0A66C2; }
-.plat-x { background: #333; }
-.plat-news { background: #08C394; }
-.plat-pod { background: #1DB954; }
-.plat-tt { background: linear-gradient(135deg, #EE1D52, #111); }
+  .card-status-select {
+    width: 100%; padding: 6px 10px; background: #1a1a30; border: 1px solid #2a2a45;
+    border-radius: 6px; color: #e8e8ea; font-size: 11px; font-family: 'Barlow', sans-serif;
+    cursor: pointer; outline: none; margin-bottom: 8px;
+  }
+  .card-status-select:focus { border-color: #FC5C03; }
 
-/* ── Persona Dots ── */
-.persona-dot {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 22px; height: 22px; border-radius: 50%; font-size: 10px; font-weight: 700; color: #fff; flex-shrink: 0;
-}
-.persona-ben { background: #FC5C03; }
-.persona-matt { background: #0A66C2; }
-.persona-travis { background: #1DB954; }
-.persona-sarn { background: #C13584; }
+  .card-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  .card-actions button {
+    font-size: 10px; font-weight: 600; padding: 5px 10px; border-radius: 6px;
+    border: 1px solid #2a2a45; background: #1a1a2e; color: #b0b0c0; cursor: pointer;
+    transition: all 0.12s;
+  }
+  .card-actions button:hover { border-color: #FC5C03; color: #FC5C03; }
 
-/* ── Board View ── */
-.cb-board-wrap { padding: 20px 32px; overflow-x: auto; }
-.cb-board {
-  display: flex; gap: 14px; min-height: calc(100vh - 240px); align-items: flex-start;
-}
-.cb-column {
-  background: #fff; border-radius: 12px; border: 1px solid var(--cs-border);
-  min-width: 240px; width: 240px; flex-shrink: 0;
-  display: flex; flex-direction: column; max-height: calc(100vh - 240px);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-}
-.cb-col-header {
-  padding: 14px 16px 10px; display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid var(--cs-border); position: sticky; top: 0; background: #fff;
-  border-radius: 12px 12px 0 0; z-index: 2;
-}
-.cb-col-title { font-weight: 700; font-size: 13px; color: var(--cs-text); }
-.cb-col-count {
-  background: var(--cs-page); color: var(--cs-muted); font-size: 11px;
-  padding: 2px 8px; border-radius: 10px; font-weight: 600;
-}
-.cb-col-cards { padding: 8px 10px 14px; flex: 1; overflow-y: auto; min-height: 60px; }
+  .card-cta {
+    font-size: 10px; color: #6bffb5; font-weight: 600; margin-top: 4px;
+    background: #1a2a1a; padding: 3px 8px; border-radius: 4px; display: inline-block;
+  }
 
-/* Status colours on column header */
-.cb-col-header[data-status="Draft"] .cb-col-title { color: var(--cs-muted); }
-.cb-col-header[data-status="Ben Review"] .cb-col-title { color: #E67E22; }
-.cb-col-header[data-status="Approved"] .cb-col-title { color: var(--cs-green); }
-.cb-col-header[data-status="Scheduled"] .cb-col-title { color: var(--cs-purple); }
-.cb-col-header[data-status="Posted"] .cb-col-title { color: #08C394; }
+  /* ── Add Content Form ── */
+  .add-form-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    z-index: 200; justify-content: center; align-items: flex-start; padding: 80px 20px;
+    backdrop-filter: blur(2px);
+  }
+  .add-form-overlay.open { display: flex; }
+  .add-form {
+    background: #1a1a2e; border: 1px solid #2a2a45; border-radius: 14px;
+    width: 100%; max-width: 540px; padding: 28px; animation: modalIn 0.2s ease;
+  }
+  @keyframes modalIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+  .add-form h2 {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
+    font-size: 18px; color: #fff; margin-bottom: 20px;
+  }
+  .form-field { margin-bottom: 14px; }
+  .form-field label {
+    display: block; font-size: 11px; color: #807F86; margin-bottom: 4px;
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .form-field input, .form-field textarea, .form-field select {
+    width: 100%; padding: 10px 12px; background: #12122a; border: 1px solid #2a2a45;
+    border-radius: 8px; font-size: 13px; color: #e8e8ea;
+    font-family: 'Barlow', sans-serif; outline: none;
+  }
+  .form-field input:focus, .form-field textarea:focus, .form-field select:focus { border-color: #FC5C03; }
+  .form-field textarea { min-height: 80px; resize: vertical; }
+  .form-row { display: flex; gap: 12px; }
+  .form-row .form-field { flex: 1; }
+  .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+  .btn-cancel {
+    padding: 10px 20px; background: #2a2a45; color: #b0b0c0; border: none;
+    border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px;
+  }
+  .btn-cancel:hover { background: #3a3a55; }
+  .btn-submit {
+    padding: 10px 20px; background: #FC5C03; color: #fff; border: none;
+    border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px;
+  }
+  .btn-submit:hover { background: #e04f00; }
 
-.cb-col-header[data-status="Draft"] { border-bottom-color: #ccc; }
-.cb-col-header[data-status="Ben Review"] { border-bottom-color: #E67E22; }
-.cb-col-header[data-status="Approved"] { border-bottom-color: var(--cs-green); }
-.cb-col-header[data-status="Scheduled"] { border-bottom-color: var(--cs-purple); }
-.cb-col-header[data-status="Posted"] { border-bottom-color: #08C394; }
+  /* ── Toast ── */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; background: #1A1A2E; border: 1px solid #FC5C03;
+    color: #fff; padding: 12px 20px; border-radius: 10px; font-size: 13px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3); z-index: 300; opacity: 0;
+    transform: translateY(10px); transition: all 0.3s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
 
-/* ── Cards ── */
-.cb-card {
-  background: #fff; border: 1px solid var(--cs-border); border-radius: 10px;
-  padding: 12px 14px; margin-bottom: 8px; cursor: pointer;
-  transition: all 0.15s; position: relative;
-}
-.cb-card:hover { border-color: var(--cs-orange); box-shadow: 0 2px 8px rgba(252,92,3,0.12); transform: translateY(-1px); }
-.cb-card.dragging { opacity: 0.4; transform: rotate(2deg); }
-.cb-card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-.cb-card-title { font-size: 13px; font-weight: 600; color: var(--cs-text); line-height: 1.35; margin-bottom: 6px; }
-.cb-card-preview { font-size: 11px; color: var(--cs-muted); line-height: 1.4; margin-bottom: 8px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-.cb-card-footer { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-.cb-card-date { font-size: 10px; color: var(--cs-muted); }
-.cb-card-chars { font-size: 10px; color: var(--cs-muted); background: var(--cs-page); padding: 1px 6px; border-radius: 4px; }
-.cb-card-video-tag { font-size: 10px; color: var(--cs-muted); background: var(--cs-page); padding: 2px 6px; border-radius: 4px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* ── Add Content Button ── */
+  .add-content-btn {
+    padding: 8px 18px; background: #FC5C03; color: #fff; border: none;
+    border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
+    font-family: 'Barlow', sans-serif; transition: all 0.15s;
+  }
+  .add-content-btn:hover { background: #e04f00; transform: translateY(-1px); }
 
-.cb-drop-indicator { height: 3px; background: var(--cs-orange); border-radius: 2px; margin: 4px 0; transition: all .15s; }
-
-/* ── Status Badge (clickable on card) ── */
-.cb-status-badge {
-  font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; cursor: pointer;
-  position: relative; user-select: none; white-space: nowrap;
-}
-.cb-status-badge[data-status="Draft"] { background: #f0f0f0; color: #888; }
-.cb-status-badge[data-status="Ben Review"] { background: #FFF3E0; color: #E67E22; }
-.cb-status-badge[data-status="Approved"] { background: #E8F5E9; color: #08C394; }
-.cb-status-badge[data-status="Scheduled"] { background: #EDE7F6; color: var(--cs-purple); }
-.cb-status-badge[data-status="Posted"] { background: #E0F2F1; color: #08C394; }
-
-/* ── Status Dropdown ── */
-.cb-status-dropdown {
-  position: absolute; top: 100%; left: 0; z-index: 50;
-  background: #fff; border: 1px solid var(--cs-border); border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12); min-width: 140px; padding: 4px 0;
-  display: none;
-}
-.cb-status-dropdown.open { display: block; }
-.cb-status-dropdown-item {
-  padding: 6px 12px; font-size: 12px; cursor: pointer; color: var(--cs-text); transition: background 0.1s;
-}
-.cb-status-dropdown-item:hover { background: var(--cs-page); }
-.cb-status-dropdown-item.current { color: var(--cs-orange); font-weight: 600; }
-
-/* ── Calendar View ── */
-.cb-calendar-wrap { padding: 20px 32px; display: none; }
-.cb-calendar-header {
-  display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;
-}
-.cb-calendar-header h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.1rem; font-weight: 700; }
-.cb-calendar-nav { display: flex; gap: 8px; }
-.cb-calendar-nav button {
-  width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--cs-border);
-  background: #fff; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center;
-  transition: all 0.12s;
-}
-.cb-calendar-nav button:hover { border-color: var(--cs-orange); color: var(--cs-orange); }
-
-.cb-calendar-container { display: flex; gap: 20px; }
-.cb-calendar-grid-wrap { flex: 1; min-width: 0; }
-.cb-calendar-grid {
-  display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px;
-  background: var(--cs-border); border: 1px solid var(--cs-border); border-radius: 10px; overflow: hidden;
-}
-.cb-cal-day-header {
-  background: var(--cs-page); padding: 8px; text-align: center;
-  font-size: 11px; font-weight: 600; color: var(--cs-muted); text-transform: uppercase;
-}
-.cb-cal-day {
-  background: #fff; min-height: 100px; padding: 6px; cursor: pointer;
-  transition: background 0.12s; position: relative;
-}
-.cb-cal-day:hover { background: #FFFAF7; }
-.cb-cal-day.today { background: #FFF8F3; }
-.cb-cal-day.other-month { background: #FAFAFA; }
-.cb-cal-day.other-month .cb-cal-day-num { color: #ccc; }
-.cb-cal-day-num { font-size: 12px; font-weight: 600; color: var(--cs-text); margin-bottom: 4px; }
-.cb-cal-day.today .cb-cal-day-num {
-  background: var(--cs-orange); color: #fff; width: 22px; height: 22px;
-  border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px;
-}
-.cb-cal-card-mini {
-  font-size: 10px; padding: 2px 5px; border-radius: 3px; margin-bottom: 2px;
-  color: #fff; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  transition: transform 0.1s;
-}
-.cb-cal-card-mini:hover { transform: scale(1.02); }
-
-/* Unscheduled sidebar */
-.cb-unscheduled {
-  width: 260px; flex-shrink: 0; background: #fff; border: 1px solid var(--cs-border);
-  border-radius: 10px; max-height: calc(100vh - 280px); overflow-y: auto;
-}
-.cb-unscheduled-header {
-  padding: 12px 14px; border-bottom: 1px solid var(--cs-border);
-  font-weight: 700; font-size: 13px; color: var(--cs-text); position: sticky; top: 0; background: #fff;
-  border-radius: 10px 10px 0 0;
-}
-.cb-unscheduled-list { padding: 8px; }
-
-/* ── Modal ── */
-.cb-modal-overlay {
-  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4);
-  z-index: 200; justify-content: center; align-items: flex-start; padding: 60px 20px 20px;
-  overflow-y: auto; backdrop-filter: blur(2px);
-}
-.cb-modal-overlay.open { display: flex; }
-.cb-modal {
-  background: #fff; border-radius: 14px; width: 100%; max-width: 680px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.15); animation: modalIn 0.2s ease;
-}
-@keyframes modalIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-.cb-modal-head {
-  padding: 20px 24px 14px; border-bottom: 1px solid var(--cs-border);
-  display: flex; justify-content: space-between; align-items: flex-start;
-}
-.cb-modal-head h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--cs-text); line-height: 1.3; }
-.cb-modal-close {
-  background: none; border: none; color: var(--cs-muted); font-size: 1.4rem;
-  cursor: pointer; padding: 0 4px; transition: color 0.12s;
-}
-.cb-modal-close:hover { color: var(--cs-orange); }
-.cb-modal-body { padding: 20px 24px; }
-.cb-modal-field { margin-bottom: 16px; }
-.cb-modal-field label {
-  display: block; font-size: 11px; color: var(--cs-muted); margin-bottom: 4px;
-  font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
-}
-.cb-modal-field input, .cb-modal-field textarea, .cb-modal-field select {
-  width: 100%; padding: 8px 12px; border: 1px solid var(--cs-border); border-radius: 8px;
-  font-size: 13px; font-family: 'Barlow', sans-serif; color: var(--cs-text); outline: none;
-  transition: border-color 0.15s; background: #fff;
-}
-.cb-modal-field input:focus, .cb-modal-field textarea:focus, .cb-modal-field select:focus { border-color: var(--cs-orange); }
-.cb-modal-field textarea { min-height: 80px; resize: vertical; }
-.cb-modal-row { display: flex; gap: 12px; flex-wrap: wrap; }
-.cb-modal-row .cb-modal-field { flex: 1; min-width: 140px; }
-.cb-modal-foot {
-  padding: 14px 24px 20px; display: flex; gap: 8px; justify-content: flex-end;
-  border-top: 1px solid var(--cs-border);
-}
-
-/* Brief sections */
-.cb-brief { background: var(--cs-page); padding: 14px 16px; border-radius: 10px; border: 1px solid var(--cs-border); margin-top: 10px; }
-.cb-brief h4 { font-size: 12px; font-weight: 700; color: var(--cs-orange); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px; }
-.cb-brief p { font-size: 13px; color: var(--cs-secondary); line-height: 1.55; }
-
-.cb-copy-area {
-  width: 100%; min-height: 160px; padding: 12px; border: 1px solid var(--cs-border);
-  border-radius: 8px; font-family: 'Barlow', sans-serif; font-size: 13px; line-height: 1.55;
-  color: var(--cs-text); background: var(--cs-page); resize: vertical; white-space: pre-wrap;
-}
-.cb-copy-btn {
-  margin-top: 8px; padding: 8px 16px; background: var(--cs-orange); color: #fff;
-  border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;
-  font-family: 'Barlow', sans-serif; transition: all 0.15s;
-}
-.cb-copy-btn:hover { filter: brightness(1.1); }
-.cb-copied-flash {
-  display: inline-block; margin-left: 8px; font-size: 12px; font-weight: 600;
-  color: var(--cs-green); opacity: 0; transition: opacity 0.3s;
-}
-.cb-copied-flash.show { opacity: 1; }
-
-/* ICP badge */
-.cb-icp-badge {
-  display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 10px;
-  border-radius: 4px; background: #FFF3E0; color: #E67E22; white-space: nowrap;
-}
-.cb-icp-explainer {
-  font-size: 12px; color: var(--cs-muted); background: #FFFAF7;
-  padding: 8px 12px; border-radius: 6px; border-left: 3px solid var(--cs-orange); margin-top: 6px;
-}
-
-/* Persona badge large */
-.cb-persona-badge-lg {
-  display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px;
-  border-radius: 6px; font-size: 13px; font-weight: 600; border: 1px solid var(--cs-border);
-}
-
-/* ── Toast ── */
-.cb-toast {
-  position: fixed; bottom: 24px; right: 24px; background: var(--cs-navy);
-  color: #fff; padding: 12px 20px; border-radius: 10px; font-size: 13px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2); z-index: 300; opacity: 0;
-  transform: translateY(10px); transition: all 0.3s; pointer-events: none;
-}
-.cb-toast.show { opacity: 1; transform: translateY(0); }
-
-/* ── Responsive ── */
-@media (max-width: 1023px) {
-  .cb-controls, .cb-filter-bar, .cb-board-wrap, .cb-calendar-wrap { padding-left: 16px; padding-right: 16px; }
-  .cb-column { min-width: 220px; width: 220px; }
-  .cb-calendar-container { flex-direction: column; }
-  .cb-unscheduled { width: 100%; max-height: 300px; }
-}
-@media (max-width: 640px) {
-  .cb-column { min-width: 85vw; width: 85vw; }
-  .cb-controls { gap: 8px; }
-  .cb-title { font-size: 1rem; width: 100%; }
-  .cb-cal-day { min-height: 70px; }
-}
+  /* ── Mobile ── */
+  @media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-overlay.open { display: block; }
+    .topbar { left: 0; }
+    .main-content { margin-left: 0; }
+    .kanban-col { min-width: 85vw; width: 85vw; }
+    .mobile-hamburger { display: flex !important; }
+  }
 </style>
 </head>
 <body>
 
-<!-- Sidebar Overlay -->
-<div class="ds-sidebar-overlay" id="dsSidebarOverlay" onclick="document.getElementById('dsSidebar').classList.remove('open');this.classList.remove('open');"></div>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
-<!-- Sidebar -->
-<aside class="ds-sidebar" id="dsSidebar">
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
   <div style="padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);">
     <a href="index.html" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
       <div style="width:32px; height:32px; border-radius:8px; background:rgba(252,92,3,0.15); display:flex; align-items:center; justify-content:center;">
@@ -413,771 +217,379 @@
     </a>
   </div>
   <nav style="flex:1; padding: 8px 0;">
-    <div class="ds-sidebar-section">Home</div>
-    <a class="ds-sidebar-link" href="index.html"><span class="ds-icon">⭐</span> Morning Brief</a>
-    <a class="ds-sidebar-link" href="index.html#tasks"><span class="ds-icon">✓</span> Tasks</a>
-    <a class="ds-sidebar-link" href="actions.html"><span class="ds-icon">⚡</span> Actions</a>
-    <div class="ds-sidebar-section">Metrics</div>
-    <a class="ds-sidebar-link" href="index.html#metrics"><span class="ds-icon">📊</span> KPIs</a>
-    <a class="ds-sidebar-link" href="team-cost.html"><span class="ds-icon">💰</span> Cash &amp; Costs</a>
-    <a class="ds-sidebar-link" href="hub/products.html"><span class="ds-icon">👥</span> Members</a>
-    <div class="ds-sidebar-section">Content</div>
-    <a class="ds-sidebar-link active" href="content-board.html"><span class="ds-icon">🎬</span> Content Board</a>
-    <a class="ds-sidebar-link" href="instagram-qa.html"><span class="ds-icon">📸</span> IG Q&amp;A</a>
-    <a class="ds-sidebar-link" href="asana-board-mockup.html"><span class="ds-icon">📅</span> Calendar</a>
-    <a class="ds-sidebar-link" href="hub/youtube-strategy.html"><span class="ds-icon">▶</span> YouTube</a>
-    <div class="ds-sidebar-section">Strategy</div>
-    <a class="ds-sidebar-link" href="hub/operating-system.html"><span class="ds-icon">🧭</span> Strategy Hub</a>
-    <a class="ds-sidebar-link" href="hub/brand.html"><span class="ds-icon">📄</span> Docs</a>
-    <div class="ds-sidebar-section">Team</div>
-    <a class="ds-sidebar-link" href="team-cost.html"><span class="ds-icon">👤</span> Team</a>
-    <a class="ds-sidebar-link" href="index.html#bots"><span class="ds-icon">🤖</span> Bot Fleet</a>
+    <div class="sidebar-section">Home</div>
+    <a class="sidebar-link" href="index.html"><span class="sidebar-icon">⭐</span> Morning Brief</a>
+    <a class="sidebar-link" href="index.html"><span class="sidebar-icon">✓</span> Tasks</a>
+    <a class="sidebar-link" href="index.html"><span class="sidebar-icon">⚡</span> Actions</a>
+    <div class="sidebar-section">Metrics</div>
+    <a class="sidebar-link" href="index.html"><span class="sidebar-icon">📊</span> KPIs</a>
+    <a class="sidebar-link" href="team-cost.html"><span class="sidebar-icon">💰</span> Cash & Costs</a>
+    <a class="sidebar-link" href="hub/products.html"><span class="sidebar-icon">👥</span> Members</a>
+    <div class="sidebar-section">Content</div>
+    <a class="sidebar-link active" href="content-board.html"><span class="sidebar-icon">🎬</span> Content Board</a>
+    <a class="sidebar-link" href="content-studio.html"><span class="sidebar-icon">🎯</span> Content Studio</a>
+    <a class="sidebar-link" href="asana-board-mockup.html"><span class="sidebar-icon">📅</span> Calendar</a>
+    <a class="sidebar-link" href="hub/youtube-strategy.html"><span class="sidebar-icon">▶</span> YouTube</a>
+    <div class="sidebar-section">Strategy</div>
+    <a class="sidebar-link" href="hub/operating-system.html"><span class="sidebar-icon">🧭</span> Strategy Hub</a>
+    <a class="sidebar-link" href="hub/brand.html"><span class="sidebar-icon">📄</span> Docs</a>
+    <div class="sidebar-section">Team</div>
+    <a class="sidebar-link" href="team-cost.html"><span class="sidebar-icon">👤</span> Team</a>
+    <a class="sidebar-link" href="index.html"><span class="sidebar-icon">🤖</span> Bot Fleet</a>
   </nav>
   <div style="padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 10px; color: rgba(255,255,255,0.25); font-family: 'Source Code Pro', monospace;">
     v2.1 · April 2026
   </div>
 </aside>
 
-<!-- Top Bar -->
-<header class="ds-topbar">
+<!-- TOP BAR -->
+<header class="topbar">
   <div style="display:flex; align-items:center; gap:12px;">
-    <button class="ds-mobile-hamburger" onclick="document.getElementById('dsSidebar').classList.toggle('open');document.getElementById('dsSidebarOverlay').classList.toggle('open');" style="background:none; border:none; cursor:pointer; color:#807F86; padding:4px;">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    <button class="mobile-hamburger" onclick="toggleSidebar()" style="background:none; border:none; cursor:pointer; color:#807F86; padding:4px; display:none;">
+      <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
     </button>
-    <nav style="font-size:12px; color:#807F86; display:flex; align-items:center; gap:6px;">
-      <a href="index.html" style="color:#807F86; text-decoration:none;">Dashboard</a>
-      <span>›</span>
-      <span style="color:#1B1925; font-weight:600;">Content Board</span>
-    </nav>
+    <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:15px; color:#fff;">🎬 Content Board</span>
+    <span style="font-size:11px; color:#807F86; font-family:'Source Code Pro',monospace;">Kanban Tracker</span>
   </div>
-  <div style="display:flex; align-items:center; gap:16px;">
-    <div style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-      <div style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #FC5C03, #FC8C4E); display:flex; align-items:center; justify-content:center;">
-        <span style="color:#fff; font-size:11px; font-weight:700; font-family:'Plus Jakarta Sans',sans-serif;">BB</span>
-      </div>
-      <span style="font-size:13px; font-weight:500; color:#1B1925;">BenBot</span>
-    </div>
+  <div>
+    <button class="add-content-btn" onclick="openAddForm()">+ Add Content</button>
   </div>
 </header>
 
-<!-- Main Content -->
-<div class="ds-main-content">
+<!-- MAIN -->
+<div class="main-content">
 
-  <!-- Controls Row -->
-  <div class="cb-controls">
-    <h1 class="cb-title">🎬 Content <span>Board</span></h1>
-    <div class="cb-chips" id="viewChips">
-      <div class="cb-chip active" data-view="board">Board</div>
-      <div class="cb-chip" data-view="calendar">Calendar</div>
-    </div>
-    <button class="cb-btn" id="addContentBtn">+ Add Content</button>
+  <!-- Sync Banner -->
+  <div class="sync-banner">
+    <span>🔄</span> Changes sync to BenBot automatically. Status updates post to #ceo-benbot.
   </div>
 
-  <!-- Filter Bar -->
-  <div class="cb-filter-bar" id="filterBar">
-    <span class="cb-filter-label">Video</span>
-    <select class="cb-filter-select" id="videoFilter"></select>
-    <div class="cb-filter-divider"></div>
-    <span class="cb-filter-label">Platform</span>
-    <select class="cb-filter-select" id="platformFilter">
-      <option value="all">All Platforms</option>
-    </select>
-    <div class="cb-filter-divider"></div>
-    <span class="cb-filter-label">Owner</span>
-    <select class="cb-filter-select" id="personaFilter">
-      <option value="all">All Owners</option>
-    </select>
-    <div class="cb-filter-divider"></div>
-    <span class="cb-filter-label">Status</span>
-    <select class="cb-filter-select" id="statusFilter">
-      <option value="all">All Statuses</option>
-      <option value="Draft">Draft</option>
-      <option value="Ben Review">Ben Review</option>
-      <option value="Approved">Approved</option>
-      <option value="Scheduled">Scheduled</option>
-      <option value="Posted">Posted</option>
-    </select>
-    <div class="cb-stats" id="statsBar"></div>
-  </div>
-
-  <!-- Board View -->
-  <div class="cb-board-wrap" id="boardView">
-    <div class="cb-board" id="board"></div>
-  </div>
-
-  <!-- Calendar View -->
-  <div class="cb-calendar-wrap" id="calendarView">
-    <div class="cb-calendar-header">
-      <h2 id="calMonthLabel"></h2>
-      <div class="cb-calendar-nav">
-        <button onclick="changeMonth(-1)">‹</button>
-        <button onclick="changeMonth(0)" style="width:auto;padding:0 10px;font-size:11px;">Today</button>
-        <button onclick="changeMonth(1)">›</button>
-      </div>
-    </div>
-    <div class="cb-calendar-container">
-      <div class="cb-calendar-grid-wrap">
-        <div class="cb-calendar-grid" id="calGrid"></div>
-      </div>
-      <div class="cb-unscheduled">
-        <div class="cb-unscheduled-header">📋 Unscheduled <span id="unschedCount"></span></div>
-        <div class="cb-unscheduled-list" id="unschedList"></div>
-      </div>
-    </div>
+  <!-- Kanban Board -->
+  <div class="kanban-wrap">
+    <div class="kanban-board" id="kanbanBoard"></div>
   </div>
 </div>
 
-<!-- Card Detail Modal -->
-<div class="cb-modal-overlay" id="cardModal">
-  <div class="cb-modal">
-    <div class="cb-modal-head">
-      <h2 id="modalTitle"></h2>
-      <button class="cb-modal-close" onclick="closeModal()">&times;</button>
+<!-- Add Content Form -->
+<div class="add-form-overlay" id="addFormOverlay" onclick="if(event.target===this)closeAddForm()">
+  <div class="add-form">
+    <h2>+ Add Content</h2>
+    <div class="form-field">
+      <label>Title</label>
+      <input type="text" id="formTitle" placeholder="Content title...">
     </div>
-    <div class="cb-modal-body" id="modalBody"></div>
-    <div class="cb-modal-foot" id="modalFoot">
-      <button class="cb-btn cb-btn-secondary" onclick="closeModal()">Close</button>
-      <button class="cb-btn" id="modalPostedBtn" style="background:#08C394;">✓ Mark as Posted</button>
-    </div>
-  </div>
-</div>
-
-<!-- New Video Modal -->
-<div class="cb-modal-overlay" id="newVideoModal">
-  <div class="cb-modal">
-    <div class="cb-modal-head">
-      <h2>Add New Video</h2>
-      <button class="cb-modal-close" onclick="closeNewVideoModal()">&times;</button>
-    </div>
-    <div class="cb-modal-body">
-      <div class="cb-modal-field"><label>Video Title</label><input type="text" id="nvTitle" placeholder="e.g. Why Bitcoin Will Hit $200K"></div>
-      <div class="cb-modal-field"><label>YouTube URL</label><input type="text" id="nvUrl" placeholder="https://youtu.be/..."></div>
-      <div class="cb-modal-row">
-        <div class="cb-modal-field"><label>Publish Date</label><input type="date" id="nvDate"></div>
-        <div class="cb-modal-field"><label>Primary Persona</label>
-          <select id="nvPersona"><option value="Ben">🎙️ Ben</option><option value="Matt">📊 Matt</option><option value="Travis">🎬 Travis</option><option value="Sarn">✍️ Sarn</option></select>
-        </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label>Platform</label>
+        <select id="formPlatform">
+          <option value="LinkedIn">LinkedIn</option>
+          <option value="Instagram">Instagram</option>
+          <option value="Podcast">Podcast</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Content Type</label>
+        <select id="formType">
+          <option value="post">Post</option>
+          <option value="reel">Reel</option>
+          <option value="story">Story</option>
+          <option value="carousel">Carousel</option>
+          <option value="episode">Episode</option>
+        </select>
       </div>
     </div>
-    <div class="cb-modal-foot">
-      <button class="cb-btn cb-btn-secondary" onclick="closeNewVideoModal()">Cancel</button>
-      <button class="cb-btn" onclick="createNewVideo()">Create 17 Cards</button>
+    <div class="form-row">
+      <div class="form-field">
+        <label>Scheduled Date</label>
+        <input type="date" id="formDate">
+      </div>
+      <div class="form-field">
+        <label>CTA Keyword</label>
+        <input type="text" id="formCta" placeholder="e.g. STRATEGY">
+      </div>
+    </div>
+    <div class="form-field">
+      <label>Copy / Caption</label>
+      <textarea id="formCopy" placeholder="Draft copy or caption..."></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeAddForm()">Cancel</button>
+      <button class="btn-submit" onclick="submitNewContent()">Add to Board</button>
     </div>
   </div>
 </div>
 
 <!-- Toast -->
-<div class="cb-toast" id="toast"></div>
+<div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════════
-// CONTENT BOARD — Collective Shift
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════
+// KANBAN COLUMNS
+// ══════════════════════════════════════
+const COLUMNS = [
+  { id: 'draft', label: '📝 Draft', color: '#807F86' },
+  { id: 'recording', label: '🎬 Recording', color: '#ffd76b' },
+  { id: 'editing', label: '✂️ Editing', color: '#6bb5ff' },
+  { id: 'ready', label: '✅ Ready to Post', color: '#6bffb5' },
+  { id: 'posted', label: '📤 Posted', color: '#08C394' },
+  { id: 'skipped', label: '⏭️ Skipped', color: '#4D4C55' }
+];
 
-const STATUS_COLUMNS = ['Draft', 'Ben Review', 'Approved', 'Scheduled', 'Posted'];
-
-// Map raw JSON column → board status
-const COLUMN_MAP = {
-  'Idea': 'Draft',
-  'Script': 'Draft',
-  'In Edit': 'Draft',
-  'Redistribution': 'Approved',
-  'Formatting': 'Approved',
-  'Ben Review': 'Ben Review',
-  'Ready to Post': 'Approved',
-  'Posted': 'Posted',
-  // Direct status values (from localStorage overrides)
-  'Draft': 'Draft',
-  'Approved': 'Approved',
-  'Scheduled': 'Scheduled',
+const STATUS_MAP = {
+  'draft': 'Draft', 'recording': 'Recording', 'editing': 'Editing',
+  'ready': 'Ready to Post', 'posted': 'Posted', 'skipped': 'Skipped'
 };
 
-const PLATFORM_CLASS = {
-  'YouTube': 'plat-yt',
-  'YouTube Shorts': 'plat-yts',
-  'TikTok': 'plat-tt',
-  'TikTok/Reels': 'plat-tt',
-  'Instagram': 'plat-ig',
-  'Reels': 'plat-reels',
-  'LinkedIn': 'plat-li',
-  'X/Twitter': 'plat-x',
-  'Newsletter': 'plat-news',
-  'Podcast': 'plat-pod',
+const PLATFORM_CLASSES = {
+  'LinkedIn': 'plat-linkedin',
+  'Instagram': 'plat-instagram',
+  'Podcast': 'plat-podcast'
 };
 
-const PERSONA_CLASS = {
-  'Ben': 'persona-ben',
-  'Matt': 'persona-matt',
-  'Travis': 'persona-travis',
-  'Sarn': 'persona-sarn',
-};
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+let cards = [];
+let draggedCardId = null;
 
-const PERSONA_INITIALS = { 'Ben': 'B', 'Matt': 'M', 'Travis': 'T', 'Sarn': 'S' };
-
-let boardData = null;
-let allCards = []; // flattened: { ...card, videoId, videoTitle, status }
-let activeView = 'board';
-let calDate = new Date();
-let dragCard = null;
-let currentModalCard = null;
-
-// ── Data Loading ──
-async function loadData() {
+// Load cards from API, fall back to localStorage
+async function loadCards() {
   try {
     const resp = await fetch('content-board.json');
-    boardData = await resp.json();
-    flattenCards();
-    restoreOverrides();
-    buildFilterOptions();
-    render();
-  } catch (e) {
-    console.error('Failed to load content-board.json', e);
-    document.getElementById('board').innerHTML = '<p style="padding:20px;color:#FF6B6B;">Error loading content-board.json</p>';
-  }
-}
-
-function flattenCards() {
-  allCards = [];
-  boardData.videos.forEach(v => {
-    v.cards.forEach(c => {
-      allCards.push({
-        ...c,
-        videoId: v.id,
-        videoTitle: v.title,
-        videoUrl: v.url,
-        status: mapStatus(c.column),
-        _key: v.id + '-' + c.num,
-      });
-    });
-  });
-}
-
-function mapStatus(col) {
-  return COLUMN_MAP[col] || 'Draft';
-}
-
-function restoreOverrides() {
-  try {
-    const saved = localStorage.getItem('cs_cb_v2');
-    if (!saved) return;
-    const overrides = JSON.parse(saved);
-    allCards.forEach(c => {
-      const ov = overrides[c._key];
-      if (ov) {
-        if (ov.status) c.status = ov.status;
-        if (ov.publishDate !== undefined) c.publishDate = ov.publishDate;
-        if (ov.notes !== undefined) c.notes = ov.notes;
-        if (ov.copy !== undefined && c.brief) c.brief.copy = ov.copy;
+    if (resp.ok) {
+      const data = await resp.json();
+      if (data.cards && data.cards.length > 0) {
+        cards = data.cards;
+        render();
+        return;
       }
-    });
-  } catch (e) {}
-}
+    }
+  } catch(e) {}
 
-function saveOverrides() {
+  // Fallback: localStorage
   try {
-    const overrides = {};
-    allCards.forEach(c => {
-      overrides[c._key] = { status: c.status, publishDate: c.publishDate || null, notes: c.notes || '', copy: c.brief?.copy || '' };
-    });
-    localStorage.setItem('cs_cb_v2', JSON.stringify(overrides));
-  } catch (e) {}
+    const saved = localStorage.getItem('cs_content_board_v3');
+    if (saved) {
+      cards = JSON.parse(saved);
+      render();
+      return;
+    }
+  } catch(e) {}
+
+  // Default cards
+  cards = getDefaultCards();
+  render();
 }
 
-// ── Filters ──
-function buildFilterOptions() {
-  const vf = document.getElementById('videoFilter');
-  vf.innerHTML = '<option value="all">All Videos</option>' +
-    boardData.videos.map(v => `<option value="${v.id}">${v.title}</option>`).join('');
-
-  const pf = document.getElementById('platformFilter');
-  const platforms = [...new Set(allCards.map(c => c.platform))].sort();
-  pf.innerHTML = '<option value="all">All Platforms</option>' +
-    platforms.map(p => `<option value="${p}">${p}</option>`).join('');
-
-  const pe = document.getElementById('personaFilter');
-  const personas = [...new Set(allCards.map(c => c.persona))].sort();
-  pe.innerHTML = '<option value="all">All Owners</option>' +
-    personas.map(p => `<option value="${p}">${boardData.personas[p]?.emoji || ''} ${p}</option>`).join('');
-
-  [vf, pf, pe, document.getElementById('statusFilter')].forEach(el => {
-    el.addEventListener('change', render);
-  });
+function getDefaultCards() {
+  return [
+    { id: 'c1', title: 'LinkedIn — Market update post', platform: 'LinkedIn', type: 'post', status: 'draft', scheduledDate: '2026-04-07', cta: 'STRATEGY', copy: '', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+    { id: 'c2', title: 'Instagram — Educational story', platform: 'Instagram', type: 'story', status: 'draft', scheduledDate: '2026-04-08', cta: '', copy: '', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+    { id: 'c3', title: 'LinkedIn — Member win case study', platform: 'LinkedIn', type: 'post', status: 'draft', scheduledDate: '2026-04-10', cta: 'FRAMEWORK', copy: '', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+    { id: 'c4', title: 'Instagram — Weekend hook post', platform: 'Instagram', type: 'reel', status: 'draft', scheduledDate: '2026-04-11', cta: '', copy: '', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+    { id: 'c5', title: 'Wealth Shift Podcast Ep 1', platform: 'Podcast', type: 'episode', status: 'draft', scheduledDate: '2026-04-09', cta: '', copy: '', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+    { id: 'c6', title: 'Wealth Shift Podcast Ep 2', platform: 'Podcast', type: 'episode', status: 'draft', scheduledDate: '2026-04-11', cta: '', copy: '', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
+  ];
 }
 
-function getFiltered() {
-  const vf = document.getElementById('videoFilter').value;
-  const pf = document.getElementById('platformFilter').value;
-  const pe = document.getElementById('personaFilter').value;
-  const sf = document.getElementById('statusFilter').value;
-  return allCards.filter(c => {
-    if (vf !== 'all' && c.videoId !== vf) return false;
-    if (pf !== 'all' && c.platform !== pf) return false;
-    if (pe !== 'all' && c.persona !== pe) return false;
-    if (sf !== 'all' && c.status !== sf) return false;
-    return true;
-  });
+function saveLocal() {
+  localStorage.setItem('cs_content_board_v3', JSON.stringify(cards));
 }
 
-// ── Render ──
+// ══════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════
 function render() {
-  const filtered = getFiltered();
-
-  // Stats
-  const total = filtered.length;
-  const posted = filtered.filter(c => c.status === 'Posted').length;
-  const inReview = filtered.filter(c => c.status === 'Ben Review').length;
-  document.getElementById('statsBar').innerHTML =
-    `<span><strong>${total}</strong> cards</span><span><strong>${posted}</strong> posted</span><span><strong>${inReview}</strong> in review</span>`;
-
-  if (activeView === 'board') renderBoard(filtered);
-  else renderCalendar(filtered);
-}
-
-function renderBoard(filtered) {
-  const board = document.getElementById('board');
+  const board = document.getElementById('kanbanBoard');
   board.innerHTML = '';
 
-  STATUS_COLUMNS.forEach(status => {
-    const cards = filtered.filter(c => c.status === status);
-    const col = document.createElement('div');
-    col.className = 'cb-column';
-    col.innerHTML = `
-      <div class="cb-col-header" data-status="${status}">
-        <span class="cb-col-title">${status}</span>
-        <span class="cb-col-count">${cards.length}</span>
+  COLUMNS.forEach(col => {
+    const colCards = cards.filter(c => c.status === col.id);
+    const colEl = document.createElement('div');
+    colEl.className = 'kanban-col';
+    colEl.dataset.status = col.id;
+
+    colEl.innerHTML = `
+      <div class="kanban-col-header">
+        <span class="kanban-col-title" style="color:${col.color}">${col.label}</span>
+        <span class="kanban-col-count">${colCards.length}</span>
       </div>
-      <div class="cb-col-cards" data-status="${status}"></div>
+      <div class="kanban-col-cards" data-status="${col.id}"></div>
     `;
-    const container = col.querySelector('.cb-col-cards');
-    setupDropZone(container, status);
-    cards.forEach(c => container.appendChild(createCardEl(c)));
-    board.appendChild(col);
+
+    const cardsContainer = colEl.querySelector('.kanban-col-cards');
+    setupDropZone(cardsContainer, col.id);
+    colCards.forEach(c => cardsContainer.appendChild(createCardEl(c)));
+    board.appendChild(colEl);
   });
 }
 
 function createCardEl(card) {
   const el = document.createElement('div');
-  el.className = 'cb-card';
+  el.className = 'content-card';
   el.draggable = true;
-  el.dataset.key = card._key;
+  el.dataset.id = card.id;
 
-  const platClass = PLATFORM_CLASS[card.platform] || 'plat-news';
-  const personaClass = PERSONA_CLASS[card.persona] || 'persona-ben';
-  const initial = PERSONA_INITIALS[card.persona] || '?';
-  const preview = (card.brief?.copy || '').replace(/<[^>]*>/g, '').substring(0, 80);
-  const isTwitter = card.platform === 'X/Twitter';
-  const charCount = card.brief?.copy ? card.brief.copy.length : 0;
+  const platClass = PLATFORM_CLASSES[card.platform] || 'plat-linkedin';
+  const dateDisplay = card.scheduledDate ? formatDate(card.scheduledDate) : 'No date';
 
   el.innerHTML = `
-    <div class="cb-card-top">
-      <span class="plat-badge ${platClass}">${card.platform}</span>
-      <div class="persona-dot ${personaClass}" title="${card.persona}">${initial}</div>
-      <span class="cb-card-video-tag" title="${card.videoTitle}">${card.videoTitle.substring(0, 25)}${card.videoTitle.length > 25 ? '…' : ''}</span>
+    <div class="card-title">${esc(card.title)}</div>
+    <div class="card-meta">
+      <span class="platform-badge ${platClass}">${card.platform}</span>
+      <span class="card-date">📅 ${dateDisplay}</span>
     </div>
-    <div class="cb-card-title">${esc(card.title)}</div>
-    ${preview ? `<div class="cb-card-preview">${esc(preview)}${preview.length >= 80 ? '…' : ''}</div>` : ''}
-    <div class="cb-card-footer">
-      <span class="cb-status-badge" data-status="${card.status}" data-key="${card._key}">${card.status}</span>
-      <div style="display:flex; align-items:center; gap:6px;">
-        ${card.publishDate ? `<span class="cb-card-date">📅 ${card.publishDate}</span>` : ''}
-        ${isTwitter ? `<span class="cb-card-chars">${charCount} chars</span>` : ''}
-      </div>
+    <select class="card-status-select" data-id="${card.id}" onchange="changeStatus('${card.id}', this.value)">
+      ${COLUMNS.map(col => `<option value="${col.id}" ${card.status === col.id ? 'selected' : ''}>${STATUS_MAP[col.id]}</option>`).join('')}
+    </select>
+    ${card.cta ? `<div class="card-cta">CTA: ${esc(card.cta)}</div>` : ''}
+    <div class="card-actions">
+      <button onclick="event.stopPropagation(); generateVisuals('${card.id}')">🎨 Generate Visuals</button>
+      <button onclick="event.stopPropagation(); copyCaption('${card.id}', this)">📋 Copy Caption</button>
     </div>
   `;
 
-  // Status badge click → dropdown
-  const badge = el.querySelector('.cb-status-badge');
-  badge.addEventListener('click', (e) => {
-    e.stopPropagation();
-    openStatusDropdown(badge, card);
-  });
-
-  // Card click → modal
-  el.addEventListener('click', (e) => {
-    if (e.target.closest('.cb-status-badge')) return;
-    openCardModal(card);
-  });
-
-  // Drag
+  // Drag events
   el.addEventListener('dragstart', (e) => {
-    dragCard = card;
+    draggedCardId = card.id;
     el.classList.add('dragging');
     e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', card._key);
+    e.dataTransfer.setData('text/plain', card.id);
   });
   el.addEventListener('dragend', () => {
     el.classList.remove('dragging');
-    dragCard = null;
-    document.querySelectorAll('.cb-drop-indicator').forEach(d => d.remove());
+    draggedCardId = null;
+    document.querySelectorAll('.kanban-col').forEach(c => c.classList.remove('drag-over'));
   });
 
   return el;
 }
 
 function setupDropZone(container, status) {
-  container.addEventListener('dragover', (e) => {
+  const col = container.closest('.kanban-col');
+  col.addEventListener('dragover', (e) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
-    if (!container.querySelector('.cb-drop-indicator')) {
-      const ind = document.createElement('div');
-      ind.className = 'cb-drop-indicator';
-      container.appendChild(ind);
-    }
+    col.classList.add('drag-over');
   });
-  container.addEventListener('dragleave', (e) => {
-    if (!container.contains(e.relatedTarget)) {
-      container.querySelectorAll('.cb-drop-indicator').forEach(d => d.remove());
-    }
+  col.addEventListener('dragleave', (e) => {
+    if (!col.contains(e.relatedTarget)) col.classList.remove('drag-over');
   });
-  container.addEventListener('drop', (e) => {
+  col.addEventListener('drop', (e) => {
     e.preventDefault();
-    container.querySelectorAll('.cb-drop-indicator').forEach(d => d.remove());
-    if (!dragCard) return;
-    dragCard.status = status;
-    saveOverrides();
-    render();
-    showToast(`Moved to ${status}`);
-  });
-}
-
-// ── Status Dropdown ──
-let openDropdown = null;
-function openStatusDropdown(badge, card) {
-  closeStatusDropdown();
-  const dd = document.createElement('div');
-  dd.className = 'cb-status-dropdown open';
-  STATUS_COLUMNS.forEach(s => {
-    const item = document.createElement('div');
-    item.className = 'cb-status-dropdown-item' + (s === card.status ? ' current' : '');
-    item.textContent = s;
-    item.addEventListener('click', (e) => {
-      e.stopPropagation();
-      card.status = s;
-      saveOverrides();
-      closeStatusDropdown();
-      render();
-      showToast(`Status → ${s}`);
-    });
-    dd.appendChild(item);
-  });
-  badge.style.position = 'relative';
-  badge.appendChild(dd);
-  openDropdown = dd;
-  setTimeout(() => document.addEventListener('click', closeStatusDropdown, { once: true }), 0);
-}
-
-function closeStatusDropdown() {
-  if (openDropdown) { openDropdown.remove(); openDropdown = null; }
-}
-
-// ── Calendar View ──
-function renderCalendar(filtered) {
-  const grid = document.getElementById('calGrid');
-  const year = calDate.getFullYear();
-  const month = calDate.getMonth();
-  const today = new Date();
-
-  document.getElementById('calMonthLabel').textContent =
-    calDate.toLocaleDateString('en-AU', { month: 'long', year: 'numeric' });
-
-  // Day headers
-  let html = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d =>
-    `<div class="cb-cal-day-header">${d}</div>`
-  ).join('');
-
-  // Calendar days
-  const firstDay = new Date(year, month, 1);
-  let startDay = firstDay.getDay() - 1; // Mon=0
-  if (startDay < 0) startDay = 6;
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const prevMonthDays = new Date(year, month, 0).getDate();
-
-  // Cards by date
-  const cardsByDate = {};
-  filtered.forEach(c => {
-    if (c.publishDate) {
-      if (!cardsByDate[c.publishDate]) cardsByDate[c.publishDate] = [];
-      cardsByDate[c.publishDate].push(c);
+    col.classList.remove('drag-over');
+    if (draggedCardId) {
+      changeStatus(draggedCardId, status);
+      draggedCardId = null;
     }
   });
-
-  // Unscheduled
-  const unscheduled = filtered.filter(c => !c.publishDate);
-
-  // Previous month overflow
-  for (let i = startDay - 1; i >= 0; i--) {
-    const d = prevMonthDays - i;
-    html += `<div class="cb-cal-day other-month"><div class="cb-cal-day-num">${d}</div></div>`;
-  }
-
-  // Current month
-  for (let d = 1; d <= daysInMonth; d++) {
-    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-    const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === d;
-    const dayCards = cardsByDate[dateStr] || [];
-    html += `<div class="cb-cal-day${isToday ? ' today' : ''}" data-date="${dateStr}">
-      <div class="cb-cal-day-num">${d}</div>
-      ${dayCards.slice(0, 3).map(c => {
-        const cls = PLATFORM_CLASS[c.platform] || 'plat-news';
-        return `<div class="cb-cal-card-mini ${cls}" data-key="${c._key}" onclick="event.stopPropagation();openCardModal(findCard('${c._key}'))">${esc(c.title).substring(0, 20)}</div>`;
-      }).join('')}
-      ${dayCards.length > 3 ? `<div style="font-size:10px;color:var(--cs-muted);padding:1px 5px;">+${dayCards.length - 3} more</div>` : ''}
-    </div>`;
-  }
-
-  // Next month overflow
-  const totalCells = startDay + daysInMonth;
-  const remaining = (7 - (totalCells % 7)) % 7;
-  for (let d = 1; d <= remaining; d++) {
-    html += `<div class="cb-cal-day other-month"><div class="cb-cal-day-num">${d}</div></div>`;
-  }
-
-  grid.innerHTML = html;
-
-  // Calendar day click → schedule
-  grid.querySelectorAll('.cb-cal-day:not(.other-month)').forEach(day => {
-    day.addEventListener('click', () => {
-      const date = day.dataset.date;
-      if (unscheduled.length > 0) openSchedulePicker(date, unscheduled);
-    });
-  });
-
-  // Unscheduled sidebar
-  const list = document.getElementById('unschedList');
-  document.getElementById('unschedCount').textContent = `(${unscheduled.length})`;
-  list.innerHTML = unscheduled.map(c => {
-    const platClass = PLATFORM_CLASS[c.platform] || 'plat-news';
-    return `<div class="cb-card" style="cursor:pointer;" onclick="openCardModal(findCard('${c._key}'))">
-      <div class="cb-card-top"><span class="plat-badge ${platClass}">${c.platform}</span></div>
-      <div class="cb-card-title" style="font-size:12px;">${esc(c.title)}</div>
-      <div style="font-size:10px;color:var(--cs-muted);">${esc(c.videoTitle).substring(0, 30)}</div>
-    </div>`;
-  }).join('');
 }
 
-function changeMonth(delta) {
-  if (delta === 0) calDate = new Date();
-  else calDate.setMonth(calDate.getMonth() + delta);
-  render();
-}
-
-function openSchedulePicker(date, unscheduled) {
-  // Simple: prompt with list
-  const names = unscheduled.map((c, i) => `${i + 1}. ${c.title} (${c.platform})`).join('\n');
-  const choice = prompt(`Schedule content for ${date}:\n\n${names}\n\nEnter number (or cancel):`);
-  if (!choice) return;
-  const idx = parseInt(choice) - 1;
-  if (idx >= 0 && idx < unscheduled.length) {
-    unscheduled[idx].publishDate = date;
-    unscheduled[idx].status = 'Scheduled';
-    saveOverrides();
-    render();
-    showToast(`Scheduled for ${date}`);
-  }
-}
-
-// ── Card Modal ──
-function openCardModal(card) {
+// ══════════════════════════════════════
+// ACTIONS
+// ══════════════════════════════════════
+async function changeStatus(cardId, newStatus) {
+  const card = cards.find(c => c.id === cardId);
   if (!card) return;
-  currentModalCard = card;
-
-  const persona = boardData.personas[card.persona] || {};
-  const platClass = PLATFORM_CLASS[card.platform] || 'plat-news';
-  const personaClass = PERSONA_CLASS[card.persona] || 'persona-ben';
-  const stageDesc = boardData.icpStages[card.icpStage] || '';
-  const brief = card.brief || {};
-
-  document.getElementById('modalTitle').innerHTML = `#${card.num} — ${esc(card.title)}`;
-
-  document.getElementById('modalBody').innerHTML = `
-    <div class="cb-modal-row">
-      <div class="cb-modal-field">
-        <label>Platform & Owner</label>
-        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:4px;">
-          <span class="plat-badge ${platClass}" style="font-size:12px; padding:4px 10px;">${card.platform}</span>
-          <span class="cb-persona-badge-lg">
-            <span class="persona-dot ${personaClass}" style="width:24px;height:24px;font-size:11px;">${PERSONA_INITIALS[card.persona] || '?'}</span>
-            ${card.persona} <span style="font-weight:400;color:var(--cs-muted);font-size:11px;">(${persona.role || ''})</span>
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <div class="cb-modal-field">
-      <label>ICP Stage</label>
-      <span class="cb-icp-badge">${card.icpStage || 'N/A'}</span>
-      ${stageDesc ? `<div class="cb-icp-explainer">${stageDesc}</div>` : ''}
-    </div>
-
-    <div class="cb-modal-field">
-      <label>Source Video</label>
-      <p style="font-size:13px;">${esc(card.videoTitle)} ${card.videoUrl ? `<a href="${card.videoUrl}" target="_blank" style="color:var(--cs-orange);font-weight:600;">[Watch ▶]</a>` : ''}</p>
-    </div>
-
-    <div class="cb-modal-row">
-      <div class="cb-modal-field">
-        <label>Status</label>
-        <select id="modalStatus" onchange="updateCardStatus()">
-          ${STATUS_COLUMNS.map(s => `<option value="${s}" ${s === card.status ? 'selected' : ''}>${s}</option>`).join('')}
-        </select>
-      </div>
-      <div class="cb-modal-field">
-        <label>Publish Date</label>
-        <input type="date" id="modalDate" value="${card.publishDate || ''}" onchange="updateCardDate()">
-      </div>
-    </div>
-
-    ${brief.hook ? `<div class="cb-brief"><h4>🎯 Hook</h4><p>${esc(brief.hook)}</p></div>` : ''}
-    ${brief.angle ? `<div class="cb-brief"><h4>📐 Angle / Brief</h4><p>${esc(brief.angle)}</p></div>` : ''}
-    ${brief.cta ? `<div class="cb-brief"><h4>📢 CTA</h4><p>${esc(brief.cta)}</p></div>` : ''}
-
-    ${brief.copy ? `
-    <div class="cb-modal-field" style="margin-top:16px;">
-      <label>📋 Copy (editable)</label>
-      <textarea class="cb-copy-area" id="modalCopy" onchange="updateCardCopy()">${esc(brief.copy)}</textarea>
-      <div style="display:flex; align-items:center; margin-top:8px;">
-        <button class="cb-copy-btn" onclick="copyToClipboard()">📋 Copy to Clipboard</button>
-        <span class="cb-copied-flash" id="copiedFlash">Copied! ✓</span>
-      </div>
-    </div>` : ''}
-
-    <div class="cb-modal-field" style="margin-top:16px;">
-      <label>Notes</label>
-      <textarea id="modalNotes" placeholder="Add notes about this card..." onchange="updateCardNotes()" style="min-height:60px;">${esc(card.notes || '')}</textarea>
-    </div>
-  `;
-
-  // Posted button
-  const postedBtn = document.getElementById('modalPostedBtn');
-  if (card.status === 'Posted') {
-    postedBtn.style.display = 'none';
-  } else {
-    postedBtn.style.display = '';
-    postedBtn.onclick = () => {
-      card.status = 'Posted';
-      card.publishDate = card.publishDate || new Date().toISOString().split('T')[0];
-      saveOverrides();
-      render();
-      closeModal();
-      showToast('Marked as Posted ✓');
-    };
-  }
-
-  document.getElementById('cardModal').classList.add('open');
-}
-
-function updateCardStatus() {
-  if (!currentModalCard) return;
-  currentModalCard.status = document.getElementById('modalStatus').value;
-  saveOverrides();
+  card.status = newStatus;
+  card.updatedAt = new Date().toISOString();
+  saveLocal();
   render();
+  showToast(`Status → ${STATUS_MAP[newStatus]}`);
+
+  // API call — fail silently
+  try {
+    await fetch('/api/content/status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cardId, status: newStatus, updatedAt: card.updatedAt })
+    });
+  } catch(e) {}
 }
 
-function updateCardDate() {
-  if (!currentModalCard) return;
-  currentModalCard.publishDate = document.getElementById('modalDate').value || null;
-  saveOverrides();
+function generateVisuals(cardId) {
+  const card = cards.find(c => c.id === cardId);
+  console.log('Generate visuals for:', card ? card.title : cardId);
+  showToast('Visual generation coming soon! (logged to console)');
 }
 
-function updateCardCopy() {
-  if (!currentModalCard || !currentModalCard.brief) return;
-  currentModalCard.brief.copy = document.getElementById('modalCopy').value;
-  saveOverrides();
-}
-
-function updateCardNotes() {
-  if (!currentModalCard) return;
-  currentModalCard.notes = document.getElementById('modalNotes').value;
-  saveOverrides();
-}
-
-function copyToClipboard() {
-  const area = document.getElementById('modalCopy');
-  if (!area) return;
-  navigator.clipboard.writeText(area.value).then(() => {
-    const flash = document.getElementById('copiedFlash');
-    flash.classList.add('show');
-    setTimeout(() => flash.classList.remove('show'), 1500);
+function copyCaption(cardId, btn) {
+  const card = cards.find(c => c.id === cardId);
+  if (!card) return;
+  const text = card.copy || card.title;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => btn.textContent = '📋 Copy Caption', 1500);
   });
 }
 
-function closeModal() {
-  document.getElementById('cardModal').classList.remove('open');
-  currentModalCard = null;
+// ══════════════════════════════════════
+// ADD CONTENT FORM
+// ══════════════════════════════════════
+function openAddForm() {
+  document.getElementById('addFormOverlay').classList.add('open');
 }
 
-function findCard(key) {
-  return allCards.find(c => c._key === key);
+function closeAddForm() {
+  document.getElementById('addFormOverlay').classList.remove('open');
 }
 
-// ── New Video ──
-document.getElementById('addContentBtn').onclick = () => document.getElementById('newVideoModal').classList.add('open');
-function closeNewVideoModal() { document.getElementById('newVideoModal').classList.remove('open'); }
+async function submitNewContent() {
+  const title = document.getElementById('formTitle').value.trim();
+  const platform = document.getElementById('formPlatform').value;
+  const type = document.getElementById('formType').value;
+  const scheduledDate = document.getElementById('formDate').value;
+  const cta = document.getElementById('formCta').value.trim();
+  const copy = document.getElementById('formCopy').value.trim();
 
-function createNewVideo() {
-  const title = document.getElementById('nvTitle').value.trim();
-  const url = document.getElementById('nvUrl').value.trim();
-  const date = document.getElementById('nvDate').value;
-  const persona = document.getElementById('nvPersona').value;
-  if (!title) { alert('Please enter a video title.'); return; }
+  if (!title) { showToast('Please enter a title'); return; }
 
-  const TEMPLATE = [
-    { num:1, title:'Short Clip 1', platform:'YouTube Shorts', icpStage:'Stage 1 – Awareness', persona:'Travis' },
-    { num:2, title:'Short Clip 2', platform:'YouTube Shorts', icpStage:'Stage 1 – Awareness', persona:'Travis' },
-    { num:3, title:'Short Clip 3', platform:'YouTube Shorts', icpStage:'Stage 1 – Awareness', persona:'Ben' },
-    { num:4, title:'Short Clip 4', platform:'Reels', icpStage:'Stage 1 – Awareness', persona:'Ben' },
-    { num:5, title:'Short Clip 5', platform:'YouTube Shorts', icpStage:'Stage 1 – Awareness', persona:'Ben' },
-    { num:6, title:'Short Clip 6', platform:'Reels', icpStage:'Stage 1 – Awareness', persona:'Ben' },
-    { num:7, title:'YouTube Community Post', platform:'YouTube', icpStage:'Stage 1 – Awareness', persona:'Sarn' },
-    { num:8, title:'Instagram Carousel', platform:'Instagram', icpStage:'Stage 2 – Education', persona:'Sarn' },
-    { num:9, title:'Newsletter — The Weekly Shift', platform:'Newsletter', icpStage:'Stage 2 – Education', persona:'Matt' },
-    { num:10, title:'X/Twitter Thread', platform:'X/Twitter', icpStage:'Stage 1 – Awareness', persona:'Ben' },
-    { num:11, title:'LinkedIn Post', platform:'LinkedIn', icpStage:'Stage 2 – Education', persona:'Ben' },
-    { num:12, title:'Greenscreen Reaction', platform:'Reels', icpStage:'Stage 1 – Awareness', persona:'Ben' },
-    { num:13, title:'Instagram Stories', platform:'Instagram', icpStage:'Stage 1 – Awareness', persona:'Sarn' },
-    { num:14, title:'Instagram Caption', platform:'Instagram', icpStage:'Stage 1 – Awareness', persona:'Sarn' },
-    { num:15, title:'LinkedIn Long-form', platform:'LinkedIn', icpStage:'Stage 2 – Education', persona:'Ben' },
-    { num:16, title:'X Quote Card', platform:'X/Twitter', icpStage:'Stage 1 – Awareness', persona:'Sarn' },
-    { num:17, title:'Podcast Clip/Promo', platform:'Podcast', icpStage:'Stage 5 – Retention', persona:'Travis' },
-  ];
+  const newCard = {
+    id: 'c' + Date.now(),
+    title, platform, type, copy, cta,
+    status: 'draft',
+    scheduledDate: scheduledDate || '',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
 
-  const vidId = 'vid-' + Date.now();
-  const newVid = { id: vidId, title, url: url || null, publishDate: date || null, persona, cards: TEMPLATE.map(t => ({
-    ...t, column: 'Redistribution', publishDate: null, brief: { hook:'', angle:'', cta:'', copy:'' }
-  })) };
-
-  boardData.videos.push(newVid);
-  flattenCards();
-  restoreOverrides();
-  buildFilterOptions();
-  document.getElementById('videoFilter').value = vidId;
-  saveOverrides();
+  cards.push(newCard);
+  saveLocal();
   render();
-  closeNewVideoModal();
-  document.getElementById('nvTitle').value = '';
-  document.getElementById('nvUrl').value = '';
-  showToast('Video created with 17 cards');
+  closeAddForm();
+  showToast('Content added to board');
+
+  // Clear form
+  document.getElementById('formTitle').value = '';
+  document.getElementById('formDate').value = '';
+  document.getElementById('formCta').value = '';
+  document.getElementById('formCopy').value = '';
+
+  // API call — fail silently
+  try {
+    await fetch('/api/content/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newCard)
+    });
+  } catch(e) {}
 }
 
-// ── View Toggle ──
-document.getElementById('viewChips').addEventListener('click', (e) => {
-  const chip = e.target.closest('.cb-chip');
-  if (!chip) return;
-  document.querySelectorAll('#viewChips .cb-chip').forEach(c => c.classList.remove('active'));
-  chip.classList.add('active');
-  activeView = chip.dataset.view;
-  document.getElementById('boardView').style.display = activeView === 'board' ? '' : 'none';
-  document.getElementById('calendarView').style.display = activeView === 'calendar' ? '' : 'none';
-  render();
-});
+// ══════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
 
-// ── Escape & Overlay Close ──
-document.getElementById('cardModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
-document.getElementById('newVideoModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeNewVideoModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeNewVideoModal(); } });
-
-// ── Utils ──
-function esc(str) { return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function formatDate(dateStr) {
+  try {
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+  } catch(e) { return dateStr; }
+}
 
 function showToast(msg) {
   const toast = document.getElementById('toast');
@@ -1186,8 +598,22 @@ function showToast(msg) {
   setTimeout(() => toast.classList.remove('show'), 2000);
 }
 
-// ── Init ──
-loadData();
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+
+// Escape & overlay close
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAddForm(); });
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+loadCards();
 </script>
 </body>
 </html>
