@@ -519,6 +519,52 @@ tailwind.config = {
   }
   .atm-close:hover { color: #1B1925; }
 
+  /* ── Complete Button ── */
+  .complete-btn {
+    width: 36px; height: 36px; min-width: 36px; min-height: 36px;
+    border-radius: 50%; border: 2.5px solid #D1D1D6;
+    background: transparent; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+    flex-shrink: 0; padding: 0; position: relative;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .complete-btn::after {
+    content: ''; display: block; width: 0; height: 0;
+    border-radius: 50%; background: #22c55e;
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%); transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  .complete-btn:hover { border-color: #22c55e; }
+  .complete-btn:hover .complete-icon { color: #22c55e; }
+  .complete-btn .complete-icon {
+    font-size: 16px; color: #D1D1D6; transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+    z-index: 1; line-height: 1;
+  }
+  .complete-btn.completed {
+    border-color: #22c55e; background: #22c55e;
+    transform: scale(1.1);
+  }
+  .complete-btn.completed::after {
+    width: 100%; height: 100%;
+  }
+  .complete-btn.completed .complete-icon { color: #fff; }
+  .task-row.task-completed {
+    opacity: 0.6; border-left: 3px solid #22c55e;
+    transition: all 0.4s ease;
+  }
+  .task-row.task-completed .task-name { text-decoration: line-through; color: #9CA3AF; }
+  .task-row.task-sliding-out {
+    max-height: 0 !important; overflow: hidden !important;
+    margin-bottom: 0 !important; padding-top: 0 !important;
+    padding-bottom: 0 !important; opacity: 0 !important;
+    border-bottom: none !important;
+    transition: all 0.4s ease !important;
+  }
+  /* Complete toast */
+  .toast-msg.toast-success { background: #22c55e; }
+
   /* ── Toast ── */
   .toast-msg {
     position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
@@ -2096,7 +2142,7 @@ function renderTasks() {
     // Action buttons row
     expandHtml += `<div style="display:flex; align-items:center; gap:8px; margin-top:10px; flex-wrap:wrap;">`;
     expandHtml += `<button class="expand-edit-btn" onclick="event.stopPropagation(); openTaskPanel(${globalIdx})" style="margin-top:0;">\u270F\uFE0F Edit Task</button>`;
-    expandHtml += `<button class="ask-ai-btn" onclick="askAI('${effective.id}', event)">\uD83E\uDD16 Ask AI<span class="ask-ai-tooltip">Copied!</span></button>`;
+    expandHtml += `<button class="ask-ai-btn" onclick="askAI('${effective.id}', event)">\uD83D\uDCCB Copy Prompt<span class="ask-ai-tooltip">Copied! Paste into Discord ↗</span></button>`;
     expandHtml += `</div>`;
     expandHtml += `</div>`;
 
@@ -2122,6 +2168,7 @@ function renderTasks() {
         ${descHtml}
         ${getTaskUpdatedLabel(effective) ? `<div style="font-size:10px; color:#9CA3AF; margin-top:1px; font-family:'Source Code Pro',monospace;">${getTaskUpdatedLabel(effective)}</div>` : ''}
       </div>
+      <button class="complete-btn" title="Mark complete" onclick="event.stopPropagation(); completeTask('${effective.id}', this.closest('.task-row'));"><span class="complete-icon">✓</span></button>
       <div class="task-row-meta" style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
         <select class="priority-dropdown" data-priority="${taskPrio}" onclick="event.stopPropagation()" onchange="changePriority('${effective.id}', this.value, event)" title="Priority">
           <option value="urgent" ${taskPrio === 'urgent' ? 'selected' : ''}>\uD83D\uDD34 Urgent</option>
@@ -2778,11 +2825,59 @@ function submitAddTask() {
   closeAddTaskModal();
   showToast('Task added ✓');
 }
-function showToast(msg) {
+function showToast(msg, type) {
   const el = document.getElementById('toastMsg');
   el.textContent = msg;
+  el.classList.remove('toast-success');
+  if (type === 'success') el.classList.add('toast-success');
   el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2500);
+  setTimeout(() => { el.classList.remove('show'); el.classList.remove('toast-success'); }, 2500);
+}
+
+// ═══════════════════════════════════════════
+// COMPLETE TASK (satisfying tick)
+// ═══════════════════════════════════════════
+function getCompletedTasks() {
+  try { return JSON.parse(localStorage.getItem('cs-completed-tasks') || '[]'); } catch(e) { return []; }
+}
+function saveCompletedTask(taskId) {
+  const completed = getCompletedTasks();
+  if (!completed.includes(taskId)) { completed.push(taskId); localStorage.setItem('cs-completed-tasks', JSON.stringify(completed)); }
+}
+function completeTask(taskId, cardElement) {
+  if (!cardElement) return;
+  // 1. Animate tick button
+  const tick = cardElement.querySelector('.complete-btn');
+  if (tick) tick.classList.add('completed');
+  // 2. Card celebration — brief scale up
+  cardElement.style.transition = 'transform 0.2s cubic-bezier(0.4,0,0.2,1), border-left 0.2s ease, opacity 0.3s ease';
+  cardElement.style.transform = 'scale(1.02)';
+  setTimeout(() => { cardElement.style.transform = 'scale(1)'; }, 200);
+  // 3. Completed visual state
+  setTimeout(() => {
+    cardElement.classList.add('task-completed');
+  }, 250);
+  // 4. Save + toast
+  saveCompletedTask(taskId);
+  // Also update localStorage status to done
+  const stored = JSON.parse(localStorage.getItem('cs-task-' + taskId) || '{}');
+  stored.status = 'done';
+  localStorage.setItem('cs-task-' + taskId, JSON.stringify(stored));
+  showToast('✓ Task marked complete', 'success');
+  // 5. Slide out after 1.5s
+  setTimeout(() => {
+    // Also hide the expand section if open
+    const expand = cardElement.nextElementSibling;
+    if (expand && expand.classList.contains('task-expand')) {
+      expand.style.transition = 'all 0.4s ease';
+      expand.style.maxHeight = '0';
+      expand.style.overflow = 'hidden';
+      expand.style.opacity = '0';
+    }
+    cardElement.classList.add('task-sliding-out');
+    // After animation, re-render
+    setTimeout(() => { fetchTasks(); }, 450);
+  }, 1500);
 }
 
 // ═══════════════════════════════════════════
