@@ -663,11 +663,11 @@ tailwind.config = {
       <div class="card" style="margin-bottom:20px;">
         <div style="display:flex; align-items:center; justify-content:space-between;">
           <div class="card-title" style="margin-bottom:0;">🤖 Bot Fleet</div>
-          <a onclick="switchView('bots')" style="font-size:12px; color:#FC5C03; font-weight:600; cursor:pointer;">View all →</a>
+          <a onclick="switchView('bots')" style="font-size:12px; color:#FC5C03; font-weight:600; cursor:pointer;">View all 17 →</a>
         </div>
         <div style="margin-top:10px; font-size:14px; color:#1B1925; line-height:1.7;">
-          <div><span style="font-weight:600; color:#08C394;">6 of 11 agents active</span> — Finance, EA, Sales, CSM, Crypto Analyst, Ben Analyst all online today.</div>
-          <div style="color:#807F86; font-size:12px;">5 pending setup: Marketing, Social Media, Email, SEO, Video Clipper.</div>
+          <div><span style="font-weight:600; color:#08C394;">7 of 17 agents active</span> — Finance, EA, Sales, CSM, Crypto Analyst, Ben Analyst, Telegram CEO online.</div>
+          <div style="color:#807F86; font-size:12px;">10 idle: Marketing, Social, Email, Video, SEO, Product, Legal, Advisor, Design, Entrepreneur.</div>
         </div>
       </div>
     </div>
@@ -903,9 +903,28 @@ tailwind.config = {
 
     <!-- ═══ VIEW: BOTS ═══ -->
     <div id="view-bots" style="display:none;">
-      <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#1B1925; margin-bottom:4px;">🤖 Bot Fleet</h1>
-      <p style="font-size:13px; color:#807F86; margin-bottom:20px;">11 agents configured · 6 active today</p>
-      <div id="bot-fleet-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:12px;"></div>
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+        <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#1B1925;">🤖 Bot Fleet</h1>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span id="bot-fleet-summary" style="font-size:12px; color:#807F86; font-family:'Source Code Pro',monospace;"></span>
+        </div>
+      </div>
+      <p style="font-size:13px; color:#807F86; margin-bottom:20px;">17 agents across the Collective Shift AI team — your command centre for who does what.</p>
+
+      <!-- Filter tabs -->
+      <div style="display:flex; gap:4px; border-bottom:1px solid #E8E8EA; margin-bottom:20px;">
+        <button class="view-tab active" onclick="filterBots('all', this)">All (17)</button>
+        <button class="view-tab" onclick="filterBots('active', this)">Active</button>
+        <button class="view-tab" onclick="filterBots('idle', this)">Idle</button>
+      </div>
+
+      <div id="bot-fleet-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap:14px;"></div>
+
+      <!-- What each bot owns -->
+      <div class="card" style="margin-top:28px;">
+        <div class="card-title" style="margin-bottom:14px;">📋 Quick Reference — What Each Bot Owns</div>
+        <div id="bot-ownership-table" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:10px;"></div>
+      </div>
     </div>
     <!-- ═══ END BOTS ═══ -->
 
@@ -1334,37 +1353,108 @@ function addProject() {
 // BOT FLEET
 // ═══════════════════════════════════════════
 const botTeam = [
-  { name:'Finance Bot', channel:'#finance-bot', status:'green', activity:'Active today' },
-  { name:'EA Bot', channel:'#executive-assistant', status:'green', activity:'Active today' },
-  { name:'Sales Bot', channel:'#sales-bot', status:'green', activity:'Active today' },
-  { name:'CSM Bot', channel:'#client-success-bot', status:'green', activity:'Active today' },
-  { name:'Crypto Analyst', channel:'#crypto-analyst-bot', status:'green', activity:'Active today' },
-  { name:'Ben Analyst', channel:'#ben-analyst-bot', status:'green', activity:'Active today' },
-  { name:'Marketing Bot', channel:'#marketing-bot', status:'amber', activity:'Briefing sent' },
-  { name:'Social Media Bot', channel:'#social-media-bot', status:'amber', activity:'Awaiting brief' },
-  { name:'Email Bot', channel:'#email-marketing-bot', status:'amber', activity:'Awaiting brief' },
-  { name:'SEO Bot', channel:'#seo-bot', status:'amber', activity:'Awaiting brief' },
-  { name:'Video Clipper', channel:'#video-clipper-bot', status:'amber', activity:'Awaiting brief' },
+  { key:'marketing', name:'Marketing Bot', role:'Content strategy, campaign briefs, marketing plans & distribution', channel:'#marketing-bot', status:'idle', lastTask:'Researching Content Distribution System v2 architecture', workspace:'~/.openclaw/workspace-marketing' },
+  { key:'social', name:'Social Media Bot', role:'Social post creation, scheduling, engagement & community management', channel:'#social-media-bot', status:'idle', lastTask:'Queued 9 reel scripts + tweet drafts for review', workspace:'~/.openclaw/workspace-social' },
+  { key:'email', name:'Email Bot', role:'Email campaigns, sequences, newsletter drafts & automations', channel:'#email-marketing-bot', status:'idle', lastTask:'Drafted Digital Asset Shift newsletter', workspace:'~/.openclaw/workspace-email' },
+  { key:'sales', name:'Sales Bot', role:'Pipeline management, lead scoring, deal tracking & outreach', channel:'#sales-bot', status:'active', lastTask:'Tracking March close rate drop to 16.7%', workspace:'~/.openclaw/workspace-sales' },
+  { key:'finance', name:'Finance Bot', role:'Cash flow, P&L, burn rate, runway forecasting & expense tracking', channel:'#finance-bot', status:'active', lastTask:'Updated March P&L: -A$50K net cash forecast', workspace:'~/.openclaw/workspace-finance' },
+  { key:'csm', name:'CSM Bot', role:'Client success, renewals pipeline, onboarding & retention tracking', channel:'#client-success-bot', status:'active', lastTask:'May renewals pipeline: 397 members, 35% contacted', workspace:'~/.openclaw/workspace-csm' },
+  { key:'analyst', name:'Crypto Analyst', role:'Market analysis, token research, macro reports & portfolio insights', channel:'#crypto-analyst-bot', status:'active', lastTask:'BTC -48% content analysis completed', workspace:'~/.openclaw/workspace-analyst' },
+  { key:'ben-analyst', name:'Ben Analyst', role:'Personal analytics, decision support & data deep-dives for Ben', channel:'#ben-analyst-bot', status:'active', lastTask:'Competitor analysis for positioning doc', workspace:'~/.openclaw/workspace-ben-analyst' },
+  { key:'video', name:'Video Bot', role:'Video clipping, editing briefs, YouTube content pipeline', channel:'#video-clipper-bot', status:'idle', lastTask:'Awaiting long-form editor hire', workspace:'~/.openclaw/workspace-video' },
+  { key:'seo', name:'SEO Bot', role:'SEO audits, keyword research, on-page optimisation & rank tracking', channel:'#seo-bot', status:'idle', lastTask:'Awaiting initial brief', workspace:'~/.openclaw/workspace-seo' },
+  { key:'product', name:'Product Bot', role:'Product roadmap, feature specs, two-track system & member experience', channel:'#product-bot', status:'idle', lastTask:'Two-track product overhaul spec drafted', workspace:'~/.openclaw/workspace-product' },
+  { key:'legal', name:'Legal Bot', role:'Contracts, compliance, deeds of release & corporate structuring', channel:'#legal-bot', status:'idle', lastTask:'Cayman Islands restructure legal audit', workspace:'~/.openclaw/workspace-legal' },
+  { key:'advisor', name:'Advisor Bot', role:'Strategic advice, investor prep, pitch reviews & board materials', channel:'#advisor-bot', status:'idle', lastTask:'Pre-Series A investor memo review', workspace:'~/.openclaw/workspace-advisor' },
+  { key:'ea', name:'EA Bot', role:'Calendar, scheduling, travel, meeting prep & executive admin', channel:'#executive-assistant', status:'active', lastTask:'Booked Steve meetings for US trip', workspace:'~/.openclaw/workspace-ea' },
+  { key:'design', name:'Design Bot', role:'Brand assets, social graphics, presentation design & visual identity', channel:'#design-bot', status:'idle', lastTask:'Awaiting initial brief', workspace:'~/.openclaw/workspace-design' },
+  { key:'entrepreneur', name:'Entrepreneur Bot', role:'Business strategy, opportunity analysis, founder coaching & OKRs', channel:'#entrepreneur-bot', status:'idle', lastTask:'House of Brands strategy doc input', workspace:'~/.openclaw/workspace-entrepreneur' },
+  { key:'telegram-ceo', name:'Telegram CEO Bot', role:'Telegram-native CEO interface — quick commands, alerts & mobile access', channel:'Telegram DM', status:'active', lastTask:'Morning brief delivery', workspace:'~/.openclaw/workspace-telegram-ceo' },
 ];
 
 function renderBotFleet() {
   const grid = document.getElementById('bot-fleet-grid');
-  const colors = { green: { dot:'#08C394', label:'Active' }, amber: { dot:'#F59E0B', label:'Pending' }, red: { dot:'#EF4444', label:'Offline' } };
+  const ownerGrid = document.getElementById('bot-ownership-table');
+  const statusConfig = {
+    active: { dot:'#08C394', label:'Active', bg:'rgba(8,195,148,0.08)', border:'#08C394' },
+    idle:   { dot:'#9CA3AF', label:'Idle',   bg:'rgba(156,163,175,0.05)', border:'#E8E8EA' },
+  };
+
+  const activeCount = botTeam.filter(b => b.status === 'active').length;
+  document.getElementById('bot-fleet-summary').textContent = `${activeCount} active · ${botTeam.length - activeCount} idle`;
 
   grid.innerHTML = botTeam.map(b => {
-    const c = colors[b.status];
-    return `<div class="card" style="padding:14px; display:flex; align-items:center; gap:12px;">
-      <div style="width:10px; height:10px; border-radius:50%; background:${c.dot}; flex-shrink:0; ${b.status === 'green' ? 'animation:pulse-glow 2s ease-in-out infinite;' : ''}"></div>
-      <div style="flex:1; min-width:0;">
-        <div style="font-size:14px; font-weight:600; color:#1B1925;">${b.name}</div>
-        <div style="font-size:11px; color:#807F86; font-family:'Source Code Pro',monospace;">${b.channel}</div>
+    const c = statusConfig[b.status] || statusConfig.idle;
+    return `<div class="card bot-card" data-bot-status="${b.status}" style="padding:16px; border-left:3px solid ${c.border}; background:${c.bg};">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+        <div style="width:36px; height:36px; border-radius:8px; background:rgba(252,92,3,0.1); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <span style="font-size:16px;">🤖</span>
+        </div>
+        <div style="flex:1; min-width:0;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; font-weight:700; color:#1B1925;">${b.name}</span>
+            <span style="width:8px; height:8px; border-radius:50%; background:${c.dot}; flex-shrink:0; ${b.status === 'active' ? 'animation:pulse-glow 2s ease-in-out infinite;' : ''}"></span>
+            <span style="font-size:10px; font-weight:600; color:${c.dot}; text-transform:uppercase; letter-spacing:0.5px;">${c.label}</span>
+          </div>
+          <div style="font-size:12px; color:#807F86; margin-top:2px; line-height:1.4;">${b.role}</div>
+        </div>
       </div>
-      <div style="text-align:right;">
-        <div style="font-size:11px; font-weight:600; color:${c.dot};">${c.label}</div>
-        <div style="font-size:10px; color:#807F86;">${b.activity}</div>
+      <div style="display:flex; flex-direction:column; gap:6px; padding-top:10px; border-top:1px solid #F0F0F2;">
+        <div style="display:flex; align-items:flex-start; gap:6px;">
+          <span style="font-size:10px; color:#807F86; text-transform:uppercase; font-weight:600; min-width:65px; flex-shrink:0;">Last Task</span>
+          <span style="font-size:12px; color:#4D4C55; line-height:1.4;">${b.lastTask}</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-size:10px; color:#807F86; text-transform:uppercase; font-weight:600; min-width:65px; flex-shrink:0;">Channel</span>
+          <span style="font-size:11px; color:#654FFC; font-family:'Source Code Pro',monospace;">${b.channel}</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-size:10px; color:#807F86; text-transform:uppercase; font-weight:600; min-width:65px; flex-shrink:0;">Workspace</span>
+          <span style="font-size:11px; color:#807F86; font-family:'Source Code Pro',monospace;">${b.workspace}</span>
+        </div>
       </div>
     </div>`;
   }).join('');
+
+  // Ownership quick reference
+  const ownershipData = [
+    { q:'"How are we tracking financially?"', bot:'Finance Bot', color:'#08C394' },
+    { q:'"Book my flights / schedule a call"', bot:'EA Bot', color:'#654FFC' },
+    { q:'"What\'s the renewal pipeline look like?"', bot:'CSM Bot', color:'#3B82F6' },
+    { q:'"Close rate dropped — what happened?"', bot:'Sales Bot', color:'#EF4444' },
+    { q:'"Write me a tweet thread on BTC"', bot:'Social Media Bot', color:'#FC5C03' },
+    { q:'"Draft a marketing campaign brief"', bot:'Marketing Bot', color:'#F59E0B' },
+    { q:'"What\'s Bitcoin doing right now?"', bot:'Crypto Analyst', color:'#8B5CF6' },
+    { q:'"Analyse this data / compare options"', bot:'Ben Analyst', color:'#10B981' },
+    { q:'"Draft the newsletter for this week"', bot:'Email Bot', color:'#EC4899' },
+    { q:'"Clip this video into shorts"', bot:'Video Bot', color:'#06B6D4' },
+    { q:'"Audit our SEO / keyword gaps"', bot:'SEO Bot', color:'#84CC16' },
+    { q:'"Spec out the new product feature"', bot:'Product Bot', color:'#D97706' },
+    { q:'"Review this contract / send a deed"', bot:'Legal Bot', color:'#6366F1' },
+    { q:'"Prep investor materials"', bot:'Advisor Bot', color:'#14B8A6' },
+    { q:'"Design a social graphic"', bot:'Design Bot', color:'#F43F5E' },
+    { q:'"Brainstorm business ideas / OKRs"', bot:'Entrepreneur Bot', color:'#A855F7' },
+    { q:'"Quick update from my phone"', bot:'Telegram CEO Bot', color:'#0EA5E9' },
+  ];
+
+  ownerGrid.innerHTML = ownershipData.map(o => {
+    return `<div style="display:flex; align-items:center; gap:10px; padding:8px 12px; background:#FAFAFA; border-radius:8px; border:1px solid #F0F0F2;">
+      <div style="width:4px; height:28px; border-radius:2px; background:${o.color}; flex-shrink:0;"></div>
+      <div style="flex:1; min-width:0;">
+        <div style="font-size:12px; color:#4D4C55; font-style:italic; line-height:1.3;">${o.q}</div>
+        <div style="font-size:11px; font-weight:600; color:#1B1925; margin-top:2px;">→ ${o.bot}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterBots(filter, btn) {
+  document.querySelectorAll('#view-bots .view-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.querySelectorAll('.bot-card').forEach(card => {
+    if (filter === 'all') { card.style.display = ''; return; }
+    card.style.display = card.dataset.botStatus === filter ? '' : 'none';
+  });
 }
 
 // ═══════════════════════════════════════════
