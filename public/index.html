@@ -697,6 +697,119 @@ tailwind.config = {
   @media (max-width: 640px) {
     .topbar-search { width: 120px; font-size: 12px; }
   }
+
+  /* ── Light Mode Overrides (Feature 9) ── */
+  body.light-mode {
+    --bg-primary: #f5f5f5;
+    --bg-secondary: #ffffff;
+    --text-primary: #1a1a2e;
+    --text-muted: #666;
+    --border-color: #e0e0e0;
+    --card-bg: #ffffff;
+  }
+
+  /* ── Quick Actions Grid (Feature 7) ── */
+  .quick-actions-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  }
+  @media (max-width: 768px) {
+    .quick-actions-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  .qa-btn {
+    background: #1A1A2E; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px;
+    padding: 14px 12px; cursor: pointer; display: flex; align-items: center; gap: 10px;
+    transition: all 0.15s; color: #E8E8EA; font-size: 13px; font-weight: 500;
+    font-family: 'Barlow', sans-serif; min-height: 44px; position: relative;
+    text-align: left;
+  }
+  .qa-btn:hover { background: #252540; border-color: rgba(252,92,3,0.3); transform: translateY(-1px); }
+  .qa-btn:active { transform: translateY(0); }
+  .qa-btn .qa-icon { font-size: 18px; flex-shrink: 0; }
+  .qa-tooltip {
+    position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+    background: #08C394; color: #fff; font-size: 11px; padding: 4px 10px;
+    border-radius: 6px; white-space: nowrap; pointer-events: none;
+    opacity: 0; transition: opacity 0.2s; margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .qa-tooltip.show { opacity: 1; }
+
+  /* ── Notification Centre (Feature 8) ── */
+  .notif-bell {
+    position: relative; background: none; border: none; font-size: 18px;
+    cursor: pointer; padding: 4px; line-height: 1;
+  }
+  .notif-badge {
+    position: absolute; top: -2px; right: -4px; background: #EF4444; color: #fff;
+    font-size: 9px; font-weight: 700; min-width: 16px; height: 16px;
+    border-radius: 999px; display: flex; align-items: center; justify-content: center;
+    font-family: 'Plus Jakarta Sans', sans-serif; padding: 0 3px;
+  }
+  .notif-badge:empty { display: none; }
+  .notif-dropdown {
+    position: absolute; top: 100%; right: 0; margin-top: 8px; width: 320px;
+    background: #fff; border: 1px solid #E8E8EA; border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12); z-index: 200;
+    display: none; overflow: hidden;
+  }
+  .notif-dropdown.open { display: block; }
+  .notif-header {
+    padding: 12px 16px; border-bottom: 1px solid #E8E8EA;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px;
+    font-weight: 700; color: #1B1925;
+  }
+  .notif-item {
+    display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+    border-bottom: 1px solid #F0F0F2; transition: background 0.1s; cursor: pointer;
+  }
+  .notif-item:hover { background: #F7F7F8; }
+  .notif-item:last-child { border-bottom: none; }
+  .notif-icon { font-size: 16px; flex-shrink: 0; }
+  .notif-text { flex: 1; min-width: 0; }
+  .notif-name { font-size: 13px; font-weight: 500; color: #1B1925; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .notif-date { font-size: 10px; color: #807F86; font-family: 'Source Code Pro', monospace; margin-top: 2px; }
+  .notif-view { font-size: 11px; color: #FC5C03; font-weight: 600; white-space: nowrap; cursor: pointer; }
+  .notif-empty { padding: 20px 16px; text-align: center; font-size: 13px; color: #807F86; }
+
+  /* ── Theme Toggle (Feature 9) ── */
+  .theme-toggle {
+    background: none; border: none; font-size: 18px; cursor: pointer;
+    padding: 4px; line-height: 1; transition: transform 0.2s;
+  }
+  .theme-toggle:hover { transform: scale(1.15); }
+
+  /* ── Keyboard Shortcuts Modal (Feature 10) ── */
+  .kb-modal-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500;
+    display: none; align-items: center; justify-content: center;
+  }
+  .kb-modal-backdrop.open { display: flex; }
+  .kb-modal {
+    background: #fff; border-radius: 12px; padding: 24px 28px; max-width: 440px;
+    width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+  }
+  .kb-modal h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 16px; color: #1B1925; }
+  .kb-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #F0F0F2; }
+  .kb-row:last-child { border-bottom: none; }
+  .kb-key {
+    background: #F7F7F8; border: 1px solid #E8E8EA; border-radius: 4px;
+    padding: 2px 8px; font-family: 'Source Code Pro', monospace; font-size: 12px;
+    font-weight: 600; color: #1B1925; min-width: 24px; text-align: center;
+  }
+  .kb-desc { font-size: 13px; color: #4D4C55; }
+  .kb-section { font-size: 11px; color: #807F86; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-top: 12px; margin-bottom: 4px; }
+
+  /* ── Export CSV Button (Feature 11) ── */
+  .export-csv-btn {
+    background: none; border: 1px solid #E8E8EA; border-radius: 8px;
+    color: #807F86; font-size: 11px; cursor: pointer; padding: 6px 12px;
+    min-height: 36px; font-family: 'Barlow', sans-serif; transition: all 0.15s;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .export-csv-btn:hover { border-color: #FC5C03; color: #FC5C03; }
+
+  /* ── Selected task highlight for keyboard nav ── */
+  .task-row.kb-selected { outline: 2px solid #FC5C03; outline-offset: -2px; border-radius: 4px; }
 </style>
 </head>
 <body>
@@ -824,6 +937,18 @@ tailwind.config = {
     <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#807F86;" title="Dashboard status">
       <span style="width:8px; height:8px; border-radius:50%; background:#08C394; flex-shrink:0;"></span>
       <span>Live</span>
+    </div>
+    <!-- Theme Toggle (Feature 9) -->
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light mode">🌙</button>
+    <!-- Notification Bell (Feature 8) -->
+    <div style="position:relative;">
+      <button class="notif-bell" id="notifBell" onclick="toggleNotifications(event)" title="Notifications">
+        🔔<span class="notif-badge" id="notifBadge"></span>
+      </button>
+      <div class="notif-dropdown" id="notifDropdown">
+        <div class="notif-header">Notifications</div>
+        <div id="notifList"></div>
+      </div>
     </div>
     <!-- Avatar -->
     <div style="display:flex; align-items:center; gap:8px; cursor:pointer;">
@@ -1028,6 +1153,37 @@ tailwind.config = {
         </div>
         <p class="muted-note">Update counts as outreach progresses. Target: 34+ renewals by May 18. <a href="/may-renewals-2026.html">View playbook →</a></p>
       </div>
+
+      <!-- ═══ FEATURE 7: Quick Actions ═══ -->
+      <div class="card" style="margin-bottom:20px; background:#111127; border-color:rgba(255,255,255,0.06);">
+        <div class="card-title" style="color:#807F86;">⚡ Quick Actions</div>
+        <div class="quick-actions-grid">
+          <button class="qa-btn" onclick="copyQuickAction(this, 'BenBot, draft a social post for this week. Platform: [Instagram/LinkedIn]. Topic: [describe topic]. Tone: educator, direct, no hype.')">
+            <span class="qa-icon">📣</span> Draft social post
+            <span class="qa-tooltip">Copied! Paste in Discord ↗</span>
+          </button>
+          <button class="qa-btn" onclick="copyQuickAction(this, 'BenBot, summarise what happened this week across all bots. Key completions, what\'s in progress, what needs my attention.')">
+            <span class="qa-icon">📊</span> Summarise this week
+            <span class="qa-tooltip">Copied! Paste in Discord ↗</span>
+          </button>
+          <button class="qa-btn" onclick="copyQuickAction(this, 'BenBot, give me an update on May renewals. How many contacts made, any responses, what\'s the pipeline looking like?')">
+            <span class="qa-icon">💰</span> Check renewals status
+            <span class="qa-tooltip">Copied! Paste in Discord ↗</span>
+          </button>
+          <button class="qa-btn" onclick="copyQuickAction(this, 'BenBot, pull today\'s call stats. How many calls booked, show rate, close rate vs target.')">
+            <span class="qa-icon">📞</span> Review call pipeline
+            <span class="qa-tooltip">Copied! Paste in Discord ↗</span>
+          </button>
+          <button class="qa-btn" onclick="copyQuickAction(this, 'BenBot, what are the top 3 things I should focus on this week based on current KPIs and open tasks?')">
+            <span class="qa-icon">🎯</span> Weekly priorities
+            <span class="qa-tooltip">Copied! Paste in Discord ↗</span>
+          </button>
+          <button class="qa-btn" onclick="copyQuickAction(this, 'BenBot, create a content brief for this week. One YouTube video idea, 3 LinkedIn posts, 5 Instagram stories based on current market conditions.')">
+            <span class="qa-icon">📝</span> Content brief
+            <span class="qa-tooltip">Copied! Paste in Discord ↗</span>
+          </button>
+        </div>
+      </div>
     </div>
     <!-- ═══ END MORNING BRIEF ═══ -->
 
@@ -1037,6 +1193,7 @@ tailwind.config = {
         <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#1B1925; margin:0;">My Tasks</h1>
         <div style="display:flex; align-items:center; gap:8px;">
           <button onclick="clearTaskCache()" style="background:none;border:1px solid #E8E8EA;border-radius:8px;color:#9CA3AF;font-size:11px;cursor:pointer;padding:6px 12px;min-height:36px;" title="Clear local cache if tasks not showing">↺ Reset view</button>
+          <button class="export-csv-btn" onclick="exportTasksCSV()" title="Export tasks to CSV">📥 Export CSV</button>
           <button onclick="addPriority()" style="display:flex; align-items:center; gap:6px; background:#FC5C03; color:#fff; border:none; padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; font-family:'Barlow',sans-serif; min-height:36px;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
             Add Task
@@ -1571,6 +1728,29 @@ tailwind.config = {
 
 <!-- ═══ TOAST ═══ -->
 <div class="toast-msg" id="toastMsg"></div>
+
+<!-- ═══ KEYBOARD SHORTCUTS MODAL (Feature 10) ═══ -->
+<div class="kb-modal-backdrop" id="kbModal">
+  <div class="kb-modal">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+      <h2 style="margin:0;">⌨️ Keyboard Shortcuts</h2>
+      <button onclick="document.getElementById('kbModal').classList.remove('open')" style="background:none; border:none; font-size:20px; color:#807F86; cursor:pointer;">✕</button>
+    </div>
+    <div class="kb-section">Navigation</div>
+    <div class="kb-row"><span class="kb-desc">Morning Brief</span><span class="kb-key">B</span></div>
+    <div class="kb-row"><span class="kb-desc">Tasks</span><span class="kb-key">T</span></div>
+    <div class="kb-row"><span class="kb-desc">Metrics / KPIs</span><span class="kb-key">M</span></div>
+    <div class="kb-row"><span class="kb-desc">Docs</span><span class="kb-key">D</span></div>
+    <div class="kb-row"><span class="kb-desc">Scorecard</span><span class="kb-key">S</span></div>
+    <div class="kb-section">Tasks View</div>
+    <div class="kb-row"><span class="kb-desc">Select next task</span><span class="kb-key">J</span></div>
+    <div class="kb-row"><span class="kb-desc">Select previous task</span><span class="kb-key">K</span></div>
+    <div class="kb-row"><span class="kb-desc">Expand selected task</span><span class="kb-key">Enter</span></div>
+    <div class="kb-section">General</div>
+    <div class="kb-row"><span class="kb-desc">Show this help</span><span class="kb-key">?</span></div>
+    <div class="kb-row"><span class="kb-desc">Close modal</span><span class="kb-key">Esc</span></div>
+  </div>
+</div>
 
 <!-- ═══ MOBILE BOTTOM TAB BAR ═══ -->
 <div class="bottom-tab-bar">
@@ -2418,43 +2598,49 @@ document.getElementById('tpStatus').addEventListener('change', function() {
 // ═══════════════════════════════════════════
 const docsData = [
   { category: 'marketing', label: 'Marketing Strategy', docs: [
-    { name: 'Integrated Marketing Strategy', url: '/integrated-marketing-strategy.html' },
-    { name: 'Lead Magnet Strategy', url: '/lead-magnet-strategy.html' },
-    { name: 'April Marketing Plan', url: '/april-marketing-plan-2026.html' },
-    { name: 'Marketing Intelligence', url: '/marketing-intelligence.html' },
+    { name: 'Integrated Marketing Strategy', url: '/integrated-marketing-strategy.html', updated: '03 Apr 2026' },
+    { name: 'Lead Magnet Strategy', url: '/lead-magnet-strategy.html', updated: '03 Apr 2026' },
+    { name: 'April Marketing Plan', url: '/april-marketing-plan-2026.html', updated: '01 Apr 2026' },
+    { name: 'Marketing Intelligence', url: '/marketing-intelligence.html', updated: '03 Apr 2026' },
+    { name: 'Marketing Skills', url: '/marketing-skills.html', updated: '01 Apr 2026' },
   ]},
   { category: 'social', label: 'Social & Content', docs: [
-    { name: 'Social Strategy Playbook', url: '/social-strategy-playbook.html' },
-    { name: 'House of Brands', url: '/house-of-brands.html' },
-    { name: 'Content Board', url: '/content-board.html' },
-    { name: 'Content Calendar', url: '/content-calendar.html' },
-    { name: 'Instagram Content Strategy', url: '/instagram-content-strategy.html' },
-    { name: 'YouTube Strategy', url: '/youtube-strategy.html' },
+    { name: 'Social Strategy Playbook', url: '/social-strategy-playbook.html', updated: '03 Apr 2026' },
+    { name: 'House of Brands', url: '/house-of-brands.html', updated: '03 Apr 2026' },
+    { name: 'Content Board', url: '/content-board.html', updated: '02 Apr 2026' },
+    { name: 'Content Calendar', url: '/content-calendar.html', updated: '01 Apr 2026' },
+    { name: 'Content Studio', url: '/content-studio.html', updated: '01 Apr 2026' },
+    { name: 'Instagram Content Strategy', url: '/instagram-content-strategy.html', updated: '30 Mar 2026' },
+    { name: 'Instagram Q&A', url: '/hub/instagram-strategy.html', updated: '01 Apr 2026' },
+    { name: 'YouTube Strategy', url: '/youtube-strategy.html', updated: '30 Mar 2026' },
+    { name: 'CS YouTube Strategy', url: '/hub/youtube-strategy.html', updated: '27 Mar 2026' },
   ]},
   { category: 'sales', label: 'Sales & Renewals', docs: [
-    { name: 'Alchemy Negotiation (Sales Playbook)', url: '/alchemy-negotiation.html' },
-    { name: 'May Renewals 2026', url: '/may-renewals-2026.html' },
-    { name: 'Micromagnet Playbook', url: '/micromagnet-playbook.html' },
-    { name: 'Portfolio Calculator', url: '/portfolio-calculator.html' },
+    { name: 'Sales Playbook (Alchemy Negotiation)', url: '/alchemy-negotiation.html', updated: '03 Apr 2026' },
+    { name: 'May Renewals 2026', url: '/may-renewals-2026.html', updated: '03 Apr 2026' },
+    { name: 'Micromagnet Playbook', url: '/micromagnet-playbook.html', updated: '03 Apr 2026' },
+    { name: 'Portfolio Calculator', url: '/portfolio-calculator.html', updated: '01 Apr 2026' },
   ]},
   { category: 'finance', label: 'Finance & Operations', docs: [
-    { name: 'Amex Expense Report Mar 2026', url: '/amex-expense-report-mar2026.html' },
-    { name: 'Team Cost', url: '/team-cost.html' },
-    { name: 'Restructure Playbook', url: '/restructure-playbook.html' },
-    { name: 'Actions', url: '/actions.html' },
+    { name: 'Amex Expense Report Mar 2026', url: '/amex-expense-report-mar2026.html', updated: '03 Apr 2026' },
+    { name: 'Team Cost', url: '/team-cost.html', updated: '01 Apr 2026' },
+    { name: 'Restructure Playbook', url: '/restructure-playbook.html', updated: '29 Mar 2026' },
+    { name: 'Actions', url: '/actions.html', updated: '01 Apr 2026' },
+    { name: 'Katya Finance Briefing', url: '/team/index.html', updated: '01 Apr 2026', badge: 'Team' },
   ]},
   { category: 'strategy', label: 'Strategy & Company', docs: [
-    { name: 'Strategy Hub', url: '/strategy-hub.html' },
-    { name: 'CS Education System Overview', url: '/cs-education-system-overview.html' },
-    { name: 'CS Operating System Manual', url: '/cs-operating-system-manual.html' },
-    { name: '8-Step Strategy Workbook', url: '/8-step-strategy-workbook-L1.html' },
-    { name: 'Q1 Exec Briefing', url: '/q1-exec-briefing-2026-03-30.html' },
-    { name: 'Q2 Market Briefing', url: '/q2-market-briefing.html' },
-    { name: 'Webinar Q2 2026', url: '/webinar-q2-2026-is-now-the-time.html' },
+    { name: 'Strategy Hub', url: '/strategy-hub.html', updated: '01 Apr 2026' },
+    { name: 'CS Education System Overview', url: '/cs-education-system-overview.html', updated: '27 Mar 2026' },
+    { name: 'CS Operating System Manual', url: '/cs-operating-system-manual.html', updated: '26 Mar 2026' },
+    { name: '8-Step Strategy Workbook', url: '/8-step-strategy-workbook-L1.html', updated: '27 Mar 2026' },
+    { name: 'Q1 Exec Briefing', url: '/q1-exec-briefing-2026-03-30.html', updated: '01 Apr 2026' },
+    { name: 'Q2 Market Briefing', url: '/q2-market-briefing.html', updated: '01 Apr 2026' },
+    { name: 'New Member Strategy', url: '/new-member-strategy.html', updated: '24 Mar 2026' },
+    { name: 'Webinar Q2 2026', url: '/webinar-q2-2026-is-now-the-time.html', updated: '01 Apr 2026' },
   ]},
   { category: 'team', label: 'Team Briefs', docs: [
-    { name: 'Travis Briefing', url: '/travis-briefing-2026-03-27.html' },
-    { name: 'CS Brand Guidelines', url: '/CS_Brand_Guidelines_Figma_2026.html' },
+    { name: 'Travis Briefing', url: '/travis-briefing-2026-03-27.html', updated: '01 Apr 2026' },
+    { name: 'CS Brand Guidelines', url: '/CS_Brand_Guidelines_Figma_2026.html', updated: '23 Mar 2026' },
   ]},
 ];
 
@@ -2481,8 +2667,11 @@ function renderDocs(filter) {
     html += `</div>`;
     html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">`;
     group.docs.forEach(d => {
+      const badgeHtml = d.badge ? `<span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;background:#EEF2FF;color:#6366F1;text-transform:uppercase;letter-spacing:0.5px;margin-left:6px;">${escHtml(d.badge)}</span>` : '';
       html += `<a href="${d.url}" target="_blank" rel="noopener" class="card" style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;text-decoration:none;border-left:3px solid ${cc.border};transition:all 0.15s;cursor:pointer;">`;
-      html += `<span style="font-size:14px;font-weight:500;color:#1B1925;">${escHtml(d.name)}</span>`;
+      html += `<div style="flex:1;min-width:0;"><div style="display:flex;align-items:center;flex-wrap:wrap;"><span style="font-size:14px;font-weight:500;color:#1B1925;">${escHtml(d.name)}</span>${badgeHtml}</div>`;
+      if (d.updated) html += `<div style="font-size:11px;color:#9CA3AF;margin-top:3px;font-family:'Source Code Pro',monospace;">Updated: ${d.updated}</div>`;
+      html += `</div>`;
       html += `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#807F86" stroke-width="2" style="flex-shrink:0;"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>`;
       html += `</a>`;
     });
@@ -2594,6 +2783,211 @@ function showToast(msg) {
   el.textContent = msg;
   el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ═══════════════════════════════════════════
+// FEATURE 7: Quick Actions (clipboard copy)
+// ═══════════════════════════════════════════
+function copyQuickAction(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const tooltip = btn.querySelector('.qa-tooltip');
+    if (tooltip) {
+      tooltip.classList.add('show');
+      setTimeout(() => tooltip.classList.remove('show'), 2000);
+    }
+  });
+}
+
+// ═══════════════════════════════════════════
+// FEATURE 8: Notification Centre
+// ═══════════════════════════════════════════
+function renderNotifications() {
+  const list = document.getElementById('notifList');
+  const badge = document.getElementById('notifBadge');
+  if (!_allTasks || !_allTasks.length) {
+    list.innerHTML = '<div class="notif-empty">All clear. No pending approvals.</div>';
+    badge.textContent = '';
+    return;
+  }
+  const approvalItems = _allTasks.filter(t => t.needsApproval);
+  const doneItems = _allTasks.filter(t => {
+    const stored = JSON.parse(localStorage.getItem('cs-task-' + t.id) || '{}');
+    const effective = Object.assign({}, t, stored);
+    return effective.status === 'done' && !stored._deleted;
+  });
+  const items = [...approvalItems];
+  doneItems.forEach(d => {
+    if (items.length < 5 && !items.find(i => i.id === d.id)) items.push(d);
+  });
+  const display = items.slice(0, 5);
+  if (display.length === 0) {
+    list.innerHTML = '<div class="notif-empty">All clear. No pending approvals.</div>';
+    badge.textContent = '';
+    return;
+  }
+  const badgeCount = approvalItems.length || Math.min(display.length, 5);
+  badge.textContent = badgeCount;
+  list.innerHTML = display.map(t => {
+    const icon = t.needsApproval ? '⚠️' : '✅';
+    const dateStr = t.completedAt || t.due || '';
+    let dateLabel = '';
+    if (dateStr) {
+      try { dateLabel = new Date(dateStr + 'T00:00:00').toLocaleDateString('en-AU', {day:'numeric',month:'short'}); } catch(e) {}
+    }
+    return `<div class="notif-item" onclick="toggleNotifications(); switchView('tasks');">
+      <span class="notif-icon">${icon}</span>
+      <div class="notif-text">
+        <div class="notif-name">${escHtml(t.name)}</div>
+        <div class="notif-date">${dateLabel}</div>
+      </div>
+      <span class="notif-view">View</span>
+    </div>`;
+  }).join('');
+}
+
+function toggleNotifications(e) {
+  if (e) e.stopPropagation();
+  const dd = document.getElementById('notifDropdown');
+  dd.classList.toggle('open');
+}
+
+document.addEventListener('click', function(e) {
+  const dd = document.getElementById('notifDropdown');
+  const bell = document.getElementById('notifBell');
+  if (dd && dd.classList.contains('open') && !dd.contains(e.target) && !bell.contains(e.target)) {
+    dd.classList.remove('open');
+  }
+});
+
+const _origFetchTasks = fetchTasks;
+fetchTasks = async function() {
+  await _origFetchTasks();
+  renderNotifications();
+};
+setTimeout(renderNotifications, 500);
+
+// ═══════════════════════════════════════════
+// FEATURE 9: Dark/Light Mode Toggle
+// ═══════════════════════════════════════════
+function toggleTheme() {
+  const body = document.body;
+  const isLight = body.classList.toggle('light-mode');
+  const theme = isLight ? 'light' : 'dark';
+  localStorage.setItem('theme', theme);
+  document.getElementById('themeToggle').textContent = isLight ? '☀️' : '🌙';
+}
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'light') {
+    document.body.classList.add('light-mode');
+    document.getElementById('themeToggle').textContent = '☀️';
+  }
+})();
+
+// ═══════════════════════════════════════════
+// FEATURE 10: Keyboard Shortcuts
+// ═══════════════════════════════════════════
+let _kbSelectedIdx = -1;
+
+document.addEventListener('keydown', function(e) {
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable) return;
+
+  const key = e.key;
+
+  if (key === 'Escape') {
+    document.getElementById('kbModal').classList.remove('open');
+    return;
+  }
+  if (key === '?') {
+    e.preventDefault();
+    document.getElementById('kbModal').classList.toggle('open');
+    return;
+  }
+  if (key === 'b') { switchView('brief'); return; }
+  if (key === 't') { switchView('tasks'); return; }
+  if (key === 'm') { switchView('metrics'); return; }
+  if (key === 'd') { switchView('docs'); return; }
+  if (key === 's') { switchView('scorecard'); return; }
+
+  const tasksView = document.getElementById('view-tasks');
+  if (tasksView && tasksView.style.display !== 'none') {
+    const rows = Array.from(document.querySelectorAll('#tasks-container .task-row')).filter(r => r.style.display !== 'none');
+    if (key === 'j') {
+      e.preventDefault();
+      _kbSelectedIdx = Math.min(_kbSelectedIdx + 1, rows.length - 1);
+      highlightKbRow(rows);
+      return;
+    }
+    if (key === 'k') {
+      e.preventDefault();
+      _kbSelectedIdx = Math.max(_kbSelectedIdx - 1, 0);
+      highlightKbRow(rows);
+      return;
+    }
+    if (key === 'Enter' && _kbSelectedIdx >= 0 && _kbSelectedIdx < rows.length) {
+      e.preventDefault();
+      rows[_kbSelectedIdx].click();
+      return;
+    }
+  }
+});
+
+function highlightKbRow(rows) {
+  rows.forEach(r => r.classList.remove('kb-selected'));
+  if (_kbSelectedIdx >= 0 && _kbSelectedIdx < rows.length) {
+    rows[_kbSelectedIdx].classList.add('kb-selected');
+    rows[_kbSelectedIdx].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+}
+
+// ═══════════════════════════════════════════
+// FEATURE 11: Export Tasks to CSV
+// ═══════════════════════════════════════════
+function exportTasksCSV() {
+  const pending = JSON.parse(localStorage.getItem('pending_tasks') || '[]');
+  const allExport = [..._allTasks, ...pending.filter(p => !_allTasks.find(t => t.id === p.id))];
+
+  const headers = ['id','name','status','priority','category','due','completedAt','notes'];
+  const csvEscape = (val) => {
+    if (val == null) return '';
+    const s = String(val);
+    if (s.includes(',') || s.includes('"') || s.includes('\n')) {
+      return '"' + s.replace(/"/g, '""') + '"';
+    }
+    return s;
+  };
+
+  let csv = headers.join(',') + '\n';
+  allExport.forEach(t => {
+    const stored = JSON.parse(localStorage.getItem('cs-task-' + t.id) || '{}');
+    if (stored._deleted) return;
+    const effective = Object.assign({}, t, stored);
+    const priority = getTaskPriority(effective.id);
+    const row = [
+      effective.id,
+      effective.name,
+      effective.status,
+      priority,
+      effective.category || '',
+      effective.due || '',
+      effective.completedAt || '',
+      effective.notes || ''
+    ].map(csvEscape);
+    csv += row.join(',') + '\n';
+  });
+
+  const dateStr = new Date().toISOString().split('T')[0];
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'cs-tasks-' + dateStr + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Tasks exported ✓');
 }
 </script>
 </body>
