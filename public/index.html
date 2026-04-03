@@ -360,19 +360,42 @@ tailwind.config = {
     .bottom-tab .btab-icon { font-size: 18px; }
   }
 
-  /* ── Priority selector on task cards ── */
-  .priority-selector {
-    display: inline-flex; align-items: center; gap: 2px;
-    font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 100px;
-    cursor: pointer; border: 1px solid #E8E8EA; background: #F7F7F8;
-    min-height: 44px; min-width: 44px; justify-content: center;
-    transition: all 0.15s; user-select: none; white-space: nowrap;
+  /* ── Priority dropdown on task cards ── */
+  .priority-dropdown {
+    appearance: none; -webkit-appearance: none; -moz-appearance: none;
+    font-size: 12px; font-weight: 600; padding: 6px 28px 6px 10px;
+    border-radius: 8px; cursor: pointer; border: 1.5px solid #333;
+    background: #1A1A2E; color: #ccc;
+    min-height: 44px; min-width: 44px;
+    transition: all 0.15s; white-space: nowrap;
+    font-family: 'Barlow', sans-serif;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 8px center;
   }
-  .priority-selector:hover { border-color: #FC5C03; }
-  .priority-selector[data-priority='urgent'] { background: #FEE2E2; color: #DC2626; border-color: #FECACA; }
-  .priority-selector[data-priority='high'] { background: #FFF7ED; color: #EA580C; border-color: #FED7AA; }
-  .priority-selector[data-priority='normal'] { background: #F0F0F2; color: #4D4C55; border-color: #E8E8EA; }
-  .priority-selector[data-priority='low'] { background: #F0FDF4; color: #16A34A; border-color: #BBF7D0; }
+  .priority-dropdown:focus { outline: none; border-color: #FC5C03; }
+  .priority-dropdown option { background: #1A1A2E; color: #ccc; padding: 8px; }
+  .priority-dropdown[data-priority='urgent'] { border-left: 3px solid #EF4444; color: #F87171; }
+  .priority-dropdown[data-priority='high'] { border-left: 3px solid #F97316; color: #FB923C; }
+  .priority-dropdown[data-priority='normal'] { border-left: 3px solid #555; color: #ccc; }
+  .priority-dropdown[data-priority='low'] { border-left: 3px solid #6B7280; color: #9CA3AF; }
+
+  /* ── Task description ── */
+  .task-description {
+    font-size: 13px; color: #9CA3AF; line-height: 1.4; margin-top: 3px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden; text-overflow: ellipsis; max-height: 2.8em;
+    transition: max-height 0.25s ease;
+  }
+  .task-description.expanded {
+    -webkit-line-clamp: unset; max-height: 500px; overflow: visible;
+  }
+
+  /* ── Task category icon ── */
+  .task-cat-icon {
+    font-size: 20px; line-height: 1; flex-shrink: 0;
+    width: 24px; text-align: center;
+    display: flex; align-items: center; justify-content: center;
+  }
 
   /* ── File pill buttons on task cards ── */
   .task-file-pill {
@@ -1190,6 +1213,13 @@ function handleGlobalSearch(query) {
 const PRIORITY_ORDER = { urgent: 0, high: 1, normal: 2, low: 3 };
 const PRIORITY_LABELS = { urgent: '\uD83D\uDD34 Urgent', high: '\uD83D\uDFE0 High', normal: '\u26AA Normal', low: '\uD83D\uDFE2 Low' };
 const PRIORITY_CYCLE_LIST = ['normal', 'high', 'urgent', 'low'];
+const CATEGORY_ICONS = {
+  'marketing': '📣', 'sales': '💰', 'finance': '📊', 'product': '⚙️',
+  'social': '📱', 'csm': '🤝', 'content': '✍️', 'strategy': '🎯',
+  'legal': '⚖️', 'operations': '🔧', 'revenue': '💰', 'ai-bots': '🤖',
+  'travel': '✈️', 'default': '📋'
+};
+function getCategoryIcon(cat) { return CATEGORY_ICONS[cat] || CATEGORY_ICONS['default']; }
 
 function getTaskPriority(taskId) {
   const stored = JSON.parse(localStorage.getItem('cs-task-priority') || '{}');
@@ -1208,6 +1238,17 @@ function cyclePriority(taskId, event) {
   setTaskPriority(taskId, next);
   renderTasks();
   renderBriefTasks();
+}
+function changePriority(taskId, value, event) {
+  if (event) event.stopPropagation();
+  setTaskPriority(taskId, value);
+  renderTasks();
+  renderBriefTasks();
+}
+function toggleDescription(idx, event) {
+  event.stopPropagation();
+  const desc = document.getElementById('task-desc-' + idx);
+  if (desc) desc.classList.toggle('expanded');
 }
 
 // ═══════════════════════════════════════════
@@ -1422,14 +1463,25 @@ function renderTasks() {
       filesInline += `</div>`;
     }
 
+    const catIcon = getCategoryIcon(effective.category);
+    const hasNotes = effective.notes && effective.notes.trim();
+    const descHtml = hasNotes ? `<div class="task-description" id="task-desc-${globalIdx}" onclick="toggleDescription(${globalIdx}, event)">${escHtml(effective.notes)}</div>` : '';
+
     html += `<div class="task-row" data-status="${effective.status}" onclick="toggleExpand(${globalIdx})">
       <button class="status-pill" data-st="${effective.status}" title="Click to cycle status" onclick="event.stopPropagation(); cycleStatus(${globalIdx})">${STATUS_LABELS[effective.status] || '?'}</button>
+      <span class="task-cat-icon" title="${effective.category || 'task'}">${catIcon}</span>
       <div style="flex:1; min-width:0;">
         <span class="task-name ${effective.status === 'done' ? 'done' : ''}">${escHtml(effective.name)}</span>
+        ${descHtml}
         ${getTaskUpdatedLabel(effective) ? `<div style="font-size:10px; color:#9CA3AF; margin-top:1px; font-family:'Source Code Pro',monospace;">${getTaskUpdatedLabel(effective)}</div>` : ''}
       </div>
       <div class="task-row-meta" style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
-        <button class="priority-selector" data-priority="${taskPrio}" onclick="cyclePriority('${effective.id}', event)" title="Click to change priority">${PRIORITY_LABELS[taskPrio] || '\u26AA Normal'}</button>
+        <select class="priority-dropdown" data-priority="${taskPrio}" onclick="event.stopPropagation()" onchange="changePriority('${effective.id}', this.value, event)" title="Priority">
+          <option value="urgent" ${taskPrio === 'urgent' ? 'selected' : ''}>\uD83D\uDD34 Urgent</option>
+          <option value="high" ${taskPrio === 'high' ? 'selected' : ''}>\uD83D\uDFE0 High</option>
+          <option value="normal" ${taskPrio === 'normal' ? 'selected' : ''}>\u26AA Normal</option>
+          <option value="low" ${taskPrio === 'low' ? 'selected' : ''}>\uD83D\uDFE2 Low</option>
+        </select>
         ${effective.category ? `<span class="category-badge" style="background:${cat.bg}; color:${cat.text};">${effective.category}</span>` : ''}
         ${subtaskCount > 0 ? `<span style="font-size:10px;color:#807F86;">${subtaskDone}/${subtaskCount}</span>` : ''}
         ${dueLabel ? `<span class="task-due ${isOverdue ? 'overdue' : ''}">${dueLabel}</span>` : ''}
@@ -1478,11 +1530,12 @@ function renderBriefTasks() {
   container.innerHTML = top5.map(p => {
     const isOverdue = p.due && p.due < todayStr;
     const dueLabel = p.due ? (p.due === todayStr ? 'Today' : new Date(p.due + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })) : '';
+    const icon = getCategoryIcon(p.category);
     return `<div style="display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid #F0F0F2;">
-      <div style="width:8px; height:8px; border-radius:50%; background:${STATUS_COLORS[p.status] || '#807F86'}; flex-shrink:0;"></div>
+      <span style="font-size:16px; width:20px; text-align:center; flex-shrink:0;">${icon}</span>
       <div style="flex:1; min-width:0;">
         <span class="brief-task-name" style="font-size:13px; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block;">${escHtml(p.name)}</span>
-        ${getTaskUpdatedLabel(p) ? `<span style="font-size:10px; color:#9CA3AF; font-family:'Source Code Pro',monospace;">${getTaskUpdatedLabel(p)}</span>` : ''}
+        ${p.notes ? `<span style="font-size:12px; color:#9CA3AF; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;">${escHtml(p.notes)}</span>` : ''}
       </div>
       ${dueLabel ? `<span style="font-size:10px; font-family:'Source Code Pro',monospace; color:${isOverdue ? '#EF4444' : '#807F86'}; white-space:nowrap;">${dueLabel}</span>` : ''}
     </div>`;
