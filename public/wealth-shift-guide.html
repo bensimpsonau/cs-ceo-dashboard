@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Wealth Shift — Collective Shift</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange: #FC5C03;
+      --orange-light: #FFF3EE;
+      --navy: #1A1A2E;
+      --navy-mid: #2A2A42;
+      --bg: #FAFAF8;
+      --text: #2D2D2D;
+      --text-light: #5A5A5A;
+      --grey-light: #F5F5F5;
+      --border: #E8E6E3;
+      --white: #FFFFFF;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+      color: var(--text);
+      background: var(--bg);
+      font-size: 17px;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--orange); z-index: 9999; width: 0%; transition: width 0.1s linear; }
+    .print-btn { position: fixed; top: 16px; right: 20px; z-index: 9998; background: rgba(255,255,255,0.9); border: 1px solid var(--border); color: var(--text-light); font-family: 'Source Serif 4', serif; font-size: 13px; padding: 6px 14px; border-radius: 4px; cursor: pointer; backdrop-filter: blur(8px); transition: all 0.2s; }
+    .print-btn:hover { color: var(--navy); border-color: var(--navy); }
+    .back-to-top { position: fixed; bottom: 32px; right: 32px; z-index: 9998; width: 44px; height: 44px; border-radius: 50%; background: var(--navy); color: var(--white); border: none; font-size: 20px; cursor: pointer; opacity: 0; transform: translateY(12px); transition: all 0.3s; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+    .back-to-top.visible { opacity: 1; transform: translateY(0); }
+    .back-to-top:hover { background: var(--orange); }
+
+    /* Cover */
+    .cover { min-height: 100vh; background: var(--navy); color: var(--white); display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; padding: 3rem 2rem; text-align: center; }
+    .cover-wordmark { position: absolute; top: 40px; left: 48px; font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; letter-spacing: 0.02em; color: var(--white); }
+    .cover-wordmark .dot { color: var(--orange); }
+    .cover-center { max-width: 640px; }
+    .cover-title { font-family: 'Playfair Display', serif; font-size: 3.6rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; line-height: 1.15; margin-bottom: 1.2rem; }
+    .cover-subtitle { font-family: 'Source Serif 4', serif; font-size: 1.25rem; font-weight: 300; color: rgba(255,255,255,0.7); margin-bottom: 2.5rem; font-style: italic; }
+    .cover-rule { width: 80px; height: 2px; background: var(--orange); margin: 0 auto 2.5rem; }
+    .cover-meta { font-family: 'Source Serif 4', serif; font-size: 0.95rem; color: rgba(255,255,255,0.55); letter-spacing: 0.04em; }
+    .cover-confidential { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); font-family: 'Source Serif 4', serif; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.18em; color: rgba(255,255,255,0.3); }
+    .cover-arrow { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.35); font-size: 24px; animation: bounce 2s infinite; text-decoration: none; }
+    @keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+
+    .container { max-width: 780px; margin: 0 auto; padding: 0 3rem; }
+
+    /* TOC */
+    .toc-section { padding: 5rem 0 4rem; border-bottom: 1px solid var(--border); }
+    .toc-label { font-family: 'Source Serif 4', serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--text-light); margin-bottom: 2rem; }
+    .toc-list { list-style: none; }
+    .toc-item { display: flex; align-items: baseline; padding: 0.85rem 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+    .toc-item:last-child { border-bottom: none; }
+    .toc-num { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 600; color: var(--orange); width: 40px; flex-shrink: 0; }
+    .toc-content { flex: 1; }
+    .toc-title-link { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 600; color: var(--navy); text-decoration: none; transition: color 0.2s; }
+    .toc-title-link:hover { color: var(--orange); }
+    .toc-desc { font-size: 0.85rem; color: var(--text-light); margin-top: 2px; }
+    .toc-time { font-family: 'Source Serif 4', serif; font-size: 0.78rem; color: var(--text-light); flex-shrink: 0; margin-left: 1rem; white-space: nowrap; }
+
+    /* Chapter */
+    .chapter { padding: 5rem 0 3rem; }
+    .chapter-num { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 400; color: var(--orange); opacity: 0.7; line-height: 1; margin-bottom: 0.5rem; }
+    .chapter-title { font-family: 'Playfair Display', serif; font-size: 1.75rem; font-weight: 700; color: var(--navy); line-height: 1.3; margin-bottom: 2rem; }
+    .pull-quote { font-family: 'Source Serif 4', serif; font-size: 1.2rem; font-style: italic; color: var(--navy); line-height: 1.7; border-left: 3px solid var(--orange); padding: 0.5rem 0 0.5rem 1.5rem; margin-bottom: 2.5rem; }
+    h3, .section-heading { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 600; color: var(--navy); margin-top: 2.5rem; margin-bottom: 0.8rem; }
+    p { margin-bottom: 1.15rem; }
+    strong { font-weight: 600; color: var(--navy); }
+
+    /* Stats */
+    .stat-row { display: flex; gap: 1rem; margin: 2rem 0; flex-wrap: wrap; }
+    .stat-box { flex: 1; min-width: 180px; background: var(--grey-light); border-radius: 6px; padding: 1.5rem; text-align: center; }
+    .stat-number { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--orange); line-height: 1.2; }
+    .stat-label { font-size: 0.82rem; color: var(--text-light); margin-top: 0.4rem; line-height: 1.4; }
+
+    /* Key Insight */
+    .key-insight { background: var(--orange-light); border-left: 4px solid var(--orange); padding: 1.5rem 1.8rem; margin: 2.5rem 0; border-radius: 0 6px 6px 0; }
+    .key-insight-label { font-family: 'Source Serif 4', serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--orange); margin-bottom: 0.5rem; }
+    .key-insight p { font-size: 1.02rem; color: var(--navy); font-weight: 500; margin-bottom: 0; line-height: 1.7; }
+
+    /* Chapter Divider */
+    .chapter-divider { border-top: 1px solid var(--orange); opacity: 0.3; margin-top: 3rem; padding-top: 1rem; text-align: right; }
+    .chapter-divider a { font-family: 'Source Serif 4', serif; font-size: 0.82rem; color: var(--orange); text-decoration: none; letter-spacing: 0.02em; }
+    .chapter-divider a:hover { text-decoration: underline; }
+
+    /* CTA */
+    .cta-section { background: var(--navy); color: var(--white); padding: 5rem 2rem; text-align: center; }
+    .cta-inner { max-width: 580px; margin: 0 auto; }
+    .cta-heading { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--white); margin-bottom: 1rem; }
+    .cta-desc { font-size: 1.05rem; color: rgba(255,255,255,0.75); margin-bottom: 2rem; line-height: 1.7; }
+    .cta-button { display: inline-block; background: var(--orange); color: var(--white); font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 1.05rem; padding: 1rem 2.5rem; border-radius: 5px; text-decoration: none; letter-spacing: 0.02em; transition: all 0.2s; }
+    .cta-button:hover { background: #e05200; transform: translateY(-1px); }
+    .cta-author { margin-top: 2rem; font-size: 0.9rem; color: rgba(255,255,255,0.55); }
+    .cta-author strong { color: rgba(255,255,255,0.85); }
+    .cta-trust { margin-top: 1.5rem; font-size: 0.78rem; color: rgba(255,255,255,0.35); letter-spacing: 0.04em; }
+    .cta-trust span { margin: 0 0.6rem; }
+
+    /* Qualifier List */
+    .qualifier-list { list-style: none; padding: 0; margin: 1rem 0 1.5rem; }
+    .qualifier-list li { padding: 0.4rem 0 0.4rem 1.6rem; position: relative; line-height: 1.7; }
+    .qualifier-list li::before { content: '\2713'; position: absolute; left: 0; color: var(--orange); font-weight: 700; }
+    .qualifier-list.not-for li::before { content: '\2717'; color: #9CA3AF; }
+
+    /* Chart */
+    .chart-block { background: var(--white); border: 1px solid #E8E8EA; border-radius: 12px; padding: 24px; margin: 32px 0; }
+    .chart-block .figure-label { font-family: 'Source Serif 4', serif; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--orange); margin-bottom: 4px; }
+    .chart-block .chart-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: 16px; }
+    .chart-block .chart-caption { font-family: 'Source Serif 4', serif; font-size: 0.78rem; font-style: italic; color: var(--text-light); margin-top: 12px; line-height: 1.5; }
+    .chart-block canvas { width: 100% !important; }
+
+    /* Supply Visual */
+    .supply-bar-wrap { margin-bottom: 20px; }
+    .supply-bar-label { font-family: 'Source Serif 4', serif; font-size: 0.82rem; color: var(--text-light); margin-bottom: 6px; }
+    .supply-bar-label strong { color: var(--navy); }
+    .supply-bar-track { width: 100%; height: 32px; background: var(--grey-light); border-radius: 6px; overflow: hidden; display: flex; }
+    .supply-bar-mined { width: 93.8%; background: var(--navy); border-radius: 6px 0 0 6px; }
+    .supply-bar-remaining { width: 6.2%; background: var(--orange); }
+    .supply-compare { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+    .supply-compare-box { flex: 1; min-width: 180px; padding: 16px; border-radius: 8px; text-align: center; font-family: 'Source Serif 4', serif; font-size: 0.85rem; line-height: 1.5; }
+    .supply-compare-box .supply-icon { font-size: 1.6rem; margin-bottom: 6px; }
+    .supply-compare-box strong { display: block; margin-bottom: 4px; }
+    .supply-box-red { background: #FEF2F2; color: #991B1B; }
+    .supply-box-yellow { background: #FEFCE8; color: #854D0E; }
+    .supply-box-orange { background: var(--orange-light); color: var(--navy); border: 1px solid var(--orange); }
+
+    /* Round-Trip */
+    .roundtrip-stats { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+    .roundtrip-stat-box { flex: 1; min-width: 180px; background: var(--grey-light); border-radius: 8px; padding: 16px; text-align: center; font-family: 'Source Serif 4', serif; font-size: 0.88rem; line-height: 1.5; color: var(--navy); }
+
+    /* Timeline */
+    .timeline-wrap { position: relative; padding: 40px 0 20px; overflow-x: auto; }
+    .timeline-line { position: relative; display: flex; align-items: center; justify-content: space-between; min-width: 700px; height: 200px; }
+    .timeline-line::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: var(--border); transform: translateY(-50%); }
+    .timeline-event { position: relative; text-align: center; flex: 1; opacity: 0; transform: translateY(10px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .timeline-event.visible { opacity: 1; transform: translateY(0); }
+    .timeline-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--navy); margin: 0 auto; position: relative; z-index: 2; }
+    .timeline-event.future .timeline-dot { background: var(--orange); box-shadow: 0 0 0 4px rgba(252,92,3,0.2); }
+    .timeline-label { position: absolute; left: 50%; transform: translateX(-50%); width: 120px; font-family: 'Source Serif 4', serif; font-size: 0.72rem; line-height: 1.4; color: var(--text); }
+    .timeline-label strong { display: block; font-size: 0.75rem; color: var(--navy); }
+    .timeline-event:nth-child(odd) .timeline-label { bottom: calc(50% + 16px); }
+    .timeline-event:nth-child(even) .timeline-label { top: calc(50% + 16px); }
+    .timeline-event.future .timeline-label strong { color: var(--orange); }
+
+    /* Pricing Card */
+    .pricing-card { background: var(--navy); color: var(--white); border-radius: 12px; padding: 2.5rem; margin: 2.5rem 0; text-align: center; }
+    .pricing-card .price { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .pricing-card .price-sub { font-size: 0.95rem; color: rgba(255,255,255,0.6); margin-bottom: 1.5rem; }
+    .pricing-card .price-features { list-style: none; padding: 0; text-align: left; max-width: 400px; margin: 0 auto; }
+    .pricing-card .price-features li { padding: 0.5rem 0 0.5rem 1.8rem; position: relative; font-size: 0.95rem; color: rgba(255,255,255,0.85); border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .pricing-card .price-features li::before { content: '\2713'; position: absolute; left: 0; color: var(--orange); font-weight: 700; }
+
+    /* Member Story */
+    .member-story { background: var(--grey-light); border-radius: 8px; padding: 1.8rem 2rem; margin: 2rem 0; border-left: 3px solid var(--orange); }
+    .member-story .story-text { font-style: italic; font-size: 1rem; line-height: 1.7; margin-bottom: 0.8rem; }
+    .member-story .story-attr { font-size: 0.82rem; color: var(--text-light); font-weight: 600; }
+
+    .footer { text-align: center; padding: 2.5rem 2rem; font-size: 0.78rem; color: var(--text-light); border-top: 1px solid var(--border); }
+
+    @media (max-width: 640px) {
+      body { font-size: 16px; }
+      .container { padding: 0 1.5rem; }
+      .cover-title { font-size: 2.2rem; letter-spacing: 0.08em; }
+      .cover-wordmark { top: 24px; left: 24px; font-size: 15px; }
+      .cover-confidential { bottom: 60px; font-size: 0.6rem; }
+      .chapter { padding: 3.5rem 0 2rem; }
+      .chapter-num { font-size: 2.5rem; }
+      .chapter-title { font-size: 1.4rem; }
+      .stat-row { flex-direction: column; }
+      .stat-box { min-width: unset; }
+      .cta-heading { font-size: 1.6rem; }
+      .supply-compare { flex-direction: column; }
+      .roundtrip-stats { flex-direction: column; }
+      .pricing-card .price { font-size: 2.2rem; }
+    }
+
+    @media print {
+      .chart-block { break-inside: avoid; border-color: #ddd; }
+      .timeline-event { opacity: 1 !important; transform: none !important; }
+      .progress-bar, .print-btn, .back-to-top, .cover-arrow, .cover-confidential, .chapter-divider { display: none !important; }
+      .cover { min-height: auto; padding: 4rem 2rem; page-break-after: always; }
+      .chapter { page-break-before: always; padding-top: 2rem; }
+      .cta-section { page-break-before: always; }
+      body { font-size: 11pt; }
+      .container { max-width: 100%; padding: 0 1cm; }
+      .key-insight { break-inside: avoid; }
+      .stat-row { break-inside: avoid; }
+    }
+
+/* Fear Cards */
+.fear-card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; margin: 1.8rem 0; overflow: hidden; }
+.fear-card-header { background: var(--navy); color: var(--white); padding: 1rem 1.5rem; font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 600; line-height: 1.4; }
+.fear-card-header .fear-num { color: var(--orange); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; display: block; margin-bottom: 4px; font-weight: 700; }
+.fear-card-body { padding: 1.5rem 1.5rem 1.2rem; }
+.fear-card-body p { margin-bottom: 0.9rem; }
+.fear-card-body p:last-child { margin-bottom: 0; }
+
+/* Bitcoin Timeline */
+.btc-timeline { position: relative; padding: 1rem 0 1rem 2.5rem; margin: 2rem 0; }
+.btc-timeline::before { content: ''; position: absolute; top: 0; left: 11px; bottom: 0; width: 2px; background: var(--border); }
+.btc-timeline-item { position: relative; margin-bottom: 1.5rem; }
+.btc-timeline-dot { position: absolute; left: -2.5rem; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--navy); border: 2px solid var(--white); box-shadow: 0 0 0 2px var(--border); z-index: 2; }
+.btc-timeline-item.today .btc-timeline-dot { background: var(--orange); box-shadow: 0 0 0 4px rgba(252,92,3,0.2); }
+.btc-timeline-year { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1rem; color: var(--navy); margin-bottom: 2px; }
+.btc-timeline-item.today .btc-timeline-year { color: var(--orange); }
+.btc-timeline-text { font-size: 0.95rem; color: var(--text); line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<button class="print-btn" onclick="window.print()" title="Print this guide">&#x2399; Print</button>
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0})" title="Back to top">&uarr;</button>
+
+<!-- ═══════════════ COVER ═══════════════ -->
+<header class="cover" id="top">
+  <div class="cover-wordmark">Collective Shift<span class="dot">.</span></div>
+  <div class="cover-center">
+    <h1 class="cover-title">The Wealth<br>Shift</h1>
+    <p class="cover-subtitle">Why Your Portfolio Is Not Enough</p>
+    <div class="cover-rule"></div>
+    <p class="cover-meta">Ben Simpson &middot; Founder, Collective Shift &middot; April 2026</p>
+  </div>
+  <p class="cover-confidential">Confidential &mdash; For strategy session prospects only</p>
+  <a href="#toc" class="cover-arrow" aria-label="Scroll to contents">&darr;</a>
+</header>
+
+<!-- ═══════════════ TABLE OF CONTENTS ═══════════════ -->
+<div class="container">
+  <section class="toc-section" id="toc">
+    <div class="toc-label">Contents</div>
+    <ol class="toc-list">
+      <li class="toc-item">
+        <span class="toc-num">00</span>
+        <div class="toc-content"><a href="#intro" class="toc-title-link">Introduction</a><div class="toc-desc">The pattern I keep seeing in every conversation</div></div>
+        <span class="toc-time">~3 min</span>
+      </li>
+      <li class="toc-item">
+        <span class="toc-num"></span>
+        <div class="toc-content"><a href="#who" class="toc-title-link">Who This Is For</a><div class="toc-desc">Before you read further</div></div>
+        <span class="toc-time">~2 min</span>
+      </li>
+      <li class="toc-item">
+        <span class="toc-num">★</span>
+        <div class="toc-content">
+          <a href="#bitcoin-primer" class="toc-title-link">What Is Bitcoin — And Why Should You Care?</a>
+          <div class="toc-desc">A wealth-builder's explanation, the 15-year history, and every major objection answered</div>
+        </div>
+        <span class="toc-time">~12 min</span>
+      </li>
+      <li class="toc-item">
+        <span class="toc-num">01</span>
+        <div class="toc-content"><a href="#ch1" class="toc-title-link">The Portfolio That Got You Here Will Not Get You There</a><div class="toc-desc">Inflation, the property trap, super gaps, and the limits of the Australian playbook</div></div>
+        <span class="toc-time">~6 min</span>
+      </li>
+      <li class="toc-item">
+        <span class="toc-num">02</span>
+        <div class="toc-content"><a href="#ch2" class="toc-title-link">What You Are Actually Protecting Against</a><div class="toc-desc">Currency debasement, the hardest asset ever created, and the allocation question</div></div>
+        <span class="toc-time">~5 min</span>
+      </li>
+      <li class="toc-item">
+        <span class="toc-num">03</span>
+        <div class="toc-content"><a href="#ch3" class="toc-title-link">The 3 Mistakes High-Net-Worth Investors Make</a><div class="toc-desc">Waiting for certainty, skipping the framework, and having no exit plan</div></div>
+        <span class="toc-time">~6 min</span>
+      </li>
+      <li class="toc-item">
+        <span class="toc-num">04</span>
+        <div class="toc-content"><a href="#ch4" class="toc-title-link">What Our Members Actually Get</a><div class="toc-desc">Outcomes, not features. The Platinum membership.</div></div>
+        <span class="toc-time">~5 min</span>
+      </li>
+      <li class="toc-item">
+        <span class="toc-num">05</span>
+        <div class="toc-content"><a href="#ch5" class="toc-title-link">The Australian Opportunity</a><div class="toc-desc">$3.5 trillion in super, SMSF access, and why Australia is better positioned than most</div></div>
+        <span class="toc-time">~4 min</span>
+      </li>
+      <li class="toc-item">
+        <span class="toc-num">06</span>
+        <div class="toc-content"><a href="#ch6" class="toc-title-link">The Shift Has Already Started</a><div class="toc-desc">ETF inflows, sovereign wealth funds, and the institutional wave</div></div>
+        <span class="toc-time">~5 min</span>
+      </li>
+      <li class="toc-item">
+        <span class="toc-num">07</span>
+        <div class="toc-content"><a href="#ch7" class="toc-title-link">What Members Say</a><div class="toc-desc">Real results from real investors</div></div>
+        <span class="toc-time">~3 min</span>
+      </li>
+      <li class="toc-item">
+        <span class="toc-num">08</span>
+        <div class="toc-content"><a href="#cta" class="toc-title-link">What Comes Next</a><div class="toc-desc">Closing the gap between knowing and doing</div></div>
+        <span class="toc-time">~3 min</span>
+      </li>
+    </ol>
+  </section>
+
+<!-- ═══════════════ INTRODUCTION ═══════════════ -->
+<section class="chapter" id="intro">
+  <div class="chapter-num">00</div>
+  <h2 class="chapter-title">Introduction</h2>
+
+  <div class="pull-quote">I have watched people ride a 10x all the way back to breakeven because they never defined what enough looks like.</div>
+
+  <p>Last year I sat across from a surgeon. Mid-fifties. Quietly brilliant. He had spent 25 years building one of the most impressive wealth positions I had seen. Three investment properties in Sydney. A self-managed super fund north of $1.2 million. Blue-chip ASX stocks. Cash buffer. Everything you would expect from someone who had done it right.</p>
+
+  <p>Then he told me something that stopped me cold.</p>
+
+  <p>"I bought Bitcoin in 2017. Watched it go to $90,000. Watched it come all the way back. Sold at breakeven. I do not trust myself in this space."</p>
+
+  <p>He was not a sceptic. He was a believer who got hurt. Not by the asset. By the absence of a framework.</p>
+
+  <p>I have had this conversation hundreds of times now. The details change. The pattern does not.</p>
+
+  <p>Someone reaches out. Usually a business owner or senior professional. Net worth somewhere between $500K and $2M. Sometimes more. They have spent 15, 20, sometimes 30 years building real wealth. They are smart. Disciplined. They did not get here by accident.</p>
+
+  <p>But they have a problem they cannot solve with the tools that got them here.</p>
+
+  <p>The dollar is losing value. Their wealth is locked in property they cannot easily access. Super will not be enough. The ASX is a concentrated bet on four banks and a mining company. And digital assets feel like they matter, but nobody has given them a proper framework for how to think about it.</p>
+
+  <p>About 40% of the people who come to us have already been in digital assets. They have already made money. And they have already watched it evaporate. They are not looking for hype. They are looking for the framework they wish they had the first time around.</p>
+
+  <p>That is who I wrote this for.</p>
+
+  <p><strong>Here is what you will have when you finish reading:</strong></p>
+
+  <p>A clear understanding of why the traditional Australian wealth playbook is breaking down. The data behind Bitcoin's role as a store of value. The three mistakes that cost investors the most in this space. What Collective Shift's Platinum membership actually delivers (and what it costs). And the specific Australian opportunity most people do not realise exists.</p>
+
+  <p>No hype. No price predictions. Just the numbers and the logic. The same conversation I would have with you over dinner.</p>
+
+  <div class="key-insight">
+    <div class="key-insight-label">Key Insight</div>
+    <p>The rules that built wealth from 1995 to 2020 are not the rules that will build it from 2025 to 2040. The institutions know this. They have already moved. This guide shows you exactly what is changing and what to do about it.</p>
+  </div>
+
+  <div class="chapter-divider"><a href="#who">Next: Who This Is For &rarr;</a></div>
+</section>
+
+<!-- ═══════════════ WHO THIS IS FOR ═══════════════ -->
+<section class="chapter" id="who">
+  <h2 class="chapter-title">Who This Is For</h2>
+
+  <p>Before you read further, I want to be honest about who this guide is for. And who it is not.</p>
+
+  <h3>This guide is for you if:</h3>
+  <ul class="qualifier-list">
+    <li>You have built genuine wealth through your career, business, or property</li>
+    <li>You suspect digital assets matter but have not found a framework you trust</li>
+    <li>You are not looking for tips or signals. You want to understand the asset class properly</li>
+    <li>You are willing to allocate a meaningful amount (not $500) and manage it seriously</li>
+    <li>You think in decades, not days</li>
+  </ul>
+
+  <h3>This guide is probably not for you if:</h3>
+  <ul class="qualifier-list not-for">
+    <li>You are looking for the next 100x memecoin</li>
+    <li>You want someone to tell you what to buy without understanding why</li>
+    <li>You are not prepared for volatility (digital assets can and do fall 50-80%)</li>
+    <li>You need this money in the next 12 months</li>
+  </ul>
+
+  <p>If you are still reading, you are who I wrote this for.</p>
+  <div class="chapter-divider"><a href="#bitcoin-primer">Next: What Is Bitcoin? &rarr;</a></div>
+</section>
+
+<!-- ═══════════════════════ BITCOIN PRIMER ═══════════════════════ -->
+<section class="chapter" id="bitcoin-primer">
+  <div class="chapter-num">★</div>
+  <h2 class="chapter-title">What Is Bitcoin — And Why Should You Care?</h2>
+
+  <div class="pull-quote">If you're reading this and you still don't fully understand what Bitcoin is, this chapter is for you. Not the technical explanation. The wealth-builder's explanation.</div>
+
+  <p>I wrote the rest of this guide for people who already have some conviction about digital assets. But over the last two years, I've realised something. About a quarter of the people finding their way here are smart, serious investors who've been following this space from a distance. They know digital assets exist. They suspect they matter. But they haven't understood Bitcoin well enough to feel confident committing capital.</p>
+
+  <p>If that's you, this chapter closes that gap. Everything after this will make more sense once you've read it.</p>
+
+  <h3>What Bitcoin actually is</h3>
+
+  <p>Bitcoin is a monetary network with a fixed supply. For the first time in human history, digital scarcity is mathematically provable and enforced. Not by a government. Not by a company. By mathematics and a global network of computers that verify every transaction.</p>
+
+  <p>Property is scarce because land is finite. Bitcoin is scarce because mathematics makes it finite. Unlike property, it cannot be rezoned, subdivided, or built over. The total supply is 21 million. That number was set in 2009 and will never change.</p>
+
+  <div class="stat-row">
+    <div class="stat-box"><div class="stat-number">15 Years</div><div class="stat-label">Continuous uptime since January 2009. No downtime.</div></div>
+    <div class="stat-box"><div class="stat-number">&lt;1%</div><div class="stat-label">Of transactions linked to illicit activity (Chainalysis 2024)</div></div>
+    <div class="stat-box"><div class="stat-number">5th</div><div class="stat-label">Largest asset by market cap globally (2025)</div></div>
+  </div>
+
+  <p><strong>Bitcoin vs "crypto."</strong> This distinction matters enormously. Bitcoin is the reserve asset of the digital economy. Everything else is speculation on top of speculation. When people say "crypto crashed" or "crypto is a scam," they're usually talking about tokens that have nothing to do with Bitcoin's value proposition. Lumping them together is like comparing BHP to a penny stock because both are listed on the ASX.</p>
+
+  <p><strong>There is no CEO. That is a feature.</strong> Bitcoin has no headquarters, no board of directors. That sounds like a weakness. It is the opposite. No single entity can inflate it, shut it down, or change the rules. It has been running continuously since January 2009. The rules are enforced by mathematics and verified by thousands of independent computers worldwide.</p>
+
+  <p><strong>It has never been hacked.</strong> In over 15 years, the Bitcoin network itself has never been compromised. When you hear about "Bitcoin hacks," those are custodians or exchanges being hacked. That is human error in custody, not Bitcoin. Like saying "the Australian dollar was hacked" because someone robbed a bank.</p>
+
+  <h3>The history (investor-relevant)</h3>
+
+  <p>You need to know the arc. Because the arc tells you something important: every time the world said Bitcoin was dead, it came back stronger. Every cycle brought bigger, more serious players.</p>
+
+  <div class="btc-timeline">
+    <div class="btc-timeline-item"><div class="btc-timeline-dot"></div><div class="btc-timeline-year">2008</div><div class="btc-timeline-text">White paper published during the GFC. Explicitly a response to central bank money printing and bank bailouts.</div></div>
+    <div class="btc-timeline-item"><div class="btc-timeline-dot"></div><div class="btc-timeline-year">2013</div><div class="btc-timeline-text">First major media cycle. Price goes $13 to $1,200 and crashes. "Bitcoin is dead." First of many obituaries.</div></div>
+    <div class="btc-timeline-item"><div class="btc-timeline-dot"></div><div class="btc-timeline-year">2017</div><div class="btc-timeline-text">Bitcoin hits $20K, crashes to $3K. "It's over." The technology keeps running.</div></div>
+    <div class="btc-timeline-item"><div class="btc-timeline-dot"></div><div class="btc-timeline-year">2020</div><div class="btc-timeline-text">Institutional adoption begins. MicroStrategy, Square, PayPal all move in. COVID money printing validates the inflation thesis.</div></div>
+    <div class="btc-timeline-item"><div class="btc-timeline-dot"></div><div class="btc-timeline-year">2024</div><div class="btc-timeline-text">US SEC approves 11 spot Bitcoin ETFs. BlackRock enters. Largest ETF launch in history by AUM. The institutional legitimacy moment.</div></div>
+    <div class="btc-timeline-item"><div class="btc-timeline-dot"></div><div class="btc-timeline-year">2025</div><div class="btc-timeline-text">Sovereign wealth funds start allocating. US government confirms Bitcoin as a strategic reserve. Australia's ATO publishes comprehensive guidance.</div></div>
+    <div class="btc-timeline-item today"><div class="btc-timeline-dot"></div><div class="btc-timeline-year">Today</div><div class="btc-timeline-text">Bitcoin is the 5th largest asset globally. Larger than Berkshire Hathaway. Larger than silver. Held by sovereign wealth funds, the world's largest asset managers, and national governments.</div></div>
+  </div>
+
+  <h3>Every major objection, answered</h3>
+
+  <p>Every serious investor I've spoken to has had at least three of these fears. Most have had all ten. They're legitimate. Here's the data.</p>
+
+  <div class="fear-card">
+    <div class="fear-card-header"><span class="fear-num">Objection 1</span>"It's not backed by anything."</div>
+    <div class="fear-card-body">
+      <p>What backs the Australian dollar? Not gold. Australia left the gold standard decades ago. The AUD is backed by the full faith and credit of the Australian government. That's it. Bitcoin is backed by mathematics, energy, and global consensus. The question is not "what backs it." It's "what prevents supply from being debased." For Bitcoin: mathematics. For fiat: political will. Political will is not a reliable store of value. Ask anyone who held Argentine pesos or Turkish lira.</p>
+    </div>
+  </div>
+
+  <div class="fear-card">
+    <div class="fear-card-header"><span class="fear-num">Objection 2</span>"It's too volatile. I could lose everything."</div>
+    <div class="fear-card-body">
+      <p>Yes, Bitcoin is volatile. So was Amazon, which dropped 94% in 2001 and is now up over 200,000% from IPO. Volatility is not the same as permanent loss. In every 4-year holding period in Bitcoin's history, buying at any point has produced a positive return. Every single one. Including buying at every prior all-time high.</p>
+      <p>The framework answer: appropriate position sizing means volatility doesn't materially change your life. A 5% allocation that drops 50% is a 2.5% portfolio drawdown. Most property portfolios swing more than that in a year. Investors just don't check the price daily.</p>
+    </div>
+  </div>
+
+  <div class="fear-card">
+    <div class="fear-card-header"><span class="fear-num">Objection 3</span>"It's used by criminals."</div>
+    <div class="fear-card-body">
+      <p>Every US dollar ever printed has been used for criminal activity. Cash is the original anonymous money. Bitcoin is the opposite of anonymous. Every transaction is recorded on a public ledger anyone can inspect forever. Chainalysis consistently shows less than 1% of Bitcoin transactions are linked to illicit activity. Lower than the traditional banking system. The FBI has seized hundreds of millions in Bitcoin because it is traceable. Criminals prefer cash.</p>
+    </div>
+  </div>
+
+  <div class="fear-card">
+    <div class="fear-card-header"><span class="fear-num">Objection 4</span>"Governments will ban it."</div>
+    <div class="fear-card-body">
+      <p>The US approved 11 spot Bitcoin ETFs and holds Bitcoin as a strategic reserve. You cannot ban something you hold as a national asset. Australia's ATO publishes comprehensive tax guidance. You cannot tax what you have banned. China's 2021 ban was the most aggressive action possible. Bitcoin's network kept running without interruption and the price recovered to new all-time highs. Regulation is coming. Prohibition is not.</p>
+    </div>
+  </div>
+
+  <div class="fear-card">
+    <div class="fear-card-header"><span class="fear-num">Objection 5</span>"It's a bubble / Ponzi scheme."</div>
+    <div class="fear-card-body">
+      <p>A Ponzi collapses when the promoter disappears. Satoshi Nakamoto disappeared in 2011. Bitcoin kept going for fourteen more years. Bubbles don't attract BlackRock, Fidelity, Morgan Stanley, and the Norwegian Sovereign Wealth Fund. Bitcoin has been declared dead over 400 times and keeps hitting new all-time highs. This is a new asset class going through adoption cycles, like every new asset class in history. That is very different from a bubble.</p>
+    </div>
+  </div>
+
+  <div class="fear-card">
+    <div class="fear-card-header"><span class="fear-num">Objection 6</span>"I missed it. The price is too high."</div>
+    <div class="fear-card-body">
+      <p>In 2013, people said this at $200. In 2017 at $5K. In 2020 at $10K. A 10x from $100K is the same return as a 10x from $1K. For a serious wealth builder, this is not about catching a moonshot. It's about whether a 5-10% allocation makes sense as a hedge against monetary debasement. At any price, that question has the same answer. You don't need to buy a whole Bitcoin.</p>
+    </div>
+  </div>
+
+  <div class="fear-card">
+    <div class="fear-card-header"><span class="fear-num">Objection 7</span>"I don't understand it well enough."</div>
+    <div class="fear-card-body">
+      <p>You didn't understand fractional reserve banking when you got your first mortgage. You didn't read the full prospectus of your super fund before salary sacrifice started. Understanding enough to invest is different from understanding everything. The thesis: fixed supply, growing demand, institutional adoption, hedge against monetary debasement, non-correlated to traditional assets. If that makes sense to you, you understand enough.</p>
+    </div>
+  </div>
+
+  <div class="fear-card">
+    <div class="fear-card-header"><span class="fear-num">Objection 8</span>"What if it goes to zero?"</div>
+    <div class="fear-card-body">
+      <p>For Bitcoin at this stage of adoption, the path to zero requires unwinding more institutional infrastructure than has been built around any asset in this timeframe. Sovereign wealth funds would need to write off positions. National governments would need to liquidate reserves. The 5th-largest asset on Earth does not go to zero quietly. The more useful question: what does your portfolio look like if inflation runs at 5-7% for the next decade and you have no hedge?</p>
+    </div>
+  </div>
+
+  <div class="fear-card">
+    <div class="fear-card-header"><span class="fear-num">Objection 9</span>"I'll wait until it's more stable."</div>
+    <div class="fear-card-body">
+      <p>More stable means less return potential. Volatility and return are two sides of the same coin. The window where sophisticated retail investors can still get in ahead of mass institutional adoption is narrowing. "Waiting for stability" historically has meant waiting until the asymmetric opportunity is gone. There is no stable version of a new asset class. There is only early or late.</p>
+    </div>
+  </div>
+
+  <div class="fear-card">
+    <div class="fear-card-header"><span class="fear-num">Objection 10</span>"My accountant / financial advisor told me not to."</div>
+    <div class="fear-card-body">
+      <p>Most financial advisors are not licensed to advise on digital assets. Their caution is often a liability management position, not an investment thesis. The same advisors in 2000 would have said property was too risky. In 2010 they would have said Amazon was speculation. None of this means your advisor is wrong. It means their caution deserves scrutiny. Ask them: what is your specific thesis against a 5% allocation to Bitcoin as a monetary hedge? If the answer is "I'm not sure," that tells you something.</p>
+    </div>
+  </div>
+
+  <div class="chapter-divider"><a href="#ch1">Next: Chapter 1 →</a></div>
+</section>
+
+<!-- ═══════════════ CHAPTER 1 ═══════════════ -->
+<section class="chapter" id="ch1">
+  <div class="chapter-num">01</div>
+  <h2 class="chapter-title">The Portfolio That Got You Here Will Not Get You There</h2>
+
+  <div class="pull-quote">The standard Australian wealth playbook worked. But the conditions that made it work are changing faster than most investors realise.</div>
+
+  <p>Let me start with what has worked.</p>
+
+  <p>Australian property has been one of the best-performing asset classes on the planet over the last 30 years. Combine that with compulsory superannuation, sprinkle in some blue-chip ASX stocks, and you have the standard Australian wealth playbook.</p>
+
+  <p>It worked. I am not here to tell you it did not.</p>
+
+  <p>But I am here to tell you why it is not enough anymore. And I want to use real numbers to do it.</p>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="stat-number">28%</div>
+      <div class="stat-label">Purchasing power lost by the AUD, 2014 to 2024</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">67%</div>
+      <div class="stat-label">Average Australian household wealth in residential property</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">~3-4%</div>
+      <div class="stat-label">Real return on median balanced super fund (after inflation and fees)</div>
+    </div>
+  </div>
+
+  <h3>Inflation is a silent tax.</h3>
+
+  <div class="chart-block">
+    <div class="figure-label">Figure 1.1</div>
+    <div class="chart-title">AUD Purchasing Power 1990 to 2024 (indexed to 100)</div>
+    <canvas id="purchasingPowerChart" height="280"></canvas>
+    <div class="chart-caption">Source: RBA CPI data. Indexed to 100 in 1990.</div>
+  </div>
+
+  <p>Between 2014 and 2024, the Australian dollar lost approximately 28% of its purchasing power. That is not a theory. That is the Reserve Bank's own data. Your $1 million in 2014 buys roughly $720,000 worth of goods and services today. You did not lose money. The money lost value.</p>
+
+  <p>And that is the official number. Anyone who has paid for groceries, insurance, or childcare recently knows the real number feels worse.</p>
+
+  <div class="chart-block">
+    <div class="figure-label">Figure 1.2</div>
+    <div class="chart-title">Where Australian Wealth Sits (Typical HNW Portfolio)</div>
+    <div style="max-width:360px;margin:0 auto;"><canvas id="portfolioDonut" height="360"></canvas></div>
+    <div class="chart-caption">Digital assets represent less than 2% of the average Australian HNW portfolio. The opportunity is in the reallocation, not the speculation.</div>
+  </div>
+
+  <h3>The property trap.</h3>
+
+  <p>The average Australian household has approximately 67% of their total wealth tied up in residential property. That is not diversification. That is a leveraged, illiquid, single-asset-class bet on one country's housing market. If you own your home plus an investment property, you might be at 80% or more.</p>
+
+  <p>Median Sydney property prices roughly doubled from 2014 to 2024. Sounds great on paper. But rental yields compressed from around 4% to 2.5% over the same period. So the asset is worth more, but it produces less income relative to its value. And you cannot spend the capital gain without selling.</p>
+
+  <p>Try accessing that wealth quickly without selling. You cannot. Not without taking on more debt. Most people I talk to have spent 20 years building serious wealth in property. But the moment they want to access the lifestyle, they undo all of it by selling the very asset doing the heavy lifting.</p>
+
+  <p>That is the property trap. Your net worth looks impressive. Your liquidity does not.</p>
+
+  <h3>Super is better than nothing. But it is not a strategy.</h3>
+
+  <p>Super is a tax-advantaged, long-duration savings mechanism. It is good for what it is. But if you are 45 and your preservation age is 60, you have a 15-year delay on your biggest pool of capital. That is not a wealth strategy. That is a queue.</p>
+
+  <p>And the returns? The median balanced super fund returned approximately 7.1% per annum over the decade to 2024. After inflation. After fees. You are looking at real returns closer to 3-4%. You are not building wealth. You are maintaining it. Barely.</p>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="stat-number">$250K</div>
+      <div class="stat-label">Average male super balance at retirement (ASFA 2023)</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">$150K</div>
+      <div class="stat-label">Average female super balance at retirement (ASFA 2023)</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">$595K</div>
+      <div class="stat-label">ASFA comfortable retirement target (couple)</div>
+    </div>
+  </div>
+
+  <h3>The ASX is less diversified than you think.</h3>
+
+  <p>The top 10 stocks in the ASX 200 make up approximately 45% of the entire index. Four of those are banks. The top 4 banks plus BHP plus CSL account for roughly 40% of the whole index. You are not investing in the Australian economy. You are investing in Commonwealth Bank's mortgage book, BHP's iron ore, and CSL's plasma. That is it. One country, one sector concentration, dressed up as a diversified portfolio.</p>
+
+  <p>If Australian housing slows down, the banks slow down. If the banks slow down, the ASX slows down. If the ASX slows down, your super slows down. It is all the same bet. Property, super, equities. Three labels. One exposure.</p>
+
+  <div class="key-insight">
+    <div class="key-insight-label">Key Insight</div>
+    <p>Property, super, ASX. Three labels. One exposure. The assets that built wealth for the last generation are not the same assets that will build it for the next one. That is not a prediction. That is a pattern. And it is already playing out.</p>
+  </div>
+
+  <div class="chapter-divider"><a href="#ch2">Next: Chapter 2 &rarr;</a></div>
+</section>
+
+<!-- ═══════════════ CHAPTER 2 ═══════════════ -->
+<section class="chapter" id="ch2">
+  <div class="chapter-num">02</div>
+  <h2 class="chapter-title">What You Are Actually Protecting Against</h2>
+
+  <div class="pull-quote">The better question is not "how much can I make?" It is "what am I losing by standing still?"</div>
+
+  <p>Most people think about digital assets the wrong way. They think about gains. About price going up. About whether they can "still make money."</p>
+
+  <p>That is the wrong frame.</p>
+
+  <h3>Every dollar printed dilutes every dollar held.</h3>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="stat-number">$21T+</div>
+      <div class="stat-label">US M2 money supply in 2024 (up from $4.8T in 2000)</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">3.5x</div>
+      <div class="stat-label">Growth in RBA balance sheet ($180B to $640B since 2020)</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">~$580K</div>
+      <div class="stat-label">What $1M in 2000 actually buys today (US purchasing power)</div>
+    </div>
+  </div>
+
+  <p>The US M2 money supply went from $4.8 trillion in 2000 to over $21 trillion in 2024. The number of dollars in existence more than quadrupled in 24 years. Every dollar printed dilutes every dollar held. If you had $1 million in 2000, the purchasing power of that money today is roughly $580,000. You did not spend it. It got diluted.</p>
+
+  <p>The Reserve Bank of Australia's balance sheet went from roughly $180 billion to over $640 billion since 2020. Every major central bank on Earth is doing the same thing. Printing money to manage debt. Your savings are the cost.</p>
+
+  <h3>Bitcoin is the hardest asset ever created.</h3>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="stat-number">21M</div>
+      <div class="stat-label">Total Bitcoin supply. Ever. Mathematically fixed and immutable.</div>
+    </div>
+  </div>
+
+  <div class="chart-block">
+    <div class="figure-label">Figure 2.1</div>
+    <div class="chart-title">Bitcoin's Fixed Supply vs. Everything Else</div>
+    <div class="supply-bar-wrap">
+      <div class="supply-bar-label"><strong>Total Bitcoin Supply: 21,000,000</strong></div>
+      <div class="supply-bar-track">
+        <div class="supply-bar-mined" title="Already Mined: 19,700,000 (93.8%)"></div>
+        <div class="supply-bar-remaining" title="Remaining: 1,300,000 (6.2%)"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:6px;">
+        <span style="font-size:0.75rem;color:var(--navy);">Already Mined: 19,700,000 (93.8%)</span>
+        <span style="font-size:0.75rem;color:var(--orange);">Remaining: 1,300,000 (6.2%)</span>
+      </div>
+    </div>
+    <div class="supply-compare">
+      <div class="supply-compare-box supply-box-red">
+        <div class="supply-icon">&#x1f3db;</div>
+        <strong>Fiat Currency</strong>Unlimited supply. M2 up 4x since 2000.
+      </div>
+      <div class="supply-compare-box supply-box-yellow">
+        <div class="supply-icon">&#x1f947;</div>
+        <strong>Gold</strong>~2% new supply mined each year. Forever.
+      </div>
+      <div class="supply-compare-box supply-box-orange">
+        <div class="supply-icon">&#x20bf;</div>
+        <strong>Bitcoin</strong>Mathematically fixed at 21M. Cannot be changed. Ever.
+      </div>
+    </div>
+  </div>
+
+  <p>This is what makes Bitcoin fundamentally different from every other asset in human history. It is the only asset with a mathematically provable, immutable supply cap.</p>
+
+  <p>Gold has roughly 2% new supply added each year through mining. Property can be built. Companies can issue new shares. Central banks can print unlimited currency. Only Bitcoin is truly fixed.</p>
+
+  <p>No government can print more. No central bank can dilute it. No board of directors can issue more shares. The monetary policy is written into the code, verified by thousands of nodes worldwide, and it cannot be changed. That is not a marketing claim. That is mathematics.</p>
+
+  <p>BlackRock's own research team described Bitcoin as a "unique diversifier" against fiscal, monetary, and geopolitical risks. This is the firm that manages $10 trillion saying this. Not a blog post. An institutional research memo.</p>
+
+  <div class="chart-block">
+    <div class="figure-label">Figure 2.2</div>
+    <div class="chart-title">10-Year Returns: Traditional vs Digital Assets (2014 to 2024)</div>
+    <canvas id="assetComparisonChart" height="300"></canvas>
+    <div class="chart-caption">Past performance is not indicative of future results. Bitcoin figures are indicative based on publicly available price data.</div>
+  </div>
+
+  <h3>The allocation question.</h3>
+
+  <p>This is not about going all-in. It is about what even a small allocation does over time.</p>
+
+  <p>Most conservative institutional allocators are starting at 1-5% of total portfolio value. That is the "insurance policy" level. Enough to matter if digital assets continue their trajectory. Not enough to hurt if they do not.</p>
+
+  <p>But many of our members, after doing the research and building the framework, are allocating meaningfully more. 10%, 15%, some north of 20%. Not because they are speculators. Because once you understand the risk on the other side, standing at zero becomes the uncomfortable position.</p>
+
+  <div class="key-insight">
+    <div class="key-insight-label">Key Insight</div>
+    <p>You do not buy Bitcoin because you think it is going to the moon. You buy it because you are not sure the dollar is not going to the floor. The question is not "can I afford to allocate?" It is "can I afford not to?"</p>
+  </div>
+
+  <div class="chapter-divider"><a href="#ch3">Next: Chapter 3 &rarr;</a></div>
+</section>
+
+<!-- ═══════════════ CHAPTER 3 ═══════════════ -->
+<section class="chapter" id="ch3">
+  <div class="chapter-num">03</div>
+  <h2 class="chapter-title">The 3 Mistakes High-Net-Worth Investors Make</h2>
+
+  <div class="pull-quote">I have worked with hundreds of investors over nine years. Smart people. Successful people. And I see the same three mistakes. Every time.</div>
+
+  <h3>Mistake 1: Waiting for certainty that will never come</h3>
+
+  <p>"I will buy Bitcoin when it stabilises."<br>
+  "I want to wait until there is more regulatory clarity."<br>
+  "I will look at it properly next quarter."</p>
+
+  <p>I have heard all three hundreds of times. Usually from people who first said them in 2020 when Bitcoin was under $10,000. Then again in 2021 when it was $30,000. Then again in 2023 at $25,000.</p>
+
+  <div class="member-story">
+    <div class="story-text">"I had been watching Collective Shift for two years, waiting for the right time. Bitcoin was $16,000 when I started watching. I joined at $28,000. That is the cost of waiting for certainty. The certainty never comes, and neither does the entry price."</div>
+    <div class="story-attr">Platinum member, joined January 2023</div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="stat-number">~$85K</div>
+      <div class="stat-label">Bitcoin price, early 2026</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">8x</div>
+      <div class="stat-label">Growth since "I will wait" conversations began</div>
+    </div>
+  </div>
+
+  <p>The institutions are not waiting. They moved while uncertainty was still the dominant narrative. That is what institutions do. They act on probability, not certainty.</p>
+
+  <h3>Mistake 2: Going in without a framework</h3>
+
+  <p>The second mistake is the opposite of the first. Instead of waiting, they jump in. A mate mentions a token at a barbecue. They read a headline. They download an app and buy $50,000 worth of something they cannot explain.</p>
+
+  <p>That is not investing. That is speculation dressed up in an investment account.</p>
+
+  <p>Real allocation to digital assets looks like any other serious investment decision. You need a thesis. You need position sizing rules. You need entry criteria. You need exit criteria. You need to know what success looks like and what failure looks like before you start.</p>
+
+  <p>Most people skip all of this. They buy based on emotion, hold based on hope, and sell based on fear. Then they tell everyone digital assets do not work.</p>
+
+  <p>Digital assets work fine. Their process did not.</p>
+
+  <h3>Mistake 3: No exit strategy</h3>
+
+  <p>This is the most expensive mistake.</p>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="stat-number">2.8/10</div>
+      <div class="stat-label">Average exit strategy confidence score (Collective Shift member survey)</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">3.7/10</div>
+      <div class="stat-label">Confidence in own research ability</div>
+    </div>
+  </div>
+
+  <p>2.8 out of 10. That is the average exit strategy confidence score from our member survey. Not a random sample. Our members. People who have already committed to this space. Still, 2.8 out of 10 know when they would actually sell.</p>
+
+  <div class="chart-block">
+    <div class="figure-label">Figure 3.1</div>
+    <div class="chart-title">The Round-Trip Pattern: Why Most Investors Give Back Their Gains</div>
+    <svg viewBox="0 0 700 280" style="width:100%;height:auto;" xmlns="http://www.w3.org/2000/svg">
+      <line x1="50" y1="240" x2="660" y2="240" stroke="#E8E8EA" stroke-width="1"/>
+      <path d="M 60 220 Q 120 200, 180 160 Q 240 100, 300 50 Q 340 30, 360 40 Q 420 100, 480 180 Q 510 220, 530 230 Q 560 240, 580 230 Q 620 200, 660 170" fill="none" stroke="#FC5C03" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 60 220 Q 120 200, 180 160 Q 240 100, 300 50 Q 340 30, 360 40 Q 420 100, 480 180 Q 510 220, 530 230 Q 560 240, 580 230 Q 620 200, 660 170 L 660 240 L 60 240 Z" fill="rgba(252,92,3,0.06)"/>
+      <circle cx="300" cy="50" r="7" fill="#FC5C03"/>
+      <circle cx="530" cy="230" r="7" fill="#DC2626"/>
+      <circle cx="660" cy="170" r="5" fill="#1A1A2E"/>
+      <text x="160" y="130" font-family="Source Serif 4, serif" font-size="11" fill="#1A1A2E" font-weight="600">Bull market:</text>
+      <text x="160" y="144" font-family="Source Serif 4, serif" font-size="11" fill="#1A1A2E">portfolio up 5x</text>
+      <text x="300" y="30" font-family="Source Serif 4, serif" font-size="10" fill="#FC5C03" text-anchor="middle" font-style="italic">"I should probably take profits"</text>
+      <text x="420" y="120" font-family="Source Serif 4, serif" font-size="11" fill="#1A1A2E" font-weight="600">Bear market:</text>
+      <text x="420" y="134" font-family="Source Serif 4, serif" font-size="11" fill="#1A1A2E">"I will wait for recovery"</text>
+      <text x="530" y="260" font-family="Source Serif 4, serif" font-size="10" fill="#DC2626" text-anchor="middle" font-weight="600">Capitulation: "It is over"</text>
+      <text x="650" y="158" font-family="Source Serif 4, serif" font-size="10" fill="#1A1A2E" text-anchor="end">Next cycle begins</text>
+      <text x="460" y="218" font-family="Source Serif 4, serif" font-size="11" fill="#DC2626" font-weight="700">Most investors exit here &rarr;</text>
+    </svg>
+    <div class="roundtrip-stats">
+      <div class="roundtrip-stat-box"><strong style="color:var(--orange);font-size:1.3rem;">40%</strong><br>of our strategy call prospects have already experienced this pattern</div>
+      <div class="roundtrip-stat-box"><strong style="color:var(--orange);font-size:1.3rem;">60-80%</strong><br>average round-trip loss from peak</div>
+      <div class="roundtrip-stat-box"><strong style="color:var(--orange);font-size:1.3rem;">Solution</strong><br>A pre-defined exit strategy BEFORE the bull market peaks</div>
+    </div>
+  </div>
+
+  <p>An exit strategy is not about timing the top. It is about defining what success means before emotion enters the equation. It is about rules that operate when you cannot think clearly.</p>
+
+  <div class="key-insight">
+    <div class="key-insight-label">Key Insight</div>
+    <p>The entry is 20% of the job. The framework is 80%. And "know when to take profits" is the single most important skill in this entire space.</p>
+  </div>
+
+  <div class="chapter-divider"><a href="#ch4">Next: What Our Members Actually Get &rarr;</a></div>
+</section>
+
+<!-- ═══════════════ CHAPTER 4: WHAT MEMBERS GET ═══════════════ -->
+<section class="chapter" id="ch4">
+  <div class="chapter-num">04</div>
+  <h2 class="chapter-title">What Our Members Actually Get</h2>
+
+  <div class="pull-quote">This is not a course. It is not a signal service. It is the operating system for your digital asset wealth.</div>
+
+  <p>I am going to be direct about what Platinum membership is, what it costs, and what it delivers. You are reading this because you are considering a strategy session. You deserve to know exactly what you are walking into.</p>
+
+  <!-- PRICE ANCHOR -->
+  <div class="pricing-card">
+    <div class="price">$14,999</div>
+    <div class="price-sub">per year. Platinum Membership.</div>
+    <ul class="price-features">
+      <li><strong>Shift OS</strong> - The complete digital asset operating system. Position sizing, asset selection, entry rules, exit planning, and review cadence. This is the framework most investors are missing.</li>
+      <li><strong>Weekly Platinum Calls</strong> - Live sessions with Ben and the research team. Market analysis, portfolio reviews, Q&A. Every week. No recordings sent afterwards and forgotten. Live participation with your actual questions.</li>
+      <li><strong>Research Library</strong> - Every piece of analysis we produce. Asset-specific reports, market updates, on-chain analysis, tax strategy guides. Updated continuously.</li>
+      <li><strong>The Community</strong> - 300+ serious investors sharing data, insights, and holding each other accountable. No noise. No memecoins. Business owners, professionals, and retirees doing this properly.</li>
+      <li><strong>Exit Planning Framework</strong> - The exact system for knowing when to take profits and when to hold. Pre-defined rules. Built when you are calm. Executed when you are not. Most members say this alone was worth the membership.</li>
+      <li><strong>Tax Optimisation Strategy</strong> - Specific guidance on structuring your digital asset holdings for tax efficiency within the Australian framework. SMSF considerations included.</li>
+    </ul>
+  </div>
+
+  <h3>Outcomes, not features.</h3>
+
+  <p>I could list more features. But what matters is what changes for you.</p>
+
+  <p><strong>Before Platinum:</strong> You know digital assets matter. You have some exposure, or you have been meaning to get some. You check prices on your phone. You do not have a framework. You do not know when you would take profits. You are not sure if your allocation is right. You are doing this alone.</p>
+
+  <p><strong>After Platinum:</strong> You have a written investment thesis. You know exactly what percentage of your portfolio is in digital assets and why. You have entry rules and exit rules that operate without emotion. You check your portfolio once a month, not once a day. You have a community of people in the same position doing the same work. And when the market drops 40%, you do not panic. You look at your rules and you follow them.</p>
+
+  <p>That is the shift. From guessing to system. From anxiety to confidence. From hoping to knowing.</p>
+
+  <h3>What $14,999 actually means.</h3>
+
+  <p>If your investable assets are $500K, Platinum is 3% of your portfolio. If your investable assets are $1M, it is 1.5%. If you are at $2M, it is less than 0.75%.</p>
+
+  <p>Most of our members will tell you their tax savings in year one covered a significant portion of the membership. The exit planning framework prevented them from making decisions that would have cost multiples of the membership fee.</p>
+
+  <p>The question is not whether $14,999 is a lot of money. It is. The question is what it costs you to not have this framework for another 12 months.</p>
+
+  <div class="key-insight">
+    <div class="key-insight-label">Key Insight</div>
+    <p>Most people treat their digital asset allocation like a punt. Our members treat it like a business decision. There is a framework. There are rules. There is a process. And there is a community of people doing the same thing, sharing data, and keeping each other honest.</p>
+  </div>
+
+  <div class="chapter-divider"><a href="#ch5">Next: The Australian Opportunity &rarr;</a></div>
+</section>
+
+<!-- ═══════════════ CHAPTER 5: THE AUSTRALIAN OPPORTUNITY ═══════════════ -->
+<section class="chapter" id="ch5">
+  <div class="chapter-num">05</div>
+  <h2 class="chapter-title">The Australian Opportunity</h2>
+
+  <div class="pull-quote">Australia's wealth is in the old world. The opportunity is to be early in the new one.</div>
+
+  <p>Australia has one of the highest household wealth levels per capita on Earth. That is the good news. The problem is where that wealth sits. It is locked in property and super. Two of the least liquid, most regulated asset classes you can own.</p>
+
+  <p>But there is a structural opportunity here that most Australians do not realise exists.</p>
+
+  <h3>The superannuation system is enormous. And it is starting to move.</h3>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="stat-number">$3.5T</div>
+      <div class="stat-label">Total Australian superannuation assets</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">$35B</div>
+      <div class="stat-label">What a 1% allocation to digital assets would mean</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">~600K</div>
+      <div class="stat-label">Self-managed super funds in Australia</div>
+    </div>
+  </div>
+
+  <p>Australia's superannuation system holds $3.5 trillion in assets. A 1% allocation to digital assets across the system would mean $35 billion of new demand. This is not theoretical. AMP and Australian Retirement Trust have both explored digital asset exposure. The conversation is moving from "if" to "how much."</p>
+
+  <h3>SMSF rules explicitly allow Bitcoin exposure. Most people do not know this.</h3>
+
+  <p>There are roughly 600,000 self-managed super funds in Australia. The ATO's guidance is clear: SMSFs can hold digital assets including Bitcoin, provided the investment is in line with the fund's investment strategy and the trustee's obligations.</p>
+
+  <p>Most Australians with SMSFs do not know this. Most of their accountants have not told them. And most have not made an allocation. That is a gap. A big one. And it is closing.</p>
+
+  <h3>Australia has clearer regulatory guidance than most countries.</h3>
+
+  <p>The ATO has published detailed guidance on digital asset taxation. Capital gains treatment. Income classification. Record-keeping requirements. It is all there. You know exactly how digital assets will be taxed. You know the rules for holding them in an SMSF. Compare that to the US, where regulatory clarity has been a moving target for years.</p>
+
+  <div class="key-insight">
+    <div class="key-insight-label">Key Insight</div>
+    <p>$3.5 trillion in super. Clear ATO guidance. SMSF access. The structural opportunity for Australian investors is not just about digital assets performing well. It is about being positioned before the system moves.</p>
+  </div>
+
+  <div class="chapter-divider"><a href="#ch6">Next: The Shift Has Already Started &rarr;</a></div>
+</section>
+
+<!-- ═══════════════ CHAPTER 6: THE SHIFT ═══════════════ -->
+<section class="chapter" id="ch6">
+  <div class="chapter-num">06</div>
+  <h2 class="chapter-title">The Shift Has Already Started</h2>
+
+  <div class="pull-quote">If you are thinking "this sounds logical, but is it too early?" the data says otherwise.</div>
+
+  <h3>The institutions have already moved.</h3>
+
+  <p>In January 2024, BlackRock launched its spot Bitcoin ETF. Within 12 months, it became the fastest-growing ETF in the history of financial markets. Not the fastest-growing Bitcoin product. The fastest-growing ETF. Period.</p>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="stat-number">$50B+</div>
+      <div class="stat-label">BlackRock IBIT AUM in first 12 months. Fastest ETF launch in history.</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">$35B+</div>
+      <div class="stat-label">Net inflows into US spot Bitcoin ETFs in year one</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">5x</div>
+      <div class="stat-label">Faster adoption vs. gold ETFs (which took 5+ years to match)</div>
+    </div>
+  </div>
+
+  <div class="chart-block">
+    <div class="figure-label">Figure 6.1</div>
+    <div class="chart-title">The Institutional Shift: A Timeline</div>
+    <div class="timeline-wrap">
+      <div class="timeline-line" id="institutionalTimeline">
+        <div class="timeline-event"><div class="timeline-label"><strong>2020</strong>MicroStrategy adds BTC to treasury ($250M)</div><div class="timeline-dot"></div></div>
+        <div class="timeline-event"><div class="timeline-label"><strong>2021</strong>Tesla, Square, Coinbase IPO</div><div class="timeline-dot"></div></div>
+        <div class="timeline-event"><div class="timeline-label"><strong>2023</strong>BlackRock files for Bitcoin ETF</div><div class="timeline-dot"></div></div>
+        <div class="timeline-event"><div class="timeline-label"><strong>Jan 2024</strong>11 Bitcoin ETFs approved in US</div><div class="timeline-dot"></div></div>
+        <div class="timeline-event"><div class="timeline-label"><strong>Mar 2024</strong>IBIT hits $10B AUM (fastest ETF ever)</div><div class="timeline-dot"></div></div>
+        <div class="timeline-event"><div class="timeline-label"><strong>Nov 2024</strong>IBIT hits $40B AUM</div><div class="timeline-dot"></div></div>
+        <div class="timeline-event"><div class="timeline-label"><strong>2025</strong>Sovereign wealth funds begin allocating</div><div class="timeline-dot"></div></div>
+        <div class="timeline-event future"><div class="timeline-label"><strong>2026</strong>Where are you?</div><div class="timeline-dot"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <p>Fidelity launched one too. So did VanEck. So did Franklin Templeton. The biggest names in asset management did not all independently decide to enter this space by coincidence. They did it because their clients were asking for it.</p>
+
+  <h3>Sovereign wealth funds are moving.</h3>
+
+  <p>Abu Dhabi's Mubadala Investment Company disclosed a position in BlackRock's Bitcoin ETF. Norway's Government Pension Fund, the largest sovereign wealth fund in the world at over $1.7 trillion, holds indirect exposure. The Swiss National Bank has exposure. Singapore's GIC has invested in digital asset infrastructure.</p>
+
+  <p>These are the most conservative, longest-duration capital pools on the planet. They do not speculate.</p>
+
+  <h3>The "it will be banned" argument is dead.</h3>
+
+  <p>2024 and 2025 saw the most significant regulatory clarity for digital assets in history. The US approved spot Bitcoin ETFs. The EU implemented MiCA. Australia's ATO has clear guidance. Governments are not banning digital assets. They are building frameworks to regulate them. That is a fundamentally different trajectory.</p>
+
+  <div class="chart-block">
+    <div class="figure-label">Figure 6.2</div>
+    <div class="chart-title">Bitcoin ETF Net Inflows (2024, USD Billions)</div>
+    <canvas id="etfInflowsChart" height="280"></canvas>
+    <div class="chart-caption">Source: Bloomberg/BitMEX Research. Figures approximate.</div>
+  </div>
+
+  <div class="key-insight">
+    <div class="key-insight-label">Key Insight</div>
+    <p>The question is no longer whether this asset class will be taken seriously. It already is. The question is whether you are positioned before or after the majority moves.</p>
+  </div>
+
+  <div class="chapter-divider"><a href="#ch7">Next: What Members Say &rarr;</a></div>
+</section>
+
+<!-- ═══════════════ CHAPTER 7: SOCIAL PROOF ═══════════════ -->
+<section class="chapter" id="ch7">
+  <div class="chapter-num">07</div>
+  <h2 class="chapter-title">What Members Say</h2>
+
+  <div class="pull-quote">I do not ask you to take my word for it. Here is what the people who have done it say.</div>
+
+  <p>These are Platinum members. Business owners, professionals, and retirees who were in a similar position to where you are now. They had the same questions. The same doubts. The same sense that they should be doing something but were not sure what.</p>
+
+  <div class="member-story">
+    <div class="story-text">"I had been buying Bitcoin since 2017 but I had no system. No rules. I watched a 7x gain come back to 2x because I did not know when to sell. Within 60 days of joining Platinum, I had a complete exit strategy. When the market pulled back 35% last year, I followed the rules and did not panic. That alone was worth the membership ten times over."</div>
+    <div class="story-attr">Business owner, Sydney. $1.2M portfolio. Platinum member since 2024.</div>
+  </div>
+
+  <div class="member-story">
+    <div class="story-text">"I am a GP. I have zero spare time. I needed someone to cut through the noise and tell me what actually matters. The weekly calls are 60 minutes and I leave every one knowing exactly what is happening and what I should be paying attention to. I restructured my SMSF allocation using the Shift OS framework. My accountant was impressed."</div>
+    <div class="story-attr">Medical professional, Melbourne. SMSF holder. Platinum member since 2023.</div>
+  </div>
+
+  <div class="member-story">
+    <div class="story-text">"I was sceptical. $14,999 is real money. But I calculated what my tax savings were in the first year using the strategies I learned in Platinum. It covered the entire membership fee. Everything after that was pure upside."</div>
+    <div class="story-attr">Property developer, Brisbane. Platinum member since 2024.</div>
+  </div>
+
+  <div class="member-story">
+    <div class="story-text">"The community is what got me. I was doing this alone for 3 years. Making every mistake in the book. Now I have 300 people who are smarter than me sharing what they see. The collective intelligence is the real product."</div>
+    <div class="story-attr">Tech executive, Perth. Platinum member since 2023.</div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="stat-number">1,000+</div>
+      <div class="stat-label">Members across all tiers</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">9 years</div>
+      <div class="stat-label">In digital asset education</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">&lt;1%</div>
+      <div class="stat-label">Dispute rate</div>
+    </div>
+  </div>
+
+  <div class="key-insight">
+    <div class="key-insight-label">Key Insight</div>
+    <p>The people who succeed in this space are not smarter or braver. They have a framework. They have rules. And they have people around them who are doing the same thing. That is what Platinum provides.</p>
+  </div>
+
+  <div class="chapter-divider"><a href="#cta">Next: What Comes Next &rarr;</a></div>
+</section>
+
+</div><!-- end .container -->
+
+<!-- ═══════════════ CTA ═══════════════ -->
+<section class="cta-section" id="cta">
+  <div class="cta-inner" style="max-width:640px;text-align:left;">
+    <h2 class="cta-heading" style="text-align:center;">What Comes Next</h2>
+
+    <p class="cta-desc">You now know more than 95% of investors about why this matters.</p>
+
+    <p class="cta-desc">You have seen the numbers on purchasing power. You understand why the traditional Australian playbook is a concentrated bet most people do not recognise. You know Bitcoin is the only asset in human history with a mathematically fixed supply. You have seen the three mistakes that cost investors the most. You know what Platinum delivers and what it costs. And you understand the structural opportunity sitting in front of Australian investors right now.</p>
+
+    <p class="cta-desc">But knowing is not the hard part. Doing is.</p>
+
+    <p class="cta-desc">The gap between understanding the case for digital assets and actually building a structured, rules-based allocation within your portfolio is where most people get stuck. They read the research. They nod along. Then they do nothing. Or worse, they try to do it alone, make one of the three mistakes I described, and write the whole thing off.</p>
+
+    <p class="cta-desc">That is the gap Collective Shift exists to close.</p>
+
+    <p class="cta-desc" style="color:rgba(255,255,255,0.9);"><strong style="color:#fff;">Here is what a strategy session looks like.</strong> It is 30 minutes. My team reviews your current situation and gives you honest feedback on whether we can help. No pitch. No pressure. If it is not the right fit, we will tell you. Most people walk away with clarity they did not have before, regardless of whether they join.</p>
+
+    <p class="cta-desc" style="color:rgba(255,255,255,0.9);">Platinum is <strong style="color:#fff;">$14,999 per year.</strong> You already know that. The question is whether this is the year you build the framework, or the year you look back on and wish you had.</p>
+
+    <p class="cta-desc">The next cycle is already forming. The people who do the work now are the ones who will have the stories in 5 years.</p>
+
+    <div style="text-align:center;margin:2.5rem 0;">
+      <a href="#" class="cta-button">Book Your Free Strategy Session &rarr;</a>
+    </div>
+
+    <p class="cta-desc" style="text-align:center;margin-top:2rem;color:rgba(255,255,255,0.7);">Ben</p>
+
+    <div class="cta-trust" style="text-align:center;">
+      <span>1,000+ members</span> &middot; <span>9 years in digital assets</span> &middot; <span>No affiliates</span> &middot; <span>Platinum: $14,999/yr</span>
+    </div>
+  </div>
+</section>
+
+<div class="footer">
+  <p>&copy; 2026 Collective Shift Pty Ltd. All rights reserved. This document is confidential and intended solely for the recipient.</p>
+</div>
+
+<!-- ═══════════════ SCRIPTS ═══════════════ -->
+<script>
+  const progressBar = document.getElementById('progressBar');
+  const backToTop = document.getElementById('backToTop');
+  function updateProgress() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = progress + '%';
+    if (scrollTop > 500) backToTop.classList.add('visible'); else backToTop.classList.remove('visible');
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+
+  const timelineEvents = document.querySelectorAll('.timeline-event');
+  if (timelineEvents.length) {
+    const tObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.2 });
+    timelineEvents.forEach((el, i) => { el.style.transitionDelay = (i * 0.12) + 's'; tObserver.observe(el); });
+  }
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const orange = '#FC5C03';
+    const navy = '#1A1A2E';
+
+    new Chart(document.getElementById('purchasingPowerChart'), {
+      type: 'line',
+      data: {
+        labels: ['1990','1995','2000','2005','2010','2015','2020','2024'],
+        datasets: [{ data: [100,92,85,78,72,65,55,40], borderColor: orange, backgroundColor: 'rgba(252,92,3,0.08)', fill: true, tension: 0.35, pointRadius: 4, pointBackgroundColor: orange, pointBorderColor: '#fff', pointBorderWidth: 2, borderWidth: 2.5 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 0, max: 110, grid: { display: false }, ticks: { font: { size: 11 } } }, x: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 } } } } }
+    });
+
+    new Chart(document.getElementById('portfolioDonut'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Property (67%)', 'Super (15%)', 'Equities (12%)', 'Cash (4%)', 'Digital Assets (2%)'],
+        datasets: [{ data: [67,15,12,4,2], backgroundColor: [navy,'#6B7280','#9CA3AF','#D1D5DB',orange], borderWidth: 2, borderColor: '#fff' }]
+      },
+      options: { responsive: true, maintainAspectRatio: true, cutout: '55%', plugins: { legend: { position: 'bottom', labels: { padding: 16, font: { family: "'Source Serif 4', serif", size: 12 }, usePointStyle: true, pointStyleWidth: 10 } } } }
+    });
+
+    new Chart(document.getElementById('assetComparisonChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Gold','Aus. Property','ASX 200','S&P 500','Bitcoin'],
+        datasets: [{ data: [68,87,94,185,26900], backgroundColor: ['#9CA3AF','#9CA3AF','#9CA3AF','#9CA3AF',orange], borderRadius: 4, barThickness: 40 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(ctx) { return '+' + ctx.raw.toLocaleString() + '%'; } } } }, scales: { x: { type: 'logarithmic', min: 10, max: 50000, grid: { color: '#F0F0F0' }, ticks: { callback: function(val) { if ([10,100,1000,10000,50000].includes(val)) return '+' + val.toLocaleString() + '%'; return ''; }, font: { size: 11 } } }, y: { grid: { display: false }, ticks: { font: { size: 12, family: "'Source Serif 4', serif" } } } } }
+    });
+
+    const etfData = [4.8,6.2,7.1,-1.2,2.1,-0.8,1.9,0.4,1.1,4.2,8.9,5.3];
+    new Chart(document.getElementById('etfInflowsChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+        datasets: [{ data: etfData, backgroundColor: etfData.map(v => v >= 0 ? orange : '#9CA3AF'), borderRadius: 3, barThickness: 28 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(ctx) { return (ctx.raw >= 0 ? '+' : '') + ctx.raw + 'B'; } } } }, scales: { y: { grid: { color: '#F0F0F0' }, ticks: { callback: function(v) { return (v >= 0 ? '+' : '') + v + 'B'; }, font: { size: 11 } } }, x: { grid: { display: false }, ticks: { font: { size: 11 } } } } }
+    });
+  });
+</script>
+
+</body>
+</html>
