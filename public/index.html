@@ -432,6 +432,123 @@ tailwind.config = {
   }
   .tasks-empty-state .empty-icon { font-size: 32px; margin-bottom: 8px; }
 
+  /* ── Scorecard View (dark theme) ── */
+  #view-scorecard {
+    background: #1A1A2E; border-radius: 12px; padding: 24px; margin: -24px -32px;
+    min-height: calc(100vh - 48px);
+  }
+  @media (max-width: 768px) { #view-scorecard { margin: -12px; padding: 16px; } }
+  .sc-kpi-card {
+    background: #252540; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
+    padding: 24px; transition: transform 0.15s, box-shadow 0.15s; position: relative; overflow: hidden;
+  }
+  .sc-kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .sc-kpi-card .sc-accent { position: absolute; top: 0; left: 0; width: 4px; height: 100%; border-radius: 2px; }
+  .sc-kpi-label { font-size: 11px; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 1.2px; font-weight: 600; margin-bottom: 10px; }
+  .sc-kpi-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; line-height: 1.1; }
+  @media (max-width: 768px) { .sc-kpi-value { font-size: 28px; } }
+  .sc-kpi-sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 6px; font-family: 'Source Code Pro', monospace; }
+  .sc-target-row {
+    display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+    background: #252540; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);
+  }
+  .sc-target-icon { font-size: 18px; flex-shrink: 0; }
+  .sc-target-label { font-size: 13px; color: rgba(255,255,255,0.7); flex: 1; }
+  .sc-target-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700; color: #FC5C03; white-space: nowrap; }
+  .sc-calls-input {
+    background: transparent; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px;
+    color: #08C394; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800;
+    width: 90px; text-align: center; padding: 4px 8px; outline: none;
+  }
+  .sc-calls-input:focus { border-color: #08C394; box-shadow: 0 0 0 2px rgba(8,195,148,0.2); }
+  @media (max-width: 768px) { .sc-calls-input { font-size: 28px; width: 70px; } }
+
+  /* ── Add Task FAB ── */
+  .fab-add-task {
+    position: fixed; bottom: 24px; right: 24px; z-index: 180;
+    width: 56px; height: 56px; border-radius: 50%; border: none;
+    background: linear-gradient(135deg, #FC5C03, #FC8C4E); color: #fff;
+    font-size: 28px; font-weight: 300; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(252,92,3,0.4);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .fab-add-task:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(252,92,3,0.5); }
+  @media (max-width: 1023px) { .fab-add-task { bottom: 72px; } }
+
+  /* ── Add Task Modal ── */
+  .atm-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300;
+    opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0.2s;
+  }
+  .atm-backdrop.open { opacity: 1; visibility: visible; }
+  .atm-modal {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%);
+    width: 100%; max-width: 500px; z-index: 310;
+    background: #fff; border-radius: 16px 16px 0 0; padding: 24px;
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    max-height: 90vh; overflow-y: auto;
+  }
+  .atm-modal.open { transform: translateX(-50%) translateY(0); }
+  @media (min-width: 641px) {
+    .atm-modal { bottom: auto; top: 50%; transform: translate(-50%, -50%) scale(0.95); border-radius: 16px; opacity: 0; }
+    .atm-modal.open { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  }
+  .atm-field { margin-bottom: 14px; }
+  .atm-field label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #807F86; font-weight: 600; margin-bottom: 4px; }
+  .atm-field input, .atm-field select, .atm-field textarea {
+    width: 100%; padding: 10px 12px; border: 1px solid #E8E8EA; border-radius: 8px;
+    font-size: 14px; font-family: 'Barlow', sans-serif; outline: none; background: #F7F7F8;
+    box-sizing: border-box;
+  }
+  .atm-field input:focus, .atm-field select:focus, .atm-field textarea:focus { border-color: #FC5C03; }
+  .atm-field textarea { resize: vertical; min-height: 60px; }
+  .atm-submit {
+    width: 100%; padding: 12px; background: #FC5C03; color: #fff; border: none;
+    border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif; transition: opacity 0.15s;
+  }
+  .atm-submit:hover { opacity: 0.88; }
+  .atm-info {
+    font-size: 11px; color: #9CA3AF; text-align: center; margin-top: 10px;
+    font-style: italic;
+  }
+  .atm-close {
+    position: absolute; top: 16px; right: 16px; background: none; border: none;
+    font-size: 22px; color: #807F86; cursor: pointer; line-height: 1; padding: 0;
+  }
+  .atm-close:hover { color: #1B1925; }
+
+  /* ── Toast ── */
+  .toast-msg {
+    position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: #1B1925; color: #fff; padding: 10px 24px; border-radius: 100px;
+    font-size: 14px; font-weight: 600; z-index: 400; opacity: 0;
+    transition: opacity 0.3s, transform 0.3s; pointer-events: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .toast-msg.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── Renewals Countdown Banner ── */
+  .renewals-countdown {
+    background: linear-gradient(135deg, #78350F 0%, #92400E 50%, #B45309 100%);
+    border: 1px solid rgba(245,158,11,0.3); border-radius: 10px;
+    padding: 10px 20px; display: flex; align-items: center; gap: 10px;
+    flex-wrap: wrap; min-height: 40px; margin-bottom: 20px;
+  }
+  .renewals-countdown .rc-text {
+    font-size: 13px; color: #FDE68A; font-weight: 600;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .renewals-countdown .rc-sep {
+    color: rgba(253,230,138,0.3); font-size: 13px;
+  }
+  @media (max-width: 640px) {
+    .renewals-countdown { padding: 8px 12px; gap: 6px; }
+    .renewals-countdown .rc-text { font-size: 11px; }
+    .renewals-countdown .rc-sep { display: none; }
+  }
+
   /* ── Last updated label ── */
   .last-updated-label {
     font-size: 10px; color: #9CA3AF; font-style: italic;
@@ -546,6 +663,9 @@ tailwind.config = {
     <a class="sidebar-link" data-view="metrics" onclick="switchView('metrics')">
       <span class="sidebar-icon">📊</span> KPIs
     </a>
+    <a class="sidebar-link" data-view="scorecard" onclick="switchView('scorecard')">
+      <span class="sidebar-icon">📈</span> Scorecard
+    </a>
     <a class="sidebar-link" href="team-cost.html">
       <span class="sidebar-icon">💰</span> Cash & Costs
     </a>
@@ -653,6 +773,17 @@ tailwind.config = {
           <h1 id="brief-greeting" style="font-family:'Plus Jakarta Sans',sans-serif; font-size:24px; font-weight:700; color:#1B1925;">Good morning, Ben 👋</h1>
           <p id="brief-date" style="font-size:14px; color:#807F86; margin-top:4px;"></p>
         </div>
+      </div>
+
+      <!-- Renewals Countdown Banner -->
+      <div class="renewals-countdown" id="renewals-countdown">
+        <span class="rc-text">🗓 May Renewals: <span id="rc-days"></span> days away</span>
+        <span class="rc-sep">|</span>
+        <span class="rc-text">40 members</span>
+        <span class="rc-sep">|</span>
+        <span class="rc-text">$417–504K pipeline</span>
+        <span class="rc-sep">|</span>
+        <span class="rc-text">Target: 34 renewals</span>
       </div>
 
       <!-- Alert Banner -->
@@ -1041,6 +1172,88 @@ tailwind.config = {
     </div>
     <!-- ═══ END DOCS ═══ -->
 
+    <!-- ═══ VIEW: SCORECARD ═══ -->
+    <div id="view-scorecard" style="display:none;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;">
+        <div>
+          <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:24px; font-weight:700; color:#fff;">📈 Weekly Scorecard</h1>
+          <p style="font-size:13px; color:rgba(255,255,255,0.4); margin-top:4px; font-family:'Source Code Pro',monospace;">Key metrics at a glance · <span id="sc-week-label"></span></p>
+        </div>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="grid-responsive" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-bottom:16px;">
+        <!-- ARR -->
+        <div class="sc-kpi-card">
+          <div class="sc-accent" style="background:#08C394;"></div>
+          <div class="sc-kpi-label">💰 Annual Recurring Revenue</div>
+          <div class="sc-kpi-value" style="color:#08C394;">A$7.3M</div>
+          <div class="sc-kpi-sub">↑ 203% YoY · Last updated manually</div>
+        </div>
+        <!-- Monthly Burn -->
+        <div class="sc-kpi-card">
+          <div class="sc-accent" style="background:#EF4444;"></div>
+          <div class="sc-kpi-label">🔥 Monthly Burn</div>
+          <div class="sc-kpi-value" style="color:#EF4444;">A$326K<span style="font-size:16px; font-weight:400; color:rgba(255,255,255,0.4);">/mo</span></div>
+          <div class="sc-kpi-sub">Wages + contractors + ops · Last updated manually</div>
+        </div>
+        <!-- Calls Booked -->
+        <div class="sc-kpi-card">
+          <div class="sc-accent" style="background:#3B82F6;"></div>
+          <div class="sc-kpi-label">📞 Calls Booked This Week</div>
+          <div style="display:flex; align-items:baseline; gap:8px;">
+            <input type="number" class="sc-calls-input" id="sc-calls-input" min="0" max="99" value="0" oninput="saveScorecardCalls(this.value)">
+            <span style="font-size:14px; color:rgba(255,255,255,0.35);">/20 target</span>
+          </div>
+          <div class="sc-kpi-sub">Editable · Saves locally</div>
+        </div>
+      </div>
+      <div class="grid-responsive" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:16px; margin-bottom:32px;">
+        <!-- May Renewals Pipeline -->
+        <div class="sc-kpi-card">
+          <div class="sc-accent" style="background:#F59E0B;"></div>
+          <div class="sc-kpi-label">🔄 May Renewals Pipeline</div>
+          <div class="sc-kpi-value" style="color:#F59E0B;">40 <span style="font-size:18px; font-weight:500;">members</span></div>
+          <div class="sc-kpi-sub">$417–504K pipeline value · Last updated manually</div>
+        </div>
+        <!-- Close Rate -->
+        <div class="sc-kpi-card">
+          <div class="sc-accent" style="background:#08C394;"></div>
+          <div class="sc-kpi-label">🎯 Close Rate</div>
+          <div class="sc-kpi-value" style="color:#08C394;">30%</div>
+          <div class="sc-kpi-sub">Target: 30% · Last updated manually</div>
+        </div>
+      </div>
+
+      <!-- Weekly Targets -->
+      <div style="margin-bottom:8px;">
+        <h2 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:18px; font-weight:700; color:#fff; margin-bottom:16px;">🎯 Weekly Targets</h2>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div class="sc-target-row">
+          <span class="sc-target-icon">📞</span>
+          <span class="sc-target-label">Calls target — 4/day</span>
+          <span class="sc-target-value">20/week</span>
+        </div>
+        <div class="sc-target-row">
+          <span class="sc-target-icon">🏆</span>
+          <span class="sc-target-label">Close target — 30%</span>
+          <span class="sc-target-value">6 Platinum/week</span>
+        </div>
+        <div class="sc-target-row">
+          <span class="sc-target-icon">💰</span>
+          <span class="sc-target-label">Revenue target — 6 × $14,999</span>
+          <span class="sc-target-value">$89,994/week</span>
+        </div>
+        <div class="sc-target-row">
+          <span class="sc-target-icon">🔄</span>
+          <span class="sc-target-label">Renewals — 34 of 40 by May 18</span>
+          <span class="sc-target-value">85% target</span>
+        </div>
+      </div>
+    </div>
+    <!-- ═══ END SCORECARD ═══ -->
+
   </div>
 </div>
 
@@ -1110,6 +1323,60 @@ tailwind.config = {
   </div>
 </div>
 
+<!-- ═══ ADD TASK FAB ═══ -->
+<button class="fab-add-task" id="fabAddTask" onclick="openAddTaskModal()" title="Add Task">+</button>
+
+<!-- ═══ ADD TASK MODAL ═══ -->
+<div class="atm-backdrop" id="atmBackdrop" onclick="closeAddTaskModal()"></div>
+<div class="atm-modal" id="atmModal">
+  <button class="atm-close" onclick="closeAddTaskModal()">✕</button>
+  <h2 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:18px; font-weight:700; color:#1B1925; margin-bottom:16px;">➕ Add Task</h2>
+  <div class="atm-field">
+    <label>Task Name *</label>
+    <input type="text" id="atmName" placeholder="What needs to be done?" required>
+  </div>
+  <div style="display:flex; gap:12px;">
+    <div class="atm-field" style="flex:1;">
+      <label>Priority</label>
+      <select id="atmPriority">
+        <option value="urgent">🔴 Urgent</option>
+        <option value="high">🟠 High</option>
+        <option value="normal" selected>⚪ Normal</option>
+        <option value="low">🟢 Low</option>
+      </select>
+    </div>
+    <div class="atm-field" style="flex:1;">
+      <label>Category</label>
+      <select id="atmCategory">
+        <option value="marketing">📣 Marketing</option>
+        <option value="sales">💰 Sales</option>
+        <option value="finance">📊 Finance</option>
+        <option value="product">⚙️ Product</option>
+        <option value="social">📱 Social</option>
+        <option value="csm">🤝 CSM</option>
+        <option value="content">✍️ Content</option>
+        <option value="strategy">🎯 Strategy</option>
+        <option value="operations">🔧 Operations</option>
+        <option value="legal">⚖️ Legal</option>
+        <option value="ai-bots">🤖 AI Bots</option>
+      </select>
+    </div>
+  </div>
+  <div class="atm-field">
+    <label>Due Date</label>
+    <input type="date" id="atmDue">
+  </div>
+  <div class="atm-field">
+    <label>Notes</label>
+    <textarea id="atmNotes" placeholder="Optional notes, context, or links..."></textarea>
+  </div>
+  <button class="atm-submit" onclick="submitAddTask()">Add Task ✓</button>
+  <div class="atm-info">New tasks saved locally. BenBot will sync to dashboard on next update.</div>
+</div>
+
+<!-- ═══ TOAST ═══ -->
+<div class="toast-msg" id="toastMsg"></div>
+
 <!-- ═══ MOBILE BOTTOM TAB BAR ═══ -->
 <div class="bottom-tab-bar">
   <a class="bottom-tab active" data-view="brief" onclick="switchView('brief')">
@@ -1121,12 +1388,11 @@ tailwind.config = {
   <a class="bottom-tab" data-view="metrics" onclick="switchView('metrics')">
     <span class="btab-icon">📊</span> KPIs
   </a>
-
+  <a class="bottom-tab" data-view="scorecard" onclick="switchView('scorecard')">
+    <span class="btab-icon">📈</span> Score
+  </a>
   <a class="bottom-tab" data-view="bots" onclick="switchView('bots')">
     <span class="btab-icon">🤖</span> Bots
-  </a>
-  <a class="bottom-tab" data-view="docs" onclick="switchView('docs')">
-    <span class="btab-icon">📄</span> Docs
   </a>
 </div>
 
@@ -1279,7 +1545,7 @@ function askAI(taskId, event) {
 // VIEW SWITCHING
 // ═══════════════════════════════════════════
 function switchView(view) {
-  const views = ['brief', 'tasks', 'metrics', 'bots', 'docs'];
+  const views = ['brief', 'tasks', 'metrics', 'bots', 'docs', 'scorecard'];
   views.forEach(v => {
     const el = document.getElementById('view-' + v);
     if (el) el.style.display = v === view ? 'block' : 'none';
@@ -2034,6 +2300,103 @@ function filterDocs(filter, btn) {
 }
 
 renderDocs('all');
+
+// ═══════════════════════════════════════════
+// RENEWALS COUNTDOWN
+// ═══════════════════════════════════════════
+function updateRenewalsCountdown() {
+  const target = new Date('2026-05-18T00:00:00+10:00');
+  const now = new Date();
+  const diff = target - now;
+  const days = Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+  const el = document.getElementById('rc-days');
+  if (el) el.textContent = days;
+}
+updateRenewalsCountdown();
+setInterval(updateRenewalsCountdown, 60000);
+
+// ═══════════════════════════════════════════
+// SCORECARD
+// ═══════════════════════════════════════════
+function initScorecard() {
+  // Week label
+  const now = new Date();
+  const weekStart = new Date(now);
+  weekStart.setDate(now.getDate() - now.getDay() + 1);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekStart.getDate() + 6);
+  const fmt = d => d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+  const lbl = document.getElementById('sc-week-label');
+  if (lbl) lbl.textContent = 'Week of ' + fmt(weekStart) + ' – ' + fmt(weekEnd);
+  // Restore calls
+  const saved = localStorage.getItem('sc-calls-booked');
+  const inp = document.getElementById('sc-calls-input');
+  if (saved && inp) inp.value = saved;
+}
+function saveScorecardCalls(val) {
+  localStorage.setItem('sc-calls-booked', val);
+}
+initScorecard();
+
+// ═══════════════════════════════════════════
+// ADD TASK MODAL
+// ═══════════════════════════════════════════
+function openAddTaskModal() {
+  document.getElementById('atmBackdrop').classList.add('open');
+  document.getElementById('atmModal').classList.add('open');
+  setTimeout(() => document.getElementById('atmName').focus(), 200);
+}
+function closeAddTaskModal() {
+  document.getElementById('atmBackdrop').classList.remove('open');
+  document.getElementById('atmModal').classList.remove('open');
+  // Reset form
+  document.getElementById('atmName').value = '';
+  document.getElementById('atmPriority').value = 'normal';
+  document.getElementById('atmCategory').value = 'marketing';
+  document.getElementById('atmDue').value = '';
+  document.getElementById('atmNotes').value = '';
+}
+function submitAddTask() {
+  const name = document.getElementById('atmName').value.trim();
+  if (!name) { document.getElementById('atmName').style.borderColor = '#EF4444'; return; }
+  const priority = document.getElementById('atmPriority').value;
+  const category = document.getElementById('atmCategory').value;
+  const due = document.getElementById('atmDue').value;
+  const notes = document.getElementById('atmNotes').value.trim();
+  const newTask = {
+    id: 'local-' + Date.now(),
+    name: name,
+    status: 'todo',
+    due: due,
+    category: category,
+    notes: notes,
+    completedAt: '',
+    files: [],
+    subtasks: [],
+    _local: true
+  };
+  // Add to in-memory list
+  priorities.unshift(newTask);
+  _allTasks = priorities;
+  savePriorities(priorities);
+  // Set priority
+  setTaskPriority(newTask.id, priority);
+  // Save to pending_tasks in localStorage
+  const pending = JSON.parse(localStorage.getItem('pending_tasks') || '[]');
+  pending.push(newTask);
+  localStorage.setItem('pending_tasks', JSON.stringify(pending));
+  // Re-render
+  renderTasks();
+  renderBriefTasks();
+  closeAddTaskModal();
+  showToast('Task added ✓');
+}
+function showToast(msg) {
+  const el = document.getElementById('toastMsg');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
 </script>
 </body>
 </html>
