@@ -555,6 +555,76 @@ tailwind.config = {
     font-family: 'Source Code Pro', monospace; margin-top: 4px;
   }
 
+  /* ── Bot Activity Feed ── */
+  .bot-feed { display: flex; flex-direction: column; gap: 2px; }
+  .bot-feed-item {
+    display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px;
+    background: #1A1A2E; border-radius: 8px; transition: background 0.12s;
+  }
+  .bot-feed-item:hover { background: #252540; }
+  .bot-icon { font-size: 16px; flex-shrink: 0; width: 22px; text-align: center; margin-top: 1px; }
+  .bot-feed-title { font-size: 13px; font-weight: 500; color: #E8E8EA; }
+  .bot-feed-desc { font-size: 11px; color: #807F86; margin-top: 2px; line-height: 1.4; }
+
+  /* ── Member Health Grid ── */
+  .health-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+  }
+  .health-card {
+    background: #1A1A2E; border-radius: 10px; padding: 16px; text-align: center;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .health-card.green { border-left: 3px solid #08C394; }
+  .health-card.amber { border-left: 3px solid #F59E0B; }
+  .health-card.red { border-left: 3px solid #EF4444; }
+  .health-tier { font-size: 13px; font-weight: 600; color: #E8E8EA; margin-bottom: 6px; }
+  .health-count { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; font-weight: 700; color: #fff; }
+  .health-revenue { font-size: 12px; color: #807F86; margin-top: 4px; font-family: 'Source Code Pro', monospace; }
+  .muted-note { font-size: 12px; color: #807F86; margin-top: 12px; line-height: 1.5; }
+  .muted-note a { color: #FC5C03; text-decoration: none; font-weight: 600; }
+  .muted-note a:hover { text-decoration: underline; }
+
+  /* ── Content Calendar ── */
+  .calendar-grid {
+    display: grid; grid-template-columns: 100px repeat(7, 1fr); gap: 1px;
+    background: #252540; border-radius: 10px; overflow: hidden; font-size: 12px;
+  }
+  .calendar-header {
+    background: #1A1A2E; padding: 10px 6px; text-align: center;
+    font-weight: 600; color: #E8E8EA; font-size: 11px;
+  }
+  .calendar-header.corner { background: #1A1A2E; }
+  .calendar-row-label {
+    background: #1A1A2E; padding: 12px 10px; display: flex;
+    align-items: center; gap: 6px; font-weight: 600; color: #E8E8EA; font-size: 12px;
+  }
+  .calendar-cell {
+    background: #1A1A2E; padding: 10px 6px; min-height: 52px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cal-pill {
+    display: inline-block; padding: 3px 8px; border-radius: 100px;
+    font-size: 10px; font-weight: 600; white-space: nowrap; line-height: 1.4;
+  }
+  .cal-pill.instagram { background: rgba(168,85,247,0.15); color: #C084FC; }
+  .cal-pill.youtube { background: rgba(239,68,68,0.15); color: #F87171; }
+  .cal-pill.linkedin { background: rgba(59,130,246,0.15); color: #60A5FA; }
+  .calendar-note {
+    font-size: 12px; color: #807F86; margin-bottom: 16px; font-style: italic;
+  }
+  .calendar-footer {
+    margin-top: 16px; text-align: center;
+  }
+  .calendar-footer a {
+    color: #FC5C03; font-size: 13px; font-weight: 600; text-decoration: none;
+  }
+  .calendar-footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 768px) {
+    .calendar-grid { overflow-x: auto; min-width: 700px; }
+    .health-grid { grid-template-columns: 1fr; }
+  }
+
   @media (max-width: 768px) {
     /* ── Header: hide search, clean layout ── */
     .topbar-search-wrap { display: none !important; }
@@ -721,6 +791,9 @@ tailwind.config = {
     </a>
 
     <div class="sidebar-section">Resources</div>
+    <a class="sidebar-link" data-view="calendar" onclick="switchView('calendar')">
+      <span class="sidebar-icon">📅</span> Calendar
+    </a>
     <a class="sidebar-link" data-view="docs" onclick="switchView('docs')">
       <span class="sidebar-icon">📄</span> Docs
     </a>
@@ -889,6 +962,71 @@ tailwind.config = {
           <div><span style="font-weight:600; color:#08C394;">7 of 17 agents active</span> — Finance, EA, Sales, CSM, Crypto Analyst, Ben Analyst, Telegram CEO online.</div>
           <div style="color:#807F86; font-size:12px;">10 idle: Marketing, Social, Email, Video, SEO, Product, Legal, Advisor, Design, Entrepreneur.</div>
         </div>
+      </div>
+
+      <!-- ═══ FEATURE: Recent Bot Activity ═══ -->
+      <div class="card" style="margin-bottom:20px; background:#111127; border-color:rgba(255,255,255,0.06);">
+        <div class="card-title" style="color:#807F86;">🤖 Recent Bot Activity</div>
+        <div class="bot-feed">
+          <div class="bot-feed-item">
+            <span class="bot-icon">📊</span>
+            <div>
+              <div class="bot-feed-title">Amex Mar 2026 expense report — Completed 3 Apr</div>
+              <div class="bot-feed-desc">All clarification items resolved by Ben Apr 3. JB Hi-Fi $217 → business. 6 items → personal...</div>
+            </div>
+          </div>
+          <div class="bot-feed-item">
+            <span class="bot-icon">📣</span>
+            <div>
+              <div class="bot-feed-title">Jeremy Haynes frameworks downloaded — Completed 3 Apr</div>
+              <div class="bot-feed-desc">All 38 skills downloaded, adapted for CS in JEREMY_HAYNES_CS_PLAYBOOK.md (61KB) and JEREMY_HA...</div>
+            </div>
+          </div>
+          <div class="bot-feed-item">
+            <span class="bot-icon">📣</span>
+            <div>
+              <div class="bot-feed-title">Integrated Marketing Strategy rebuilt — Completed 3 Apr</div>
+              <div class="bot-feed-desc">10 sections: financial math, 3-path funnel, pixel conditioning, Hammer Them campaign, organic...</div>
+            </div>
+          </div>
+          <div class="bot-feed-item">
+            <span class="bot-icon">⚙️</span>
+            <div>
+              <div class="bot-feed-title">Dashboard — task cards: priority dropdown, descriptions — Completed 3 Apr</div>
+              <div class="bot-feed-desc">Priority: dark-themed select dropdown, colour-coded, re-sorts on change, persists via localSt...</div>
+            </div>
+          </div>
+          <div class="bot-feed-item">
+            <span class="bot-icon">⚙️</span>
+            <div>
+              <div class="bot-feed-title">Dashboard — full audit fixes + priority reorder — Completed 3 Apr</div>
+              <div class="bot-feed-desc">Fixed: dynamic date, tasks header, empty state, touch targets (44px min), fake search removed...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ FEATURE: Member Health Snapshot ═══ -->
+      <div class="card" style="margin-bottom:20px; background:#111127; border-color:rgba(255,255,255,0.06);">
+        <div class="card-title" style="color:#807F86;">May Renewals — Member Health</div>
+        <div class="health-grid">
+          <div class="health-card green">
+            <div class="health-tier">🟢 Likely Renew</div>
+            <div class="health-count">12–15</div>
+            <div class="health-revenue">~$180–225K</div>
+          </div>
+          <div class="health-card amber">
+            <div class="health-tier">🟡 At Risk</div>
+            <div class="health-count">15–18</div>
+            <div class="health-revenue">~$225–270K</div>
+          </div>
+          <div class="health-card red">
+            <div class="health-tier">🔴 Likely Churn</div>
+            <div class="health-count">8–12</div>
+            <div class="health-revenue">~$120–180K</div>
+          </div>
+        </div>
+        <p class="muted-note">Update counts as outreach progresses. Target: 34+ renewals by May 18. <a href="/may-renewals-2026.html">View playbook →</a></p>
       </div>
     </div>
     <!-- ═══ END MORNING BRIEF ═══ -->
@@ -1254,6 +1392,63 @@ tailwind.config = {
     </div>
     <!-- ═══ END SCORECARD ═══ -->
 
+    <!-- ═══ VIEW: CALENDAR ═══ -->
+    <div id="view-calendar" style="display:none;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+        <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#1B1925;">📅 Content Calendar</h1>
+      </div>
+      <p class="calendar-note">Update manually or ask BenBot to populate</p>
+
+      <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
+        <div class="calendar-grid" style="min-width:700px;">
+          <!-- Header Row -->
+          <div class="calendar-header corner"></div>
+          <div class="calendar-header">Mon<br><span style="font-size:10px; color:#807F86;">31 Mar</span></div>
+          <div class="calendar-header">Tue<br><span style="font-size:10px; color:#807F86;">1 Apr</span></div>
+          <div class="calendar-header">Wed<br><span style="font-size:10px; color:#807F86;">2 Apr</span></div>
+          <div class="calendar-header">Thu<br><span style="font-size:10px; color:#807F86;">3 Apr</span></div>
+          <div class="calendar-header">Fri<br><span style="font-size:10px; color:#807F86;">4 Apr</span></div>
+          <div class="calendar-header">Sat<br><span style="font-size:10px; color:#807F86;">5 Apr</span></div>
+          <div class="calendar-header">Sun<br><span style="font-size:10px; color:#807F86;">6 Apr</span></div>
+
+          <!-- Instagram Row -->
+          <div class="calendar-row-label">🟣 Instagram</div>
+          <div class="calendar-cell"></div>
+          <div class="calendar-cell"><span class="cal-pill instagram">Educational story</span></div>
+          <div class="calendar-cell"></div>
+          <div class="calendar-cell"></div>
+          <div class="calendar-cell"><span class="cal-pill instagram">Weekend hook post</span></div>
+          <div class="calendar-cell"></div>
+          <div class="calendar-cell"></div>
+
+          <!-- YouTube Row -->
+          <div class="calendar-row-label">🔴 YouTube</div>
+          <div class="calendar-cell"></div>
+          <div class="calendar-cell"></div>
+          <div class="calendar-cell"></div>
+          <div class="calendar-cell"></div>
+          <div class="calendar-cell"></div>
+          <div class="calendar-cell"></div>
+          <div class="calendar-cell"></div>
+
+          <!-- LinkedIn Row -->
+          <div class="calendar-row-label">🔵 LinkedIn</div>
+          <div class="calendar-cell"><span class="cal-pill linkedin">Market update post</span></div>
+          <div class="calendar-cell"></div>
+          <div class="calendar-cell"></div>
+          <div class="calendar-cell"><span class="cal-pill linkedin">Member win / case study</span></div>
+          <div class="calendar-cell"></div>
+          <div class="calendar-cell"></div>
+          <div class="calendar-cell"></div>
+        </div>
+      </div>
+
+      <div class="calendar-footer">
+        <a href="/content-calendar.html">View full content calendar →</a>
+      </div>
+    </div>
+    <!-- ═══ END CALENDAR ═══ -->
+
   </div>
 </div>
 
@@ -1394,6 +1589,9 @@ tailwind.config = {
   <a class="bottom-tab" data-view="bots" onclick="switchView('bots')">
     <span class="btab-icon">🤖</span> Bots
   </a>
+  <a class="bottom-tab" data-view="calendar" onclick="switchView('calendar')">
+    <span class="btab-icon">📅</span> Calendar
+  </a>
 </div>
 
 <script>
@@ -1446,8 +1644,8 @@ updateDynamicDates();
 // ═══════════════════════════════════════════
 function handleGlobalSearch(query) {
   const q = query.trim().toLowerCase();
-  const views = ['brief', 'tasks', 'metrics', 'bots', 'docs'];
-  const activeView = views.find(v => {
+  const allViews = ['brief', 'tasks', 'metrics', 'bots', 'docs', 'scorecard', 'calendar'];
+  const activeView = allViews.find(v => {
     const el = document.getElementById('view-' + v);
     return el && el.style.display !== 'none';
   }) || 'brief';
@@ -1545,7 +1743,7 @@ function askAI(taskId, event) {
 // VIEW SWITCHING
 // ═══════════════════════════════════════════
 function switchView(view) {
-  const views = ['brief', 'tasks', 'metrics', 'bots', 'docs', 'scorecard'];
+  const views = ['brief', 'tasks', 'metrics', 'bots', 'docs', 'scorecard', 'calendar'];
   views.forEach(v => {
     const el = document.getElementById('view-' + v);
     if (el) el.style.display = v === view ? 'block' : 'none';
