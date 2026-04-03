@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Micromagnet Playbook — Collective Shift</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Barlow:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --dark: #1A1A2E;
+    --dark-card: #1F1F35;
+    --dark-card-hover: #24243D;
+    --orange: #FC5C03;
+    --orange-light: rgba(252,92,3,0.12);
+    --green: #059E78;
+    --green-light: rgba(5,158,120,0.12);
+    --purple: #6C63FF;
+    --purple-light: rgba(108,99,255,0.12);
+    --red: #EF4444;
+    --red-light: rgba(239,68,68,0.12);
+    --yellow: #F59E0B;
+    --yellow-light: rgba(245,158,11,0.12);
+    --border: rgba(255,255,255,0.08);
+    --text: #E8E8F0;
+    --text-muted: #9090A8;
+    --text-dim: rgba(255,255,255,0.35);
+    --radius: 12px;
+    --sidebar-w: 240px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    line-height: 1.65;
+    font-size: 14px;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: var(--sidebar-w);
+    background: #15152A;
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    z-index: 100;
+    padding-bottom: 40px;
+  }
+  .sidebar-logo {
+    padding: 20px 16px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .sidebar-logo-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--orange-light);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--orange);
+    font-weight: 800; font-size: 13px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .sidebar-logo-text {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700; font-size: 14px; color: #fff;
+  }
+  .sidebar-logo-sub {
+    font-size: 10px; color: var(--text-dim);
+    font-family: 'Source Code Pro', monospace;
+  }
+  .sidebar-section {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px; font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    padding: 20px 16px 6px;
+  }
+  .sidebar-link {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 16px;
+    font-size: 13px; font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+  }
+  .sidebar-link:hover { color: #fff; background: rgba(255,255,255,0.04); }
+  .sidebar-link.active {
+    color: var(--orange);
+    border-left-color: var(--orange);
+    background: rgba(252,92,3,0.06);
+    font-weight: 600;
+  }
+  .sidebar-num {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px; color: var(--text-dim);
+    min-width: 20px;
+  }
+
+  /* MAIN */
+  .main { margin-left: var(--sidebar-w); }
+  .header {
+    padding: 32px 48px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .header-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px; font-weight: 600;
+    color: var(--orange);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+  .header-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 28px; font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+  }
+  .header-sub {
+    font-size: 14px; color: var(--text-muted);
+    margin-top: 8px; max-width: 700px;
+  }
+
+  .content { padding: 32px 48px 80px; max-width: 960px; }
+
+  /* SECTIONS */
+  .section { margin-bottom: 48px; }
+  .section-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px; font-weight: 600;
+    color: var(--orange);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 22px; font-weight: 800;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .section-intro {
+    font-size: 14px; color: var(--text-muted);
+    margin-bottom: 24px; max-width: 750px;
+    line-height: 1.7;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--dark-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: rgba(255,255,255,0.15); }
+  .card-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px; font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .card-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    padding: 20px 24px;
+    border-radius: var(--radius);
+    border-left: 4px solid;
+    margin-bottom: 20px;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .callout-orange { background: rgba(252,92,3,0.06); border-left-color: var(--orange); }
+  .callout-green { background: rgba(5,158,120,0.06); border-left-color: var(--green); }
+  .callout-red { background: rgba(239,68,68,0.06); border-left-color: var(--red); }
+  .callout-purple { background: rgba(108,99,255,0.06); border-left-color: var(--purple); }
+
+  /* TAGS */
+  .tag {
+    display: inline-block;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .tag-orange { background: var(--orange-light); color: var(--orange); }
+  .tag-green { background: var(--green-light); color: var(--green); }
+  .tag-purple { background: var(--purple-light); color: var(--purple); }
+  .tag-red { background: var(--red-light); color: var(--red); }
+  .tag-yellow { background: var(--yellow-light); color: var(--yellow); }
+
+  /* TABLES */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    text-align: left;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px; font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: top;
+    color: var(--text-muted);
+  }
+  td strong { color: #fff; }
+
+  /* HERO CARD */
+  .hero-card {
+    background: linear-gradient(135deg, rgba(252,92,3,0.08), rgba(252,92,3,0.02));
+    border: 2px solid rgba(252,92,3,0.3);
+    border-radius: var(--radius);
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+
+  /* FUNNEL STEP */
+  .funnel-step {
+    padding: 16px 20px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .funnel-arrow {
+    text-align: center;
+    font-size: 18px;
+    color: var(--text-dim);
+    padding: 4px 0;
+  }
+
+  /* CHECKLIST */
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .checklist-box {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* POST COPY BLOCK */
+  .post-copy {
+    padding: 20px;
+    border-radius: 8px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    font-size: 13px;
+    line-height: 1.8;
+    margin-top: 16px;
+    white-space: pre-line;
+  }
+  .post-copy .platform-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .header, .content { padding-left: 24px; padding-right: 24px; }
+    .card-grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <a class="sidebar-logo" href="#">
+    <div class="sidebar-logo-icon">CS</div>
+    <div>
+      <div class="sidebar-logo-text">Collective Shift</div>
+      <div class="sidebar-logo-sub">Micromagnet Playbook</div>
+    </div>
+  </a>
+  <div class="sidebar-section">Playbook</div>
+  <a class="sidebar-link" href="#s01"><span class="sidebar-num">01</span> What Is a Micromagnet?</a>
+  <a class="sidebar-link" href="#s02"><span class="sidebar-num">02</span> What We're NOT Doing</a>
+  <a class="sidebar-link" href="#s03"><span class="sidebar-num">03</span> 🤖 #1: 8-Step Strategy GPT</a>
+  <a class="sidebar-link" href="#s04"><span class="sidebar-num">04</span> 🛡️ #2: Wealth Scorecard</a>
+  <a class="sidebar-link" href="#s05"><span class="sidebar-num">05</span> 🧮 #3: Allocation Calculator</a>
+  <a class="sidebar-link" href="#s06"><span class="sidebar-num">06</span> 📄 #4: Digital Asset Blueprint</a>
+  <a class="sidebar-link" href="#s07"><span class="sidebar-num">07</span> 🏛️ #5: Tax-Smart Playbook</a>
+  <a class="sidebar-link" href="#s08"><span class="sidebar-num">08</span> ✋ The Hand Raiser Formula</a>
+  <a class="sidebar-link" href="#s09"><span class="sidebar-num">09</span> The Funnel Chain</a>
+  <a class="sidebar-link" href="#s10"><span class="sidebar-num">10</span> Production Checklist</a>
+  <a class="sidebar-link" href="#s11"><span class="sidebar-num">11</span> ManyChat Setup</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-label">Operational Reference — Marketing Team</div>
+    <div class="header-title">🧲 Micromagnet Playbook</div>
+    <div class="header-sub">Taki Moore's Micromagnet framework applied to Collective Shift. 5 micromagnet variants, the Hand Raiser post formula, ManyChat integration, and the full funnel chain from cold audience to Platinum.</div>
+  </div>
+
+  <div class="content">
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 01: WHAT IS A MICROMAGNET          -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div class="section" id="s01">
+      <div class="section-label">01 / Framework</div>
+      <div class="section-title">What Is a Micromagnet?</div>
+      <p class="section-intro">A micromagnet is a complete solution to a TINY problem, consumed in under 3 minutes, that requires zero learning and delivers an instant result. The test: it's a light switch — they don't need to understand electricity, they just need the lights to come on.</p>
+
+      <div class="card">
+        <div class="card-title">The 4 Types of Lead Magnet — Only 1 Works Now</div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">Source: Taki Moore's Micromagnet framework. Our ICP is 45-65, HNW, time-poor, and deeply sceptical of internet marketing tactics.</p>
+        <table>
+          <thead><tr><th>Type</th><th>Example</th><th>Problem</th><th>Verdict</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>🪤 Trap</strong></td>
+              <td>Free strategy session</td>
+              <td>Everyone knows it's a sales call. Our ICP avoids these on instinct.</td>
+              <td><span class="tag tag-red">DEAD</span></td>
+            </tr>
+            <tr>
+              <td><strong>💩 Crap</strong></td>
+              <td>Newsletter opt-in</td>
+              <td>Safe but valueless. "Join our newsletter" is table stakes, not a value prop.</td>
+              <td><span class="tag tag-red">DEAD</span></td>
+            </tr>
+            <tr>
+              <td><strong>📚 Gap</strong></td>
+              <td>Free course / 5-day challenge / 42-page PDF</td>
+              <td>Valuable but too much effort. Completion rate &lt;10%. Our ICP doesn't have 5 days.</td>
+              <td><span class="tag tag-red">DEAD</span></td>
+            </tr>
+            <tr style="background:rgba(5,158,120,0.04);">
+              <td><strong>🧲 Micromagnet</strong></td>
+              <td>Calculator, scorecard, custom GPT, 1-page cheat sheet</td>
+              <td>Safe + instant + solves one tiny problem + no learning required</td>
+              <td><span class="tag tag-green">✅ THIS</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-orange">
+        <strong>What Makes a Great Micromagnet</strong><br>
+        • Solves a <strong>SPLINTER</strong> (tiny specific pain point), not a broad problem<br>
+        • Consumed in <strong>120 seconds or less</strong> (our GPT: 3 minutes max)<br>
+        • No information — just <strong>OUTCOME</strong><br>
+        • Feels like a <strong>TOOL</strong> not a course ("steal this" not "learn this")<br>
+        • Zero friction: no sales call, no lengthy signup forms<br>
+        • Title formula: <strong>"Steal/Copy/Get [specific thing] in [timeframe] without [pain]"</strong>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Why This Works for Our ICP (Legacy Builder)</div>
+        <table>
+          <tbody>
+            <tr><td style="width:140px;"><strong>Age</strong></td><td>45-65</td></tr>
+            <tr><td><strong>Net worth</strong></td><td>$1M+, $100K-$500K+ in investable assets</td></tr>
+            <tr><td><strong>Occupation</strong></td><td>Business owner, doctor, property investor, finance professional</td></tr>
+            <tr><td><strong>Time</strong></td><td>Extremely time-poor. Won't sit through a 5-day challenge.</td></tr>
+            <tr><td><strong>Trust level</strong></td><td>Sceptical. Has been burned. Sees through marketing tactics.</td></tr>
+            <tr><td><strong>What they want</strong></td><td>A framework, not information. A result, not a course.</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:12px;font-size:12px;color:var(--text-muted);">
+          <strong>3 Core Problems → Splinters we target:</strong><br>
+          1. No clear digital asset strategy → "I don't know what % to allocate" / "Bitcoin only or others?"<br>
+          2. Inflation / wealth erosion fear → "My cash is losing value" / "Property isn't growing fast enough"<br>
+          3. Trust / information overload → "Every expert says something different" / "I've been burned before"<br>
+          4. Tax / income protection → "I don't want to get hit with a massive tax bill" / "How do I structure this?"
+        </div>
+      </div>
+
+      <div class="callout callout-green">
+        <strong>Benchmark: Taki Moore's Own Result</strong><br>
+        1,256 opt-ins in 48 hours for $339 total spend ($0.27 per lead). Carousel post → custom GPT micromagnet → ManyChat DM delivery. 30% of VSL viewers came from the micromagnet funnel.
+      </div>
+
+      <div class="card">
+        <div class="card-title">Micromagnet Delivery Formats That Work</div>
+        <div class="card-grid-2" style="margin-top:8px;">
+          <div style="padding:12px;border-radius:8px;border:1px solid var(--border);">
+            <div style="font-weight:700;color:var(--orange);margin-bottom:4px;">🤖 Custom GPT</div>
+            <div style="font-size:12px;color:var(--text-muted);">Asks questions, gives personalised output. Highest engagement. Our hero format.</div>
+          </div>
+          <div style="padding:12px;border-radius:8px;border:1px solid var(--border);">
+            <div style="font-weight:700;color:var(--green);margin-bottom:4px;">📊 Calculator / Assessment</div>
+            <div style="font-size:12px;color:var(--text-muted);">Input numbers → get a score or recommendation. Interactive.</div>
+          </div>
+          <div style="padding:12px;border-radius:8px;border:1px solid var(--border);">
+            <div style="font-weight:700;color:var(--purple);margin-bottom:4px;">📋 Cheat Sheet / Swipe File</div>
+            <div style="font-size:12px;color:var(--text-muted);">1-page, steal-able. Fill-in-the-blank or reference card.</div>
+          </div>
+          <div style="padding:12px;border-radius:8px;border:1px solid var(--border);">
+            <div style="font-weight:700;color:var(--yellow);margin-bottom:4px;">✅ Checklist</div>
+            <div style="font-size:12px;color:var(--text-muted);">10-point, done in 2 mins. "Do I have this? Yes/No."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 02: WHAT WE'RE NOT DOING           -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div class="section" id="s02">
+      <div class="section-label">02 / Anti-Patterns</div>
+      <div class="section-title">What We're NOT Building</div>
+
+      <div class="callout callout-red">
+        <strong>🚫 Do Not Build These as Lead Magnets</strong><br><br>
+        <strong>Free WordPress beginners course</strong> — This was flagged as a content idea but it's a classic Gap magnet. Information-packed, long, nobody finishes it. Our ICP doesn't want to learn WordPress. They want a result.<br><br>
+        <strong>5-day email challenges</strong> — Completion rate &lt;10%. Day 1 gets 60% opens. Day 5 gets 8%. Dead format for time-poor HNW audience.<br><br>
+        <strong>"Ultimate Guide to Digital Assets" (42-page PDF)</strong> — Nobody reads these. They download them, feel good for 3 seconds, then forget they exist. Zero trust built.<br><br>
+        <strong>Free strategy sessions disguised as "discovery calls"</strong> — Our ICP sees through this immediately. It's a Trap magnet. Don't do it at the top of funnel.<br><br>
+        <span style="color:var(--orange);font-weight:700;">Rule: If it requires more than 3 minutes of their time before they get a result, it's not a micromagnet. Don't build it as one.</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 03: HERO — 8-STEP STRATEGY GPT     -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div class="section" id="s03">
+      <div class="section-label">03 / Hero Micromagnet</div>
+      <div class="section-title">🤖 #1: The 8-Step Digital Asset Strategy Tool</div>
+      <p class="section-intro">Ben's preferred format and our primary micromagnet. A Custom GPT trained on the Collective Shift framework that builds a personalised digital asset strategy in 3 minutes.</p>
+
+      <div class="hero-card">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <span class="tag tag-orange">⭐ HERO MICROMAGNET — BUILD FIRST</span>
+        </div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:var(--orange);line-height:1.3;margin-bottom:16px;">
+          "Steal my 8-step strategy tool that creates your digital asset wealth strategy in 3 minutes"
+        </div>
+
+        <table>
+          <tbody>
+            <tr><td style="width:160px;"><strong>Format</strong></td><td>Custom GPT (ChatGPT) — no app install, no signup, just click and use</td></tr>
+            <tr><td><strong>How it works</strong></td><td>GPT asks 4-5 questions about the user's situation (portfolio size, age, risk tolerance, goals, current holdings) → processes through CS 8-step framework → outputs a personalised digital asset strategy with specific allocation percentages and asset recommendations</td></tr>
+            <tr><td><strong>Time to result</strong></td><td>~3 minutes (answer 5 questions, get instant output)</td></tr>
+            <tr><td><strong>Output</strong></td><td>Personalised strategy document: recommended allocation %, specific assets, entry approach, risk framework</td></tr>
+            <tr><td><strong>Bridge to VSL</strong></td><td style="color:var(--green);font-weight:600;">"Now the next step is to turn this into a full strategy — watch this video →" (links to collectiveshift.net/trainingvslv5)</td></tr>
+            <tr><td><strong>Trigger keyword</strong></td><td><span style="color:var(--orange);font-weight:700;font-size:16px;">STRATEGY</span></td></tr>
+            <tr><td><strong>Why hero</strong></td><td>GPT is the highest-converting micromagnet type (Taki's own example: 1,256 opt-ins in 48hrs). Interactive = memorable. Output is unique per person = high perceived value. Impossible to get this from a PDF.</td></tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top:20px;padding:16px;border-radius:8px;background:rgba(252,92,3,0.06);border:1px solid rgba(252,92,3,0.15);">
+          <div style="font-size:11px;color:var(--orange);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Splinters This Solves</div>
+          <div style="font-size:13px;color:var(--text-muted);">
+            • "I don't know what % of my portfolio to put in digital assets"<br>
+            • "I don't know which assets to focus on — Bitcoin only or others too?"<br>
+            • "I've been meaning to start for 2 years but still haven't"
+          </div>
+        </div>
+      </div>
+
+      <!-- GPT Internal Flow -->
+      <div class="card">
+        <div class="card-title">GPT Internal Flow (What Happens Inside)</div>
+        <table>
+          <thead><tr><th>Step</th><th>GPT Action</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td><strong>Welcome:</strong> "I'm going to build you a personalised digital asset strategy. I'll ask 5 quick questions. Takes about 3 minutes."</td><td>Set expectation, reduce anxiety</td></tr>
+            <tr><td>2</td><td><strong>Q1:</strong> "What's the rough size of your total investment portfolio?"</td><td>Calibrate allocation size</td></tr>
+            <tr><td>3</td><td><strong>Q2:</strong> "What's your age range?"</td><td>Time horizon</td></tr>
+            <tr><td>4</td><td><strong>Q3:</strong> "How would you describe your risk tolerance?"</td><td>Conservative/moderate/aggressive</td></tr>
+            <tr><td>5</td><td><strong>Q4:</strong> "What's your primary goal?" (grow, protect, diversify, generational)</td><td>Strategy orientation</td></tr>
+            <tr><td>6</td><td><strong>Q5:</strong> "Do you currently hold any digital assets?"</td><td>Starting point</td></tr>
+            <tr><td>7</td><td><strong>OUTPUT:</strong> Personalised 8-step strategy with allocations, specific assets, entry approach</td><td>Instant result — the micromagnet payoff</td></tr>
+            <tr style="background:rgba(5,158,120,0.04);"><td>8</td><td><strong>BRIDGE:</strong> "Now the next step is to turn this into a full strategy — watch this video →" + VSL link</td><td>Temperature raise → VSL</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Post Copy — All Platforms -->
+      <div class="card">
+        <div class="card-title">Ready-to-Use Post Copy — All Platforms</div>
+
+        <div class="post-copy">
+          <span class="platform-label" style="color:var(--orange);">📸 Instagram Caption</span>
+I built a tool that creates a personalised digital asset strategy in 3 minutes.
+
+It asks 5 questions about your situation — your portfolio, your goals, your risk tolerance — and gives you a plan.
+
+No course. No call. No 42-page PDF you'll never read.
+
+Just your strategy.
+
+3,000+ investors have used our 8-step framework. Now you can steal it in 3 minutes.
+
+Comment <strong style="color:var(--orange);">STRATEGY</strong> and I'll DM you the link.
+        </div>
+
+        <div class="post-copy" style="margin-top:12px;">
+          <span class="platform-label" style="color:var(--red);">▶️ YouTube Description CTA</span>
+🔗 Want your personalised digital asset strategy? I built an AI tool that creates one in 3 minutes.
+
+It asks 5 questions about your situation and gives you a specific plan — allocations, assets, entry approach.
+
+No course. No call. Just your strategy → [LINK]
+        </div>
+
+        <div class="post-copy" style="margin-top:12px;">
+          <span class="platform-label" style="color:var(--purple);">𝕏 Twitter/X Post</span>
+I built an AI tool that creates a personalised digital asset strategy in 3 minutes.
+
+5 questions → your specific allocation plan.
+
+No course. No PDF. No sales call.
+
+3,000+ investors use this framework.
+
+Reply STRATEGY and I'll send you the link.
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 04: WEALTH SCORECARD               -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div class="section" id="s04">
+      <div class="section-label">04 / Micromagnet #2</div>
+      <div class="section-title">🛡️ #2: The 2-Minute Wealth Protection Scorecard</div>
+      <p class="section-intro">Quick win to launch while the GPT is being built. This is our existing quiz reframed as a micromagnet with sharper positioning.</p>
+
+      <div class="card" style="border-left:3px solid var(--green);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <span class="tag tag-green">PRIORITY 2 — QUICK WIN</span>
+        </div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:16px;">
+          "Find out if your wealth is inflation-proof in 2 minutes — take the scorecard"
+        </div>
+        <table>
+          <tbody>
+            <tr><td style="width:160px;"><strong>Format</strong></td><td>Quiz / assessment (existing quiz infrastructure, reframed)</td></tr>
+            <tr><td><strong>How it works</strong></td><td>6 questions about current portfolio → instant inflation risk score → tells you exactly how exposed you are and what to do about it</td></tr>
+            <tr><td><strong>Time to result</strong></td><td>~2 minutes</td></tr>
+            <tr><td><strong>Hook</strong></td><td>"Most HNW investors think their portfolio is protected. Most are wrong. Find out where you stand in 2 minutes."</td></tr>
+            <tr><td><strong>Bridge to VSL</strong></td><td>"Now the next step is to turn this into a full strategy — watch this video →"</td></tr>
+            <tr><td><strong>Trigger keyword</strong></td><td><span style="color:var(--green);font-weight:700;font-size:16px;">SCORECARD</span></td></tr>
+            <tr><td><strong>Why quick win</strong></td><td>Lowest build effort. We already have the quiz — just reframe the copy, add micromagnet positioning, and re-promote with the Hand Raiser Formula.</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:16px;padding:12px;border-radius:8px;background:rgba(5,158,120,0.06);border:1px solid rgba(5,158,120,0.15);font-size:12px;color:var(--text-muted);">
+          <strong>Splinters:</strong> "I don't know how to protect what I've built" / "My cash/bonds are losing value but I don't know what to do" / "Property isn't growing fast enough to beat inflation"
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Ready-to-Use Post Copy</div>
+        <div class="post-copy">
+          <span class="platform-label" style="color:var(--green);">📸 Instagram Caption</span>
+Most high-net-worth investors think their portfolio is protected from inflation.
+
+Most are wrong.
+
+I built a 2-minute scorecard that tells you exactly how exposed you are — and what to do about it.
+
+6 questions. Instant score. No fluff.
+
+Comment <strong style="color:var(--green);">SCORECARD</strong> and I'll send you the link.
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 05: ALLOCATION CALCULATOR          -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div class="section" id="s05">
+      <div class="section-label">05 / Micromagnet #3</div>
+      <div class="section-title">🧮 #3: The 5-Minute Digital Asset Allocation Calculator</div>
+      <p class="section-intro">Highest novelty and shareability. Novel format that people screenshot and share. Requires new build but highest viral potential.</p>
+
+      <div class="card" style="border-left:3px solid var(--purple);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <span class="tag tag-purple">PRIORITY 3</span>
+        </div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:16px;">
+          "Steal our exact portfolio allocation formula — enter your numbers, get your answer in 60 seconds"
+        </div>
+        <table>
+          <tbody>
+            <tr><td style="width:160px;"><strong>Format</strong></td><td>Simple HTML tool or Google Sheets calculator</td></tr>
+            <tr><td><strong>How it works</strong></td><td>Input total portfolio value + age + risk profile → spits out exact % to allocate to digital assets and which assets (BTC, ETH, alts split)</td></tr>
+            <tr><td><strong>Time to result</strong></td><td>~60 seconds</td></tr>
+            <tr><td><strong>Hook</strong></td><td>"Still guessing how much of your portfolio should be in digital assets? Stop guessing. Plug in your numbers and get your personalised answer."</td></tr>
+            <tr><td><strong>Bridge to VSL</strong></td><td>"Now the next step is to turn this into a full strategy — watch this video →"</td></tr>
+            <tr><td><strong>Trigger keyword</strong></td><td><span style="color:var(--purple);font-weight:700;font-size:16px;">CALCULATOR</span></td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:16px;padding:12px;border-radius:8px;background:rgba(108,99,255,0.06);border:1px solid rgba(108,99,255,0.15);font-size:12px;color:var(--text-muted);">
+          <strong>Splinters:</strong> "I don't know what % of my portfolio to put in digital assets" / "I don't know which assets to focus on — Bitcoin only or others too?"
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Ready-to-Use Post Copy — 3 Platform Variants</div>
+        <div class="post-copy">
+          <span class="platform-label" style="color:var(--purple);">📸 Instagram Caption</span>
+"How much of my portfolio should be in digital assets?"
+
+I get asked this every week.
+
+So we built a calculator that answers it in 60 seconds.
+
+Enter your portfolio size, your age, and your risk profile. Get your exact allocation — BTC, ETH, and alts — broken down by percentage.
+
+No course. No call. Just your number.
+
+Comment <strong style="color:var(--purple);">CALCULATOR</strong> and I'll DM you the link.
+        </div>
+        <div class="post-copy" style="margin-top:12px;">
+          <span class="platform-label" style="color:var(--red);">▶️ YouTube Description CTA</span>
+🧮 Want to know exactly how much of your portfolio to put in digital assets? Use our free calculator → [LINK]
+
+Enter your numbers. Get your allocation in 60 seconds. No signup required.
+        </div>
+        <div class="post-copy" style="margin-top:12px;">
+          <span class="platform-label" style="color:var(--text-muted);">𝕏 Twitter/X Post</span>
+"What % should I put in digital assets?"
+
+We built a calculator.
+
+Enter your portfolio size + age + risk profile → get your exact allocation in 60 seconds.
+
+BTC, ETH, alts — broken down by %.
+
+Reply CALCULATOR for the link. Free, no signup.
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 06: DIGITAL ASSET BLUEPRINT        -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div class="section" id="s06">
+      <div class="section-label">06 / Micromagnet #4</div>
+      <div class="section-title">📄 #4: The Digital Asset Blueprint (1-Page)</div>
+
+      <div class="card" style="border-left:3px solid var(--yellow);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <span class="tag tag-yellow">PRIORITY 4</span>
+        </div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:16px;">
+          "Steal Ben's exact digital asset blueprint — the 5-step framework used by 3,000+ members"
+        </div>
+        <table>
+          <tbody>
+            <tr><td style="width:160px;"><strong>Format</strong></td><td>1-page PDF download (literally one page — NOT a 42-page guide)</td></tr>
+            <tr><td><strong>What it does</strong></td><td>One-page visual framework — Ben's exact 5-step process for building a digital asset allocation, with specific assets at each step</td></tr>
+            <tr><td><strong>Hook</strong></td><td>"You don't need more information about digital assets. You need a framework. Here's ours — one page, ready to use."</td></tr>
+            <tr><td><strong>Trigger keyword</strong></td><td><span style="color:var(--yellow);font-weight:700;font-size:16px;">BLUEPRINT</span></td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:16px;padding:12px;border-radius:8px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.15);font-size:12px;color:var(--text-muted);">
+          <strong>Splinters:</strong> "Every expert says something different — I don't know who to trust" / "I've been meaning to start for 2 years but still haven't"
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Ready-to-Use Post Copy</div>
+        <div class="post-copy">
+          <span class="platform-label" style="color:var(--yellow);">📸 Instagram Caption</span>
+You don't need more information about digital assets.
+
+You need a framework.
+
+I've been in this space for 9 years. I've helped 3,000+ investors build their digital asset allocations.
+
+I put the entire process on one page.
+
+Not a 42-page guide. Not a course. One page. Ben's exact 5-step framework.
+
+Comment <strong style="color:var(--yellow);">BLUEPRINT</strong> and I'll DM you the link.
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 07: TAX-SMART PLAYBOOK             -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div class="section" id="s07">
+      <div class="section-label">07 / Micromagnet #5</div>
+      <div class="section-title">🏛️ #5: The Tax-Smart Digital Asset Playbook</div>
+      <p class="section-intro">New TOFU angle flagged by Ben. Tax/income protection is a separate pain bucket from inflation — and an extremely strong cold audience hook for HNW investors.</p>
+
+      <div class="card" style="border-left:3px solid var(--red);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <span class="tag tag-red">NEW ANGLE — TAX/INCOME PROTECTION</span>
+        </div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:16px;">
+          "Steal the tax strategy our members use to protect digital asset gains — 2-minute read"
+        </div>
+        <table>
+          <tbody>
+            <tr><td style="width:160px;"><strong>Format</strong></td><td>1-page PDF or visual cheat sheet</td></tr>
+            <tr><td><strong>What it does</strong></td><td>Tax-smart structure for holding, trading, and taking profits from digital assets in Australia. SMSF, trust, individual — which structure for which scenario.</td></tr>
+            <tr><td><strong>TOFU hook</strong></td><td style="color:var(--red);font-weight:600;">"How I achieved X without paying tax" — strong cold audience hook. HNW people are obsessed with tax efficiency.</td></tr>
+            <tr><td><strong>Hook</strong></td><td>"Most investors pay full tax on digital asset gains. Our members don't. Here's the framework."</td></tr>
+            <tr><td><strong>Bridge to VSL</strong></td><td>"This is the framework. Want to see how to implement it for your specific situation? Watch this →"</td></tr>
+            <tr><td><strong>Trigger keyword</strong></td><td><span style="color:var(--red);font-weight:700;font-size:16px;">TAX</span></td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:16px;padding:12px;border-radius:8px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);font-size:12px;color:var(--text-muted);">
+          <strong>Splinters:</strong> "I don't know the tax implications" / "I don't want to get hit with a massive tax bill" / "How do I structure this properly?"
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Ready-to-Use Post Copy</div>
+        <div class="post-copy">
+          <span class="platform-label" style="color:var(--red);">📸 Instagram Caption</span>
+Most investors pay full tax on their digital asset gains.
+
+Our members don't.
+
+There's a framework for structuring digital asset holdings in Australia — SMSF, trust, individual — and most people have never seen it.
+
+I put it on one page. 2-minute read.
+
+Not tax advice. Just the framework your accountant should be using.
+
+Comment <strong style="color:var(--red);">TAX</strong> and I'll DM you the playbook.
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 08: THE HAND RAISER FORMULA        -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div class="section" id="s08">
+      <div class="section-label">08 / The Post Formula</div>
+      <div class="section-title">✋ The Hand Raiser Formula</div>
+      <p class="section-intro">Based on Leo Burnett's 60-year-old advertising formula. Taki Moore calls the GPT that writes these "The Hand Raiser Automatic." This is the structure for every post that promotes a micromagnet — text, carousel, Reel, ad, YouTube description. Same formula, every time.</p>
+
+      <div class="hero-card" style="background:linear-gradient(135deg,rgba(252,92,3,0.06),rgba(252,92,3,0.02));">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:#fff;line-height:1.6;padding:16px 20px;background:rgba(0,0,0,0.3);border-radius:8px;">
+          <span style="color:var(--orange);">1.</span> Here's what I got. <span style="color:var(--text-muted);font-size:14px;font-weight:400;">[Name the tool/asset]</span><br>
+          <span style="color:var(--orange);">2.</span> Here's what it'll do for you. <span style="color:var(--text-muted);font-size:14px;font-weight:400;">[Specific outcome in a timeframe]</span><br>
+          <span style="color:var(--orange);">3.</span> Here's how to get it. <span style="color:var(--text-muted);font-size:14px;font-weight:400;">[Comment WORD / click link / DM me]</span>
+        </div>
+      </div>
+
+      <div class="callout callout-orange">
+        <strong>Rules for Using the Formula</strong><br>
+        • Speak directly to the <strong>SITUATION</strong> and <strong>FRUSTRATION</strong> of the ICP<br>
+        • Don't teach. Don't explain. Just show them the result they'll get.<br>
+        • The CTA is always: Comment [KEYWORD] → ManyChat DMs the link<br>
+        • Works across: text posts, carousels, Reels, ads, YouTube descriptions, X threads<br>
+        • Every micromagnet promotion follows this structure. No exceptions.
+      </div>
+
+      <div class="card">
+        <div class="card-title">3 Filled Examples for CS</div>
+        <table>
+          <thead><tr><th>Micromagnet</th><th>Here's what I got</th><th>Here's what it'll do for you</th><th>Here's how to get it</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="tag tag-orange">STRATEGY GPT</span></td>
+              <td>An AI tool trained on our 8-step framework that builds you a personalised digital asset strategy in 3 minutes.</td>
+              <td>Answer 5 questions and get a strategy tailored to your portfolio, your goals, and your risk profile. No generic advice. No sales pitch.</td>
+              <td>Comment <strong style="color:var(--orange);">STRATEGY</strong></td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-green">SCORECARD</span></td>
+              <td>A 2-minute inflation risk scorecard that tells you exactly how exposed your wealth is.</td>
+              <td>You'll know if your portfolio is actually protected — or if you're quietly losing ground every year.</td>
+              <td>Comment <strong style="color:var(--green);">SCORECARD</strong></td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-red">TAX</span></td>
+              <td>The tax-smart framework our members use to structure digital asset holdings — so they keep more of what they make.</td>
+              <td>In 2 minutes you'll know which structure protects your gains and which one you're probably using that doesn't.</td>
+              <td>Comment <strong style="color:var(--red);">TAX</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Taki's Title Formula (Old vs New)</div>
+        <table>
+          <thead><tr><th>❌ Old Way (Dead)</th><th>✅ New Way (Micromagnet)</th></tr></thead>
+          <tbody>
+            <tr><td>"The Ultimate Guide to Digital Assets"</td><td>"Steal my 8-step strategy tool that creates your digital asset wealth strategy in 3 minutes"</td></tr>
+            <tr><td>"Email Marketing Masterclass"</td><td>"Dean Jackson's 9-word email that revives dead leads"</td></tr>
+            <tr><td>"How to Invest in Crypto"</td><td>"Steal our exact portfolio allocation formula — enter your numbers, get your answer in 60 seconds"</td></tr>
+            <tr><td>"Tax Guide for Crypto Investors"</td><td>"Steal the tax strategy our members use to protect digital asset gains — 2-minute read"</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:12px;font-size:12px;color:var(--text-muted);">
+          <strong>Pattern:</strong> "Steal/Copy/Get [specific thing] in [timeframe] without [pain]"
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 09: THE FUNNEL CHAIN               -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div class="section" id="s09">
+      <div class="section-label">09 / Funnel Architecture</div>
+      <div class="section-title">The Funnel Chain — Temperature-Based Progression</div>
+      <p class="section-intro">"A funnel is just a series of easy yeses." Each step raises the temperature by one degree. No big jumps. No asking for marriage on the first date.</p>
+
+      <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:24px;">
+        <div class="funnel-step" style="background:rgba(108,99,255,0.08);border-radius:12px 12px 4px 4px;border-color:rgba(108,99,255,0.2);">
+          <span style="font-size:24px;">🧊</span>
+          <div>
+            <div style="font-weight:700;color:#fff;font-size:15px;">COLD — Sees TOFU Content</div>
+            <div style="font-size:12px;color:var(--text-muted);">Instagram Reel, YouTube video, X post. Pain-focused angles: inflation/wealth erosion, tax on gains, institutional adoption, "still guessing?"</div>
+          </div>
+        </div>
+        <div class="funnel-arrow">↓</div>
+        <div class="funnel-step" style="background:rgba(252,92,3,0.06);border-color:rgba(252,92,3,0.2);">
+          <span style="font-size:24px;">💬</span>
+          <div>
+            <div style="font-weight:700;color:#fff;font-size:15px;">HAND RAISE — Comments Keyword</div>
+            <div style="font-size:12px;color:var(--text-muted);">Comments STRATEGY / SCORECARD / CALCULATOR / BLUEPRINT / TAX → triggers ManyChat automation</div>
+          </div>
+        </div>
+        <div class="funnel-arrow">↓</div>
+        <div class="funnel-step" style="background:rgba(252,92,3,0.10);border-color:rgba(252,92,3,0.25);">
+          <span style="font-size:24px;">🧲</span>
+          <div>
+            <div style="font-weight:700;color:#fff;font-size:15px;">MICROMAGNET — Instant Result in DMs</div>
+            <div style="font-size:12px;color:var(--text-muted);">ManyChat auto-DMs the micromagnet link. User gets result in &lt;3 minutes. Zero friction.</div>
+          </div>
+        </div>
+        <div class="funnel-arrow">↓</div>
+        <div class="funnel-step" style="background:rgba(252,92,3,0.14);border-color:rgba(252,92,3,0.3);">
+          <span style="font-size:24px;">🔥</span>
+          <div>
+            <div style="font-weight:700;color:var(--orange);font-size:15px;">BRIDGE — "Now the next step is to turn this into a full strategy"</div>
+            <div style="font-size:12px;color:var(--text-muted);">Inside the tool, after delivering the result: "Now the next step is to turn this into a full strategy — watch this video →" + VSL link</div>
+          </div>
+        </div>
+        <div class="funnel-arrow">↓</div>
+        <div class="funnel-step" style="background:rgba(5,158,120,0.08);border-color:rgba(5,158,120,0.2);">
+          <span style="font-size:24px;">📹</span>
+          <div>
+            <div style="font-weight:700;color:#fff;font-size:15px;">VSL — 15-Minute Video</div>
+            <div style="font-size:12px;color:var(--text-muted);">collectiveshift.net/trainingvslv5 — bridges from micromagnet result to the full Collective Shift system. Ends with "Book a strategy session" CTA.</div>
+          </div>
+        </div>
+        <div class="funnel-arrow">↓</div>
+        <div class="funnel-step" style="background:rgba(5,158,120,0.12);border-color:rgba(5,158,120,0.25);">
+          <span style="font-size:24px;">📞</span>
+          <div>
+            <div style="font-weight:700;color:#fff;font-size:15px;">SETTER CALL → CLOSER CALL</div>
+            <div style="font-size:12px;color:var(--text-muted);">Qualification call → Strategy session → Platinum close</div>
+          </div>
+        </div>
+        <div class="funnel-arrow">↓</div>
+        <div class="funnel-step" style="background:linear-gradient(135deg,rgba(252,92,3,0.15),rgba(5,158,120,0.15));border-radius:4px 4px 12px 12px;border-color:rgba(252,92,3,0.3);">
+          <span style="font-size:24px;">💎</span>
+          <div>
+            <div style="font-weight:700;color:var(--orange);font-size:15px;">PLATINUM — $14,999/year</div>
+            <div style="font-size:12px;color:var(--text-muted);">Full Collective Shift membership. The entire system. The micromagnet gave them a taste — Platinum is the full kitchen.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-green">
+        <strong>Key Insight: The micromagnet IS the Instagram DM funnel.</strong><br>
+        No separate "DM strategy" needed. The micromagnet replaces it entirely. Post with Hand Raiser formula → comment trigger → ManyChat DMs the tool → tool bridges to VSL → VSL drives calls. Taki's benchmark: 30% of VSL viewers came from the micromagnet funnel.
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 10: PRODUCTION CHECKLIST           -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div class="section" id="s10">
+      <div class="section-label">10 / Execution</div>
+      <div class="section-title">Production Checklist — What Needs to Be Built</div>
+
+      <!-- Hero GPT -->
+      <div class="card" style="border-left:3px solid var(--orange);">
+        <div class="card-title">🤖 #1: 8-Step Strategy GPT <span class="tag tag-orange" style="margin-left:8px;">HERO — BUILD FIRST</span></div>
+        <div style="margin-top:12px;">
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Create Custom GPT in ChatGPT</strong> — train on CS 8-step framework, portfolio allocation logic, asset selection criteria</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Write GPT system prompt</strong> — personality (Ben's voice), question flow (5 Qs), output format (strategy document), bridge copy at end</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Upload training context</strong> — CS framework documents, allocation guidelines, asset tier definitions</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Add VSL bridge</strong> — after output: "Now the next step is to turn this into a full strategy — watch this video →" + link to collectiveshift.net/trainingvslv5</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Test with 10 different profiles</strong> — verify output quality, allocation logic, bridge CTA rendering</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Set up ManyChat automation</strong> — keyword "STRATEGY" → auto-DM with GPT link</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Create launch post</strong> — Instagram carousel or Reel using Hand Raiser formula</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Publish GPT link</strong> — make GPT public/shareable</div></div>
+        </div>
+      </div>
+
+      <!-- Scorecard -->
+      <div class="card" style="border-left:3px solid var(--green);">
+        <div class="card-title">🛡️ #2: Wealth Protection Scorecard <span class="tag tag-green" style="margin-left:8px;">QUICK WIN</span></div>
+        <div style="margin-top:12px;">
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Reframe existing quiz</strong> — update copy from "quiz" to "scorecard", sharpen micromagnet positioning</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Update result page</strong> — add instant score + VSL bridge: "Now the next step is to turn this into a full strategy — watch this video →"</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Set up ManyChat automation</strong> — keyword "SCORECARD" → auto-DM with quiz link</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Create launch post</strong> — Hand Raiser formula, ready-to-use copy above</div></div>
+        </div>
+      </div>
+
+      <!-- Calculator -->
+      <div class="card" style="border-left:3px solid var(--purple);">
+        <div class="card-title">🧮 #3: Allocation Calculator <span class="tag tag-purple" style="margin-left:8px;">PRIORITY 3</span></div>
+        <div style="margin-top:12px;">
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Build HTML calculator</strong> — 3 input fields (portfolio value, age, risk profile), allocation logic, output display</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Design output</strong> — visual allocation breakdown (BTC %, ETH %, alts %), shareable/screenshottable</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Add VSL bridge</strong> — below output: "Now the next step is to turn this into a full strategy — watch this video →"</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Host on CS subdomain</strong> — collectiveshift.co/calculator or similar</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Set up ManyChat automation</strong> — keyword "CALCULATOR" → auto-DM with link</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Create launch posts</strong> — 3 platform variants (Instagram, YouTube, X), ready-to-use copy above</div></div>
+        </div>
+      </div>
+
+      <!-- Blueprint -->
+      <div class="card" style="border-left:3px solid var(--yellow);">
+        <div class="card-title">📄 #4: Digital Asset Blueprint <span class="tag tag-yellow" style="margin-left:8px;">PRIORITY 4</span></div>
+        <div style="margin-top:12px;">
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Design 1-page PDF</strong> — Ben's 5-step framework, visual layout, CS brand (navy/orange), Manus to design</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Host as downloadable PDF</strong> — direct link, no form (or minimal — email only)</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Set up ManyChat automation</strong> — keyword "BLUEPRINT" → auto-DM with link</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Create launch post</strong> — Hand Raiser formula</div></div>
+        </div>
+      </div>
+
+      <!-- Tax -->
+      <div class="card" style="border-left:3px solid var(--red);">
+        <div class="card-title">🏛️ #5: Tax-Smart Playbook <span class="tag tag-red" style="margin-left:8px;">NEW ANGLE</span></div>
+        <div style="margin-top:12px;">
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Write 1-page framework</strong> — SMSF vs trust vs individual, which structure for which scenario, Australian context</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Legal review</strong> — ensure "not tax advice" disclaimer is prominent, framework is directional not prescriptive</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Design as visual cheat sheet</strong> — 1-page, scannable, CS brand</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Set up ManyChat automation</strong> — keyword "TAX" → auto-DM with link</div></div>
+          <div class="checklist-item"><div class="checklist-box"></div><div><strong>Create launch post</strong> — Hand Raiser formula, tax-focused TOFU hook</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 11: MANYCHAT SETUP                 -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div class="section" id="s11">
+      <div class="section-label">11 / Automation</div>
+      <div class="section-title">ManyChat Setup Notes</div>
+      <p class="section-intro">How to set up the comment → DM automation for each micromagnet. This is the Instagram DM funnel — the micromagnet is the trigger.</p>
+
+      <div class="card">
+        <div class="card-title">General ManyChat Architecture</div>
+        <table>
+          <thead><tr><th>Component</th><th>Setup</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Trigger type</strong></td><td>Instagram Comment Automation (Growth Tool)</td></tr>
+            <tr><td><strong>Trigger condition</strong></td><td>Comment contains keyword (exact or partial match)</td></tr>
+            <tr><td><strong>Response type</strong></td><td>DM (not comment reply) — direct message to the commenter</td></tr>
+            <tr><td><strong>DM content</strong></td><td>Short, clean: "Here's your [tool name] → [LINK]" + one line about what to expect</td></tr>
+            <tr><td><strong>Follow-up</strong></td><td>Optional: 24hr follow-up DM: "Did you try the [tool]? Here's what most people do next →" + VSL link</td></tr>
+            <tr><td><strong>Tagging</strong></td><td>Tag subscriber by keyword for segmentation (strategy_lead, scorecard_lead, tax_lead, etc.)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Per-Keyword Automation Setup</div>
+        <table>
+          <thead><tr><th>Keyword</th><th>DM Copy</th><th>Link</th><th>ManyChat Tag</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong style="color:var(--orange);">STRATEGY</strong></td>
+              <td>"Here's the 8-step strategy tool → [LINK]. Answer 5 questions and get your personalised digital asset strategy in 3 minutes."</td>
+              <td>[Custom GPT URL]</td>
+              <td>strategy_lead</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--green);">SCORECARD</strong></td>
+              <td>"Here's the Wealth Protection Scorecard → [LINK]. Takes 2 minutes. You'll get your inflation risk score instantly."</td>
+              <td>[Quiz URL]</td>
+              <td>scorecard_lead</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--purple);">CALCULATOR</strong></td>
+              <td>"Here's the allocation calculator → [LINK]. Enter your numbers and get your exact digital asset allocation in 60 seconds."</td>
+              <td>[Calculator URL]</td>
+              <td>calculator_lead</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--yellow);">BLUEPRINT</strong></td>
+              <td>"Here's Ben's one-page Digital Asset Blueprint → [LINK]. The exact 5-step framework 3,000+ members use."</td>
+              <td>[PDF URL]</td>
+              <td>blueprint_lead</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--red);">TAX</strong></td>
+              <td>"Here's the Tax-Smart Playbook → [LINK]. The framework for structuring digital asset holdings in Australia. 2-minute read."</td>
+              <td>[PDF URL]</td>
+              <td>tax_lead</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-orange">
+        <strong>⚡ Important: Every DM Ends with One Next Step</strong><br>
+        After the micromagnet link, add one line: "After you've used it, the next step is here → [VSL LINK]"<br>
+        This is the bridge. Don't overload the DM. One tool. One next step. That's it.
+      </div>
+
+      <div class="card">
+        <div class="card-title">ManyChat 24hr Follow-Up Template</div>
+        <div class="post-copy">
+Hey [First Name] 👋
+
+Did you try the [tool name]?
+
+Most people who use it want to see how it applies to their full situation.
+
+I recorded a 15-minute video that walks through exactly that → [VSL LINK]
+
+No sales pitch. Just the framework in action.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+  // Active sidebar on scroll
+  const sections = document.querySelectorAll('.section[id]');
+  const links = document.querySelectorAll('.sidebar-link');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.sidebar-link[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
