@@ -856,6 +856,167 @@ tailwind.config = {
 
   /* ── Selected task highlight for keyboard nav ── */
   .task-row.kb-selected { outline: 2px solid #FC5C03; outline-offset: -2px; border-radius: 4px; }
+
+  /* ── Task Detail Modal (Dark Theme Bottom-Sheet / Centered) ── */
+  .tdm-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 500;
+    opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s;
+  }
+  .tdm-overlay.open { opacity: 1; visibility: visible; }
+  .tdm-modal {
+    position: fixed; z-index: 510;
+    background: #1A1A2E; color: #E8E8EA;
+    overflow-y: auto; overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Mobile: bottom sheet */
+  .tdm-modal {
+    bottom: 0; left: 0; right: 0;
+    max-height: 85vh; border-radius: 20px 20px 0 0;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .tdm-modal.open { transform: translateY(0); }
+  /* Desktop: centered modal */
+  @media (min-width: 769px) {
+    .tdm-modal {
+      bottom: auto; left: 50%; top: 50%; right: auto;
+      transform: translate(-50%, -50%) scale(0.95);
+      opacity: 0; max-width: 560px; width: 90%;
+      max-height: 85vh; border-radius: 16px;
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+    }
+    .tdm-modal.open { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  }
+  .tdm-handle {
+    width: 40px; height: 4px; background: rgba(255,255,255,0.2);
+    border-radius: 2px; margin: 12px auto 0; flex-shrink: 0;
+  }
+  @media (min-width: 769px) { .tdm-handle { display: none; } }
+  .tdm-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px 8px; position: sticky; top: 0;
+    background: #1A1A2E; z-index: 2;
+  }
+  .tdm-close {
+    background: none; border: none; color: rgba(255,255,255,0.5);
+    font-size: 24px; cursor: pointer; padding: 4px 8px; line-height: 1;
+    transition: color 0.15s; -webkit-tap-highlight-color: transparent;
+  }
+  .tdm-close:hover { color: #fff; }
+  .tdm-body { padding: 0 20px 20px; }
+  .tdm-task-name {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 20px; font-weight: 700; color: #fff;
+    margin-bottom: 16px; line-height: 1.3;
+  }
+  .tdm-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .tdm-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: 100px; font-size: 11px; font-weight: 600;
+  }
+  .tdm-meta-row {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 14px; color: rgba(255,255,255,0.7);
+    padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .tdm-section-title {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px;
+    color: rgba(255,255,255,0.35); font-weight: 600; margin: 20px 0 8px;
+  }
+  .tdm-notes {
+    font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.6;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .tdm-subtask {
+    display: flex; align-items: center; gap: 10px; padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 14px;
+    color: rgba(255,255,255,0.75);
+  }
+  .tdm-subtask-box {
+    width: 16px; height: 16px; border-radius: 4px; border: 2px solid rgba(255,255,255,0.3);
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: #fff;
+  }
+  .tdm-subtask-box.checked { background: #08C394; border-color: #08C394; }
+  .tdm-subtask.done-sub { color: rgba(255,255,255,0.3); text-decoration: line-through; }
+  .tdm-file-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 100px; font-size: 12px; color: #FC5C03; text-decoration: none;
+    margin: 4px 4px 4px 0; transition: all 0.15s;
+  }
+  .tdm-file-link:hover { background: rgba(252,92,3,0.12); border-color: rgba(252,92,3,0.3); }
+  .tdm-divider {
+    height: 1px; background: rgba(255,255,255,0.08); margin: 20px 0 0;
+  }
+  .tdm-footer {
+    display: flex; gap: 8px; padding: 16px 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    position: sticky; bottom: 0; background: #1A1A2E; z-index: 2;
+  }
+  @media (max-width: 768px) {
+    .tdm-footer { flex-direction: column; }
+    .tdm-footer button { width: 100%; }
+  }
+  .tdm-btn {
+    flex: 1; padding: 12px 16px; border: none; border-radius: 10px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    -webkit-tap-highlight-color: transparent; min-height: 44px;
+  }
+  .tdm-btn-edit { background: rgba(255,255,255,0.08); color: #E8E8EA; }
+  .tdm-btn-edit:hover { background: rgba(255,255,255,0.15); }
+  .tdm-btn-copy { background: rgba(101,79,252,0.12); color: #A78BFA; }
+  .tdm-btn-copy:hover { background: rgba(101,79,252,0.2); }
+  .tdm-btn-complete { background: #08C394; color: #fff; }
+  .tdm-btn-complete:hover { opacity: 0.88; }
+
+  /* ── Discord Content Upload Form ── */
+  .discord-upload-form { display: flex; flex-direction: column; gap: 12px; }
+  .discord-upload-form label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    color: rgba(255,255,255,0.45); font-weight: 600; margin-bottom: 2px; display: block;
+  }
+  .discord-upload-form select,
+  .discord-upload-form input,
+  .discord-upload-form textarea {
+    width: 100%; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.12); border-radius: 8px;
+    font-size: 14px; font-family: 'Barlow', sans-serif; outline: none; background: #252540;
+    color: #E8E8EA; box-sizing: border-box; -webkit-appearance: none;
+  }
+  .discord-upload-form select option { background: #252540; color: #E8E8EA; }
+  .discord-upload-form select:focus,
+  .discord-upload-form input:focus,
+  .discord-upload-form textarea:focus { border-color: #5865F2; }
+  .discord-upload-form textarea { resize: vertical; min-height: 80px; }
+  .discord-gen-btn {
+    width: 100%; padding: 12px; background: #5865F2; color: #fff; border: none;
+    border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif; transition: opacity 0.15s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 44px; -webkit-tap-highlight-color: transparent;
+  }
+  .discord-gen-btn:hover { opacity: 0.88; }
+  .discord-tooltip {
+    text-align: center; font-size: 12px; color: #08C394; font-weight: 600;
+    margin-top: 6px; opacity: 0; transition: opacity 0.3s; min-height: 20px;
+  }
+  .discord-tooltip.show { opacity: 1; }
+  .discord-note-card {
+    display: flex; align-items: center; gap: 10px; padding: 12px 16px;
+    background: rgba(88,101,242,0.08); border: 1px solid rgba(88,101,242,0.2);
+    border-radius: 10px; margin-top: 16px;
+  }
+  .discord-note-card .discord-badge {
+    background: #5865F2; color: #fff; padding: 3px 10px; border-radius: 100px;
+    font-size: 11px; font-weight: 700; white-space: nowrap;
+  }
+  .discord-note-card .discord-note-text {
+    font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.4;
+  }
 </style>
 </head>
 <body>
@@ -1230,6 +1391,55 @@ tailwind.config = {
           </button>
         </div>
       </div>
+
+      <!-- ═══ Discord Content Upload ═══ -->
+      <div class="card" style="margin-bottom:20px; background:#111127; border-color:rgba(255,255,255,0.06);">
+        <div class="card-title" style="color:#807F86;">📤 Add Content to Board</div>
+        <div class="discord-upload-form">
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <div style="flex:1; min-width:140px;">
+              <label>Platform</label>
+              <select id="dcPlatform">
+                <option>Instagram</option><option>YouTube</option><option>LinkedIn</option><option>Twitter</option><option>TikTok</option>
+              </select>
+            </div>
+            <div style="flex:1; min-width:140px;">
+              <label>Content Type</label>
+              <select id="dcContentType">
+                <option>Reel</option><option>Story</option><option>Post</option><option>Video</option><option>Thread</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label>Copy / Caption *</label>
+            <textarea id="dcCopy" placeholder="Write the caption or copy for this content..."></textarea>
+          </div>
+          <div>
+            <label>Visual Description <span style="opacity:0.5; text-transform:none; letter-spacing:0;">(optional)</span></label>
+            <input type="text" id="dcVisual" placeholder="What does the image/video show?">
+          </div>
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <div style="flex:1; min-width:140px;">
+              <label>CTA / Keyword Trigger <span style="opacity:0.5; text-transform:none; letter-spacing:0;">(optional)</span></label>
+              <input type="text" id="dcCta" placeholder="e.g. STRATEGY">
+            </div>
+            <div style="flex:1; min-width:140px;">
+              <label>Status</label>
+              <select id="dcStatus">
+                <option>Draft</option><option>Ready to Post</option><option>Scheduled</option>
+              </select>
+            </div>
+          </div>
+          <button class="discord-gen-btn" onclick="generateDiscordMessage()">📋 Generate Discord Message</button>
+          <div class="discord-tooltip" id="dcTooltip">✅ Copied! Paste into #content-uploads in Discord</div>
+        </div>
+        <p style="font-size:12px; color:rgba(255,255,255,0.35); margin-top:14px; font-style:italic;">BenBot monitors #content-uploads and will add this to the content board automatically.</p>
+        <div class="discord-note-card">
+          <span class="discord-badge">Discord</span>
+          <span class="discord-note-text">Post content → #content-uploads → auto-added to board</span>
+        </div>
+      </div>
+
     </div>
     <!-- ═══ END MORNING BRIEF ═══ -->
 
@@ -1798,6 +2008,22 @@ tailwind.config = {
   </div>
 </div>
 
+<!-- ═══ TASK DETAIL MODAL (Dark Theme) ═══ -->
+<div class="tdm-overlay" id="tdmOverlay" onclick="closeTaskDetailModal()"></div>
+<div class="tdm-modal" id="tdmModal" data-task-id="">
+  <div class="tdm-handle"></div>
+  <div class="tdm-header">
+    <span style="font-size:11px; font-weight:700; color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:1px;">Task Details</span>
+    <button class="tdm-close" onclick="closeTaskDetailModal()">×</button>
+  </div>
+  <div class="tdm-body" id="tdmBody"></div>
+  <div class="tdm-footer">
+    <button class="tdm-btn tdm-btn-edit" onclick="tdmEditTask()">✏️ Edit Task</button>
+    <button class="tdm-btn tdm-btn-copy" onclick="tdmCopyPrompt()">📋 Copy Prompt</button>
+    <button class="tdm-btn tdm-btn-complete" onclick="tdmMarkComplete()">✅ Mark Complete</button>
+  </div>
+</div>
+
 <!-- ═══ MOBILE BOTTOM TAB BAR ═══ -->
 <div class="bottom-tab-bar">
   <a class="bottom-tab active" data-view="brief" onclick="switchView('brief')">
@@ -2160,7 +2386,7 @@ function renderTasks() {
     const hasNotes = effective.notes && effective.notes.trim();
     const descHtml = hasNotes ? `<div class="task-description" id="task-desc-${globalIdx}" onclick="toggleDescription(${globalIdx}, event)">${escHtml(effective.notes)}</div>` : '';
 
-    html += `<div class="task-row" data-status="${effective.status}" onclick="toggleExpand(${globalIdx})">
+    html += `<div class="task-row" data-status="${effective.status}" onclick="openTaskDetailModal('${effective.id}')">
       <button class="status-pill" data-st="${effective.status}" title="Click to cycle status" onclick="event.stopPropagation(); cycleStatus(${globalIdx})">${STATUS_LABELS[effective.status] || '?'}</button>
       <span class="task-cat-icon" title="${effective.category || 'task'}">${catIcon}</span>
       <div style="flex:1; min-width:0;">
@@ -2819,6 +3045,16 @@ function submitAddTask() {
   const pending = JSON.parse(localStorage.getItem('pending_tasks') || '[]');
   pending.push(newTask);
   localStorage.setItem('pending_tasks', JSON.stringify(pending));
+  // Sync to server API
+  fetch('/api/tasks/add', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, priority, category, due, notes })
+  }).then(r => r.json()).then(data => {
+    if (data.success) showToast('Task added and synced ✓', 'success');
+  }).catch(err => {
+    console.log('Offline — saved locally only');
+  });
   // Re-render
   renderTasks();
   renderBriefTasks();
@@ -2864,6 +3100,19 @@ function completeTask(taskId, cardElement) {
   stored.status = 'done';
   localStorage.setItem('cs-task-' + taskId, JSON.stringify(stored));
   showToast('✓ Task marked complete', 'success');
+  // 4b. Sync to server API
+  fetch('/api/tasks/complete', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      taskId: taskId,
+      completedAt: new Date().toISOString().split('T')[0]
+    })
+  }).then(r => r.json()).then(data => {
+    if (data.success) console.log('Task synced to server');
+  }).catch(err => {
+    console.log('Offline — saved locally only');
+  });
   // 5. Slide out after 1.5s
   setTimeout(() => {
     // Also hide the expand section if open
@@ -3039,6 +3288,155 @@ function highlightKbRow(rows) {
 // ═══════════════════════════════════════════
 // FEATURE 11: Export Tasks to CSV
 // ═══════════════════════════════════════════
+// ═══════════════════════════════════════════
+// TASK DETAIL MODAL (Dark Theme)
+// ═══════════════════════════════════════════
+function openTaskDetailModal(taskId) {
+  const task = _allTasks.find(t => t.id === taskId);
+  if (!task) return;
+  const stored = JSON.parse(localStorage.getItem('cs-task-' + task.id) || '{}');
+  if (stored._deleted) return;
+  const effective = Object.assign({}, task, stored);
+  const todayStr = new Date().toISOString().split('T')[0];
+  const isOverdue = effective.due && effective.due < todayStr && effective.status !== 'done';
+  const dueLabel = effective.due ? (effective.due === todayStr ? 'Today' : new Date(effective.due + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })) : '\u2014';
+  const taskPrio = getTaskPriority(effective.id);
+  const cat = CATEGORY_COLORS[effective.category] || CATEGORY_COLORS.operations;
+  const catIcon = getCategoryIcon(effective.category);
+  const assignee = effective.assignee || '\u2014';
+  const statusColorMap = { todo:'#9CA3AF', urgent:'#EF4444', progress:'#3B82F6', done:'#08C394', 'on-hold':'#F59E0B', blocked:'#EF4444' };
+  const statusNameMap = { todo:'To Do', urgent:'Urgent', progress:'In Progress', done:'Done', 'on-hold':'On Hold', blocked:'Blocked' };
+  const prioColorMap = { urgent:'#EF4444', high:'#F97316', normal:'#9CA3AF', low:'#6B7280' };
+  let html = '';
+  // Pills
+  html += '<div class="tdm-pills">';
+  html += `<span class="tdm-pill" style="background:${cat.bg||'#F0F0F2'};color:${cat.text||'#4D4C55'};">${catIcon} ${escHtml(effective.category||'Task')}</span>`;
+  html += `<span class="tdm-pill" style="background:${prioColorMap[taskPrio]||'#9CA3AF'}20;color:${prioColorMap[taskPrio]||'#9CA3AF'};">${PRIORITY_LABELS[taskPrio]||'\u26AA Normal'}</span>`;
+  html += `<span class="tdm-pill" style="background:${statusColorMap[effective.status]||'#9CA3AF'}20;color:${statusColorMap[effective.status]||'#9CA3AF'};">${statusNameMap[effective.status]||'To Do'}</span>`;
+  html += '</div>';
+  // Name
+  html += `<div class="tdm-task-name">${escHtml(effective.name)}</div>`;
+  // Meta
+  html += `<div class="tdm-meta-row">\uD83D\uDCC5 Due: <span style="${isOverdue?'color:#EF4444;font-weight:600;':''}margin-left:4px;">${dueLabel}</span></div>`;
+  html += `<div class="tdm-meta-row">\uD83D\uDC64 Assignee: <span style="margin-left:4px;">${escHtml(assignee)}</span></div>`;
+  html += `<div class="tdm-meta-row">\uD83C\uDFF7 Category: <span style="margin-left:4px;">${escHtml(effective.category||'\u2014')}</span></div>`;
+  // Notes
+  if (effective.notes && effective.notes.trim()) {
+    html += '<div class="tdm-section-title">Notes</div>';
+    html += `<div class="tdm-notes">${escHtml(effective.notes)}</div>`;
+  }
+  // Subtasks
+  if (effective.subtasks && effective.subtasks.length) {
+    const done = effective.subtasks.filter(s=>s.done).length;
+    html += `<div class="tdm-section-title">Subtasks (${done}/${effective.subtasks.length})</div>`;
+    effective.subtasks.forEach(s => {
+      html += `<div class="tdm-subtask ${s.done?'done-sub':''}">`;
+      html += `<span class="tdm-subtask-box ${s.done?'checked':''}">${s.done?'\u2713':''}</span>`;
+      html += escHtml(s.text||'');
+      html += '</div>';
+    });
+  }
+  // Files
+  if (effective.files && effective.files.length) {
+    html += '<div class="tdm-section-title">Files & Links</div>';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:6px;">';
+    effective.files.forEach(f => {
+      html += `<a href="${f.url}" target="_blank" class="tdm-file-link">\uD83D\uDD17 ${escHtml(f.label)}</a>`;
+    });
+    html += '</div>';
+  }
+  document.getElementById('tdmBody').innerHTML = html;
+  document.getElementById('tdmModal').dataset.taskId = taskId;
+  document.getElementById('tdmOverlay').classList.add('open');
+  document.getElementById('tdmModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeTaskDetailModal() {
+  document.getElementById('tdmOverlay').classList.remove('open');
+  document.getElementById('tdmModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function tdmEditTask() {
+  const taskId = document.getElementById('tdmModal').dataset.taskId;
+  const idx = _allTasks.findIndex(t => t.id === taskId);
+  closeTaskDetailModal();
+  if (idx >= 0) openTaskPanel(idx);
+}
+
+function tdmCopyPrompt() {
+  const taskId = document.getElementById('tdmModal').dataset.taskId;
+  const task = _allTasks.find(t => t.id === taskId);
+  if (!task) return;
+  const stored = JSON.parse(localStorage.getItem('cs-task-' + task.id) || '{}');
+  const eff = Object.assign({}, task, stored);
+  const fileLinks = (eff.files||[]).map(f=>f.url).join(' ');
+  const msg = ('BenBot, re: '+eff.name+' \u2014 '+(eff.notes||'(no notes)')+'. '+fileLinks).trim();
+  navigator.clipboard.writeText(msg).then(()=>{ showToast('\uD83D\uDCCB Prompt copied!'); });
+}
+
+function tdmMarkComplete() {
+  const taskId = document.getElementById('tdmModal').dataset.taskId;
+  closeTaskDetailModal();
+  const stored = JSON.parse(localStorage.getItem('cs-task-'+taskId)||'{}');
+  stored.status = 'done';
+  localStorage.setItem('cs-task-'+taskId, JSON.stringify(stored));
+  saveCompletedTask(taskId);
+  showToast('\u2713 Task marked complete','success');
+  fetchTasks();
+}
+
+// Swipe-down to close on mobile
+(function(){
+  const modal = document.getElementById('tdmModal');
+  if(!modal) return;
+  let startY=0, dragging=false;
+  modal.addEventListener('touchstart',function(e){
+    if(modal.scrollTop>0) return;
+    startY=e.touches[0].clientY; dragging=true;
+  },{passive:true});
+  modal.addEventListener('touchmove',function(e){
+    if(!dragging) return;
+    const diff=e.touches[0].clientY-startY;
+    if(diff>0 && modal.scrollTop<=0){
+      modal.style.transition='none';
+      modal.style.transform='translateY('+diff+'px)';
+    }
+  },{passive:true});
+  modal.addEventListener('touchend',function(e){
+    if(!dragging) return;
+    dragging=false;
+    const diff=e.changedTouches[0].clientY-startY;
+    modal.style.transition='';
+    modal.style.transform='';
+    if(diff>80) closeTaskDetailModal();
+  });
+})();
+
+// ═══════════════════════════════════════════
+// DISCORD CONTENT UPLOAD
+// ═══════════════════════════════════════════
+function generateDiscordMessage() {
+  const copy = document.getElementById('dcCopy').value.trim();
+  if(!copy){ document.getElementById('dcCopy').style.borderColor='#EF4444'; return; }
+  document.getElementById('dcCopy').style.borderColor='';
+  const platform = document.getElementById('dcPlatform').value;
+  const contentType = document.getElementById('dcContentType').value;
+  const visual = document.getElementById('dcVisual').value.trim();
+  const cta = document.getElementById('dcCta').value.trim();
+  const status = document.getElementById('dcStatus').value;
+  let msg = '\uD83D\uDCE4 **Content Upload**\nPlatform: '+platform+' | Type: '+contentType+'\nStatus: '+status;
+  if(cta) msg += '\nCTA Keyword: '+cta;
+  msg += '\n\n**Copy:**\n'+copy;
+  if(visual) msg += '\n\n**Visual:** '+visual;
+  navigator.clipboard.writeText(msg).then(()=>{
+    const tt = document.getElementById('dcTooltip');
+    tt.classList.add('show');
+    setTimeout(()=>tt.classList.remove('show'),3000);
+  });
+}
+
 function exportTasksCSV() {
   const pending = JSON.parse(localStorage.getItem('pending_tasks') || '[]');
   const allExport = [..._allTasks, ...pending.filter(p => !_allTasks.find(t => t.id === p.id))];
