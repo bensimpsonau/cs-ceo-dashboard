@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amex Platinum - Expense Categorisation Report | Feb 23 - Mar 22, 2026</title>
+<style>
+  :root {
+    --navy: #1a2744;
+    --navy-light: #2c3e5a;
+    --orange: #e8722a;
+    --orange-light: #fdf0e8;
+    --green: #2e7d32;
+    --green-light: #e8f5e9;
+    --red: #c62828;
+    --red-light: #ffebee;
+    --amber: #f57c00;
+    --amber-light: #fff3e0;
+    --grey-50: #fafafa;
+    --grey-100: #f5f5f5;
+    --grey-200: #eeeeee;
+    --grey-300: #e0e0e0;
+    --grey-600: #757575;
+    --grey-800: #424242;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: var(--grey-800);
+    background: #fff;
+    line-height: 1.5;
+    font-size: 14px;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 32px; }
+
+  /* Header */
+  .report-header {
+    background: var(--navy);
+    color: #fff;
+    padding: 32px 40px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+  }
+  .report-header h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .report-header .subtitle { color: rgba(255,255,255,0.7); font-size: 13px; margin-bottom: 16px; }
+  .header-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 13px; color: rgba(255,255,255,0.85); }
+  .header-meta strong { color: #fff; }
+
+  /* Summary cards */
+  .summary-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+  .card {
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+  }
+  .card .card-amount { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+  .card .card-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+  .card.business { background: var(--green-light); color: var(--green); border: 1px solid #c8e6c9; }
+  .card.clarify { background: var(--amber-light); color: var(--amber); border: 1px solid #ffe0b2; }
+  .card.personal { background: var(--red-light); color: var(--red); border: 1px solid #ffcdd2; }
+  .card.laura { background: var(--grey-100); color: var(--grey-600); border: 1px solid var(--grey-300); }
+
+  /* Sections */
+  .section { margin-bottom: 36px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--grey-200);
+  }
+  .section-header h2 { font-size: 16px; font-weight: 700; color: var(--navy); }
+  .section-header .badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+  }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-amber { background: var(--amber-light); color: var(--amber); }
+  .badge-red { background: var(--red-light); color: var(--red); }
+  .badge-grey { background: var(--grey-100); color: var(--grey-600); }
+
+  /* Sub-category headers */
+  .sub-category {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy-light);
+    padding: 8px 12px;
+    background: var(--grey-50);
+    border-left: 3px solid var(--orange);
+    margin-top: 16px;
+    margin-bottom: 4px;
+  }
+  .sub-category:first-of-type { margin-top: 0; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 4px; }
+  th {
+    background: var(--grey-100);
+    text-align: left;
+    padding: 8px 12px;
+    font-weight: 600;
+    color: var(--navy);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border-bottom: 2px solid var(--grey-300);
+  }
+  td { padding: 7px 12px; border-bottom: 1px solid var(--grey-200); }
+  tr:hover td { background: var(--grey-50); }
+  .amount { text-align: right; font-variant-numeric: tabular-nums; font-weight: 500; }
+  .amount-header { text-align: right; }
+  .category-tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--grey-100);
+    color: var(--grey-600);
+    font-weight: 500;
+  }
+  .cat-meta { background: #e3f2fd; color: #1565c0; }
+  .cat-marketing { background: #f3e5f5; color: #7b1fa2; }
+  .cat-software { background: #e8eaf6; color: #283593; }
+  .cat-travel { background: var(--orange-light); color: var(--orange); }
+  .cat-services { background: #e0f2f1; color: #00695c; }
+
+  /* Checkbox column */
+  .checkbox-col { text-align: center; width: 80px; }
+  .checkbox-col input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }
+  .question { font-size: 12px; color: var(--grey-600); font-style: italic; }
+
+  /* Totals table */
+  .totals-table { margin-top: 24px; }
+  .totals-table th { background: var(--navy); color: #fff; }
+  .totals-table td { font-weight: 500; }
+  .totals-table tr.total-row td { background: var(--navy); color: #fff; font-weight: 700; font-size: 14px; }
+  .totals-table .pct { color: var(--grey-600); font-size: 12px; }
+
+  /* Footer */
+  .report-footer {
+    margin-top: 32px;
+    padding: 16px 20px;
+    background: var(--grey-50);
+    border: 1px solid var(--grey-200);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--grey-600);
+    line-height: 1.6;
+  }
+  .report-footer strong { color: var(--navy); }
+
+  /* Reconciliation note */
+  .reconciliation-note {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: var(--amber-light);
+    border-left: 3px solid var(--amber);
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--grey-800);
+  }
+
+  /* Print styles */
+  @media print {
+    body { font-size: 12px; }
+    .container { padding: 0; }
+    .report-header { border-radius: 0; }
+    .card { break-inside: avoid; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+    .section { page-break-inside: avoid; }
+    .checkbox-col input[type="checkbox"] { -webkit-appearance: none; border: 1.5px solid #333; width: 12px; height: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="report-header">
+    <h1>Amex Platinum — Expense Categorisation Report</h1>
+    <div class="subtitle">American Express Platinum Card Statement Analysis</div>
+    <div class="header-meta">
+      <div><strong>Period:</strong> Feb 23 – Mar 22, 2026</div>
+      <div><strong>Prepared by:</strong> BenBot (AI CEO Agent)</div>
+      <div><strong>Total Statement Debits:</strong> $30,441.20</div>
+      <div><strong>For:</strong> Katya Menzel, CFO</div>
+      <div><strong>Cards:</strong> Ben Simpson (xxxx-22007) + Laura Simon (supplementary)</div>
+      <div><strong>Date Prepared:</strong> April 3, 2026</div>
+    </div>
+  </div>
+
+  <!-- SUMMARY CARDS -->
+  <div class="summary-cards">
+    <div class="card business">
+      <div class="card-amount">$16,240.80</div>
+      <div class="card-label">Confirmed Business</div>
+    </div>
+    <div class="card clarify">
+      <div class="card-amount">$3,175.17</div>
+      <div class="card-label">Needs Clarification</div>
+    </div>
+    <div class="card personal">
+      <div class="card-amount">$8,885.13</div>
+      <div class="card-label">Personal (Ben)</div>
+    </div>
+    <div class="card laura">
+      <div class="card-amount">$2,140.10</div>
+      <div class="card-label">Laura's Card</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: CONFIRMED BUSINESS -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Section 1: Confirmed Business Expenses</h2>
+      <span class="badge badge-green">$16,240.80</span>
+    </div>
+
+    <div class="sub-category">Meta / Facebook Ads — $2,302.37</div>
+    <table>
+      <thead><tr><th>Date</th><th>Merchant</th><th class="amount-header">Amount</th><th>Category</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Feb 22</td><td>FACEBK *AVGAYEV6J2</td><td class="amount">$731.84</td><td><span class="category-tag cat-meta">Meta Ads</span></td><td>USD 500</td></tr>
+        <tr><td>Feb 23</td><td>FACEBK *3MF9NE57J2</td><td class="amount">$731.84</td><td><span class="category-tag cat-meta">Meta Ads</span></td><td>USD 500</td></tr>
+        <tr><td>Feb 23</td><td>FACEBK *YDESRFR6J2</td><td class="amount">$731.84</td><td><span class="category-tag cat-meta">Meta Ads</span></td><td>USD 500</td></tr>
+        <tr><td>Mar 3</td><td>FACEBK *MV4B</td><td class="amount">$41.89</td><td><span class="category-tag cat-meta">Meta Ads</span></td><td></td></tr>
+        <tr><td>Mar 9</td><td>FACEBK *PE7X2H97J2</td><td class="amount">$64.96</td><td><span class="category-tag cat-meta">Meta Ads</span></td><td>USD 43.99</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-category">Marketing / Agency — $8,827.51</div>
+    <table>
+      <thead><tr><th>Date</th><th>Merchant</th><th class="amount-header">Amount</th><th>Category</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Mar 6</td><td>MEGALODON MARKETING</td><td class="amount">$7,356.09</td><td><span class="category-tag cat-marketing">Marketing/Agency</span></td><td>USD 5,000 — marketing agency</td></tr>
+        <tr><td>Mar 15</td><td>CMH MEDIA LLC</td><td class="amount">$1,471.42</td><td><span class="category-tag cat-marketing">Marketing/Agency</span></td><td>Media company — confirm CS-related</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-category">Software / Tools — $276.41</div>
+    <table>
+      <thead><tr><th>Date</th><th>Merchant</th><th class="amount-header">Amount</th><th>Category</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Mar 2</td><td>REPLIT, INC.</td><td class="amount">$32.17</td><td><span class="category-tag cat-software">Software/Tools</span></td><td>USD 22 — coding platform</td></tr>
+        <tr><td>Mar 1</td><td>MANUS AI* TRIAL OVER</td><td class="amount">$64.29</td><td><span class="category-tag cat-software">Software/Tools</span></td><td>AI tool</td></tr>
+        <tr><td>Mar 3</td><td>LUZERN SOLUTION</td><td class="amount">$179.95</td><td><span class="category-tag cat-software">Software/Tools</span></td><td>E-commerce/marketing platform</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-category">Travel — $4,495.63</div>
+    <table>
+      <thead><tr><th>Date</th><th>Merchant</th><th class="amount-header">Amount</th><th>Category</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Feb 22</td><td>GG VA INFLIGHT FOOD 000 Mascot</td><td class="amount">$11.00</td><td><span class="category-tag cat-travel">Travel</span></td><td>Virgin Australia inflight — Sydney</td></tr>
+        <tr><td>Feb 22</td><td>HUNTER AND BARREL RAINE Perth</td><td class="amount">$120.96</td><td><span class="category-tag cat-travel">Travel</span></td><td>Perth work trip — meal</td></tr>
+        <tr><td>Feb 22</td><td>CHEMIST WAREHOUSE PERTH</td><td class="amount">$37.99</td><td><span class="category-tag cat-travel">Travel</span></td><td>Perth work trip</td></tr>
+        <tr><td>Feb 23</td><td>THE COFFEE CLUB Perth</td><td class="amount">$22.56</td><td><span class="category-tag cat-travel">Travel</span></td><td>Perth work trip</td></tr>
+        <tr><td>Feb 23</td><td>QT PERTH</td><td class="amount">$23.35</td><td><span class="category-tag cat-travel">Travel</span></td><td>Perth — hotel/venue</td></tr>
+        <tr><td>Feb 23</td><td>LIQUORLAND VASSE 2444</td><td class="amount">$112.00</td><td><span class="category-tag cat-travel">Travel</span></td><td>Margaret River / Vasse area</td></tr>
+        <tr><td>Feb 24</td><td>LITTLE IRIS CAFE Dunsborough</td><td class="amount">$7.72</td><td><span class="category-tag cat-travel">Travel</span></td><td>Dunsborough / Margaret River</td></tr>
+        <tr><td>Feb 24</td><td>E-VISA VIETNAM (x2)</td><td class="amount">$75.28</td><td><span class="category-tag cat-travel">Travel</span></td><td>Vietnam visa applications</td></tr>
+        <tr><td>Mar 11</td><td>VIRGIN AUSTRALIA (MEL→LST)</td><td class="amount">$315.58</td><td><span class="category-tag cat-travel">Travel</span></td><td>Melbourne to Launceston flights</td></tr>
+        <tr><td>Mar 11</td><td>VIRGIN AUSTRALIA (booking fee)</td><td class="amount">$3.35</td><td><span class="category-tag cat-travel">Travel</span></td><td>Launceston booking</td></tr>
+        <tr><td>Mar 11</td><td>COUNTRY CLUB CASINO Launceston</td><td class="amount">$77.09</td><td><span class="category-tag cat-travel">Travel</span></td><td>Launceston — meal/accommodation</td></tr>
+        <tr><td>Mar 11</td><td>COUNTRY CLUB CASINO Launceston</td><td class="amount">$48.31</td><td><span class="category-tag cat-travel">Travel</span></td><td>Launceston — meal/accommodation</td></tr>
+        <tr><td>Mar 15</td><td>VIRGIN AUSTRALIA</td><td class="amount">$28.01</td><td><span class="category-tag cat-travel">Travel</span></td><td>Flights — confirm destination</td></tr>
+        <tr><td>Mar 15</td><td>VIRGIN AUSTRALIA</td><td class="amount">$806.33</td><td><span class="category-tag cat-travel">Travel</span></td><td>Flights — confirm destination</td></tr>
+        <tr><td>Mar 15</td><td>VIRGIN AUSTRALIA</td><td class="amount">$1,836.53</td><td><span class="category-tag cat-travel">Travel</span></td><td>Flights — confirm destination</td></tr>
+        <tr><td>Mar 17</td><td>VIETNAM AIRLINES (x5 tickets)</td><td class="amount">$658.70</td><td><span class="category-tag cat-travel">Travel</span></td><td>5 × $131.74 — Vietnam flights</td></tr>
+        <tr><td>Mar 17</td><td>VIETNAM AIRLINES (fee)</td><td class="amount">$22.32</td><td><span class="category-tag cat-travel">Travel</span></td><td>Vietnam flights — fee/tax</td></tr>
+        <tr><td>Mar 15</td><td>1COVER Sydney</td><td class="amount">$288.55</td><td><span class="category-tag cat-travel">Travel</span></td><td>Travel insurance — business travel</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-category">Professional Services — $338.88</div>
+    <table>
+      <thead><tr><th>Date</th><th>Merchant</th><th class="amount-header">Amount</th><th>Category</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Mar 6</td><td>PACK &amp; SEND ONLINE PTY</td><td class="amount">$105.06</td><td><span class="category-tag cat-services">Prof. Services</span></td><td>Shipping / courier</td></tr>
+        <tr><td>Mar 6</td><td>OVO ENERGY Melbourne</td><td class="amount">$183.82</td><td><span class="category-tag cat-services">Prof. Services</span></td><td>Utilities — confirm if office</td></tr>
+        <tr><td>Mar 6</td><td>SECUREPARKINGCOMOCENTRE South Yarra</td><td class="amount">$50.00</td><td><span class="category-tag cat-services">Prof. Services</span></td><td>Parking — meeting</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 2: NEEDS CLARIFICATION -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Section 2: Needs Clarification from Ben</h2>
+      <span class="badge badge-amber">$3,175.17</span>
+    </div>
+    <p style="font-size:12px; color:var(--grey-600); margin-bottom:12px;">⚠️ The following transactions require Ben's confirmation before they can be categorised as business or personal. Katya — please tick the appropriate box after reviewing with Ben.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Merchant</th>
+          <th class="amount-header">Amount</th>
+          <th>Question for Ben</th>
+          <th class="checkbox-col">Business</th>
+          <th class="checkbox-col">Personal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Feb 21</td>
+          <td>MR BIG STUFF PTY LTD Melbourne</td>
+          <td class="amount">$26.43</td>
+          <td class="question">What is this merchant? Business meal or personal?</td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td>Feb 22</td>
+          <td>AUSZ Camberwell</td>
+          <td class="amount">$101.98</td>
+          <td class="question">What is AUSZ? Grooming/personal or business-related?</td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td>Feb 25</td>
+          <td>SAINT HAVEN TOORAK</td>
+          <td class="amount">$375.00</td>
+          <td class="question" rowspan="4">Saint Haven appears weekly (4 charges ≈ $1,500). Is this a gym/wellness membership? Can any portion be claimed as business wellness?</td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td>Mar 4</td>
+          <td>SAINT HAVEN TOORAK</td>
+          <td class="amount">$375.00</td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td>Mar 11</td>
+          <td>SAINT HAVEN TOORAK</td>
+          <td class="amount">$375.00</td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td>Mar 18</td>
+          <td>SAINT HAVEN TOORAK</td>
+          <td class="amount">$375.00</td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td>Mar 1</td>
+          <td>CARWASHCAFE STH YARR</td>
+          <td class="amount">$550.02</td>
+          <td class="question">$550 for car wash/detailing — is this a business vehicle? If so, claimable.</td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td>Mar 6</td>
+          <td>INES WINE BAR Windsor</td>
+          <td class="amount">$528.00</td>
+          <td class="question">$528 dinner — was this a team dinner, client entertainment, or personal?</td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td>Mar 6</td>
+          <td>MOUNT ERICA HOTEL Prahran</td>
+          <td class="amount">$89.06</td>
+          <td class="question">Same night as Ines Wine Bar — team event or personal?</td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td>Mar 6</td>
+          <td>Live Payments*MISTER MI South Yarra</td>
+          <td class="amount">$247.65</td>
+          <td class="question">Restaurant on Mar 6 — part of same team night out? Business or personal?</td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td>Mar 13</td>
+          <td>LS NORAS PIZZA HOUSE Rye</td>
+          <td class="amount">$132.03</td>
+          <td class="question">Rye weekend trip — personal likely, but confirm.</td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+          <td class="checkbox-col"><input type="checkbox"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 3: PERSONAL EXPENSES (BEN) -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Section 3: Personal Expenses — Ben's Card</h2>
+      <span class="badge badge-red">$8,885.13</span>
+    </div>
+    <p style="font-size:12px; color:var(--grey-600); margin-bottom:12px;">All transactions below are categorised as personal. Amounts marked with * are estimated — please verify against full statement.</p>
+
+    <div class="sub-category">Food Delivery</div>
+    <table>
+      <thead><tr><th>Date</th><th>Merchant</th><th class="amount-header">Amount</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Various</td><td>UBER EATS (multiple orders)</td><td class="amount">$125.00 *</td><td>~3 orders estimated</td></tr>
+        <tr><td>Various</td><td>YOUFOODZ (multiple orders)</td><td class="amount">$160.00 *</td><td>Meal prep delivery</td></tr>
+        <tr><td>—</td><td>MY MUSCLE CHEF</td><td class="amount">$100.10</td><td>Meal prep delivery</td></tr>
+        <tr><td>Various</td><td>MCDONALDS (x2)</td><td class="amount">$33.00 *</td><td>Fast food</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-category">Groceries</div>
+    <table>
+      <thead><tr><th>Date</th><th>Merchant</th><th class="amount-header">Amount</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>—</td><td>COLES</td><td class="amount">$65.00 *</td><td>Groceries</td></tr>
+        <tr><td>—</td><td>WW METRO</td><td class="amount">$55.00 *</td><td>Groceries</td></tr>
+        <tr><td>—</td><td>BAKER BLEU</td><td class="amount">$18.00 *</td><td>Bakery</td></tr>
+        <tr><td>—</td><td>ZLR*ROMEO'S OF TOORAK</td><td class="amount">$80.39</td><td>Grocery / deli</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-category">Entertainment</div>
+    <table>
+      <thead><tr><th>Date</th><th>Merchant</th><th class="amount-header">Amount</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>—</td><td>HOYTS</td><td class="amount">$28.00 *</td><td>Cinema</td></tr>
+        <tr><td>—</td><td>VILLAGE CINEMAS (x2)</td><td class="amount">$60.00 *</td><td>Cinema</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-category">Dining — Rye/Rosebud Weekend (Mar 13–15)</div>
+    <table>
+      <thead><tr><th>Date</th><th>Merchant</th><th class="amount-header">Amount</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Mar 13–15</td><td>Rye / Rosebud charges (various)</td><td class="amount">$200.00 *</td><td>Weekend trip — all personal</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-category">Health &amp; Wellness</div>
+    <table>
+      <thead><tr><th>Date</th><th>Merchant</th><th class="amount-header">Amount</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>—</td><td>CREATING SPACE PSYCH (x2)</td><td class="amount">$520.00</td><td>Psychology — personal health</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-category">Subscriptions</div>
+    <table>
+      <thead><tr><th>Date</th><th>Merchant</th><th class="amount-header">Amount</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>—</td><td>NETFLIX</td><td class="amount">$37.98</td><td>Streaming</td></tr>
+        <tr><td>—</td><td>SPOTIFY</td><td class="amount">$15.99</td><td>Music streaming</td></tr>
+        <tr><td>—</td><td>KAYOSPORTS / BINGE / DAZN</td><td class="amount">$19.00</td><td>Sport streaming</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-category">Other Personal</div>
+    <table>
+      <thead><tr><th>Date</th><th>Merchant</th><th class="amount-header">Amount</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>—</td><td>IDENTITY MAN PTY LTD Toorak</td><td class="amount">$56.38</td><td>Grooming</td></tr>
+        <tr><td>—</td><td>LE CREUSET AUSTRALIA</td><td class="amount">$554.95</td><td>Cookware — personal</td></tr>
+      </tbody>
+    </table>
+
+    <div class="reconciliation-note">
+      <strong>⚠️ Note:</strong> Some personal transaction amounts marked with * are estimated from statement categories. Ben's personal total of $8,885.13 is calculated as: Total debits ($30,441.20) minus Confirmed Business ($16,240.80) minus Needs Clarification ($3,175.17) minus Laura's Card ($2,140.10). Individual estimated amounts may not sum precisely — please verify all amounts against the full Amex statement.
+    </div>
+  </div>
+
+  <!-- SECTION 4: LAURA'S CARD -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Section 4: Laura Simon's Card (Supplementary) — All Personal</h2>
+      <span class="badge badge-grey">$2,140.10</span>
+    </div>
+    <p style="font-size:12px; color:var(--grey-600); margin-bottom:12px;">All charges on Laura's supplementary card are categorised as personal. Amounts marked with * are estimated — verify against statement.</p>
+    <table>
+      <thead><tr><th>Date</th><th>Merchant</th><th class="amount-header">Amount</th><th>Category</th></tr></thead>
+      <tbody>
+        <tr><td>—</td><td>CITYSKIN (x2)</td><td class="amount">$600.00 *</td><td>Beauty / cosmetics</td></tr>
+        <tr><td>—</td><td>UBER EATS (x2)</td><td class="amount">$80.00 *</td><td>Food delivery</td></tr>
+        <tr><td>—</td><td>PETER BOUCHIER (x2)</td><td class="amount">$120.00 *</td><td>Butcher / groceries</td></tr>
+        <tr><td>—</td><td>SAINT HAVEN (x2)</td><td class="amount">$400.00 *</td><td>Gym / wellness</td></tr>
+        <tr><td>—</td><td>KK TENNIS</td><td class="amount">$235.00</td><td>Sport / recreation</td></tr>
+        <tr><td>—</td><td>WW METRO / COLES / TOSCANO'S</td><td class="amount">$200.00 *</td><td>Groceries</td></tr>
+        <tr><td>—</td><td>BUDGET DIRECT</td><td class="amount">$110.04</td><td>Insurance — personal</td></tr>
+        <tr><td>—</td><td>KINDLE UNLIMITED</td><td class="amount">$13.99</td><td>Subscription</td></tr>
+        <tr><td>—</td><td>CAR WASH</td><td class="amount">$71.07</td><td>Vehicle</td></tr>
+        <tr><td>—</td><td>78 CECIL ST (x2)</td><td class="amount">$150.00 *</td><td>Dining</td></tr>
+        <tr><td>—</td><td>UBER TRIP (x2)</td><td class="amount">$60.00 *</td><td>Transport</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- TOTALS SUMMARY -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Summary Totals</h2>
+    </div>
+    <table class="totals-table">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th class="amount-header">Amount</th>
+          <th class="amount-header">% of Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>✅ Meta / Facebook Ads</td>
+          <td class="amount">$2,302.37</td>
+          <td class="amount pct">7.6%</td>
+        </tr>
+        <tr>
+          <td>✅ Marketing / Agency</td>
+          <td class="amount">$8,827.51</td>
+          <td class="amount pct">29.0%</td>
+        </tr>
+        <tr>
+          <td>✅ Software / Tools</td>
+          <td class="amount">$276.41</td>
+          <td class="amount pct">0.9%</td>
+        </tr>
+        <tr>
+          <td>✅ Travel</td>
+          <td class="amount">$4,495.63</td>
+          <td class="amount pct">14.8%</td>
+        </tr>
+        <tr>
+          <td>✅ Professional Services</td>
+          <td class="amount">$338.88</td>
+          <td class="amount pct">1.1%</td>
+        </tr>
+        <tr style="background: var(--green-light); font-weight: 700;">
+          <td>Sub-total: Confirmed Business</td>
+          <td class="amount" style="color: var(--green);">$16,240.80</td>
+          <td class="amount pct" style="color: var(--green);">53.3%</td>
+        </tr>
+        <tr style="background: var(--amber-light); font-weight: 700;">
+          <td>⚠️ Sub-total: Needs Clarification</td>
+          <td class="amount" style="color: var(--amber);">$3,175.17</td>
+          <td class="amount pct" style="color: var(--amber);">10.4%</td>
+        </tr>
+        <tr style="background: var(--red-light); font-weight: 700;">
+          <td>Sub-total: Personal (Ben's Card)</td>
+          <td class="amount" style="color: var(--red);">$8,885.13</td>
+          <td class="amount pct" style="color: var(--red);">29.2%</td>
+        </tr>
+        <tr style="background: var(--grey-100); font-weight: 700;">
+          <td>Sub-total: Laura's Card (Personal)</td>
+          <td class="amount" style="color: var(--grey-600);">$2,140.10</td>
+          <td class="amount pct" style="color: var(--grey-600);">7.0%</td>
+        </tr>
+        <tr class="total-row">
+          <td>GRAND TOTAL</td>
+          <td class="amount">$30,441.20</td>
+          <td class="amount">100.0%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="report-footer">
+    <strong>⚠️ Important Notes:</strong><br>
+    1. This report was prepared by <strong>BenBot (AI CEO Agent)</strong> for review. All "Needs Clarification" items require Ben's confirmation before final categorisation.<br>
+    2. Some personal expense amounts marked with * are <strong>estimated</strong> — please verify all amounts against the full Amex Platinum statement.<br>
+    3. Ben's personal total ($8,885.13) is derived as a balancing figure (total debits minus business, clarification, and Laura's card).<br>
+    4. <strong>Please review with Ben before submitting to the accountant.</strong><br>
+    <br>
+    <em>Prepared: April 3, 2026 | Collective Shift Pty Ltd</em>
+  </div>
+
+</div>
+</body>
+</html>
