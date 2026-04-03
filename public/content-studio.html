@@ -5,44 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
 <title>Content Studio — Collective Shift</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      colors: {
-        cs: {
-          orange: '#FC5C03',
-          'orange-light': '#FC8C4E',
-          'orange-bg': '#FEDECC',
-          'orange-hover': '#FEEEE5',
-          green: '#08C394',
-          purple: '#654FFC',
-          navy: '#1A1A2E',
-          'navy-light': '#252540',
-          border: '#E8E8EA',
-          text: '#1B1925',
-          secondary: '#4D4C55',
-          muted: '#807F86',
-          page: '#F7F7F8',
-        }
-      },
-      fontFamily: {
-        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
-        barlow: ['Barlow', 'sans-serif'],
-        mono: ['Source Code Pro', 'monospace'],
-      },
-    }
-  }
-}
-</script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #F7F7F8; color: #1B1925; font-family: 'Barlow', sans-serif; }
+  body { background: #0f0f1a; color: #e8e8ea; font-family: 'Barlow', sans-serif; }
   ::-webkit-scrollbar { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #4D4C55; border-radius: 3px; }
 
+  /* ── Sidebar ── */
   .sidebar {
     width: 220px; height: 100vh; position: fixed; top: 0; left: 0;
     background: #1A1A2E; color: #fff; z-index: 100;
@@ -68,364 +38,190 @@ tailwind.config = {
     border-left-color: #FC5C03; font-weight: 600;
   }
   .sidebar-link .sidebar-icon { width: 18px; text-align: center; font-size: 14px; flex-shrink: 0; }
-
   .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 95; }
 
+  /* ── Topbar ── */
   .topbar {
     height: 48px; position: fixed; top: 0; left: 220px; right: 0;
-    background: #fff; border-bottom: 1px solid #E8E8EA;
+    background: #16162a; border-bottom: 1px solid #2a2a45;
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 24px; z-index: 90;
   }
 
+  /* ── Main ── */
   .main-content { margin-left: 220px; padding-top: 48px; min-height: 100vh; padding-bottom: 60px; }
-  .content-area { max-width: 1400px; margin: 0 auto; padding: 24px 24px 80px; }
+  .content-area { max-width: 1100px; margin: 0 auto; padding: 24px 24px 80px; }
 
-  /* Kanban */
-  .kanban-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; min-height: 500px; }
-  .kanban-col { background: #F0F0F2; border-radius: 10px; padding: 12px; min-height: 400px; }
-  .kanban-col-header {
+  /* ── Section Card ── */
+  .section-card {
+    background: #1a1a2e; border: 1px solid #2a2a45; border-radius: 14px;
+    padding: 24px; margin-bottom: 24px;
+  }
+  .section-title {
     font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
-    font-size: 13px; padding: 8px 8px; display: flex; align-items: center;
-    justify-content: space-between; margin-bottom: 8px; border-radius: 6px;
+    font-size: 18px; color: #fff; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
   }
-  .kanban-col-header .count {
-    font-size: 11px; font-weight: 700;
-    padding: 2px 8px; border-radius: 100px; font-family: 'Source Code Pro', monospace;
-  }
-  #col-idea .kanban-col-header { background: #DBEAFE; color: #1E40AF; border-top: 3px solid #3B82F6; }
-  #col-idea .kanban-col-header .count { background: #BFDBFE; color: #1E40AF; }
-  #col-approved .kanban-col-header { background: #D1FAE5; color: #065F46; border-top: 3px solid #22C55E; }
-  #col-approved .kanban-col-header .count { background: #A7F3D0; color: #065F46; }
-  #col-production .kanban-col-header { background: #FEF3C7; color: #92400E; border-top: 3px solid #F59E0B; }
-  #col-production .kanban-col-header .count { background: #FDE68A; color: #92400E; }
-  #col-posted .kanban-col-header { background: #F3F4F6; color: #6B7280; border-top: 3px solid #9CA3AF; }
-  #col-posted .kanban-col-header .count { background: #E5E7EB; color: #6B7280; }
-  .kanban-col.drag-over { background: #E8E8EA; outline: 2px dashed #FC5C03; outline-offset: -2px; }
 
-  /* Content Cards */
-  .content-card {
-    background: #fff; border: 1px solid #E8E8EA; border-radius: 8px;
-    padding: 12px; margin-bottom: 8px; cursor: grab; transition: all 0.15s;
-    position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  /* ── Generate Button ── */
+  .generate-btn {
+    width: 100%; padding: 18px; background: linear-gradient(135deg, #FC5C03, #e04f00);
+    color: #fff; border: none; border-radius: 12px; font-size: 18px; font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer;
+    transition: all 0.2s; box-shadow: 0 4px 20px rgba(252,92,3,0.3);
   }
-  .content-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-  .content-card.dragging { opacity: 0.5; transform: rotate(2deg); }
-  .content-card .badges { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
-  .badge {
-    font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 100px;
-    white-space: nowrap; text-transform: uppercase; letter-spacing: 0.5px;
-  }
-  .badge-youtube { background: #FF0000; color: #fff; }
-  .badge-newsletter { background: #FC5C03; color: #fff; }
-  .badge-x, .badge-twitter { background: #000000; color: #fff; }
-  .badge-linkedin { background: #0077B5; color: #fff; }
-  .badge-instagram { background: #E1306C; color: #fff; }
-  .badge-facebook { background: #1877F2; color: #fff; }
-  .badge-blog { background: #6B7280; color: #fff; }
-  .badge-community { background: #FF0000; color: #fff; }
-  .badge-whatsapp { background: #25D366; color: #fff; }
-  .badge-tier { font-weight: 700; }
-  .badge-t1 { background: #FEF3C7; color: #92400E; }
-  .badge-t2 { background: #DBEAFE; color: #1E40AF; }
-  .badge-t3 { background: #F3F4F6; color: #6B7280; }
-  .badge-format { background: #F7F7F8; color: #4D4C55; }
+  .generate-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(252,92,3,0.4); }
 
-  .card-hook {
+  /* ── Idea Cards Grid ── */
+  .ideas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin-top: 16px; }
+  .idea-card {
+    background: #12122a; border: 1px solid #2a2a45; border-radius: 10px;
+    padding: 16px; transition: all 0.15s; cursor: pointer; position: relative;
+  }
+  .idea-card:hover { border-color: #FC5C03; transform: translateY(-2px); }
+  .idea-card.selected { border-color: #FC5C03; background: #1e1428; box-shadow: 0 0 0 2px rgba(252,92,3,0.3); }
+  .idea-card-title {
     font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
-    font-size: 13px; color: #1B1925; line-height: 1.4;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-    overflow: hidden; margin-bottom: 8px;
+    font-size: 14px; color: #fff; line-height: 1.4; margin-bottom: 10px;
   }
-  .card-meta { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #807F86; margin-bottom: 8px; }
-  .card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-  .card-actions button {
-    font-size: 11px; font-weight: 600; padding: 6px 12px; border-radius: 6px;
-    border: 1px solid #E8E8EA; background: #fff; cursor: pointer; transition: all 0.12s;
-  }
-  .card-actions button:hover { background: #F7F7F8; }
-  .card-actions .btn-approve { color: #fff; background: #08C394; border-color: #08C394; font-weight: 700; }
-  .card-actions .btn-approve:hover { background: #06A67D; }
-  .card-actions .btn-reject { color: #fff; background: #EF4444; border-color: #EF4444; font-weight: 700; }
-  .card-actions .btn-reject:hover { background: #DC2626; }
-  .card-actions .btn-production { color: #FC5C03; border-color: #FC5C03; }
-  .card-actions .btn-production:hover { background: #FEEEE5; }
-  .card-actions .btn-ready { color: #08C394; border-color: #08C394; }
-  .card-actions .btn-archive { color: #807F86; }
-
-  /* Platform pills */
-  .platform-pills { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0; margin-bottom: 20px; }
-  .platform-pill {
-    font-size: 12px; font-weight: 600; padding: 6px 16px; border-radius: 100px;
-    border: 1px solid #E8E8EA; background: #fff; cursor: pointer; white-space: nowrap;
-    transition: all 0.12s; color: #4D4C55;
-  }
-  .platform-pill:hover { border-color: #FC5C03; color: #FC5C03; }
-  .platform-pill.active { background: #FC5C03; color: #fff; border-color: #FC5C03; }
-
-  /* Modal */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-    z-index: 200; justify-content: center; align-items: flex-start; padding: 60px 24px;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal-content {
-    background: #fff; border-radius: 12px; width: 100%; max-width: 640px;
-    max-height: 80vh; overflow-y: auto; padding: 28px; position: relative;
-  }
-  .modal-close {
-    position: absolute; top: 12px; right: 16px; background: none; border: none;
-    font-size: 20px; cursor: pointer; color: #807F86; padding: 4px;
-  }
-  .modal-close:hover { color: #1B1925; }
-  .modal-field { margin-bottom: 16px; }
-  .modal-field label {
-    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
-    font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px;
-    color: #807F86; display: block; margin-bottom: 4px;
-  }
-  .modal-field .value { font-size: 14px; line-height: 1.5; color: #1B1925; }
-  .modal-field textarea, .modal-field input[type="text"] {
-    width: 100%; border: 1px solid #E8E8EA; border-radius: 8px;
-    padding: 10px 12px; font-size: 13px; font-family: 'Barlow', sans-serif;
-    outline: none; resize: vertical;
-  }
-  .modal-field textarea:focus, .modal-field input[type="text"]:focus { border-color: #FC5C03; }
-  .btn-orange {
-    background: #FC5C03; color: #fff; border: none; padding: 10px 20px;
-    border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer;
-    transition: background 0.12s;
-  }
-  .btn-orange:hover { background: #E04F00; }
-
-  /* Loading animation */
-  .loading-dots::after {
-    content: ''; animation: dots 1.5s infinite;
-  }
-  @keyframes dots {
-    0% { content: ''; }
-    25% { content: '.'; }
-    50% { content: '..'; }
-    75% { content: '...'; }
+  .idea-card-meta { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .idea-card input[type="checkbox"] {
+    position: absolute; top: 12px; right: 12px; width: 18px; height: 18px;
+    accent-color: #FC5C03; cursor: pointer;
   }
 
-  /* Summary bar */
-  .summary-bar {
-    position: fixed; bottom: 0; left: 220px; right: 0;
-    background: #1A1A2E; color: rgba(255,255,255,0.85);
-    padding: 10px 24px; font-size: 12px; font-weight: 500;
-    display: flex; align-items: center; justify-content: space-between; z-index: 90;
-    font-family: 'Source Code Pro', monospace;
-  }
-  .summary-bar .stat { display: inline-flex; align-items: center; gap: 4px; }
-  .summary-bar .stat-value { color: #FC5C03; font-weight: 700; }
-
-  /* Input card */
-  .input-card {
-    background: #fff; border: 1px solid #E8E8EA; border-radius: 12px;
-    padding: 24px; margin-bottom: 20px;
-  }
-  /* Source Tabs */
-  .source-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
-  .source-tab {
-    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
-    font-size: 13px; padding: 8px 20px; border-radius: 100px;
-    border: none; cursor: pointer; transition: all 0.15s;
-    background: #E8E8EA; color: #807F86;
-  }
-  .source-tab:hover { background: #D4D4D6; color: #4D4C55; }
-  .source-tab.active { background: #FC5C03; color: #fff; }
-  .source-tab-panel { display: none; }
-  .source-tab-panel.active { display: block; }
-
-  /* My Content Grid */
-  .my-content-section-title {
-    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
-    font-size: 14px; color: #1B1925; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
-  }
-  .my-content-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px;
-  }
-  .my-content-card {
-    background: #fff; border: 1px solid #E8E8EA; border-radius: 8px;
-    overflow: hidden; cursor: pointer; transition: all 0.2s;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06); position: relative;
-  }
-  .my-content-card:hover {
-    transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    border-color: #FC5C03;
-  }
-  .my-content-card .thumb {
-    width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;
-  }
-  .my-content-card .thumb-placeholder {
-    width: 100%; aspect-ratio: 16/9;
-    background: linear-gradient(135deg, #E1306C, #833AB4);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .my-content-card .thumb-placeholder svg { width: 36px; height: 36px; fill: rgba(255,255,255,0.85); }
-  .my-content-card .card-info { padding: 10px 12px; }
-  .my-content-card .card-title {
-    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
-    font-size: 12px; color: #1B1925; line-height: 1.4;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-    overflow: hidden; margin-bottom: 6px;
-  }
-  .my-content-card .card-bottom {
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .my-content-card .platform-badge {
-    font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 100px;
-    text-transform: uppercase; letter-spacing: 0.5px; color: #fff;
-  }
-  .my-content-card .platform-badge.yt { background: #FF0000; }
-  .my-content-card .platform-badge.ig { background: #E1306C; }
-  .my-content-card .card-duration {
-    font-size: 10px; color: #807F86; font-family: 'Source Code Pro', monospace;
-  }
-  .my-content-card .hover-strip {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    background: rgba(252, 92, 3, 0.92); color: #fff;
-    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
-    font-size: 11px; text-align: center; padding: 8px;
-    opacity: 0; transition: opacity 0.2s; pointer-events: none;
-  }
-  .my-content-card:hover .hover-strip { opacity: 1; }
-
-  .generating-banner {
-    background: #FEEEE5; border: 1px solid #FC5C03; border-radius: 8px;
-    padding: 10px 16px; margin-bottom: 16px; display: none;
-    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
-    font-size: 13px; color: #FC5C03;
-  }
-  .generating-banner.visible { display: block; }
-
-  @keyframes pulse-orange {
-    0% { box-shadow: 0 0 0 0 rgba(252,92,3,0.5); }
-    70% { box-shadow: 0 0 0 12px rgba(252,92,3,0); }
-    100% { box-shadow: 0 0 0 0 rgba(252,92,3,0); }
-  }
-  .generate-btn.pulse { animation: pulse-orange 1.2s ease-in-out 3; }
-
-  @media (max-width: 768px) {
-    .my-content-grid { grid-template-columns: 1fr; }
-  }
-  @media (min-width: 769px) and (max-width: 1000px) {
-    .my-content-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-
-  /* Ideas Bank */
-  .ideas-bank-input { display: flex; gap: 8px; margin-bottom: 16px; }
-  .ideas-bank-input input { flex: 1; }
-  .ideas-bank-input select {
-    width: 160px; border: 1px solid #E8E8EA; border-radius: 8px;
-    padding: 8px 10px; font-size: 12px; font-family: 'Barlow', sans-serif; outline: none;
-  }
-  .ideas-bank-input select:focus { border-color: #FC5C03; }
-  .idea-item {
-    display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px;
-    border: 1px solid #E8E8EA; border-radius: 8px; margin-bottom: 8px;
-    background: #FAFAFA; transition: background 0.12s;
-  }
-  .idea-item:hover { background: #F3F3F5; }
-  .idea-item .idea-text { font-size: 13px; line-height: 1.5; color: #1B1925; }
-  .idea-item .idea-meta { font-size: 10px; color: #807F86; margin-top: 4px; display: flex; gap: 8px; align-items: center; }
-  .idea-source-tag {
-    font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 100px;
+  /* ── Tags / Badges ── */
+  .pillar-tag {
+    font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 100px;
     text-transform: uppercase; letter-spacing: 0.5px;
   }
-  .idea-source-tag.member-question { background: #DBEAFE; color: #1E40AF; }
-  .idea-source-tag.dm { background: #FCE7F3; color: #9D174D; }
-  .idea-source-tag.community { background: #D1FAE5; color: #065F46; }
-  .idea-source-tag.my-thought { background: #FEF3C7; color: #92400E; }
-  .idea-source-tag.market-event { background: #EDE9FE; color: #5B21B6; }
-  .idea-actions { display: flex; gap: 6px; flex-shrink: 0; align-items: center; }
-  .idea-actions button {
-    font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px;
-    border: 1px solid #E8E8EA; background: #fff; cursor: pointer; transition: all 0.12s;
-    white-space: nowrap;
-  }
-  .idea-actions button:hover { background: #F7F7F8; }
-  .idea-actions .btn-turn-video { color: #FC5C03; border-color: #FC5C03; }
-  .idea-actions .btn-turn-video:hover { background: #FEEEE5; }
-  .idea-actions .btn-delete-idea { color: #EF4444; border-color: #EF4444; }
-  .idea-actions .btn-delete-idea:hover { background: #FEE2E2; }
+  .pillar-market { background: #3a1a1a; color: #ff6b6b; }
+  .pillar-education { background: #1a2a3a; color: #6bb5ff; }
+  .pillar-member { background: #1a3a2a; color: #6bffb5; }
+  .pillar-strategy { background: #3a3a1a; color: #ffd76b; }
+  .pillar-bts { background: #2a2a3a; color: #b0b0c0; }
+  .pillar-social { background: #2a1a3a; color: #c06bff; }
 
-  /* Thumbnail Reminder */
-  .thumb-reminder-card {
-    background: #FFFBF5; border: 1px solid #FDBA74; border-radius: 10px;
-    padding: 14px 16px; margin-top: 14px;
+  .platform-badge {
+    font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 100px;
+    text-transform: uppercase; letter-spacing: 0.5px;
   }
-  .thumb-reminder-card h4 {
-    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
-    font-size: 13px; margin-bottom: 6px; color: #1B1925;
-  }
-  .thumb-reminder-card p { font-size: 12px; color: #4D4C55; line-height: 1.5; margin-bottom: 10px; }
-  .thumb-reminder-card .reminder-btn {
-    font-size: 12px; font-weight: 600; padding: 8px 16px; border-radius: 8px;
-    border: none; background: #FC5C03; color: #fff; cursor: pointer; transition: background 0.12s;
-  }
-  .thumb-reminder-card .reminder-btn:hover { background: #E04F00; }
-  .thumb-reminder-countdown {
-    font-family: 'Source Code Pro', monospace; font-size: 13px;
-    color: #FC5C03; font-weight: 600; margin-top: 8px;
-  }
+  .platform-ig { background: linear-gradient(135deg, #833AB4, #FD1D1D); color: #fff; }
+  .platform-linkedin { background: #0A66C2; color: #fff; }
+  .platform-podcast { background: #1DB954; color: #fff; }
 
-  /* Ad Potential Badges */
-  .badge-ad { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 100px; }
-  .badge-ad-high { background: #FED7AA; color: #C2410C; }
-  .badge-ad-medium { background: #DBEAFE; color: #1E40AF; }
-
-  .input-card label {
-    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
-    font-size: 12px; color: #4D4C55; display: block; margin-bottom: 6px;
-  }
-  .input-card input[type="text"], .input-card textarea {
-    width: 100%; border: 1px solid #E8E8EA; border-radius: 8px;
-    padding: 10px 12px; font-size: 13px; font-family: 'Barlow', sans-serif;
-    outline: none; margin-bottom: 14px; resize: vertical;
-  }
-  .input-card input:focus, .input-card textarea:focus { border-color: #FC5C03; }
-  .generate-btn {
-    width: 100%; padding: 14px; background: #FC5C03; color: #fff;
+  /* ── Build Scripts Button ── */
+  .build-scripts-btn {
+    margin-top: 16px; padding: 14px 28px; background: #FC5C03; color: #fff;
     border: none; border-radius: 10px; font-size: 15px; font-weight: 700;
-    font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer;
-    transition: background 0.15s;
+    font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; transition: all 0.15s;
   }
-  .generate-btn:hover { background: #E04F00; }
-  .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .build-scripts-btn:hover { background: #e04f00; }
+  .build-scripts-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  /* Collapsible input */
-  .input-toggle {
-    display: flex; align-items: center; justify-content: space-between;
-    cursor: pointer; margin-bottom: 12px;
+  /* ── Script Cards ── */
+  .scripts-container { margin-top: 20px; }
+  .script-card {
+    background: #12122a; border: 1px solid #2a2a45; border-radius: 12px;
+    padding: 20px; margin-bottom: 16px;
   }
-  .input-toggle h2 {
-    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 16px;
+  .script-hook {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
+    font-size: 18px; color: #FC5C03; line-height: 1.3; margin-bottom: 12px;
   }
-  .input-body.collapsed { display: none; }
+  .script-alt-hooks { margin-bottom: 14px; }
+  .script-alt-hooks .label {
+    font-size: 11px; color: #807F86; text-transform: uppercase; letter-spacing: 0.8px;
+    margin-bottom: 4px; font-weight: 600;
+  }
+  .script-alt-hook {
+    font-size: 13px; color: #b0b0c0; padding: 6px 12px;
+    background: #1a1a30; border-radius: 6px; margin-bottom: 4px;
+  }
+  .script-points { margin-bottom: 14px; }
+  .script-points li {
+    font-size: 14px; color: #d0d0e0; padding: 4px 0; line-height: 1.5;
+    list-style: none; padding-left: 20px; position: relative;
+  }
+  .script-points li::before { content: '→'; position: absolute; left: 0; color: #FC5C03; font-weight: 700; }
+  .script-cta {
+    background: #1a2a1a; border: 1px solid #2a4a2a; border-radius: 8px;
+    padding: 10px 14px; font-size: 13px; font-weight: 600; color: #6bffb5; margin-bottom: 12px;
+  }
+  .copy-script-btn {
+    padding: 8px 18px; background: #2a2a45; color: #e8e8ea; border: 1px solid #3a3a55;
+    border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.12s;
+  }
+  .copy-script-btn:hover { background: #3a3a55; border-color: #FC5C03; color: #FC5C03; }
 
-  .reset-btn {
-    font-size: 11px; font-weight: 600; padding: 6px 14px; border-radius: 6px;
-    border: 1px solid #E8E8EA; background: #fff; cursor: pointer; color: #807F86;
-    transition: all 0.12s;
+  /* ── Pillars Bar ── */
+  .pillars-bar { display: flex; gap: 10px; flex-wrap: wrap; }
+  .pillar-badge {
+    font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 100px;
+    display: flex; align-items: center; gap: 6px;
   }
-  .reset-btn:hover { border-color: #EF4444; color: #EF4444; }
 
-  @media (max-width: 1100px) and (min-width: 769px) {
-    .kanban-board {
-      grid-template-columns: repeat(4, minmax(260px, 1fr));
-      overflow-x: auto; -webkit-overflow-scrolling: touch;
-    }
+  /* ── Ideas Bank ── */
+  .ideas-bank-input { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .ideas-bank-input input {
+    flex: 1; min-width: 200px; background: #12122a; border: 1px solid #2a2a45;
+    border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #e8e8ea;
+    font-family: 'Barlow', sans-serif; outline: none;
   }
+  .ideas-bank-input input:focus { border-color: #FC5C03; }
+  .ideas-bank-input select {
+    background: #12122a; border: 1px solid #2a2a45; border-radius: 8px;
+    padding: 10px 12px; font-size: 12px; color: #e8e8ea;
+    font-family: 'Barlow', sans-serif; outline: none;
+  }
+  .ideas-bank-input select:focus { border-color: #FC5C03; }
+  .add-idea-btn {
+    padding: 10px 18px; background: #FC5C03; color: #fff; border: none;
+    border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; white-space: nowrap;
+  }
+  .add-idea-btn:hover { background: #e04f00; }
+  .idea-item {
+    display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px;
+    background: #12122a; border: 1px solid #2a2a45; border-radius: 8px;
+    margin-bottom: 8px; transition: all 0.12s;
+  }
+  .idea-item:hover { border-color: #3a3a55; }
+  .idea-text { font-size: 13px; color: #d0d0e0; line-height: 1.5; }
+  .idea-meta { font-size: 10px; color: #807F86; margin-top: 4px; display: flex; gap: 8px; align-items: center; }
+  .idea-actions { display: flex; gap: 6px; flex-shrink: 0; align-items: flex-start; }
+  .idea-actions button {
+    font-size: 11px; font-weight: 600; padding: 5px 12px; border-radius: 6px;
+    border: 1px solid #2a2a45; background: #1a1a2e; color: #b0b0c0; cursor: pointer;
+    transition: all 0.12s; white-space: nowrap;
+  }
+  .idea-actions .btn-use { color: #FC5C03; border-color: #FC5C03; }
+  .idea-actions .btn-use:hover { background: rgba(252,92,3,0.1); }
+  .idea-actions .btn-del { color: #ff6b6b; border-color: #ff6b6b; }
+  .idea-actions .btn-del:hover { background: rgba(255,107,107,0.1); }
+
+  /* ── Repurpose Matrix ── */
+  .matrix-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .matrix-table th {
+    text-align: left; padding: 8px 12px; color: #807F86; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #2a2a45;
+  }
+  .matrix-table td { padding: 8px 12px; border-bottom: 1px solid #1a1a30; color: #d0d0e0; }
+  .matrix-status {
+    font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 100px;
+    text-transform: uppercase; cursor: pointer; transition: all 0.12s;
+  }
+  .matrix-status.not-done { background: #2a2a3a; color: #807F86; }
+  .matrix-status.in-progress { background: #3a3a1a; color: #ffd76b; }
+  .matrix-status.done { background: #1a3a2a; color: #6bffb5; }
+
+  /* ── Mobile ── */
   @media (max-width: 768px) {
     .sidebar { transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
     .sidebar-overlay.open { display: block; }
     .topbar { left: 0; }
     .main-content { margin-left: 0; }
-    .summary-bar { left: 0; }
-    .kanban-board { grid-template-columns: 1fr; }
+    .ideas-grid { grid-template-columns: 1fr; }
+    .mobile-hamburger { display: flex !important; }
   }
 </style>
 </head>
@@ -436,7 +232,7 @@ tailwind.config = {
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div style="padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);">
-    <div style="display:flex; align-items:center; gap:10px;">
+    <a href="index.html" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
       <div style="width:32px; height:32px; border-radius:8px; background:rgba(252,92,3,0.15); display:flex; align-items:center; justify-content:center;">
         <span style="color:#FC5C03; font-weight:800; font-size:13px; font-family:'Plus Jakarta Sans',sans-serif;">CS</span>
       </div>
@@ -444,63 +240,31 @@ tailwind.config = {
         <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; color:#fff; letter-spacing:0.3px;">Collective Shift</div>
         <div style="font-size:10px; color:rgba(255,255,255,0.35); font-family:'Source Code Pro',monospace;">CEO Dashboard</div>
       </div>
-    </div>
+    </a>
   </div>
   <nav style="flex:1; padding: 8px 0;">
     <div class="sidebar-section">Home</div>
-    <a class="sidebar-link" href="index.html">
-      <span class="sidebar-icon">⭐</span> Morning Brief
-    </a>
-    <a class="sidebar-link" href="index.html">
-      <span class="sidebar-icon">✓</span> Tasks
-    </a>
-    <a class="sidebar-link" href="index.html">
-      <span class="sidebar-icon">⚡</span> Actions
-    </a>
-
+    <a class="sidebar-link" href="index.html"><span class="sidebar-icon">⭐</span> Morning Brief</a>
+    <a class="sidebar-link" href="index.html"><span class="sidebar-icon">✓</span> Tasks</a>
+    <a class="sidebar-link" href="index.html"><span class="sidebar-icon">⚡</span> Actions</a>
     <div class="sidebar-section">Metrics</div>
-    <a class="sidebar-link" href="index.html">
-      <span class="sidebar-icon">📊</span> KPIs
-    </a>
-    <a class="sidebar-link" href="team-cost.html">
-      <span class="sidebar-icon">💰</span> Cash & Costs
-    </a>
-    <a class="sidebar-link" href="hub/products.html">
-      <span class="sidebar-icon">👥</span> Members
-    </a>
-
+    <a class="sidebar-link" href="index.html"><span class="sidebar-icon">📊</span> KPIs</a>
+    <a class="sidebar-link" href="team-cost.html"><span class="sidebar-icon">💰</span> Cash & Costs</a>
+    <a class="sidebar-link" href="hub/products.html"><span class="sidebar-icon">👥</span> Members</a>
     <div class="sidebar-section">Content</div>
-    <a class="sidebar-link" href="content-board.html">
-      <span class="sidebar-icon">🎬</span> Content Board
-    </a>
-    <a class="sidebar-link active" href="content-studio.html">
-      <span class="sidebar-icon">🎯</span> Content Studio
-    </a>
-    <a class="sidebar-link" href="asana-board-mockup.html">
-      <span class="sidebar-icon">📅</span> Calendar
-    </a>
-    <a class="sidebar-link" href="hub/youtube-strategy.html">
-      <span class="sidebar-icon">▶</span> YouTube
-    </a>
-
+    <a class="sidebar-link" href="content-board.html"><span class="sidebar-icon">🎬</span> Content Board</a>
+    <a class="sidebar-link active" href="content-studio.html"><span class="sidebar-icon">🎯</span> Content Studio</a>
+    <a class="sidebar-link" href="asana-board-mockup.html"><span class="sidebar-icon">📅</span> Calendar</a>
+    <a class="sidebar-link" href="hub/youtube-strategy.html"><span class="sidebar-icon">▶</span> YouTube</a>
     <div class="sidebar-section">Strategy</div>
-    <a class="sidebar-link" href="hub/operating-system.html">
-      <span class="sidebar-icon">🧭</span> Strategy Hub
-    </a>
-    <a class="sidebar-link" href="hub/brand.html">
-      <span class="sidebar-icon">📄</span> Docs
-    </a>
-
+    <a class="sidebar-link" href="hub/operating-system.html"><span class="sidebar-icon">🧭</span> Strategy Hub</a>
+    <a class="sidebar-link" href="hub/brand.html"><span class="sidebar-icon">📄</span> Docs</a>
     <div class="sidebar-section">Team</div>
-    <a class="sidebar-link" href="team-cost.html">
-      <span class="sidebar-icon">👤</span> Team
-    </a>
-    <a class="sidebar-link" href="index.html">
-      <span class="sidebar-icon">🤖</span> Bot Fleet
-    </a>
+    <a class="sidebar-link" href="team-cost.html"><span class="sidebar-icon">👤</span> Team</a>
+    <a class="sidebar-link" href="index.html"><span class="sidebar-icon">🤖</span> Bot Fleet</a>
   </nav>
   <div style="padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 10px; color: rgba(255,255,255,0.25); font-family: 'Source Code Pro', monospace;">
-    v2.0 · April 2026
+    v2.1 · April 2026
   </div>
 </aside>
 
@@ -510,11 +274,8 @@ tailwind.config = {
     <button class="mobile-hamburger" onclick="toggleSidebar()" style="background:none; border:none; cursor:pointer; color:#807F86; padding:4px; display:none;">
       <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
     </button>
-    <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:15px; color:#1B1925;">🎯 Content Studio</span>
-    <span style="font-size:11px; color:#807F86; font-family:'Source Code Pro',monospace;">AI-Powered Redistribution</span>
-  </div>
-  <div style="display:flex; align-items:center; gap:12px;">
-    <button class="reset-btn" onclick="resetBoard()">↻ Reset to AI Suggestions</button>
+    <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:15px; color:#fff;">🎯 Content Studio</span>
+    <span style="font-size:11px; color:#807F86; font-family:'Source Code Pro',monospace;">Content Operating System</span>
   </div>
 </header>
 
@@ -522,875 +283,350 @@ tailwind.config = {
 <div class="main-content">
   <div class="content-area">
 
-    <!-- VIDEO INPUT (TABBED) -->
-    <div class="input-card" id="inputCard">
-      <div class="input-toggle" onclick="toggleInput()">
-        <h2>📹 Pillar Video Input</h2>
-        <span id="inputChevron" style="font-size:18px; color:#807F86; transition:transform 0.2s;">▼</span>
+    <!-- SECTION 1: Reel Ideas Generator -->
+    <div class="section-card">
+      <div class="section-title">💡 Reel Ideas Generator</div>
+      <button class="generate-btn" id="generateBtn" onclick="generateReelIdeas()">💡 Generate Reel Ideas</button>
+
+      <div id="ideasContainer" style="display:none;">
+        <div class="ideas-grid" id="ideasGrid"></div>
+        <div style="display:flex; align-items:center; gap:12px; margin-top:16px;">
+          <button class="build-scripts-btn" id="buildScriptsBtn" onclick="buildScripts()" disabled>🎬 Build Scripts for Selected</button>
+          <span id="selectedCount" style="font-size:12px; color:#807F86;">0 selected</span>
+        </div>
       </div>
-      <div class="input-body" id="inputBody">
-        <!-- Source Tabs -->
-        <div class="source-tabs">
-          <button class="source-tab active" data-tab="my-content" onclick="switchSourceTab('my-content')">📺 My Content</button>
-          <button class="source-tab" data-tab="add-manually" onclick="switchSourceTab('add-manually')">✏️ Add Manually</button>
-          <button class="source-tab" data-tab="ideas-bank" onclick="switchSourceTab('ideas-bank')">💬 Ideas Bank</button>
-        </div>
 
-        <!-- Tab 1: My Content -->
-        <div class="source-tab-panel active" id="tab-my-content">
-          <div class="my-content-section-title"><span style="font-size:16px;">▶</span> YouTube Videos</div>
-          <div class="my-content-grid" id="ytGrid"></div>
+      <div class="scripts-container" id="scriptsContainer"></div>
+    </div>
 
-          <div class="my-content-section-title"><span style="font-size:16px;">📷</span> Instagram Reels</div>
-          <div class="my-content-grid" id="igGrid"></div>
-        </div>
-
-        <!-- Tab 2: Add Manually -->
-        <div class="source-tab-panel" id="tab-add-manually">
-          <label>Video Title</label>
-          <input type="text" id="videoTitle" value="">
-
-          <label>Video Description</label>
-          <textarea id="videoDesc" rows="5"></textarea>
-
-          <label>Key Talking Points / Transcript Excerpt</label>
-          <textarea id="videoTranscript" rows="8"></textarea>
-
-          <button class="generate-btn" id="generateBtn" onclick="generateIdeas()">🎯 Generate Redistribution Ideas</button>
-
-          <!-- Thumbnail 72hr Reminder -->
-          <div class="thumb-reminder-card" id="thumbReminderCard">
-            <h4>📸 Thumbnail Review Reminder</h4>
-            <p>Upload your initial thumbnail now. Set a reminder to review CTR at 72 hours.<br>If CTR &lt; 4%, swap the thumbnail.</p>
-            <button class="reminder-btn" id="thumbReminderBtn" onclick="setThumbReminder()">Set 72hr Reminder</button>
-            <div class="thumb-reminder-countdown" id="thumbCountdown" style="display:none;"></div>
-          </div>
-        </div>
-
-        <!-- Tab 3: Ideas Bank -->
-        <div class="source-tab-panel" id="tab-ideas-bank">
-          <div style="margin-bottom:16px;">
-            <p style="font-size:13px; color:#807F86; margin-bottom:12px;">Drop content ideas from conversations, DMs, and community threads. Each idea can become a future video topic.</p>
-            <div class="ideas-bank-input">
-              <input type="text" id="newIdeaText" placeholder="Drop an idea, member question, or DM insight...">
-              <select id="newIdeaSource">
-                <option value="Member Question">Member Question</option>
-                <option value="DM">DM</option>
-                <option value="Community">Community</option>
-                <option value="My Thought">My Thought</option>
-                <option value="Market Event">Market Event</option>
-              </select>
-              <button class="btn-orange" onclick="addIdea()" style="white-space:nowrap;">+ Add Idea</button>
-            </div>
-          </div>
-          <div id="ideasBankList"></div>
-        </div>
-
+    <!-- SECTION 2: Content Pillars -->
+    <div class="section-card">
+      <div class="section-title">🎨 Content Pillars</div>
+      <div class="pillars-bar">
+        <span class="pillar-badge" style="background:#3a1a1a; color:#ff6b6b;">🔴 Market Update</span>
+        <span class="pillar-badge" style="background:#1a2a3a; color:#6bb5ff;">🔵 Education</span>
+        <span class="pillar-badge" style="background:#1a3a2a; color:#6bffb5;">🟢 Member Win</span>
+        <span class="pillar-badge" style="background:#3a3a1a; color:#ffd76b;">🟡 Strategy</span>
+        <span class="pillar-badge" style="background:#2a2a3a; color:#b0b0c0;">⚪ Behind the Scenes</span>
       </div>
     </div>
 
-    <!-- Generating Banner -->
-    <div class="generating-banner" id="generatingBanner"></div>
-
-    <!-- LOADING STATE -->
-    <div id="loadingState" style="display:none; text-align:center; padding:40px;">
-      <div style="font-size:32px; margin-bottom:12px;">🤖</div>
-      <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:600; font-size:16px; color:#4D4C55;">
-        Generating redistribution ideas<span class="loading-dots"></span>
+    <!-- SECTION 3: Ideas Bank -->
+    <div class="section-card">
+      <div class="section-title">💬 Ideas Bank</div>
+      <div class="ideas-bank-input">
+        <input type="text" id="newIdeaInput" placeholder="Drop an idea, member question, or insight...">
+        <select id="newIdeaPillar">
+          <option value="Market Update">🔴 Market Update</option>
+          <option value="Education">🔵 Education</option>
+          <option value="Member Win">🟢 Member Win</option>
+          <option value="Strategy">🟡 Strategy</option>
+          <option value="Behind the Scenes">⚪ Behind the Scenes</option>
+        </select>
+        <button class="add-idea-btn" onclick="addIdea()">+ Add Idea</button>
       </div>
-      <div style="font-size:12px; color:#807F86; margin-top:6px;">Analyzing video content across 10 platforms</div>
+      <div id="ideasBankList"></div>
     </div>
 
-    <!-- PLATFORM FILTER -->
-    <div class="platform-pills" id="platformPills" style="display:none;">
-      <button class="platform-pill active" data-platform="all" onclick="filterPlatform('all')">All</button>
-      <button class="platform-pill" data-platform="youtube_clip" onclick="filterPlatform('youtube_clip')">YouTube Clips</button>
-      <button class="platform-pill" data-platform="email" onclick="filterPlatform('email')">Newsletter</button>
-      <button class="platform-pill" data-platform="x_thread" onclick="filterPlatform('x_thread')">X Thread</button>
-      <button class="platform-pill" data-platform="linkedin" onclick="filterPlatform('linkedin')">LinkedIn</button>
-      <button class="platform-pill" data-platform="ig_reel" onclick="filterPlatform('ig_reel')">Instagram Reel</button>
-      <button class="platform-pill" data-platform="ig_carousel" onclick="filterPlatform('ig_carousel')">Instagram Carousel</button>
-      <button class="platform-pill" data-platform="facebook" onclick="filterPlatform('facebook')">Facebook</button>
-      <button class="platform-pill" data-platform="blog" onclick="filterPlatform('blog')">Blog</button>
-      <button class="platform-pill" data-platform="yt_community" onclick="filterPlatform('yt_community')">YouTube Community</button>
-      <button class="platform-pill" data-platform="whatsapp" onclick="filterPlatform('whatsapp')">WhatsApp</button>
-    </div>
-
-    <!-- KANBAN BOARD -->
-    <div class="kanban-board" id="kanbanBoard" style="display:none;">
-      <div class="kanban-col" id="col-idea" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'idea')" ondragleave="handleDragLeave(event)">
-        <div class="kanban-col-header">
-          <span>💡 Ideas</span>
-          <span class="count" id="count-idea">0</span>
-        </div>
-        <div class="kanban-cards" id="cards-idea"></div>
-      </div>
-      <div class="kanban-col" id="col-approved" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'approved')" ondragleave="handleDragLeave(event)">
-        <div class="kanban-col-header">
-          <span>✅ Approved</span>
-          <span class="count" id="count-approved">0</span>
-        </div>
-        <div class="kanban-cards" id="cards-approved"></div>
-      </div>
-      <div class="kanban-col" id="col-production" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'production')" ondragleave="handleDragLeave(event)">
-        <div class="kanban-col-header">
-          <span>🔨 Production</span>
-          <span class="count" id="count-production">0</span>
-        </div>
-        <div class="kanban-cards" id="cards-production"></div>
-      </div>
-      <div class="kanban-col" id="col-posted" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'posted')" ondragleave="handleDragLeave(event)">
-        <div class="kanban-col-header">
-          <span>📤 Posted</span>
-          <span class="count" id="count-posted">0</span>
-        </div>
-        <div class="kanban-cards" id="cards-posted"></div>
+    <!-- SECTION 4: Repurpose Matrix -->
+    <div class="section-card">
+      <div class="section-title">🔄 Repurpose Matrix</div>
+      <p style="font-size:13px; color:#807F86; margin-bottom:14px;">Jeremy's 1-to-Many: Turn 1 pillar video into 7+ pieces of content</p>
+      <div style="overflow-x:auto;">
+        <table class="matrix-table" id="matrixTable">
+          <thead>
+            <tr>
+              <th>Format</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="matrixBody"></tbody>
+        </table>
       </div>
     </div>
 
-  </div>
-</div>
-
-<!-- SUMMARY BAR -->
-<div class="summary-bar" id="summaryBar" style="display:none;">
-  <div>
-    <span class="stat">Ideas: <span class="stat-value" id="sum-idea">0</span></span>
-    <span style="margin:0 10px; opacity:0.3;">|</span>
-    <span class="stat">Approved: <span class="stat-value" id="sum-approved">0</span></span>
-    <span style="margin:0 10px; opacity:0.3;">|</span>
-    <span class="stat">In Production: <span class="stat-value" id="sum-production">0</span></span>
-    <span style="margin:0 10px; opacity:0.3;">|</span>
-    <span class="stat">Posted: <span class="stat-value" id="sum-posted">0</span></span>
-  </div>
-  <div style="opacity:0.6; font-size:11px;">This week's video: "Bitcoin Is Down 48%..."</div>
-</div>
-
-<!-- MODAL -->
-<div class="modal-overlay" id="cardModal">
-  <div class="modal-content">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <div id="modalBody"></div>
   </div>
 </div>
 
 <script>
 // ══════════════════════════════════════
-// DATA
+// REEL IDEAS DATA
 // ══════════════════════════════════════
-// ══════════════════════════════════════
-// MY CONTENT DATA
-// ══════════════════════════════════════
-const MY_CONTENT = [
+const REEL_IDEAS = [
   {
-    id: "yt_001", platform: "youtube",
-    title: "Bitcoin Is Down 48%. Is Now the Time to Buy? (Data Only)",
-    videoId: "KZIjRzlLEvI", url: "https://youtu.be/KZIjRzlLEvI",
-    duration: "18:24", date: "2026-03-28",
-    description: "Bitcoin has drawn down 48% from its all-time high. Before making any decisions, I ran the data. Here's what it shows.",
-    keyPoints: "Historical drawdown analysis, on-chain data, Fear & Greed at 8, institutional accumulation signals, framework for decision-making in red markets"
+    id: 'ri1',
+    title: "Bitcoin is down 20% — here's what HNW investors are actually doing",
+    pillar: 'Market Update', pillarClass: 'pillar-market',
+    platform: 'IG Reel', platformClass: 'platform-ig',
+    hook: "STOP. Bitcoin is down 20% and everyone's panicking. But here's what high-net-worth investors are actually doing right now.",
+    altHooks: [
+      "Curiosity: What are HNW investors doing while Bitcoin drops 20%? It's not what you think.",
+      "Result-first: The investors who turned $500K into $5M all did the same thing during a 20% Bitcoin dip."
+    ],
+    points: [
+      "HNW investors treat drawdowns as allocation opportunities, not panic triggers",
+      "The difference between retail and institutional response to drawdowns",
+      "Data: what on-chain accumulation looks like during dips",
+      "Framework: how to think about position sizing during volatility"
+    ],
+    cta: "Comment STRATEGY to get our drawdown framework"
   },
   {
-    id: "yt_002", platform: "youtube",
-    title: "Why I'm Still Holding Bitcoin (And What Would Change My Mind)",
-    videoId: "dQw4w9WgXcQ", url: "https://youtu.be/example2",
-    duration: "22:11", date: "2026-03-21",
-    description: "The exit strategy framework I use. Most people have an entry plan but no exit plan.",
-    keyPoints: "Exit strategy framework, 3 types of exit strategies, portfolio rebalancing principles, what on-chain signals matter"
+    id: 'ri2',
+    title: "The one question every serious investor asks before allocating to digital assets",
+    pillar: 'Education', pillarClass: 'pillar-education',
+    platform: 'IG Reel', platformClass: 'platform-ig',
+    hook: "I've spoken to 1,163 investors. The serious ones all ask ONE question before they allocate a single dollar to digital assets.",
+    altHooks: [
+      "Curiosity: There's one question that separates amateur investors from serious allocators. Do you know what it is?",
+      "Result-first: Every investor who built a 7-figure digital asset portfolio asked this question first."
+    ],
+    points: [
+      "The question: 'What's my framework for selling?' (not buying)",
+      "Why having an exit strategy matters more than entry timing",
+      "The cost of not having a framework during volatility",
+      "How our members build their own decision frameworks"
+    ],
+    cta: "DM me 'FRAMEWORK' to learn how we build these"
   },
   {
-    id: "yt_003", platform: "youtube",
-    title: "The 5 Digital Asset Questions Every Investor Gets Wrong",
-    videoId: "dQw4w9WgXcQ", url: "https://youtu.be/example3",
-    duration: "15:47", date: "2026-03-14",
-    description: "The most common misconceptions I hear from new investors, and the data-backed answers.",
-    keyPoints: "Common investor mistakes, Bitcoin vs altcoins, timing vs allocation, risk management principles, ICP-level education"
+    id: 'ri3',
+    title: "Why 30% close rate means nothing if your cost per call is $2,000",
+    pillar: 'Strategy', pillarClass: 'pillar-strategy',
+    platform: 'LinkedIn', platformClass: 'platform-linkedin',
+    hook: "Everyone brags about their close rate. Nobody talks about their cost per call. Here's why that number matters more.",
+    altHooks: [
+      "Curiosity: Your 30% close rate might be destroying your business. Here's the metric that actually matters.",
+      "Result-first: We dropped our cost per call from $2,000 to $400. That one change 5x'd our profitability."
+    ],
+    points: [
+      "Close rate is a vanity metric without context",
+      "Cost per call = total ad spend ÷ booked calls",
+      "How to optimise for cost per qualified call, not just volume",
+      "The real equation: LTV vs cost per acquisition",
+      "Why content is the cheapest way to lower your cost per call"
+    ],
+    cta: "Link in bio for our full strategy breakdown"
   },
   {
-    id: "ig_001", platform: "instagram",
-    title: "Don't Go All In at the First Dip", thumbnail: null,
-    url: "https://instagram.com/bensimpsonau",
-    duration: "0:58", date: "2026-03-29",
-    description: "The staged allocation framework. Most people go all in too early.",
-    keyPoints: "Staged allocation, averaging in, emotional decision-making, framework vs impulse"
+    id: 'ri4',
+    title: "Our member just moved 15% of his SMSF into Bitcoin. Here's his thinking.",
+    pillar: 'Member Win', pillarClass: 'pillar-member',
+    platform: 'IG Reel', platformClass: 'platform-ig',
+    hook: "One of our members just allocated 15% of his SMSF to Bitcoin. Before you react — listen to his reasoning.",
+    altHooks: [
+      "Curiosity: Why would someone put 15% of their super into Bitcoin? His answer surprised me.",
+      "Result-first: This member's SMSF is up 47% in 12 months. He credits one decision."
+    ],
+    points: [
+      "His research process before making the allocation",
+      "Why he chose 15% specifically (risk framework)",
+      "The role of Collective Shift in his decision-making",
+      "What he'd tell other SMSF holders considering the same move"
+    ],
+    cta: "Comment STRATEGY to learn about our member framework"
   },
   {
-    id: "ig_002", platform: "instagram",
-    title: "Bitcoin vs The S&P 500: 10-Year Data", thumbnail: null,
-    url: "https://instagram.com/bensimpsonau",
-    duration: "1:02", date: "2026-03-25",
-    description: "Side by side comparison of returns, volatility, and correlation.",
-    keyPoints: "Performance comparison, volatility metrics, portfolio diversification, long-term data"
+    id: 'ri5',
+    title: "The 3 digital asset mistakes HNW investors make in bear markets",
+    pillar: 'Education', pillarClass: 'pillar-education',
+    platform: 'IG Reel', platformClass: 'platform-ig',
+    hook: "3 mistakes. That's what separates HNW investors who lose in bear markets from those who build generational wealth.",
+    altHooks: [
+      "Curiosity: Even HNW investors get these 3 things wrong in bear markets. Are you making them?",
+      "Result-first: Avoiding these 3 mistakes saved our members an average of $180K in the last bear market."
+    ],
+    points: [
+      "Mistake 1: Treating Bitcoin and altcoins as the same asset class",
+      "Mistake 2: Going all-in at one price instead of staged allocation",
+      "Mistake 3: Making decisions based on headlines instead of on-chain data",
+      "The framework that prevents all three mistakes"
+    ],
+    cta: "DM me 'MISTAKES' to get the bear market checklist"
   },
   {
-    id: "ig_003", platform: "instagram",
-    title: "The One Metric I Watch Before Adding to My Position", thumbnail: null,
-    url: "https://instagram.com/bensimpsonau",
-    duration: "0:47", date: "2026-03-20",
-    description: "Not price. Not headlines. This one on-chain metric tells me more than anything else.",
-    keyPoints: "On-chain analysis, decision framework, data over emotion, one key metric"
+    id: 'ri6',
+    title: "I've had 1,163 members go through this exact framework. Here's what separates the ones who win.",
+    pillar: 'Social Proof', pillarClass: 'pillar-social',
+    platform: 'LinkedIn', platformClass: 'platform-linkedin',
+    hook: "1,163 members. Same framework. Very different results. Here's the one thing that separates the winners.",
+    altHooks: [
+      "Curiosity: After guiding 1,163 investors, I've noticed a pattern. The top 10% all do one thing differently.",
+      "Result-first: The members who 10x'd their portfolios had one thing in common. It's not what you think."
+    ],
+    points: [
+      "The winners follow the framework even when it's uncomfortable",
+      "They review data weekly, not just when markets move",
+      "They focus on position sizing over price prediction",
+      "They treat the membership as a system, not just information",
+      "Consistency beats timing — the data proves it"
+    ],
+    cta: "Link in bio to see how the framework works"
   }
 ];
 
-const STORAGE_KEY = 'cs_content_studio_v2';
-const STORAGE_FILTER_KEY = 'cs_content_studio_filter';
-
-const platformMeta = {
-  youtube_clip: { label: 'YouTube Clip', badgeClass: 'badge-youtube', color: '#FF0000' },
-  email: { label: 'Newsletter', badgeClass: 'badge-newsletter', color: '#FC5C03' },
-  x_thread: { label: 'X Thread', badgeClass: 'badge-x', color: '#000000' },
-  linkedin: { label: 'LinkedIn', badgeClass: 'badge-linkedin', color: '#0077B5' },
-  ig_reel: { label: 'Instagram Reel', badgeClass: 'badge-instagram', color: '#E1306C' },
-  ig_carousel: { label: 'Instagram Carousel', badgeClass: 'badge-instagram', color: '#E1306C' },
-  facebook: { label: 'Facebook', badgeClass: 'badge-facebook', color: '#1877F2' },
-  blog: { label: 'Blog', badgeClass: 'badge-blog', color: '#6B7280' },
-  yt_community: { label: 'YouTube Community', badgeClass: 'badge-community', color: '#FF0000' },
-  whatsapp: { label: 'WhatsApp', badgeClass: 'badge-whatsapp', color: '#25D366' },
-};
-
-const formatLabels = {
-  video_clip: 'Clip', thread: 'Thread', text_post: 'Post', carousel: 'Carousel',
-  article: 'Article', poll: 'Poll', image_quote: 'Quote Card', newsletter: 'Newsletter'
-};
-
-const effortDisplay = { very_low: '🟢 Very Low', low: '🟢 Low', medium: '🟡 Medium', high: '🔴 High' };
-
-function getDefaultAdPotential(platform, tier) {
-  if (platform === 'linkedin') return 'High';
-  if (platform === 'x_thread' && tier === '1_high') return 'High';
-  if (platform === 'youtube_clip') return 'Medium';
-  if (platform === 'ig_carousel') return 'Medium';
-  return 'Low';
-}
-
-function generateDefaultCards() {
-  return [
-    {
-      id: 'c1', platform: 'youtube_clip', format: 'video_clip', tier: '1_high',
-      hook: 'Bitcoin just entered a price zone that has marked the bottom of every major cycle since 2012. Here\'s what the data shows.',
-      title: 'The Value Zone',
-      angle: 'Bollinger Band value zone framework — when Bitcoin enters this zone historically, it has always preceded significant recoveries.',
-      keyMessage: 'The monthly Bollinger Band value zone has marked every major cycle bottom since 2012, and Bitcoin just entered it again.',
-      cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
-      effortLevel: 'medium', estimatedMinutes: 30, priority: 1, stage: 'idea',
-      assignedTo: 'kishan',
-      adPotential: 'Medium',
-      draftCopy: '[CLIP: 60-90 seconds]\n\nHook: "Bitcoin just entered a price zone that has marked the bottom of every major cycle since 2012."\n\nBody: Show the monthly chart with Bollinger Bands. Highlight the previous entries into the lower band — 2015, 2018, 2022 — and what happened in the 12-24 months that followed.\n\n"This isn\'t a prediction. It\'s a pattern. And the pattern is clear."\n\nEnd screen: Link to full video + subscribe.',
-      mediaNeeded: 'Clip from full video — timestamp around the Bollinger Band discussion. Add lower-third text overlays.',
-      notes: ''
-    },
-    {
-      id: 'c2', platform: 'youtube_clip', format: 'video_clip', tier: '1_high',
-      hook: 'While retail investors are selling, here\'s what institutional on-chain data is actually showing right now.',
-      title: 'The Institutional Signal',
-      angle: 'Divergence between retail sentiment (extreme fear) and institutional on-chain behaviour (accumulation).',
-      keyMessage: 'On-chain data shows institutions are accumulating while retail is panic-selling — this divergence has historically been a strong signal.',
-      cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
-      effortLevel: 'medium', estimatedMinutes: 30, priority: 2, stage: 'idea',
-      assignedTo: 'kishan',
-      adPotential: 'Medium',
-      draftCopy: '[CLIP: 60-90 seconds]\n\nHook: "While retail investors are selling, here\'s what institutional on-chain data is actually showing right now."\n\nBody: Walk through the on-chain accumulation metrics — wallet cohort analysis showing large wallets increasing positions while small wallets are distributing.\n\n"When the data says one thing and the headlines say another, I follow the data. Every time."\n\nEnd screen: Link to full breakdown in the video.',
-      mediaNeeded: 'Clip from institutional data segment. Add on-chain chart overlays if not already in video.',
-      notes: ''
-    },
-    {
-      id: 'c3', platform: 'youtube_clip', format: 'video_clip', tier: '1_high',
-      hook: 'Bitcoin is down 48%. Sounds catastrophic. Here\'s what every previous drawdown of this magnitude led to.',
-      title: 'Historical Drawdown Context',
-      angle: 'Historical context — every previous 48%+ drawdown and what followed within 12-24 months.',
-      keyMessage: 'Every Bitcoin drawdown of 45%+ from ATH has preceded a new all-time high within 12-24 months. The current 48% drawdown fits this pattern exactly.',
-      cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
-      effortLevel: 'low', estimatedMinutes: 25, priority: 3, stage: 'idea',
-      assignedTo: 'kishan',
-      adPotential: 'Medium',
-      draftCopy: '[CLIP: 60-90 seconds]\n\nHook: "Bitcoin is down 48%. Sounds catastrophic. Here\'s what every previous drawdown of this magnitude led to."\n\nBody: Quick-fire data — 2014: -85%, then 12,000% recovery. 2018: -84%, then 1,600% recovery. 2022: -77%, then 350% recovery. 2025: -48%...\n\n"I\'m not saying history will repeat. I\'m saying ignoring historical data is not a strategy."\n\nEnd screen: Full data breakdown in the video.',
-      mediaNeeded: 'Clip from drawdown comparison segment. Ensure historical chart is visible.',
-      notes: ''
-    },
-    {
-      id: 'c4', platform: 'youtube_clip', format: 'video_clip', tier: '1_high',
-      hook: 'I started accumulating again at $63K. Not because of emotion. Because of this framework.',
-      title: 'Why I Started Accumulating at $63K',
-      angle: 'Ben\'s personal decision-making framework — what specific signals triggered his re-entry.',
-      keyMessage: 'Having a framework before the drawdown happens means you act on data, not headlines. This is exactly what that looks like in practice.',
-      cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
-      effortLevel: 'medium', estimatedMinutes: 30, priority: 4, stage: 'idea',
-      assignedTo: 'kishan',
-      adPotential: 'Medium',
-      draftCopy: '[CLIP: 60-90 seconds]\n\nHook: "I started accumulating again at $63K. Not because I felt bullish. Because of this framework."\n\nBody: Walk through the decision checklist — value zone entry ✓, extreme fear reading ✓, institutional accumulation ✓, macro context reviewed ✓.\n\n"The framework tells me what to do so my emotions don\'t have to. That\'s the entire point."\n\nEnd screen: Full framework breakdown in the video.',
-      mediaNeeded: 'Clip from the $63K discussion segment.',
-      notes: ''
-    },
-    {
-      id: 'c5', platform: 'email', format: 'newsletter', tier: '1_high',
-      hook: 'Bitcoin Down 48%: What the Data Says (Not the Headlines)',
-      title: 'Bitcoin Down 48%: What the Data Says (Not the Headlines)',
-      angle: 'Newsletter summary with key data points, Fear & Greed context, and CTA to full video.',
-      keyMessage: 'The data tells a different story than the headlines. Here\'s what institutional investors are actually doing right now.',
-      cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
-      effortLevel: 'low', estimatedMinutes: 20, priority: 5, stage: 'idea',
-      assignedTo: 'kishan',
-      adPotential: 'Low',
-      draftCopy: 'Subject: Bitcoin Down 48% — What the Data Actually Says\n\nPreview: The headlines say crash. The on-chain data says something different.\n\n---\n\nBitcoin has drawn down 48% from its all-time high.\n\nThe Fear & Greed Index hit 8 — extreme fear. This has happened only 5 times in Bitcoin\'s history.\n\nThe headlines are predictable: "crash," "bubble burst," "digital tulips." You\'ve heard it all before.\n\nBut here\'s what the headlines won\'t tell you:\n\n→ Every previous drawdown of this magnitude (45%+) has preceded a new all-time high within 12-24 months\n→ On-chain data shows institutional wallets are accumulating, not selling\n→ Bitcoin just entered the monthly Bollinger Band value zone — a level that has marked the bottom of every major cycle since 2012\n\nThis doesn\'t mean "buy everything now." It means the data deserves more attention than the headlines.\n\nI broke down all of this — the historical patterns, the on-chain signals, and the framework I use to make decisions during drawdowns — in this week\'s video.\n\n👉 Watch the full breakdown: [LINK]\n\nAs always, this is education — not financial advice. But the data is worth looking at before you make any decisions.\n\n— Ben',
-      mediaNeeded: 'None — text email with video thumbnail and CTA button.',
-      notes: ''
-    },
-    {
-      id: 'c6', platform: 'x_thread', format: 'thread', tier: '1_high',
-      hook: 'Bitcoin is down 48% from ATH. Fear & Greed at 8. I looked at the data. Here\'s what I found 🧵',
-      title: '48% Drawdown Data Thread',
-      angle: '8-tweet thread walking through the data points — each tweet delivers standalone value.',
-      keyMessage: 'The data tells a different story than the headlines. Historical drawdowns, on-chain signals, and Fear & Greed extremes all point in the same direction.',
-      cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
-      effortLevel: 'medium', estimatedMinutes: 25, priority: 6, stage: 'idea',
-      assignedTo: 'ben',
-      adPotential: 'High',
-      draftCopy: '1/ Bitcoin is down 48% from ATH.\n\nFear & Greed Index at 8.\n\nI looked at the data. Here\'s what I found 🧵\n\n2/ First, context.\n\nBitcoin has had 5 drawdowns of 45%+ from ATH.\n\nEvery single one preceded a new all-time high within 12-24 months.\n\nNot sometimes. Every time.\n\n3/ The Fear & Greed Index has hit single digits only 5 times in its history.\n\nAverage 12-month return from those readings: well above what most asset classes deliver in a decade.\n\nFear is a data point, not a directive.\n\n4/ Here\'s what\'s happening on-chain:\n\nInstitutional wallets (1,000+ BTC) are accumulating.\nRetail wallets (<1 BTC) are distributing.\n\nWhen the smart money and the scared money diverge — I pay attention to the smart money.\n\n5/ Bitcoin just entered the monthly Bollinger Band "value zone."\n\nThis zone has marked the bottom of every major cycle since 2012.\n\nIt doesn\'t mean "bottom is in today." It means the asymmetric opportunity window is open.\n\n6/ The biggest mistake I see:\n\nGoing all in at one price during a drawdown.\n\nNo one picks the exact bottom. Dollar-cost averaging through the value zone is how you capture the opportunity without needing to be perfect.\n\n7/ Important distinction:\n\nThis analysis applies to Bitcoin specifically.\n\nAltcoins are a fundamentally different asset class with different risk profiles. Don\'t apply Bitcoin\'s historical patterns to tokens with 2 years of history.\n\n8/ I broke down all of this in detail — the historical data, the on-chain signals, and the exact framework I use to make decisions during drawdowns.\n\nFull video: [LINK]\n\nNot financial advice. But the data is worth your time.',
-      mediaNeeded: 'None — text thread. Consider adding a chart image to tweet 5 (Bollinger Band visual).',
-      notes: ''
-    },
-    {
-      id: 'c7', platform: 'linkedin', format: 'text_post', tier: '1_high',
-      hook: 'Bitcoin has drawn down 48% from its all-time high. The headlines are calling it a crash. The data tells a different story.',
-      title: 'LinkedIn: Data vs Headlines',
-      angle: 'Professional, data-driven perspective on the drawdown — positioned for HNW business owners and executives.',
-      keyMessage: 'The divergence between media narrative and on-chain data creates an information asymmetry that educated investors can use to their advantage.',
-      cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
-      effortLevel: 'medium', estimatedMinutes: 20, priority: 7, stage: 'idea',
-      assignedTo: 'ben',
-      adPotential: 'High',
-      draftCopy: 'Bitcoin has drawn down 48% from its all-time high.\n\nThe headlines are calling it a crash. The data tells a different story.\n\nI\'ve spent 9 years in digital assets. Built a research and education business around helping high-net-worth investors navigate this asset class.\n\nHere\'s what I see when I look at the data (not the headlines):\n\n📊 Historical context: Every Bitcoin drawdown of 45%+ from ATH has preceded a new all-time high within 12-24 months. Not a guarantee — but a pattern worth understanding.\n\n📉 Sentiment: The Fear & Greed Index hit 8. This has happened only 5 times. Each time marked a significant inflection point.\n\n🏦 On-chain data: Institutional wallets are accumulating. Retail wallets are selling. When these diverge, the institutional signal has historically been the better indicator.\n\nDoes this mean "buy now"? No.\n\nIt means having a framework for making decisions during drawdowns is the difference between reacting emotionally and acting strategically.\n\nI cover the full data breakdown — historical patterns, on-chain signals, and the decision framework I use — in my latest analysis.\n\nLink in comments.\n\n#DigitalAssets #Bitcoin #InvestmentFramework',
-      mediaNeeded: 'Professional chart graphic or video thumbnail. LinkedIn favours native images.',
-      notes: ''
-    },
-    {
-      id: 'c8', platform: 'ig_reel', format: 'video_clip', tier: '2_medium',
-      hook: 'The biggest mistake I see in a drawdown: going all in at the first dip. Here\'s the framework I use instead.',
-      title: 'Don\'t Go All In',
-      angle: 'DCA framework for drawdowns — why going all-in is the biggest mistake and what to do instead.',
-      keyMessage: 'Dollar-cost averaging through a drawdown removes the need to pick the exact bottom. It\'s systematic, not emotional.',
-      cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
-      effortLevel: 'medium', estimatedMinutes: 35, priority: 8, stage: 'idea',
-      assignedTo: 'kishan',
-      adPotential: 'Low',
-      draftCopy: '[REEL: 30-60 seconds, vertical format]\n\nHook (text on screen): "The #1 mistake in a drawdown"\n\nVoiceover: "Bitcoin is down 48% and I\'m seeing the same mistake everywhere. People going all in at the first sign of a dip."\n\n"Here\'s the thing — no one picks the exact bottom. No one. Not me, not the best analysts in the world."\n\n"So instead of trying to be perfect, here\'s the framework:"\n\n"When Bitcoin enters the value zone, I start dollar-cost averaging. Not all at once. Systematically. Over weeks."\n\n"This way, if it drops another 20%, I\'m still buying. If it bounces, I already have a position."\n\n"Frameworks beat feelings. Every time."\n\n[End screen: "Full framework breakdown — link in bio"]\n\nCaption: Bitcoin is down 48%. The biggest mistake? Going all in at one price. Here\'s the DCA framework I use instead → Full video in bio\n\n#Bitcoin #DigitalAssets #Investing #DCA',
-      mediaNeeded: 'Vertical re-edit from full video or fresh talking-head clip. Add text overlays for key points.',
-      notes: ''
-    },
-    {
-      id: 'c9', platform: 'ig_carousel', format: 'carousel', tier: '2_medium',
-      hook: 'Before you make any decisions about your Bitcoin position — look at these 10 data points.',
-      title: 'Bitcoin Down 48%: 10 Data Points',
-      angle: 'Visual data carousel — 10 slides, each with one key data point from the video analysis.',
-      keyMessage: 'Data should drive decisions, not headlines. These 10 data points paint a very different picture than the media narrative.',
-      cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
-      effortLevel: 'high', estimatedMinutes: 45, priority: 9, stage: 'idea',
-      assignedTo: 'kishan',
-      adPotential: 'Medium',
-      draftCopy: 'Slide 1 (Cover): "Bitcoin Down 48% — 10 Data Points Before You Decide"\n\nSlide 2: "48% drawdown from ATH — sounds catastrophic, right?"\n\nSlide 3: "But every Bitcoin drawdown of 45%+ has preceded a new ATH within 12-24 months"\n\nSlide 4: "Fear & Greed Index: 8 — Extreme Fear. This has happened only 5 times."\n\nSlide 5: "Each previous extreme fear reading marked a significant market bottom"\n\nSlide 6: "On-chain: institutional wallets (1,000+ BTC) are accumulating"\n\nSlide 7: "On-chain: retail wallets (<1 BTC) are distributing (panic selling)"\n\nSlide 8: "Bitcoin entered the monthly Bollinger Band value zone — bottomed every cycle since 2012"\n\nSlide 9: "The 2014 drawdown: -85%. What followed: 12,000% recovery. 2018: -84%, then 1,600%."\n\nSlide 10: "Headlines ≠ Data. Make decisions based on frameworks, not fear."\n\nSlide 11 (CTA): "Full breakdown with all the data → Link in bio"\n\nCaption: Bitcoin is down 48%. Before you make any decisions — look at the data, not the headlines. 10 data points that tell a very different story. Full analysis → link in bio.',
-      mediaNeeded: 'Design 10 carousel slides in CS brand. Clean, data-focused, minimal text per slide. Use brand colours.',
-      notes: ''
-    },
-    {
-      id: 'c10', platform: 'ig_reel', format: 'video_clip', tier: '2_medium',
-      hook: 'Stop treating Bitcoin and altcoins as the same asset class. They\'re not.',
-      title: 'Bitcoin ≠ Digital Assets',
-      angle: 'Important distinction between Bitcoin and altcoins — why you can\'t apply Bitcoin\'s historical patterns to other tokens.',
-      keyMessage: 'Bitcoin has 15 years of cycle data. Most altcoins have 2-3 years. Treating them the same is a mistake that costs people money.',
-      cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
-      effortLevel: 'medium', estimatedMinutes: 30, priority: 10, stage: 'idea',
-      assignedTo: 'kishan',
-      adPotential: 'Low',
-      draftCopy: '[REEL: 30-45 seconds, vertical format]\n\nHook (text on screen): "Bitcoin ≠ Altcoins"\n\nVoiceover: "I see this constantly. Someone looks at Bitcoin\'s historical drawdown data and then applies it to their altcoin portfolio."\n\n"Stop. These are fundamentally different asset classes."\n\n"Bitcoin has 15 years of cycle data. Multiple 45%+ drawdowns, each followed by new highs."\n\n"Most altcoins? 2-3 years of data. Many won\'t survive this cycle."\n\n"When I say Bitcoin is in a value zone — that\'s Bitcoin specifically. Not your favourite alt."\n\n"Different assets. Different frameworks. Different risk."\n\n[End: "Full breakdown → link in bio"]\n\nCaption: Bitcoin is not "crypto." When I share Bitcoin data, I mean Bitcoin. Different asset, different framework, different risk profile. Full analysis → link in bio.',
-      mediaNeeded: 'Vertical talking-head clip or re-edit from full video. Text overlays for key distinction.',
-      notes: ''
-    },
-    {
-      id: 'c11', platform: 'facebook', format: 'text_post', tier: '2_medium',
-      hook: 'Bitcoin is down 48% from its all-time high. Before you react — here\'s what the data actually shows.',
-      title: 'Facebook: Data Over Headlines',
-      angle: 'Facebook-adapted version of the LinkedIn post — slightly more conversational tone, same data.',
-      keyMessage: 'The media narrative and the on-chain data are telling two completely different stories. The data deserves your attention.',
-      cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
-      effortLevel: 'low', estimatedMinutes: 10, priority: 11, stage: 'idea',
-      assignedTo: 'kishan',
-      adPotential: 'Low',
-      draftCopy: 'Bitcoin is down 48% from its all-time high.\n\nBefore you react, here\'s what the data actually shows:\n\n📊 Every Bitcoin drawdown of 45%+ from ATH has preceded a new all-time high within 12-24 months\n\n😱 The Fear & Greed Index hit 8 (extreme fear) — this has happened only 5 times. Each time was a significant turning point.\n\n🏦 On-chain data: institutional wallets are quietly accumulating while retail wallets are selling.\n\n📉 Bitcoin just entered the monthly "value zone" that has marked the bottom of every major cycle since 2012.\n\nThis doesn\'t mean rush out and buy. It means the data tells a very different story than the headlines.\n\nI break down all of this — historical patterns, on-chain signals, and my framework for making decisions during drawdowns — in this week\'s video.\n\n👉 Link in comments\n\nAs always: education, not financial advice. But the data is worth 20 minutes of your time.',
-      mediaNeeded: 'Video thumbnail or chart graphic. Facebook favours native video clips if available.',
-      notes: ''
-    },
-    {
-      id: 'c12', platform: 'yt_community', format: 'poll', tier: '3_low',
-      hook: 'Bitcoin is down 48%. What\'s your move?',
-      title: 'Community Poll: What\'s Your Move?',
-      angle: 'Engagement poll to drive discussion and understand audience sentiment.',
-      keyMessage: 'Engaging the community in conversation about the drawdown — drives comments and algorithm activity.',
-      cta: 'comment', ctaLink: '',
-      effortLevel: 'very_low', estimatedMinutes: 5, priority: 12, stage: 'idea',
-      assignedTo: 'kishan',
-      adPotential: 'Low',
-      draftCopy: '📊 Bitcoin is down 48% from its all-time high.\n\nWhat\'s your move?\n\n🔵 Accumulating (DCA)\n🟢 Holding — not selling, not buying\n🟡 Waiting for more data\n🔴 Reducing exposure\n\nI just published my full data breakdown on this drawdown — including the historical patterns and on-chain signals I\'m watching. Link to the video in my latest upload.\n\nCurious where everyone\'s head is at. 👇',
-      mediaNeeded: 'None — YouTube community poll format.',
-      notes: ''
-    },
-    {
-      id: 'c13', platform: 'blog', format: 'article', tier: '3_low',
-      hook: 'What a 48% Bitcoin Drawdown Teaches Us About Market Psychology',
-      title: 'Blog: Market Psychology of Drawdowns',
-      angle: 'Long-form SEO article exploring the psychology of drawdowns — targets search intent from investors Googling "Bitcoin crash."',
-      keyMessage: 'Market psychology drives most investor mistakes. Understanding the data behind drawdowns removes emotion from the equation.',
-      cta: 'visit_vsl', ctaLink: 'https://collectiveshift.com/vsl',
-      effortLevel: 'high', estimatedMinutes: 90, priority: 13, stage: 'idea',
-      assignedTo: 'kishan',
-      adPotential: 'Low',
-      draftCopy: '# What a 48% Bitcoin Drawdown Teaches Us About Market Psychology\n\n*By Ben Simpson, Founder of Collective Shift*\n\nBitcoin has drawn down 48% from its all-time high. If you\'re reading this, you\'re likely feeling one of two things: fear or opportunity.\n\nBoth are valid emotional responses. Neither should drive your investment decisions.\n\nIn this analysis, I want to walk through what the data actually shows during drawdowns of this magnitude — and more importantly, what it reveals about the psychology that causes most investors to make their biggest mistakes at exactly the wrong time.\n\n## The Historical Pattern\n\nBitcoin has experienced five drawdowns of 45% or more from its all-time high...\n\n[Continue with full article covering: historical drawdowns, Fear & Greed psychology, institutional vs retail behaviour, the value zone framework, and why having a pre-built decision framework matters more than any single data point.]\n\n## The Framework\n\nI don\'t make investment decisions based on headlines. I use a systematic framework...\n\n[Share the WHAT of the framework without the specific HOW — drive to VSL for the detailed approach.]\n\n---\n\n*This article is for educational purposes only and does not constitute financial advice. For a deeper look at the frameworks I use, visit [Collective Shift](https://collectiveshift.com).*',
-      mediaNeeded: 'Featured image, 2-3 in-article charts (drawdown comparison, Fear & Greed history, Bollinger Band chart).',
-      notes: 'SEO target keywords: "Bitcoin drawdown", "Bitcoin crash 2025", "should I sell Bitcoin"'
-    },
-    {
-      id: 'c14', platform: 'whatsapp', format: 'image_quote', tier: '3_low',
-      hook: 'Fear is a data point, not a directive.',
-      title: 'WhatsApp: Key Quote Card',
-      angle: 'Shareable quote card for Platinum community and WhatsApp — drives discussion among existing members.',
-      keyMessage: 'A single powerful quote from the video that members will want to share.',
-      cta: 'none', ctaLink: '',
-      effortLevel: 'very_low', estimatedMinutes: 10, priority: 14, stage: 'idea',
-      assignedTo: 'kishan',
-      adPotential: 'Low',
-      draftCopy: '[QUOTE CARD — CS branded]\n\n"Fear is a data point, not a directive.\n\nThe Fear & Greed Index hit 8. This has happened 5 times in Bitcoin\'s history. Each one was a turning point.\n\nDon\'t let a number designed to measure emotion become the emotion that drives your decisions."\n\n— Ben Simpson, Collective Shift\n\n[Accompanying message for Platinum community:]\nNew video dropped — full data breakdown on this 48% drawdown. Historical patterns, on-chain signals, and the framework for navigating it. Worth 20 minutes. Link: [VIDEO URL]',
-      mediaNeeded: 'Branded quote card graphic — CS orange accent, clean typography, Ben\'s name.',
-      notes: ''
-    },
-    {
-      id: 'c15', platform: 'ig_carousel', format: 'carousel', tier: '2_medium',
-      hook: 'The framework I use to make decisions in a drawdown. No emotion. Just data.',
-      title: 'The Framework I Use to Make Decisions in a Drawdown',
-      angle: 'Framework-focused carousel — shows the decision-making process step by step without giving away specifics.',
-      keyMessage: 'Having a pre-built framework means you act on data, not fear. Here\'s what a good framework looks like (without the specific numbers).',
-      cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
-      effortLevel: 'high', estimatedMinutes: 45, priority: 15, stage: 'idea',
-      assignedTo: 'kishan',
-      adPotential: 'Medium',
-      draftCopy: 'Slide 1 (Cover): "My Framework for Drawdown Decisions"\n\nSlide 2: "Step 1: Check the data, not the headlines" — What does on-chain data show? Are institutions buying or selling?\n\nSlide 3: "Step 2: Historical context" — How does this drawdown compare to previous cycles? What followed?\n\nSlide 4: "Step 3: Sentiment check" — Where is Fear & Greed? Extreme readings in either direction are signals.\n\nSlide 5: "Step 4: Value zone assessment" — Has Bitcoin entered a historically significant price zone?\n\nSlide 6: "Step 5: Position sizing" — Never go all-in. DCA through the zone systematically.\n\nSlide 7: "Step 6: Separate Bitcoin from altcoins" — Different assets, different frameworks, different risk.\n\nSlide 8: "Step 7: Review your timeline" — Are you investing for 6 months or 6 years? This changes everything.\n\nSlide 9 (CTA): "I walk through this entire framework with real data in my latest video → Link in bio"\n\nCaption: This is the exact framework I use when Bitcoin enters a drawdown. No emotion. No panic. Just a checklist. Full walkthrough with live data → link in bio.',
-      mediaNeeded: 'Design 8-9 carousel slides. Clean, step-by-step format. CS brand colours.',
-      notes: ''
-    },
-    {
-      id: 'c16', platform: 'x_thread', format: 'thread', tier: '2_medium',
-      hook: '3 on-chain signals I watch when Bitcoin is in the red. No hype — just data.',
-      title: '3 On-Chain Signals Thread',
-      angle: 'Focused thread on three specific on-chain metrics — educational and shareable.',
-      keyMessage: 'On-chain data is the closest thing to "insider information" in digital assets — and it\'s publicly available if you know where to look.',
-      cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
-      effortLevel: 'medium', estimatedMinutes: 20, priority: 16, stage: 'idea',
-      assignedTo: 'ben',
-      adPotential: 'Low',
-      draftCopy: '1/ 3 on-chain signals I watch when Bitcoin is in the red.\n\nNo hype. Just data. 🧵\n\n2/ Signal #1: Wallet cohort behaviour\n\nAre large wallets (1,000+ BTC) accumulating or distributing?\n\nRight now: accumulating. While retail sells in fear, institutions are adding.\n\nThis divergence has historically been one of the strongest signals.\n\n3/ Signal #2: Exchange flows\n\nIs Bitcoin flowing onto exchanges (selling pressure) or off exchanges (holding/accumulation)?\n\nCurrent data: net outflows from exchanges. Fewer coins available to sell.\n\n4/ Signal #3: Long-term holder behaviour\n\nAre long-term holders (1+ year) selling? Or are they sitting tight?\n\nRight now: long-term holders are not moving. The selling is almost entirely short-term holders and new entrants.\n\n5/ These three signals together paint a picture:\n\n→ Institutions buying\n→ Coins leaving exchanges\n→ Long-term holders not selling\n\nThe fear is real. But the on-chain data doesn\'t support panic.\n\n6/ I cover these signals (and more) with actual data and charts in my latest video.\n\nFull breakdown: [LINK]\n\nNot financial advice — just the data that\'s publicly available if you know where to look.',
-      mediaNeeded: 'Consider adding chart screenshots for tweets 2-4.',
-      notes: ''
-    },
-    {
-      id: 'c17', platform: 'linkedin', format: 'text_post', tier: '2_medium',
-      hook: '9 years in digital assets. The most important lesson about bear markets: the best decisions are made before they happen.',
-      title: 'LinkedIn: 9 Years of Lessons',
-      angle: 'Personal reflection and authority positioning — draws on Ben\'s experience to deliver a timeless lesson about frameworks.',
-      keyMessage: 'The most important investment decisions are made before the drawdown, not during it. A framework built in calm waters works in storms.',
-      cta: 'watch_full_video', ctaLink: 'https://youtube.com/collectiveshift',
-      effortLevel: 'medium', estimatedMinutes: 20, priority: 17, stage: 'idea',
-      assignedTo: 'ben',
-      adPotential: 'Low',
-      draftCopy: '9 years in digital assets.\n\nThe most important lesson about bear markets:\n\nThe best decisions are made before they happen.\n\nWhen Bitcoin was at all-time highs, I wasn\'t celebrating. I was building a framework for exactly this moment.\n\nWhat price triggers my DCA strategy?\nWhat on-chain signals do I watch?\nWhat\'s my position sizing in a drawdown?\nWhen do I stop adding?\n\nEvery one of these questions was answered months ago. Not today. Not in the middle of a 48% drawdown.\n\nToday, I just follow the framework.\n\nThat\'s the lesson. The framework doesn\'t need to be complex. It needs to exist. And it needs to be built when you\'re thinking clearly — not when the Fear & Greed Index is at 8.\n\nIf you\'re making investment decisions based on today\'s headlines, you\'re already behind.\n\nBuild the framework. Then trust it.\n\n—\n\nI share the exact data and signals I\'m watching right now in my latest analysis. Link in comments.\n\n#DigitalAssets #Bitcoin #InvestmentFramework #WealthManagement',
-      mediaNeeded: 'Professional headshot or branded graphic. LinkedIn favours personal imagery for authority posts.',
-      notes: ''
-    }
-  ];
-}
+// ══════════════════════════════════════
+// SCRIPT DATA (pre-built for each idea)
+// ══════════════════════════════════════
+const SCRIPTS = {};
+REEL_IDEAS.forEach(idea => {
+  SCRIPTS[idea.id] = {
+    hook: idea.hook,
+    altHooks: idea.altHooks,
+    points: idea.points,
+    cta: idea.cta
+  };
+});
 
 // ══════════════════════════════════════
-// STATE
+// REEL IDEAS GENERATOR
 // ══════════════════════════════════════
-let cards = [];
-let activeFilter = 'all';
-let boardVisible = false;
+let selectedIdeas = new Set();
 
-function loadState() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      cards = JSON.parse(saved);
-      boardVisible = cards.length > 0;
-    }
-    const savedFilter = localStorage.getItem(STORAGE_FILTER_KEY);
-    if (savedFilter) activeFilter = savedFilter;
-  } catch(e) { cards = []; }
-}
+function generateReelIdeas() {
+  const container = document.getElementById('ideasContainer');
+  const grid = document.getElementById('ideasGrid');
+  container.style.display = 'block';
+  document.getElementById('generateBtn').textContent = '🔄 Regenerate Ideas';
+  document.getElementById('scriptsContainer').innerHTML = '';
+  selectedIdeas.clear();
+  updateSelectedCount();
 
-function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
-  localStorage.setItem(STORAGE_FILTER_KEY, activeFilter);
-}
-
-// ══════════════════════════════════════
-// RENDER
-// ══════════════════════════════════════
-function render() {
-  if (!boardVisible) return;
-
-  document.getElementById('kanbanBoard').style.display = 'grid';
-  document.getElementById('platformPills').style.display = 'flex';
-  document.getElementById('summaryBar').style.display = 'flex';
-
-  // Set active filter pill
-  document.querySelectorAll('.platform-pill').forEach(p => {
-    p.classList.toggle('active', p.dataset.platform === activeFilter);
-  });
-
-  const stages = ['idea', 'approved', 'production', 'posted'];
-  const filtered = activeFilter === 'all' ? cards : cards.filter(c => c.platform === activeFilter);
-
-  stages.forEach(stage => {
-    const container = document.getElementById('cards-' + stage);
-    const stageCards = filtered.filter(c => c.stage === stage);
-    container.innerHTML = stageCards.map(c => renderCard(c)).join('');
-    document.getElementById('count-' + stage).textContent = stageCards.length;
-  });
-
-  // Summary counts (unfiltered)
-  ['idea','approved','production','posted'].forEach(s => {
-    document.getElementById('sum-' + s).textContent = cards.filter(c => c.stage === s).length;
-  });
-}
-
-function renderCard(card) {
-  const pm = platformMeta[card.platform] || { label: card.platform, badgeClass: '', color: '#666' };
-  const tierClass = card.tier === '1_high' ? 'badge-t1' : card.tier === '2_medium' ? 'badge-t2' : 'badge-t3';
-  const tierLabel = card.tier === '1_high' ? 'T1' : card.tier === '2_medium' ? 'T2' : 'T3';
-  const fmt = formatLabels[card.format] || card.format;
-  const effort = effortDisplay[card.effortLevel] || card.effortLevel;
-
-  let actions = '';
-  if (card.stage === 'idea') {
-    actions = `<button class="btn-approve" onclick="event.stopPropagation(); moveCard('${card.id}','approved')">✅ Approve</button>
-               <button class="btn-reject" onclick="event.stopPropagation(); rejectCard('${card.id}')">❌</button>
-               <button onclick="event.stopPropagation(); openModal('${card.id}')">✏️</button>`;
-  } else if (card.stage === 'approved') {
-    actions = `<button class="btn-production" onclick="event.stopPropagation(); moveCard('${card.id}','production')">🔨 Production</button>
-               <button onclick="event.stopPropagation(); openModal('${card.id}')">✏️</button>`;
-  } else if (card.stage === 'production') {
-    actions = `<button class="btn-ready" onclick="event.stopPropagation(); moveCard('${card.id}','posted')">📤 Ready</button>
-               <button onclick="event.stopPropagation(); openModal('${card.id}')">✏️</button>`;
-  } else if (card.stage === 'posted') {
-    actions = `<button class="btn-archive" onclick="event.stopPropagation(); archiveCard('${card.id}')">🗄️ Archive</button>`;
-  }
-
-  // Ad potential badge
-  let adBadge = '';
-  if (card.adPotential === 'High') adBadge = '<span class="badge badge-ad badge-ad-high">🔥 Ad Ready</span>';
-  else if (card.adPotential === 'Medium') adBadge = '<span class="badge badge-ad badge-ad-medium">📊 Ad Potential</span>';
-
-  return `<div class="content-card" draggable="true" ondragstart="handleDragStart(event, '${card.id}')" ondragend="handleDragEnd(event)" onclick="openModal('${card.id}')">
-    <div class="badges">
-      <span class="badge ${pm.badgeClass}">${pm.label}</span>
-      <span class="badge badge-format">${fmt}</span>
-      <span class="badge badge-tier ${tierClass}">${tierLabel}</span>
-      ${adBadge}
-    </div>
-    <div class="card-hook">${escHtml(card.hook)}</div>
-    <div class="card-meta">
-      <span>${effort}</span>
-      <span>~${card.estimatedMinutes} min</span>
-    </div>
-    <div class="card-actions">${actions}</div>
-  </div>`;
-}
-
-function escHtml(s) {
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
-}
-
-// ══════════════════════════════════════
-// ACTIONS
-// ══════════════════════════════════════
-function moveCard(id, newStage) {
-  const card = cards.find(c => c.id === id);
-  if (!card) return;
-  card.stage = newStage;
-  if (newStage === 'approved') card.approvedAt = new Date().toISOString();
-  if (newStage === 'posted') card.postedAt = new Date().toISOString();
-  saveState();
-  render();
-}
-
-function rejectCard(id) {
-  const reason = prompt('Rejection reason (optional):');
-  cards = cards.filter(c => c.id !== id);
-  saveState();
-  render();
-}
-
-function archiveCard(id) {
-  cards = cards.filter(c => c.id !== id);
-  saveState();
-  render();
-}
-
-function filterPlatform(platform) {
-  activeFilter = platform;
-  saveState();
-  render();
-}
-
-function generateIdeas() {
-  const btn = document.getElementById('generateBtn');
-  btn.disabled = true;
-  btn.textContent = '🤖 Generating...';
-  document.getElementById('loadingState').style.display = 'block';
-
-  setTimeout(() => {
-    cards = generateDefaultCards();
-    boardVisible = true;
-    document.getElementById('loadingState').style.display = 'none';
-    btn.disabled = false;
-    btn.textContent = '🎯 Generate Redistribution Ideas';
-    // Collapse input
-    document.getElementById('inputBody').classList.add('collapsed');
-    document.getElementById('inputChevron').style.transform = 'rotate(-90deg)';
-    saveState();
-    render();
-  }, 2000);
-}
-
-function resetBoard() {
-  if (!confirm('Reset all cards to original AI suggestions? This will remove any changes.')) return;
-  cards = generateDefaultCards();
-  activeFilter = 'all';
-  boardVisible = true;
-  saveState();
-  render();
-}
-
-function toggleInput() {
-  const body = document.getElementById('inputBody');
-  const chev = document.getElementById('inputChevron');
-  body.classList.toggle('collapsed');
-  chev.style.transform = body.classList.contains('collapsed') ? 'rotate(-90deg)' : 'rotate(0deg)';
-}
-
-// ══════════════════════════════════════
-// DRAG & DROP
-// ══════════════════════════════════════
-let draggedCardId = null;
-
-function handleDragStart(e, id) {
-  draggedCardId = id;
-  e.target.classList.add('dragging');
-  e.dataTransfer.effectAllowed = 'move';
-}
-
-function handleDragEnd(e) {
-  e.target.classList.remove('dragging');
-  document.querySelectorAll('.kanban-col').forEach(c => c.classList.remove('drag-over'));
-}
-
-function handleDragOver(e) {
-  e.preventDefault();
-  e.dataTransfer.dropEffect = 'move';
-  e.currentTarget.classList.add('drag-over');
-}
-
-function handleDragLeave(e) {
-  e.currentTarget.classList.remove('drag-over');
-}
-
-function handleDrop(e, newStage) {
-  e.preventDefault();
-  e.currentTarget.classList.remove('drag-over');
-  if (draggedCardId) {
-    moveCard(draggedCardId, newStage);
-    draggedCardId = null;
-  }
-}
-
-// ══════════════════════════════════════
-// MODAL
-// ══════════════════════════════════════
-function openModal(id) {
-  const card = cards.find(c => c.id === id);
-  if (!card) return;
-  const pm = platformMeta[card.platform] || { label: card.platform };
-  const tierLabel = card.tier === '1_high' ? 'Tier 1 — High Priority' : card.tier === '2_medium' ? 'Tier 2 — Medium Priority' : 'Tier 3 — Low Priority';
-  const effort = effortDisplay[card.effortLevel] || card.effortLevel;
-
-  document.getElementById('modalBody').innerHTML = `
-    <div style="margin-bottom:20px;">
-      <div class="badges" style="margin-bottom:12px;">
-        <span class="badge ${(platformMeta[card.platform]||{}).badgeClass||''}">${pm.label}</span>
-        <span class="badge badge-format">${formatLabels[card.format]||card.format}</span>
-        <span class="badge badge-tier ${card.tier==='1_high'?'badge-t1':card.tier==='2_medium'?'badge-t2':'badge-t3'}">${card.tier==='1_high'?'T1':card.tier==='2_medium'?'T2':'T3'}</span>
-      </div>
-      <h2 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:18px; margin-bottom:4px;">${escHtml(card.title || '')}</h2>
-      <div style="font-size:12px; color:#807F86;">${tierLabel} · ${effort} · ~${card.estimatedMinutes} min</div>
-    </div>
-
-    <div class="modal-field">
-      <label>Hook</label>
-      <div class="value" style="font-weight:600; font-size:15px;">${escHtml(card.hook)}</div>
-    </div>
-
-    <div class="modal-field">
-      <label>Angle</label>
-      <div class="value">${escHtml(card.angle || '')}</div>
-    </div>
-
-    <div class="modal-field">
-      <label>Key Message</label>
-      <div class="value">${escHtml(card.keyMessage || '')}</div>
-    </div>
-
-    <div class="modal-field">
-      <label>CTA</label>
-      <div class="value">${card.cta ? card.cta.replace(/_/g,' ') : 'None'}${card.ctaLink ? ' → <a href="'+escHtml(card.ctaLink)+'" target="_blank" style="color:#FC5C03;">'+escHtml(card.ctaLink)+'</a>' : ''}</div>
-    </div>
-
-    <div class="modal-field">
-      <label>Draft Copy</label>
-      <textarea id="modalDraft" rows="12" style="font-size:12px; line-height:1.6;">${escHtml(card.draftCopy || '')}</textarea>
-      <div style="display:flex; gap:8px; margin-top:8px;">
-        <button class="btn-orange" onclick="copyDraft()">📋 Copy to Clipboard</button>
-        <button class="btn-orange" style="background:#08C394;" onclick="saveDraft('${card.id}')">💾 Save Changes</button>
+  grid.innerHTML = REEL_IDEAS.map(idea => `
+    <div class="idea-card" id="card-${idea.id}" onclick="toggleIdea('${idea.id}')">
+      <input type="checkbox" id="cb-${idea.id}" onclick="event.stopPropagation(); toggleIdea('${idea.id}')">
+      <div class="idea-card-title">${esc(idea.title)}</div>
+      <div class="idea-card-meta">
+        <span class="pillar-tag ${idea.pillarClass}">${idea.pillar}</span>
+        <span class="platform-badge ${idea.platformClass}">${idea.platform}</span>
       </div>
     </div>
-
-    <div class="modal-field">
-      <label>Media Needed</label>
-      <div class="value" style="font-size:12px; color:#4D4C55;">${escHtml(card.mediaNeeded || 'None specified')}</div>
-    </div>
-
-    <div class="modal-field">
-      <label>Notes</label>
-      <textarea id="modalNotes" rows="3" placeholder="Add notes...">${escHtml(card.notes || '')}</textarea>
-      <button style="margin-top:6px; font-size:11px; padding:4px 12px; border-radius:6px; border:1px solid #E8E8EA; background:#fff; cursor:pointer;" onclick="saveNotes('${card.id}')">Save Notes</button>
-    </div>
-  `;
-
-  document.getElementById('cardModal').classList.add('open');
+  `).join('');
 }
 
-function closeModal() {
-  document.getElementById('cardModal').classList.remove('open');
+function toggleIdea(id) {
+  const card = document.getElementById('card-' + id);
+  const cb = document.getElementById('cb-' + id);
+  if (selectedIdeas.has(id)) {
+    selectedIdeas.delete(id);
+    card.classList.remove('selected');
+    cb.checked = false;
+  } else {
+    selectedIdeas.add(id);
+    card.classList.add('selected');
+    cb.checked = true;
+  }
+  updateSelectedCount();
 }
 
-function copyDraft() {
-  const ta = document.getElementById('modalDraft');
-  navigator.clipboard.writeText(ta.value).then(() => {
-    const btn = event.target;
+function updateSelectedCount() {
+  const count = selectedIdeas.size;
+  document.getElementById('selectedCount').textContent = count + ' selected';
+  document.getElementById('buildScriptsBtn').disabled = count === 0;
+}
+
+function buildScripts() {
+  const container = document.getElementById('scriptsContainer');
+  if (selectedIdeas.size === 0) return;
+
+  const html = Array.from(selectedIdeas).map(id => {
+    const idea = REEL_IDEAS.find(i => i.id === id);
+    const script = SCRIPTS[id];
+    if (!idea || !script) return '';
+
+    return `
+      <div class="script-card">
+        <div style="display:flex; gap:6px; margin-bottom:10px; flex-wrap:wrap;">
+          <span class="pillar-tag ${idea.pillarClass}">${idea.pillar}</span>
+          <span class="platform-badge ${idea.platformClass}">${idea.platform}</span>
+        </div>
+        <div class="script-hook">${esc(script.hook)}</div>
+        <div class="script-alt-hooks">
+          <div class="label">Alternative Hooks</div>
+          ${script.altHooks.map(h => `<div class="script-alt-hook">${esc(h)}</div>`).join('')}
+        </div>
+        <ul class="script-points">
+          ${script.points.map(p => `<li>${esc(p)}</li>`).join('')}
+        </ul>
+        <div class="script-cta">📢 CTA: ${esc(script.cta)}</div>
+        <button class="copy-script-btn" onclick="copyScript(this, '${idea.id}')">📋 Copy Script</button>
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = html;
+  container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function copyScript(btn, id) {
+  const idea = REEL_IDEAS.find(i => i.id === id);
+  const script = SCRIPTS[id];
+  if (!idea || !script) return;
+
+  const text = `HOOK: ${script.hook}\n\nALT HOOKS:\n${script.altHooks.join('\n')}\n\nTALKING POINTS:\n${script.points.map(p => '→ ' + p).join('\n')}\n\nCTA: ${script.cta}`;
+  navigator.clipboard.writeText(text).then(() => {
     btn.textContent = '✅ Copied!';
-    setTimeout(() => btn.textContent = '📋 Copy to Clipboard', 1500);
+    setTimeout(() => btn.textContent = '📋 Copy Script', 1500);
   });
-}
-
-function saveDraft(id) {
-  const card = cards.find(c => c.id === id);
-  if (card) {
-    card.draftCopy = document.getElementById('modalDraft').value;
-    saveState();
-    const btn = event.target;
-    btn.textContent = '✅ Saved!';
-    setTimeout(() => btn.textContent = '💾 Save Changes', 1500);
-  }
-}
-
-function saveNotes(id) {
-  const card = cards.find(c => c.id === id);
-  if (card) {
-    card.notes = document.getElementById('modalNotes').value;
-    saveState();
-  }
-}
-
-function saveAdPotential(id) {
-  const card = cards.find(c => c.id === id);
-  if (card) {
-    card.adPotential = document.getElementById('modalAdPotential').value;
-    saveState();
-    render();
-  }
-}
-
-// ══════════════════════════════════════
-// SOURCE TABS
-// ══════════════════════════════════════
-function switchSourceTab(tabId) {
-  document.querySelectorAll('.source-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.source-tab-panel').forEach(p => p.classList.remove('active'));
-  const panel = document.getElementById('tab-' + tabId);
-  if (panel) panel.classList.add('active');
-  document.querySelectorAll('.source-tab').forEach(t => {
-    if (t.dataset.tab === tabId) t.classList.add('active');
-  });
-  if (tabId === 'ideas-bank') renderIdeasBank();
 }
 
 // ══════════════════════════════════════
 // IDEAS BANK
 // ══════════════════════════════════════
-const IDEAS_STORAGE_KEY = 'cs_ideas_bank';
+const IDEAS_KEY = 'cs_studio_ideas_bank';
 
 function loadIdeas() {
   try {
-    const saved = localStorage.getItem(IDEAS_STORAGE_KEY);
+    const saved = localStorage.getItem(IDEAS_KEY);
     if (saved) return JSON.parse(saved);
   } catch(e) {}
-  const defaults = [
-    { id: 'idea_1', text: "A member asked: what's the difference between Bitcoin and digital assets? Should I explain it?", source: 'Member Question', date: new Date().toISOString() },
-    { id: 'idea_2', text: 'Community thread blew up about the Fed rate decision - good video angle?', source: 'Community', date: new Date().toISOString() },
-    { id: 'idea_3', text: "DM: 'Ben how do you know when to sell? I have no exit strategy'", source: 'DM', date: new Date().toISOString() }
-  ];
-  localStorage.setItem(IDEAS_STORAGE_KEY, JSON.stringify(defaults));
-  return defaults;
+  return [];
 }
 
-function saveIdeas(ideas) {
-  localStorage.setItem(IDEAS_STORAGE_KEY, JSON.stringify(ideas));
-}
+function saveIdeas(ideas) { localStorage.setItem(IDEAS_KEY, JSON.stringify(ideas)); }
 
 function addIdea() {
-  const text = document.getElementById('newIdeaText').value.trim();
+  const input = document.getElementById('newIdeaInput');
+  const pillar = document.getElementById('newIdeaPillar').value;
+  const text = input.value.trim();
   if (!text) return;
-  const source = document.getElementById('newIdeaSource').value;
+
   const ideas = loadIdeas();
-  ideas.unshift({ id: 'idea_' + Date.now(), text, source, date: new Date().toISOString() });
+  ideas.unshift({ id: 'idea_' + Date.now(), text, pillar, date: new Date().toISOString() });
   saveIdeas(ideas);
-  document.getElementById('newIdeaText').value = '';
+  input.value = '';
   renderIdeasBank();
 }
 
 function deleteIdea(id) {
-  let ideas = loadIdeas();
-  ideas = ideas.filter(i => i.id !== id);
+  const ideas = loadIdeas().filter(i => i.id !== id);
   saveIdeas(ideas);
   renderIdeasBank();
 }
 
-function turnIntoVideo(id) {
+function useIdea(id) {
   const ideas = loadIdeas();
   const idea = ideas.find(i => i.id === id);
   if (!idea) return;
-  switchSourceTab('add-manually');
-  document.getElementById('videoTitle').value = idea.text;
+  // Pre-fill generator — scroll to top and show ideas
+  generateReelIdeas();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function sourceTagClass(source) {
-  const map = { 'Member Question': 'member-question', 'DM': 'dm', 'Community': 'community', 'My Thought': 'my-thought', 'Market Event': 'market-event' };
-  return map[source] || 'community';
+function pillarTagClass(pillar) {
+  const map = {
+    'Market Update': 'pillar-market', 'Education': 'pillar-education',
+    'Member Win': 'pillar-member', 'Strategy': 'pillar-strategy',
+    'Behind the Scenes': 'pillar-bts'
+  };
+  return map[pillar] || 'pillar-bts';
 }
 
 function renderIdeasBank() {
   const ideas = loadIdeas();
   const container = document.getElementById('ideasBankList');
   if (!ideas.length) {
-    container.innerHTML = '<p style="font-size:13px; color:#807F86; text-align:center; padding:20px;">No ideas yet. Drop one in above!</p>';
+    container.innerHTML = '<p style="font-size:13px; color:#807F86; text-align:center; padding:20px;">No ideas saved yet. Add one above!</p>';
     return;
   }
   container.innerHTML = ideas.map(idea => {
@@ -1398,84 +634,80 @@ function renderIdeasBank() {
     const dateStr = d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
     return `<div class="idea-item">
       <div style="flex:1;">
-        <div class="idea-text">${escHtml(idea.text)}</div>
+        <div class="idea-text">${esc(idea.text)}</div>
         <div class="idea-meta">
-          <span class="idea-source-tag ${sourceTagClass(idea.source)}">${idea.source}</span>
+          <span class="pillar-tag ${pillarTagClass(idea.pillar)}">${idea.pillar}</span>
           <span>${dateStr}</span>
         </div>
       </div>
       <div class="idea-actions">
-        <button class="btn-turn-video" onclick="turnIntoVideo('${idea.id}')">Turn into video \u2192</button>
-        <button class="btn-delete-idea" onclick="deleteIdea('${idea.id}')">\u2715</button>
+        <button class="btn-use" onclick="useIdea('${idea.id}')">Use This →</button>
+        <button class="btn-del" onclick="deleteIdea('${idea.id}')">✕</button>
       </div>
     </div>`;
   }).join('');
 }
 
 // ══════════════════════════════════════
-// THUMBNAIL 72HR REMINDER
+// REPURPOSE MATRIX
 // ══════════════════════════════════════
-const THUMB_REMINDER_KEY = 'cs_thumb_reminder';
-let thumbCountdownInterval = null;
+const MATRIX_KEY = 'cs_repurpose_matrix';
+const MATRIX_FORMATS = [
+  { format: '🎬 Pillar Video', icon: '🎬' },
+  { format: '🐦 Twitter Thread', icon: '🐦' },
+  { format: '💼 LinkedIn Post', icon: '💼' },
+  { format: '📸 IG Caption', icon: '📸' },
+  { format: '📧 Email Newsletter', icon: '📧' },
+  { format: '📁 Swipe File', icon: '📁' },
+  { format: '▶ YouTube Description', icon: '▶' },
+  { format: '📘 Facebook Post', icon: '📘' }
+];
 
-function setThumbReminder() {
-  const reminderTime = Date.now() + (72 * 60 * 60 * 1000);
-  localStorage.setItem(THUMB_REMINDER_KEY, reminderTime.toString());
-  startThumbCountdown();
-  if ('Notification' in window && Notification.permission === 'default') {
-    Notification.requestPermission();
-  }
+function loadMatrix() {
+  try {
+    const saved = localStorage.getItem(MATRIX_KEY);
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  return MATRIX_FORMATS.map((f, i) => ({ format: f.format, status: i === 0 ? 'done' : 'not-done' }));
 }
 
-function startThumbCountdown() {
-  const reminderTime = localStorage.getItem(THUMB_REMINDER_KEY);
-  if (!reminderTime) return;
-  const target = parseInt(reminderTime);
-  const btn = document.getElementById('thumbReminderBtn');
-  const countdown = document.getElementById('thumbCountdown');
-  if (!btn || !countdown) return;
+function saveMatrix(matrix) { localStorage.setItem(MATRIX_KEY, JSON.stringify(matrix)); }
 
-  if (thumbCountdownInterval) clearInterval(thumbCountdownInterval);
-
-  function update() {
-    const remaining = target - Date.now();
-    if (remaining <= 0) {
-      countdown.textContent = '🔔 Review time! Check your thumbnail CTR now.';
-      countdown.style.display = 'block';
-      btn.textContent = 'Set New 72hr Reminder';
-      btn.style.background = '#08C394';
-      clearInterval(thumbCountdownInterval);
-      if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification('📸 Thumbnail Review', { body: 'Check your thumbnail CTR. If < 4%, swap it!' });
-      }
-      localStorage.removeItem(THUMB_REMINDER_KEY);
-      return;
-    }
-    const hours = Math.floor(remaining / (1000 * 60 * 60));
-    const mins = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-    countdown.textContent = `⏰ Review due in ${hours}h ${mins}m`;
-    countdown.style.display = 'block';
-    btn.textContent = '✅ Reminder Set';
-    btn.style.background = '#08C394';
-  }
-
-  update();
-  thumbCountdownInterval = setInterval(update, 60000);
+function cycleStatus(idx) {
+  const matrix = loadMatrix();
+  const current = matrix[idx].status;
+  const next = current === 'not-done' ? 'in-progress' : current === 'in-progress' ? 'done' : 'not-done';
+  matrix[idx].status = next;
+  saveMatrix(matrix);
+  renderMatrix();
 }
 
-startThumbCountdown();
+function statusLabel(s) {
+  if (s === 'done') return 'Done';
+  if (s === 'in-progress') return 'In Progress';
+  return 'Not Done';
+}
 
-// Close modal on overlay click
-document.getElementById('cardModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
+function renderMatrix() {
+  const matrix = loadMatrix();
+  const body = document.getElementById('matrixBody');
+  body.innerHTML = matrix.map((row, i) => `
+    <tr>
+      <td>${row.format}</td>
+      <td><span class="matrix-status ${row.status}" onclick="cycleStatus(${i})">${statusLabel(row.status)}</span></td>
+    </tr>
+  `).join('');
+}
 
-// Close modal on Escape
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeModal();
-});
+// ══════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
 
-// Mobile sidebar
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('sidebarOverlay').classList.toggle('open');
@@ -1488,13 +720,8 @@ function closeSidebar() {
 // ══════════════════════════════════════
 // INIT
 // ══════════════════════════════════════
-loadState();
-if (boardVisible) {
-  render();
-  // Collapse input if board exists
-  document.getElementById('inputBody').classList.add('collapsed');
-  document.getElementById('inputChevron').style.transform = 'rotate(-90deg)';
-}
+renderIdeasBank();
+renderMatrix();
 </script>
 </body>
 </html>
