@@ -521,6 +521,11 @@ tailwind.config = {
     <a class="sidebar-link" data-view="bots" onclick="switchView('bots')">
       <span class="sidebar-icon">🤖</span> Bot Fleet
     </a>
+
+    <div class="sidebar-section">Resources</div>
+    <a class="sidebar-link" data-view="docs" onclick="switchView('docs')">
+      <span class="sidebar-icon">📄</span> Docs
+    </a>
   </nav>
 
   <!-- Sidebar Footer -->
@@ -928,6 +933,28 @@ tailwind.config = {
     </div>
     <!-- ═══ END BOTS ═══ -->
 
+    <!-- ═══ VIEW: DOCS ═══ -->
+    <div id="view-docs" style="display:none;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+        <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:#1B1925;">📄 Strategy Docs</h1>
+      </div>
+      <p style="font-size:13px; color:#807F86; margin-bottom:20px;">All playbooks, strategies, and briefings in one place.</p>
+
+      <!-- Category filter tabs -->
+      <div class="view-tabs-wrap" style="display:flex; gap:4px; border-bottom:1px solid #E8E8EA; margin-bottom:24px; flex-wrap:wrap;">
+        <button class="view-tab active" onclick="filterDocs('all', this)">All</button>
+        <button class="view-tab" onclick="filterDocs('marketing', this)">Marketing</button>
+        <button class="view-tab" onclick="filterDocs('social', this)">Social</button>
+        <button class="view-tab" onclick="filterDocs('sales', this)">Sales</button>
+        <button class="view-tab" onclick="filterDocs('finance', this)">Finance</button>
+        <button class="view-tab" onclick="filterDocs('strategy', this)">Strategy</button>
+        <button class="view-tab" onclick="filterDocs('team', this)">Team</button>
+      </div>
+
+      <div id="docs-container"></div>
+    </div>
+    <!-- ═══ END DOCS ═══ -->
+
   </div>
 </div>
 
@@ -1012,6 +1039,9 @@ tailwind.config = {
   <a class="bottom-tab" data-view="bots" onclick="switchView('bots')">
     <span class="btab-icon">🤖</span> Bots
   </a>
+  <a class="bottom-tab" data-view="docs" onclick="switchView('docs')">
+    <span class="btab-icon">📄</span> Docs
+  </a>
 </div>
 
 <script>
@@ -1044,7 +1074,7 @@ updateClock(); setInterval(updateClock, 1000);
 // VIEW SWITCHING
 // ═══════════════════════════════════════════
 function switchView(view) {
-  const views = ['brief', 'tasks', 'metrics', 'bots'];
+  const views = ['brief', 'tasks', 'metrics', 'bots', 'docs'];
   views.forEach(v => {
     const el = document.getElementById('view-' + v);
     if (el) el.style.display = v === view ? 'block' : 'none';
@@ -1653,6 +1683,92 @@ document.getElementById('tpStatus').addEventListener('change', function() {
   this.style.borderColor = STATUS_COLORS[this.value] || '#9CA3AF';
   document.getElementById('tpCompletedWrap').style.display = this.value === 'done' ? 'flex' : 'none';
 });
+
+// ═══════════════════════════════════════════
+// DOCS HUB
+// ═══════════════════════════════════════════
+const docsData = [
+  { category: 'marketing', label: 'Marketing Strategy', docs: [
+    { name: 'Integrated Marketing Strategy', url: '/integrated-marketing-strategy.html' },
+    { name: 'Lead Magnet Strategy', url: '/lead-magnet-strategy.html' },
+    { name: 'April Marketing Plan', url: '/april-marketing-plan-2026.html' },
+    { name: 'Marketing Intelligence', url: '/marketing-intelligence.html' },
+  ]},
+  { category: 'social', label: 'Social & Content', docs: [
+    { name: 'Social Strategy Playbook', url: '/social-strategy-playbook.html' },
+    { name: 'House of Brands', url: '/house-of-brands.html' },
+    { name: 'Content Board', url: '/content-board.html' },
+    { name: 'Content Calendar', url: '/content-calendar.html' },
+    { name: 'Instagram Content Strategy', url: '/instagram-content-strategy.html' },
+    { name: 'YouTube Strategy', url: '/youtube-strategy.html' },
+  ]},
+  { category: 'sales', label: 'Sales & Renewals', docs: [
+    { name: 'Alchemy Negotiation (Sales Playbook)', url: '/alchemy-negotiation.html' },
+    { name: 'May Renewals 2026', url: '/may-renewals-2026.html' },
+    { name: 'Micromagnet Playbook', url: '/micromagnet-playbook.html' },
+    { name: 'Portfolio Calculator', url: '/portfolio-calculator.html' },
+  ]},
+  { category: 'finance', label: 'Finance & Operations', docs: [
+    { name: 'Amex Expense Report Mar 2026', url: '/amex-expense-report-mar2026.html' },
+    { name: 'Team Cost', url: '/team-cost.html' },
+    { name: 'Restructure Playbook', url: '/restructure-playbook.html' },
+    { name: 'Actions', url: '/actions.html' },
+  ]},
+  { category: 'strategy', label: 'Strategy & Company', docs: [
+    { name: 'Strategy Hub', url: '/strategy-hub.html' },
+    { name: 'CS Education System Overview', url: '/cs-education-system-overview.html' },
+    { name: 'CS Operating System Manual', url: '/cs-operating-system-manual.html' },
+    { name: '8-Step Strategy Workbook', url: '/8-step-strategy-workbook-L1.html' },
+    { name: 'Q1 Exec Briefing', url: '/q1-exec-briefing-2026-03-30.html' },
+    { name: 'Q2 Market Briefing', url: '/q2-market-briefing.html' },
+    { name: 'Webinar Q2 2026', url: '/webinar-q2-2026-is-now-the-time.html' },
+  ]},
+  { category: 'team', label: 'Team Briefs', docs: [
+    { name: 'Travis Briefing', url: '/travis-briefing-2026-03-27.html' },
+    { name: 'CS Brand Guidelines', url: '/CS_Brand_Guidelines_Figma_2026.html' },
+  ]},
+];
+
+const DOC_CAT_COLORS = {
+  marketing: { bg: '#FFF7ED', border: '#FC5C03', icon: '📣' },
+  social:    { bg: '#FCE7F3', border: '#DB2777', icon: '🎬' },
+  sales:     { bg: '#ECFDF5', border: '#08C394', icon: '💰' },
+  finance:   { bg: '#FEF3C7', border: '#D97706', icon: '📊' },
+  strategy:  { bg: '#EDE9FE', border: '#654FFC', icon: '🧭' },
+  team:      { bg: '#DBEAFE', border: '#3B82F6', icon: '👤' },
+};
+
+function renderDocs(filter) {
+  const container = document.getElementById('docs-container');
+  let html = '';
+  docsData.forEach(group => {
+    if (filter && filter !== 'all' && group.category !== filter) return;
+    const cc = DOC_CAT_COLORS[group.category] || DOC_CAT_COLORS.strategy;
+    html += `<div class="docs-category" data-cat="${group.category}" style="margin-bottom:28px;">`;
+    html += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">`;
+    html += `<span style="font-size:16px;">${cc.icon}</span>`;
+    html += `<h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;color:#1B1925;margin:0;">${group.label}</h2>`;
+    html += `<span style="font-size:11px;color:#807F86;font-family:'Source Code Pro',monospace;">${group.docs.length} docs</span>`;
+    html += `</div>`;
+    html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">`;
+    group.docs.forEach(d => {
+      html += `<a href="${d.url}" target="_blank" rel="noopener" class="card" style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;text-decoration:none;border-left:3px solid ${cc.border};transition:all 0.15s;cursor:pointer;">`;
+      html += `<span style="font-size:14px;font-weight:500;color:#1B1925;">${escHtml(d.name)}</span>`;
+      html += `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#807F86" stroke-width="2" style="flex-shrink:0;"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>`;
+      html += `</a>`;
+    });
+    html += `</div></div>`;
+  });
+  container.innerHTML = html;
+}
+
+function filterDocs(filter, btn) {
+  document.querySelectorAll('#view-docs .view-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderDocs(filter);
+}
+
+renderDocs('all');
 </script>
 </body>
 </html>
