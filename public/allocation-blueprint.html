@@ -697,8 +697,10 @@ function renderResults() {
   ];
 
   // Profile — scored questions only (Q4-Q9), max 24
-  // Use cs_score from localStorage if available (set by quiz), else fallback to rawScore
-  let quizScore = parseInt(localStorage.getItem('cs_score'));
+  // Priority: URL ?score param (from quiz redirect) > localStorage cs_score > rawScore (standalone)
+  const urlParams = new URLSearchParams(window.location.search);
+  let quizScore = parseInt(urlParams.get('score'));
+  if (isNaN(quizScore)) quizScore = parseInt(localStorage.getItem('cs_score'));
   if (isNaN(quizScore)) quizScore = rawScore; // fallback for standalone tool
   let profile;
   if (quizScore <= 10) profile = profiles.cautious;
@@ -826,6 +828,30 @@ function animateNumber(id, target, duration) {
   }
   requestAnimationFrame(tick);
 }
+
+// Auto-skip intro if arriving from quiz (score in URL or localStorage)
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const hasUrlScore = params.has('score');
+  const hasLocalScore = localStorage.getItem('cs_score') || localStorage.getItem('cs_quiz_score');
+  if (hasUrlScore || hasLocalScore) {
+    document.getElementById('introScreen').style.display = 'none';
+    // Populate name if passed
+    const nameParam = params.get('name');
+    if (nameParam) {
+      const nameEls = document.querySelectorAll('.result-name, #resultName');
+      nameEls.forEach(el => el.textContent = nameParam);
+    }
+    // Kick off results render
+    if (typeof renderResults === 'function') {
+      renderResults();
+    } else {
+      window.addEventListener('DOMContentLoaded', function() {
+        if (typeof renderResults === 'function') renderResults();
+      });
+    }
+  }
+})();
 </script>
 </body>
 </html>
