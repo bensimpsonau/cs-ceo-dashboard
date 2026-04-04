@@ -338,6 +338,7 @@ body {
       <h2>Your Current Profile</h2>
       <div class="profile-name" id="profileName"></div>
       <p id="profileDesc"></p>
+      <p id="personalisedIntro" style="margin-top:16px;color:#374151;line-height:1.7;font-size:14px;"></p>
     </div>
 
     <!-- Key area -->
@@ -547,10 +548,10 @@ const stepData = [
 ];
 
 const profiles = {
-  cautious: { name: "Cautious Observer", emoji: "🔴", color: "#dc2626", desc: "You can see the opportunity, but you've stayed on the sidelines because you don't yet trust your process. The main gap is not ambition — it's a framework you can act on with confidence." },
-  hesitant: { name: "Hesitant First Allocator", emoji: "🟠", color: "#d97706", desc: "You're closer than most to taking digital assets seriously, but uncertainty is still blocking conviction. Intent is there, but trust in your own execution is not yet." },
-  reactive: { name: "Reactive Dabbler", emoji: "🟡", color: "#ca8a04", desc: "You've taken some steps, but your decisions are still being shaped more by noise and headlines than by a coherent process. Some exposure exists, but without a decision-making framework behind it." },
-  structured: { name: "Structured Allocator", emoji: "🟢", color: "#16a34a", desc: "You're approaching this space more seriously than most. There are still areas worth strengthening before increasing complexity, but you have the foundation in place." }
+  cautious: { name: "Cautious Observer", emoji: "🔴", color: "#dc2626", desc: "Strong on caution, your primary gap is a structured entry framework. You can see the opportunity but you haven't yet found a process you trust enough to act on with confidence." },
+  hesitant: { name: "Hesitant First Allocator", emoji: "🟠", color: "#d97706", desc: "You're ready to move but missing conviction and process. The intent is there — what's missing is a framework you trust enough to deploy serious capital through." },
+  reactive: { name: "Reactive Dabbler", emoji: "🟡", color: "#ca8a04", desc: "You have experience but you're making reactive decisions without a system. Some exposure exists, but without a decision-making framework behind it, every market move becomes a new question." },
+  structured: { name: "Structured Allocator", emoji: "🟢", color: "#16a34a", desc: "You have a strong foundation. Your focus now is optimising and protecting gains. There are still areas worth strengthening, but the core structure is in place." }
 };
 
 const bucketNames = ["Thesis Clarity", "Information Confidence", "Risk Readiness", "Decision Structure"];
@@ -695,11 +696,14 @@ function renderResults() {
     answers[5] + answers[6]
   ];
 
-  // Profile
+  // Profile — scored questions only (Q4-Q9), max 24
+  // Use cs_score from localStorage if available (set by quiz), else fallback to rawScore
+  let quizScore = parseInt(localStorage.getItem('cs_score'));
+  if (isNaN(quizScore)) quizScore = rawScore; // fallback for standalone tool
   let profile;
-  if (rawScore <= 14) profile = profiles.cautious;
-  else if (rawScore <= 20) profile = profiles.hesitant;
-  else if (rawScore <= 26) profile = profiles.reactive;
+  if (quizScore <= 10) profile = profiles.cautious;
+  else if (quizScore <= 15) profile = profiles.hesitant;
+  else if (quizScore <= 20) profile = profiles.reactive;
   else profile = profiles.structured;
 
   // Score color
@@ -725,6 +729,11 @@ function renderResults() {
   document.getElementById('profileName').textContent = profile.emoji + ' ' + profile.name;
   document.getElementById('profileName').style.color = profile.color;
   document.getElementById('profileDesc').textContent = profile.desc;
+
+  // Personalised paragraph based on qualifier answers
+  var personalPara = buildPersonalisedParagraph();
+  var personalEl = document.getElementById('personalisedIntro');
+  if (personalEl) personalEl.textContent = personalPara;
 
   // Lowest bucket
   let lowestIdx = 0;
@@ -777,6 +786,32 @@ function renderResults() {
 
   // Scroll to top
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function buildPersonalisedParagraph() {
+  var goal = localStorage.getItem('cs_q2_goal');
+  var exp = localStorage.getItem('cs_q1_exp');
+
+  if (!goal && !exp) {
+    return 'Based on your assessment, your blueprint focuses on the areas where structured investors consistently see the biggest gaps: thesis clarity, information filtering, risk boundaries, and exit strategy.';
+  }
+
+  var goalText = '';
+  if (goal === 'A') goalText = 'Your focus on protecting wealth from inflation puts you in line with a growing number of high-net-worth investors who see digital assets \u2014 Bitcoin in particular \u2014 as a long-term store of value rather than a speculative bet.';
+  else if (goal === 'B') goalText = 'Building generational wealth is the goal that drives most of our Platinum members. The V9 framework was built specifically for investors with a long time horizon who want to approach this with structure, not speculation.';
+  else if (goal === 'C') goalText = 'Growing wealth faster than traditional assets allow is a legitimate goal \u2014 and one that requires more structure, not less. The asymmetric upside in digital assets is real, but so is the downside for investors without a framework.';
+  else if (goal === 'D') goalText = 'Buying back time requires a strategy that doesn\u2019t demand constant attention. The V9 framework was designed for investors who want to build a portfolio they can manage in under 2 hours a month \u2014 without missing the moves that matter.';
+
+  var expText = '';
+  if (exp === 'A') expText = 'Starting from research is actually the best position \u2014 you haven\u2019t made the reactive mistakes most first-time allocators make.';
+  else if (exp === 'B') expText = 'Having made some moves without a clear strategy is more common than you\u2019d think \u2014 but it\u2019s the stage where a framework matters most. Reactive decisions in both directions are the most expensive mistakes we see.';
+  else if (exp === 'C') expText = 'Having active positions without a system means every market move becomes a decision point. The framework work is about removing that cognitive load.';
+  else if (exp === 'D') expText = 'Having experience in the market and still feeling like you need a better system is exactly why the V9 framework exists. Most experienced investors find their gaps are in exit strategy and risk boundaries \u2014 not in conviction.';
+
+  var parts = [];
+  if (goalText) parts.push(goalText);
+  if (expText) parts.push(expText);
+  return parts.join(' ') || 'Based on your assessment, your blueprint focuses on the areas where structured investors consistently see the biggest gaps: thesis clarity, information filtering, risk boundaries, and exit strategy.';
 }
 
 function animateNumber(id, target, duration) {
