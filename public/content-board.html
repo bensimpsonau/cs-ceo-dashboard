@@ -128,47 +128,30 @@
     background: #1a2a1a; padding: 3px 8px; border-radius: 4px; display: inline-block;
   }
 
-  /* ── Add Content Form ── */
-  .add-form-overlay {
-    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-    z-index: 200; justify-content: center; align-items: flex-start; padding: 80px 20px;
-    backdrop-filter: blur(2px);
+  /* ── Content Studio Overlay ── */
+  .studio-overlay {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.75); z-index: 1000;
+    backdrop-filter: blur(4px); animation: studioFadeIn 0.25s ease;
   }
-  .add-form-overlay.open { display: flex; }
-  .add-form {
-    background: #1a1a2e; border: 1px solid #2a2a45; border-radius: 14px;
-    width: 100%; max-width: 540px; padding: 28px; animation: modalIn 0.2s ease;
+  .studio-overlay.open { display: block; }
+  @keyframes studioFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .studio-overlay-close {
+    position: fixed; top: 12px; right: 16px; z-index: 1010;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(26,26,46,0.9); border: 1px solid #2a2a45;
+    color: #e8e8ea; font-size: 22px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; line-height: 1;
   }
-  @keyframes modalIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-  .add-form h2 {
-    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
-    font-size: 18px; color: #fff; margin-bottom: 20px;
+  .studio-overlay-close:hover { background: #FC5C03; color: #fff; border-color: #FC5C03; }
+  .studio-overlay iframe {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    border: none; z-index: 1005;
   }
-  .form-field { margin-bottom: 14px; }
-  .form-field label {
-    display: block; font-size: 11px; color: #807F86; margin-bottom: 4px;
-    font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
-  }
-  .form-field input, .form-field textarea, .form-field select {
-    width: 100%; padding: 10px 12px; background: #12122a; border: 1px solid #2a2a45;
-    border-radius: 8px; font-size: 13px; color: #e8e8ea;
-    font-family: 'Barlow', sans-serif; outline: none;
-  }
-  .form-field input:focus, .form-field textarea:focus, .form-field select:focus { border-color: #FC5C03; }
-  .form-field textarea { min-height: 80px; resize: vertical; }
-  .form-row { display: flex; gap: 12px; }
-  .form-row .form-field { flex: 1; }
-  .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
-  .btn-cancel {
-    padding: 10px 20px; background: #2a2a45; color: #b0b0c0; border: none;
-    border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px;
-  }
-  .btn-cancel:hover { background: #3a3a55; }
-  .btn-submit {
-    padding: 10px 20px; background: #FC5C03; color: #fff; border: none;
-    border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px;
-  }
-  .btn-submit:hover { background: #e04f00; }
+
+  /* ── Legacy Add Content Form (hidden, replaced by studio overlay) ── */
+  .add-form-overlay { display: none !important; }
 
   /* ── Toast ── */
   .toast {
@@ -270,53 +253,10 @@
   </div>
 </div>
 
-<!-- Add Content Form -->
-<div class="add-form-overlay" id="addFormOverlay" onclick="if(event.target===this)closeAddForm()">
-  <div class="add-form">
-    <h2>+ Add Content</h2>
-    <div class="form-field">
-      <label>Title</label>
-      <input type="text" id="formTitle" placeholder="Content title...">
-    </div>
-    <div class="form-row">
-      <div class="form-field">
-        <label>Platform</label>
-        <select id="formPlatform">
-          <option value="LinkedIn">LinkedIn</option>
-          <option value="Instagram">Instagram</option>
-          <option value="Podcast">Podcast</option>
-        </select>
-      </div>
-      <div class="form-field">
-        <label>Content Type</label>
-        <select id="formType">
-          <option value="post">Post</option>
-          <option value="reel">Reel</option>
-          <option value="story">Story</option>
-          <option value="carousel">Carousel</option>
-          <option value="episode">Episode</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-field">
-        <label>Scheduled Date</label>
-        <input type="date" id="formDate">
-      </div>
-      <div class="form-field">
-        <label>CTA Keyword</label>
-        <input type="text" id="formCta" placeholder="e.g. STRATEGY">
-      </div>
-    </div>
-    <div class="form-field">
-      <label>Copy / Caption</label>
-      <textarea id="formCopy" placeholder="Draft copy or caption..."></textarea>
-    </div>
-    <div class="form-actions">
-      <button class="btn-cancel" onclick="closeAddForm()">Cancel</button>
-      <button class="btn-submit" onclick="submitNewContent()">Add to Board</button>
-    </div>
-  </div>
+<!-- Content Studio Overlay -->
+<div class="studio-overlay" id="studioOverlay">
+  <button class="studio-overlay-close" id="studioOverlayClose" onclick="closeStudioOverlay()" title="Close Content Studio">✕</button>
+  <iframe id="studioIframe" src="about:blank"></iframe>
 </div>
 
 <!-- Toast -->
@@ -444,6 +384,7 @@ function createCardEl(card) {
     </select>
     ${card.cta ? `<div class="card-cta">CTA: ${esc(card.cta)}</div>` : ''}
     <div class="card-actions">
+      <button onclick="event.stopPropagation(); improveInStudio('${card.id}')">✨ Improve</button>
       <button onclick="event.stopPropagation(); generateVisuals('${card.id}')">🎨 Generate Visuals</button>
       <button onclick="event.stopPropagation(); copyCaption('${card.id}', this)">📋 Copy Caption</button>
     </div>
@@ -526,54 +467,49 @@ function copyCaption(cardId, btn) {
 // ══════════════════════════════════════
 // ADD CONTENT FORM
 // ══════════════════════════════════════
+// ══════════════════════════════════════
+// CONTENT STUDIO OVERLAY
+// ══════════════════════════════════════
+function openStudioOverlay(params) {
+  const overlay = document.getElementById('studioOverlay');
+  const iframe = document.getElementById('studioIframe');
+  let url = 'content-studio.html';
+  if (params) {
+    const qs = new URLSearchParams(params).toString();
+    if (qs) url += '?' + qs;
+  }
+  iframe.src = url;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeStudioOverlay() {
+  const overlay = document.getElementById('studioOverlay');
+  const iframe = document.getElementById('studioIframe');
+  overlay.classList.remove('open');
+  iframe.src = 'about:blank';
+  document.body.style.overflow = '';
+}
+
 function openAddForm() {
-  document.getElementById('addFormOverlay').classList.add('open');
+  openStudioOverlay();
 }
 
 function closeAddForm() {
-  document.getElementById('addFormOverlay').classList.remove('open');
+  closeStudioOverlay();
 }
 
-async function submitNewContent() {
-  const title = document.getElementById('formTitle').value.trim();
-  const platform = document.getElementById('formPlatform').value;
-  const type = document.getElementById('formType').value;
-  const scheduledDate = document.getElementById('formDate').value;
-  const cta = document.getElementById('formCta').value.trim();
-  const copy = document.getElementById('formCopy').value.trim();
-
-  if (!title) { showToast('Please enter a title'); return; }
-
-  const newCard = {
-    id: 'c' + Date.now(),
-    title, platform, type, copy, cta,
-    status: 'draft',
-    scheduledDate: scheduledDate || '',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  };
-
-  cards.push(newCard);
-  saveLocal();
-  render();
-  closeAddForm();
-  showToast('Content added to board');
-
-  // Clear form
-  document.getElementById('formTitle').value = '';
-  document.getElementById('formDate').value = '';
-  document.getElementById('formCta').value = '';
-  document.getElementById('formCopy').value = '';
-
-  // API call — fail silently
-  try {
-    await fetch('/api/content/add', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newCard)
-    });
-  } catch(e) {}
+function improveInStudio(cardId) {
+  const card = cards.find(c => c.id === cardId);
+  if (!card) return;
+  const params = {};
+  if (card.copy) params.copy = card.copy;
+  if (card.platform) params.platform = card.platform;
+  if (card.title) params.title = card.title;
+  openStudioOverlay(params);
 }
+
+// submitNewContent removed — Content Studio overlay is now used for adding content
 
 // ══════════════════════════════════════
 // UTILS
@@ -608,7 +544,9 @@ function closeSidebar() {
 }
 
 // Escape & overlay close
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAddForm(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeStudioOverlay();
+});
 
 // ══════════════════════════════════════
 // INIT

@@ -1835,10 +1835,45 @@ function ciAddToBoard(format, btn) {
 }
 
 // ══════════════════════════════════════
+// URL PARAM PRE-FILL (from Content Board)
+// ══════════════════════════════════════
+function prefillFromParams() {
+  const params = new URLSearchParams(window.location.search);
+  const copy = params.get('copy');
+  const title = params.get('title');
+  const platform = params.get('platform');
+
+  if (copy || title) {
+    // Switch to text tab and pre-fill
+    ciSwitchTab('text');
+    const textInput = document.getElementById('ci-text-input');
+    if (textInput) {
+      textInput.value = copy || title || '';
+    }
+    // Set a helpful prompt
+    const promptField = document.getElementById('ci-prompt');
+    if (promptField && title) {
+      promptField.value = 'Improve and rewrite this content for: ' + title;
+    }
+  }
+
+  // If opened in iframe, hide sidebar for cleaner overlay look
+  if (window.self !== window.top) {
+    const sidebar = document.getElementById('sidebar');
+    const topbar = document.querySelector('.topbar');
+    const mainContent = document.querySelector('.main-content');
+    if (sidebar) sidebar.style.display = 'none';
+    if (topbar) topbar.style.left = '0';
+    if (mainContent) mainContent.style.marginLeft = '0';
+  }
+}
+
+// ══════════════════════════════════════
 // INIT
 // ══════════════════════════════════════
 renderIdeasBank();
 renderMatrix();
+prefillFromParams();
 </script>
 </body>
 </html>
