@@ -440,6 +440,30 @@ app.post('/api/transcribe', transcribeUpload.single('file'), async (req, res) =>
   }
 });
 
+// ──────────────────────────────────────────────────────
+// POST /api/blueprint-email
+// Captures lead from allocation blueprint quiz
+// ──────────────────────────────────────────────────────
+app.post('/api/blueprint-email', (req, res) => {
+  const { name, email, answers, score } = req.body;
+  if (!name || !email) {
+    return res.status(400).json({ error: 'Name and email are required' });
+  }
+  // TODO: Wire up email sending (see EMAIL SEQUENCE below)
+  // For now, log the lead and return success
+  console.log(`[Blueprint Lead] ${name} <${email}> | Score: ${score} | Answers:`, JSON.stringify(answers));
+  res.json({ ok: true });
+});
+
+// EMAIL SEQUENCE:
+// Email 1 (immediate): Subject: "Your Digital Asset Blueprint — [First Name]"
+//   Body: personalized score + blueprint sections as HTML
+//   Include: score number, protection gap label, exchange list, storage approach, security checklist, tax tools, CTA to book strategy call
+// Email 2 (day 2 follow-up): Subject: "How sophisticated investors are allocating to digital assets"
+//   Body: 3-paragraph educational email about institutional allocation trends (BlackRock 1-2%, Bitwise 5%, etc.)
+//   CTA: Watch the free VSL → https://collectiveshift.io/vsl (placeholder)
+// Implementation: Use SendGrid, Mailgun, or Resend (add SENDGRID_API_KEY or RESEND_API_KEY to Render env vars)
+
 app.listen(PORT, () => {
   console.log(`CS CEO Dashboard running on http://localhost:${PORT}`);
 });

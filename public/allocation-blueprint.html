@@ -22,6 +22,7 @@
   --text-muted: #8888a0;
   --text-dim: rgba(255,255,255,0.30);
   --radius: 10px;
+  --score-color: #FC5C03;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
@@ -71,10 +72,51 @@ body{font-family:'Barlow',sans-serif;font-size:14px;line-height:1.65;color:var(-
 @keyframes spin{to{transform:rotate(360deg);}}
 .spinner-text{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--text-muted);}
 
+/* EMAIL CAPTURE */
+.email-capture{display:none;max-width:420px;margin:0 auto;padding:60px 0;text-align:center;animation:fadeUp 0.5s ease;}
+.email-capture.show{display:block;}
+.email-capture h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;color:#fff;margin-bottom:8px;}
+.email-capture .ec-sub{font-size:14px;color:var(--text-muted);margin-bottom:28px;line-height:1.6;}
+.email-capture .ec-form{display:flex;flex-direction:column;gap:12px;}
+.email-capture input{background:var(--card);border:1px solid var(--border-light);border-radius:8px;padding:14px 16px;font-size:15px;color:#fff;font-family:'Barlow',sans-serif;outline:none;transition:border-color 0.15s;}
+.email-capture input::placeholder{color:var(--text-dim);}
+.email-capture input:focus{border-color:var(--orange);}
+.email-capture input.input-error{border-color:#e74c3c;}
+.ec-submit{width:100%;padding:16px;background:linear-gradient(135deg,#FC5C03,#e04f00);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 20px rgba(252,92,3,0.3);}
+.ec-submit:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(252,92,3,0.4);}
+.ec-submit:disabled{opacity:0.7;cursor:not-allowed;transform:none;}
+.ec-fine{font-size:11px;color:var(--text-dim);margin-top:12px;line-height:1.5;}
+.ec-error{font-size:12px;color:#e74c3c;margin-top:8px;display:none;}
+.ec-error.show{display:block;}
+.ec-skip{margin-top:16px;font-size:12px;color:var(--text-muted);cursor:pointer;background:none;border:none;font-family:'Barlow',sans-serif;transition:color 0.15s;text-decoration:underline;text-underline-offset:2px;}
+.ec-skip:hover{color:#fff;}
+
+/* SCORECARD */
+.scorecard{display:none;margin-bottom:36px;animation:fadeUp 0.5s ease;}
+.scorecard.show{display:block;}
+.scorecard-inner{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:36px 28px;text-align:center;position:relative;overflow:hidden;}
+.scorecard-inner::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--score-color),transparent);}
+.scorecard-label{font-family:'Source Code Pro',monospace;font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:20px;}
+.score-ring{position:relative;width:140px;height:140px;margin:0 auto 20px;}
+.score-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+.score-ring .ring-bg{fill:none;stroke:rgba(255,255,255,0.06);stroke-width:8;}
+.score-ring .ring-fill{fill:none;stroke:var(--score-color);stroke-width:8;stroke-linecap:round;stroke-dasharray:408;stroke-dashoffset:408;transition:stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1);}
+.score-number{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Plus Jakarta Sans',sans-serif;font-size:64px;font-weight:800;color:var(--score-color);line-height:1;}
+.score-number span{font-size:22px;font-weight:600;color:var(--text-muted);vertical-align:super;margin-left:2px;}
+.score-bar-wrap{max-width:320px;margin:0 auto 20px;}
+.score-bar-bg{height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;}
+.score-bar-fill{height:100%;border-radius:4px;transition:width 1s cubic-bezier(0.4,0,0.2,1);background:var(--score-color);}
+.score-gap{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;margin-bottom:8px;}
+.score-gap .gap-label{color:var(--score-color);text-transform:uppercase;letter-spacing:0.5px;}
+.score-interp{font-size:13px;color:var(--text-muted);line-height:1.7;max-width:480px;margin:0 auto;}
+
 /* BLUEPRINT */
 .blueprint{display:none;animation:fadeUp 0.5s ease;}
 .blueprint.show{display:block;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+.bp-pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:20px;}
+.bp-pill{font-family:'Source Code Pro',monospace;font-size:11px;color:var(--text-muted);background:rgba(255,255,255,0.04);padding:4px 12px;border-radius:20px;border:1px solid var(--border);}
 
 .bp-profile{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:28px;text-align:center;}
 .bp-profile-tags{font-family:'Source Code Pro',monospace;font-size:11px;color:var(--text-muted);margin-bottom:8px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
@@ -92,6 +134,7 @@ body{font-family:'Barlow',sans-serif;font-size:14px;line-height:1.65;color:var(-
 .exchange-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;}
 .exchange-card h4{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:4px;}
 .exchange-card p{font-size:12px;color:var(--text-muted);line-height:1.5;}
+.exchange-card .ex-why{font-size:11px;color:var(--orange);margin-top:6px;font-style:italic;line-height:1.4;opacity:0.85;}
 
 /* CALLOUT */
 .callout{border-left:3px solid var(--orange);background:rgba(252,92,3,0.04);padding:12px 16px;border-radius:0 var(--radius) var(--radius) 0;font-size:12px;color:var(--text-muted);line-height:1.6;margin-top:8px;}
@@ -100,6 +143,14 @@ body{font-family:'Barlow',sans-serif;font-size:14px;line-height:1.65;color:var(-
 .storage-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:12px;}
 .storage-card h4{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:8px;}
 .storage-card p{font-size:13px;color:var(--text);line-height:1.7;}
+.storage-risk{margin-top:10px;padding:10px 14px;background:rgba(252,92,3,0.05);border:1px solid rgba(252,92,3,0.12);border-radius:8px;font-size:12px;color:var(--text-muted);line-height:1.6;}
+.storage-risk strong{color:var(--orange);font-weight:600;}
+
+/* WALLET OPTIONS */
+.wallet-section{margin-top:16px;}
+.wallet-section h5{font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#fff;margin-bottom:6px;}
+.wallet-list{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.wallet-list li{font-size:12px;color:var(--text-muted);background:rgba(255,255,255,0.04);border:1px solid var(--border);padding:4px 10px;border-radius:5px;}
 
 /* CHECKLIST */
 .checklist{list-style:none;padding:0;}
@@ -134,21 +185,32 @@ body{font-family:'Barlow',sans-serif;font-size:14px;line-height:1.65;color:var(-
   .next-grid{grid-template-columns:1fr;}
   .exchange-grid{grid-template-columns:1fr;}
   .quiz-option{font-size:14px;padding:12px 14px;}
+  .score-number{font-size:52px;}
+  .score-ring{width:120px;height:120px;}
+  .scorecard-inner{padding:28px 20px;}
 }
 
 /* PRINT STYLESHEET */
 @media print{
   body{background:#fff!important;color:#111!important;font-size:12px;}
-  .topbar,.quiz-container,.progress-wrap,.spinner-wrap,.action-row,.retake-btn,.download-btn,.coming-soon-badge{display:none!important;}
-  .blueprint{display:block!important;}
+  .topbar,.quiz-container,.progress-wrap,.spinner-wrap,.email-capture,.action-row,.retake-btn,.download-btn,.coming-soon-badge,.ec-skip{display:none!important;}
+  .blueprint,.scorecard{display:block!important;}
   .document{max-width:100%;padding:0;}
-  .bp-profile,.exchange-card,.storage-card,.next-card,.callout{background:#f9f9f9!important;border-color:#ddd!important;color:#111!important;}
+  .scorecard-inner{background:#f9f9f9!important;border-color:#ddd!important;color:#111!important;}
+  .scorecard-label{color:#666!important;}
+  .score-number{color:var(--score-color)!important;}
+  .score-gap .gap-label{color:var(--score-color)!important;}
+  .score-interp{color:#333!important;}
+  .score-bar-bg{background:#eee!important;}
+  .bp-profile,.exchange-card,.storage-card,.next-card,.callout,.storage-risk{background:#f9f9f9!important;border-color:#ddd!important;color:#111!important;}
   .bp-profile h1,.bp-section-title,.exchange-card h4,.storage-card h4,.next-card h4{color:#111!important;}
-  .bp-profile p,.bp-section p,.bp-section li,.exchange-card p,.storage-card p,.next-card p,.callout{color:#333!important;}
-  .bp-profile-tags span{background:#eee!important;border-color:#ddd!important;color:#333!important;}
+  .bp-profile p,.bp-section p,.bp-section li,.exchange-card p,.storage-card p,.next-card p,.callout,.storage-risk{color:#333!important;}
+  .bp-profile-tags span,.bp-pill{background:#eee!important;border-color:#ddd!important;color:#333!important;}
   .bp-section-label{color:var(--orange)!important;}
   .checklist li .check-box{border-color:#999!important;}
   .checklist li.checked .check-box{background:#08C394!important;}
+  .wallet-list li{background:#eee!important;border-color:#ddd!important;color:#333!important;}
+  .exchange-card .ex-why{color:var(--orange)!important;}
   a{color:#111!important;}
 }
 </style>
@@ -172,7 +234,7 @@ body{font-family:'Barlow',sans-serif;font-size:14px;line-height:1.65;color:var(-
   <div class="doc-header">
     <div class="doc-tag">Interactive Tool</div>
     <h1 class="doc-title">Allocation Blueprint</h1>
-    <p class="doc-sub">Answer 5 quick questions to explore an educational framework for digital asset allocation — covering exchanges, storage, security, and tax tools based on your answers.</p>
+    <p class="doc-sub">Answer 5 quick questions and get a personalized framework for your digital asset allocation — exchanges, storage, security, and tax tools tailored to your situation.</p>
   </div>
 
   <!-- PROGRESS BAR -->
@@ -249,14 +311,42 @@ body{font-family:'Barlow',sans-serif;font-size:14px;line-height:1.65;color:var(-
     <div class="spinner-text">Generating your blueprint…</div>
   </div>
 
+  <!-- EMAIL CAPTURE -->
+  <div class="email-capture" id="emailCapture">
+    <h2>Your blueprint is ready.</h2>
+    <p class="ec-sub">Enter your details and we'll email you a copy.</p>
+    <form class="ec-form" id="emailForm" onsubmit="return handleEmailSubmit(event)">
+      <input type="text" id="ecName" placeholder="First name" required autocomplete="given-name">
+      <input type="email" id="ecEmail" placeholder="Email address" required autocomplete="email">
+      <button type="submit" class="ec-submit" id="ecSubmitBtn">Send My Blueprint →</button>
+    </form>
+    <div class="ec-error" id="ecError">Something went wrong — your blueprint is shown below.</div>
+    <p class="ec-fine">We'll email your score and personalized blueprint. No spam — just your results and occasional insights from Collective Shift.</p>
+    <button class="ec-skip" onclick="skipEmail()">Skip — just show my results</button>
+  </div>
+
+  <!-- SCORECARD -->
+  <div class="scorecard" id="scorecard">
+    <div class="scorecard-inner">
+      <div class="scorecard-label">Your Portfolio Protection Score</div>
+      <div class="score-ring">
+        <svg viewBox="0 0 140 140">
+          <circle class="ring-bg" cx="70" cy="70" r="65"/>
+          <circle class="ring-fill" id="scoreFill" cx="70" cy="70" r="65"/>
+        </svg>
+        <div class="score-number" id="scoreNumber">0<span>/100</span></div>
+      </div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-bg"><div class="score-bar-fill" id="scoreBarFill" style="width:0%"></div></div>
+      </div>
+      <div class="score-gap">Protection Gap: <span class="gap-label" id="gapLabel">—</span></div>
+      <p class="score-interp" id="scoreInterp"></p>
+    </div>
+  </div>
+
   <!-- BLUEPRINT OUTPUT -->
   <div class="blueprint" id="blueprint">
     <div class="bp-profile" id="bpProfile"></div>
-
-    <!-- Compliance Disclaimer -->
-    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:14px 18px;margin-bottom:28px;font-size:11px;color:var(--text-muted);line-height:1.7;">
-      ⚠️ <strong style="color:var(--text);">Educational content only.</strong> This blueprint is for informational purposes and does not constitute financial advice. Digital assets involve risk. Always conduct your own research and consider seeking independent financial advice before making any investment decisions. Regulations vary by jurisdiction. Collective Shift (ABN 78 650 977 325) is an education company and does not hold an Australian Financial Services Licence.
-    </div>
 
     <!-- Where to Buy -->
     <div class="bp-section">
@@ -264,7 +354,6 @@ body{font-family:'Barlow',sans-serif;font-size:14px;line-height:1.65;color:var(-
       <div class="bp-section-title">Where to Buy</div>
       <div class="exchange-grid" id="exchangeGrid"></div>
       <div class="callout" id="exchangeNote"></div>
-      <div class="callout" style="margin-top:8px;border-left-color:var(--text-muted);">Collective Shift is not affiliated with, paid by, or endorsing any of the platforms listed. These are platforms commonly used by members — research each platform independently before using.</div>
     </div>
 
     <!-- How to Store It -->
@@ -273,13 +362,12 @@ body{font-family:'Barlow',sans-serif;font-size:14px;line-height:1.65;color:var(-
       <div class="bp-section-title">How to Store It</div>
       <div class="storage-card" id="storageCard"></div>
       <div class="callout">The Shift OS teaches: exchanges are for transacting, not storing. The principle: not your keys, not your coins.</div>
-      <div class="callout" style="margin-top:8px;border-left-color:var(--text-muted);">Wallet options listed are for informational purposes only. Research each option independently before use.</div>
     </div>
 
     <!-- Security Checklist -->
     <div class="bp-section">
       <div class="bp-section-label">Step 3</div>
-      <div class="bp-section-title">Security Setup — Key Considerations</div>
+      <div class="bp-section-title">Security Setup — Non-Negotiables</div>
       <ul class="checklist" id="securityChecklist">
         <li onclick="this.classList.toggle('checked')"><span class="check-box"></span><span class="check-text">Set up two-factor authentication (2FA) on all exchange accounts</span></li>
         <li onclick="this.classList.toggle('checked')"><span class="check-box"></span><span class="check-text">Use a unique, strong password for each exchange (password manager recommended)</span></li>
@@ -300,7 +388,7 @@ body{font-family:'Barlow',sans-serif;font-size:14px;line-height:1.65;color:var(-
     <!-- Next Steps -->
     <div class="bp-section">
       <div class="bp-section-label">Step 5</div>
-      <div class="bp-section-title">What to Do Next</div>
+      <div class="bp-section-title">Your Recommended Next Step</div>
       <div class="next-grid">
         <div class="next-card disabled">
           <span class="coming-soon-badge">Coming Soon</span>
@@ -309,16 +397,16 @@ body{font-family:'Barlow',sans-serif;font-size:14px;line-height:1.65;color:var(-
           <p style="margin-top:8px;font-size:11px;color:var(--text-dim);">Register to be notified when it's live.</p>
         </div>
         <div class="next-card">
-          <h4>📞 Book an Education Call</h4>
-          <p>Talk to a Collective Shift analyst. They can walk you through the concepts in this blueprint and answer your questions.</p>
-          <a class="cta-btn" href="https://collectiveshift.io/strategy-call" target="_blank">Book Now →</a>
+          <h4>📞 Book a Strategy Session</h4>
+          <p>A Collective Shift analyst will review your score, walk through your blueprint, and help you apply it to your specific situation. No obligation — this is an educational session.</p>
+          <a class="cta-btn" href="https://collectiveshift.io/strategy-call" target="_blank">Book Your Free Strategy Session →</a>
         </div>
       </div>
     </div>
 
     <!-- Actions -->
     <div class="action-row">
-      <button class="download-btn" onclick="window.print()">Download Your Blueprint</button>
+      <button class="download-btn" onclick="window.print()">Download Your Score + Blueprint</button>
       <button class="retake-btn" onclick="retakeQuiz()">Retake Quiz</button>
     </div>
 
@@ -339,41 +427,127 @@ const levelLabels = { beginner:'Beginner', intermediate:'Intermediate', experien
 const goalLabels = { protect:'Wealth protection', grow:'Long-term growth', yield:'Yield / income', all:'All of the above' };
 const allocLabels = { under10k:'Under $10K', '10k50k':'$10K–$50K', '50k250k':'$50K–$250K', '250kplus':'$250K+' };
 
+/* ── Score Mapping ── */
+const scoreMap = {
+  // Q4 - Goal
+  goal: { protect:25, grow:20, yield:15, all:22 },
+  // Q2 - Experience (bought before)
+  experience: { none:25, some:20, meaningful:10 },
+  // Q3 - Experience level
+  level: { beginner:25, intermediate:20, experienced:12 },
+  // Q5 - Allocation bonus
+  allocation: { under10k:0, '10k50k':2, '50k250k':4, '250kplus':5 }
+};
+
+function calculateScore() {
+  let total = 0;
+  total += scoreMap.goal[answers.goal] || 0;
+  total += scoreMap.experience[answers.experience] || 0;
+  total += scoreMap.level[answers.level] || 0;
+  total += scoreMap.allocation[answers.allocation] || 0;
+  return Math.min(total, 100);
+}
+
+function getScoreColor(score) {
+  if (score < 45) return '#e74c3c';
+  if (score <= 70) return '#f39c12';
+  return '#08C394';
+}
+
+function getScoreBand(score) {
+  if (score >= 85) return {
+    label: 'Critical',
+    message: 'Your current portfolio has critical exposure gaps. Your allocation profile is exactly who the Digital Asset Wealth Protection Framework was built for.'
+  };
+  if (score >= 65) return {
+    label: 'Significant',
+    message: 'Your portfolio has significant protection gaps. The Framework will show you exactly where you\'re exposed and how to address it.'
+  };
+  if (score >= 45) return {
+    label: 'Moderate',
+    message: 'Your portfolio has moderate gaps. The Framework will give you clarity on where and how to begin building protection.'
+  };
+  return {
+    label: 'Low',
+    message: 'You already have some exposure. The Framework will help you structure and strengthen what you\'ve built.'
+  };
+}
+
+/* ── Exchange Data (expanded) ── */
 const exchanges = {
   au: [
-    { name:'CoinSpot', desc:'Beginner-friendly, AUD pairs, simple onboarding.' },
-    { name:'Independent Reserve', desc:'Professional grade, AUD/BTC focus, trusted by institutions.' },
-    { name:'Kraken', desc:'Global platform, suited for larger allocations.' }
+    { name:'CoinSpot', desc:'Beginner-friendly, AUD pairs, simple onboarding.', why:'The most popular Australian exchange for first-time buyers — AUD deposits, regulated, simple interface.' },
+    { name:'Independent Reserve', desc:'Professional grade, AUD/BTC focus, trusted by institutions.', why:'Professional-grade exchange for larger allocations — institutional-quality security, AUD and SMSF support.' },
+    { name:'BTC Markets', desc:'ASX-listed parent company, strong compliance record.', why:'Suited for larger amounts — the ASX-listed backing provides an extra layer of regulatory credibility.' },
+    { name:'Swyftx', desc:'Wide asset range beyond Bitcoin, user-friendly interface.', why:'Popular for broader digital asset exposure beyond Bitcoin — good for diversified allocations.' },
+    { name:'Kraken', desc:'Global platform, suited for larger allocations.', why:'Professional-grade option for larger positions — one of the longest-running and most secure exchanges globally.' }
   ],
   nz: [
-    { name:'Easy Crypto', desc:'NZ-focused, simple interface, local support.' },
-    { name:'Binance', desc:'Wide range of assets, suited for larger amounts.' },
-    { name:'Kraken', desc:'Established global platform, strong security track record.' }
+    { name:'Easy Crypto', desc:'NZ-focused, simple interface, local support.', why:'NZ-focused, simple buy/sell process, NZD deposits — the most used starting point for New Zealand buyers.' },
+    { name:'Dasset', desc:'NZ-based exchange with NZD support.', why:'Local NZ exchange with direct NZD trading pairs — straightforward for Kiwi investors.' },
+    { name:'Binance', desc:'Wide range of assets, suited for larger amounts.', why:'Largest global exchange by volume — broad asset range for those wanting exposure beyond Bitcoin.' },
+    { name:'Kraken', desc:'Established global platform, strong security track record.', why:'Professional-grade option for larger positions — one of the longest-running and most secure exchanges globally.' }
   ],
   us: [
-    { name:'Coinbase', desc:'Beginner-friendly, US-regulated, easy bank linking.' },
-    { name:'Kraken', desc:'Professional grade, advanced features, strong security.' },
-    { name:'River', desc:'Bitcoin-only, built for serious long-term holders.' }
+    { name:'Coinbase', desc:'Beginner-friendly, US-regulated, easy bank linking.', why:'The largest regulated US exchange — strong compliance record, straightforward for beginners.' },
+    { name:'River', desc:'Bitcoin-only, built for serious long-term holders.', why:'Bitcoin-only. No altcoins, no distractions — preferred by serious long-term Bitcoin holders.' },
+    { name:'Swan Bitcoin', desc:'Bitcoin-only, automatic DCA plans, recurring buys.', why:'Bitcoin-only with automatic dollar-cost averaging — popular for long-term accumulators who want a set-and-forget approach.' },
+    { name:'Strike', desc:'Bitcoin purchases and payments, low fees.', why:'Low-fee Bitcoin purchases and Lightning Network payments — great for those who want to use Bitcoin, not just hold it.' },
+    { name:'Kraken', desc:'Professional grade, advanced features, strong security.', why:'Professional-grade option for larger positions — one of the longest-running and most secure exchanges globally.' }
   ],
   other: [
-    { name:'Kraken', desc:'Available in 190+ countries, professional grade.' },
-    { name:'Binance', desc:'Largest global exchange by volume, wide asset range.' },
-    { name:'Coinbase', desc:'Beginner-friendly, available in 100+ countries.' }
+    { name:'Kraken', desc:'Available in 190+ countries, professional grade.', why:'Professional-grade option for larger positions — one of the longest-running and most secure exchanges globally.' },
+    { name:'Binance', desc:'Largest global exchange by volume, wide asset range.', why:'Largest exchange globally — available in most countries with the widest range of trading pairs.' },
+    { name:'Coinbase', desc:'Beginner-friendly, available in 100+ countries.', why:'The largest regulated US exchange — strong compliance record, straightforward for beginners.' },
+    { name:'Bitfinex', desc:'Long track record, suited for larger positions.', why:'For larger positions — one of the longest-running exchanges with deep liquidity for serious allocators.' }
   ]
 };
 
+/* ── Storage Data (expanded with risk warnings + wallet options) ── */
 const storageText = {
-  under10k: { title:'Software Wallets — Getting Started', text:'Software wallets such as Exodus, BlueWallet, or Blockstream Green offer easy access. Many people at this level keep funds on an exchange, but learning self-custody from the start builds good habits. Research each wallet to find what suits you.' },
-  '10k50k': { title:'Hardware Wallets — Worth Exploring', text:'Hardware wallets are worth exploring at this level. Ledger, Trezor, and Coldcard are established options — each with different trade-offs. The general principle: exchanges are for transacting, not storing.' },
-  '50k250k': { title:'Hardware Wallets — Common at This Level', text:'Hardware wallets are commonly used at this level. Ledger, Trezor, and Coldcard are popular options. Some holders explore splitting storage across two devices (one active, one backup). Research what setup fits your situation.' },
-  '250kplus': { title:'Advanced Storage — Multi-Signature & Custody Options', text:'Multi-signature setups are worth exploring for larger allocation sizes. Hardware wallets (Ledger, Trezor, Coldcard) are a common starting point. Some holders also explore professional custody solutions such as Casa or Unchained. Research each option and evaluate what fits your risk profile.' }
+  under10k: {
+    title:'Software Wallet — Easy Access',
+    text:'Software wallet for easy access. Exchange storage is common at this level, but learning self-custody from the start builds good habits.',
+    risk:'Exchange hacks and insolvencies do happen — FTX lost $8B in customer funds in 2022. Starting self-custody early builds the habit before stakes are higher.',
+    wallets: {
+      software: ['Exodus', 'BlueWallet', 'Muun'],
+      hardware: ['Ledger Nano X', 'Trezor Model T']
+    }
+  },
+  '10k50k': {
+    title:'Hardware Wallet — Strongly Worth Considering',
+    text:'Hardware wallet strongly worth considering at this level. Exchanges are for transacting, not storing.',
+    risk:'At this allocation size, exchange counterparty risk becomes meaningful. A hardware wallet removes that risk entirely.',
+    wallets: {
+      software: ['BlueWallet', 'Sparrow (Bitcoin-only, advanced)'],
+      hardware: ['Ledger Nano X', 'Trezor Model T', 'Coldcard (Bitcoin-only, maximum security)']
+    }
+  },
+  '50k250k': {
+    title:'Hardware Wallet — The Standard',
+    text:'Hardware wallet is the standard at this level. Consider splitting storage across two devices (one active, one backup). Exchanges should hold the minimum needed for active trading.',
+    risk:'Exchange insolvency, regulatory freezes, or hacks at this allocation size would be a significant financial event. Hardware wallet storage is the minimum standard.',
+    wallets: {
+      software: ['Sparrow (Bitcoin-only, advanced)'],
+      hardware: ['Ledger Nano X', 'Trezor Model T', 'Coldcard (Bitcoin-only, maximum security)', 'Foundation Passport (open source)']
+    }
+  },
+  '250kplus': {
+    title:'Multi-Signature Setup — Worth Exploring',
+    text:'Multi-signature setup worth exploring for this allocation size. Standard hardware wallet as a minimum. Consider professional custody options for amounts above $500K. Never keep this amount on an exchange.',
+    risk:'Single-point-of-failure storage at this level is a serious security risk. Multi-signature means no single device or seed phrase compromise can result in total loss.',
+    wallets: {
+      hardware: ['Coldcard (Bitcoin-only, maximum security)', 'Foundation Passport (open source)', 'Ledger Nano X', 'Trezor Model T'],
+      multisig: ['Unchained Capital (collaborative multi-sig, US-focused)', 'Casa (managed multi-sig service)']
+    }
+  }
 };
 
 const taxText = {
-  au: 'Koinly, CryptoTaxCalculator, and Syla are commonly used tools by Australian digital asset investors. Tracking from your first transaction is generally easier than retrofitting records later. Consider speaking with a specialist tax advisor for your situation.',
-  nz: 'Koinly and CryptoTaxCalculator both support NZ tax frameworks. NZ Inland Revenue treats digital assets as property — exploring a session with a specialist accountant early is worth considering.',
-  us: 'Koinly, TaxBit, and CoinTracker are commonly used options. US tax treatment is complex — every trade may be a taxable event. Exploring a crypto-specialist CPA is worth considering.',
-  other: 'Koinly supports 20+ countries and is a commonly used starting point. Tracking from day one is generally easier regardless of jurisdiction. Consult a local tax professional for jurisdiction-specific guidance.'
+  au: 'Koinly or CryptoTaxCalculator are the two most used tools by Australian digital asset investors. Set up tracking from your first transaction — retrofitting records is painful.',
+  nz: 'Same tools work well for NZ — Koinly has NZ tax support. NZ Inland Revenue treats digital assets as property — book a session with a specialist accountant early.',
+  us: 'Koinly, TaxBit, and CoinTracker are the main options. US tax treatment is complex — every trade is a taxable event. Engage a crypto-specialist CPA early.',
+  other: 'Koinly supports 20+ countries. Start tracking from day one regardless of jurisdiction.'
 };
 
 /* ── Quiz Logic ── */
@@ -387,7 +561,7 @@ document.querySelectorAll('.quiz-option').forEach(btn => {
     if (qNum < totalQ) {
       showQuestion(qNum + 1);
     } else {
-      generateBlueprint();
+      showSpinnerThenEmail();
     }
   });
 });
@@ -404,12 +578,11 @@ function goBack() {
   if (currentQ > 1) showQuestion(currentQ - 1);
 }
 
-/* ── Generate Blueprint ── */
-function generateBlueprint() {
+/* ── Spinner → Email Capture ── */
+function showSpinnerThenEmail() {
   const quiz = document.getElementById('quizContainer');
   const progress = document.getElementById('progressWrap');
   const spinner = document.getElementById('spinnerWrap');
-  const bp = document.getElementById('blueprint');
 
   quiz.style.display = 'none';
   progress.style.display = 'none';
@@ -417,12 +590,106 @@ function generateBlueprint() {
 
   setTimeout(() => {
     spinner.classList.remove('show');
-    renderBlueprint();
-    bp.classList.add('show');
+    document.getElementById('emailCapture').classList.add('show');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, 1500);
 }
 
+/* ── Email Submission ── */
+function handleEmailSubmit(e) {
+  e.preventDefault();
+  const nameInput = document.getElementById('ecName');
+  const emailInput = document.getElementById('ecEmail');
+  const btn = document.getElementById('ecSubmitBtn');
+  const errorEl = document.getElementById('ecError');
+
+  // Clear previous errors
+  nameInput.classList.remove('input-error');
+  emailInput.classList.remove('input-error');
+  errorEl.classList.remove('show');
+
+  const name = nameInput.value.trim();
+  const email = emailInput.value.trim();
+
+  if (!name) { nameInput.classList.add('input-error'); nameInput.focus(); return false; }
+  if (!email) { emailInput.classList.add('input-error'); emailInput.focus(); return false; }
+
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  fetch('/api/blueprint-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, answers, score: calculateScore() })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error('Server error');
+    return res.json();
+  })
+  .then(() => {
+    revealResults();
+  })
+  .catch(() => {
+    errorEl.classList.add('show');
+    setTimeout(() => revealResults(), 1200);
+  });
+
+  return false;
+}
+
+function skipEmail() {
+  revealResults();
+}
+
+function revealResults() {
+  document.getElementById('emailCapture').classList.remove('show');
+  document.getElementById('emailCapture').style.display = 'none';
+  renderScorecard();
+  renderBlueprint();
+  document.getElementById('scorecard').classList.add('show');
+  document.getElementById('blueprint').classList.add('show');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── Render Scorecard ── */
+function renderScorecard() {
+  const score = calculateScore();
+  const color = getScoreColor(score);
+  const band = getScoreBand(score);
+
+  // Set CSS variable for score color
+  document.documentElement.style.setProperty('--score-color', color);
+
+  // Animate score number
+  const scoreNum = document.getElementById('scoreNumber');
+  scoreNum.innerHTML = `0<span>/100</span>`;
+  let current = 0;
+  const increment = Math.ceil(score / 30);
+  const counter = setInterval(() => {
+    current += increment;
+    if (current >= score) { current = score; clearInterval(counter); }
+    scoreNum.innerHTML = `${current}<span>/100</span>`;
+  }, 30);
+
+  // Animate ring
+  const circumference = 2 * Math.PI * 65; // ~408
+  const offset = circumference - (score / 100) * circumference;
+  const ring = document.getElementById('scoreFill');
+  ring.style.stroke = color;
+  setTimeout(() => { ring.style.strokeDashoffset = offset; }, 100);
+
+  // Animate bar
+  const bar = document.getElementById('scoreBarFill');
+  bar.style.background = color;
+  setTimeout(() => { bar.style.width = score + '%'; }, 100);
+
+  // Labels
+  document.getElementById('gapLabel').textContent = band.label;
+  document.getElementById('gapLabel').style.color = color;
+  document.getElementById('scoreInterp').textContent = band.message;
+}
+
+/* ── Render Blueprint ── */
 function renderBlueprint() {
   const c = answers.country;
   const a = answers.allocation;
@@ -437,7 +704,7 @@ function renderBlueprint() {
       <span>${allocLabels[a]}</span>
     </div>
     <h1>Your Bitcoin Allocation Blueprint</h1>
-    <p>Based on your answers, here's an educational framework to explore.</p>
+    <p>Based on your answers, here's your personalized starting framework.</p>
   `;
 
   // Exchanges
@@ -446,6 +713,7 @@ function renderBlueprint() {
     <div class="exchange-card">
       <h4>${ex.name}</h4>
       <p>${ex.desc}</p>
+      <p class="ex-why">${ex.why}</p>
     </div>
   `).join('');
   document.getElementById('exchangeNote').textContent =
@@ -454,7 +722,36 @@ function renderBlueprint() {
   // Storage
   const sc = document.getElementById('storageCard');
   const st = storageText[a];
-  sc.innerHTML = `<h4>${st.title}</h4><p>${st.text}</p>`;
+  let walletHtml = '';
+
+  if (st.wallets.software) {
+    walletHtml += `
+      <div class="wallet-section">
+        <h5>Software Wallets</h5>
+        <ul class="wallet-list">${st.wallets.software.map(w => `<li>${w}</li>`).join('')}</ul>
+      </div>`;
+  }
+  if (st.wallets.hardware) {
+    walletHtml += `
+      <div class="wallet-section">
+        <h5>Hardware Wallets</h5>
+        <ul class="wallet-list">${st.wallets.hardware.map(w => `<li>${w}</li>`).join('')}</ul>
+      </div>`;
+  }
+  if (st.wallets.multisig) {
+    walletHtml += `
+      <div class="wallet-section">
+        <h5>Multi-Signature Services</h5>
+        <ul class="wallet-list">${st.wallets.multisig.map(w => `<li>${w}</li>`).join('')}</ul>
+      </div>`;
+  }
+
+  sc.innerHTML = `
+    <h4>${st.title}</h4>
+    <p>${st.text}</p>
+    <div class="storage-risk"><strong>Risk if you skip this:</strong> ${st.risk}</div>
+    ${walletHtml}
+  `;
 
   // Tax
   const tc = document.getElementById('taxCard');
@@ -466,9 +763,21 @@ function retakeQuiz() {
   Object.keys(answers).forEach(k => delete answers[k]);
   document.getElementById('blueprint').classList.remove('show');
   document.getElementById('blueprint').style.display = '';
+  document.getElementById('scorecard').classList.remove('show');
+  document.getElementById('scorecard').style.display = '';
+  document.getElementById('emailCapture').classList.remove('show');
+  document.getElementById('emailCapture').style.display = '';
+  document.getElementById('ecError').classList.remove('show');
+  document.getElementById('ecSubmitBtn').disabled = false;
+  document.getElementById('ecSubmitBtn').textContent = 'Send My Blueprint →';
+  document.getElementById('ecName').value = '';
+  document.getElementById('ecEmail').value = '';
   document.getElementById('quizContainer').style.display = '';
   document.getElementById('progressWrap').style.display = '';
   document.querySelectorAll('.checklist li').forEach(li => li.classList.remove('checked'));
+  // Reset ring animation
+  document.getElementById('scoreFill').style.strokeDashoffset = 408;
+  document.getElementById('scoreBarFill').style.width = '0%';
   showQuestion(1);
 }
 </script>
