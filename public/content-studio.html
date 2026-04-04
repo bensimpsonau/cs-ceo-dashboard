@@ -395,6 +395,11 @@
             <input type="file" accept=".mp4,.mov,video/mp4,video/quicktime" onchange="ciVideoSelected(this)">
           </div>
           <div class="ci-file-info" id="ci-video-info"></div>
+          <p style="font-size:12px; color:#807F86; margin-top:8px; font-style:italic;">After uploading, paste the transcript below to generate content.</p>
+          <div style="margin-top:14px;">
+            <span class="ci-label" style="display:flex; align-items:center; gap:6px;">📝 <strong style="color:#d0d0e0;">Paste transcript or notes (required)</strong></span>
+            <textarea class="ci-text-input" id="ci-video-transcript" rows="5" placeholder="Paste the video transcript, script, or key talking points here. This is used to generate your content." style="border-color:#3a3a55;"></textarea>
+          </div>
         </div>
         <div class="ci-pane" id="ci-pane-image">
           <span class="ci-label">Upload a chart or screenshot</span>
@@ -404,10 +409,18 @@
           </div>
           <div class="ci-file-info" id="ci-image-info"></div>
           <img class="ci-file-preview" id="ci-image-preview">
+          <div style="margin-top:14px;">
+            <span class="ci-label" style="display:flex; align-items:center; gap:6px;">📝 <strong style="color:#d0d0e0;">Paste notes or context (required)</strong></span>
+            <textarea class="ci-text-input" id="ci-image-notes" rows="5" placeholder="Describe what's in the image, paste related notes, or add context. This is used to generate your content." style="border-color:#3a3a55;"></textarea>
+          </div>
         </div>
         <div class="ci-pane" id="ci-pane-url">
           <span class="ci-label">Paste a news article or Twitter/X link</span>
           <input class="ci-text-input" type="url" id="ci-url-input" placeholder="https://...">
+          <div style="margin-top:14px; display:none;" id="ci-url-fallback">
+            <p style="font-size:13px; color:#ffd76b; margin-bottom:10px;">⚠️ URL extraction coming soon. Paste the article text in the field below instead.</p>
+            <textarea class="ci-text-input" id="ci-url-text" rows="6" placeholder="Paste the article content here..."></textarea>
+          </div>
         </div>
         <div class="ci-pane" id="ci-pane-text">
           <span class="ci-label">Paste a script, transcript, or quote</span>
@@ -442,6 +455,7 @@
 
       <!-- Generate -->
       <button class="generate-btn" id="ciGenerateBtn" onclick="ciGenerate()">🚀 Generate Content</button>
+      <div id="ci-inline-error" style="display:none; margin-top:12px; padding:10px 14px; background:#2a1a1a; border:1px solid #4a2a2a; border-radius:8px; color:#ff6b6b; font-size:13px; font-weight:600;"></div>
 
       <!-- Output area -->
       <div class="ci-output-area" id="ci-output-area"></div>
@@ -1594,62 +1608,78 @@ function ciImageSelected(input) {
 
 function ciGenerate() {
   const outputArea = document.getElementById('ci-output-area');
+  const inlineError = document.getElementById('ci-inline-error');
   const formats = Array.from(document.querySelectorAll('input[name="ci-format"]:checked')).map(cb => cb.value);
   const pillar = document.querySelector('input[name="ci-pillar"]:checked')?.value || 'Market Update';
   const prompt = document.getElementById('ci-prompt').value.trim();
 
+  // Reset error state
+  inlineError.style.display = 'none';
+  inlineError.textContent = '';
+  outputArea.style.display = 'none';
+  outputArea.innerHTML = '';
+
   if (formats.length === 0) {
-    alert('Select at least one output format.');
+    inlineError.textContent = '⚠️ Select at least one output format.';
+    inlineError.style.display = 'block';
     return;
   }
-
-  // Show processing state
-  outputArea.style.display = 'block';
-  outputArea.innerHTML = '<div class="ci-processing"><span class="spinner"></span> Processing...</div>';
 
   if (ciActiveTab === 'text') {
     const text = document.getElementById('ci-text-input').value.trim();
     if (!text) {
-      outputArea.innerHTML = '<div class="ci-processing" style="color:#ff6b6b;">⚠️ Paste some text first.</div>';
+      inlineError.textContent = '⚠️ Paste some text first.';
+      inlineError.style.display = 'block';
       return;
     }
+    outputArea.style.display = 'block';
+    outputArea.innerHTML = '<div class="ci-processing"><span class="spinner"></span> Processing...</div>';
     setTimeout(() => ciRenderTextOutput(text, prompt, pillar, formats), 800);
   } else if (ciActiveTab === 'video') {
-    if (!ciVideoFile) {
-      outputArea.innerHTML = '<div class="ci-processing" style="color:#ff6b6b;">⚠️ Upload a video first, or switch to Paste Text.</div>';
+    const transcript = document.getElementById('ci-video-transcript').value.trim();
+    if (!transcript) {
+      inlineError.textContent = '📝 Paste your transcript above to generate content.';
+      inlineError.style.display = 'block';
       return;
     }
-    setTimeout(() => ciRenderPlaceholder('uploaded media', formats), 2000);
+    outputArea.style.display = 'block';
+    outputArea.innerHTML = '<div class="ci-processing"><span class="spinner"></span> Processing...</div>';
+    setTimeout(() => ciRenderTextOutput(transcript, prompt, pillar, formats), 800);
   } else if (ciActiveTab === 'image') {
-    if (!ciImageFile) {
-      outputArea.innerHTML = '<div class="ci-processing" style="color:#ff6b6b;">⚠️ Upload an image first, or switch to Paste Text.</div>';
+    const notes = document.getElementById('ci-image-notes').value.trim();
+    if (!notes) {
+      inlineError.textContent = '📝 Paste your notes or context above to generate content.';
+      inlineError.style.display = 'block';
       return;
     }
-    setTimeout(() => ciRenderPlaceholder('uploaded media', formats), 2000);
+    outputArea.style.display = 'block';
+    outputArea.innerHTML = '<div class="ci-processing"><span class="spinner"></span> Processing...</div>';
+    setTimeout(() => ciRenderTextOutput(notes, prompt, pillar, formats), 800);
   } else if (ciActiveTab === 'url') {
+    const urlFallback = document.getElementById('ci-url-fallback');
+    const urlText = document.getElementById('ci-url-text').value.trim();
     const url = document.getElementById('ci-url-input').value.trim();
-    if (!url) {
-      outputArea.innerHTML = '<div class="ci-processing" style="color:#ff6b6b;">⚠️ Paste a URL first, or switch to Paste Text.</div>';
+    if (!url && !urlText) {
+      inlineError.textContent = '⚠️ Paste a URL or article text first.';
+      inlineError.style.display = 'block';
       return;
     }
-    setTimeout(() => ciRenderPlaceholder('URL content', formats), 2000);
+    // If URL filled but no text pasted yet, show fallback textarea
+    if (url && !urlText && urlFallback.style.display === 'none') {
+      urlFallback.style.display = 'block';
+      inlineError.textContent = '⚠️ URL extraction coming soon. Paste the article text in the field below instead.';
+      inlineError.style.display = 'block';
+      return;
+    }
+    if (!urlText) {
+      inlineError.textContent = '📝 Paste the article text in the field above to generate content.';
+      inlineError.style.display = 'block';
+      return;
+    }
+    outputArea.style.display = 'block';
+    outputArea.innerHTML = '<div class="ci-processing"><span class="spinner"></span> Processing...</div>';
+    setTimeout(() => ciRenderTextOutput(urlText, prompt, pillar, formats), 800);
   }
-}
-
-function ciRenderPlaceholder(sourceType, formats) {
-  const outputArea = document.getElementById('ci-output-area');
-  const msg = sourceType === 'URL content'
-    ? '[URL content extraction coming soon — paste the article text below to generate now]'
-    : '[Content generation from ' + sourceType + ' coming soon — paste the transcript below to generate now]';
-
-  let html = '<div class="section-title" style="margin-top:8px;">📄 Generated Content</div>';
-  formats.forEach(fmt => {
-    html += `<div class="ci-output-card">
-      <div class="ci-output-label">${esc(fmt)}</div>
-      <textarea class="ci-output-text" readonly>${esc(msg)}</textarea>
-    </div>`;
-  });
-  outputArea.innerHTML = html;
 }
 
 function ciRenderTextOutput(sourceText, prompt, pillar, formats) {
