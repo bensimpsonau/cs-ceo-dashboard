@@ -802,6 +802,7 @@ body::before {
     <form class="gate-form" id="gateForm" onsubmit="submitGate(event)">
       <input class="gate-input" type="text" id="gateName" placeholder="First name" required autocomplete="given-name">
       <input class="gate-input" type="email" id="gateEmail" placeholder="Email address" required autocomplete="email">
+      <input class="gate-input" type="tel" id="gateMobile" placeholder="Mobile number" required autocomplete="tel">
       <div class="gate-error" id="gateError">Something went wrong. Please try again.</div>
       <button class="gate-submit" type="submit" id="gateBtn">Show Me My Score →</button>
     </form>
@@ -953,10 +954,11 @@ document.addEventListener('DOMContentLoaded', function() {
     e.preventDefault();
     const name = document.getElementById('gateName').value.trim();
     const email = document.getElementById('gateEmail').value.trim();
+    const mobile = document.getElementById('gateMobile').value.trim();
     const btn = document.getElementById('gateBtn');
     const errEl = document.getElementById('gateError');
 
-    if (!name || !email) return;
+    if (!name || !email || !mobile) return;
 
     btn.disabled = true;
     btn.textContent = 'Loading...';
@@ -982,7 +984,8 @@ document.addEventListener('DOMContentLoaded', function() {
     localStorage.setItem('cs_quiz_email', email);
 
     // Send to backend (fire-and-forget, then redirect)
-    const payload = { name: name, email: email, answers: answers, score: total, qualifiers: { experience: answers[1], goal: answers[2], capital: answers[3] } };
+    localStorage.setItem('cs_quiz_mobile', mobile);
+    const payload = { name: name, email: email, mobile: mobile, answers: answers, score: total, qualifiers: { experience: answers[1], goal: answers[2], capital: answers[3] } };
 
     fetch('/api/quiz-lead', {
       method: 'POST',
