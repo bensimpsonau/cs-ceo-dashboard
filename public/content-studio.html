@@ -220,6 +220,89 @@
   .matrix-status.in-progress { background: #3a3a1a; color: #ffd76b; }
   .matrix-status.done { background: #1a3a2a; color: #6bffb5; }
 
+  /* ── Content Input Hub ── */
+  .ci-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+  .ci-tab {
+    padding: 8px 16px; border-radius: 20px; border: 1px solid #2a2a45; background: transparent;
+    color: #807F86; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s;
+    font-family: 'Barlow', sans-serif;
+  }
+  .ci-tab:hover { border-color: #FC5C03; color: #FC5C03; }
+  .ci-tab.active { background: #FC5C03; border-color: #FC5C03; color: #fff; }
+  .ci-input-area { margin-bottom: 16px; }
+  .ci-input-area .ci-pane { display: none; }
+  .ci-input-area .ci-pane.active { display: block; }
+  .ci-label { font-size: 13px; color: #807F86; margin-bottom: 8px; display: block; }
+  .ci-file-input {
+    background: #12122a; border: 2px dashed #2a2a45; border-radius: 10px;
+    padding: 24px; text-align: center; cursor: pointer; transition: border-color 0.15s;
+    position: relative; color: #807F86; font-size: 13px;
+  }
+  .ci-file-input:hover { border-color: #FC5C03; }
+  .ci-file-input input[type="file"] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer;
+  }
+  .ci-file-info { margin-top: 10px; font-size: 12px; color: #6bffb5; display: none; }
+  .ci-file-preview { max-width: 120px; max-height: 120px; border-radius: 8px; margin-top: 10px; display: none; }
+  .ci-text-input {
+    width: 100%; background: #12122a; border: 1px solid #2a2a45; border-radius: 10px;
+    padding: 12px 14px; font-size: 13px; color: #e8e8ea; font-family: 'Barlow', sans-serif;
+    outline: none; resize: vertical;
+  }
+  .ci-text-input:focus { border-color: #FC5C03; }
+  .ci-prompt-field {
+    width: 100%; background: #12122a; border: 1px solid #2a2a45; border-radius: 10px;
+    padding: 12px 14px; font-size: 13px; color: #e8e8ea; font-family: 'Barlow', sans-serif;
+    outline: none; resize: vertical; min-height: 70px; margin-bottom: 16px;
+  }
+  .ci-prompt-field:focus { border-color: #FC5C03; }
+  .ci-radio-group, .ci-check-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .ci-radio-group label, .ci-check-group label {
+    display: flex; align-items: center; gap: 6px; padding: 7px 14px;
+    background: #12122a; border: 1px solid #2a2a45; border-radius: 8px;
+    font-size: 12px; color: #d0d0e0; cursor: pointer; transition: all 0.12s;
+  }
+  .ci-radio-group label:hover, .ci-check-group label:hover { border-color: #3a3a55; }
+  .ci-radio-group input:checked + span, .ci-check-group input:checked + span { color: #FC5C03; }
+  .ci-radio-group label:has(input:checked), .ci-check-group label:has(input:checked) { border-color: #FC5C03; background: rgba(252,92,3,0.08); }
+  .ci-radio-group input, .ci-check-group input { accent-color: #FC5C03; width: 14px; height: 14px; }
+  .ci-section-label {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.8px;
+    color: #807F86; font-weight: 600; margin-bottom: 8px;
+  }
+  .ci-output-area { margin-top: 20px; display: none; }
+  .ci-output-card {
+    background: #12122a; border: 1px solid #2a2a45; border-radius: 10px;
+    padding: 16px; margin-bottom: 12px;
+  }
+  .ci-output-label {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
+    font-size: 14px; color: #FC5C03; margin-bottom: 8px;
+  }
+  .ci-output-text {
+    width: 100%; background: #0f0f1a; border: 1px solid #2a2a45; border-radius: 8px;
+    padding: 12px; font-size: 13px; color: #d0d0e0; font-family: 'Source Code Pro', monospace;
+    line-height: 1.6; resize: vertical; min-height: 120px;
+  }
+  .ci-output-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .ci-copy-btn, .ci-board-btn {
+    padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all 0.12s; border: 1px solid #2a2a45;
+  }
+  .ci-copy-btn { background: #2a2a45; color: #e8e8ea; }
+  .ci-copy-btn:hover { border-color: #FC5C03; color: #FC5C03; }
+  .ci-board-btn { background: transparent; color: #6bffb5; border-color: #2a4a2a; }
+  .ci-board-btn:hover { background: rgba(107,255,181,0.08); }
+  .ci-processing {
+    text-align: center; padding: 40px; color: #FC5C03; font-size: 15px; font-weight: 600;
+  }
+  .ci-processing .spinner {
+    display: inline-block; width: 24px; height: 24px; border: 3px solid #2a2a45;
+    border-top-color: #FC5C03; border-radius: 50%; animation: ci-spin 0.8s linear infinite;
+    margin-right: 10px; vertical-align: middle;
+  }
+  @keyframes ci-spin { to { transform: rotate(360deg); } }
+
   /* ── Mobile ── */
   @media (max-width: 768px) {
     .sidebar { transform: translateX(-100%); }
@@ -289,6 +372,80 @@
 <!-- MAIN -->
 <div class="main-content">
   <div class="content-area">
+
+    <!-- SECTION 0: Content Input Hub -->
+    <div class="section-card" id="content-input">
+      <div class="section-title">📥 Create from Source</div>
+      <p style="font-size:13px; color:#807F86; margin-bottom:16px;">Paste or upload source content, choose your output formats, and generate ready-to-use content.</p>
+
+      <!-- Input type tabs -->
+      <div class="ci-tabs">
+        <button class="ci-tab active" data-ci-tab="video" onclick="ciSwitchTab('video')">🎬 Video</button>
+        <button class="ci-tab" data-ci-tab="image" onclick="ciSwitchTab('image')">🖼️ Image</button>
+        <button class="ci-tab" data-ci-tab="url" onclick="ciSwitchTab('url')">🔗 URL / Article</button>
+        <button class="ci-tab" data-ci-tab="text" onclick="ciSwitchTab('text')">📝 Paste Text</button>
+      </div>
+
+      <!-- Input panes -->
+      <div class="ci-input-area">
+        <div class="ci-pane active" id="ci-pane-video">
+          <span class="ci-label">Upload a reel or video clip</span>
+          <div class="ci-file-input" id="ci-video-drop">
+            <span>📁 Click or drag to upload (.mp4, .mov)</span>
+            <input type="file" accept=".mp4,.mov,video/mp4,video/quicktime" onchange="ciVideoSelected(this)">
+          </div>
+          <div class="ci-file-info" id="ci-video-info"></div>
+        </div>
+        <div class="ci-pane" id="ci-pane-image">
+          <span class="ci-label">Upload a chart or screenshot</span>
+          <div class="ci-file-input" id="ci-image-drop">
+            <span>📁 Click or drag to upload (.jpg, .png)</span>
+            <input type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" onchange="ciImageSelected(this)">
+          </div>
+          <div class="ci-file-info" id="ci-image-info"></div>
+          <img class="ci-file-preview" id="ci-image-preview">
+        </div>
+        <div class="ci-pane" id="ci-pane-url">
+          <span class="ci-label">Paste a news article or Twitter/X link</span>
+          <input class="ci-text-input" type="url" id="ci-url-input" placeholder="https://...">
+        </div>
+        <div class="ci-pane" id="ci-pane-text">
+          <span class="ci-label">Paste a script, transcript, or quote</span>
+          <textarea class="ci-text-input" id="ci-text-input" rows="6" placeholder="Paste your content here..."></textarea>
+        </div>
+      </div>
+
+      <!-- Prompt -->
+      <div class="ci-section-label">What do you want to create?</div>
+      <textarea class="ci-prompt-field" id="ci-prompt" placeholder="e.g. Write 3 Instagram caption options. Turn this into a Twitter thread. Summarise the key points for a LinkedIn post. Write a Stories sequence."></textarea>
+
+      <!-- Content Pillar -->
+      <div class="ci-section-label">Content Pillar</div>
+      <div class="ci-radio-group">
+        <label><input type="radio" name="ci-pillar" value="Market Update" checked><span>🔴 Market Update</span></label>
+        <label><input type="radio" name="ci-pillar" value="Education"><span>🔵 Education</span></label>
+        <label><input type="radio" name="ci-pillar" value="Member Win / Social Proof"><span>🟢 Member Win / Social Proof</span></label>
+        <label><input type="radio" name="ci-pillar" value="Strategy / Thought Leadership"><span>🟡 Strategy / Thought Leadership</span></label>
+        <label><input type="radio" name="ci-pillar" value="Behind the Scenes"><span>⚪ Behind the Scenes</span></label>
+      </div>
+
+      <!-- Output formats -->
+      <div class="ci-section-label">Output Formats</div>
+      <div class="ci-check-group">
+        <label><input type="checkbox" name="ci-format" value="Instagram Caption + Hooks" checked><span>📸 Instagram Caption + Hooks</span></label>
+        <label><input type="checkbox" name="ci-format" value="Twitter/X Thread"><span>🐦 Twitter/X Thread</span></label>
+        <label><input type="checkbox" name="ci-format" value="LinkedIn Post"><span>💼 LinkedIn Post</span></label>
+        <label><input type="checkbox" name="ci-format" value="Stories Sequence (3 slides)"><span>📱 Stories Sequence (3 slides)</span></label>
+        <label><input type="checkbox" name="ci-format" value="Email Teaser"><span>📧 Email Teaser</span></label>
+        <label><input type="checkbox" name="ci-format" value="YouTube Description"><span>▶ YouTube Description</span></label>
+      </div>
+
+      <!-- Generate -->
+      <button class="generate-btn" id="ciGenerateBtn" onclick="ciGenerate()">🚀 Generate Content</button>
+
+      <!-- Output area -->
+      <div class="ci-output-area" id="ci-output-area"></div>
+    </div>
 
     <!-- SECTION 1: Reel Ideas Generator -->
     <div class="section-card">
@@ -1387,6 +1544,164 @@ function toggleSidebar() {
 function closeSidebar() {
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sidebarOverlay').classList.remove('open');
+}
+
+// ══════════════════════════════════════
+// CONTENT INPUT HUB
+// ══════════════════════════════════════
+let ciActiveTab = 'video';
+let ciVideoFile = null;
+let ciImageFile = null;
+
+function ciSwitchTab(tab) {
+  ciActiveTab = tab;
+  document.querySelectorAll('.ci-tab').forEach(b => b.classList.toggle('active', b.dataset.ciTab === tab));
+  document.querySelectorAll('.ci-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('ci-pane-' + tab).classList.add('active');
+}
+
+function ciVideoSelected(input) {
+  const file = input.files[0];
+  if (!file) return;
+  ciVideoFile = file;
+  const info = document.getElementById('ci-video-info');
+  info.style.display = 'block';
+  info.textContent = '📎 ' + file.name + ' (' + (file.size / 1048576).toFixed(1) + ' MB)';
+  // Try to get duration
+  const video = document.createElement('video');
+  video.preload = 'metadata';
+  video.onloadedmetadata = function() {
+    const dur = Math.round(video.duration);
+    const min = Math.floor(dur / 60);
+    const sec = dur % 60;
+    info.textContent = '📎 ' + file.name + ' (' + (file.size / 1048576).toFixed(1) + ' MB) · ' + min + ':' + String(sec).padStart(2, '0');
+    URL.revokeObjectURL(video.src);
+  };
+  video.src = URL.createObjectURL(file);
+}
+
+function ciImageSelected(input) {
+  const file = input.files[0];
+  if (!file) return;
+  ciImageFile = file;
+  const info = document.getElementById('ci-image-info');
+  info.style.display = 'block';
+  info.textContent = '📎 ' + file.name + ' (' + (file.size / 1048576).toFixed(1) + ' MB)';
+  const preview = document.getElementById('ci-image-preview');
+  preview.style.display = 'block';
+  preview.src = URL.createObjectURL(file);
+}
+
+function ciGenerate() {
+  const outputArea = document.getElementById('ci-output-area');
+  const formats = Array.from(document.querySelectorAll('input[name="ci-format"]:checked')).map(cb => cb.value);
+  const pillar = document.querySelector('input[name="ci-pillar"]:checked')?.value || 'Market Update';
+  const prompt = document.getElementById('ci-prompt').value.trim();
+
+  if (formats.length === 0) {
+    alert('Select at least one output format.');
+    return;
+  }
+
+  // Show processing state
+  outputArea.style.display = 'block';
+  outputArea.innerHTML = '<div class="ci-processing"><span class="spinner"></span> Processing...</div>';
+
+  if (ciActiveTab === 'text') {
+    const text = document.getElementById('ci-text-input').value.trim();
+    if (!text) {
+      outputArea.innerHTML = '<div class="ci-processing" style="color:#ff6b6b;">⚠️ Paste some text first.</div>';
+      return;
+    }
+    setTimeout(() => ciRenderTextOutput(text, prompt, pillar, formats), 800);
+  } else if (ciActiveTab === 'video') {
+    if (!ciVideoFile) {
+      outputArea.innerHTML = '<div class="ci-processing" style="color:#ff6b6b;">⚠️ Upload a video first, or switch to Paste Text.</div>';
+      return;
+    }
+    setTimeout(() => ciRenderPlaceholder('uploaded media', formats), 2000);
+  } else if (ciActiveTab === 'image') {
+    if (!ciImageFile) {
+      outputArea.innerHTML = '<div class="ci-processing" style="color:#ff6b6b;">⚠️ Upload an image first, or switch to Paste Text.</div>';
+      return;
+    }
+    setTimeout(() => ciRenderPlaceholder('uploaded media', formats), 2000);
+  } else if (ciActiveTab === 'url') {
+    const url = document.getElementById('ci-url-input').value.trim();
+    if (!url) {
+      outputArea.innerHTML = '<div class="ci-processing" style="color:#ff6b6b;">⚠️ Paste a URL first, or switch to Paste Text.</div>';
+      return;
+    }
+    setTimeout(() => ciRenderPlaceholder('URL content', formats), 2000);
+  }
+}
+
+function ciRenderPlaceholder(sourceType, formats) {
+  const outputArea = document.getElementById('ci-output-area');
+  const msg = sourceType === 'URL content'
+    ? '[URL content extraction coming soon — paste the article text below to generate now]'
+    : '[Content generation from ' + sourceType + ' coming soon — paste the transcript below to generate now]';
+
+  let html = '<div class="section-title" style="margin-top:8px;">📄 Generated Content</div>';
+  formats.forEach(fmt => {
+    html += `<div class="ci-output-card">
+      <div class="ci-output-label">${esc(fmt)}</div>
+      <textarea class="ci-output-text" readonly>${esc(msg)}</textarea>
+    </div>`;
+  });
+  outputArea.innerHTML = html;
+}
+
+function ciRenderTextOutput(sourceText, prompt, pillar, formats) {
+  const outputArea = document.getElementById('ci-output-area');
+  let html = '<div class="section-title" style="margin-top:8px;">📄 Generated Content</div>';
+  html += '<p style="font-size:13px; color:#807F86; margin-bottom:14px;">Use this prompt with your AI tool of choice (ChatGPT, Claude, etc.):</p>';
+
+  formats.forEach(fmt => {
+    const promptBlock = buildPromptBlock(sourceText, prompt, pillar, fmt);
+    html += `<div class="ci-output-card">
+      <div class="ci-output-label">${esc(fmt)}</div>
+      <textarea class="ci-output-text" readonly>${esc(promptBlock)}</textarea>
+      <div class="ci-output-actions">
+        <button class="ci-copy-btn" onclick="ciCopy(this)">📋 Copy</button>
+        <button class="ci-board-btn" onclick="ciAddToBoard('${esc(fmt)}', this)">+ Add to Content Board</button>
+      </div>
+    </div>`;
+  });
+
+  outputArea.innerHTML = html;
+  outputArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function buildPromptBlock(source, prompt, pillar, format) {
+  let p = '';
+  p += '=== CONTENT GENERATION PROMPT ===\n\n';
+  p += 'CONTENT PILLAR: ' + pillar + '\n';
+  p += 'OUTPUT FORMAT: ' + format + '\n\n';
+  if (prompt) {
+    p += 'INSTRUCTIONS:\n' + prompt + '\n\n';
+  }
+  p += '--- SOURCE CONTENT ---\n\n' + source + '\n\n--- END SOURCE ---\n\n';
+  p += 'Please generate a ' + format + ' based on the source content above.';
+  if (pillar) p += ' The content pillar is "' + pillar + '".';
+  p += ' Match the Collective Shift brand voice: professional, data-driven, educational, and confident without being hype-driven.';
+  return p;
+}
+
+function ciCopy(btn) {
+  const textarea = btn.closest('.ci-output-card').querySelector('.ci-output-text');
+  navigator.clipboard.writeText(textarea.value).then(() => {
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => btn.textContent = '📋 Copy', 1500);
+  });
+}
+
+function ciAddToBoard(format, btn) {
+  // Placeholder — log and show feedback
+  console.log('[Content Input] Add to board:', format);
+  btn.textContent = '✅ Added!';
+  btn.style.color = '#6bffb5';
+  setTimeout(() => { btn.textContent = '+ Add to Content Board'; btn.style.color = ''; }, 2000);
 }
 
 // ══════════════════════════════════════
