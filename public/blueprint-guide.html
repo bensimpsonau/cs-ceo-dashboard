@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Asset Entry &amp; Protection Blueprint — Collective Shift</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --dark: #1a1a2e;
+      --gold: #f0a500;
+      --teal: #10b981;
+      --body-text: #374151;
+      --heading-text: #1a1a2e;
+      --bg: #ffffff;
+      --grey-light: #f3f4f6;
+      --grey-mid: #9ca3af;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--body-text);
+      line-height: 1.65;
+      font-size: 16px;
+    }
+
+    /* ── NAV BAR (screen only) ── */
+    .top-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 32px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .top-bar a { color: var(--dark); text-decoration: none; font-size: 14px; font-weight: 500; }
+    .top-bar a:hover { color: var(--gold); }
+    .btn-print {
+      background: var(--gold);
+      color: var(--dark);
+      border: none;
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+    .btn-print:hover { opacity: .85; }
+
+    /* ── COVER PAGE ── */
+    .cover-page {
+      background: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 60px 32px 40px;
+      position: relative;
+    }
+    .cover-page .brand {
+      color: var(--gold);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 40px;
+    }
+    .cover-page h1 {
+      color: #ffffff;
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 900;
+      line-height: 1.15;
+      max-width: 720px;
+      margin-bottom: 24px;
+    }
+    .cover-page .subtitle {
+      color: #d1d5db;
+      font-size: clamp(16px, 2.2vw, 20px);
+      max-width: 600px;
+      line-height: 1.5;
+      margin-bottom: 40px;
+    }
+    .cover-badge {
+      display: inline-block;
+      background: rgba(16,185,129,0.15);
+      color: var(--teal);
+      font-weight: 700;
+      font-size: 14px;
+      padding: 8px 20px;
+      border-radius: 100px;
+      letter-spacing: 1px;
+    }
+    .cover-footer {
+      position: absolute;
+      bottom: 28px;
+      left: 0; right: 0;
+      text-align: center;
+      color: #6b7280;
+      font-size: 11px;
+      line-height: 1.6;
+      padding: 0 24px;
+    }
+
+    /* ── CHAPTER PAGES ── */
+    .chapter {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 80px 32px 60px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      position: relative;
+    }
+    .chapter-number {
+      font-size: 72px;
+      font-weight: 900;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 8px;
+      opacity: 0.85;
+    }
+    .chapter-title {
+      font-size: clamp(26px, 3.5vw, 36px);
+      font-weight: 800;
+      color: var(--heading-text);
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+    .module-tag {
+      display: inline-block;
+      background: rgba(16,185,129,0.1);
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 100px;
+      margin-bottom: 32px;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--gold);
+      margin-bottom: 8px;
+      margin-top: 28px;
+    }
+    .section-label:first-of-type { margin-top: 0; }
+
+    .chapter p {
+      font-size: 15.5px;
+      line-height: 1.7;
+      margin-bottom: 4px;
+    }
+
+    .chapter ul {
+      margin: 8px 0 4px 0;
+      padding-left: 20px;
+    }
+    .chapter ul li {
+      font-size: 15.5px;
+      line-height: 1.7;
+      margin-bottom: 6px;
+    }
+
+    .action-box {
+      background: #fffbeb;
+      border: 2px solid var(--gold);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-top: 32px;
+    }
+    .action-box .action-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .action-box p {
+      font-size: 15.5px;
+      font-weight: 600;
+      color: var(--heading-text);
+      line-height: 1.6;
+    }
+
+    .chapter-divider {
+      margin-top: auto;
+      padding-top: 32px;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chapter-divider .page-num {
+      font-size: 13px;
+      color: var(--grey-mid);
+      font-weight: 600;
+    }
+    .chapter-divider .footer-text {
+      font-size: 11px;
+      color: var(--grey-mid);
+    }
+
+    /* ── V9 DELIVERABLE REFERENCE ── */
+    .deliverable-ref {
+      margin-top: 16px;
+      padding: 10px 16px;
+      background: var(--grey-light);
+      border-radius: 8px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .deliverable-ref strong {
+      color: var(--heading-text);
+    }
+
+    /* ── CTA PAGE ── */
+    .cta-page {
+      background: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 60px 32px 40px;
+      position: relative;
+    }
+    .cta-page h2 {
+      color: #ffffff;
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 900;
+      margin-bottom: 16px;
+    }
+    .cta-page .cta-sub {
+      color: #d1d5db;
+      font-size: 18px;
+      max-width: 560px;
+      line-height: 1.6;
+      margin-bottom: 36px;
+    }
+    .cta-page ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 40px;
+      text-align: left;
+      max-width: 480px;
+    }
+    .cta-page ul li {
+      color: #d1d5db;
+      font-size: 16px;
+      line-height: 1.7;
+      padding-left: 28px;
+      position: relative;
+      margin-bottom: 12px;
+    }
+    .cta-page ul li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--teal);
+      font-weight: 700;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--dark);
+      font-weight: 800;
+      font-size: 18px;
+      padding: 16px 40px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: opacity .2s;
+      margin-bottom: 40px;
+    }
+    .cta-btn:hover { opacity: .85; }
+    .cta-footer {
+      color: #6b7280;
+      font-size: 12px;
+      line-height: 1.8;
+      max-width: 480px;
+    }
+
+    /* ── PRINT ── */
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white; font-size: 12pt; }
+      .top-bar { display: none !important; }
+      .cover-page {
+        background: #1a1a2e !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        page-break-after: always;
+      }
+      .chapter {
+        page-break-after: always;
+        min-height: auto;
+        padding: 40px 24px 32px;
+      }
+      .action-box {
+        border: 2px solid #f0a500 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        background: #fffbeb !important;
+      }
+      .cta-page {
+        background: #1a1a2e !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        page-break-after: auto;
+      }
+      .module-tag {
+        background: rgba(16,185,129,0.1) !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .cover-badge {
+        background: rgba(16,185,129,0.15) !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .deliverable-ref {
+        background: #f3f4f6 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .chapter { padding: 60px 20px 40px; }
+      .chapter-number { font-size: 56px; }
+      .top-bar { padding: 10px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR (screen only) -->
+  <div class="top-bar no-print">
+    <a href="/allocation-blueprint.html">← Back to your results</a>
+    <button class="btn-print" onclick="window.print()">Print / Download PDF</button>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- COVER PAGE                              -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="cover-page">
+    <div class="brand">Collective Shift</div>
+    <h1>Digital Asset Entry &amp; Protection Blueprint</h1>
+    <p class="subtitle">The 8-Step Framework for Entering Digital Assets with Structure, Protection and Conviction</p>
+    <span class="cover-badge">SHIFT OS V9 FRAMEWORK</span>
+    <div class="cover-footer">
+      ABN 78 650 977 325 &nbsp;|&nbsp; Educational purposes only. Not financial advice.<br>
+      Collective Shift is not an AFS licensee. No personal financial advice is provided.
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- CHAPTER 01                              -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="chapter">
+    <div class="chapter-number">01</div>
+    <h2 class="chapter-title">Investment Thesis Clarity</h2>
+    <span class="module-tag">Market Outlook + Goal Setting</span>
+
+    <div class="section-label">What This Is</div>
+    <p>Having a clear, defensible view on <em>why</em> digital assets may belong in your wealth strategy — grounded in macro context, not price action. This combines understanding where markets sit right now (key BTC levels, on-chain signals like NUPL, MVRV, STH cost basis, and the 200-week moving average) with defining your personal "why" before allocating a single dollar. It means knowing which of the three macro scenarios may play out and what each means for your portfolio — then connecting that to a written goal: wealth creation, wealth preservation, or income.</p>
+
+    <div class="section-label">Why It Matters</div>
+    <p>Without a thesis, every price move becomes a trigger. Investors without clarity hold through fear and sell at the wrong time. As the Shift OS puts it: "a strategy in your head is not a strategy." When there is no written view grounding your actions, short-term volatility dictates long-term decisions — and the cost of that pattern compounds with every cycle.</p>
+
+    <div class="section-label">What Sophisticated Investors Commonly Do</div>
+    <ul>
+      <li>Define their "why" before allocating a dollar — setting a written goal statement that specifies wealth creation, preservation, or income as the objective.</li>
+      <li>Understand the macro case: currency debasement, institutional adoption via Bitcoin ETF fund flows, and the asymmetric upside that a fixed-supply monetary network may offer.</li>
+      <li>Set a target allocation percentage and time horizon in writing, so every subsequent decision has a reference point rather than starting from scratch.</li>
+    </ul>
+
+    <div class="action-box">
+      <div class="action-label">Your Action Item</div>
+      <p>Write one sentence that completes this: "I believe digital assets may deserve a place in my portfolio because…" That sentence is the foundation of everything else.</p>
+    </div>
+
+    <div class="deliverable-ref">
+      <strong>V9 Deliverable:</strong> Written goal statement + target allocation + time horizon
+    </div>
+
+    <div class="chapter-divider">
+      <span class="footer-text">Educational purposes only. Not financial advice.</span>
+      <span class="page-num">2</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- CHAPTER 02                              -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="chapter">
+    <div class="chapter-number">02</div>
+    <h2 class="chapter-title">Entry Readiness</h2>
+    <span class="module-tag">Bitcoin Deep-Dive + Altcoin Deep-Dive</span>
+
+    <div class="section-label">What This Is</div>
+    <p>Understanding the two distinct categories of digital assets — Bitcoin as a monetary network and digital gold versus altcoins as venture-style bets — and having a clear view on what you'd own and why. The Shift OS treats these as fundamentally different asset classes. Bitcoin's investment case rests on decentralisation, fixed supply, network effect, and accelerating institutional adoption. Altcoins are evaluated through a different lens entirely: tokenomics, daily active users, real catalysts versus narrative, and the recognition that 98% of projects don't survive scrutiny.</p>
+
+    <div class="section-label">Why It Matters</div>
+    <p>Treating all digital assets the same is one of the most common and costly mistakes. Bitcoin and altcoins require fundamentally different frameworks, risk tolerances, and time horizons. Without separating the two, investors often over-allocate to altcoins during euphoria or dismiss Bitcoin during fear — both of which erode returns and increase risk unnecessarily.</p>
+
+    <div class="section-label">What Sophisticated Investors Commonly Do</div>
+    <ul>
+      <li>Start with Bitcoin as the foundation — using dollar-cost averaging, the 200-week moving average, and 4-year cycle awareness to build a position with structure rather than impulse.</li>
+      <li>Apply stricter criteria to altcoins: evaluating tokenomics and the supply trap, checking daily active users, identifying genuine catalysts, and distinguishing marketing from substance (as the V9 framework illustrates with examples like HYPE vs Cardano).</li>
+      <li>Establish a "buy at X" framework before any market move happens — defining what they'd own, at what price, how much, and in what order.</li>
+    </ul>
+
+    <div class="action-box">
+      <div class="action-label">Your Action Item</div>
+      <p>Before making any allocation, answer: What would I own? At what price? How much? In what order? If you can't answer all four, you're not ready to act.</p>
+    </div>
+
+    <div class="deliverable-ref">
+      <strong>V9 Deliverable:</strong> BTC allocation target + buy prices + DCA plan + altcoin framework
+    </div>
+
+    <div class="chapter-divider">
+      <span class="footer-text">Educational purposes only. Not financial advice.</span>
+      <span class="page-num">3</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- CHAPTER 03                              -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="chapter">
+    <div class="chapter-number">03</div>
+    <h2 class="chapter-title">Information Filtering</h2>
+    <span class="module-tag">Signal vs Noise + Investment Principles</span>
+
+    <div class="section-label">What This Is</div>
+    <p>Building a reliable process for separating useful market intelligence from noise — on-chain data, institutional research, and framework-based analysis versus social media, price commentary, and influencer opinion. The Shift OS emphasises that 98% of what its research team does is say "no." This chapter is about building that same filter for yourself: a discipline of reduction, not accumulation. It combines the signal-vs-noise framework (Module 02) with the investment principles that determine <em>how</em> you evaluate what gets through (Module 06).</p>
+
+    <div class="section-label">Why It Matters</div>
+    <p>The signal-to-noise ratio in digital assets is extremely low. Investors without a filter end up reactive — making decisions based on headlines and price moves rather than a coherent view. Narrative cycles (ICOs → NFTs → memecoins → AI) create urgency that feels real but rarely is. Without written investment principles, every piece of information feels equally important, and the resulting cognitive overload leads to either paralysis or impulsive action.</p>
+
+    <div class="section-label">What Sophisticated Investors Commonly Do</div>
+    <ul>
+      <li>Reduce information inputs, not increase them — members commonly find that clarity comes from fewer, higher-quality sources rather than trying to track everything.</li>
+      <li>Focus on on-chain signals (NUPL, MVRV, STH cost basis, 200WMA) and institutional fund flows as primary data points, while treating social media and influencer opinion as noise until proven otherwise.</li>
+      <li>Apply a "98% no" principle — most opportunities don't pass the filter, and that's by design. They build their own view rather than aggregating others'.</li>
+    </ul>
+
+    <div class="action-box">
+      <div class="action-label">Your Action Item</div>
+      <p>Identify 2–3 sources you'd trust enough to act on. Remove everything else from your information diet for 30 days. Clarity comes from reduction, not accumulation.</p>
+    </div>
+
+    <div class="deliverable-ref">
+      <strong>V9 Deliverable:</strong> Research time audit + noise sources identified + personal investment principles written
+    </div>
+
+    <div class="chapter-divider">
+      <span class="footer-text">Educational purposes only. Not financial advice.</span>
+      <span class="page-num">4</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- CHAPTER 04                              -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="chapter">
+    <div class="chapter-number">04</div>
+    <h2 class="chapter-title">Risk Boundaries</h2>
+    <span class="module-tag">Risk Management</span>
+
+    <div class="section-label">What This Is</div>
+    <p>Having explicit, written rules around the four risk types — market risk, security risk, liquidity risk, and emotional risk — before committing meaningful capital. The Shift OS V9 framework treats risk management as its own dedicated module because rough ideas about risk don't hold under pressure. This step covers the "50% rule" (can you tolerate a 50% drawdown on your digital asset allocation?), position sizing for different allocation sizes, staged entry strategies, and — critically — an honest audit of your own emotional biases.</p>
+
+    <div class="section-label">Why It Matters</div>
+    <p>In the moment of a large price movement, rough ideas don't hold. Investors without written risk boundaries make their worst decisions under pressure — holding too long, selling too early, or going too large. The emotional cycle is well-documented: FOMO drives entry at highs, loss aversion prevents cutting losses, confirmation bias filters out warning signs, recency bias overweights the last move, and anchoring locks attention on irrelevant price points. Without pre-written boundaries, each of these biases operates unopposed.</p>
+
+    <div class="section-label">What Sophisticated Investors Commonly Do</div>
+    <ul>
+      <li>Define their maximum allocation percentage before entering — not after the market moves — and stress-test it against the 50% drawdown scenario the V9 framework uses as a baseline.</li>
+      <li>Set a maximum drawdown tolerance and a pre-committed response (what they would do if it happened), so the decision is made in calm conditions, not crisis conditions.</li>
+      <li>Use staged entry rather than a single large allocation, and conduct a personal bias audit — identifying which of the five cognitive biases (FOMO, loss aversion, confirmation bias, recency, anchoring) they are most susceptible to.</li>
+    </ul>
+
+    <div class="action-box">
+      <div class="action-label">Your Action Item</div>
+      <p>Before your next allocation, write down three things: (1) the maximum % of your portfolio you'd allocate, (2) the maximum drawdown you could tolerate without changing your plan, (3) what you'd do if that drawdown happened. That document is your protection.</p>
+    </div>
+
+    <div class="deliverable-ref">
+      <strong>V9 Deliverable:</strong> Max drawdown tolerance + position sizing rules + bias audit
+    </div>
+
+    <div class="chapter-divider">
+      <span class="footer-text">Educational purposes only. Not financial advice.</span>
+      <span class="page-num">5</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- CHAPTER 05                              -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="chapter">
+    <div class="chapter-number">05</div>
+    <h2 class="chapter-title">Capital Readiness</h2>
+    <span class="module-tag">Asset Analysis &amp; Investment Thesis</span>
+
+    <div class="section-label">What This Is</div>
+    <p>Having a written investment thesis that covers what you'd own, what you paid (or would pay), why you own it, and your exit criteria — before allocating meaningful capital. The Shift OS models this with full transparency through the CS Portfolio: what the team owns, what they paid, and why. Capital readiness isn't just about having funds available — it's about having a framework worthy of those funds. This includes defining a watchlist, knowing what's <em>not</em> on it, setting entry and exit criteria for each position, and establishing a review cadence.</p>
+
+    <div class="section-label">Why It Matters</div>
+    <p>Without a written thesis, allocation decisions stay ad hoc. Every new opportunity looks equally compelling, every dip looks like a buying opportunity, and every rally looks like the last chance to get in. A written thesis forces clarity — it's the document that separates "I have conviction" from "I'm guessing." Members commonly find that the discipline of writing the thesis reveals gaps in their thinking they didn't know existed.</p>
+
+    <div class="section-label">What Sophisticated Investors Commonly Do</div>
+    <ul>
+      <li>Build a personal investment thesis that mirrors the CS-style transparency model: what they own, what they paid, and why — creating accountability to themselves.</li>
+      <li>Define entry criteria and exit criteria for each position before allocating, including specific price levels, on-chain signals, or fundamental changes that would trigger action.</li>
+      <li>Set a regular review cadence and maintain a clear watchlist — knowing what they're watching and, just as importantly, what they've deliberately excluded and why.</li>
+    </ul>
+
+    <div class="action-box">
+      <div class="action-label">Your Action Item</div>
+      <p>Write a one-page investment thesis: what you'd own, at what price, why, and at what price you'd exit. If you can't write it, you're not ready to allocate.</p>
+    </div>
+
+    <div class="deliverable-ref">
+      <strong>V9 Deliverable:</strong> Written investment thesis (for analyst session)
+    </div>
+
+    <div class="chapter-divider">
+      <span class="footer-text">Educational purposes only. Not financial advice.</span>
+      <span class="page-num">6</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- CHAPTER 06                              -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="chapter">
+    <div class="chapter-number">06</div>
+    <h2 class="chapter-title">Decision Framework</h2>
+    <span class="module-tag">Investment Principles + Asset Analysis</span>
+
+    <div class="section-label">What This Is</div>
+    <p>A repeatable, structured process for making investment decisions — so that decisions are driven by criteria and frameworks, not by price moves, news cycles, or emotion. The Shift OS philosophy is "we teach you how to think, not what to think," and this chapter is the embodiment of that. It combines the investment principles from Module 06 (education not advice, frameworks over predictions, risk-first, signals vs noise) with the practical asset analysis process from Module 08 to create a decision system you can apply consistently.</p>
+
+    <div class="section-label">Why It Matters</div>
+    <p>Reactive investors consistently buy high and sell low. A decision framework is what separates a structured investor from a speculator — it removes the open-ended "what should I do?" question and replaces it with a clear process. Without one, every market move creates a fresh decision from scratch, consuming mental energy and increasing the probability of error. The V9 framework emphasises that most things won't pass the filter — and that's the point.</p>
+
+    <div class="section-label">What Sophisticated Investors Commonly Do</div>
+    <ul>
+      <li>Define their investment principles in writing — members commonly find that articulating principles (rather than just "feeling" them) changes how they respond to market events.</li>
+      <li>Use a consistent framework for every decision: thesis check → risk check → entry criteria → position size → exit plan. This sequence ensures nothing is skipped under pressure.</li>
+      <li>Review decisions against their framework rather than against outcomes — a good decision that loses money is still a good decision, and a bad process that makes money is still a bad process.</li>
+    </ul>
+
+    <div class="action-box">
+      <div class="action-label">Your Action Item</div>
+      <p>Build a simple if/then decision framework: "I will consider investing when [condition A], [condition B], and [condition C] are all true." Write it down before the next market move.</p>
+    </div>
+
+    <div class="deliverable-ref">
+      <strong>V9 Deliverable:</strong> Personal investment principles written
+    </div>
+
+    <div class="chapter-divider">
+      <span class="footer-text">Educational purposes only. Not financial advice.</span>
+      <span class="page-num">7</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- CHAPTER 07                              -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="chapter">
+    <div class="chapter-number">07</div>
+    <h2 class="chapter-title">Time-Efficient Oversight</h2>
+    <span class="module-tag">Yield &amp; Staking + Platforms &amp; Security</span>
+
+    <div class="section-label">What This Is</div>
+    <p>Having the right infrastructure in place — storage, platforms, yield strategy — and a time-efficient review rhythm that maintains quality without requiring constant attention. This step combines two V9 modules: the yield and staking framework (understanding the 4-tier risk spectrum from Tier 1 at 2–5% through to Tier 4 at 18%+, and knowing the difference between yield and staking) with the platforms and security module (where to buy, how to store, and why exchanges are for transacting, not holding). The goal is a system that runs efficiently on minimal time.</p>
+
+    <div class="section-label">Why It Matters</div>
+    <p>Most sophisticated investors are time-poor. Without the right infrastructure and a clear review cadence, the cognitive load of managing digital assets becomes a reason to avoid them entirely. The FTX collapse demonstrated that security infrastructure isn't optional — it's the most important decision an investor makes after their allocation decision. And yield, while attractive, needs to be understood through the lens of "where does the yield come from?" before any capital is committed.</p>
+
+    <div class="section-label">What Sophisticated Investors Commonly Do</div>
+    <ul>
+      <li>Separate transacting platforms from storage — exchanges are for buying, not holding. Members commonly set up a hardware wallet with a seed phrase (24 words, handwritten, stored in two physical locations, never digitised).</li>
+      <li>Consider yield on stablecoins only after understanding the risk tiers — asking "where does the yield come from?" before committing. Staking (e.g., ETH ~3–4%, SOL ~7%) is understood as offsetting supply inflation, not generating "free money."</li>
+      <li>Establish a monthly review rhythm — most structured investors spend under 2 hours per month once their system is set up, reviewing positions against their thesis and checking whether anything has changed.</li>
+    </ul>
+
+    <div class="action-box">
+      <div class="action-label">Your Action Item</div>
+      <p>Complete your security setup first: buy a hardware wallet, test it, and confirm your seed phrase is stored in two physical locations. Never digitise your seed phrase. This is your most important infrastructure decision.</p>
+    </div>
+
+    <div class="deliverable-ref">
+      <strong>V9 Deliverable:</strong> Security setup completed + yield strategy decision
+    </div>
+
+    <div class="chapter-divider">
+      <span class="footer-text">Educational purposes only. Not financial advice.</span>
+      <span class="page-num">8</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- CHAPTER 08                              -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="chapter">
+    <div class="chapter-number">08</div>
+    <h2 class="chapter-title">Implementation Structure</h2>
+    <span class="module-tag">Tax &amp; Structure + Sell Strategy</span>
+
+    <div class="section-label">What This Is</div>
+    <p>Having a clear implementation plan — including tax structure, record-keeping, and most importantly a written sell strategy — before increasing exposure. The V9 framework calls Module 12 (Sell Strategy) the "most important module" and "the capstone" of the entire system. This step combines the practical tax and structural considerations (CGT treatment, record-keeping tools, jurisdiction-specific nuances) with the sell strategy framework that defines <em>when</em> and <em>how</em> to take profits — by goal type: cashflow (systematic selling for income), wealth creation (scale-out at defined multiples), or wealth preservation ("if you've won, stop playing").</p>
+
+    <div class="section-label">Why It Matters</div>
+    <p>The sell strategy is the most commonly skipped step and the most expensive mistake. Investors who enter without a sell strategy make emotional exits. As the V9 framework puts it: "the best time to sell feels the worst." Tax and structure decisions made after the fact are always more costly than those made before — whether that's missing the 12-month CGT discount, failing to record transactions from day one, or discovering structural options (SMSF, trusts, TFSAs) only after significant gains have been realised.</p>
+
+    <div class="section-label">What Sophisticated Investors Commonly Do</div>
+    <ul>
+      <li>Set up record-keeping from day one using tools like Koinly or CryptoTaxCalculator — members commonly find that retroactive record-keeping is significantly more painful and expensive than starting clean.</li>
+      <li>Understand the tax treatment in their jurisdiction before making significant moves: AU (CGT + 50% discount at 12+ months), NZ (intent-based taxation), US (long-term capital gains, Roth IRA), CA (50% inclusion rate, TFSA).</li>
+      <li>Write a sell strategy by goal type with specific percentage targets and price levels per position. For altcoins specifically, the V9 framework advises tighter stops and faster profit-taking: "altcoins are a good time, not a long time."</li>
+    </ul>
+
+    <div class="action-box">
+      <div class="action-label">Your Action Item</div>
+      <p>Write your sell strategy before your next allocation. For each position, answer: at what price or market signal would I sell 25%? 50%? 100%? "The best time to sell feels the worst" — your strategy needs to be written before that moment arrives.</p>
+    </div>
+
+    <div class="deliverable-ref">
+      <strong>V9 Deliverable:</strong> Tax tool set up + written sell strategy with specific % targets and price levels per position
+    </div>
+
+    <div class="chapter-divider">
+      <span class="footer-text">Educational purposes only. Not financial advice.</span>
+      <span class="page-num">9</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- CTA PAGE                                -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="cta-page">
+    <h2>Ready to Build This Properly?</h2>
+    <p class="cta-sub">The Shift OS V9 framework is the foundation of every Collective Shift member's digital asset strategy.</p>
+    <ul>
+      <li>Walk through your current position and identify gaps across all 8 steps with an experienced analyst</li>
+      <li>Get clarity on your investment thesis, risk boundaries, and sell strategy in a structured 1:1 session</li>
+      <li>Leave with a concrete, written action plan — not generic advice, but a framework built around your situation</li>
+    </ul>
+    <a href="https://collectiveshift.io/strategy-call" class="cta-btn">Book a Digital Asset Strategy Call</a>
+    <div class="cta-footer">
+      Educational only. No personal financial advice.<br>
+      Collective Shift is not an AFS licensee.<br>
+      ABN 78 650 977 325
+    </div>
+  </section>
+
+</body>
+</html>
