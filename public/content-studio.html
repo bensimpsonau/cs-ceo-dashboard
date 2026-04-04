@@ -303,6 +303,35 @@
   }
   @keyframes ci-spin { to { transform: rotate(360deg); } }
 
+  /* ── Transcription Status ── */
+  .transcribe-status {
+    display: none; margin-top: 12px; padding: 12px 16px;
+    border-radius: 10px; font-size: 13px; font-weight: 600;
+    align-items: center; gap: 10px;
+  }
+  .transcribe-status.loading {
+    display: flex; background: #1a1a30; border: 1px solid #2a2a45; color: #FC5C03;
+  }
+  .transcribe-status.success {
+    display: flex; background: #1a2a1a; border: 1px solid #2a4a2a; color: #6bffb5;
+  }
+  .transcribe-status.error {
+    display: flex; background: #2a1a1a; border: 1px solid #4a2a2a; color: #ff6b6b;
+  }
+  .transcribe-spinner {
+    display: inline-block; width: 18px; height: 18px; border: 2.5px solid #2a2a45;
+    border-top-color: #FC5C03; border-radius: 50%; animation: ci-spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+  .transcribe-progress-bar {
+    width: 100%; height: 4px; background: #2a2a45; border-radius: 2px; margin-top: 8px; overflow: hidden;
+  }
+  .transcribe-progress-bar .fill {
+    height: 100%; width: 0%; background: linear-gradient(90deg, #FC5C03, #e04f00);
+    border-radius: 2px; animation: transcribe-fill 25s ease-out forwards;
+  }
+  @keyframes transcribe-fill { 0% { width: 0%; } 100% { width: 90%; } }
+
   /* ── Mobile ── */
   @media (max-width: 768px) {
     .sidebar { transform: translateX(-100%); }
@@ -395,7 +424,13 @@
             <input type="file" accept=".mp4,.mov,video/mp4,video/quicktime" onchange="ciVideoSelected(this)">
           </div>
           <div class="ci-file-info" id="ci-video-info"></div>
-          <p style="font-size:12px; color:#807F86; margin-top:8px; font-style:italic;">After uploading, paste the transcript below to generate content.</p>
+          <div class="transcribe-status" id="transcribe-status">
+            <span class="transcribe-spinner" id="transcribe-spinner"></span>
+            <span id="transcribe-status-text">Extracting audio and transcribing... (10-30 seconds)</span>
+          </div>
+          <div class="transcribe-progress-bar" id="transcribe-progress" style="display:none;">
+            <div class="fill" id="transcribe-progress-fill"></div>
+          </div>
           <div style="margin-top:14px;">
             <span class="ci-label" style="display:flex; align-items:center; gap:6px;">📝 <strong style="color:#d0d0e0;">Paste transcript or notes (required)</strong></span>
             <textarea class="ci-text-input" id="ci-video-transcript" rows="5" placeholder="Paste the video transcript, script, or key talking points here. This is used to generate your content." style="border-color:#3a3a55;"></textarea>
@@ -1592,6 +1627,71 @@ function ciVideoSelected(input) {
     URL.revokeObjectURL(video.src);
   };
   video.src = URL.createObjectURL(file);
+
+  // Auto-transcribe
+  ciAutoTranscribe(file);
+}
+
+async function ciAutoTranscribe(file) {
+  const statusEl = document.getElementById('transcribe-status');
+  const statusText = document.getElementById('transcribe-status-text');
+  const spinnerEl = document.getElementById('transcribe-spinner');
+  const progressBar = document.getElementById('transcribe-progress');
+  const progressFill = document.getElementById('transcribe-progress-fill');
+  const transcript = document.getElementById('ci-video-transcript');
+  const generateBtn = document.getElementById('ciGenerateBtn');
+
+  // Show loading state
+  statusEl.className = 'transcribe-status loading';
+  statusText.textContent = 'Extracting audio and transcribing... (10-30 seconds)';
+  spinnerEl.style.display = 'inline-block';
+  progressBar.style.display = 'block';
+  // Reset animation
+  progressFill.style.animation = 'none';
+  void progressFill.offsetWidth;
+  progressFill.style.animation = 'transcribe-fill 25s ease-out forwards';
+
+  transcript.placeholder = 'Transcribing your video... this takes 10-30 seconds';
+  transcript.value = '';
+  generateBtn.disabled = true;
+  generateBtn.style.opacity = '0.4';
+  generateBtn.style.cursor = 'not-allowed';
+
+  try {
+    const formData = new window.FormData();
+    formData.append('file', file);
+
+    const res = await fetch('/api/transcribe', {
+      method: 'POST',
+      body: formData
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || data.detail || 'Transcription failed');
+    }
+
+    // Success
+    transcript.value = data.transcript;
+    transcript.placeholder = 'Paste the video transcript, script, or key talking points here.';
+    statusEl.className = 'transcribe-status success';
+    spinnerEl.style.display = 'none';
+    statusText.textContent = '✅ Transcript ready — review and hit Generate';
+    progressBar.style.display = 'none';
+
+  } catch (err) {
+    console.error('Auto-transcription failed:', err);
+    statusEl.className = 'transcribe-status error';
+    spinnerEl.style.display = 'none';
+    statusText.textContent = '❌ Auto-transcription failed. Paste your transcript manually below.';
+    transcript.placeholder = 'Auto-transcription failed. Paste your transcript manually here...';
+    progressBar.style.display = 'none';
+  } finally {
+    generateBtn.disabled = false;
+    generateBtn.style.opacity = '1';
+    generateBtn.style.cursor = 'pointer';
+  }
 }
 
 function ciImageSelected(input) {

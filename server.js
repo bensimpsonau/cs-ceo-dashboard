@@ -1,6 +1,9 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const { execFile } = require('child_process');
+const multer = require('multer');
+const FormData = require('form-data');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,6 +16,10 @@ const TASKS_PATH = path.join(__dirname, 'public', 'tasks.json');
 // 3. To get webhook URL: Discord → #ceo-benbot channel → Edit → Integrations → Webhooks → New Webhook → Copy URL
 // 4. Once set, task completions and new tasks will post to #ceo-benbot automatically
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL || '';
+
+// TRANSCRIPTION SETUP:
+// Add OPENAI_API_KEY to Render environment variables (the same key used locally in ~/.zshenv)
+// Required for the /api/transcribe endpoint used by Content Studio video upload
 
 // GITHUB AUTO-SYNC SETUP:
 // Add GITHUB_TOKEN to Render env vars (a GitHub Personal Access Token with repo write permissions)
@@ -335,6 +342,102 @@ app.post('/api/content/add', async (req, res) => {
 // GET /api/content/cards
 app.get('/api/content/cards', (req, res) => {
   res.json(contentBoard);
+});
+
+// ═══════════════════════════════════════════
+// POST /api/transcribe
+// Accepts a video/audio file, extracts audio via ffmpeg, sends to Whisper API
+// ═══════════════════════════════════════════
+const transcribeUpload = multer({
+  dest: '/tmp/cs-transcribe/',
+  limits: { fileSize: 500 * 1024 * 1024 } // 500MB limit
+});
+
+app.post('/api/transcribe', transcribeUpload.single('file'), async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+
+  const inputPath = req.file.path;
+  const audioPath = inputPath + '.mp3';
+  const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+
+  if (!OPENAI_API_KEY) {
+    fs.unlinkSync(inputPath);
+    return res.status(500).json({ error: 'OPENAI_API_KEY not configured on server' });
+  }
+
+  try {
+    // Step 1: Extract audio with ffmpeg
+    await new Promise((resolve, reject) => {
+      execFile('ffmpeg', [
+        '-i', inputPath,
+        '-vn',
+        '-acodec', 'libmp3lame',
+        '-q:a', '5',
+        '-ac', '1',       // mono
+        '-ar', '16000',   // 16kHz — optimal for Whisper
+        audioPath,
+        '-y'
+      ], (err) => {
+        if (err) reject(err); else resolve();
+      });
+    });
+
+    // Step 2: Check file size — Whisper API limit is 25MB
+    const audioStats = fs.statSync(audioPath);
+    if (audioStats.size > 25 * 1024 * 1024) {
+      // File too large — try lower bitrate re-encode
+      const audioPath2 = inputPath + '_small.mp3';
+      await new Promise((resolve, reject) => {
+        execFile('ffmpeg', [
+          '-i', audioPath,
+          '-acodec', 'libmp3lame',
+          '-q:a', '9',
+          '-ac', '1',
+          '-ar', '16000',
+          audioPath2,
+          '-y'
+        ], (err) => {
+          if (err) reject(err); else resolve();
+        });
+      });
+      fs.unlinkSync(audioPath);
+      fs.renameSync(audioPath2, audioPath);
+    }
+
+    // Step 3: Send to OpenAI Whisper
+    const form = new FormData();
+    form.append('file', fs.createReadStream(audioPath), {
+      filename: 'audio.mp3',
+      contentType: 'audio/mpeg'
+    });
+    form.append('model', 'whisper-1');
+    form.append('language', 'en');
+
+    const whisperRes = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+        ...form.getHeaders()
+      },
+      body: form
+    });
+
+    if (!whisperRes.ok) {
+      const err = await whisperRes.text();
+      throw new Error(`Whisper API error: ${whisperRes.status} ${err}`);
+    }
+
+    const result = await whisperRes.json();
+    res.json({ transcript: result.text });
+
+  } catch (err) {
+    console.error('Transcription error:', err.message);
+    res.status(500).json({ error: 'Transcription failed', detail: err.message });
+  } finally {
+    // Cleanup temp files
+    try { fs.unlinkSync(inputPath); } catch(e) {}
+    try { fs.unlinkSync(audioPath); } catch(e) {}
+  }
 });
 
 app.listen(PORT, () => {
