@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<title>VSL Script — How Sophisticated Investors Are Allocating to Digital Assets</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+--orange: #f59e0b;
+--orange-dim: rgba(245,158,11,0.12);
+--green: #059E78;
+--green-dim: rgba(5,158,120,0.10);
+--purple: #6C63FF;
+--purple-dim: rgba(108,99,255,0.10);
+--red: #EF4444;
+--red-dim: rgba(239,68,68,0.10);
+--blue: #3B82F6;
+--blue-dim: rgba(59,130,246,0.10);
+--bg: #0d0d0d;
+--card: #141418;
+--card-raised: #1a1a20;
+--border: rgba(255,255,255,0.07);
+--border-light: rgba(255,255,255,0.12);
+--text: #e2e2ea;
+--text-muted: #8888a0;
+--text-dim: rgba(255,255,255,0.30);
+--radius: 10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Barlow',sans-serif;font-size:14px;line-height:1.65;color:var(--text);background:var(--bg);}
+/* SECTION NAV */
+.section-nav{position:sticky;top:0;z-index:200;background:var(--bg);border-bottom:1px solid var(--border);padding:0 16px;display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;white-space:nowrap;}
+.section-nav::-webkit-scrollbar{display:none;}
+.section-nav a{display:inline-block;padding:10px 14px;font-size:11px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:#64748b;text-decoration:none;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;white-space:nowrap;letter-spacing:.03em;}
+.section-nav a:hover{color:var(--orange);}
+.section-nav a.active{color:var(--orange);border-bottom-color:var(--orange);}
+/* TOPBAR */
+.topbar{background:#111114;border-bottom:1px solid var(--border);padding:10px 32px;display:flex;align-items:center;justify-content:space-between;}
+.topbar-brand{display:flex;align-items:center;gap:8px;text-decoration:none;}
+.topbar-icon{width:26px;height:26px;border-radius:6px;background:var(--orange-dim);display:flex;align-items:center;justify-content:center;color:var(--orange);font-weight:800;font-size:10px;font-family:'Plus Jakarta Sans',sans-serif;}
+.topbar-text{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13px;color:#fff;}
+.topbar-links{display:flex;gap:6px;}
+.topbar-link{font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);text-decoration:none;padding:4px 10px;border-radius:5px;border:1px solid var(--border);transition:all .15s;}
+.topbar-link:hover{color:#fff;border-color:var(--orange);}
+.print-btn{font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:11px;background:var(--orange);color:#000;border:none;border-radius:5px;padding:4px 12px;cursor:pointer;}
+/* DOCUMENT */
+.document{max-width:920px;margin:0 auto;padding:32px 40px 80px;}
+/* HEADER */
+.doc-header{margin-bottom:40px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+.doc-tag{font-family:'Source Code Pro',monospace;font-size:10px;font-weight:600;color:var(--orange);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;}
+.doc-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px;}
+.doc-title span{color:var(--orange);}
+.doc-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:700px;}
+.doc-meta{display:flex;gap:20px;margin-top:14px;font-size:11px;color:var(--text-muted);font-family:'Source Code Pro',monospace;flex-wrap:wrap;}
+.doc-meta strong{color:var(--text);}
+/* SECTIONS */
+.section{margin-bottom:56px;scroll-margin-top:80px;}
+.section-label{font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;}
+.section-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:6px;}
+.section-intro{font-size:13px;color:var(--text-muted);max-width:750px;line-height:1.7;margin-bottom:24px;}
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
+.card-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:10px;}
+.card-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.card-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px;}
+/* CALLOUTS */
+.callout{border-left:3px solid var(--orange);background:rgba(245,158,11,0.04);padding:14px 18px;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:16px;font-size:13px;color:var(--text);line-height:1.7;}
+.callout strong{color:var(--orange);}
+.callout-green{border-left-color:var(--green);background:rgba(5,158,120,0.04);}
+.callout-green strong{color:var(--green);}
+.callout-purple{border-left-color:var(--purple);background:rgba(108,99,255,0.04);}
+.callout-purple strong{color:var(--purple);}
+.callout-red{border-left-color:var(--red);background:rgba(239,68,68,0.04);}
+.callout-red strong{color:var(--red);}
+.callout-blue{border-left-color:var(--blue);background:rgba(59,130,246,0.04);}
+.callout-blue strong{color:var(--blue);}
+/* TAGS */
+.tag{display:inline-block;font-family:'Source Code Pro',monospace;font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.5px;text-transform:uppercase;}
+.tag-orange{background:var(--orange-dim);color:var(--orange);}
+.tag-green{background:var(--green-dim);color:var(--green);}
+.tag-purple{background:var(--purple-dim);color:var(--purple);}
+.tag-red{background:var(--red-dim);color:var(--red);}
+.tag-blue{background:var(--blue-dim);color:var(--blue);}
+/* TABLES */
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0;}
+th{font-family:'Plus Jakarta Sans',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--orange);padding:10px 12px;text-align:left;border-bottom:2px solid var(--border);background:rgba(245,158,11,0.04);}
+td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top;line-height:1.55;}
+tr:last-child td{border-bottom:none;}
+/* STATS BAR */
+.stats-bar{display:flex;gap:1px;background:var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;}
+.stat{flex:1;background:var(--card);padding:14px 10px;text-align:center;}
+.stat-label{font-family:'Source Code Pro',monospace;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:3px;}
+.stat-value{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:var(--orange);}
+.stat-value.white{color:#fff;font-size:13px;font-weight:700;}
+.stat-value.green{color:var(--green);}
+/* JUMP BUTTONS */
+.jump-row{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0;}
+.jump-btn{display:inline-block;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;background:var(--card-raised);border:1px solid var(--border);color:var(--text-muted);text-decoration:none;transition:all .15s;}
+.jump-btn:hover{color:var(--orange);border-color:var(--orange);}
+/* CHECKLIST */
+.checklist{list-style:none;padding:0;}
+.checklist li{position:relative;padding:3px 0 3px 22px;font-size:12.5px;}
+.checklist li::before{content:"\2713";position:absolute;left:0;color:var(--green);font-weight:700;}
+.checklist-x li::before{content:"\2717";color:var(--red);}
+/* DIVIDER */
+hr.divider{border:none;border-top:1px solid var(--border);margin:36px 0;}
+/* SCRIPT BLOCK */
+.script-block{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:28px;}
+.script-header{padding:16px 20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);}
+.script-header-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.script-header-text{flex:1;}
+.script-header-time{font-family:'Source Code Pro',monospace;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;}
+.script-header-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:#fff;margin-top:2px;}
+.script-body{padding:20px;}
+.script-text{font-size:13px;color:var(--text);line-height:1.75;margin-bottom:14px;}
+.script-text:last-child{margin-bottom:0;}
+.script-direction{font-size:11px;color:var(--purple);font-style:italic;margin-bottom:10px;padding:8px 12px;background:var(--purple-dim);border-radius:6px;}
+.script-note{font-size:11px;color:var(--text-muted);font-style:italic;margin-top:10px;padding:8px 12px;background:var(--card-raised);border-radius:6px;border-left:3px solid var(--orange);}
+/* BRIEF ITEM */
+.brief-item{padding:14px 16px;background:var(--card-raised);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;}
+.brief-item-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#fff;margin-bottom:6px;}
+.brief-item-text{font-size:12px;color:var(--text-muted);line-height:1.6;}
+/* TIMESTAMP PILL */
+.time-pill{display:inline-block;font-family:'Source Code Pro',monospace;font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.5px;background:var(--orange-dim);color:var(--orange);margin-right:8px;}
+/* MOBILE */
+@media(max-width:768px){
+body{overflow-x:hidden;}
+.topbar{flex-wrap:wrap;gap:6px;padding:8px 12px;}
+.topbar-link{font-size:10px;padding:4px 8px;}
+.print-btn{display:none;}
+.section-nav{padding:0 8px;}
+.section-nav a{padding:8px 8px;font-size:10px;}
+.doc-title{font-size:22px;}
+.section-title{font-size:18px;}
+.document{padding:20px 16px 60px;}
+.card-grid-2,.card-grid-3{display:block!important;}
+.card-grid-2>*,.card-grid-3>*{margin-bottom:10px;}
+.stats-bar{flex-direction:column;gap:1px;}
+table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+}
+@media(max-width:480px){
+.document{padding:16px 12px 50px;}
+}
+/* PRINT */
+@media print{
+.topbar,.section-nav{display:none!important;}
+body{background:#fff;color:#1a1a1a;font-size:11px;}
+.document{padding:20px;max-width:100%;}
+.card,.callout,.stat,.script-body,.script-header,.brief-item{background:#fafafa;border-color:#ddd;}
+.doc-title,.section-title,.card-title,.script-header-title{color:#1a1a1a;}
+.stat-value,.stat-value.white{color:#1a1a1a;}
+th{background:#f0f0f0;color:#1a1a1a;}
+td,.callout,.section-intro{color:#333;}
+.section{page-break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+<div id="pageLoader" style="position:fixed;inset:0;background:#0d0d0d;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;">
+<div style="width:40px;height:40px;border:3px solid rgba(245,158,11,0.2);border-top-color:#f59e0b;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+<div style="color:#8888a0;font-size:13px;font-family:sans-serif;">Loading script...</div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
+<nav class="section-nav" id="sectionNav"></nav>
+
+<div class="topbar">
+<a href="index.html" class="topbar-brand">
+<div class="topbar-icon">CS</div>
+<div class="topbar-text">Collective Shift</div>
+</a>
+<div class="topbar-links">
+<a href="lead-magnet-strategy.html" class="topbar-link">Lead Magnets</a>
+<a href="cs-marketing-plan-april-2026.html" class="topbar-link">Marketing OS</a>
+<a href="index.html" class="topbar-link">Dashboard</a>
+<button class="print-btn" onclick="window.print();">Print / PDF</button>
+</div>
+</div>
+
+<div class="document">
+
+<!-- HERO HEADER -->
+<div class="doc-header">
+<div class="doc-tag">Confidential / Ben Simpson — Video Production</div>
+<h1 class="doc-title">VSL Script: <span>How Sophisticated Investors Are Allocating to Digital Assets</span></h1>
+<p class="doc-sub">Full video sales letter script and recording brief for a 20–30 minute presentation. Built on the Jeremy Haynes VSL framework: 9 sections from hook to close. This video sits in the funnel after the lead magnet — it's the bridge between "interested" and "book a call".</p>
+<div class="doc-meta">
+<div><strong>Presenter:</strong> Ben Simpson</div>
+<div><strong>Duration:</strong> 20–30 minutes</div>
+<div><strong>Format:</strong> Talking head + slides</div>
+<div><strong>Date:</strong> 4 April 2026</div>
+<div><strong>Version:</strong> <span class="tag tag-orange">v1.0 / Draft</span></div>
+</div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+<div class="stat">
+<div class="stat-label">Duration</div>
+<div class="stat-value">20-30m</div>
+</div>
+<div class="stat">
+<div class="stat-label">Sections</div>
+<div class="stat-value white">9</div>
+</div>
+<div class="stat">
+<div class="stat-label">Framework</div>
+<div class="stat-value white">J. Haynes</div>
+</div>
+<div class="stat">
+<div class="stat-label">Funnel Position</div>
+<div class="stat-value green">Post-Magnet</div>
+</div>
+<div class="stat">
+<div class="stat-label">CTA</div>
+<div class="stat-value green">Setter Call</div>
+</div>
+</div>
+
+<!-- JUMP NAV -->
+<div style="font-family:'Source Code Pro',monospace;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:8px;">Jump to section</div>
+<div class="jump-row">
+<a href="#brief" class="jump-btn">🎬 Recording Brief</a>
+<a href="#s1" class="jump-btn">🪝 Hook</a>
+<a href="#s2" class="jump-btn">👤 Who This Is For</a>
+<a href="#s3" class="jump-btn">🔥 The Big Problem</a>
+<a href="#s4" class="jump-btn">⏰ Why Now</a>
+<a href="#s5" class="jump-btn">⚙️ The Mechanism</a>
+<a href="#s6" class="jump-btn">⭐ Social Proof</a>
+<a href="#s7" class="jump-btn">📚 The Content</a>
+<a href="#s8" class="jump-btn">💎 The Offer</a>
+<a href="#s9" class="jump-btn">🚀 CTA</a>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- RECORDING BRIEF -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="brief">
+<div class="section-label">00 / Recording Brief</div>
+<h2 class="section-title">Pre-Production Checklist</h2>
+<p class="section-intro">Everything Ben needs to know before hitting record. Wardrobe, location, key talking points to memorise, slides to prepare, and things to avoid saying on camera.</p>
+
+<div class="card-grid-2">
+<div class="card" style="border-top:3px solid var(--green);">
+<div class="card-title">👔 What to Wear</div>
+<div class="brief-item">
+<div class="brief-item-text">
+• Clean, dark-coloured button-up shirt (navy or charcoal) — no logos<br>
+• No tie — approachable but professional<br>
+• Avoid stripes, patterns, and bright whites (camera flicker)<br>
+• Ensure shirt is pressed and wrinkle-free<br>
+• Simple watch is fine — no flashy jewellery
+</div>
+</div>
+</div>
+<div class="card" style="border-top:3px solid var(--blue);">
+<div class="card-title">📍 Where to Record</div>
+<div class="brief-item">
+<div class="brief-item-text">
+• Clean, professional background — office or neutral backdrop<br>
+• Good natural lighting from the front or professional lighting kit<br>
+• Quiet room, no echo (soft furnishings help)<br>
+• Camera at eye level, head and shoulders framing<br>
+• Lapel mic or shotgun mic — no built-in camera mic
+</div>
+</div>
+</div>
+</div>
+
+<div class="card" style="border-top:3px solid var(--orange);">
+<div class="card-title">🧠 Key Points to Memorise</div>
+<p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Don't memorise the script word-for-word. Memorise these anchor points and speak naturally around them.</p>
+<div class="card-grid-2" style="margin-bottom:0;">
+<div class="brief-item">
+<div class="brief-item-title">Opening Hook</div>
+<div class="brief-item-text">The 60/40 portfolio is broken. Sophisticated investors are quietly adding a new asset class. Not speculation — protection.</div>
+</div>
+<div class="brief-item">
+<div class="brief-item-title">The Big Number</div>
+<div class="brief-item-text">$1.2 trillion in institutional capital has flowed into digital assets since 2024. BlackRock, Fidelity, sovereign wealth funds.</div>
+</div>
+<div class="brief-item">
+<div class="brief-item-title">The Framework</div>
+<div class="brief-item-text">5-layer Wealth Protection Model: Allocation → Vehicle → Custody → Tax Structure → Exit Rules</div>
+</div>
+<div class="brief-item">
+<div class="brief-item-title">The CTA</div>
+<div class="brief-item-text">Book a free 30-minute portfolio review. We'll map this to your situation. Link below.</div>
+</div>
+</div>
+</div>
+
+<div class="card" style="border-top:3px solid var(--purple);">
+<div class="card-title">📊 Slides Needed</div>
+<div class="brief-item">
+<div class="brief-item-text">
+<strong style="color:var(--purple);">1.</strong> Title slide — "How Sophisticated Investors Are Allocating to Digital Assets"<br>
+<strong style="color:var(--purple);">2.</strong> The 60/40 breakdown chart (inflation-adjusted returns since 2020)<br>
+<strong style="color:var(--purple);">3.</strong> Institutional adoption timeline (BlackRock IBIT, Fidelity FBTC, sovereign funds)<br>
+<strong style="color:var(--purple);">4.</strong> Correlation matrix — BTC vs stocks vs bonds vs real estate<br>
+<strong style="color:var(--purple);">5.</strong> The 5-Layer Wealth Protection Model diagram<br>
+<strong style="color:var(--purple);">6.</strong> Vehicle comparison table (ETF vs direct vs IRA)<br>
+<strong style="color:var(--purple);">7.</strong> Member case study results (anonymised)<br>
+<strong style="color:var(--purple);">8.</strong> CTA slide — "Book Your Free Portfolio Review"
+</div>
+</div>
+</div>
+
+<div class="card" style="border-top:3px solid var(--red);">
+<div class="card-title">🚫 What NOT to Say</div>
+<div class="callout callout-red" style="margin-bottom:0;">
+<strong>Hard rules — never say these on camera:</strong><br><br>
+• No specific return promises ("you'll make X%")<br>
+• No "crypto" — always say "digital assets" or "Bitcoin"<br>
+• No "guaranteed" or "risk-free" — ever<br>
+• No bashing traditional finance advisors — position as "different lens, not wrong"<br>
+• No urgency faking ("only 3 spots left") — be genuine<br>
+• No "get rich quick" framing — this is wealth protection<br>
+• No specific tax advice — "consult your tax professional" for anything specific<br>
+• No mention of specific altcoins — Bitcoin and digital assets only
+</div>
+</div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SCRIPT SECTION 1: HOOK -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s1">
+<div class="section-label">01 / Hook</div>
+<h2 class="section-title">🪝 The Hook</h2>
+<div class="section-intro"><span class="time-pill">0:00 – 0:30</span> Open strong. Pattern interrupt. Make them stop scrolling. Establish the paradigm shift in the first 10 seconds.</div>
+
+<div class="script-block">
+<div class="script-header" style="background:rgba(245,158,11,0.04);">
+<div class="script-header-icon" style="background:var(--orange-dim);color:var(--orange);">🪝</div>
+<div class="script-header-text">
+<div class="script-header-time" style="color:var(--orange);"><span class="tag tag-orange">0:00 – 0:30</span> &nbsp; 30 seconds</div>
+<div class="script-header-title">Pattern Interrupt + Paradigm Shift</div>
+</div>
+</div>
+<div class="script-body">
+<div class="script-direction">🎬 Direction: Look directly at camera. Speak with calm authority. No smile — this is serious. Pause after the first line.</div>
+<div class="script-text" id="script-s1">
+<em style="color:var(--text-muted);">Loading script content... This section will be populated from the VSL script draft.</em>
+</div>
+<div class="script-note">💡 <strong>Goal:</strong> The viewer should think "wait, what?" within 5 seconds. This is not hype — it's a credibility-first hook that signals this video is different from every other crypto ad.</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SCRIPT SECTION 2: WHO THIS IS FOR -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s2">
+<div class="section-label">02 / Who This Is For</div>
+<h2 class="section-title">👤 Who This Is For</h2>
+<div class="section-intro"><span class="time-pill">0:30 – 1:30</span> Qualify the audience. Make the right people lean in and the wrong people leave. Identity-based targeting.</div>
+
+<div class="script-block">
+<div class="script-header" style="background:rgba(5,158,120,0.04);">
+<div class="script-header-icon" style="background:var(--green-dim);color:var(--green);">👤</div>
+<div class="script-header-text">
+<div class="script-header-time" style="color:var(--green);"><span class="tag tag-green">0:30 – 1:30</span> &nbsp; 60 seconds</div>
+<div class="script-header-title">Audience Qualification + Identity Lock</div>
+</div>
+</div>
+<div class="script-body">
+<div class="script-direction">🎬 Direction: Warm but direct. Lean forward slightly. "I'm talking to YOU" energy.</div>
+<div class="script-text" id="script-s2">
+<em style="color:var(--text-muted);">Loading script content... This section will be populated from the VSL script draft.</em>
+</div>
+<div class="script-note">💡 <strong>Goal:</strong> The ICP hears themselves described perfectly. They think "this is for me." Everyone else self-selects out.</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SCRIPT SECTION 3: THE BIG PROBLEM -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s3">
+<div class="section-label">03 / The Big Problem</div>
+<h2 class="section-title">🔥 The Big Problem</h2>
+<div class="section-intro"><span class="time-pill">1:30 – 4:00</span> Agitate the pain. Make the cost of inaction visceral. Use data, not hype. Show them what they're losing by doing nothing.</div>
+
+<div class="script-block">
+<div class="script-header" style="background:rgba(239,68,68,0.04);">
+<div class="script-header-icon" style="background:var(--red-dim);color:var(--red);">🔥</div>
+<div class="script-header-text">
+<div class="script-header-time" style="color:var(--red);"><span class="tag tag-red">1:30 – 4:00</span> &nbsp; 2.5 minutes</div>
+<div class="script-header-title">Pain Agitation + Cost of Inaction</div>
+</div>
+</div>
+<div class="script-body">
+<div class="script-direction">🎬 Direction: Serious tone. Use slides for data points. Slow down on the key numbers — let them land.</div>
+<div class="script-text" id="script-s3">
+<em style="color:var(--text-muted);">Loading script content... This section will be populated from the VSL script draft.</em>
+</div>
+<div class="script-note">💡 <strong>Goal:</strong> Create genuine urgency through data. The viewer should feel the cost of their current inaction. Not fear — awareness.</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SCRIPT SECTION 4: WHY NOW -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s4">
+<div class="section-label">04 / Why Now</div>
+<h2 class="section-title">⏰ Why Now</h2>
+<div class="section-intro"><span class="time-pill">4:00 – 7:00</span> The window is open. Institutional adoption is accelerating. Regulatory clarity is arriving. The smart money has already moved. This section creates time-based urgency.</div>
+
+<div class="script-block">
+<div class="script-header" style="background:rgba(108,99,255,0.04);">
+<div class="script-header-icon" style="background:var(--purple-dim);color:var(--purple);">⏰</div>
+<div class="script-header-text">
+<div class="script-header-time" style="color:var(--purple);"><span class="tag tag-purple">4:00 – 7:00</span> &nbsp; 3 minutes</div>
+<div class="script-header-title">Timing Urgency + Institutional Proof</div>
+</div>
+</div>
+<div class="script-body">
+<div class="script-direction">🎬 Direction: Build energy. Show the institutional adoption slide. This is the "the world has changed and you're about to miss it" section.</div>
+<div class="script-text" id="script-s4">
+<em style="color:var(--text-muted);">Loading script content... This section will be populated from the VSL script draft.</em>
+</div>
+<div class="script-note">💡 <strong>Goal:</strong> Viewer feels the window closing. Not FOMO — strategic awareness. "The infrastructure is built. The institutions are in. The question is whether I am."</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SCRIPT SECTION 5: THE MECHANISM -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s5">
+<div class="section-label">05 / The Mechanism</div>
+<h2 class="section-title">⚙️ The Mechanism</h2>
+<div class="section-intro"><span class="time-pill">7:00 – 12:00</span> This is the meat. Introduce the 5-Layer Wealth Protection Model. Give enough that it's genuinely valuable. Hold back enough that they need Platinum to implement.</div>
+
+<div class="script-block">
+<div class="script-header" style="background:rgba(245,158,11,0.04);">
+<div class="script-header-icon" style="background:var(--orange-dim);color:var(--orange);">⚙️</div>
+<div class="script-header-text">
+<div class="script-header-time" style="color:var(--orange);"><span class="tag tag-orange">7:00 – 12:00</span> &nbsp; 5 minutes</div>
+<div class="script-header-title">The 5-Layer Wealth Protection Model</div>
+</div>
+</div>
+<div class="script-body">
+<div class="script-direction">🎬 Direction: This is teaching mode. Use the 5-Layer diagram slide. Walk through each layer clearly. This is where Ben's expertise shines.</div>
+<div class="script-text" id="script-s5">
+<em style="color:var(--text-muted);">Loading script content... This section will be populated from the VSL script draft.</em>
+</div>
+<div class="script-note">💡 <strong>Goal:</strong> Viewer understands the framework conceptually and thinks "I need help implementing this for my situation." The framework is free. The implementation is Platinum.</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SCRIPT SECTION 6: SOCIAL PROOF -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s6">
+<div class="section-label">06 / Social Proof</div>
+<h2 class="section-title">⭐ Social Proof</h2>
+<div class="section-intro"><span class="time-pill">12:00 – 15:00</span> Stories from real members. Not testimonials — transformation narratives. Before and after. Specific results. People who look like the ICP.</div>
+
+<div class="script-block">
+<div class="script-header" style="background:rgba(5,158,120,0.04);">
+<div class="script-header-icon" style="background:var(--green-dim);color:var(--green);">⭐</div>
+<div class="script-header-text">
+<div class="script-header-time" style="color:var(--green);"><span class="tag tag-green">12:00 – 15:00</span> &nbsp; 3 minutes</div>
+<div class="script-header-title">Member Transformation Stories</div>
+</div>
+</div>
+<div class="script-body">
+<div class="script-direction">🎬 Direction: Storytelling mode. Warm, genuine. These are real people. Use first names (with permission). Pause for impact.</div>
+<div class="script-text" id="script-s6">
+<em style="color:var(--text-muted);">Loading script content... This section will be populated from the VSL script draft.</em>
+</div>
+<div class="script-note">💡 <strong>Goal:</strong> "People like me have already done this and it worked." The viewer sees themselves in the stories.</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SCRIPT SECTION 7: THE CONTENT -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s7">
+<div class="section-label">07 / The Content</div>
+<h2 class="section-title">📚 The Content</h2>
+<div class="section-intro"><span class="time-pill">15:00 – 22:00</span> Deep value delivery. This is where Ben teaches. Specific, actionable insights that prove expertise and build the "if the free stuff is this good, imagine the paid stuff" effect.</div>
+
+<div class="script-block">
+<div class="script-header" style="background:rgba(59,130,246,0.04);">
+<div class="script-header-icon" style="background:var(--blue-dim);color:var(--blue);">📚</div>
+<div class="script-header-text">
+<div class="script-header-time" style="color:var(--blue);"><span class="tag tag-blue">15:00 – 22:00</span> &nbsp; 7 minutes</div>
+<div class="script-header-title">Deep Value + Expertise Proof</div>
+</div>
+</div>
+<div class="script-body">
+<div class="script-direction">🎬 Direction: Peak teaching energy. Use multiple slides. This is the section viewers will screenshot and share. Make every point specific and actionable.</div>
+<div class="script-text" id="script-s7">
+<em style="color:var(--text-muted);">Loading script content... This section will be populated from the VSL script draft.</em>
+</div>
+<div class="script-note">💡 <strong>Goal:</strong> Massive value delivery. The viewer is thinking "this is the best 7 minutes of crypto education I've ever consumed." They trust Ben completely by the end of this section.</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SCRIPT SECTION 8: THE OFFER -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s8">
+<div class="section-label">08 / The Offer</div>
+<h2 class="section-title">💎 The Offer</h2>
+<div class="section-intro"><span class="time-pill">22:00 – 26:00</span> Transition from value to offer. Not a hard sell — a natural next step. "You now understand the framework. Here's how we help you implement it."</div>
+
+<div class="script-block">
+<div class="script-header" style="background:rgba(245,158,11,0.04);">
+<div class="script-header-icon" style="background:var(--orange-dim);color:var(--orange);">💎</div>
+<div class="script-header-text">
+<div class="script-header-time" style="color:var(--orange);"><span class="tag tag-orange">22:00 – 26:00</span> &nbsp; 4 minutes</div>
+<div class="script-header-title">Platinum Offer — Natural Transition</div>
+</div>
+</div>
+<div class="script-body">
+<div class="script-direction">🎬 Direction: Shift from teacher to guide. Calm confidence. "Here's the bridge from knowing to doing." No pressure — just clarity.</div>
+<div class="script-text" id="script-s8">
+<em style="color:var(--text-muted);">Loading script content... This section will be populated from the VSL script draft.</em>
+</div>
+<div class="script-note">💡 <strong>Goal:</strong> The offer feels like the obvious next step, not a pitch. "I've been given all this value for free. Of course there's a premium tier where they help me implement it."</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SCRIPT SECTION 9: CTA -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s9">
+<div class="section-label">09 / Call to Action</div>
+<h2 class="section-title">🚀 CTA — Close</h2>
+<div class="section-intro"><span class="time-pill">26:00 – 28:00</span> One clear action. Book the call. Remove friction. Restate the promise. End strong.</div>
+
+<div class="script-block">
+<div class="script-header" style="background:rgba(5,158,120,0.04);">
+<div class="script-header-icon" style="background:var(--green-dim);color:var(--green);">🚀</div>
+<div class="script-header-text">
+<div class="script-header-time" style="color:var(--green);"><span class="tag tag-green">26:00 – 28:00</span> &nbsp; 2 minutes</div>
+<div class="script-header-title">Single CTA — Book the Portfolio Review</div>
+</div>
+</div>
+<div class="script-body">
+<div class="script-direction">🎬 Direction: Direct eye contact. Warm but confident. This is the moment. Slow down. One clear instruction.</div>
+<div class="script-text" id="script-s9">
+<em style="color:var(--text-muted);">Loading script content... This section will be populated from the VSL script draft.</em>
+</div>
+<div class="script-note">💡 <strong>Goal:</strong> One action. Zero confusion. The viewer clicks the link below the video and books the call.</div>
+</div>
+</div>
+</div>
+
+<!-- FOOTER -->
+<div style="margin-top:48px;padding-top:28px;border-top:1px solid var(--border);text-align:center;">
+<p style="font-size:11px;color:var(--text-dim);font-family:'Source Code Pro',monospace;">Collective Shift VSL Script v1.0 / How Sophisticated Investors Are Allocating to Digital Assets / April 2026</p>
+<p style="font-size:10px;color:var(--text-dim);margin-top:4px;">Confidential. For internal use by Ben Simpson and the marketing team.</p>
+<p style="font-size:10px;color:var(--text-dim);margin-top:8px;"><a href="lead-magnet-strategy.html" style="color:var(--orange);text-decoration:none;">← Lead Magnet Strategy</a> &nbsp;·&nbsp; <a href="cs-marketing-plan-april-2026.html" style="color:var(--orange);text-decoration:none;">Marketing OS</a> &nbsp;·&nbsp; <a href="index.html" style="color:var(--orange);text-decoration:none;">Dashboard</a></p>
+</div>
+
+</div><!-- /document -->
+
+<script>
+(function(){
+var nav=document.getElementById('sectionNav');
+if(!nav)return;
+var sections=[
+{id:'brief',label:'Recording Brief'},
+{id:'s1',label:'Hook'},
+{id:'s2',label:'Who This Is For'},
+{id:'s3',label:'The Big Problem'},
+{id:'s4',label:'Why Now'},
+{id:'s5',label:'The Mechanism'},
+{id:'s6',label:'Social Proof'},
+{id:'s7',label:'The Content'},
+{id:'s8',label:'The Offer'},
+{id:'s9',label:'CTA'}
+];
+sections.forEach(function(s){
+var a=document.createElement('a');
+a.href='#'+s.id;
+a.textContent=s.label;
+a.addEventListener('click',function(e){
+e.preventDefault();
+var el=document.getElementById(s.id);
+if(el){el.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(function(){window.scrollBy(0,-60);},350);}
+});
+nav.appendChild(a);
+});
+var observer=new IntersectionObserver(function(entries){
+entries.forEach(function(entry){
+if(entry.isIntersecting){
+nav.querySelectorAll('a').forEach(function(a){a.classList.remove('active');});
+var active=nav.querySelector('a[href="#'+entry.target.id+'"]');
+if(active){active.classList.add('active');active.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}
+}
+});
+},{rootMargin:'-80px 0px -60% 0px',threshold:0});
+sections.forEach(function(s){var el=document.getElementById(s.id);if(el)observer.observe(el);});
+})();
+window.addEventListener('DOMContentLoaded', function() {
+var loader = document.getElementById('pageLoader');
+if (loader) loader.style.display = 'none';
+});
+window.addEventListener('load', function() {
+var loader = document.getElementById('pageLoader');
+if (loader) loader.style.display = 'none';
+});
+setTimeout(function() {
+var loader = document.getElementById('pageLoader');
+if (loader) loader.style.display = 'none';
+}, 2000);
+</script>
+</body>
+</html>
