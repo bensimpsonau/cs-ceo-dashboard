@@ -225,6 +225,46 @@ body::before {
   margin-top: 16px;
 }
 
+/* ── VARIANT SWITCHER ── */
+.variant-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.variant-label {
+  font-family: var(--mono-font);
+  font-size: 11px;
+  color: var(--grey-dark);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-right: 4px;
+}
+.variant-btn {
+  font-family: var(--mono-font);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--grey-mid);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  letter-spacing: 0.5px;
+}
+.variant-btn:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+.variant-btn.active {
+  border-color: var(--orange);
+  background: rgba(252,92,3,0.12);
+  color: var(--orange);
+}
+
 /* ── QUESTION CARD ── */
 .q-label {
   font-family: var(--body-font);
@@ -476,10 +516,20 @@ body::before {
 
   <!-- SLIDE 0: INTRO / ABOVE THE FOLD -->
   <div class="slide active" id="slide-intro">
-    <p class="intro-eyebrow">Designed for high-income professionals and investors who want to enter digital assets with more structure, protection, and conviction.</p>
-    <h1 class="intro-headline">Discover Your Digital Asset Wealth Blueprint.</h1>
-    <p class="intro-sub">Complete this short investor assessment to discover how ready you are to position intelligently for the next wave of digital asset adoption - and receive a tailored blueprint highlighting potential gaps in your decision-making, risk awareness, and entry readiness.</p>
-    <button class="start-btn" onclick="startQuiz()">Begin Your Free Assessment →</button>
+
+    <!-- VARIANT SWITCHER (for internal testing) -->
+    <div class="variant-switcher no-print" id="variantSwitcher">
+      <span class="variant-label">Test variant:</span>
+      <button class="variant-btn active" onclick="setVariant(0)" id="vbtn-0">Control</button>
+      <button class="variant-btn" onclick="setVariant(1)" id="vbtn-1">V1</button>
+      <button class="variant-btn" onclick="setVariant(2)" id="vbtn-2">V2</button>
+      <button class="variant-btn" onclick="setVariant(3)" id="vbtn-3">V3</button>
+    </div>
+
+    <p class="intro-eyebrow" id="intro-eyebrow-text"></p>
+    <h1 class="intro-headline" id="intro-headline-text"></h1>
+    <p class="intro-sub" id="intro-sub-text"></p>
+    <button class="start-btn" id="intro-cta-btn" onclick="startQuiz()"></button>
     <p class="intro-fine">Takes under 2 minutes. No sign-up required to begin.</p>
     <p class="intro-disclaimer">This assessment is for educational purposes only and does not constitute financial advice, investment advice, or a recommendation to buy or sell any asset.</p>
   </div>
@@ -737,6 +787,60 @@ body::before {
 </footer>
 
 <script>
+// ── SPLIT TEST VARIANTS ──
+const VARIANTS = [
+  {
+    id: 'control',
+    eyebrow: 'Designed for high-income professionals and investors who want to enter digital assets with more structure, protection, and conviction.',
+    headline: 'Discover Your Digital Asset Wealth Blueprint.',
+    subhead: 'Complete this short investor assessment to discover how ready you are to position intelligently for the next wave of digital asset adoption - and receive a tailored blueprint highlighting potential gaps in your decision-making, risk awareness, and entry readiness.',
+    cta: 'Begin Your Free Assessment →'
+  },
+  {
+    id: 'v1-identity-threat',
+    eyebrow: 'For professionals and investors earning $250K+ who refuse to get digital assets wrong.',
+    headline: 'Most High-Income Investors Will Make the Same Costly Mistake With Digital Assets. This 3-Minute Assessment Shows If You’re One of Them.',
+    subhead: 'Find out where the gaps are in your risk awareness, timing, and entry strategy before you commit capital. Get a tailored breakdown in minutes.',
+    cta: 'Show Me My Gaps →'
+  },
+  {
+    id: 'v2-blind-spots',
+    eyebrow: 'For professionals and investors with $250K+ income who are serious about digital assets but not willing to guess.',
+    headline: 'Before You Allocate a Single Dollar to Digital Assets, You Need to Know Your Three Biggest Blind Spots.',
+    subhead: 'This short investor assessment identifies the gaps in your decision-making and risk awareness, then delivers a tailored blueprint to fix them.',
+    cta: 'Reveal My Blind Spots →'
+  },
+  {
+    id: 'v3-social-proof',
+    eyebrow: 'Built for high-income professionals and investors. Not for day traders or speculators.',
+    headline: 'The Assessment 1,400+ Professionals Worldwide Took Before Making Their First Serious Digital Asset Decision.',
+    subhead: '3 minutes. 8 questions. A tailored blueprint showing where your strategy, risk awareness, and entry timing stand today.',
+    cta: 'Take the Assessment Now →'
+  }
+];
+
+let activeVariant = 0;
+
+function setVariant(idx) {
+  activeVariant = idx;
+  const v = VARIANTS[idx];
+  document.getElementById('intro-eyebrow-text').textContent = v.eyebrow;
+  document.getElementById('intro-headline-text').textContent = v.headline;
+  document.getElementById('intro-sub-text').textContent = v.subhead;
+  document.getElementById('intro-cta-btn').textContent = v.cta;
+  document.querySelectorAll('.variant-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+  // persist in sessionStorage so results page can log it
+  sessionStorage.setItem('cs_variant', v.id);
+}
+
+// Initialise on load
+document.addEventListener('DOMContentLoaded', function() {
+  // Check URL param ?v=1|2|3 for direct linking
+  const urlParam = new URLSearchParams(window.location.search).get('v');
+  const startIdx = urlParam ? Math.min(Math.max(parseInt(urlParam), 0), 3) : 0;
+  setVariant(startIdx);
+});
+
 (function() {
   const TOTAL_QUESTIONS = 8;
   const answers = {};
