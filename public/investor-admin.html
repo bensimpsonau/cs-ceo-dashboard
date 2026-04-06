@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capital Raise Admin — Collective Shift | Confidential</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Barlow:wght@400;500;600&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange: #FC5C03;
+  --dark: #0f0e17;
+  --card: #1a1928;
+  --card2: #22213a;
+  --border: #2e2d4a;
+  --text: #e8e8ec;
+  --muted: #9090a8;
+  --green: #08C394;
+  --red: #EF4444;
+  --amber: #F59E0B;
+  --blue: #60a5fa;
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Barlow', sans-serif; font-size: 14px; line-height: 1.7; color: var(--text); background: var(--dark); }
+h1,h2,h3,h4,h5 { font-family: 'Plus Jakarta Sans', sans-serif; }
+code { font-family: 'Source Code Pro', monospace; font-size: 12px; background: rgba(255,255,255,0.07); padding: 2px 7px; border-radius: 4px; }
+
+/* NAV */
+.topbar { position: sticky; top: 0; z-index: 100; background: rgba(15,14,23,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 14px 40px; display: flex; justify-content: space-between; align-items: center; }
+.topbar-brand { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 15px; color: var(--text); display: flex; align-items: center; gap: 10px; }
+.topbar-brand span { color: var(--orange); }
+.confidential-badge { font-family: 'Source Code Pro', monospace; font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); padding: 3px 10px; border-radius: 20px; }
+.nav-links { display: flex; gap: 6px; }
+.nav-link { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 600; color: var(--muted); background: none; border: none; cursor: pointer; padding: 6px 12px; border-radius: 8px; text-decoration: none; transition: all .2s; }
+.nav-link:hover, .nav-link.active { background: rgba(252,92,3,0.12); color: var(--orange); }
+
+/* LAYOUT */
+.main { max-width: 1100px; margin: 0 auto; padding: 40px 40px 80px; }
+.section { display: none; }
+.section.active { display: block; }
+
+/* HERO */
+.hero { text-align: center; padding: 48px 0 40px; }
+.hero-tag { font-family: 'Source Code Pro', monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--orange); margin-bottom: 12px; }
+.hero h1 { font-size: 32px; font-weight: 800; margin-bottom: 10px; }
+.hero-sub { font-size: 15px; color: var(--muted); max-width: 550px; margin: 0 auto 32px; }
+
+/* METRIC CARDS */
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 32px; }
+.metric { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; text-align: center; }
+.metric-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; color: var(--orange); margin-bottom: 4px; }
+.metric-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+
+/* CARDS */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px; overflow: hidden; }
+.card-head { background: var(--card2); padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+.card-head h3 { font-size: 14px; font-weight: 700; }
+.card-body { padding: 20px; }
+
+/* TRACKER TABLE */
+.tracker-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tracker-table th { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+.tracker-table td { padding: 14px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+.tracker-table tr:last-child td { border-bottom: none; }
+.tracker-table tr:hover td { background: rgba(255,255,255,0.02); }
+.status-badge { display: inline-block; font-family: 'Source Code Pro', monospace; font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 20px; letter-spacing: .04em; }
+.status-intro { background: rgba(96,165,250,0.15); color: var(--blue); border: 1px solid rgba(96,165,250,0.3); }
+.status-warm { background: rgba(245,158,11,0.15); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+.status-hot { background: rgba(8,195,148,0.15); color: var(--green); border: 1px solid rgba(8,195,148,0.3); }
+.status-pass { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+.status-pending { background: rgba(144,144,168,0.15); color: var(--muted); border: 1px solid rgba(144,144,168,0.3); }
+
+/* TEMPLATES */
+.template-block { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 16px; overflow: hidden; }
+.template-head { padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
+.template-head h4 { font-size: 13px; font-weight: 700; }
+.template-head .t-tag { font-family: 'Source Code Pro', monospace; font-size: 10px; color: var(--orange); }
+.template-body { padding: 18px; display: none; border-top: 1px solid var(--border); }
+.template-body.open { display: block; }
+.template-copy { background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; padding: 16px; font-size: 13px; line-height: 1.8; white-space: pre-wrap; font-family: 'Barlow', sans-serif; }
+.copy-btn { display: flex; align-items: center; gap: 6px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 600; background: rgba(252,92,3,0.1); color: var(--orange); border: 1px solid rgba(252,92,3,0.3); border-radius: 8px; padding: 7px 14px; cursor: pointer; margin-top: 10px; transition: all .2s; }
+.copy-btn:hover { background: rgba(252,92,3,0.2); }
+
+/* Q&A */
+.qa-block { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
+.qa-q { padding: 14px 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; user-select: none; }
+.qa-q:hover { background: rgba(255,255,255,0.03); }
+.qa-q .chevron { color: var(--muted); font-size: 16px; transition: transform .2s; }
+.qa-q.open .chevron { transform: rotate(180deg); }
+.qa-a { padding: 0 18px 14px; font-size: 13px; color: var(--muted); line-height: 1.8; display: none; }
+.qa-a.open { display: block; }
+.qa-a strong { color: var(--text); }
+
+/* CAP TABLE */
+.cap-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.cap-table th { background: rgba(252,92,3,0.08); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--orange); padding: 10px 14px; text-align: left; }
+.cap-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); }
+.cap-table tr:last-child td { border-bottom: none; font-weight: 700; color: var(--orange); }
+.cap-table .sub { font-size: 11px; color: var(--muted); }
+
+/* CHECKLIST */
+.checklist { list-style: none; }
+.checklist li { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
+.checklist li:last-child { border-bottom: none; }
+.check-box { width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--border); flex-shrink: 0; margin-top: 2px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; }
+.check-box.checked { background: var(--green); border-color: var(--green); }
+.check-box.checked::after { content: '✓'; color: #fff; font-size: 11px; font-weight: 700; }
+.checklist li.checked-item { opacity: 0.5; }
+.checklist li.checked-item .check-text { text-decoration: line-through; }
+
+/* ALERT */
+.alert { border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; }
+.alert-red { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); }
+.alert-amber { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); }
+.alert-green { background: rgba(8,195,148,0.08); border: 1px solid rgba(8,195,148,0.25); }
+.alert h4 { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.alert-red h4 { color: var(--red); }
+.alert-amber h4 { color: var(--amber); }
+.alert-green h4 { color: var(--green); }
+
+/* GRID */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } .topbar { padding: 12px 20px; } .main { padding: 24px 20px 60px; } .nav-links { display: none; } }
+
+/* PRINT */
+@media print { .topbar { position: relative; } .section { display: block !important; page-break-before: always; } .section:first-child { page-break-before: auto; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">Collective Shift <span>/ Capital Raise</span> <span class="confidential-badge">Confidential</span></div>
+  <nav class="nav-links">
+    <a class="nav-link active" onclick="showSection('overview')">Overview</a>
+    <a class="nav-link" onclick="showSection('tracker')">Pipeline</a>
+    <a class="nav-link" onclick="showSection('templates')">Email Templates</a>
+    <a class="nav-link" onclick="showSection('qa')">Q&A Prep</a>
+    <a class="nav-link" onclick="showSection('legal')">Cap Table</a>
+    <a class="nav-link" onclick="showSection('checklist')">Checklist</a>
+  </nav>
+</div>
+
+<div class="main">
+
+<!-- OVERVIEW -->
+<div class="section active" id="section-overview">
+  <div class="hero">
+    <div class="hero-tag">Pre-Series A Growth Round — April 2026</div>
+    <h1>Capital Raise Admin</h1>
+    <p class="hero-sub">Bloomberg for Digital Assets — US$2M raise to accelerate US expansion</p>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-val">A$7.3M</div><div class="metric-label">ARR</div></div>
+    <div class="metric"><div class="metric-val">+203%</div><div class="metric-label">YoY Growth</div></div>
+    <div class="metric"><div class="metric-val">3.18x</div><div class="metric-label">ROAS (8mo avg)</div></div>
+    <div class="metric"><div class="metric-val">10:1</div><div class="metric-label">LTV:CAC</div></div>
+    <div class="metric"><div class="metric-val">~80%</div><div class="metric-label">Gross Margin</div></div>
+    <div class="metric"><div class="metric-val">1,163</div><div class="metric-label">Active Members</div></div>
+  </div>
+
+  <div class="alert alert-red">
+    <h4>🚨 Urgent — Gesmer Updegrove Engagement Letter OVERDUE</h4>
+    US legal counsel must be signed before any US investor term sheets or commitments. Letter was due Apr 4. Travis + Bergs need to action this immediately.
+  </div>
+
+  <div class="alert alert-amber">
+    <h4>⚠️ Clarify Round Structure with Steve</h4>
+    AU priced round (US$1M, A$65-75M pre-money, triggers SAFE conversion) and US raise (US$2M per deck) — are these running simultaneously or sequential? Answer changes what you tell US investors about terms and valuation.
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-head"><h3>Raise Summary</h3></div>
+      <div class="card-body">
+        <table style="width:100%;font-size:13px;">
+          <tr><td style="color:var(--muted);padding:5px 0;">Raise amount</td><td style="font-weight:600;">US$2M (US raise)</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0;">Pre-money (AU round)</td><td style="font-weight:600;">A$65M–A$75M</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0;">Structure</td><td style="font-weight:600;">TBD — SAFE or priced equity</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0;">Lead advisor</td><td style="font-weight:600;">Steve Walsh</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0;">US counsel</td><td style="font-weight:600;">Gesmer Updegrove (OVERDUE)</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0;">Target ARR (12mo)</td><td style="font-weight:600;">A$15M+</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0;">Series A target</td><td style="font-weight:600;">$60–100M pre-money</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Use of Funds</h3></div>
+      <div class="card-body">
+        <table style="width:100%;font-size:13px;">
+          <tr><td style="color:var(--muted);padding:5px 0;">Marketing scale (US)</td><td style="font-weight:600;">~US$900K</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0;">Team (10 hires, LA + MEL)</td><td style="font-weight:600;">~US$500K</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0;">Shift AI v2.0</td><td style="font-weight:600;">~US$300K</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0;">US legal + ops setup</td><td style="font-weight:600;">~US$150K</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0;">Events + BD</td><td style="font-weight:600;">~US$150K</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0;font-weight:700;">Total</td><td style="font-weight:700;color:var(--orange);">US$2M</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>Steve Walsh — Coordination Protocol</h3></div>
+    <div class="card-body">
+      <ul class="checklist" style="list-style:disc;padding-left:18px;">
+        <li style="display:list-item;padding:4px 0;">Every new intro from Steve = update pipeline tracker same day</li>
+        <li style="display:list-item;padding:4px 0;">Reply to Steve's intros within 24 hours max</li>
+        <li style="display:list-item;padding:4px 0;">Let Steve know when a call is booked — he wants to join</li>
+        <li style="display:list-item;padding:4px 0;">Brief Steve after each call: how it went, interest level, next step (2-3 sentences)</li>
+        <li style="display:list-item;padding:4px 0;">Build on his "Bloomberg for digital assets" framing — never contradict it</li>
+        <li style="display:list-item;padding:4px 0;">Do NOT send AU SAFE FAQ to US investors — different round, different docs</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- TRACKER -->
+<div class="section" id="section-tracker">
+  <div class="card">
+    <div class="card-head">
+      <h3>Investor Pipeline</h3>
+      <span style="font-size:12px;color:var(--muted);">Updated Apr 7, 2026</span>
+    </div>
+    <div class="card-body" style="padding:0;">
+      <table class="tracker-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Investor</th>
+            <th>Company</th>
+            <th>Introduced By</th>
+            <th>Status</th>
+            <th>Deck Sent</th>
+            <th>Call</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--muted);">1</td>
+            <td><strong>Michael McFarlane</strong><br><span style="font-size:11px;color:var(--muted);">linkedin: mcfarlanemichael</span></td>
+            <td>SoFi<br><span style="font-size:11px;color:var(--muted);">ex-Visa on-chain analytics</span></td>
+            <td>Steve Walsh</td>
+            <td><span class="status-badge status-intro">Intro Received</span></td>
+            <td><span style="color:var(--amber);">Via Steve</span></td>
+            <td><span style="color:var(--red);">Not booked</span></td>
+            <td style="font-size:12px;color:var(--muted);">Steve wants to join call. Reply-all to intro email to book. Strong fit — SoFi listed as potential acquirer in deck.</td>
+          </tr>
+          <tr>
+            <td style="color:var(--muted);">—</td>
+            <td style="color:var(--muted);font-style:italic;">Add next Steve intro here</td>
+            <td>—</td>
+            <td>Steve Walsh</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>Status Key</h3></div>
+    <div class="card-body" style="display:flex;flex-wrap:wrap;gap:10px;">
+      <span class="status-badge status-intro">Intro Received</span>
+      <span class="status-badge status-pending">Email Sent</span>
+      <span class="status-badge" style="background:rgba(167,139,250,0.15);color:#c4b5fd;border:1px solid rgba(167,139,250,0.3);">Call Booked</span>
+      <span class="status-badge" style="background:rgba(167,139,250,0.2);color:#c4b5fd;border:1px solid rgba(167,139,250,0.4);">Call Done</span>
+      <span class="status-badge status-warm">Soft Yes</span>
+      <span class="status-badge status-hot">In Diligence</span>
+      <span class="status-badge status-hot">Term Sheet</span>
+      <span class="status-badge status-hot">Closed</span>
+      <span class="status-badge status-pass">Pass</span>
+    </div>
+  </div>
+</div>
+
+<!-- TEMPLATES -->
+<div class="section" id="section-templates">
+
+  <div class="template-block">
+    <div class="template-head" onclick="toggleTemplate(this)">
+      <h4>Template 1 — Reply to Warm Intro (use for Michael NOW)</h4>
+      <span class="t-tag">USE FIRST ↓</span>
+    </div>
+    <div class="template-body open">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px;"><strong>Instructions:</strong> Reply-all to Steve's intro email to include him. Replace [bracketed text].</p>
+      <div class="template-copy">Subject: Re: Michael, Ben - Introduction
+
+Hi Michael,
+
+Thanks for the warm intro Steve.
+
+Michael - great to connect. Your background across Visa's on-chain analytics and SoFi is exactly the lens I'd love to get some time with. The convergence of traditional finance infrastructure and digital asset rails is central to where we're taking the platform.
+
+I'm in the US getting the team established here. Happy to jump on a call this week or next - whatever works for you.
+
+What does your calendar look like?
+
+Ben</div>
+      <button class="copy-btn" onclick="copyTemplate(this)">📋 Copy to clipboard</button>
+    </div>
+  </div>
+
+  <div class="template-block">
+    <div class="template-head" onclick="toggleTemplate(this)">
+      <h4>Template 2 — Follow-Up After First Call</h4>
+      <span class="t-tag">POST-CALL ↓</span>
+    </div>
+    <div class="template-body">
+      <div class="template-copy">Subject: Great to connect - Collective Shift
+
+Hi [Name],
+
+Really enjoyed the conversation [today/yesterday].
+
+As discussed - attaching the deck for your review. Happy to answer any questions that come up as you go through it.
+
+[One personalised sentence: e.g. "Your point on institutional adoption timelines really resonated - we're seeing the same signals in our member data."]
+
+On my end: [next agreed action - e.g. "I'll follow up with the data room link once we have an NDA in place" / "Happy to loop Steve back in for a follow-up call"].
+
+Let me know if useful to connect again before then.
+
+Ben</div>
+      <button class="copy-btn" onclick="copyTemplate(this)">📋 Copy to clipboard</button>
+    </div>
+  </div>
+
+  <div class="template-block">
+    <div class="template-head" onclick="toggleTemplate(this)">
+      <h4>Template 3 — Proactive Outreach (Cold/Warm)</h4>
+      <span class="t-tag">OUTBOUND ↓</span>
+    </div>
+    <div class="template-body">
+      <div class="template-copy">Subject: Collective Shift - Bloomberg for Digital Assets
+
+Hi [Name],
+
+[How you know them / common connection - 1 sentence].
+
+I'm the founder of Collective Shift - often described as the Bloomberg for digital assets. We've built to A$7.3M ARR in Australia (203% YoY) and are expanding to the US.
+
+Currently raising a US$2M seed round to accelerate the launch. Steve Walsh is advising the raise.
+
+Happy to send the deck if relevant - or jump on a 20-min call if you'd rather hear it directly.
+
+Ben Simpson
+Founder & CEO, Collective Shift</div>
+      <button class="copy-btn" onclick="copyTemplate(this)">📋 Copy to clipboard</button>
+    </div>
+  </div>
+
+  <div class="template-block">
+    <div class="template-head" onclick="toggleTemplate(this)">
+      <h4>Template 4 — Thank You + Next Steps (Strong Call)</h4>
+      <span class="t-tag">POST-CALL ↓</span>
+    </div>
+    <div class="template-body">
+      <div class="template-copy">Subject: Re: [Thread] - next steps
+
+Hi [Name],
+
+Thanks for the time [today]. Really appreciated the depth of the conversation - particularly [specific thing they said or asked].
+
+As discussed, sending across [deck / memo / data room]. The data room is available under a short NDA - happy to get that across.
+
+[If they asked a question: "On your question about [X] - [concise answer]."]
+
+Suggested next step: [what makes sense - e.g. "a second call with our CFO Rafael to go through the unit economics in detail" / "introductions to a few existing members who've agreed to speak to investors"].
+
+Happy to loop Steve in whenever useful.
+
+Ben</div>
+      <button class="copy-btn" onclick="copyTemplate(this)">📋 Copy to clipboard</button>
+    </div>
+  </div>
+
+  <div class="template-block">
+    <div class="template-head" onclick="toggleTemplate(this)">
+      <h4>Template 5 — 5-Day No-Response Follow-Up</h4>
+      <span class="t-tag">FOLLOW-UP ↓</span>
+    </div>
+    <div class="template-body">
+      <div class="template-copy">Subject: Re: [Thread]
+
+Hi [Name],
+
+Just following up on my note below - wanted to make sure it didn't get buried.
+
+Happy to keep it brief - even 15 minutes to see if there's a fit.
+
+Ben</div>
+      <button class="copy-btn" onclick="copyTemplate(this)">📋 Copy to clipboard</button>
+    </div>
+  </div>
+
+  <div class="template-block">
+    <div class="template-head" onclick="toggleTemplate(this)">
+      <h4>Template 6 — Steve Briefing (After Each Call)</h4>
+      <span class="t-tag">INTERNAL ↓</span>
+    </div>
+    <div class="template-body">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px;"><strong>Send to Steve within 24hrs of every investor call.</strong></p>
+      <div class="template-copy">Hey Steve,
+
+Quick update on [Name] call [today/yesterday]:
+
+- Interest level: [Hot / Warm / Cool / Pass]
+- Key points: [2-3 sentences on what they said, what resonated, what they pushed back on]
+- Next step: [what's happening next - e.g. "They want to see the data room" / "Following up in 2 weeks" / "Passed - reason: X"]
+
+[Any specific flag for Steve - e.g. "They mentioned knowing [person] - might be worth a connection?"]
+
+Ben</div>
+      <button class="copy-btn" onclick="copyTemplate(this)">📋 Copy to clipboard</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Q&A -->
+<div class="section" id="section-qa">
+  <p style="color:var(--muted);margin-bottom:20px;font-size:13px;">Click each question to expand the answer. These are the 10 questions you'll get on every first call - know these cold.</p>
+
+  <div class="qa-block">
+    <div class="qa-q" onclick="toggleQA(this)">Q1: "What's the valuation?" <span class="chevron">▾</span></div>
+    <div class="qa-a">"We haven't set a hard cap for the US round yet - working through that with Steve. For context, the AU round is pricing at A$65-75M pre-money based on our ARR and growth rate. For the US raise, we're discussing structure now. What typically works best for you - SAFE or priced round?" <em style="color:var(--amber);">Let them lead on preference.</em></div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-q" onclick="toggleQA(this)">Q2: "Your retention is 68% — that's below SaaS median." <span class="chevron">▾</span></div>
+    <div class="qa-a">"That's the Year 2 number and we address it head on. Here's the full curve: 68% renew at Year 2, then 72% of those renew Year 3, then 94% of Year 3 renew Year 4. The curve inverts sharply. Once a member gets past the first renewal, they almost never leave. A Year 4 member generates ~A$95K lifetime revenue against ~A$6,700 CAC. The early drop is product discovery churn - not structural. We're also actively investing in onboarding to improve the Year 2 rate."</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-q" onclick="toggleQA(this)">Q3: "You're 85% dependent on Meta ads — what if it breaks?" <span class="chevron">▾</span></div>
+    <div class="qa-a">"We've run at 3.18x ROAS for 8 consecutive months through significant market volatility - it's a controllable, repeatable machine, not a lucky streak. We also have 500K+ YouTube subscribers and a strong organic social presence as a parallel channel. And because LTV is 10x CAC, we're not constantly replacing the base - we're compounding. That said, Meta account backup and creative diversification are things we're actively building into the US setup."</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-q" onclick="toggleQA(this)">Q4: "What happens in a crypto bear market?" <span class="chevron">▾</span></div>
+    <div class="qa-a">"We grew 203% last year - in a down market. Bitcoin fell from ATH while our ARR kept accelerating. The business is structurally decorrelated from crypto prices because we serve the education and research layer, not the price action. When markets are volatile, sophisticated investors need guidance more, not less. A bear market is actually an acquisition tailwind for us - it's when our ICP gets most motivated to finally build a proper framework."</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-q" onclick="toggleQA(this)">Q5: "Why the US? Why now?" <span class="chevron">▾</span></div>
+    <div class="qa-a">"The US is 15x larger than Australia. We've already proven the model - A$7.3M ARR, 10:1 LTV:CAC, 3.18x ROAS for 8 consecutive months. Australia was the deliberate test market. US paid campaigns are already live and converting. I'm here in person to build the team on the ground. The only question is how fast we go - this raise determines the timeline."</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-q" onclick="toggleQA(this)">Q6: "What's your path to Series A?" <span class="chevron">▾</span></div>
+    <div class="qa-a">"A$15M+ ARR within 12 months, which positions us for a Series A at ~$60-100M pre-money. The math is straightforward: continue the trajectory we're already on, in a market 15x larger, with proven acquisition economics. We don't need to build something new - we need capital to scale what's already working."</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-q" onclick="toggleQA(this)">Q7: "Who are your competitors?" <span class="chevron">▾</span></div>
+    <div class="qa-a">"There's no direct competitor at our positioning. Messari and Delphi serve institutions. CoinGecko and CoinMarketCap are data tools. Crypto Twitter and Reddit are noise. Nobody owns the independent, institutional-grade research and education layer for retail HNW investors. That's the gap we own - and it's why the Bloomberg comparison lands with our audience immediately."</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-q" onclick="toggleQA(this)">Q8: "Tell me about the team." <span class="chevron">▾</span></div>
+    <div class="qa-a">"18 people now, scaling to 28 post-raise. Leadership: myself as CEO, Travis Thomas (CGO - behavioural science, MBA), Aaron Berghuber (CTO - MBA), Rafael Kimberley (CFO). Advisory: Nathan Chan (Foundr, $20M+ revenue), Stuart MacDonald (ex-CMO Expedia, 120M users), and Steve Walsh who's leading our US investor access. Three MBAs on the leadership team. The US hires are focused on sales, marketing, and member success in LA."</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-q" onclick="toggleQA(this)">Q9: "Tell me about Shift AI — is it actually built?" <span class="chevron">▾</span></div>
+    <div class="qa-a">"v1 is live in production with our Platinum members now. This raise funds v2.0 - expanded personalisation, real-time on-chain data integration, and a standalone product tier. The vision: every Collective Shift member gets a personal research analyst available 24/7 that knows their portfolio, their risk tolerance, and their goals. That's the defensible IP layer - and it's already generating member results."</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-q" onclick="toggleQA(this)">Q10: "What's in the data room?" <span class="chevron">▾</span></div>
+    <div class="qa-a">"Full P&L, cohort-level retention data, ad account access, member survey data, legal structure, and cap table detail. Available via DocSend under a short NDA. Happy to share the link once we have that in place - or we can walk through it live with our CFO Rafael on a second call if that's more useful."</div>
+  </div>
+
+  <div class="card" style="margin-top:24px;">
+    <div class="card-head"><h3>Bonus — Michael McFarlane Specific Prep</h3></div>
+    <div class="card-body">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Michael built Visa's on-chain analytics dashboard and is now at SoFi (digital banking). He's plugged into SF venture scene. SoFi is listed as a potential strategic acquirer in the deck.</p>
+      <ul style="list-style:disc;padding-left:18px;font-size:13px;line-height:2;">
+        <li>Lead with the <strong>on-chain data angle</strong> — our research framework + Shift AI maps directly to his background</li>
+        <li>Mention the <strong>convergence thesis</strong> — AI agents needing programmable money rails (his world at Visa/SoFi)</li>
+        <li>SoFi operates in the exact demographic we serve — HNW professionals digitising their finances</li>
+        <li>Ask: "Given your experience building on-chain analytics infrastructure at Visa — what do you see as the biggest gap in how retail investors currently access that data?"</li>
+        <li>Don't over-pitch. He's technically sophisticated. Let him ask the technical questions.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CAP TABLE -->
+<div class="section" id="section-legal">
+  <div class="alert alert-amber">
+    <h4>⚠️ Two Separate Rounds — Don't Conflate</h4>
+    The AU SAFE FAQ is for existing AU investors only. Do NOT share with US investors. US round structure (SAFE vs priced) is TBD pending Gesmer Updegrove engagement.
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-head"><h3>Cap Table — Current (Pre-Conversion)</h3></div>
+      <div class="card-body" style="padding:0;">
+        <table class="cap-table">
+          <tr><th>Security</th><th>Shares</th><th>%</th></tr>
+          <tr><td>Founder ordinary shares</td><td>1,000,000</td><td>96.9%</td></tr>
+          <tr><td>Investor ordinary shares</td><td>32,175</td><td>3.1%</td></tr>
+          <tr><td><strong>Undiluted total</strong></td><td>1,032,175</td><td>100%</td></tr>
+          <tr><td style="color:var(--muted);" class="sub">Staff options (issued)</td><td style="color:var(--muted);">253,335</td><td style="color:var(--muted);">—</td></tr>
+          <tr><td style="color:var(--muted);" class="sub">Option pool (future)</td><td style="color:var(--muted);">75,000</td><td style="color:var(--muted);">—</td></tr>
+          <tr><td><strong>Diluted total</strong></td><td>1,360,510</td><td>—</td></tr>
+          <tr><td style="color:var(--muted);" class="sub">SAFE conversion (est.)</td><td style="color:var(--muted);">~148,507</td><td style="color:var(--muted);">—</td></tr>
+          <tr><td><strong>Fully diluted (post-SAFE)</strong></td><td>~1,536,749</td><td>—</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>AU SAFE Round Details</h3></div>
+      <div class="card-body">
+        <table style="width:100%;font-size:13px;">
+          <tr><td style="color:var(--muted);padding:5px 0;">SAFE notes raised</td><td style="font-weight:600;">US$1.1M (2022-2024)</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0;">Valuation cap</td><td style="font-weight:600;">US$10M</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0;">Implied price/share</td><td style="font-weight:600;">~US$7.4/share</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0;">Shares on conversion</td><td style="font-weight:600;">~148,507</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0;">Qualifying Financing threshold</td><td style="font-weight:600;">≥US$1M (triggers conversion)</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0;">SAFE holder rights</td><td style="font-weight:600;color:var(--red);">No pro-rata, no info rights, no board rights, no MFN</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0;">AU priced round pre-money</td><td style="font-weight:600;">A$65M–A$75M (supportable)</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0;">Basis</td><td style="font-weight:600;">A$6.56M ARR, 189% YoY, 40% NRR</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>Deck vs Memo — Version Control</h3></div>
+    <div class="card-body" style="padding:0;">
+      <table style="width:100%;font-size:13px;border-collapse:collapse;">
+        <tr style="border-bottom:1px solid var(--border);">
+          <th style="padding:10px 14px;text-align:left;color:var(--muted);font-size:11px;text-transform:uppercase;">Document</th>
+          <th style="padding:10px 14px;text-align:left;color:var(--muted);font-size:11px;text-transform:uppercase;">For</th>
+          <th style="padding:10px 14px;text-align:left;color:var(--muted);font-size:11px;text-transform:uppercase;">Key difference</th>
+          <th style="padding:10px 14px;text-align:left;color:var(--muted);font-size:11px;text-transform:uppercase;">Safe to send?</th>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:12px 14px;font-weight:600;">Seed Deck (Apr 2026)</td>
+          <td style="padding:12px 14px;">US new investors</td>
+          <td style="padding:12px 14px;font-size:12px;color:var(--muted);">US$2M raise, US$15K Platinum, Bloomberg positioning, no valuation stated</td>
+          <td style="padding:12px 14px;"><span style="color:var(--green);">✅ Yes</span></td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:12px 14px;font-weight:600;">Investment Memo (Feb 2026)</td>
+          <td style="padding:12px 14px;">Existing AU investors only</td>
+          <td style="padding:12px 14px;font-size:12px;color:var(--muted);">Says "existing investors only," AU$ throughout, A$3M raise, A$65-75M pre-money</td>
+          <td style="padding:12px 14px;"><span style="color:var(--red);">❌ Not yet — needs US version</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 14px;font-weight:600;">SAFE FAQ (Feb 2026)</td>
+          <td style="padding:12px 14px;">Existing AU SAFE investors only</td>
+          <td style="padding:12px 14px;font-size:12px;color:var(--muted);">SAFE conversion mechanics, AU cap table, legal terms — AU round only</td>
+          <td style="padding:12px 14px;"><span style="color:var(--red);">❌ Never to US investors</span></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKLIST -->
+<div class="section" id="section-checklist">
+  <div class="two-col">
+    <div class="card">
+      <div class="card-head"><h3>Pre-Call Prep Checklist</h3></div>
+      <div class="card-body">
+        <ul class="checklist" id="precall-list">
+          <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Research investor's background (LinkedIn, portfolio, recent investments)</span></li>
+          <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Note one specific connection to CS (fintech, digital assets, education, SaaS)</span></li>
+          <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Have DocSend deck link ready to share</span></li>
+          <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Know their typical check size if available</span></li>
+          <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Confirm if Steve is joining (24hrs before)</span></li>
+          <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Review Q&A prep (especially retention + Meta questions)</span></li>
+          <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Prepare one tailored question for them based on their background</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Post-Call Process (within 24hrs)</h3></div>
+      <div class="card-body">
+        <ul class="checklist" id="postcall-list">
+          <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Send follow-up email (Template 2 or 4)</span></li>
+          <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Update pipeline tracker — status, key points, next action + date</span></li>
+          <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Answer any question you couldn't answer on the call (within 48hrs)</span></li>
+          <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Brief Steve (Template 6) — interest level, what happened, next step</span></li>
+          <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">If pass — log reason (use for pitch refinement)</span></li>
+          <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">If warm — flag to Steve immediately</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>Immediate Action Items (Today)</h3></div>
+    <div class="card-body">
+      <ul class="checklist" id="urgent-list">
+        <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text"><strong>Reply to Michael McFarlane intro</strong> — use Template 1. Reply-all to include Steve.</span></li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text"><strong>Gesmer Updegrove engagement letter</strong> — send TODAY. Overdue since Apr 4. No US commitments without US counsel.</span></li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text"><strong>Clarify round structure with Steve</strong> — AU round vs US round running simultaneously or sequential?</span></li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text"><strong>US memo version</strong> — strip "existing investors only" language, convert AU$ to US$, update for new investors</span></li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text"><strong>Pat + Josh deeds of release</strong> — both overdue since Mar 31</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div><!-- end main -->
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function toggleTemplate(head) {
+  const body = head.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+function toggleQA(q) {
+  q.classList.toggle('open');
+  const a = q.nextElementSibling;
+  a.classList.toggle('open');
+}
+
+function toggleCheck(li) {
+  li.classList.toggle('checked-item');
+  const box = li.querySelector('.check-box');
+  box.classList.toggle('checked');
+}
+
+function copyTemplate(btn) {
+  const text = btn.previousElementSibling.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => btn.innerHTML = '📋 Copy to clipboard', 2000);
+  });
+}
+</script>
+
+</body>
+</html>
