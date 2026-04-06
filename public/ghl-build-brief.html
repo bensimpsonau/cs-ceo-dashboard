@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GHL Build Brief — Digital Asset Readiness Funnel | Collective Shift</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Barlow:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange: #FC5C03;
+  --dark: #1B1925;
+  --card: #252530;
+  --border: #3A3A4A;
+  --text: #E8E8EC;
+  --muted: #9A9AAE;
+  --green: #08C394;
+  --red: #EF4444;
+  --amber: #F59E0B;
+  --radius: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Barlow', sans-serif; font-size: 14px; line-height: 1.7; color: var(--dark); background: #F7F7F8; }
+h1,h2,h3,h4,h5 { font-family: 'Plus Jakarta Sans', sans-serif; }
+code { font-family: 'Source Code Pro', monospace; font-size: 12px; background: #eee; padding: 2px 6px; border-radius: 4px; }
+
+.print-bar { background: var(--dark); padding: 10px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+.print-bar-brand { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 13px; color: #fff; }
+.print-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 13px; background: var(--orange); color: #fff; border: none; border-radius: 8px; padding: 8px 20px; cursor: pointer; }
+
+.doc { max-width: 900px; margin: 0 auto; padding: 40px 40px 80px; background: #fff; min-height: 100vh; }
+
+.cover { text-align: center; padding: 40px 0 48px; border-bottom: 3px solid var(--orange); margin-bottom: 40px; }
+.cover-tag { font-family: 'Source Code Pro', monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--orange); margin-bottom: 12px; }
+.cover h1 { font-size: 28px; font-weight: 800; margin-bottom: 10px; }
+.cover-sub { font-size: 16px; color: #555; max-width: 600px; margin: 0 auto 20px; }
+.cover-meta { display: flex; justify-content: center; gap: 32px; font-size: 13px; color: #777; flex-wrap: wrap; }
+.cover-meta strong { color: var(--dark); }
+
+.section { margin-bottom: 44px; }
+.section-label { font-family: 'Source Code Pro', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--orange); margin-bottom: 6px; }
+.section h2 { font-size: 20px; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #eee; }
+
+.alert { border-radius: var(--radius); padding: 14px 18px; margin-bottom: 20px; font-size: 13px; line-height: 1.7; }
+.alert-orange { background: #fff8f3; border-left: 4px solid var(--orange); }
+.alert-green { background: #eefbf6; border-left: 4px solid var(--green); }
+.alert-amber { background: #fffcf0; border-left: 4px solid var(--amber); }
+.alert h4 { font-size: 13px; margin-bottom: 5px; }
+
+/* Funnel flow */
+.funnel { display: flex; flex-direction: column; gap: 0; margin-bottom: 24px; }
+.funnel-step { display: flex; gap: 20px; align-items: flex-start; }
+.funnel-left { display: flex; flex-direction: column; align-items: center; width: 40px; flex-shrink: 0; }
+.funnel-num { width: 36px; height: 36px; border-radius: 50%; background: var(--orange); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.funnel-line { width: 2px; background: #eee; flex: 1; min-height: 24px; margin: 4px 0; }
+.funnel-body { padding-bottom: 24px; flex: 1; }
+.funnel-body h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.funnel-body p { font-size: 13px; color: #555; }
+.funnel-body code { display: block; margin-top: 6px; }
+
+/* Question table */
+table.q-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 24px; }
+table.q-table th { background: var(--dark); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 600; padding: 10px 14px; text-align: left; }
+table.q-table td { padding: 11px 14px; border-bottom: 1px solid #eee; vertical-align: top; }
+table.q-table tr:nth-child(even) td { background: #f9f9f9; }
+table.q-table .score-badge { display: inline-block; font-family: 'Source Code Pro', monospace; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px; letter-spacing: .05em; }
+.scored { background: #d1fae5; color: #065f46; }
+.qualifier { background: #e0f2fe; color: #0369a1; }
+
+/* Question detail blocks */
+.q-block { border: 1.5px solid #eee; border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; }
+.q-block-head { background: var(--dark); color: #fff; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; }
+.q-block-head h4 { font-size: 13px; font-weight: 600; }
+.q-block-head .badge { font-family: 'Source Code Pro', monospace; font-size: 10px; padding: 2px 8px; border-radius: 20px; }
+.q-block-body { padding: 14px 16px; }
+.q-block-body .q-text { font-size: 14px; font-weight: 600; color: var(--dark); margin-bottom: 4px; }
+.q-block-body .q-hint { font-size: 12px; color: #777; margin-bottom: 12px; font-style: italic; }
+.q-options { list-style: none; }
+.q-options li { display: flex; align-items: flex-start; gap: 10px; padding: 7px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+.q-options li:last-child { border-bottom: none; }
+.q-opt-letter { width: 22px; height: 22px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center; font-family: 'Source Code Pro', monospace; font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+.q-opt-letter.a { background: #fee2e2; color: #991b1b; }
+.q-opt-letter.b { background: #fef3c7; color: #92400e; }
+.q-opt-letter.c { background: #dbeafe; color: #1e40af; }
+.q-opt-letter.d { background: #d1fae5; color: #065f46; }
+.q-opt-letter.e { background: #ede9fe; color: #5b21b6; }
+.q-points { font-family: 'Source Code Pro', monospace; font-size: 10px; color: #999; margin-left: auto; flex-shrink: 0; padding-top: 2px; }
+
+/* Scoring / archetypes */
+.archetype-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.archetype { border: 1.5px solid #eee; border-radius: var(--radius); padding: 14px; }
+.archetype-score { font-family: 'Source Code Pro', monospace; font-size: 11px; color: var(--orange); font-weight: 700; margin-bottom: 4px; }
+.archetype h4 { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.archetype p { font-size: 12px; color: #555; line-height: 1.5; }
+
+/* Copy blocks */
+.copy-block { background: #f9f9f9; border: 1.5px solid #eee; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 16px; }
+.copy-block .copy-label { font-family: 'Source Code Pro', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--orange); margin-bottom: 8px; }
+.copy-block .copy-text { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+.copy-block .copy-sub { font-size: 13px; color: #555; }
+
+/* Redirect URL highlight */
+.url-box { background: var(--dark); color: #fff; padding: 14px 18px; border-radius: var(--radius); font-family: 'Source Code Pro', monospace; font-size: 13px; margin: 12px 0 20px; word-break: break-all; }
+.url-box span { color: var(--orange); }
+
+/* Steps list */
+ol.steps { padding-left: 0; list-style: none; counter-reset: step; }
+ol.steps li { counter-increment: step; padding: 10px 0 10px 44px; position: relative; border-bottom: 1px solid #eee; font-size: 13px; }
+ol.steps li:last-child { border-bottom: none; }
+ol.steps li::before { content: counter(step); position: absolute; left: 0; top: 10px; width: 26px; height: 26px; border-radius: 50%; background: var(--orange); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+ol.steps li strong { display: block; font-weight: 700; margin-bottom: 2px; }
+
+/* Page spec */
+.page-spec { border: 1.5px solid #eee; border-radius: var(--radius); margin-bottom: 20px; overflow: hidden; }
+.page-spec-head { background: #f0f0f0; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; }
+.page-spec-head h4 { font-size: 13px; font-weight: 700; }
+.page-spec-body { padding: 16px; }
+.page-spec-body ul { padding-left: 20px; font-size: 13px; }
+.page-spec-body ul li { margin-bottom: 6px; }
+
+.footer { margin-top: 48px; padding-top: 20px; border-top: 2px solid #eee; font-size: 12px; color: #999; text-align: center; }
+
+@media print {
+  .print-bar { display: none; }
+  .doc { padding: 0; }
+  .q-block, .page-spec { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<div class="print-bar">
+  <div class="print-bar-brand">Collective Shift — GHL Build Brief</div>
+  <button class="print-btn" onclick="window.print()">⎙ Print / Export PDF</button>
+</div>
+
+<div class="doc">
+
+<div class="cover">
+  <div class="cover-tag">GoHighLevel Build Brief — Internal</div>
+  <h1>Digital Asset Readiness Funnel</h1>
+  <p class="cover-sub">Full build specification for the quiz funnel and results page. Everything your marketing team needs to build this in GHL.</p>
+  <div class="cover-meta">
+    <div><strong>Brand:</strong> Collective Shift</div>
+    <div><strong>Prepared:</strong> April 2026</div>
+    <div><strong>Platform:</strong> GoHighLevel (Funnels + Typeform)</div>
+    <div><strong>ABN:</strong> 78 650 977 325</div>
+  </div>
+</div>
+
+<!-- ══ SECTION 1: FUNNEL OVERVIEW ══ -->
+<div class="section">
+  <div class="section-label">Section 01</div>
+  <h2>Funnel Overview</h2>
+
+  <div class="funnel">
+    <div class="funnel-step">
+      <div class="funnel-left"><div class="funnel-num">1</div><div class="funnel-line"></div></div>
+      <div class="funnel-body">
+        <h4>Entry Point — Instagram / ManyChat</h4>
+        <p>Organic content with keyword trigger <strong>BLUEPRINT</strong> → ManyChat sends DM with quiz link. Also used as paid ad landing page.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="funnel-left"><div class="funnel-num">2</div><div class="funnel-line"></div></div>
+      <div class="funnel-body">
+        <h4>Page 1 — Landing Page (GHL Funnel)</h4>
+        <p>Hero section with headline, subheadline, and a single CTA button. Button links to Typeform or embeds Typeform inline.</p>
+        <code>GHL Page: "Digital Asset Readiness — Quiz Landing"</code>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="funnel-left"><div class="funnel-num">3</div><div class="funnel-line"></div></div>
+      <div class="funnel-body">
+        <h4>Typeform — 9-Question Assessment</h4>
+        <p>Hosted on Typeform, embedded on the landing page or opened fullscreen. Captures name, email, phone after Q9. Syncs contact to GHL CRM automatically.</p>
+        <code>Typeform → GHL native integration (Settings → Integrations → GoHighLevel)</code>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="funnel-left"><div class="funnel-num">4</div><div class="funnel-line"></div></div>
+      <div class="funnel-body">
+        <h4>Page 2 — Results / Blueprint Page (GHL Funnel)</h4>
+        <p>Personalised results page showing their score out of 24, their archetype, and the 8-step Digital Asset Blueprint. Ends with a strategy call CTA.</p>
+        <code>GHL Page: "Digital Asset Readiness — Results &amp; Blueprint"</code>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="funnel-left"><div class="funnel-num">5</div><div class="funnel-line"></div></div>
+      <div class="funnel-body">
+        <h4>GHL Automation — Post Submission</h4>
+        <p>On new contact: tag based on capital outlook (Q3), add to nurture sequence, notify sales team if capital ≥ $100K.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECTION 2: PAGE 1 — LANDING PAGE COPY ══ -->
+<div class="section">
+  <div class="section-label">Section 02</div>
+  <h2>Page 1 — Landing Page Copy &amp; Structure</h2>
+
+  <div class="alert alert-orange">
+    <h4>Design Reference</h4>
+    Copy the layout structure from <strong>acquisitionprofits.com/quiz</strong> — single column, dark background, bold headline above the fold, CTA button, then Typeform embed below. Keep Collective Shift branding (orange #FC5C03, dark background #1B1925).
+  </div>
+
+  <div class="page-spec">
+    <div class="page-spec-head"><h4>Section A — Above The Fold (Hero)</h4></div>
+    <div class="page-spec-body">
+      <ul>
+        <li><strong>Logo:</strong> Collective Shift logo top-left</li>
+        <li><strong>Eyebrow text (small, above headline):</strong><br>
+          <em>Designed for high-income professionals and investors who want to enter digital assets with structure, protection, and conviction.</em></li>
+        <li><strong>Headline (H1, large, bold):</strong><br>
+          <em>Discover Your Digital Asset Wealth Blueprint.</em></li>
+        <li><strong>Subheadline:</strong><br>
+          <em>Complete this short investor assessment to discover how ready you are to position intelligently for the next wave of digital asset adoption — and receive a tailored blueprint highlighting your gaps in decision-making, risk awareness, and entry readiness.</em></li>
+        <li><strong>CTA Button (orange):</strong> Begin Your Free Assessment →</li>
+        <li><strong>Below button (fine print):</strong> Takes under 2 minutes. No sign-up required to begin.</li>
+        <li><strong>Disclaimer (very small):</strong> This assessment is for educational purposes only and does not constitute financial advice, investment advice, or a recommendation to buy or sell any asset.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-spec">
+    <div class="page-spec-head"><h4>Section B — Typeform Embed</h4></div>
+    <div class="page-spec-body">
+      <ul>
+        <li>Embed the Typeform inline below the hero using Typeform's embed widget</li>
+        <li>OR: CTA button opens Typeform as a fullscreen popup/redirect</li>
+        <li>Either method works — fullscreen redirect is simpler to build</li>
+        <li><strong>Typeform embed type recommended:</strong> Fullscreen popup on button click</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-spec">
+    <div class="page-spec-head"><h4>Headline Variants (A/B test — build all 4, test in GHL)</h4></div>
+    <div class="page-spec-body">
+      <ul>
+        <li><strong>Control:</strong> "Discover Your Digital Asset Wealth Blueprint."</li>
+        <li><strong>V1:</strong> "Most High-Income Investors Will Make the Same Costly Mistake With Digital Assets. This 3-Minute Assessment Shows If You're One of Them."</li>
+        <li><strong>V2:</strong> "Before You Allocate a Single Dollar to Digital Assets, You Need to Know Your Three Biggest Blind Spots."</li>
+        <li><strong>V3:</strong> "The Assessment 1,400+ Professionals Worldwide Took Before Making Their First Serious Digital Asset Decision."</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECTION 3: TYPEFORM BUILD ══ -->
+<div class="section">
+  <div class="section-label">Section 03</div>
+  <h2>Typeform — Full Build Specification</h2>
+
+  <div class="alert alert-green">
+    <h4>Setup First</h4>
+    Before adding questions: go to <strong>Logic → Variables → + Add variable</strong>. Name it <code>score</code>, type Number, default value <code>0</code>. This is the scoring engine. Do this before building any questions.
+  </div>
+
+  <!-- Q1 -->
+  <div class="q-block">
+    <div class="q-block-head">
+      <h4>Q1 — Your Starting Point</h4>
+      <span class="badge qualifier" style="background:#e0f2fe;color:#0369a1;">QUALIFIER — Not scored</span>
+    </div>
+    <div class="q-block-body">
+      <div class="q-text">Where are you right now with digital assets?</div>
+      <div class="q-hint">There's no right answer here. This helps us tailor your blueprint to where you actually are, not where you think you should be.</div>
+      <ul class="q-options">
+        <li><span class="q-opt-letter a">A</span> Researching only — I haven't made any moves yet</li>
+        <li><span class="q-opt-letter b">B</span> Made some purchases but I don't have a clear strategy</li>
+        <li><span class="q-opt-letter c">C</span> Have active positions but I'm making reactive decisions without a real system</li>
+        <li><span class="q-opt-letter d">D</span> I'm experienced — I want a better framework to optimise what I already have</li>
+      </ul>
+      <p style="font-size:12px;color:#999;margin-top:10px;">No logic required. Used for personalisation only — CRM tagging.</p>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-block">
+    <div class="q-block-head">
+      <h4>Q2 — Your Primary Goal</h4>
+      <span class="badge qualifier" style="background:#e0f2fe;color:#0369a1;">QUALIFIER — Not scored</span>
+    </div>
+    <div class="q-block-body">
+      <div class="q-text">What's your primary reason for getting serious about digital assets now?</div>
+      <div class="q-hint">Most people have more than one goal. Pick the one that matters most — it shapes which parts of the framework are most relevant for you.</div>
+      <ul class="q-options">
+        <li><span class="q-opt-letter a">A</span> Protect my wealth from inflation and currency debasement</li>
+        <li><span class="q-opt-letter b">B</span> Build long-term generational wealth for my family</li>
+        <li><span class="q-opt-letter c">C</span> Grow my wealth faster than traditional assets allow</li>
+        <li><span class="q-opt-letter d">D</span> Buy back my time and build genuine financial freedom</li>
+      </ul>
+      <p style="font-size:12px;color:#999;margin-top:10px;">No logic required. Used for personalisation + CRM tagging.</p>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-block">
+    <div class="q-block-head">
+      <h4>Q3 — Capital Outlook</h4>
+      <span class="badge qualifier" style="background:#e0f2fe;color:#0369a1;">QUALIFIER — Not scored</span>
+    </div>
+    <div class="q-block-body">
+      <div class="q-text">How much are you looking to deploy into digital assets over the next 12 months?</div>
+      <div class="q-hint">This is about your intention, not a commitment. It helps us calibrate the scale of the framework you need.</div>
+      <ul class="q-options">
+        <li><span class="q-opt-letter a">A</span> Under $25,000</li>
+        <li><span class="q-opt-letter b">B</span> $25,000 – $100,000</li>
+        <li><span class="q-opt-letter c">C</span> $100,000 – $500,000</li>
+        <li><span class="q-opt-letter d">D</span> $500,000 – $1,000,000</li>
+        <li><span class="q-opt-letter e">E</span> $1,000,000+</li>
+      </ul>
+      <p style="font-size:12px;color:#999;margin-top:10px;"><strong>GHL automation:</strong> Tag contacts based on this answer. C/D/E = high-value lead, notify sales.</p>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-block">
+    <div class="q-block-head">
+      <h4>Q4 — Investment Thesis</h4>
+      <span class="badge scored" style="background:#d1fae5;color:#065f46;">SCORED — 1 to 4 points</span>
+    </div>
+    <div class="q-block-body">
+      <div class="q-text">How would you describe your current view on why Bitcoin and digital assets may belong in a wealth portfolio?</div>
+      <div class="q-hint">Most people at this stage have done the research but haven't been able to articulate a clear view. That's normal — this is exactly what we help with.</div>
+      <ul class="q-options">
+        <li><span class="q-opt-letter a">A</span> Still researching — I haven't formed a clear view yet <span class="q-points">+1 pt</span></li>
+        <li><span class="q-opt-letter b">B</span> I have a general sense but can't articulate it clearly <span class="q-points">+2 pts</span></li>
+        <li><span class="q-opt-letter c">C</span> I understand the macro case but haven't committed to a written thesis <span class="q-points">+3 pts</span></li>
+        <li><span class="q-opt-letter d">D</span> I have a clear, written thesis I'm confident in <span class="q-points">+4 pts</span></li>
+      </ul>
+      <p style="font-size:12px;color:#777;margin-top:10px;"><strong>Typeform logic:</strong> Add 4 conditions after this question — one per answer. If A selected → score = score + 1. If B → score + 2. If C → score + 3. If D → score + 4.</p>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-block">
+    <div class="q-block-head">
+      <h4>Q5 — Information Sources</h4>
+      <span class="badge scored" style="background:#d1fae5;color:#065f46;">SCORED — 1 to 4 points</span>
+    </div>
+    <div class="q-block-body">
+      <div class="q-text">How do you currently stay informed about digital assets?</div>
+      <div class="q-hint">Information overload is the second biggest pain point we see. The problem isn't access to information — it's filtering what actually matters.</div>
+      <ul class="q-options">
+        <li><span class="q-opt-letter a">A</span> Social media, YouTube, influencers — wherever the news is <span class="q-points">+1 pt</span></li>
+        <li><span class="q-opt-letter b">B</span> Mix of news and some research — hard to filter signal from noise <span class="q-points">+2 pts</span></li>
+        <li><span class="q-opt-letter c">C</span> A small number of trusted sources, trying to build my own view <span class="q-points">+3 pts</span></li>
+        <li><span class="q-opt-letter d">D</span> On-chain data and primary research — I have a clear filter for what I act on <span class="q-points">+4 pts</span></li>
+      </ul>
+      <p style="font-size:12px;color:#777;margin-top:10px;"><strong>Typeform logic:</strong> Same pattern — 4 conditions, score + 1/2/3/4.</p>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-block">
+    <div class="q-block-head">
+      <h4>Q6 — Risk Framework</h4>
+      <span class="badge scored" style="background:#d1fae5;color:#065f46;">SCORED — 1 to 4 points</span>
+    </div>
+    <div class="q-block-body">
+      <div class="q-text">Do you have written rules for your digital asset allocation and what you'd do in a major drawdown?</div>
+      <div class="q-hint">Written rules sound formal, but they're the difference between a strategy and a guess. Most high-net-worth investors we work with start without them.</div>
+      <ul class="q-options">
+        <li><span class="q-opt-letter a">A</span> No — I'd work it out when the time comes <span class="q-points">+1 pt</span></li>
+        <li><span class="q-opt-letter b">B</span> Rough ideas, nothing written down <span class="q-points">+2 pts</span></li>
+        <li><span class="q-opt-letter c">C</span> Some guidelines but not formalised <span class="q-points">+3 pts</span></li>
+        <li><span class="q-opt-letter d">D</span> Written allocation rules and a clear drawdown plan <span class="q-points">+4 pts</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-block">
+    <div class="q-block-head">
+      <h4>Q7 — Time Available</h4>
+      <span class="badge scored" style="background:#d1fae5;color:#065f46;">SCORED — 1 to 4 points</span>
+    </div>
+    <div class="q-block-body">
+      <div class="q-text">How much time can you realistically dedicate to managing a digital asset portfolio each month?</div>
+      <div class="q-hint">Be honest here. The right strategy depends on how much time you actually have, not how much you think you should have.</div>
+      <ul class="q-options">
+        <li><span class="q-opt-letter a">A</span> Very little — I need something I can almost set and forget <span class="q-points">+1 pt</span></li>
+        <li><span class="q-opt-letter b">B</span> A few hours a month if it's clearly directed <span class="q-points">+2 pts</span></li>
+        <li><span class="q-opt-letter c">C</span> A few hours a week — I want to stay actively informed <span class="q-points">+3 pts</span></li>
+        <li><span class="q-opt-letter d">D</span> As much as needed — I'm prepared to put in the work <span class="q-points">+4 pts</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-block">
+    <div class="q-block-head">
+      <h4>Q8 — Exit Strategy</h4>
+      <span class="badge scored" style="background:#d1fae5;color:#065f46;">SCORED — 1 to 4 points</span>
+    </div>
+    <div class="q-block-body">
+      <div class="q-text">Do you have a written plan for when and how you'd exit your digital asset positions?</div>
+      <div class="q-hint">An entry without an exit isn't a strategy. This is the question that separates investors from speculators — and the most common gap we see.</div>
+      <ul class="q-options">
+        <li><span class="q-opt-letter a">A</span> No — I'd decide when the time comes <span class="q-points">+1 pt</span></li>
+        <li><span class="q-opt-letter b">B</span> Rough idea but nothing specific or written <span class="q-points">+2 pts</span></li>
+        <li><span class="q-opt-letter c">C</span> Some targets but haven't thought through all scenarios <span class="q-points">+3 pts</span></li>
+        <li><span class="q-opt-letter d">D</span> Written sell strategy with specific triggers and targets <span class="q-points">+4 pts</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="q-block">
+    <div class="q-block-head">
+      <h4>Q9 — Advanced Strategies</h4>
+      <span class="badge scored" style="background:#d1fae5;color:#065f46;">SCORED — 1 to 4 points</span>
+    </div>
+    <div class="q-block-body">
+      <div class="q-text">How familiar are you with using your digital assets to generate income — through lending, yield, or tax-efficient structures?</div>
+      <div class="q-hint">Yield and tax optimisation are two of the most underutilised advantages available to serious digital asset investors.</div>
+      <ul class="q-options">
+        <li><span class="q-opt-letter a">A</span> Not familiar at all — I didn't know this was possible <span class="q-points">+1 pt</span></li>
+        <li><span class="q-opt-letter b">B</span> I've heard of it but don't know how to approach it safely <span class="q-points">+2 pts</span></li>
+        <li><span class="q-opt-letter c">C</span> I understand the basics but haven't set anything up yet <span class="q-points">+3 pts</span></li>
+        <li><span class="q-opt-letter d">D</span> I actively use lending/yield strategies and have a tax structure in place <span class="q-points">+4 pts</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Contact capture -->
+  <div class="q-block">
+    <div class="q-block-head">
+      <h4>Contact Capture — After Q9</h4>
+      <span class="badge" style="background:#fef3c7;color:#92400e;">REQUIRED — CRM SYNC</span>
+    </div>
+    <div class="q-block-body">
+      <p style="font-size:13px;margin-bottom:10px;"><strong>Heading to show:</strong> "Your results are ready."<br>
+      <strong>Subtext:</strong> "Enter your details and we'll show you your Digital Asset Readiness Score and personalised blueprint."</p>
+      <ul class="q-options">
+        <li><span class="q-opt-letter" style="background:#eee;">1</span> <strong>Short Text field:</strong> First name (required)</li>
+        <li><span class="q-opt-letter" style="background:#eee;">2</span> <strong>Email field:</strong> Email address (required)</li>
+        <li><span class="q-opt-letter" style="background:#eee;">3</span> <strong>Phone field:</strong> Mobile number (required)</li>
+      </ul>
+      <p style="font-size:12px;color:#999;margin-top:10px;">Fine print below: "Free. Educational purposes only. Not financial advice."</p>
+    </div>
+  </div>
+
+  <!-- Redirect -->
+  <div class="alert alert-orange">
+    <h4>Typeform Ending — Redirect URL</h4>
+    Go to <strong>Endings → Redirect to a URL</strong> and set:<br>
+    <div class="url-box">https://[YOUR-GHL-DOMAIN]/results?score=<span>{{score}}</span>&goal=<span>{{field:Q2_answer}}</span></div>
+    The <code>{{score}}</code> variable passes their total score to the results page so it shows their personalised archetype and message. Replace <code>[YOUR-GHL-DOMAIN]</code> with your GHL funnel domain.
+  </div>
+
+  <div class="alert alert-green">
+    <h4>Typeform → GHL Integration</h4>
+    <ol style="padding-left:20px;font-size:13px;line-height:2;">
+      <li>In Typeform: <strong>Connect → GoHighLevel → Authorize</strong></li>
+      <li>Select your Collective Shift sub-account</li>
+      <li>Map fields: First Name → First Name | Email → Email | Phone → Phone Number</li>
+      <li>Optional: map Q3 (Capital Outlook) to a GHL custom field for lead scoring</li>
+      <li>Save — every submission now creates/updates a contact in GHL</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ══ SECTION 4: SCORING SYSTEM ══ -->
+<div class="section">
+  <div class="section-label">Section 04</div>
+  <h2>Scoring System</h2>
+
+  <p style="margin-bottom:16px;">Q1-Q3 are unscored qualifiers. Q4-Q9 are scored 1-4 points each. Maximum score: <strong>24 points</strong>.</p>
+
+  <div class="archetype-grid">
+    <div class="archetype">
+      <div class="archetype-score">Score: 6 – 10</div>
+      <h4>Cautious Observer</h4>
+      <p>Strong on caution. Gap: no structured entry framework yet.</p>
+      <p style="margin-top:8px;font-style:italic;font-size:12px;">"You're asking the right questions. Here's the framework to act on them."</p>
+    </div>
+    <div class="archetype">
+      <div class="archetype-score">Score: 11 – 15</div>
+      <h4>Hesitant First Allocator</h4>
+      <p>Ready to move. Gap: missing conviction and process.</p>
+      <p style="margin-top:8px;font-style:italic;font-size:12px;">"The intent is there. The structure isn't yet."</p>
+    </div>
+    <div class="archetype">
+      <div class="archetype-score">Score: 16 – 20</div>
+      <h4>Reactive Dabbler</h4>
+      <p>Has experience. Gap: reactive decisions, no system.</p>
+      <p style="margin-top:8px;font-style:italic;font-size:12px;">"You've started. Now it's time to build a strategy around what you have."</p>
+    </div>
+    <div class="archetype">
+      <div class="archetype-score">Score: 21 – 24</div>
+      <h4>Structured Allocator</h4>
+      <p>Strong foundation. Gap: optimising and protecting gains.</p>
+      <p style="margin-top:8px;font-style:italic;font-size:12px;">"The framework is working. The next level is refinement and risk protection."</p>
+    </div>
+  </div>
+
+  <div class="alert alert-amber">
+    <h4>Note on Results Page Personalisation</h4>
+    The results page receives the score via the URL parameter <code>?score=XX</code>. GHL custom JavaScript (or a conditional section) reads this and shows the matching archetype block. If GHL's page builder doesn't support custom JS easily, a simpler option is to create 4 separate results pages in GHL (one per archetype) and use Typeform Logic to redirect to the correct URL based on the final score range.
+  </div>
+</div>
+
+<!-- ══ SECTION 5: PAGE 2 — RESULTS PAGE ══ -->
+<div class="section">
+  <div class="section-label">Section 05</div>
+  <h2>Page 2 — Results Page Structure</h2>
+
+  <div class="page-spec">
+    <div class="page-spec-head"><h4>Section A — Score Card (above fold)</h4></div>
+    <div class="page-spec-body">
+      <ul>
+        <li><strong>Eyebrow:</strong> "Your Assessment Results"</li>
+        <li><strong>Personalised headline based on score:</strong> e.g. "Here's where you stand, [First Name]."</li>
+        <li><strong>Score ring/graphic:</strong> Show score out of 24 (e.g. animated circle or bold number)</li>
+        <li><strong>Archetype label:</strong> e.g. "Reactive Dabbler" — bold, orange</li>
+        <li><strong>1 paragraph:</strong> Personalised message matching their archetype (copy above)</li>
+        <li><strong>CTA button (orange):</strong> Book Your Free Digital Asset Strategy Call →</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-spec">
+    <div class="page-spec-head"><h4>Section B — The Mirror (pain section)</h4></div>
+    <div class="page-spec-body">
+      <ul>
+        <li><strong>Heading:</strong> "Most Digital Asset Investors Make the Same Three Mistakes"</li>
+        <li><strong>Mistake 1:</strong> No exit strategy — they watch gains evaporate because they never decided when to sell</li>
+        <li><strong>Mistake 2:</strong> Information overload — they follow too many voices and end up paralysed or reactive</li>
+        <li><strong>Mistake 3:</strong> Emotional allocation — they buy when confident and sell when fearful, the exact opposite of what works</li>
+        <li><strong>Transition line:</strong> "The 8-step framework below is designed to eliminate all three."</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-spec">
+    <div class="page-spec-head"><h4>Section C — 8-Step Blueprint (core content)</h4></div>
+    <div class="page-spec-body">
+      <ul>
+        <li><strong>Step 1:</strong> Build Your Macro Thesis — understand why Bitcoin belongs in a wealth portfolio before allocating</li>
+        <li><strong>Step 2:</strong> Filter Your Information Sources — create a trusted research stack and eliminate the noise</li>
+        <li><strong>Step 3:</strong> Define Your Entry Strategy — set written criteria for when and how you deploy capital</li>
+        <li><strong>Step 4:</strong> Build Your Portfolio Allocation — position sizing, asset selection, and rebalancing rules</li>
+        <li><strong>Step 5:</strong> Secure Your Assets — hardware wallets, custody options, and backup protocols</li>
+        <li><strong>Step 6:</strong> Generate Yield — staking, lending, and DeFi strategies that don't require active trading</li>
+        <li><strong>Step 7:</strong> Manage Your Risk — written drawdown rules, position limits, and stop scenarios</li>
+        <li><strong>Step 8:</strong> Build Your Exit Strategy — written sell targets, profit-taking levels, and tax-efficient exit structures</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-spec">
+    <div class="page-spec-head"><h4>Section D — Strategy Call CTA (bottom)</h4></div>
+    <div class="page-spec-body">
+      <ul>
+        <li><strong>Heading:</strong> "Want Help Implementing This With Your Portfolio?"</li>
+        <li><strong>Subtext:</strong> "Book a free 20-minute Digital Asset Strategy Call. We'll walk through your assessment results, identify the gaps, and show you what a structured approach looks like for your specific situation. No hard sell. Educational session."</li>
+        <li><strong>CTA button (orange):</strong> Book Your Free Strategy Call →</li>
+        <li><strong>Link to:</strong> GHL calendar booking page</li>
+        <li><strong>Fine print:</strong> "Not financial advice. Educational session only. Collective Shift Pty Ltd ABN 78 650 977 325."</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECTION 6: GHL AUTOMATION ══ -->
+<div class="section">
+  <div class="section-label">Section 06</div>
+  <h2>GHL Automation — Post Submission</h2>
+
+  <ol class="steps">
+    <li>
+      <strong>Trigger: Typeform submission received (new contact created)</strong>
+      Fires on every completed Typeform submission.
+    </li>
+    <li>
+      <strong>Tag contact based on Q3 — Capital Outlook</strong>
+      Under $25K → tag: <code>lead-early-stage</code><br>
+      $25K–$100K → tag: <code>lead-mid-tier</code><br>
+      $100K+ → tag: <code>lead-platinum-qualified</code> + notify sales team immediately
+    </li>
+    <li>
+      <strong>Add to nurture email sequence</strong>
+      Start 5-email nurture sequence: framework education content, social proof, then strategy call invite on email 5.
+    </li>
+    <li>
+      <strong>If Q3 = $100K+ — Internal notification</strong>
+      Send Slack/email alert to sales team: "New high-value lead — [Name], [Email], Capital: $100K+, Score: [score]"
+    </li>
+    <li>
+      <strong>If contact doesn't book call within 48 hours — Follow-up SMS</strong>
+      SMS: "Hi [First Name], your Digital Asset Readiness Score is ready. Your personalised blueprint is here: [link]. Want to walk through it together? [book link]"
+    </li>
+  </ol>
+</div>
+
+<!-- ══ SECTION 7: CHECKLIST ══ -->
+<div class="section">
+  <div class="section-label">Section 07</div>
+  <h2>Builder Checklist</h2>
+
+  <table class="q-table">
+    <thead><tr><th>Item</th><th>Where</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Create Typeform — add <code>score</code> variable first</td><td>Typeform</td><td>☐</td></tr>
+      <tr><td>Add Q1-Q9 with correct answer text</td><td>Typeform</td><td>☐</td></tr>
+      <tr><td>Add scoring logic to Q4-Q9 (4 conditions per question)</td><td>Typeform Logic</td><td>☐</td></tr>
+      <tr><td>Add contact capture fields after Q9 (name, email, phone)</td><td>Typeform</td><td>☐</td></tr>
+      <tr><td>Set Ending → Redirect to GHL results URL with <code>?score={{score}}</code></td><td>Typeform Endings</td><td>☐</td></tr>
+      <tr><td>Connect Typeform → GoHighLevel (native integration)</td><td>Typeform Connect</td><td>☐</td></tr>
+      <tr><td>Map fields: First Name, Email, Phone, Q3 (capital)</td><td>Typeform Connect</td><td>☐</td></tr>
+      <tr><td>Build Landing Page in GHL Funnels (hero + Typeform embed)</td><td>GHL Funnels</td><td>☐</td></tr>
+      <tr><td>Build Results Page in GHL Funnels (score card + 8 steps + CTA)</td><td>GHL Funnels</td><td>☐</td></tr>
+      <tr><td>Add JS to results page to read <code>?score=</code> URL param and show correct archetype</td><td>GHL — Custom Code</td><td>☐</td></tr>
+      <tr><td>Build GHL automation workflow (tags + nurture + sales alert)</td><td>GHL Automations</td><td>☐</td></tr>
+      <tr><td>Connect calendar booking to strategy call CTA</td><td>GHL Calendars</td><td>☐</td></tr>
+      <tr><td>Test full flow: complete quiz → see results page → confirm contact in GHL</td><td>End-to-end test</td><td>☐</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="footer">
+  <p><strong>Collective Shift Pty Ltd</strong> — Digital Asset Readiness Funnel — GHL Build Brief</p>
+  <p style="margin-top:4px;">Prepared: April 2026 | For internal use only — share with marketing team to build in GoHighLevel</p>
+  <p style="margin-top:4px;">ABN 78 650 977 325 | collectiveshift.io</p>
+</div>
+
+</div>
+</body>
+</html>
