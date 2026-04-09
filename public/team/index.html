@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+
 <title>Collective Shift — Team Hub</title>
 <script src="https://cdn.tailwindcss.com"></script>
+
 <script>
 tailwind.config = {
   theme: {
@@ -39,12 +41,46 @@ tailwind.config = {
 </script>
 <style>
   * { box-sizing: border-box; }
-  body {  color: #1B1925; font-family: 'Barlow', sans-serif; margin: 0; }
+  body { background: #FFFFFF; color: #1B1925; font-family: 'Barlow', sans-serif; }
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: #FFFFFF; }
   ::-webkit-scrollbar-thumb { background: #33313F; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #4D4C55; }
 
-  /* Top nav */
+  .kpi-card { backdrop-filter: blur(8px); transition: transform 0.15s ease, border-color 0.15s ease; }
+  .kpi-card:hover { transform: translateY(-2px); border-color: #4D4C55; }
+
+  .nav-btn { transition: all 0.2s ease; }
+  .nav-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(252,92,3,0.2); }
+
+  .intel-item { transition: all 0.15s ease; }
+  .intel-item:hover { background: #F2F2F2; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-in { animation: fadeIn 0.3s ease; }
+
+  .badge-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .pulse { animation: pulse-glow 2s ease-in-out infinite; }
+  @keyframes pulse-glow { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+  /* Tabs */
+  .tab-btn { padding: 10px 20px; font-size: 14px; font-weight: 600; color: #807F86; border-bottom: 3px solid transparent; cursor: pointer; transition: all 0.15s ease; }
+  .tab-btn:hover { color: #1B1925; }
+  .tab-btn.active { color: #FC5C03; border-bottom-color: #FC5C03; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Tier card hover */
+  .tier-card { transition: all 0.2s ease; }
+  .tier-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+
+  /* Module link */
+  .module-link { transition: all 0.15s ease; }
+  .module-link:hover { background: #F2F2F2; border-color: #4D4C55; }
+</style>
+
+<!-- ═══ COLLECTIVE SHIFT TOP NAV ═══ -->
+<style>
   :root {
     --csn-h: 56px;
     --csn-bg: #FFFFFF;
@@ -53,743 +89,907 @@ tailwind.config = {
     --csn-muted: #4D4C55;
     --csn-orange: #FC5C03;
     --csn-orange-bg: #FEEEE5;
+    --csn-dd-bg: #FFFFFF;
+    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
     --csn-z: 9000;
   }
   .csn-bar {
-    position: fixed; top: 0; left: 0; right: 0;
+    position: fixed;
+    top: 0; left: 0; right: 0;
     height: var(--csn-h);
     background: var(--csn-bg);
     border-bottom: 1px solid var(--csn-border);
-    display: flex; align-items: center;
-    padding: 0 24px; z-index: var(--csn-z);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 0;
+    z-index: var(--csn-z);
     font-family: 'Plus Jakarta Sans', 'Barlow', sans-serif;
   }
   .csn-logo {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 700; font-size: 15px;
+    font-weight: 700;
+    font-size: 15px;
     color: var(--csn-orange);
-    text-decoration: none; letter-spacing: 0.06em;
-    text-transform: uppercase; white-space: nowrap;
-    margin-right: 32px; flex-shrink: 0;
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin-right: 32px;
+    flex-shrink: 0;
   }
-  body {  }
-
-  /* Tabs */
-  .tab-btn {
-    padding: 12px 24px;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 600; font-size: 14px;
-    color: #807F86; background: none; border: none;
-    border-bottom: 3px solid transparent;
-    cursor: pointer; transition: all 0.2s ease;
+  .csn-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+  }
+  .csn-item { position: relative; }
+  .csn-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s, background 0.15s;
+    cursor: pointer;
+  }
+  .csn-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-item.active > .csn-link { color: var(--csn-orange); font-weight: 600; }
+  .csn-chevron { transition: transform 0.2s; flex-shrink: 0; }
+  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
+  .csn-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 240px;
+    background: var(--csn-dd-bg);
+    border: 1px solid var(--csn-border);
+    border-radius: 12px;
+    box-shadow: var(--csn-dd-shadow);
+    padding: 6px;
+    z-index: calc(var(--csn-z) + 1);
+  }
+  .csn-item.csn-has-dd { position: relative; }
+  .csn-item.csn-has-dd::after { content: ""; position: absolute; top: 100%; left: 0; width: 100%; height: 12px; }
+  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
+  .csn-dd-item {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
     white-space: nowrap;
   }
-  .tab-btn:hover { color: #1B1925; }
-  .tab-btn.active { color: #FC5C03; border-bottom-color: #FC5C03; }
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
-
-  /* Cards */
-  .hub-card {
-    background: #FFFFFF;
-    border: 1px solid #E8E8EA;
-    border-radius: 16px;
-    padding: 24px;
-    transition: all 0.15s ease;
+  .csn-dd-item:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-divider { height: 1px; background: var(--csn-border); margin: 4px 8px; }
+  .csn-hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--csn-muted);
+    padding: 4px;
+    margin-left: auto;
   }
-  .hub-card:hover { border-color: #4D4C55; }
-  .hub-card h3 {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 700; font-size: 16px;
-    margin: 0 0 12px; color: #1B1925;
+  .csn-mobile-menu {
+    display: none;
+    position: fixed;
+    top: var(--csn-h);
+    left: 0; right: 0;
+    background: var(--csn-bg);
+    border-bottom: 1px solid var(--csn-border);
+    padding: 8px 16px 16px;
+    z-index: calc(var(--csn-z) - 1);
+    max-height: calc(100vh - var(--csn-h));
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
   }
-  .hub-card p, .hub-card li {
-    font-size: 14px; color: #4D4C55; line-height: 1.6;
+  .csn-mobile-menu.open { display: block; }
+  .csn-mob-link {
+    display: block;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--csn-muted);
+    text-decoration: none;
+    transition: color 0.12s, background 0.12s;
   }
-
-  .section-title {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 700; font-size: 22px;
-    color: #1B1925; margin-bottom: 8px;
+  .csn-mob-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
+  .csn-mob-top { font-weight: 600; color: var(--csn-text); margin-top: 4px; }
+  .csn-mob-sub { font-size: 12px; padding-left: 20px; }
+  body { padding-top: var(--csn-h) !important; }
+  @media (max-width: 1023px) {
+    .csn-nav { display: none; }
+    .csn-hamburger { display: block; }
   }
-  .section-sub {
-    font-size: 14px; color: #807F86; margin-bottom: 24px;
-  }
-
-  .badge {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 100px;
-    font-size: 12px;
-    font-weight: 600;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-  }
-  .badge-orange { background: #FEEEE5; color: #FC5C03; }
-  .badge-green { background: #E6F9F3; color: #08C394; }
-  .badge-purple { background: #EEECFF; color: #654FFC; }
-
-  .link-card {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 16px; border-radius: 12px;
-    border: 1px solid #E8E8EA;
-    text-decoration: none; color: #1B1925;
-    font-size: 14px; font-weight: 500;
-    transition: all 0.15s ease;
-  }
-  .link-card:hover { background: #FEEEE5; border-color: #FC5C03; color: #FC5C03; }
-  .link-icon { font-size: 18px; color: #FC5C03; flex-shrink: 0; width: 24px; text-align: center; }
-
-  .tier-card {
-    border-radius: 16px; padding: 28px;
-    border: 2px solid #E8E8EA;
-    transition: all 0.2s ease;
-  }
-  .tier-card:hover { border-color: #FC5C03; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(252,92,3,0.1); }
-  .tier-price {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 700; font-size: 28px; color: #FC5C03;
-  }
-  .tier-name {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 700; font-size: 18px; color: #1B1925;
-  }
-
-  .schedule-row {
-    display: flex; align-items: center; gap: 12px;
-    padding: 10px 0; border-bottom: 1px solid #F2F2F2;
-  }
-  .schedule-row:last-child { border-bottom: none; }
-  .schedule-day {
-    font-weight: 600; font-size: 13px; color: #1B1925;
-    min-width: 100px;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-  }
-  .schedule-time {
-    font-size: 13px; color: #807F86;
-    font-family: 'Source Code Pro', monospace;
-    min-width: 160px;
-  }
-  .schedule-label { font-size: 13px; color: #4D4C55; }
-
-  @media (max-width: 768px) {
-    .tab-btn { padding: 10px 14px; font-size: 13px; }
-    .grid-2 { grid-template-columns: 1fr !important; }
-    .grid-3 { grid-template-columns: 1fr !important; }
+  @media (max-width: 640px) {
+    .csn-logo { font-size: 13px; margin-right: 16px; }
   }
 </style>
-
-  <link rel="stylesheet" href="/shell.css">
 </head>
-<body>
+<body class="min-h-screen">
 
-<!-- ═══ SIDEBAR OVERLAY (mobile) ═══ -->
-<div class="ds-sidebar-overlay" id="dsSidebarOverlay" onclick="document.getElementById('dsSidebar').classList.remove('open');this.classList.remove('open');"></div>
-
-<!-- ═══ SIDEBAR ═══ -->
-<aside class="ds-sidebar" id="dsSidebar">
-  <div style="padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);">
-    <a href="../index.html" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
-      <div style="width:32px; height:32px; border-radius:8px; background:rgba(252,92,3,0.15); display:flex; align-items:center; justify-content:center;">
-        <span style="color:#FC5C03; font-weight:800; font-size:13px; font-family:'Plus Jakarta Sans',sans-serif;">CS</span>
+<nav class="csn-bar" role="navigation" aria-label="Main navigation">
+  <a href="/team/" class="csn-logo">Collective Shift</a>
+  <div class="csn-nav">
+      <div class="csn-item active"><a href="/team/" class="csn-link">Team Hub</a></div>
+      <div class="csn-item csn-has-dd">
+        <a href="#" class="csn-link" onclick="switchTab('education'); return false;">Education System
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown">
+          <a href="/hub/operating-system.html" class="csn-dd-item">Operating System Overview</a>
+          <div class="csn-divider"></div>
+          <div style="display:block;padding:6px 12px 2px;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;">Level 1 — Beginner</div>
+          <a href="/hub/l1/m1-beginner-foundations.html" class="csn-dd-item">Step 1: Foundations</a>
+          <a href="/hub/l1/m2-beginner-bitcoin.html" class="csn-dd-item">Step 2: Bitcoin</a>
+          <a href="/hub/l1/m3-beginner-altcoins.html" class="csn-dd-item">Step 3: Altcoins</a>
+          <a href="/hub/l1/m4-beginner-how-we-invest.html" class="csn-dd-item">Step 4: How We Invest</a>
+          <a href="/hub/l1/m5-beginner-buy-sell.html" class="csn-dd-item">Step 5: Buy &amp; Sell</a>
+          <a href="/hub/l1/m6-beginner-send-store.html" class="csn-dd-item">Step 6: Send &amp; Store</a>
+          <a href="/hub/l1/m7-beginner-tax.html" class="csn-dd-item">Step 7: Tax</a>
+          <a href="/hub/l1/m8-beginner-sell-strategy.html" class="csn-dd-item">Step 8: Sell Strategy</a>
+          <div class="csn-divider"></div>
+          <div style="display:block;padding:6px 12px 2px;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;">Level 2 — Advanced</div>
+          <a href="/hub/l2/m1-advanced-foundations.html" class="csn-dd-item">Step 1: Advanced Foundations</a>
+          <a href="/hub/l2/m2-advanced-bitcoin.html" class="csn-dd-item">Step 2: Advanced Bitcoin</a>
+          <a href="/hub/l2/m3-advanced-altcoins.html" class="csn-dd-item">Step 3: Advanced Altcoins</a>
+          <a href="/hub/l2/m4-advanced-how-we-invest.html" class="csn-dd-item">Step 4: Advanced How We Invest</a>
+          <a href="/hub/l2/m5-advanced-buy-sell.html" class="csn-dd-item">Step 5: Advanced Buy &amp; Sell</a>
+          <a href="/hub/l2/m6-advanced-send-store.html" class="csn-dd-item">Step 6: Advanced Send &amp; Store</a>
+          <a href="/hub/l2/m7-advanced-tax.html" class="csn-dd-item">Step 7: Advanced Tax</a>
+          <a href="/hub/l2/m8-advanced-sell-strategy.html" class="csn-dd-item">Step 8: Advanced Sell Strategy</a>
+          <div class="csn-divider"></div>
+          <a href="/8-step-strategy-workbook.html" class="csn-dd-item">8-Step Strategy Workbook</a>
+          <a href="/portfolio-calculator.html" class="csn-dd-item">Portfolio Allocation Calculator</a>
+        </div>
       </div>
-      <div>
-        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; color:#fff; letter-spacing:0.3px;">Collective Shift</div>
-        <div style="font-size:10px; color:rgba(255,255,255,0.35); font-family:'Source Code Pro',monospace;">CEO Dashboard</div>
+      <div class="csn-item csn-has-dd">
+        <a href="#" class="csn-link" onclick="switchTab('product'); return false;">Product
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown">
+          <a href="/hub/products.html" class="csn-dd-item">All Products</a>
+          <a href="/hub/products.html#accelerator" class="csn-dd-item">Accelerator</a>
+          <a href="/hub/products.html#platinum" class="csn-dd-item">Platinum</a>
+          <a href="/hub/beginner-journey.html" class="csn-dd-item">Beginner's Journey</a>
+          <a href="/hub/products.html#two-track" class="csn-dd-item">Two-Track System</a>
+        </div>
       </div>
-    </a>
+      <div class="csn-item csn-has-dd">
+        <a href="#" class="csn-link" onclick="switchTab('social'); return false;">Social Media
+          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="csn-dropdown">
+          <a href="/hub/youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a>
+          <a href="/hub/social-strategy.html" class="csn-dd-item">Social Strategy</a>
+          <a href="/hub/instagram-strategy.html" class="csn-dd-item">Instagram Strategy</a>
+          <div class="csn-divider"></div>
+          <a href="/hub/brand.html" class="csn-dd-item">Brand &amp; Voice</a>
+          <a href="/hub/positioning.html" class="csn-dd-item">Positioning &amp; ICP</a>
+          <a href="/hub/competitors.html" class="csn-dd-item">Competitors</a>
+        </div>
+      </div>
   </div>
-  <nav style="flex:1; padding: 8px 0;">
-    <div class="ds-sidebar-section">Home</div>
-    <a class="ds-sidebar-link" id="nav-brief" href="../index.html">
-      <span class="ds-icon">⭐</span> Morning Brief
-    </a>
-    <a class="ds-sidebar-link" id="nav-tasks" href="../index.html#tasks">
-      <span class="ds-icon">✓</span> Tasks
-    </a>
-    <a class="ds-sidebar-link" id="nav-actions" href="../actions.html">
-      <span class="ds-icon">⚡</span> Actions
-    </a>
+  <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+<div id="csnMobileMenu" class="csn-mobile-menu">
+  <a href="/team/" class="csn-mob-link csn-mob-top">Team Hub</a>
+  <a href="#" onclick="switchTab('education'); document.getElementById('csnMobileMenu').classList.remove('open'); return false;" class="csn-mob-link csn-mob-top">Education System</a>
+  <a href="/hub/operating-system.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Operating System Overview</a>
+  <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;padding:8px 12px 2px 20px;">Level 1 — Beginner</div>
+  <a href="/hub/l1/m1-beginner-foundations.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 1: Foundations</a>
+  <a href="/hub/l1/m2-beginner-bitcoin.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 2: Bitcoin</a>
+  <a href="/hub/l1/m3-beginner-altcoins.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 3: Altcoins</a>
+  <a href="/hub/l1/m4-beginner-how-we-invest.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 4: How We Invest</a>
+  <a href="/hub/l1/m5-beginner-buy-sell.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 5: Buy &amp; Sell</a>
+  <a href="/hub/l1/m6-beginner-send-store.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 6: Send &amp; Store</a>
+  <a href="/hub/l1/m7-beginner-tax.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 7: Tax</a>
+  <a href="/hub/l1/m8-beginner-sell-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 8: Sell Strategy</a>
+  <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#807F86;font-weight:600;padding:8px 12px 2px 20px;">Level 2 — Advanced</div>
+  <a href="/hub/l2/m1-advanced-foundations.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 1: Advanced Foundations</a>
+  <a href="/hub/l2/m2-advanced-bitcoin.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 2: Advanced Bitcoin</a>
+  <a href="/hub/l2/m3-advanced-altcoins.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 3: Advanced Altcoins</a>
+  <a href="/hub/l2/m4-advanced-how-we-invest.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 4: Advanced How We Invest</a>
+  <a href="/hub/l2/m5-advanced-buy-sell.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 5: Advanced Buy &amp; Sell</a>
+  <a href="/hub/l2/m6-advanced-send-store.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 6: Advanced Send &amp; Store</a>
+  <a href="/hub/l2/m7-advanced-tax.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 7: Advanced Tax</a>
+  <a href="/hub/l2/m8-advanced-sell-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Step 8: Advanced Sell Strategy</a>
+  <a href="#" onclick="switchTab('product'); document.getElementById('csnMobileMenu').classList.remove('open'); return false;" class="csn-mob-link csn-mob-top">Product</a>
+  <a href="/hub/products.html#accelerator" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Accelerator</a>
+  <a href="/hub/products.html#platinum" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Platinum</a>
+  <a href="/hub/beginner-journey.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Beginner's Journey</a>
+  <a href="#" onclick="switchTab('social'); document.getElementById('csnMobileMenu').classList.remove('open'); return false;" class="csn-mob-link csn-mob-top">Social Media</a>
+  <a href="/hub/youtube-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;YouTube Strategy</a>
+  <a href="/hub/social-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Social Strategy</a>
+  <a href="/hub/instagram-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Instagram Strategy</a>
+  <a href="/hub/brand.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Brand &amp; Voice</a>
+</div>
+<!-- ═══ END TOP NAV ═══ -->
 
-    <div class="ds-sidebar-section">Metrics</div>
-    <a class="ds-sidebar-link" id="nav-kpis" href="../index.html#metrics">
-      <span class="ds-icon">📊</span> KPIs
-    </a>
-    <a class="ds-sidebar-link" id="nav-cash" href="../team-cost.html">
-      <span class="ds-icon">💰</span> Cash &amp; Costs
-    </a>
-    <a class="ds-sidebar-link" id="nav-members" href="../hub/products.html">
-      <span class="ds-icon">👥</span> Members
-    </a>
-
-    <div class="ds-sidebar-section">Content</div>
-    <a class="ds-sidebar-link" id="nav-content-board" href="../content-board.html">
-      <span class="ds-icon">🎬</span> Content Board
-    </a>
-    <a class="ds-sidebar-link" id="nav-calendar" href="../asana-board-mockup.html">
-      <span class="ds-icon">📅</span> Calendar
-    </a>
-    <a class="ds-sidebar-link" id="nav-youtube" href="../hub/youtube-strategy.html">
-      <span class="ds-icon">▶</span> YouTube
-    </a>
-
-    <div class="ds-sidebar-section">Strategy</div>
-    <a class="ds-sidebar-link" id="nav-strategy" href="../hub/operating-system.html">
-      <span class="ds-icon">🧭</span> Strategy Hub
-    </a>
-    <a class="ds-sidebar-link" id="nav-docs" href="../hub/brand.html">
-      <span class="ds-icon">📄</span> Docs
-    </a>
-
-    <div class="ds-sidebar-section">Team</div>
-    <a class="ds-sidebar-link active" id="nav-team" href="../team-cost.html">
-      <span class="ds-icon">👤</span> Team
-    </a>
-    <a class="ds-sidebar-link" id="nav-bots" href="../index.html#bots">
-      <span class="ds-icon">🤖</span> Bot Fleet
-    </a>
-  </nav>
-  <div style="padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 10px; color: rgba(255,255,255,0.25); font-family: 'Source Code Pro', monospace;">
-    v2.0 · April 2026
-  </div>
-</aside>
-
-<!-- ═══ TOP BAR ═══ -->
-<header class="ds-topbar">
-  <div style="display:flex; align-items:center; gap:12px;">
-    <button class="ds-mobile-hamburger" onclick="document.getElementById('dsSidebar').classList.toggle('open');document.getElementById('dsSidebarOverlay').classList.toggle('open');" style="background:none; border:none; cursor:pointer; color:#807F86; padding:4px;">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-    </button>
-    <div style="position:relative;">
-      <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:#807F86;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input type="text" class="ds-topbar-search" placeholder="Search dashboard...">
+<!-- TOP BAR -->
+<header class="sticky top-[56px] z-50 bg-white/95 backdrop-blur-md border-b border-[#E8E8EA]">
+  <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <h1 class="font-oswald text-lg sm:text-xl font-600 tracking-wide uppercase">
+        <span class="text-cs-orange">Collective Shift</span>
+        <span class="text-[#807F86] mx-1">—</span>
+        <span class="text-[#1B1925]">Team Hub</span>
+      </h1>
     </div>
-  </div>
-  <div style="display:flex; align-items:center; gap:16px;">
-    <button style="background:none; border:none; cursor:pointer; color:#807F86; position:relative;">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      <span style="position:absolute; top:-2px; right:-2px; width:8px; height:8px; background:#FC5C03; border-radius:50%; border:2px solid #fff;"></span>
-    </button>
-    <div style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-      <div style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #FC5C03, #FC8C4E); display:flex; align-items:center; justify-content:center;">
-        <span style="color:#fff; font-size:11px; font-weight:700; font-family:'Plus Jakarta Sans',sans-serif;">BB</span>
+    <div class="flex items-center gap-4 sm:gap-6">
+      <div id="clock" class="text-[#807F86] text-sm font-mono hidden sm:block"></div>
+      <div class="flex items-center gap-2">
+        <span class="badge-dot bg-cs-green pulse"></span>
+        <span class="text-xs font-medium text-cs-green">Online</span>
       </div>
-      <span style="font-size:13px; font-weight:500; color:#1B1925;">BenBot</span>
     </div>
   </div>
 </header>
 
-<!-- ═══ MAIN CONTENT ═══ -->
-<div class="ds-main-content">
-  <div class="ds-page-body">
-<!-- Top Bar -->
+<!-- MAIN CONTENT -->
+<main class="max-w-[1600px] mx-auto px-4 sm:px-6 py-5">
 
-
-<!-- Main Content -->
-<div style="max-width:1200px;margin:0 auto;padding:32px 24px;">
-
-  <!-- Header -->
-  <div style="margin-bottom:32px;">
-    <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:28px;color:#1B1925;margin:0 0 6px;">
-      Collective Shift — Team Hub
-    </h1>
-    <p style="font-size:15px;color:#807F86;margin:0;">Education system, product details, and social media strategy — all in one place.</p>
+  <!-- TAB NAVIGATION -->
+  <div class="flex border-b border-[#E8E8EA] mb-6 overflow-x-auto">
+    <button class="tab-btn active" data-tab="education" onclick="switchTab('education')">⚙️ Education System</button>
+    <button class="tab-btn" data-tab="product" onclick="switchTab('product')">📦 Product</button>
+    <button class="tab-btn" data-tab="social" onclick="switchTab('social')">📱 Social Media</button>
   </div>
 
-  <!-- Tab Navigation -->
-  <div style="display:flex;gap:0;border-bottom:1px solid #E8E8EA;margin-bottom:32px;overflow-x:auto;">
-    <button class="tab-btn active" onclick="switchTab('education')">📚 Education System</button>
-    <button class="tab-btn" onclick="switchTab('product')">🎯 Product</button>
-    <button class="tab-btn" onclick="switchTab('social')">📱 Social Media</button>
-  </div>
-
-  <!-- ═══════════════════════════════════════ -->
-  <!-- TAB 1: EDUCATION SYSTEM                -->
-  <!-- ═══════════════════════════════════════ -->
-  <div id="tab-education" class="tab-panel active">
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- TAB 1: EDUCATION SYSTEM                     -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="tab-education" class="tab-content active">
 
     <!-- Shift OS Overview -->
-    <div class="section-title">The Shift Operating System</div>
-    <p class="section-sub">Our 8-step, two-level education framework that takes members from zero to confident crypto investor in 90 days.</p>
+    <section class="mb-6">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="font-oswald text-base uppercase tracking-wider text-[#807F86] flex items-center gap-2">
+          <span class="text-cs-orange">▎</span>Shift OS — The Collective Shift Operating System
+        </h2>
+        <a href="/cs-education-system-overview.html" class="nav-btn inline-flex items-center gap-2 bg-cs-orange/10 border border-cs-orange/30 text-cs-orange px-4 py-2 rounded-lg font-medium text-sm hover:bg-cs-orange/20">
+          📊 Full Presentation
+        </a>
+      </div>
 
-    <!-- Key Links -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px;" class="grid-2">
-      <a href="/cs-education-system-overview.html" class="link-card">
-        <span class="link-icon">📊</span>
-        <div><strong>Education System Overview</strong><br><span style="font-size:12px;color:#807F86;">Full presentation deck</span></div>
-      </a>
-      <a href="/os/index.html" class="link-card">
-        <span class="link-icon">🗂️</span>
-        <div><strong>Shift OS Module Index</strong><br><span style="font-size:12px;color:#807F86;">All 16 module pages</span></div>
-      </a>
-    </div>
-
-    <!-- Two-Track System -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:32px;" class="grid-2">
-      <div class="hub-card">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
-          <span class="badge badge-green">LEVEL 1</span>
-          <h3 style="margin:0;">Beginner Track</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4" style="border-left: 3px solid #FC5C03;">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Education Model</div>
+          <div class="text-2xl font-jakarta font-700 text-[#1B1925]">2-Track</div>
+          <div class="text-xs text-[#4D4C55] mt-1">Beginner (L1) + Advanced (L2)</div>
+          <div class="text-[9px] text-[#807F86] font-mono mt-2">8 steps per track, 16 modules total</div>
         </div>
-        <p style="margin-bottom:12px;">For members new to crypto. 8 steps from foundations to sell strategy.</p>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <a href="/hub/l1/m1-beginner-foundations.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">1️⃣</span> Foundations</a>
-          <a href="/hub/l1/m2-beginner-bitcoin.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">2️⃣</span> Bitcoin</a>
-          <a href="/hub/l1/m3-beginner-altcoins.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">3️⃣</span> Altcoins</a>
-          <a href="/hub/l1/m4-beginner-how-we-invest.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">4️⃣</span> How We Invest</a>
-          <a href="/hub/l1/m5-beginner-buy-sell.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">5️⃣</span> Buy &amp; Sell</a>
-          <a href="/hub/l1/m6-beginner-send-store.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">6️⃣</span> Send &amp; Store</a>
-          <a href="/hub/l1/m7-beginner-tax.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">7️⃣</span> Tax</a>
-          <a href="/hub/l1/m8-beginner-sell-strategy.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">8️⃣</span> Sell Strategy</a>
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4" style="border-left: 3px solid #08C394;">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Member Journey</div>
+          <div class="text-2xl font-jakarta font-700 text-cs-green">90 Days</div>
+          <div class="text-xs text-[#4D4C55] mt-1">Structured onboarding to strategy</div>
+          <div class="text-[9px] text-[#807F86] font-mono mt-2">Week 1-4 foundations, Week 5-12 deep dive</div>
+        </div>
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4" style="border-left: 3px solid #654FFC;">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Weekly Calls</div>
+          <div class="text-2xl font-jakarta font-700 text-cs-purple">3/week</div>
+          <div class="text-xs text-[#4D4C55] mt-1">Tue + Wed + Thu (live group calls)</div>
+          <div class="text-[9px] text-[#807F86] font-mono mt-2">Plus 1:1 coaching Mon-Fri</div>
+        </div>
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4" style="border-left: 3px solid #F59E0B;">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Member Tools</div>
+          <div class="text-2xl font-jakarta font-700 text-[#1B1925]">3</div>
+          <div class="text-xs text-[#4D4C55] mt-1">Workbook + Strategy Builder + Calculator</div>
+          <div class="text-[9px] text-[#807F86] font-mono mt-2">Interactive self-paced resources</div>
         </div>
       </div>
-      <div class="hub-card">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
-          <span class="badge badge-purple">LEVEL 2</span>
-          <h3 style="margin:0;">Advanced Track</h3>
-        </div>
-        <p style="margin-bottom:12px;">For members who completed L1. Deeper analysis, advanced strategies.</p>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <a href="/hub/l2/m1-advanced-foundations.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">1️⃣</span> Advanced Foundations</a>
-          <a href="/hub/l2/m2-advanced-bitcoin.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">2️⃣</span> Advanced Bitcoin</a>
-          <a href="/hub/l2/m3-advanced-altcoins.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">3️⃣</span> Advanced Altcoins</a>
-          <a href="/hub/l2/m4-advanced-how-we-invest.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">4️⃣</span> Advanced How We Invest</a>
-          <a href="/hub/l2/m5-advanced-buy-sell.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">5️⃣</span> Advanced Buy &amp; Sell</a>
-          <a href="/hub/l2/m6-advanced-send-store.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">6️⃣</span> Advanced Send &amp; Store</a>
-          <a href="/hub/l2/m7-advanced-tax.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">7️⃣</span> Advanced Tax</a>
-          <a href="/hub/l2/m8-advanced-sell-strategy.html" class="link-card" style="padding:8px 12px;"><span class="link-icon" style="font-size:14px;">8️⃣</span> Advanced Sell Strategy</a>
-        </div>
-      </div>
-    </div>
+    </section>
 
-    <!-- 90-Day Journey -->
-    <div class="hub-card" style="margin-bottom:32px;">
-      <h3>🗓️ The 90-Day Member Journey</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;" class="grid-3">
-        <div style="padding:16px;background:#F9F9F9;border-radius:12px;">
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:#FC5C03;margin-bottom:6px;">Days 1–30: Foundation</div>
-          <p style="font-size:13px;color:#4D4C55;margin:0;">Complete L1 Steps 1–4. Attend weekly Foundation calls. Book 1:1 onboarding session. Set up exchange + wallet.</p>
+    <!-- 90-Day Member Journey -->
+    <section class="mb-6">
+      <h2 class="font-oswald text-base uppercase tracking-wider text-[#807F86] mb-3 flex items-center gap-2">
+        <span class="text-cs-green">▎</span>90-Day Member Journey
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-semibold mb-2">Phase 1: Foundation (Days 1-30)</div>
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs"><span class="text-[#807F86]">Welcome &amp; Onboarding</span><span class="font-semibold text-cs-green">Day 1</span></div>
+            <div class="flex justify-between text-xs"><span class="text-[#807F86]">1:1 Strategy Session</span><span class="font-semibold text-[#1B1925]">Week 1</span></div>
+            <div class="flex justify-between text-xs"><span class="text-[#807F86]">Complete L1 Steps 1-4</span><span class="font-semibold text-[#1B1925]">Week 2-4</span></div>
+            <div class="flex justify-between text-xs"><span class="text-[#807F86]">First Live Call</span><span class="font-semibold text-[#1B1925]">Week 1</span></div>
+            <div class="flex justify-between text-xs"><span class="text-[#807F86]">Workbook Started</span><span class="font-semibold text-cs-orange">Week 2</span></div>
+          </div>
         </div>
-        <div style="padding:16px;background:#F9F9F9;border-radius:12px;">
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:#08C394;margin-bottom:6px;">Days 31–60: Build</div>
-          <p style="font-size:13px;color:#4D4C55;margin:0;">Complete L1 Steps 5–8. Start portfolio allocation. Attend strategy calls. Begin L2 if confident.</p>
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-semibold mb-2">Phase 2: Deep Dive (Days 31-60)</div>
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs"><span class="text-[#807F86]">Complete L1 Steps 5-8</span><span class="font-semibold text-[#1B1925]">Week 5-8</span></div>
+            <div class="flex justify-between text-xs"><span class="text-[#807F86]">Strategy Builder Started</span><span class="font-semibold text-cs-purple">Week 5</span></div>
+            <div class="flex justify-between text-xs"><span class="text-[#807F86]">Portfolio Review 1:1</span><span class="font-semibold text-[#1B1925]">Week 6</span></div>
+            <div class="flex justify-between text-xs"><span class="text-[#807F86]">Regular Call Attendance</span><span class="font-semibold text-cs-green">Ongoing</span></div>
+            <div class="flex justify-between text-xs"><span class="text-[#807F86]">Community Engagement</span><span class="font-semibold text-[#1B1925]">Active</span></div>
+          </div>
         </div>
-        <div style="padding:16px;background:#F9F9F9;border-radius:12px;">
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:#654FFC;margin-bottom:6px;">Days 61–90: Advance</div>
-          <p style="font-size:13px;color:#4D4C55;margin:0;">Complete L2 track. Refine strategy with 1:1 coaching. Use 8-Step Strategy Workbook. Full investment confidence.</p>
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-semibold mb-2">Phase 3: Strategy (Days 61-90)</div>
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs"><span class="text-[#807F86]">Begin L2 (if Platinum)</span><span class="font-semibold text-cs-purple">Week 9</span></div>
+            <div class="flex justify-between text-xs"><span class="text-[#807F86]">Workbook Complete</span><span class="font-semibold text-cs-green">Week 10</span></div>
+            <div class="flex justify-between text-xs"><span class="text-[#807F86]">Strategy Builder Complete</span><span class="font-semibold text-cs-green">Week 11</span></div>
+            <div class="flex justify-between text-xs"><span class="text-[#807F86]">Renewal Conversation</span><span class="font-semibold text-cs-orange">Week 12</span></div>
+            <div class="flex justify-between text-xs"><span class="text-[#807F86]">Investment Plan Active</span><span class="font-semibold text-cs-green">✅</span></div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- Weekly Call Schedule -->
-    <div class="hub-card" style="margin-bottom:32px;">
-      <h3>📞 Weekly Call Schedule</h3>
-      <div style="margin-bottom:16px;">
-        <div class="schedule-row">
-          <span class="schedule-day">Tuesday</span>
-          <span class="schedule-time">8:00 PM AEST / 5:00 AM EST</span>
-          <span class="schedule-label"><strong>Weekly Strategy Call</strong> — Market analysis, portfolio positioning, member Q&amp;A</span>
+    <section class="mb-6">
+      <h2 class="font-oswald text-base uppercase tracking-wider text-[#807F86] mb-3 flex items-center gap-2">
+        <span class="text-cs-purple">▎</span>Weekly Call Schedule
+      </h2>
+      <div class="text-[10px] uppercase tracking-widest text-[#807F86] font-mono font-semibold mb-2">Group Calls</div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Tuesday</div>
+          <div class="text-xl font-jakarta font-700 text-[#1B1925]">Market Update</div>
+          <div class="text-xs text-[#4D4C55] mt-1">🇦🇺 7:00 PM AEST &nbsp;|&nbsp; 🇺🇸 4:00 AM EST</div>
+          <div class="text-[9px] text-[#807F86] font-mono mt-2">Weekly market analysis + Q&amp;A</div>
         </div>
-        <div class="schedule-row">
-          <span class="schedule-day">Wednesday</span>
-          <span class="schedule-time">8:00 PM AEST / 5:00 AM EST</span>
-          <span class="schedule-label"><strong>Foundation Call</strong> — Education walkthrough for new members (L1 focus)</span>
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Wednesday</div>
+          <div class="text-xl font-jakarta font-700 text-[#1B1925]">Education Session</div>
+          <div class="text-xs text-[#4D4C55] mt-1">🇦🇺 7:00 PM AEST &nbsp;|&nbsp; 🇺🇸 4:00 AM EST</div>
+          <div class="text-[9px] text-[#807F86] font-mono mt-2">Deep dive into current OS module</div>
         </div>
-        <div class="schedule-row">
-          <span class="schedule-day">Thursday</span>
-          <span class="schedule-time">8:00 PM AEST / 5:00 AM EST</span>
-          <span class="schedule-label"><strong>Deep Dive Call</strong> — Advanced topics, altcoin research, DeFi strategies</span>
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Thursday</div>
+          <div class="text-xl font-jakarta font-700 text-[#1B1925]">Strategy &amp; Q&amp;A</div>
+          <div class="text-xs text-[#4D4C55] mt-1">🇦🇺 12:00 PM AEST &nbsp;|&nbsp; 🇺🇸 9:00 PM EST (Wed)</div>
+          <div class="text-[9px] text-[#807F86] font-mono mt-2">US-friendly time slot</div>
         </div>
       </div>
-      <div style="padding:16px;background:#FEEEE5;border-radius:12px;">
-        <p style="font-size:13px;color:#4D4C55;margin:0;">
-          <strong style="color:#FC5C03;">Foundation Sessions:</strong> Additional beginner-focused sessions run alongside the Wednesday call. These cover L1 content step-by-step and are designed for members in their first 30 days.
-        </p>
-      </div>
-    </div>
 
-    <!-- 1:1 Booking -->
-    <div class="hub-card">
-      <h3>👤 1:1 Coaching — Booking Info</h3>
-      <p style="margin-bottom:16px;">Members can book 1:1 coaching sessions Monday–Friday with the following team members:</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;" class="grid-3">
-        <div style="padding:16px;background:#F9F9F9;border-radius:12px;text-align:center;">
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:#1B1925;margin-bottom:4px;">San</div>
-          <div style="font-size:12px;color:#807F86;">Mon – Fri</div>
-          <span class="badge badge-orange" style="margin-top:8px;">Coach</span>
+      <div class="text-[10px] uppercase tracking-widest text-[#807F86] font-mono font-semibold mb-2">1:1 Coaching (Mon-Fri)</div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4 flex items-center gap-4">
+          <div class="w-10 h-10 rounded-full bg-cs-orange/15 flex items-center justify-center flex-shrink-0">
+            <span class="text-cs-orange font-bold text-sm">SN</span>
+          </div>
+          <div>
+            <div class="text-sm font-semibold text-[#1B1925]">San</div>
+            <div class="text-xs text-[#4D4C55]">1:1 Strategy Sessions</div>
+            <div class="text-[9px] text-[#807F86] font-mono mt-1">Mon-Fri, bookable via portal</div>
+          </div>
         </div>
-        <div style="padding:16px;background:#F9F9F9;border-radius:12px;text-align:center;">
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:#1B1925;margin-bottom:4px;">Simon</div>
-          <div style="font-size:12px;color:#807F86;">Mon – Fri</div>
-          <span class="badge badge-orange" style="margin-top:8px;">Coach</span>
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4 flex items-center gap-4">
+          <div class="w-10 h-10 rounded-full bg-cs-purple/15 flex items-center justify-center flex-shrink-0">
+            <span class="text-cs-purple font-bold text-sm">SI</span>
+          </div>
+          <div>
+            <div class="text-sm font-semibold text-[#1B1925]">Simon</div>
+            <div class="text-xs text-[#4D4C55]">1:1 Strategy Sessions</div>
+            <div class="text-[9px] text-[#807F86] font-mono mt-1">Mon-Fri, bookable via portal</div>
+          </div>
         </div>
-        <div style="padding:16px;background:#F9F9F9;border-radius:12px;text-align:center;">
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:#1B1925;margin-bottom:4px;">Matt</div>
-          <div style="font-size:12px;color:#807F86;">Mon – Fri</div>
-          <span class="badge badge-orange" style="margin-top:8px;">Coach</span>
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4 flex items-center gap-4">
+          <div class="w-10 h-10 rounded-full bg-cs-green/15 flex items-center justify-center flex-shrink-0">
+            <span class="text-cs-green font-bold text-sm">MT</span>
+          </div>
+          <div>
+            <div class="text-sm font-semibold text-[#1B1925]">Matt</div>
+            <div class="text-xs text-[#4D4C55]">1:1 Strategy Sessions</div>
+            <div class="text-[9px] text-[#807F86] font-mono mt-1">Mon-Fri, bookable via portal</div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Extra links -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px;" class="grid-2">
-      <a href="/8-step-strategy-workbook.html" class="link-card">
-        <span class="link-icon">📝</span>
-        <div><strong>8-Step Strategy Workbook</strong><br><span style="font-size:12px;color:#807F86;">Interactive workbook</span></div>
-      </a>
-      <a href="/portfolio-calculator.html" class="link-card">
-        <span class="link-icon">🧮</span>
-        <div><strong>Portfolio Allocation Calculator</strong><br><span style="font-size:12px;color:#807F86;">Allocation tool</span></div>
-      </a>
-      <a href="/8-step-strategy-workbook-L1.html" class="link-card">
-        <span class="link-icon">📗</span>
-        <div><strong>Level 1 Workbook</strong><br><span style="font-size:12px;color:#807F86;">Beginner exercises</span></div>
-      </a>
-      <a href="/8-step-strategy-workbook-L2.html" class="link-card">
-        <span class="link-icon">📘</span>
-        <div><strong>Level 2 Workbook</strong><br><span style="font-size:12px;color:#807F86;">Advanced exercises</span></div>
-      </a>
-    </div>
+    <!-- OS Module Links -->
+    <section class="mb-6">
+      <h2 class="font-oswald text-base uppercase tracking-wider text-[#807F86] mb-3 flex items-center gap-2">
+        <span class="text-cs-orange">▎</span>All 16 OS Modules
+      </h2>
+
+      <div class="text-[10px] uppercase tracking-widest text-[#807F86] font-mono font-semibold mb-2">Level 1 — Beginner Track</div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+        <a href="/hub/l1/m1-beginner-foundations.html" class="module-link bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3 block text-decoration-none">
+          <div class="text-[10px] uppercase tracking-wider text-cs-orange font-mono font-semibold">Step 1</div>
+          <div class="text-sm font-semibold text-[#1B1925] mt-1">Foundations</div>
+          <div class="text-xs text-[#807F86] mt-0.5">Core concepts and setup</div>
+        </a>
+        <a href="/hub/l1/m2-beginner-bitcoin.html" class="module-link bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3 block text-decoration-none">
+          <div class="text-[10px] uppercase tracking-wider text-cs-orange font-mono font-semibold">Step 2</div>
+          <div class="text-sm font-semibold text-[#1B1925] mt-1">Bitcoin</div>
+          <div class="text-xs text-[#807F86] mt-0.5">Understanding Bitcoin</div>
+        </a>
+        <a href="/hub/l1/m3-beginner-altcoins.html" class="module-link bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3 block text-decoration-none">
+          <div class="text-[10px] uppercase tracking-wider text-cs-orange font-mono font-semibold">Step 3</div>
+          <div class="text-sm font-semibold text-[#1B1925] mt-1">Altcoins</div>
+          <div class="text-xs text-[#807F86] mt-0.5">Digital asset landscape</div>
+        </a>
+        <a href="/hub/l1/m4-beginner-how-we-invest.html" class="module-link bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3 block text-decoration-none">
+          <div class="text-[10px] uppercase tracking-wider text-cs-orange font-mono font-semibold">Step 4</div>
+          <div class="text-sm font-semibold text-[#1B1925] mt-1">How We Invest</div>
+          <div class="text-xs text-[#807F86] mt-0.5">Investment framework</div>
+        </a>
+        <a href="/hub/l1/m5-beginner-buy-sell.html" class="module-link bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3 block text-decoration-none">
+          <div class="text-[10px] uppercase tracking-wider text-cs-orange font-mono font-semibold">Step 5</div>
+          <div class="text-sm font-semibold text-[#1B1925] mt-1">Buy &amp; Sell</div>
+          <div class="text-xs text-[#807F86] mt-0.5">Exchanges and execution</div>
+        </a>
+        <a href="/hub/l1/m6-beginner-send-store.html" class="module-link bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3 block text-decoration-none">
+          <div class="text-[10px] uppercase tracking-wider text-cs-orange font-mono font-semibold">Step 6</div>
+          <div class="text-sm font-semibold text-[#1B1925] mt-1">Send &amp; Store</div>
+          <div class="text-xs text-[#807F86] mt-0.5">Wallets and security</div>
+        </a>
+        <a href="/hub/l1/m7-beginner-tax.html" class="module-link bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3 block text-decoration-none">
+          <div class="text-[10px] uppercase tracking-wider text-cs-orange font-mono font-semibold">Step 7</div>
+          <div class="text-sm font-semibold text-[#1B1925] mt-1">Tax</div>
+          <div class="text-xs text-[#807F86] mt-0.5">Tax obligations and tools</div>
+        </a>
+        <a href="/hub/l1/m8-beginner-sell-strategy.html" class="module-link bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3 block text-decoration-none">
+          <div class="text-[10px] uppercase tracking-wider text-cs-orange font-mono font-semibold">Step 8</div>
+          <div class="text-sm font-semibold text-[#1B1925] mt-1">Sell Strategy</div>
+          <div class="text-xs text-[#807F86] mt-0.5">Exit planning and profit-taking</div>
+        </a>
+      </div>
+
+      <div class="text-[10px] uppercase tracking-widest text-[#807F86] font-mono font-semibold mb-2">Level 2 — Advanced Track</div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+        <a href="/hub/l2/m1-advanced-foundations.html" class="module-link bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3 block text-decoration-none">
+          <div class="text-[10px] uppercase tracking-wider text-cs-purple font-mono font-semibold">Step 1</div>
+          <div class="text-sm font-semibold text-[#1B1925] mt-1">Advanced Foundations</div>
+          <div class="text-xs text-[#807F86] mt-0.5">On-chain analysis, macro</div>
+        </a>
+        <a href="/hub/l2/m2-advanced-bitcoin.html" class="module-link bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3 block text-decoration-none">
+          <div class="text-[10px] uppercase tracking-wider text-cs-purple font-mono font-semibold">Step 2</div>
+          <div class="text-sm font-semibold text-[#1B1925] mt-1">Advanced Bitcoin</div>
+          <div class="text-xs text-[#807F86] mt-0.5">Cycle theory, halving</div>
+        </a>
+        <a href="/hub/l2/m3-advanced-altcoins.html" class="module-link bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3 block text-decoration-none">
+          <div class="text-[10px] uppercase tracking-wider text-cs-purple font-mono font-semibold">Step 3</div>
+          <div class="text-sm font-semibold text-[#1B1925] mt-1">Advanced Altcoins</div>
+          <div class="text-xs text-[#807F86] mt-0.5">DeFi, narratives, research</div>
+        </a>
+        <a href="/hub/l2/m4-advanced-how-we-invest.html" class="module-link bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3 block text-decoration-none">
+          <div class="text-[10px] uppercase tracking-wider text-cs-purple font-mono font-semibold">Step 4</div>
+          <div class="text-sm font-semibold text-[#1B1925] mt-1">Advanced How We Invest</div>
+          <div class="text-xs text-[#807F86] mt-0.5">Portfolio construction</div>
+        </a>
+        <a href="/hub/l2/m5-advanced-buy-sell.html" class="module-link bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3 block text-decoration-none">
+          <div class="text-[10px] uppercase tracking-wider text-cs-purple font-mono font-semibold">Step 5</div>
+          <div class="text-sm font-semibold text-[#1B1925] mt-1">Advanced Buy &amp; Sell</div>
+          <div class="text-xs text-[#807F86] mt-0.5">DCA, limit orders, advanced</div>
+        </a>
+        <a href="/hub/l2/m6-advanced-send-store.html" class="module-link bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3 block text-decoration-none">
+          <div class="text-[10px] uppercase tracking-wider text-cs-purple font-mono font-semibold">Step 6</div>
+          <div class="text-sm font-semibold text-[#1B1925] mt-1">Advanced Send &amp; Store</div>
+          <div class="text-xs text-[#807F86] mt-0.5">Hardware wallets, multisig</div>
+        </a>
+        <a href="/hub/l2/m7-advanced-tax.html" class="module-link bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3 block text-decoration-none">
+          <div class="text-[10px] uppercase tracking-wider text-cs-purple font-mono font-semibold">Step 7</div>
+          <div class="text-sm font-semibold text-[#1B1925] mt-1">Advanced Tax</div>
+          <div class="text-xs text-[#807F86] mt-0.5">SMSF, structures, optimisation</div>
+        </a>
+        <a href="/hub/l2/m8-advanced-sell-strategy.html" class="module-link bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-3 block text-decoration-none">
+          <div class="text-[10px] uppercase tracking-wider text-cs-purple font-mono font-semibold">Step 8</div>
+          <div class="text-sm font-semibold text-[#1B1925] mt-1">Advanced Sell Strategy</div>
+          <div class="text-xs text-[#807F86] mt-0.5">Cycle exits, rebalancing</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Member Tools -->
+    <section class="mb-6">
+      <h2 class="font-oswald text-base uppercase tracking-wider text-[#807F86] mb-3 flex items-center gap-2">
+        <span class="text-cs-green">▎</span>Member Tools &amp; Resources
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <a href="/8-step-strategy-workbook.html" class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4 block text-decoration-none" style="border-left: 3px solid #FC5C03;">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Interactive Workbook</div>
+          <div class="text-lg font-jakarta font-700 text-[#1B1925]">8-Step Strategy Workbook</div>
+          <div class="text-xs text-[#4D4C55] mt-1">Self-paced exercises for L1 and L2</div>
+          <div class="text-[9px] text-cs-orange font-mono mt-2">L1 Workbook &nbsp;|&nbsp; L2 Workbook</div>
+        </a>
+        <a href="/portfolio-calculator.html" class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4 block text-decoration-none" style="border-left: 3px solid #654FFC;">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Strategy Builder</div>
+          <div class="text-lg font-jakarta font-700 text-[#1B1925]">Shift Strategy Builder</div>
+          <div class="text-xs text-[#4D4C55] mt-1">Portfolio allocation calculator</div>
+          <div class="text-[9px] text-cs-purple font-mono mt-2">Interactive tool</div>
+        </a>
+        <a href="/cs-education-system-overview.html" class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4 block text-decoration-none" style="border-left: 3px solid #08C394;">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Presentation</div>
+          <div class="text-lg font-jakarta font-700 text-[#1B1925]">Education System Overview</div>
+          <div class="text-xs text-[#4D4C55] mt-1">Full system walkthrough for team</div>
+          <div class="text-[9px] text-cs-green font-mono mt-2">Slide deck</div>
+        </a>
+      </div>
+    </section>
+
   </div>
 
-  <!-- ═══════════════════════════════════════ -->
-  <!-- TAB 2: PRODUCT                         -->
-  <!-- ═══════════════════════════════════════ -->
-  <div id="tab-product" class="tab-panel">
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- TAB 2: PRODUCT                               -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="tab-product" class="tab-content">
 
-    <div class="section-title">Membership Tiers</div>
-    <p class="section-sub">Three tiers designed for different stages of the investment journey. All tiers include access to the Shift OS education system.</p>
+    <!-- Tier Overview KPIs -->
+    <section class="mb-6">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="font-oswald text-base uppercase tracking-wider text-[#807F86] flex items-center gap-2">
+          <span class="text-cs-orange">▎</span>Product Tiers
+        </h2>
+      </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-bottom:32px;" class="grid-3">
-      <!-- Accelerator -->
-      <div class="tier-card" style="background:#FFFFFF;">
-        <span class="badge badge-green" style="margin-bottom:16px;">ENTRY</span>
-        <div class="tier-name" style="margin-bottom:4px;">Accelerator</div>
-        <div class="tier-price" style="margin-bottom:16px;">A$5,000<span style="font-size:14px;font-weight:400;color:#807F86;">/yr</span></div>
-        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;">
-          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
-            <span style="color:#08C394;font-weight:bold;">✓</span> Full Shift OS (L1 + L2) access
-          </li>
-          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
-            <span style="color:#08C394;font-weight:bold;">✓</span> Weekly strategy &amp; foundation calls
-          </li>
-          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
-            <span style="color:#08C394;font-weight:bold;">✓</span> Community access (Discord / Slack)
-          </li>
-          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
-            <span style="color:#08C394;font-weight:bold;">✓</span> Monthly market reports
-          </li>
-          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
-            <span style="color:#08C394;font-weight:bold;">✓</span> 8-Step Strategy Workbook
-          </li>
-          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
-            <span style="color:#08C394;font-weight:bold;">✓</span> Portfolio Allocation Calculator
-          </li>
-        </ul>
-      </div>
-      <!-- Platinum -->
-      <div class="tier-card" style="background:#FFFFFF;border-color:#FC5C03;">
-        <span class="badge badge-orange" style="margin-bottom:16px;">POPULAR</span>
-        <div class="tier-name" style="margin-bottom:4px;">Platinum</div>
-        <div class="tier-price" style="margin-bottom:16px;">A$15,000<span style="font-size:14px;font-weight:400;color:#807F86;">/yr</span></div>
-        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;">
-          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
-            <span style="color:#08C394;font-weight:bold;">✓</span> Everything in Accelerator
-          </li>
-          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
-            <span style="color:#FC5C03;font-weight:bold;">★</span> 1:1 coaching sessions (Mon–Fri)
-          </li>
-          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
-            <span style="color:#FC5C03;font-weight:bold;">★</span> Personalised portfolio review
-          </li>
-          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
-            <span style="color:#FC5C03;font-weight:bold;">★</span> Priority Q&amp;A on calls
-          </li>
-          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
-            <span style="color:#FC5C03;font-weight:bold;">★</span> Advanced altcoin research reports
-          </li>
-          <li style="font-size:13px;color:#4D4C55;display:flex;align-items:start;gap:8px;">
-            <span style="color:#FC5C03;font-weight:bold;">★</span> Direct message access to coaches
-          </li>
-        </ul>
-      </div>
-      <!-- Black Tier -->
-      <div class="tier-card" style="background:#1A1A2E;border-color:#1A1A2E;">
-        <span class="badge" style="background:rgba(252,92,3,0.2);color:#FC8C4E;margin-bottom:16px;">ELITE</span>
-        <div class="tier-name" style="color:#FFFFFF;margin-bottom:4px;">Black Tier</div>
-        <div class="tier-price" style="margin-bottom:16px;">A$33,000<span style="font-size:14px;font-weight:400;color:#807F86;">/yr</span></div>
-        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;">
-          <li style="font-size:13px;color:#B0B0B8;display:flex;align-items:start;gap:8px;">
-            <span style="color:#08C394;font-weight:bold;">✓</span> Everything in Platinum
-          </li>
-          <li style="font-size:13px;color:#B0B0B8;display:flex;align-items:start;gap:8px;">
-            <span style="color:#FC8C4E;font-weight:bold;">◆</span> Direct access to Ben Simpson
-          </li>
-          <li style="font-size:13px;color:#B0B0B8;display:flex;align-items:start;gap:8px;">
-            <span style="color:#FC8C4E;font-weight:bold;">◆</span> Quarterly strategy sessions with Ben
-          </li>
-          <li style="font-size:13px;color:#B0B0B8;display:flex;align-items:start;gap:8px;">
-            <span style="color:#FC8C4E;font-weight:bold;">◆</span> Bespoke investment strategy
-          </li>
-          <li style="font-size:13px;color:#B0B0B8;display:flex;align-items:start;gap:8px;">
-            <span style="color:#FC8C4E;font-weight:bold;">◆</span> VIP event invitations
-          </li>
-          <li style="font-size:13px;color:#B0B0B8;display:flex;align-items:start;gap:8px;">
-            <span style="color:#FC8C4E;font-weight:bold;">◆</span> Early access to new research &amp; tools
-          </li>
-        </ul>
-      </div>
-    </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <!-- Accelerator -->
+        <div class="tier-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg overflow-hidden">
+          <div class="px-5 py-4 border-b border-[#E8E8EA]" style="background: linear-gradient(135deg, #FFFFFF 80%, #FEEEE5 100%);">
+            <div class="text-[10px] uppercase tracking-wider text-cs-orange font-mono font-semibold">Tier 1</div>
+            <div class="text-2xl font-jakarta font-700 text-[#1B1925] mt-1">Accelerator</div>
+            <div class="text-xl font-jakarta font-700 text-cs-orange mt-1">A$5,000</div>
+            <div class="text-xs text-[#807F86] mt-1">12-month membership</div>
+          </div>
+          <div class="px-5 py-4 space-y-2">
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Level 1 Beginner Track (8 steps)</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">3x weekly group calls</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Community access (Discord)</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">8-Step Strategy Workbook</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Portfolio Allocation Calculator</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Market updates and research</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-[#E8E8EA] mt-0.5">✗</span><span class="text-[#807F86]">Level 2 Advanced Track</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-[#E8E8EA] mt-0.5">✗</span><span class="text-[#807F86]">1:1 coaching sessions</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-[#E8E8EA] mt-0.5">✗</span><span class="text-[#807F86]">Priority support</span></div>
+          </div>
+        </div>
 
-    <!-- What's in each tier — comparison -->
-    <div class="hub-card">
-      <h3>📋 Tier Comparison at a Glance</h3>
-      <div style="overflow-x:auto;">
-        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <!-- Platinum -->
+        <div class="tier-card bg-[#FFFFFF] border-2 border-cs-orange rounded-lg overflow-hidden">
+          <div class="px-5 py-4 border-b border-[#E8E8EA]" style="background: linear-gradient(135deg, #FFFFFF 60%, #FEEEE5 100%);">
+            <div class="flex items-center gap-2">
+              <div class="text-[10px] uppercase tracking-wider text-cs-orange font-mono font-semibold">Tier 2</div>
+              <span class="text-[9px] font-semibold text-white bg-cs-orange px-2 py-0.5 rounded-full">MOST POPULAR</span>
+            </div>
+            <div class="text-2xl font-jakarta font-700 text-[#1B1925] mt-1">Platinum</div>
+            <div class="text-xl font-jakarta font-700 text-cs-orange mt-1">A$15,000</div>
+            <div class="text-xs text-[#807F86] mt-1">12-month membership</div>
+          </div>
+          <div class="px-5 py-4 space-y-2">
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Everything in Accelerator</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55] font-semibold">Level 2 Advanced Track (8 steps)</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55] font-semibold">1:1 coaching sessions (Mon-Fri)</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55] font-semibold">Shift Strategy Builder access</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Priority support</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Advanced research and alerts</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Portfolio review sessions</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-[#E8E8EA] mt-0.5">✗</span><span class="text-[#807F86]">Direct access to Ben</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-[#E8E8EA] mt-0.5">✗</span><span class="text-[#807F86]">VIP events</span></div>
+          </div>
+        </div>
+
+        <!-- Black Tier -->
+        <div class="tier-card bg-[#FFFFFF] border border-[#1B1925] rounded-lg overflow-hidden">
+          <div class="px-5 py-4 border-b border-[#1B1925]" style="background: linear-gradient(135deg, #1B1925 0%, #33313F 100%);">
+            <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-semibold">Tier 3</div>
+            <div class="text-2xl font-jakarta font-700 text-white mt-1">Black Tier</div>
+            <div class="text-xl font-jakarta font-700 text-cs-orange mt-1">A$33,000</div>
+            <div class="text-xs text-[#807F86] mt-1">12-month membership</div>
+          </div>
+          <div class="px-5 py-4 space-y-2">
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Everything in Platinum</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55] font-semibold">Direct access to Ben Simpson</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55] font-semibold">VIP events and networking</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55] font-semibold">Bespoke portfolio strategy</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Quarterly deep-dive reviews</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">White-glove onboarding</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Early access to research</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Priority everything</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison Table -->
+    <section class="mb-6">
+      <h2 class="font-oswald text-base uppercase tracking-wider text-[#807F86] mb-3 flex items-center gap-2">
+        <span class="text-cs-purple">▎</span>Feature Comparison
+      </h2>
+      <div class="bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg overflow-hidden">
+        <table class="w-full text-sm">
           <thead>
-            <tr style="border-bottom:2px solid #E8E8EA;">
-              <th style="text-align:left;padding:10px 12px;color:#807F86;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:1px;">Feature</th>
-              <th style="text-align:center;padding:10px 12px;color:#08C394;font-weight:600;">Accelerator</th>
-              <th style="text-align:center;padding:10px 12px;color:#FC5C03;font-weight:600;">Platinum</th>
-              <th style="text-align:center;padding:10px 12px;color:#FC8C4E;font-weight:600;">Black Tier</th>
+            <tr class="border-b border-[#E8E8EA]">
+              <th class="text-left px-4 py-3 text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-semibold">Feature</th>
+              <th class="text-center px-4 py-3 text-[10px] uppercase tracking-wider text-cs-orange font-mono font-semibold">Accelerator<br><span class="text-[#807F86]">A$5K</span></th>
+              <th class="text-center px-4 py-3 text-[10px] uppercase tracking-wider text-cs-orange font-mono font-semibold">Platinum<br><span class="text-[#807F86]">A$15K</span></th>
+              <th class="text-center px-4 py-3 text-[10px] uppercase tracking-wider text-[#1B1925] font-mono font-semibold">Black Tier<br><span class="text-[#807F86]">A$33K</span></th>
             </tr>
           </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid #F2F2F2;">
-              <td style="padding:10px 12px;color:#4D4C55;">Shift OS Education (L1 + L2)</td>
-              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
-              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
-              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
-            </tr>
-            <tr style="border-bottom:1px solid #F2F2F2;">
-              <td style="padding:10px 12px;color:#4D4C55;">Weekly Calls (Strategy + Foundation + Deep Dive)</td>
-              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
-              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
-              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
-            </tr>
-            <tr style="border-bottom:1px solid #F2F2F2;">
-              <td style="padding:10px 12px;color:#4D4C55;">Community Access</td>
-              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
-              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
-              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
-            </tr>
-            <tr style="border-bottom:1px solid #F2F2F2;">
-              <td style="padding:10px 12px;color:#4D4C55;">1:1 Coaching Sessions</td>
-              <td style="text-align:center;color:#E8E8EA;">—</td>
-              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
-              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
-            </tr>
-            <tr style="border-bottom:1px solid #F2F2F2;">
-              <td style="padding:10px 12px;color:#4D4C55;">Personalised Portfolio Review</td>
-              <td style="text-align:center;color:#E8E8EA;">—</td>
-              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
-              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
-            </tr>
-            <tr style="border-bottom:1px solid #F2F2F2;">
-              <td style="padding:10px 12px;color:#4D4C55;">Advanced Research Reports</td>
-              <td style="text-align:center;color:#E8E8EA;">—</td>
-              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
-              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
-            </tr>
-            <tr style="border-bottom:1px solid #F2F2F2;">
-              <td style="padding:10px 12px;color:#4D4C55;">Direct Access to Ben</td>
-              <td style="text-align:center;color:#E8E8EA;">—</td>
-              <td style="text-align:center;color:#E8E8EA;">—</td>
-              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
-            </tr>
-            <tr>
-              <td style="padding:10px 12px;color:#4D4C55;">Bespoke Strategy + VIP Events</td>
-              <td style="text-align:center;color:#E8E8EA;">—</td>
-              <td style="text-align:center;color:#E8E8EA;">—</td>
-              <td style="text-align:center;color:#08C394;font-weight:bold;">✓</td>
-            </tr>
+          <tbody class="divide-y divide-[#E8E8EA]">
+            <tr><td class="px-4 py-2.5 text-[#4D4C55]">Level 1 Beginner Track</td><td class="text-center text-cs-green">✓</td><td class="text-center text-cs-green">✓</td><td class="text-center text-cs-green">✓</td></tr>
+            <tr><td class="px-4 py-2.5 text-[#4D4C55]">Level 2 Advanced Track</td><td class="text-center text-[#E8E8EA]">—</td><td class="text-center text-cs-green">✓</td><td class="text-center text-cs-green">✓</td></tr>
+            <tr><td class="px-4 py-2.5 text-[#4D4C55]">3x Weekly Group Calls</td><td class="text-center text-cs-green">✓</td><td class="text-center text-cs-green">✓</td><td class="text-center text-cs-green">✓</td></tr>
+            <tr><td class="px-4 py-2.5 text-[#4D4C55]">1:1 Coaching (Mon-Fri)</td><td class="text-center text-[#E8E8EA]">—</td><td class="text-center text-cs-green">✓</td><td class="text-center text-cs-green">✓</td></tr>
+            <tr><td class="px-4 py-2.5 text-[#4D4C55]">Strategy Workbook</td><td class="text-center text-cs-green">✓</td><td class="text-center text-cs-green">✓</td><td class="text-center text-cs-green">✓</td></tr>
+            <tr><td class="px-4 py-2.5 text-[#4D4C55]">Shift Strategy Builder</td><td class="text-center text-[#E8E8EA]">—</td><td class="text-center text-cs-green">✓</td><td class="text-center text-cs-green">✓</td></tr>
+            <tr><td class="px-4 py-2.5 text-[#4D4C55]">Portfolio Calculator</td><td class="text-center text-cs-green">✓</td><td class="text-center text-cs-green">✓</td><td class="text-center text-cs-green">✓</td></tr>
+            <tr><td class="px-4 py-2.5 text-[#4D4C55]">Community Access</td><td class="text-center text-cs-green">✓</td><td class="text-center text-cs-green">✓</td><td class="text-center text-cs-green">✓</td></tr>
+            <tr><td class="px-4 py-2.5 text-[#4D4C55]">Priority Support</td><td class="text-center text-[#E8E8EA]">—</td><td class="text-center text-cs-green">✓</td><td class="text-center text-cs-green">✓</td></tr>
+            <tr><td class="px-4 py-2.5 text-[#4D4C55]">Advanced Research &amp; Alerts</td><td class="text-center text-[#E8E8EA]">—</td><td class="text-center text-cs-green">✓</td><td class="text-center text-cs-green">✓</td></tr>
+            <tr><td class="px-4 py-2.5 text-[#4D4C55]">Direct Access to Ben</td><td class="text-center text-[#E8E8EA]">—</td><td class="text-center text-[#E8E8EA]">—</td><td class="text-center text-cs-green">✓</td></tr>
+            <tr><td class="px-4 py-2.5 text-[#4D4C55]">VIP Events &amp; Networking</td><td class="text-center text-[#E8E8EA]">—</td><td class="text-center text-[#E8E8EA]">—</td><td class="text-center text-cs-green">✓</td></tr>
+            <tr><td class="px-4 py-2.5 text-[#4D4C55]">Bespoke Portfolio Strategy</td><td class="text-center text-[#E8E8EA]">—</td><td class="text-center text-[#E8E8EA]">—</td><td class="text-center text-cs-green">✓</td></tr>
+            <tr><td class="px-4 py-2.5 text-[#4D4C55]">Quarterly Deep-Dive Reviews</td><td class="text-center text-[#E8E8EA]">—</td><td class="text-center text-[#E8E8EA]">—</td><td class="text-center text-cs-green">✓</td></tr>
           </tbody>
         </table>
       </div>
-    </div>
+    </section>
 
-    <!-- Product sub-pages -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px;" class="grid-2">
-      <a href="/hub/products.html" class="link-card">
-        <span class="link-icon">📦</span>
-        <div><strong>Full Product Details</strong><br><span style="font-size:12px;color:#807F86;">Detailed product page</span></div>
-      </a>
-      <a href="/hub/beginner-journey.html" class="link-card">
-        <span class="link-icon">🚀</span>
-        <div><strong>Beginner's Journey</strong><br><span style="font-size:12px;color:#807F86;">Onboarding flow</span></div>
-      </a>
-    </div>
   </div>
 
-  <!-- ═══════════════════════════════════════ -->
-  <!-- TAB 3: SOCIAL MEDIA                    -->
-  <!-- ═══════════════════════════════════════ -->
-  <div id="tab-social" class="tab-panel">
-
-    <div class="section-title">Social Media Strategy</div>
-    <p class="section-sub">Our content strategy, brand voice, and platform-specific playbooks.</p>
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- TAB 3: SOCIAL MEDIA                          -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="tab-social" class="tab-content">
 
     <!-- YouTube Strategy -->
-    <div class="hub-card" style="margin-bottom:24px;">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
-        <span style="font-size:24px;">▶️</span>
-        <h3 style="margin:0;">YouTube Strategy — Jeremy Haynes 90/10</h3>
+    <section class="mb-6">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="font-oswald text-base uppercase tracking-wider text-[#807F86] flex items-center gap-2">
+          <span class="text-cs-orange">▎</span>YouTube Strategy — Jeremy Haynes 90/10 Framework
+        </h2>
+        <a href="/hub/youtube-strategy.html" class="nav-btn inline-flex items-center gap-2 bg-cs-orange/10 border border-cs-orange/30 text-cs-orange px-4 py-2 rounded-lg font-medium text-sm hover:bg-cs-orange/20">
+          📺 Full Strategy
+        </a>
       </div>
-      <p style="margin-bottom:16px;">Our YouTube content follows the <strong>Jeremy Haynes 90/10 framework</strong>:</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;" class="grid-2">
-        <div style="padding:16px;background:#FEEEE5;border-radius:12px;">
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:32px;color:#FC5C03;margin-bottom:4px;">90%</div>
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:14px;color:#1B1925;margin-bottom:4px;">Value-First Content</div>
-          <p style="font-size:13px;color:#4D4C55;margin:0;">Education, market analysis, tutorials, how-to guides. Build trust and authority. Every video should teach something actionable.</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4" style="border-left: 3px solid #FC5C03;">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Core Framework</div>
+          <div class="text-2xl font-jakarta font-700 text-cs-orange">90/10</div>
+          <div class="text-xs text-[#4D4C55] mt-1">90% value content, 10% promotion</div>
+          <div class="text-[9px] text-[#807F86] font-mono mt-2">Jeremy Haynes model</div>
         </div>
-        <div style="padding:16px;background:#F9F9F9;border-radius:12px;">
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:32px;color:#654FFC;margin-bottom:4px;">10%</div>
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:14px;color:#1B1925;margin-bottom:4px;">Promotional Content</div>
-          <p style="font-size:13px;color:#4D4C55;margin:0;">Membership CTAs, testimonials, product announcements. Soft sell — always wrapped in value. Never hard-pitch.</p>
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4" style="border-left: 3px solid #EF4444;">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">YouTube Cadence</div>
+          <div class="text-2xl font-jakarta font-700 text-[#1B1925]">2-3/week</div>
+          <div class="text-xs text-[#4D4C55] mt-1">Long-form + shorts mix</div>
+          <div class="text-[9px] text-[#807F86] font-mono mt-2">Target: 12 videos/month minimum</div>
+        </div>
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4" style="border-left: 3px solid #654FFC;">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Content Split</div>
+          <div class="text-2xl font-jakarta font-700 text-cs-purple">70/20/10</div>
+          <div class="text-xs text-[#4D4C55] mt-1">Evergreen / Trending / Promo</div>
+          <div class="text-[9px] text-[#807F86] font-mono mt-2">Evergreen = long tail SEO value</div>
+        </div>
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4" style="border-left: 3px solid #08C394;">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Goal</div>
+          <div class="text-2xl font-jakarta font-700 text-cs-green">Organic</div>
+          <div class="text-xs text-[#4D4C55] mt-1">Build organic pipeline to reduce ad spend</div>
+          <div class="text-[9px] text-[#807F86] font-mono mt-2">YouTube → Funnel → Call → Close</div>
         </div>
       </div>
-      <a href="/hub/youtube-strategy.html" class="link-card" style="display:inline-flex;">
-        <span class="link-icon">📄</span> Full YouTube Strategy Doc
-      </a>
-    </div>
+    </section>
 
     <!-- Content Pillars -->
-    <div class="hub-card" style="margin-bottom:24px;">
-      <h3>📌 Content Pillars</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;" class="grid-3">
-        <div style="padding:16px;background:#F9F9F9;border-radius:12px;text-align:center;">
-          <div style="font-size:24px;margin-bottom:8px;">₿</div>
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;color:#1B1925;">Bitcoin &amp; Macro</div>
-          <p style="font-size:12px;color:#807F86;margin:4px 0 0;">Market cycles, macro trends, BTC analysis</p>
+    <section class="mb-6">
+      <h2 class="font-oswald text-base uppercase tracking-wider text-[#807F86] mb-3 flex items-center gap-2">
+        <span class="text-cs-purple">▎</span>Content Pillars
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
+          <div class="w-8 h-8 rounded-lg bg-cs-orange/10 flex items-center justify-center mb-2"><span class="text-lg">🎓</span></div>
+          <div class="text-sm font-semibold text-[#1B1925]">Education</div>
+          <div class="text-xs text-[#4D4C55] mt-1">Bitcoin fundamentals, how digital assets work, beginner guides, explainer videos</div>
+          <div class="text-[9px] text-[#807F86] font-mono mt-2">Primary pillar — 40% of content</div>
         </div>
-        <div style="padding:16px;background:#F9F9F9;border-radius:12px;text-align:center;">
-          <div style="font-size:24px;margin-bottom:8px;">🎓</div>
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;color:#1B1925;">Education</div>
-          <p style="font-size:12px;color:#807F86;margin:4px 0 0;">How-to, step-by-step, beginner guides</p>
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
+          <div class="w-8 h-8 rounded-lg bg-cs-purple/10 flex items-center justify-center mb-2"><span class="text-lg">📊</span></div>
+          <div class="text-sm font-semibold text-[#1B1925]">Market Analysis</div>
+          <div class="text-xs text-[#4D4C55] mt-1">Weekly market updates, on-chain data, macro analysis, cycle positioning</div>
+          <div class="text-[9px] text-[#807F86] font-mono mt-2">Timely content — 30% of content</div>
         </div>
-        <div style="padding:16px;background:#F9F9F9;border-radius:12px;text-align:center;">
-          <div style="font-size:24px;margin-bottom:8px;">🔍</div>
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;color:#1B1925;">Research</div>
-          <p style="font-size:12px;color:#807F86;margin:4px 0 0;">Altcoin deep dives, project analysis</p>
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
+          <div class="w-8 h-8 rounded-lg bg-cs-green/10 flex items-center justify-center mb-2"><span class="text-lg">💡</span></div>
+          <div class="text-sm font-semibold text-[#1B1925]">Strategy &amp; Investing</div>
+          <div class="text-xs text-[#4D4C55] mt-1">Portfolio construction, risk management, DCA strategies, sell plans</div>
+          <div class="text-[9px] text-[#807F86] font-mono mt-2">Authority content — 20% of content</div>
         </div>
-        <div style="padding:16px;background:#F9F9F9;border-radius:12px;text-align:center;">
-          <div style="font-size:24px;margin-bottom:8px;">💡</div>
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;color:#1B1925;">Strategy</div>
-          <p style="font-size:12px;color:#807F86;margin:4px 0 0;">Portfolio, risk management, DCA</p>
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
+          <div class="w-8 h-8 rounded-lg bg-yellow-400/10 flex items-center justify-center mb-2"><span class="text-lg">🏆</span></div>
+          <div class="text-sm font-semibold text-[#1B1925]">Social Proof &amp; Stories</div>
+          <div class="text-xs text-[#4D4C55] mt-1">Member wins, case studies, Ben's journey, behind the scenes</div>
+          <div class="text-[9px] text-[#807F86] font-mono mt-2">Trust builder — 10% of content</div>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- Posting Cadence -->
-    <div class="hub-card" style="margin-bottom:24px;">
-      <h3>📅 Posting Cadence</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="grid-2">
-        <div>
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;color:#FC5C03;margin-bottom:8px;">YouTube</div>
-          <div class="schedule-row">
-            <span class="schedule-day">Long-form</span>
-            <span class="schedule-label">2–3x per week (10–20 min)</span>
-          </div>
-          <div class="schedule-row">
-            <span class="schedule-day">Shorts</span>
-            <span class="schedule-label">3–5x per week (30–60 sec)</span>
+    <section class="mb-6">
+      <h2 class="font-oswald text-base uppercase tracking-wider text-[#807F86] mb-3 flex items-center gap-2">
+        <span class="text-cs-green">▎</span>Posting Cadence by Platform
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">YouTube</div>
+          <div class="text-xl font-jakarta font-700 text-[#EF4444]">2-3x/week</div>
+          <div class="space-y-1 mt-2">
+            <div class="text-xs text-[#4D4C55]">📹 Long-form: 2x/week (Tue, Thu)</div>
+            <div class="text-xs text-[#4D4C55]">⚡ Shorts: 3-5x/week</div>
+            <div class="text-xs text-[#4D4C55]">🔴 Live: 1x/month</div>
           </div>
         </div>
-        <div>
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;color:#654FFC;margin-bottom:8px;">Other Platforms</div>
-          <div class="schedule-row">
-            <span class="schedule-day">X / Twitter</span>
-            <span class="schedule-label">Daily threads + engagement</span>
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">Instagram</div>
+          <div class="text-xl font-jakarta font-700 text-[#E1306C]">5-7x/week</div>
+          <div class="space-y-1 mt-2">
+            <div class="text-xs text-[#4D4C55]">📸 Reels: 5x/week (repurposed)</div>
+            <div class="text-xs text-[#4D4C55]">🖼 Carousels: 2x/week</div>
+            <div class="text-xs text-[#4D4C55]">📝 Stories: Daily</div>
           </div>
-          <div class="schedule-row">
-            <span class="schedule-day">Instagram</span>
-            <span class="schedule-label">3–5 Reels/week + Stories daily</span>
+        </div>
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">X (Twitter)</div>
+          <div class="text-xl font-jakarta font-700 text-[#1B1925]">Daily</div>
+          <div class="space-y-1 mt-2">
+            <div class="text-xs text-[#4D4C55]">💬 Threads: 2x/week</div>
+            <div class="text-xs text-[#4D4C55]">🔁 Engagement: 30 min/day</div>
+            <div class="text-xs text-[#4D4C55]">📊 Market takes: Daily</div>
           </div>
-          <div class="schedule-row">
-            <span class="schedule-day">LinkedIn</span>
-            <span class="schedule-label">2–3 posts/week (thought leadership)</span>
+        </div>
+        <div class="kpi-card bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-4">
+          <div class="text-[10px] uppercase tracking-wider text-[#807F86] font-mono font-medium mb-1">LinkedIn</div>
+          <div class="text-xl font-jakarta font-700 text-[#0A66C2]">3x/week</div>
+          <div class="space-y-1 mt-2">
+            <div class="text-xs text-[#4D4C55]">📝 Posts: 3x/week (thought leadership)</div>
+            <div class="text-xs text-[#4D4C55]">💬 Comments: 15 min/day</div>
+            <div class="text-xs text-[#4D4C55]">📰 Articles: 1x/month</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Brand Voice -->
+    <section class="mb-6">
+      <h2 class="font-oswald text-base uppercase tracking-wider text-[#807F86] mb-3 flex items-center gap-2">
+        <span class="text-cs-orange">▎</span>Brand Voice Rules
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Do's -->
+        <div class="bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-5" style="border-left: 3px solid #08C394;">
+          <div class="text-sm font-semibold text-cs-green mb-3 flex items-center gap-2">✅ Do's</div>
+          <div class="space-y-2.5">
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Say <strong>"digital assets"</strong> not "crypto" (except "cryptocurrency" in proper context)</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Always capitalise <strong>"Bitcoin"</strong> as a proper noun</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Tone: <strong>Direct, authentic, educator.</strong> Speak like a trusted mentor</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Lead with education and value first</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Use data and evidence to back claims</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Be transparent about risks and uncertainty</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Use short sentences and clear language</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-cs-green mt-0.5">✓</span><span class="text-[#4D4C55]">Show the human side - Ben's real experience</span></div>
+          </div>
+        </div>
+
+        <!-- Don'ts -->
+        <div class="bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg p-5" style="border-left: 3px solid #EF4444;">
+          <div class="text-sm font-semibold text-red-500 mb-3 flex items-center gap-2">❌ Don'ts</div>
+          <div class="space-y-2.5">
+            <div class="flex items-start gap-2 text-xs"><span class="text-red-400 mt-0.5">✗</span><span class="text-[#4D4C55]"><strong>No em dashes (—) ever.</strong> They look like AI. Use regular dashes, full stops, or rewrite</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-red-400 mt-0.5">✗</span><span class="text-[#4D4C55]">Never be salesy or over-produced</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-red-400 mt-0.5">✗</span><span class="text-[#4D4C55]">No hype language ("to the moon", "guaranteed returns", "get rich quick")</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-red-400 mt-0.5">✗</span><span class="text-[#4D4C55]">No financial advice language (we educate, we don't advise)</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-red-400 mt-0.5">✗</span><span class="text-[#4D4C55]">Don't use "crypto" as shorthand. It's "Bitcoin" or "digital assets"</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-red-400 mt-0.5">✗</span><span class="text-[#4D4C55]">No clickbait or sensationalist headlines</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-red-400 mt-0.5">✗</span><span class="text-[#4D4C55]">Don't talk down to the audience. Respect their intelligence</span></div>
+            <div class="flex items-start gap-2 text-xs"><span class="text-red-400 mt-0.5">✗</span><span class="text-[#4D4C55]">No jargon without explanation. If you use a term, explain it</span></div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Brand Voice Rules -->
-    <div class="hub-card" style="margin-bottom:24px;">
-      <h3>🗣️ Brand Voice Rules</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;" class="grid-2">
-        <div>
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:14px;color:#08C394;margin-bottom:12px;">✅ We ARE</div>
-          <ul style="padding-left:18px;margin:0;display:flex;flex-direction:column;gap:6px;">
-            <li style="font-size:13px;color:#4D4C55;">Educator-first — teach, don't sell</li>
-            <li style="font-size:13px;color:#4D4C55;">Data-driven — back claims with evidence</li>
-            <li style="font-size:13px;color:#4D4C55;">Honest about risk — crypto is volatile</li>
-            <li style="font-size:13px;color:#4D4C55;">Long-term focused — no day trading hype</li>
-            <li style="font-size:13px;color:#4D4C55;">Professional but approachable</li>
-            <li style="font-size:13px;color:#4D4C55;">Bitcoin-native with altcoin awareness</li>
-          </ul>
-        </div>
-        <div>
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:14px;color:#E53E3E;margin-bottom:12px;">❌ We are NOT</div>
-          <ul style="padding-left:18px;margin:0;display:flex;flex-direction:column;gap:6px;">
-            <li style="font-size:13px;color:#4D4C55;">Moon boys — no "to the moon" hype</li>
-            <li style="font-size:13px;color:#4D4C55;">Financial advisors — education only</li>
-            <li style="font-size:13px;color:#4D4C55;">Shilling specific coins for clout</li>
-            <li style="font-size:13px;color:#4D4C55;">Doom-and-gloom FUD spreaders</li>
-            <li style="font-size:13px;color:#4D4C55;">Get-rich-quick promoters</li>
-            <li style="font-size:13px;color:#4D4C55;">Trading signal groups</li>
-          </ul>
-        </div>
+    <!-- Quick Links -->
+    <section class="mb-6">
+      <h2 class="font-oswald text-base uppercase tracking-wider text-[#807F86] mb-3 flex items-center gap-2">
+        <span class="text-cs-purple">▎</span>Strategy Documents
+      </h2>
+      <div class="bg-[#FFFFFF] border border-[#E8E8EA] rounded-lg divide-y divide-[#E8E8EA]">
+        <a href="/hub/youtube-strategy.html" class="intel-item flex items-center justify-between px-4 py-3 group">
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center text-sm">📺</span>
+            <div>
+              <div class="text-sm font-medium text-[#1B1925] group-hover:text-cs-orange transition-colors">YouTube Strategy</div>
+              <div class="text-xs text-[#807F86]">Full framework, video ideas, calendar</div>
+            </div>
+          </div>
+          <span class="text-[10px] font-mono text-cs-green bg-cs-green/10 px-2 py-0.5 rounded">View →</span>
+        </a>
+        <a href="/hub/social-strategy.html" class="intel-item flex items-center justify-between px-4 py-3 group">
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-cs-purple/10 flex items-center justify-center text-sm">📱</span>
+            <div>
+              <div class="text-sm font-medium text-[#1B1925] group-hover:text-cs-orange transition-colors">Social Strategy</div>
+              <div class="text-xs text-[#807F86]">Cross-platform content plan</div>
+            </div>
+          </div>
+          <span class="text-[10px] font-mono text-cs-green bg-cs-green/10 px-2 py-0.5 rounded">View →</span>
+        </a>
+        <a href="/hub/instagram-strategy.html" class="intel-item flex items-center justify-between px-4 py-3 group">
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-pink-500/10 flex items-center justify-center text-sm">📸</span>
+            <div>
+              <div class="text-sm font-medium text-[#1B1925] group-hover:text-cs-orange transition-colors">Instagram Strategy</div>
+              <div class="text-xs text-[#807F86]">Reels, carousels, stories framework</div>
+            </div>
+          </div>
+          <span class="text-[10px] font-mono text-cs-green bg-cs-green/10 px-2 py-0.5 rounded">View →</span>
+        </a>
+        <a href="/hub/brand.html" class="intel-item flex items-center justify-between px-4 py-3 group">
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-cs-orange/10 flex items-center justify-center text-sm">🎨</span>
+            <div>
+              <div class="text-sm font-medium text-[#1B1925] group-hover:text-cs-orange transition-colors">Brand &amp; Voice Guidelines</div>
+              <div class="text-xs text-[#807F86]">Tone, language, visual identity</div>
+            </div>
+          </div>
+          <span class="text-[10px] font-mono text-cs-green bg-cs-green/10 px-2 py-0.5 rounded">View →</span>
+        </a>
+        <a href="/hub/positioning.html" class="intel-item flex items-center justify-between px-4 py-3 group">
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-cs-green/10 flex items-center justify-center text-sm">🎯</span>
+            <div>
+              <div class="text-sm font-medium text-[#1B1925] group-hover:text-cs-orange transition-colors">Positioning &amp; ICP</div>
+              <div class="text-xs text-[#807F86]">Target audience, messaging, differentiation</div>
+            </div>
+          </div>
+          <span class="text-[10px] font-mono text-cs-green bg-cs-green/10 px-2 py-0.5 rounded">View →</span>
+        </a>
       </div>
-    </div>
+    </section>
 
-    <!-- Strategy Links -->
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;" class="grid-3">
-      <a href="/hub/youtube-strategy.html" class="link-card">
-        <span class="link-icon">▶️</span>
-        <div><strong>YouTube Strategy</strong><br><span style="font-size:12px;color:#807F86;">Full playbook</span></div>
-      </a>
-      <a href="/hub/social-strategy.html" class="link-card">
-        <span class="link-icon">📱</span>
-        <div><strong>Social Strategy</strong><br><span style="font-size:12px;color:#807F86;">Cross-platform plan</span></div>
-      </a>
-      <a href="/hub/instagram-strategy.html" class="link-card">
-        <span class="link-icon">📸</span>
-        <div><strong>Instagram Strategy</strong><br><span style="font-size:12px;color:#807F86;">Reels &amp; Stories</span></div>
-      </a>
-      <a href="/hub/brand.html" class="link-card">
-        <span class="link-icon">🎨</span>
-        <div><strong>Brand &amp; Voice</strong><br><span style="font-size:12px;color:#807F86;">Voice guidelines</span></div>
-      </a>
-      <a href="/hub/positioning.html" class="link-card">
-        <span class="link-icon">🎯</span>
-        <div><strong>Positioning &amp; ICP</strong><br><span style="font-size:12px;color:#807F86;">Ideal customer profile</span></div>
-      </a>
-      <a href="/hub/competitors.html" class="link-card">
-        <span class="link-icon">⚔️</span>
-        <div><strong>Competitors</strong><br><span style="font-size:12px;color:#807F86;">Competitive landscape</span></div>
-      </a>
-    </div>
   </div>
 
-</div>
-
-<!-- Footer -->
-<div style="text-align:center;padding:32px 24px;border-top:1px solid #E8E8EA;margin-top:48px;">
-  <p style="font-size:12px;color:#807F86;margin:0;">Collective Shift — Team Hub &nbsp;·&nbsp; Internal Use Only</p>
-</div>
+</main>
 
 <script>
-function switchTab(tab) {
-  // Hide all panels
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  // Deactivate all buttons
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  // Show selected panel
-  document.getElementById('tab-' + tab).classList.add('active');
-  // Activate clicked button
-  event.target.classList.add('active');
+// ===== CLOCK =====
+function updateClock() {
+  const now = new Date();
+  const opts = { timeZone: 'Australia/Melbourne', weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+  document.getElementById('clock').textContent = now.toLocaleString('en-AU', opts);
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// ===== TAB SWITCHING =====
+function switchTab(tabName) {
+  // Hide all tab contents
+  document.querySelectorAll('.tab-content').forEach(el => {
+    el.classList.remove('active');
+  });
+  // Deactivate all tab buttons
+  document.querySelectorAll('.tab-btn').forEach(el => {
+    el.classList.remove('active');
+  });
+  // Show selected tab content
+  const tabEl = document.getElementById('tab-' + tabName);
+  if (tabEl) tabEl.classList.add('active');
+  // Activate selected tab button
+  const btn = document.querySelector('.tab-btn[data-tab="' + tabName + '"]');
+  if (btn) btn.classList.add('active');
+  // Scroll to top of content
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
-  </div>
-</div>
 </body>
 </html>
