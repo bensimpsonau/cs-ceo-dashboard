@@ -18,6 +18,8 @@
   --cs-card: #1B1925;
   --cs-border: #2C2A36;
   --sidebar-w: 260px;
+  --asana-coral: #F06A6A;
+  --asana-purple: #AA62E3;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -105,13 +107,17 @@ tr:hover td { background: rgba(252,92,3,0.03); }
 .badge-blue { background: rgba(36,4,252,0.2); color: #7B68EE; }
 .badge-gray { background: rgba(142,142,147,0.15); color: var(--cs-gray); }
 .badge-green { background: rgba(34,197,94,0.15); color: #22C55E; }
+.badge-coral { background: rgba(240,106,106,0.15); color: var(--asana-coral); }
+.badge-purple { background: rgba(170,98,227,0.15); color: var(--asana-purple); }
 
 /* CALLOUT */
 .callout { background: rgba(252,92,3,0.06); border-left: 4px solid var(--cs-orange); border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 16px 0; font-size: 14px; }
 .callout-teal { background: rgba(11,244,185,0.06); border-left-color: var(--cs-teal); }
 .callout-blue { background: rgba(36,4,252,0.08); border-left-color: var(--cs-blue); }
+.callout-jarvis { background: rgba(250,204,21,0.06); border-left-color: #FACC15; }
 .callout strong { color: var(--cs-orange); }
 .callout-teal strong { color: var(--cs-teal); }
+.callout-jarvis strong { color: #FACC15; }
 
 /* TEMPLATE CARD */
 .tmpl { background: var(--cs-card); border: 1px solid var(--cs-border); border-radius: 12px; padding: 20px; margin-bottom: 14px; }
@@ -121,10 +127,6 @@ tr:hover td { background: rgba(252,92,3,0.03); }
 .tmpl-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin-bottom: 12px; font-size: 13px; }
 .tmpl-field { padding: 6px 10px; background: rgba(255,255,255,0.03); border-radius: 6px; }
 .tmpl-field .label { color: var(--cs-gray); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
-
-/* COMPARISON TABLE SPECIAL */
-.compare-winner td:first-child { position: relative; }
-.compare-winner td:first-child::after { content: 'RECOMMENDED'; position: absolute; top: 6px; right: 8px; font-size: 9px; background: var(--cs-orange); color: white; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
 
 /* DO/DONT */
 .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
@@ -141,6 +143,13 @@ tr:hover td { background: rgba(252,92,3,0.03); }
 .role-editor { background: rgba(11,244,185,0.15); color: var(--cs-teal); }
 .role-clawbot { background: rgba(250,204,21,0.15); color: #FACC15; }
 .role-matt { background: rgba(168,85,247,0.15); color: #A855F7; }
+.role-jarvis { background: rgba(250,204,21,0.15); color: #FACC15; }
+
+/* CODE / API BLOCK */
+.code-block { background: #0D0B14; border: 1px solid var(--cs-border); border-radius: 8px; padding: 16px; margin: 12px 0; font-size: 12.5px; font-family: 'SF Mono', 'Fira Code', monospace; color: var(--cs-teal); overflow-x: auto; line-height: 1.6; white-space: pre-wrap; word-break: break-all; }
+.code-block .comment { color: var(--cs-gray); }
+.code-block .key { color: var(--cs-orange); }
+.code-block .str { color: #22C55E; }
 
 /* RESPONSIVE */
 @media (max-width: 800px) {
@@ -174,10 +183,11 @@ tr:hover td { background: rgba(252,92,3,0.03); }
   <div class="subtitle">Content Production &<br>Scheduling System</div>
   <nav>
     <a href="#exec-summary"><span class="nav-icon">&#9679;</span> Executive Summary</a>
+    <a href="#getting-started"><span class="nav-icon">&#9733;</span> Getting Started</a>
     <div class="nav-divider"></div>
     <div class="nav-label">System</div>
     <a href="#workflow"><span class="nav-icon">1</span> Production Workflow</a>
-    <a href="#platform"><span class="nav-icon">2</span> Platform & Setup</a>
+    <a href="#platform"><span class="nav-icon">2</span> Asana Setup</a>
     <a href="#templates"><span class="nav-icon">3</span> Task Templates</a>
     <a href="#approval"><span class="nav-icon">4</span> Approval & Review</a>
     <div class="nav-divider"></div>
@@ -186,6 +196,9 @@ tr:hover td { background: rgba(252,92,3,0.03); }
     <a href="#onboarding"><span class="nav-icon">6</span> Onboarding & SOPs</a>
     <a href="#scaling"><span class="nav-icon">7</span> Automation & Scaling</a>
     <a href="#cheatsheets"><span class="nav-icon">8</span> Cheatsheets</a>
+    <div class="nav-divider"></div>
+    <div class="nav-label">AI Ops</div>
+    <a href="#jarvis"><span class="nav-icon">🤖</span> Jarvis + Asana API</a>
   </nav>
 </div>
 
@@ -198,7 +211,7 @@ tr:hover td { background: rgba(252,92,3,0.03); }
 <!-- EXECUTIVE SUMMARY -->
 <section id="exec-summary">
 <h1>Content Production &<br><span>Scheduling System</span></h1>
-<p class="lead">The operational layer that turns 61 weekly content pieces into a repeatable, measurable machine.</p>
+<p class="lead">The operational layer that turns 61 weekly content pieces into a repeatable, measurable machine. Built on Asana, powered by Jarvis.</p>
 
 <div class="stat-grid">
   <div class="stat-box"><div class="stat-number">61</div><div class="stat-label">Pieces / Week</div></div>
@@ -208,7 +221,62 @@ tr:hover td { background: rgba(252,92,3,0.03); }
 </div>
 
 <div class="card">
-<p><strong>Recommendation: ClickUp Business.</strong> At $12/user/month, ClickUp gives Collective Shift the content calendar views, Kanban boards, automation rules, and Zapier/Make integrations the team needs to go from manual posting and scattered briefs to a single system of record. Ben already uses Notion for the company wiki, and ClickUp slots in alongside it without overlap: Notion stays the knowledge base, ClickUp becomes the production engine. The combination of custom fields, multiple views (calendar, board, list, workload), built-in time tracking, and 100+ native integrations means the team can start building Monday, be operational by Friday, and scale from 61 to 120+ pieces per week without adding tools. Every section of this document contains exact field names, automation triggers, and step-by-step setup instructions so there is nothing left to figure out.</p>
+<p><strong>Platform: Asana Starter.</strong> At $10.99/user/month (billed annually), Asana gives Collective Shift the content calendar views, Kanban board, automation rules, custom fields, forms, and API access the team needs to go from manual posting and scattered briefs to a single system of record. The team already uses Asana, which means zero migration, zero learning curve on the basics, and immediate execution. Asana's Board View becomes the content Kanban. Calendar View becomes the visual content calendar. Custom fields track content type, pillar, platform, person, and ManyChat keywords. Rules automate assignments and notifications. And Jarvis (the AI agent) connects via the Asana API to create tasks, update statuses, add draft copy as comments, and populate the entire 90-day content calendar in one batch. Every section of this document contains exact field names, rule configurations, and step-by-step setup instructions so there is nothing left to figure out.</p>
+</div>
+
+<div class="callout-jarvis callout">
+<strong>New: Jarvis manages the Asana board.</strong> Jarvis connects directly to the Asana API to create tasks from the 90-day calendar, update statuses, add AI-generated draft copy as comments, move tasks through the pipeline, and generate weekly content reports. See Section 9 for full setup.
+</div>
+</section>
+
+<!-- GETTING STARTED -->
+<section id="getting-started">
+<h2><span class="section-num">&#9733;</span> Build It This Week</h2>
+
+<p class="lead">You already have Asana. Here is exactly what to do, day by day, to have the full content production system operational by Friday.</p>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Day</th><th>What to Build</th><th>Who</th><th>Time</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Monday</strong></td><td>
+  1. Create the "Content Calendar" project (Board View default)<br>
+  2. Add 6 sections: Idea | Draft | In Edit | In Review | Approved | Scheduled | Published<br>
+  3. Add all 9 custom fields (see Section 2)<br>
+  4. Invite team members (Ben, Travis, Matt, Sarn, Georgio, Alice, David, future slot)
+</td><td>Alice / Ben</td><td>45 min</td></tr>
+<tr><td><strong>Tuesday</strong></td><td>
+  1. Create task templates for each content type (Section 3)<br>
+  2. Set up 4 automation rules (Section 2)<br>
+  3. Create the Content Request Form<br>
+  4. Save Calendar View + Board View + "Ben's Approval Queue" view
+</td><td>Alice</td><td>60 min</td></tr>
+<tr><td><strong>Wednesday</strong></td><td>
+  1. Create "Email Production" and "YouTube Pipeline" projects<br>
+  2. Add to a "Content Ops" Portfolio for overview<br>
+  3. Generate Asana Personal Access Token for Jarvis<br>
+  4. Test: Jarvis creates 5 sample tasks via API
+</td><td>Alice + Ben</td><td>45 min</td></tr>
+<tr><td><strong>Thursday</strong></td><td>
+  1. Jarvis populates Week 1 of the 90-day content calendar (all tasks)<br>
+  2. Team walks through the board in a 15-min standup<br>
+  3. Everyone creates one test task using a template<br>
+  4. Verify rules fire correctly (status change triggers assignment)
+</td><td>Full team</td><td>30 min</td></tr>
+<tr><td><strong>Friday</strong></td><td>
+  1. Jarvis populates Weeks 2-4 of the content calendar<br>
+  2. Run the first real Monday Planning standup (practice round)<br>
+  3. Ben batch-approves a test set of tasks<br>
+  4. System is live. Start using it for all content from next Monday.
+</td><td>Full team</td><td>30 min</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout">
+<strong>Total setup time: ~3.5 hours across the week.</strong> No one spends more than an hour on any single day. By Friday, the board is live, populated with a month of content, and every team member knows how to use it.
 </div>
 </section>
 
@@ -220,35 +288,35 @@ tr:hover td { background: rgba(252,92,3,0.03); }
 <p>Every piece of content moves through seven stages. No exceptions. No skipping Approve.</p>
 
 <div class="workflow">
-  <div class="wf-step"><div class="wf-icon">💡</div><div class="wf-label">Ideate</div><div class="wf-sub">Brief created</div></div>
+  <div class="wf-step"><div class="wf-icon">💡</div><div class="wf-label">Idea</div><div class="wf-sub">Brief created</div></div>
   <div class="wf-arrow">&#10142;</div>
   <div class="wf-step"><div class="wf-icon">✍️</div><div class="wf-label">Draft</div><div class="wf-sub">Content written</div></div>
   <div class="wf-arrow">&#10142;</div>
-  <div class="wf-step"><div class="wf-icon">🎬</div><div class="wf-label">Edit</div><div class="wf-sub">Video/design</div></div>
+  <div class="wf-step"><div class="wf-icon">🎬</div><div class="wf-label">In Edit</div><div class="wf-sub">Video/design</div></div>
   <div class="wf-arrow">&#10142;</div>
-  <div class="wf-step"><div class="wf-icon">🔍</div><div class="wf-label">Review</div><div class="wf-sub">Copy + brand</div></div>
+  <div class="wf-step"><div class="wf-icon">🔍</div><div class="wf-label">In Review</div><div class="wf-sub">Copy + brand</div></div>
   <div class="wf-arrow">&#10142;</div>
-  <div class="wf-step active"><div class="wf-icon">✅</div><div class="wf-label">Approve</div><div class="wf-sub">Ben signs off</div></div>
+  <div class="wf-step active"><div class="wf-icon">✅</div><div class="wf-label">Approved</div><div class="wf-sub">Ben signs off</div></div>
   <div class="wf-arrow">&#10142;</div>
-  <div class="wf-step"><div class="wf-icon">📅</div><div class="wf-label">Schedule</div><div class="wf-sub">Queue + time</div></div>
+  <div class="wf-step"><div class="wf-icon">📅</div><div class="wf-label">Scheduled</div><div class="wf-sub">Queue + time</div></div>
   <div class="wf-arrow">&#10142;</div>
-  <div class="wf-step"><div class="wf-icon">📊</div><div class="wf-label">Measure</div><div class="wf-sub">Track KPIs</div></div>
+  <div class="wf-step"><div class="wf-icon">📊</div><div class="wf-label">Published</div><div class="wf-sub">Track KPIs</div></div>
 </div>
 
 <h3>Roles & Responsibilities Matrix</h3>
 <div class="table-wrap">
 <table>
 <thead>
-<tr><th>Stage</th><th>Ben (CEO/CMO)</th><th>Travis (CGO)</th><th>Matt / Sarn</th><th>Georgio (Editor)</th><th>ClawBot / Jarvis</th></tr>
+<tr><th>Stage</th><th>Ben (CEO/CMO)</th><th>Travis (CGO)</th><th>Matt / Sarn</th><th>Georgio (Editor)</th><th>Jarvis (AI)</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Ideate</strong></td><td>Sets weekly themes, approves topics</td><td>Own reel + YouTube topics</td><td>Research topics, tutorials</td><td>-</td><td>Generates briefs from pillar rotation, suggests hooks</td></tr>
-<tr><td><strong>Draft</strong></td><td>Films reels (Sunday batch), writes EDMs</td><td>Films own reels + YouTube</td><td>Draft scripts, analysis</td><td>-</td><td>Drafts tweets, LinkedIn, captions, EDM copy</td></tr>
-<tr><td><strong>Edit</strong></td><td>-</td><td>-</td><td>-</td><td>Reel editing, YouTube cuts</td><td>Copy polish, grammar check</td></tr>
-<tr><td><strong>Review</strong></td><td>-</td><td>Reviews own team content</td><td>Peer review research</td><td>-</td><td>Brand compliance scan, voice check</td></tr>
-<tr><td><strong>Approve</strong></td><td>Final sign-off on ALL content</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-<tr><td><strong>Schedule</strong></td><td>-</td><td>-</td><td>-</td><td>-</td><td>Prep scheduling queue, set times</td></tr>
-<tr><td><strong>Measure</strong></td><td>Reviews weekly dashboard</td><td>Reviews growth metrics</td><td>Newsletter open rates</td><td>-</td><td>Compiles weekly report</td></tr>
+<tr><td><strong>Idea</strong></td><td>Sets weekly themes, approves topics</td><td>Own reel + YouTube topics</td><td>Research topics, tutorials</td><td>-</td><td>Generates briefs from pillar rotation, suggests hooks, creates Asana tasks</td></tr>
+<tr><td><strong>Draft</strong></td><td>Films reels (Sunday batch), writes EDMs</td><td>Films own reels + YouTube</td><td>Draft scripts, analysis</td><td>-</td><td>Drafts tweets, LinkedIn, captions, EDM copy. Posts as Asana task comments.</td></tr>
+<tr><td><strong>In Edit</strong></td><td>-</td><td>-</td><td>-</td><td>Reel editing, YouTube cuts</td><td>Copy polish, grammar check</td></tr>
+<tr><td><strong>In Review</strong></td><td>-</td><td>Reviews own team content</td><td>Peer review research</td><td>-</td><td>Brand compliance scan, voice check. Flags issues as Asana comments.</td></tr>
+<tr><td><strong>Approved</strong></td><td>Final sign-off on ALL content</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+<tr><td><strong>Scheduled</strong></td><td>-</td><td>-</td><td>-</td><td>-</td><td>Prep scheduling queue, set times, update Asana custom fields</td></tr>
+<tr><td><strong>Published</strong></td><td>Reviews weekly dashboard</td><td>Reviews growth metrics</td><td>Newsletter open rates</td><td>-</td><td>Compiles weekly report, updates Asana with performance data</td></tr>
 </tbody>
 </table>
 </div>
@@ -275,208 +343,195 @@ tr:hover td { background: rgba(252,92,3,0.03); }
 <div class="card">
 <p><strong>Ben films all 21 reels for the week in a single Sunday session.</strong></p>
 <ol>
-  <li><strong>8:00am</strong> - ClawBot delivers 21 reel briefs (hook, script outline, ManyChat keyword, pillar tag) to ClickUp</li>
-  <li><strong>9:00am</strong> - Ben reviews briefs, reorders, trims. Marks any cuts.</li>
+  <li><strong>8:00am</strong> - Jarvis delivers 21 reel briefs (hook, script outline, ManyChat keyword, pillar tag) as Asana tasks with full descriptions</li>
+  <li><strong>9:00am</strong> - Ben reviews briefs in Asana Board View, reorders, trims. Marks any cuts.</li>
   <li><strong>10:00am - 1:00pm</strong> - Ben films all 21 reels (approx 8 min per reel including setup)</li>
   <li><strong>1:30pm</strong> - Raw footage uploaded to shared Google Drive folder</li>
   <li><strong>2:00pm</strong> - Georgio (editor) picks up footage. Target: all 21 reels edited by Wednesday EOD.</li>
-  <li><strong>As edited</strong> - Each reel moves to "In Review" in ClickUp. Ben batch-approves in 30 min blocks.</li>
-  <li><strong>Post-approval</strong> - Approved reels queued with scheduled post times for the week</li>
+  <li><strong>As edited</strong> - Each reel moves to "In Review" section in Asana. Ben batch-approves in 30 min blocks.</li>
+  <li><strong>Post-approval</strong> - Approved reels moved to "Scheduled" section with publish times set</li>
 </ol>
 </div>
 
-<h3>How ClawBot / Jarvis Fits In</h3>
+<h3>How Jarvis Fits In</h3>
 <div class="callout-teal callout">
-<strong>ClawBot is the invisible team member that never sleeps.</strong> It doesn't replace anyone. It removes the blank-page problem for everyone.
+<strong>Jarvis is the invisible team member that never sleeps.</strong> It connects directly to Asana via the API. It does not replace anyone. It removes the blank-page problem for everyone.
 </div>
 <ul>
+  <li><strong>Task Creation:</strong> Populates the entire 90-day content calendar as Asana tasks with all custom fields pre-filled</li>
   <li><strong>Ideation:</strong> Generates weekly reel briefs from content pillar rotation (40% BUILD, 25% PROTECT, 25% PROOF, 10% YIELD)</li>
-  <li><strong>Drafting:</strong> Writes first-draft tweets, LinkedIn posts, EDM copy, and Instagram captions in Ben's voice</li>
-  <li><strong>Polishing:</strong> Runs copy through brand compliance check (no "crypto", no em dashes, no hype language)</li>
-  <li><strong>Scheduling prep:</strong> Sets optimal post times, assigns ManyChat keywords, tags content pillars</li>
-  <li><strong>Reporting:</strong> Compiles weekly performance data into a dashboard summary for Monday standup</li>
+  <li><strong>Drafting:</strong> Writes first-draft tweets, LinkedIn posts, EDM copy, and Instagram captions in Ben's voice. Posts as Asana task comments.</li>
+  <li><strong>Polishing:</strong> Runs copy through brand compliance check (no "crypto", no em dashes, no hype language). Flags issues as Asana comments.</li>
+  <li><strong>Status Updates:</strong> Moves tasks through the pipeline, updates custom fields, sets publish dates</li>
+  <li><strong>Reporting:</strong> Compiles weekly performance data by querying Asana tasks and generating a summary for Monday standup</li>
 </ul>
 </section>
 
-<!-- SECTION 2: PLATFORM -->
+<!-- SECTION 2: PLATFORM & SETUP -->
 <section id="platform">
-<h2><span class="section-num">02</span> Recommended Platform & Setup</h2>
+<h2><span class="section-num">02</span> Asana Setup & Configuration</h2>
 
-<h3>Platform Comparison</h3>
-<div class="table-wrap">
-<table>
-<thead>
-<tr><th>Platform</th><th>Content Calendar</th><th>Automations</th><th>Integrations</th><th>Mobile App</th><th>Price (8 users/mo)</th><th>Verdict</th></tr>
-</thead>
-<tbody>
-<tr class="table-highlight compare-winner"><td><strong>ClickUp</strong></td><td>Native calendar, Kanban, list, workload views</td><td>100+ automation triggers, custom rules</td><td>Zapier, Make, 100+ native</td><td>Strong (iOS/Android)</td><td>$96/mo (Business)</td><td><span class="badge badge-orange">PICK</span></td></tr>
-<tr><td>Notion</td><td>Database calendar view (basic)</td><td>Limited (formula-based)</td><td>Zapier, Make, API</td><td>Decent, slower</td><td>$80/mo (Plus)</td><td>Great wiki, weak ops</td></tr>
-<tr><td>Asana</td><td>Good calendar + timeline</td><td>Good rules engine</td><td>Zapier, Make, native</td><td>Strong</td><td>$88/mo (Premium)</td><td>Clean but less flexible</td></tr>
-<tr><td>Airtable</td><td>Excellent (database-first)</td><td>Strong automations</td><td>Zapier, Make, scripts</td><td>Good</td><td>$160/mo (Team)</td><td>Powerful but pricey</td></tr>
-<tr><td>Monday.com</td><td>Good visual calendar</td><td>Good automations</td><td>Zapier, Make, native</td><td>Decent</td><td>$96/mo (Standard)</td><td>Visual but heavy</td></tr>
-<tr><td>Trello</td><td>Basic calendar power-up</td><td>Butler (limited)</td><td>Power-ups, Zapier</td><td>Good</td><td>$80/mo (Premium)</td><td>Too basic at 61/wk</td></tr>
-</tbody>
-</table>
+<h3>Why Asana</h3>
+<div class="card">
+<p>The team already uses Asana. No migration. No new tool to learn. Asana's Board View, Calendar View, custom fields, rules engine, forms, and API give the team everything needed to manage 61+ pieces per week. Notion stays as the knowledge base and company wiki. Asana becomes the production engine. Different tools for different jobs.</p>
 </div>
 
-<div class="callout">
-<strong>Why ClickUp over Notion?</strong> Ben already uses Notion for the company wiki and knowledge base. That stays. ClickUp is the production engine: task assignments, deadline tracking, automations, and the calendar views that Notion's databases can't match at 61 pieces per week. Different tools for different jobs. No overlap, no migration headache.
-</div>
-
-<h3>Pricing: ClickUp Business Plan</h3>
+<h3>Pricing: Asana Starter Plan</h3>
 <div class="card">
 <ul>
-  <li><strong>$12/user/month</strong> billed annually = <strong>$96/month for 8 users</strong></li>
+  <li><strong>$10.99/user/month</strong> billed annually = <strong>~$88/month for 8 users</strong></li>
   <li>8 users: Ben, Travis, Matt, Sarn, Georgio, Alice (Chief of Staff), David Tran (Member Growth), future editor</li>
-  <li>Unlimited tasks, views, integrations, dashboards</li>
-  <li>Guests (external reviewers) are free on Business plan</li>
-  <li>Annual cost: <strong>$1,152/year</strong></li>
+  <li>Includes: Custom fields, forms, rules, timeline, calendar view, board view</li>
+  <li>Guests (external reviewers) are free</li>
+  <li>Annual cost: <strong>~$1,056/year</strong></li>
 </ul>
+<p style="font-size:13px; color: var(--cs-gray);">If the team needs Portfolios for cross-project reporting or advanced dashboards, upgrade to Asana Advanced at $24.99/user/month (~$200/mo for 8 users). Start with Starter. Upgrade only when you need portfolio-level visibility.</p>
 </div>
 
-<h3>Step-by-Step Setup</h3>
-
-<h4>1. Workspace Structure</h4>
+<h3>Project Structure</h3>
 <div class="card">
 <pre style="font-size:13px; color: var(--cs-teal); line-height:1.6; overflow-x:auto;">
 Workspace: Collective Shift
   |
-  |- Space: CONTENT PRODUCTION
-  |    |
-  |    |- Folder: Social Media
-  |    |    |- List: Instagram Reels (Ben)
-  |    |    |- List: Instagram Reels (Travis/Sarn)
-  |    |    |- List: Twitter/X
-  |    |    |- List: LinkedIn
-  |    |    |- List: Instagram Carousels
-  |    |    |- List: Client Result Posts
-  |    |
-  |    |- Folder: YouTube
-  |    |    |- List: Long-Form Videos
-  |    |    |- List: YouTube Shorts/Clips
-  |    |    |- List: Thumbnails
-  |    |
-  |    |- Folder: Email
-  |    |    |- List: EDMs (Mon/Wed/Fri)
-  |    |    |- List: Weekly Shift Newsletter
-  |    |
-  |    |- Folder: Requests & Approvals
-  |         |- List: Content Requests
-  |         |- List: Copy Reviews
-  |         |- List: Final Approvals
+  |- Portfolio: CONTENT OPS (groups all content projects)
   |
-  |- Space: CONTENT STRATEGY
-       |- List: 90-Day Content Calendar
-       |- List: Content Ideas Backlog
-       |- List: Campaign Briefs
+  |- Project: Content Calendar (MAIN)
+  |    |- Section: Idea
+  |    |- Section: Draft
+  |    |- Section: In Edit
+  |    |- Section: In Review
+  |    |- Section: Approved
+  |    |- Section: Scheduled
+  |    |- Section: Published
+  |    |
+  |    Views:
+  |    |- Board View (default - Kanban by section)
+  |    |- Calendar View (by Publish Date)
+  |    |- List View (sortable/filterable master list)
+  |    |- "Ben's Approval Queue" (filter: section = In Review)
+  |    |- "By Person" (group by: Person field)
+  |    |- "By Platform" (group by: Platform field)
+  |    |- "By Pillar" (group by: Content Pillar field)
+  |
+  |- Project: Email Production
+  |    |- Section: EDM Draft
+  |    |- Section: EDM Review
+  |    |- Section: Newsletter Draft
+  |    |- Section: Newsletter Review
+  |    |- Section: Approved
+  |    |- Section: Sent
+  |
+  |- Project: YouTube Pipeline
+       |- Section: Topic Selection
+       |- Section: Scripting
+       |- Section: Filming
+       |- Section: Editing
+       |- Section: Review
+       |- Section: Published
 </pre>
 </div>
 
-<h4>2. Custom Fields (Apply to All Lists)</h4>
+<h4>Custom Fields (Apply to Content Calendar Project)</h4>
 <div class="table-wrap">
 <table>
 <thead>
 <tr><th>Field Name</th><th>Type</th><th>Options / Notes</th></tr>
 </thead>
 <tbody>
-<tr><td>Content Type</td><td>Dropdown</td><td>Reel, YouTube Long, YouTube Short, Tweet, LinkedIn, Carousel, EDM, Newsletter, Thumbnail, Story</td></tr>
-<tr><td>Content Pillar</td><td>Dropdown</td><td>BUILD (40%), PROTECT (25%), PROOF (25%), YIELD (10%)</td></tr>
-<tr><td>Platform</td><td>Dropdown (multi)</td><td>Instagram, TikTok, YouTube, X/Twitter, LinkedIn, Email, Facebook</td></tr>
-<tr><td>Status</td><td>Status</td><td>Ideation, Draft, In Edit, In Review, Approved, Scheduled, Published</td></tr>
-<tr><td>Owner</td><td>Assignee</td><td>Ben, Travis, Matt, Sarn, Georgio, ClawBot</td></tr>
-<tr><td>Reviewer</td><td>Assignee</td><td>Person responsible for review stage</td></tr>
-<tr><td>Due Date</td><td>Date</td><td>Publish date/time</td></tr>
-<tr><td>Scheduled Time</td><td>Date + Time</td><td>Exact post time (8am, 10am, 12pm, etc.)</td></tr>
-<tr><td>ManyChat Keyword</td><td>Dropdown</td><td>BLUEPRINT, PROTECT, BUILD, YIELD, PROOF, None</td></tr>
-<tr><td>CTA Type</td><td>Dropdown</td><td>ManyChat Keyword, Link in Bio, No CTA, YouTube Description</td></tr>
-<tr><td>Brand</td><td>Dropdown</td><td>Ben Simpson, Travis Thomas, Collective Shift, The Wealth Shift</td></tr>
-<tr><td>Week Number</td><td>Number</td><td>Calendar week for batch planning</td></tr>
-<tr><td>Batch Session</td><td>Dropdown</td><td>Sunday Batch [date], Standalone</td></tr>
-<tr><td>Google Drive Link</td><td>URL</td><td>Link to raw footage or final asset</td></tr>
-<tr><td>Performance</td><td>Text</td><td>Post-publish: views, engagement, saves</td></tr>
+<tr><td>Content Type</td><td>Dropdown</td><td>Reel, YouTube, Thread, Carousel, EDM, Newsletter, LinkedIn, Story</td></tr>
+<tr><td>Content Pillar</td><td>Dropdown</td><td>Protect, Strategy, Confidence, Community, Results</td></tr>
+<tr><td>Platform</td><td>Dropdown</td><td>Instagram, YouTube, X, LinkedIn, TikTok, Email</td></tr>
+<tr><td>Person</td><td>Dropdown</td><td>Ben, Travis, Sarn, Matt, Collaborative</td></tr>
+<tr><td>Status</td><td>Dropdown</td><td>Idea, Draft, In Edit, In Review, Approved, Scheduled, Published</td></tr>
+<tr><td>Priority</td><td>Dropdown</td><td>P1 Urgent, P2 High, P3 Normal, P4 Low</td></tr>
+<tr><td>ManyChat Keyword</td><td>Text</td><td>BLUEPRINT, PROTECT, BUILD, YIELD, PROOF, or blank</td></tr>
+<tr><td>Publish Date</td><td>Date</td><td>Target publish date/time</td></tr>
+<tr><td>Due Date</td><td>Date</td><td>Internal due date for production completion</td></tr>
 </tbody>
 </table>
 </div>
+<p style="font-size:13px; color: var(--cs-gray);">Note: Asana sections handle the Kanban pipeline (Idea through Published). The "Status" custom field mirrors sections for filtering and reporting. When Jarvis moves a task between sections via API, it also updates the Status field to keep them in sync.</p>
 
-<h4>3. Views to Create</h4>
+<h4>Views to Create</h4>
 <div class="card-grid">
 <div class="card">
+  <h4 style="margin-top:0;">📋 Board View (Default)</h4>
+  <p style="font-size:13px;">Kanban columns = sections (Idea through Published). Every team member's default view. Drag tasks between columns to move them through the pipeline.</p>
+</div>
+<div class="card">
   <h4 style="margin-top:0;">📅 Calendar View</h4>
-  <p style="font-size:13px;">Group by: Scheduled Time. Filter: Status not "Ideation". Color by: Content Pillar. This is the master content calendar.</p>
+  <p style="font-size:13px;">Group by: Publish Date. See the full content calendar laid out by day. Color by Content Pillar for visual pillar balance.</p>
 </div>
 <div class="card">
-  <h4 style="margin-top:0;">📋 Kanban Board</h4>
-  <p style="font-size:13px;">Group by: Status. Shows pipeline from Ideation to Published. Every team member's default view.</p>
-</div>
-<div class="card">
-  <h4 style="margin-top:0;">👤 By Person</h4>
-  <p style="font-size:13px;">Group by: Owner. Each person sees their tasks only. Filter: Status not "Published".</p>
-</div>
-<div class="card">
-  <h4 style="margin-top:0;">📱 By Platform</h4>
-  <p style="font-size:13px;">Group by: Platform. See what's going to Instagram vs YouTube vs Email today.</p>
-</div>
-<div class="card">
-  <h4 style="margin-top:0;">🎯 By Pillar</h4>
-  <p style="font-size:13px;">Group by: Content Pillar. Verify distribution matches targets (40/25/25/10).</p>
+  <h4 style="margin-top:0;">📃 List View</h4>
+  <p style="font-size:13px;">Master list. Sort by due date, filter by platform, group by person. The spreadsheet view for power users.</p>
 </div>
 <div class="card">
   <h4 style="margin-top:0;">✅ Ben's Approval Queue</h4>
-  <p style="font-size:13px;">Filter: Status = "In Review". Sorted by Due Date ascending. Ben's single inbox for sign-offs.</p>
+  <p style="font-size:13px;">Filter: Section = "In Review". Sorted by Due Date ascending. Ben's single inbox for sign-offs. Nothing else visible.</p>
 </div>
-</div>
-
-<h4>4. Content Request Form</h4>
 <div class="card">
-<p>Create a ClickUp Form linked to the "Content Requests" list. Fields:</p>
-<ul>
-  <li>What do you need? (dropdown: Reel, Carousel, Thumbnail, Copy Review, YouTube Video, Other)</li>
-  <li>Brief / Description (long text)</li>
-  <li>Target platform(s) (multi-select)</li>
-  <li>Requested publish date</li>
-  <li>Priority (Low, Normal, Urgent)</li>
-  <li>Attachments (reference images, scripts, data)</li>
-  <li>Requester name (auto-filled)</li>
-</ul>
-<p>Share the form URL with the team. Every request starts here. No Slack messages, no verbal asks.</p>
+  <h4 style="margin-top:0;">👤 By Person</h4>
+  <p style="font-size:13px;">Group by: Person custom field. Each person sees their tasks only. Filter out Published.</p>
+</div>
+<div class="card">
+  <h4 style="margin-top:0;">🎯 By Pillar</h4>
+  <p style="font-size:13px;">Group by: Content Pillar. Verify distribution matches targets. Check weekly.</p>
+</div>
 </div>
 
-<h4>5. Automation Rules</h4>
+<h4>Automation Rules</h4>
+<p>Asana Rules (available on Starter plan) automate the repetitive parts of the pipeline. Set these up on the Content Calendar project:</p>
 <div class="table-wrap">
 <table>
 <thead>
 <tr><th>Trigger</th><th>Action</th><th>Purpose</th></tr>
 </thead>
 <tbody>
-<tr><td>Status changes to "In Edit"</td><td>Assign to Georgio + notify</td><td>Editor picks up immediately</td></tr>
-<tr><td>Status changes to "In Review"</td><td>Assign to Ben + notify</td><td>Ben's approval queue updates</td></tr>
-<tr><td>Status changes to "Approved"</td><td>Move to Scheduled + set publish time</td><td>Ready for posting</td></tr>
-<tr><td>Due date is tomorrow + status not "Approved"</td><td>Notify Owner + Ben</td><td>Deadline warning</td></tr>
-<tr><td>Task created in "Content Requests"</td><td>Notify Alice (Chief of Staff)</td><td>Request triage</td></tr>
-<tr><td>Status changes to "Published"</td><td>Add comment: "Add performance data within 48h"</td><td>Close the loop on measurement</td></tr>
-<tr><td>Every Monday at 7am</td><td>Create recurring tasks for the week's EDMs</td><td>Auto-generate weekly email tasks</td></tr>
-<tr><td>Every Sunday at 7am</td><td>Create 21 reel tasks for Ben from template</td><td>Batch filming prep</td></tr>
+<tr><td>Task moved to "In Review" section</td><td>Assign task to Ben + add comment "Ready for your review"</td><td>Ben's approval queue auto-populates</td></tr>
+<tr><td>Task moved to "Approved" section</td><td>Move to "Scheduled" section</td><td>Approved content flows straight to scheduling</td></tr>
+<tr><td>Due date is tomorrow AND task is not in Approved/Scheduled/Published</td><td>Add comment tagging assignee: "Due tomorrow, not yet approved"</td><td>Deadline warning</td></tr>
+<tr><td>Task added to project</td><td>Set Priority to "P3 Normal" + set Status to "Idea"</td><td>Default values on new tasks</td></tr>
+<tr><td>Task moved to "In Edit" section</td><td>Add follower: Georgio</td><td>Editor gets notified</td></tr>
+<tr><td>Task moved to "Published" section</td><td>Add comment: "Add performance data within 48 hours"</td><td>Close the loop on measurement</td></tr>
 </tbody>
 </table>
 </div>
+<p style="font-size:13px; color: var(--cs-gray);">Asana Starter includes up to 20 rules per project. The above uses 6. Plenty of room for more as the system matures.</p>
 
-<h4>6. Integration Setup</h4>
+<h4>Content Request Form</h4>
+<div class="card">
+<p>Create an Asana Form linked to the Content Calendar project. Anyone on the team can submit content ideas or requests. Fields:</p>
+<ul>
+  <li>What do you need? (dropdown: Reel, Carousel, YouTube Video, Thread, EDM, Other)</li>
+  <li>Brief / Description (paragraph text)</li>
+  <li>Target platform(s) (multi-select: Instagram, YouTube, X, LinkedIn, TikTok, Email)</li>
+  <li>Requested publish date (date)</li>
+  <li>Priority (dropdown: P1 Urgent, P2 High, P3 Normal, P4 Low)</li>
+  <li>Attachments (reference images, scripts, data)</li>
+</ul>
+<p>Form submissions land in the "Idea" section of the Content Calendar. Share the form URL with the team. Every request starts here. No Slack messages, no verbal asks.</p>
+</div>
+
+<h4>Integration Setup</h4>
 <div class="card-grid">
 <div class="card">
-  <h4 style="margin-top:0;">Zapier / Make: Customer.io</h4>
-  <p style="font-size:13px;">When ClickUp task status = "Published" AND Content Type = "EDM" or "Newsletter", log send event to a tracking Sheet. Use Make webhook to trigger Customer.io campaign send at scheduled time.</p>
-</div>
-<div class="card">
   <h4 style="margin-top:0;">Google Calendar Sync</h4>
-  <p style="font-size:13px;">Enable ClickUp's native Google Calendar two-way sync. All tasks with due dates appear on team calendar. Use for YouTube filming blocks and Monday standups.</p>
-</div>
-<div class="card">
-  <h4 style="margin-top:0;">Google Drive</h4>
-  <p style="font-size:13px;">Enable ClickUp + Google Drive integration. Attach raw footage and final assets directly to tasks. Link to shared Drive folders for batch uploads.</p>
+  <p style="font-size:13px;">Enable Asana's native Google Calendar sync. Tasks with due dates appear on the team calendar. Use for YouTube filming blocks, Monday standups, and batch filming sessions.</p>
 </div>
 <div class="card">
   <h4 style="margin-top:0;">Slack / Discord Notifications</h4>
-  <p style="font-size:13px;">Push ClickUp notifications to a #content-ops channel. Status changes, comments, and deadline alerts show up where the team already communicates.</p>
+  <p style="font-size:13px;">Connect Asana to a #content-ops channel. Status changes, comments, and deadline alerts show up where the team already communicates. Asana has native Slack integration.</p>
+</div>
+<div class="card">
+  <h4 style="margin-top:0;">Zapier / Make: Customer.io</h4>
+  <p style="font-size:13px;"><strong>Trigger:</strong> Asana task moved to "Approved" section where Content Type = "EDM"<br>
+  <strong>Action:</strong> Update Customer.io campaign draft with subject line and body from task description. Schedule send for the Publish Date field.<br>
+  <strong>Tool:</strong> Make.com (better Customer.io module than Zapier)</p>
+</div>
+<div class="card">
+  <h4 style="margin-top:0;">Asana API (Jarvis)</h4>
+  <p style="font-size:13px;">Jarvis connects via Personal Access Token to create tasks, update fields, add comments, and move tasks between sections. Full setup in Section 9.</p>
 </div>
 </div>
 </section>
@@ -484,7 +539,7 @@ Workspace: Collective Shift
 <!-- SECTION 3: TEMPLATES -->
 <section id="templates">
 <h2><span class="section-num">03</span> Task Templates</h2>
-<p>Duplicate these templates for every new content piece. Each includes fields, subtasks, default assignees, and estimated time.</p>
+<p>Asana task templates let you create new tasks with pre-filled fields, subtasks, and descriptions. Create one template per content type. When starting a new piece, select the template and fill in the specifics.</p>
 
 <div class="tmpl">
 <div class="tmpl-header">
@@ -493,15 +548,15 @@ Workspace: Collective Shift
 </div>
 <div class="tmpl-fields">
   <div class="tmpl-field"><div class="label">Content Type</div>Reel</div>
-  <div class="tmpl-field"><div class="label">Brand</div>Ben Simpson</div>
-  <div class="tmpl-field"><div class="label">Platform</div>Instagram, TikTok, YouTube Shorts</div>
+  <div class="tmpl-field"><div class="label">Person</div>Ben</div>
+  <div class="tmpl-field"><div class="label">Platform</div>Instagram</div>
   <div class="tmpl-field"><div class="label">Est. Time</div>45 min total (8 min film + 30 min edit + review)</div>
 </div>
-<p style="font-size:13px; margin-bottom:8px;"><strong>Subtasks / Checklist:</strong></p>
+<p style="font-size:13px; margin-bottom:8px;"><strong>Subtasks:</strong></p>
 <ul class="checklist">
   <li>Hook line written (first 2 seconds)</li>
   <li>Script outline in task description</li>
-  <li>Content pillar assigned (BUILD/PROTECT/PROOF/YIELD)</li>
+  <li>Content pillar assigned</li>
   <li>ManyChat keyword selected</li>
   <li>Filmed (Sunday batch)</li>
   <li>Raw footage uploaded to Google Drive</li>
@@ -520,8 +575,8 @@ Workspace: Collective Shift
 </div>
 <div class="tmpl-fields">
   <div class="tmpl-field"><div class="label">Content Type</div>Reel</div>
-  <div class="tmpl-field"><div class="label">Brand</div>Travis Thomas / Collective Shift</div>
-  <div class="tmpl-field"><div class="label">Platform</div>Instagram, TikTok, YouTube Shorts</div>
+  <div class="tmpl-field"><div class="label">Person</div>Travis / Sarn</div>
+  <div class="tmpl-field"><div class="label">Platform</div>Instagram</div>
   <div class="tmpl-field"><div class="label">Est. Time</div>60 min (film + edit + review)</div>
 </div>
 <ul class="checklist">
@@ -529,7 +584,7 @@ Workspace: Collective Shift
   <li>Script / talking points drafted</li>
   <li>Filmed by creator</li>
   <li>Edited (self or Georgio)</li>
-  <li>Caption written (ClawBot can draft)</li>
+  <li>Caption written (Jarvis can draft)</li>
   <li>Ben approval</li>
   <li>Scheduled and cross-posted</li>
 </ul>
@@ -541,14 +596,14 @@ Workspace: Collective Shift
   <div class="tmpl-meta"><span class="badge badge-teal">YOUTUBE</span> <span class="role-tag role-matt">Matt/Travis/Sarn</span></div>
 </div>
 <div class="tmpl-fields">
-  <div class="tmpl-field"><div class="label">Content Type</div>YouTube Long-Form</div>
-  <div class="tmpl-field"><div class="label">Brand</div>Collective Shift / The Wealth Shift</div>
+  <div class="tmpl-field"><div class="label">Content Type</div>YouTube</div>
+  <div class="tmpl-field"><div class="label">Person</div>Collaborative</div>
   <div class="tmpl-field"><div class="label">Platform</div>YouTube</div>
   <div class="tmpl-field"><div class="label">Est. Time</div>6-8 hours (script + film + edit + thumbnail)</div>
 </div>
 <ul class="checklist">
   <li>Topic confirmed in Monday standup</li>
-  <li>Script / outline drafted (ClawBot can assist)</li>
+  <li>Script / outline drafted (Jarvis can assist)</li>
   <li>Filming session completed</li>
   <li>Raw footage to Google Drive</li>
   <li>Video edited (YouTube editor)</li>
@@ -563,39 +618,18 @@ Workspace: Collective Shift
 
 <div class="tmpl">
 <div class="tmpl-header">
-  <div class="tmpl-title">⚡ YouTube Short</div>
-  <div class="tmpl-meta"><span class="badge badge-teal">SHORT</span> <span class="role-tag role-editor">Editor</span></div>
-</div>
-<div class="tmpl-fields">
-  <div class="tmpl-field"><div class="label">Content Type</div>YouTube Short</div>
-  <div class="tmpl-field"><div class="label">Source</div>YouTube long-form clip extraction</div>
-  <div class="tmpl-field"><div class="label">Est. Time</div>30 min (clip + caption + review)</div>
-</div>
-<ul class="checklist">
-  <li>Source video and timestamp identified</li>
-  <li>Clip extracted and reformatted (vertical)</li>
-  <li>Captions added</li>
-  <li>Hook optimized for first 2 seconds</li>
-  <li>Caption + hashtags written</li>
-  <li>Ben approval</li>
-  <li>Published</li>
-</ul>
-</div>
-
-<div class="tmpl">
-<div class="tmpl-header">
   <div class="tmpl-title">🐦 X/Twitter Thread</div>
-  <div class="tmpl-meta"><span class="badge badge-blue">TWITTER</span> <span class="role-tag role-ben">Ben</span> <span class="role-tag role-clawbot">ClawBot</span></div>
+  <div class="tmpl-meta"><span class="badge badge-blue">THREAD</span> <span class="role-tag role-ben">Ben</span> <span class="role-tag role-jarvis">Jarvis</span></div>
 </div>
 <div class="tmpl-fields">
-  <div class="tmpl-field"><div class="label">Content Type</div>Tweet / Thread</div>
-  <div class="tmpl-field"><div class="label">Brand</div>Ben Simpson</div>
-  <div class="tmpl-field"><div class="label">Platform</div>X/Twitter</div>
-  <div class="tmpl-field"><div class="label">Est. Time</div>15 min (ClawBot drafts, Ben edits)</div>
+  <div class="tmpl-field"><div class="label">Content Type</div>Thread</div>
+  <div class="tmpl-field"><div class="label">Person</div>Ben</div>
+  <div class="tmpl-field"><div class="label">Platform</div>X</div>
+  <div class="tmpl-field"><div class="label">Est. Time</div>15 min (Jarvis drafts, Ben edits)</div>
 </div>
 <ul class="checklist">
   <li>Topic from daily content pillar</li>
-  <li>ClawBot generates first draft</li>
+  <li>Jarvis generates first draft (posted as Asana comment)</li>
   <li>Ben reviews and edits for voice</li>
   <li>No "crypto" language check</li>
   <li>Published at 10am AEST</li>
@@ -605,17 +639,17 @@ Workspace: Collective Shift
 <div class="tmpl">
 <div class="tmpl-header">
   <div class="tmpl-title">💼 LinkedIn Post</div>
-  <div class="tmpl-meta"><span class="badge badge-blue">LINKEDIN</span> <span class="role-tag role-ben">Ben</span> <span class="role-tag role-clawbot">ClawBot</span></div>
+  <div class="tmpl-meta"><span class="badge badge-blue">LINKEDIN</span> <span class="role-tag role-ben">Ben</span> <span class="role-tag role-jarvis">Jarvis</span></div>
 </div>
 <div class="tmpl-fields">
-  <div class="tmpl-field"><div class="label">Content Type</div>LinkedIn Post</div>
-  <div class="tmpl-field"><div class="label">Brand</div>Ben Simpson</div>
+  <div class="tmpl-field"><div class="label">Content Type</div>LinkedIn</div>
+  <div class="tmpl-field"><div class="label">Person</div>Ben</div>
   <div class="tmpl-field"><div class="label">Platform</div>LinkedIn</div>
-  <div class="tmpl-field"><div class="label">Est. Time</div>20 min (ClawBot drafts, Ben edits)</div>
+  <div class="tmpl-field"><div class="label">Est. Time</div>20 min (Jarvis drafts, Ben edits)</div>
 </div>
 <ul class="checklist">
   <li>Topic: thought leadership, frameworks, or market insight</li>
-  <li>ClawBot generates first draft in Ben's voice</li>
+  <li>Jarvis generates first draft in Ben's voice (posted as Asana comment)</li>
   <li>Ben edits for authenticity and adds personal detail</li>
   <li>Hook line optimized (first 2 lines before "see more")</li>
   <li>Published at 1pm AEST</li>
@@ -625,12 +659,12 @@ Workspace: Collective Shift
 <div class="tmpl">
 <div class="tmpl-header">
   <div class="tmpl-title">🖼 Instagram Carousel</div>
-  <div class="tmpl-meta"><span class="badge badge-orange">CAROUSEL</span> <span class="role-tag role-clawbot">ClawBot</span></div>
+  <div class="tmpl-meta"><span class="badge badge-orange">CAROUSEL</span> <span class="role-tag role-jarvis">Jarvis</span></div>
 </div>
 <div class="tmpl-fields">
   <div class="tmpl-field"><div class="label">Content Type</div>Carousel</div>
-  <div class="tmpl-field"><div class="label">Brand</div>Collective Shift</div>
-  <div class="tmpl-field"><div class="label">Platform</div>Instagram, LinkedIn</div>
+  <div class="tmpl-field"><div class="label">Person</div>Collaborative</div>
+  <div class="tmpl-field"><div class="label">Platform</div>Instagram</div>
   <div class="tmpl-field"><div class="label">Est. Time</div>45 min (copy + design + review)</div>
 </div>
 <ul class="checklist">
@@ -646,17 +680,17 @@ Workspace: Collective Shift
 <div class="tmpl">
 <div class="tmpl-header">
   <div class="tmpl-title">📧 EDM Draft (Mon/Wed/Fri)</div>
-  <div class="tmpl-meta"><span class="badge badge-orange">EMAIL</span> <span class="role-tag role-clawbot">ClawBot</span> <span class="role-tag role-ben">Ben</span></div>
+  <div class="tmpl-meta"><span class="badge badge-orange">EMAIL</span> <span class="role-tag role-jarvis">Jarvis</span> <span class="role-tag role-ben">Ben</span></div>
 </div>
 <div class="tmpl-fields">
   <div class="tmpl-field"><div class="label">Content Type</div>EDM</div>
   <div class="tmpl-field"><div class="label">Send Via</div>Customer.io</div>
   <div class="tmpl-field"><div class="label">Format</div>Plain text, from Ben's founder inbox</div>
-  <div class="tmpl-field"><div class="label">Est. Time</div>25 min (ClawBot drafts, Ben finalises)</div>
+  <div class="tmpl-field"><div class="label">Est. Time</div>25 min (Jarvis drafts, Ben finalises)</div>
 </div>
 <ul class="checklist">
   <li>EDM type confirmed (Educational / Story / Open Loop)</li>
-  <li>ClawBot drafts in Ben's voice, plain text</li>
+  <li>Jarvis drafts in Ben's voice, plain text (posted as Asana comment)</li>
   <li>Subject line written (3 options, Ben picks)</li>
   <li>CTA included (Blueprint link or Platinum application)</li>
   <li>Ben review and sign-off</li>
@@ -690,60 +724,19 @@ Workspace: Collective Shift
 
 <div class="tmpl">
 <div class="tmpl-header">
-  <div class="tmpl-title">🎨 Thumbnail Design Request</div>
-  <div class="tmpl-meta"><span class="badge badge-gray">DESIGN</span></div>
+  <div class="tmpl-title">📝 Story (Instagram / Facebook)</div>
+  <div class="tmpl-meta"><span class="badge badge-gray">STORY</span> <span class="role-tag role-ben">Ben</span></div>
 </div>
 <div class="tmpl-fields">
-  <div class="tmpl-field"><div class="label">Content Type</div>Thumbnail</div>
-  <div class="tmpl-field"><div class="label">For</div>YouTube video (linked task)</div>
-  <div class="tmpl-field"><div class="label">Est. Time</div>30-45 min</div>
+  <div class="tmpl-field"><div class="label">Content Type</div>Story</div>
+  <div class="tmpl-field"><div class="label">Person</div>Ben</div>
+  <div class="tmpl-field"><div class="label">Platform</div>Instagram</div>
+  <div class="tmpl-field"><div class="label">Est. Time</div>5-10 min</div>
 </div>
 <ul class="checklist">
-  <li>Video title confirmed</li>
-  <li>Thumbnail concept / text overlay specified</li>
-  <li>Designed in Canva (CS YouTube template)</li>
-  <li>3 options provided</li>
-  <li>Ben selects final</li>
-  <li>Uploaded to YouTube</li>
-</ul>
-</div>
-
-<div class="tmpl">
-<div class="tmpl-header">
-  <div class="tmpl-title">📝 Copy Review Request</div>
-  <div class="tmpl-meta"><span class="badge badge-gray">REVIEW</span></div>
-</div>
-<div class="tmpl-fields">
-  <div class="tmpl-field"><div class="label">Content Type</div>Copy Review</div>
-  <div class="tmpl-field"><div class="label">Est. Time</div>10-15 min</div>
-</div>
-<ul class="checklist">
-  <li>Copy pasted into task description</li>
-  <li>Source content type noted (email, caption, blog)</li>
-  <li>ClawBot brand compliance scan run first</li>
-  <li>Human reviewer assigned</li>
-  <li>Feedback added as comments</li>
-  <li>Final version marked in description</li>
-</ul>
-</div>
-
-<div class="tmpl">
-<div class="tmpl-header">
-  <div class="tmpl-title">✅ Final Approval Request</div>
-  <div class="tmpl-meta"><span class="badge badge-green">APPROVAL</span> <span class="role-tag role-ben">Ben</span></div>
-</div>
-<div class="tmpl-fields">
-  <div class="tmpl-field"><div class="label">Assignee</div>Always Ben</div>
-  <div class="tmpl-field"><div class="label">Est. Time</div>5-10 min per piece</div>
-</div>
-<ul class="checklist">
-  <li>Final asset attached (video, image, or copy)</li>
-  <li>All subtasks on parent task complete</li>
-  <li>Voice check: sounds like Ben / CS brand</li>
-  <li>Brand check: no "crypto", no em dashes, no hype</li>
-  <li>CTA check: correct ManyChat keyword or link</li>
-  <li>Platform check: correct format and dimensions</li>
-  <li>Approved or returned with specific feedback</li>
+  <li>Topic / angle identified</li>
+  <li>Filmed or designed</li>
+  <li>Posted (stories skip full approval since they are ephemeral)</li>
 </ul>
 </div>
 </section>
@@ -753,7 +746,7 @@ Workspace: Collective Shift
 <h2><span class="section-num">04</span> Approval & Review Process</h2>
 
 <h3>Gate System</h3>
-<p>Content moves forward only when the gate criteria are met. No stage-skipping.</p>
+<p>Content moves forward only when the gate criteria are met. No stage-skipping. In Asana, moving a task from one section to the next represents passing a gate.</p>
 
 <div class="workflow">
   <div class="wf-step"><div class="wf-label">Draft</div><div class="wf-sub">Creator completes</div></div>
@@ -779,12 +772,12 @@ Workspace: Collective Shift
 <tr><td>Ben's reels</td><td>Self-review (filmed by Ben)</td><td><strong>Ben</strong></td><td>Ben reviews edited version from Georgio</td></tr>
 <tr><td>Travis/Sarn reels</td><td>Travis (own) / Sarn (own)</td><td><strong>Ben</strong></td><td>Creator self-reviews, Ben final</td></tr>
 <tr><td>YouTube long-form</td><td>Presenter reviews own edit</td><td><strong>Ben</strong></td><td>Thumbnail approved separately</td></tr>
-<tr><td>Tweets (Ben)</td><td>ClawBot brand scan</td><td><strong>Ben</strong></td><td>Quick review, same-day turnaround</td></tr>
-<tr><td>LinkedIn (Ben)</td><td>ClawBot brand scan</td><td><strong>Ben</strong></td><td>Ben adds personal touch before posting</td></tr>
-<tr><td>EDMs</td><td>ClawBot draft + brand scan</td><td><strong>Ben</strong></td><td>Ben writes or heavily edits every email</td></tr>
+<tr><td>Tweets (Ben)</td><td>Jarvis brand scan</td><td><strong>Ben</strong></td><td>Quick review, same-day turnaround</td></tr>
+<tr><td>LinkedIn (Ben)</td><td>Jarvis brand scan</td><td><strong>Ben</strong></td><td>Ben adds personal touch before posting</td></tr>
+<tr><td>EDMs</td><td>Jarvis draft + brand scan</td><td><strong>Ben</strong></td><td>Ben writes or heavily edits every email</td></tr>
 <tr><td>Weekly Shift Newsletter</td><td>Matt drafts + self-reviews</td><td><strong>Ben</strong></td><td>Research accuracy is Matt's responsibility</td></tr>
 <tr><td>Client result posts</td><td>David Tran (Growth) selects</td><td><strong>Ben</strong></td><td>Must be anonymised correctly</td></tr>
-<tr><td>Carousels</td><td>ClawBot copy + designer</td><td><strong>Ben</strong></td><td>Design approved via Canva link</td></tr>
+<tr><td>Carousels</td><td>Jarvis copy + designer</td><td><strong>Ben</strong></td><td>Design approved via Canva link in Asana task</td></tr>
 </tbody>
 </table>
 </div>
@@ -793,7 +786,7 @@ Workspace: Collective Shift
 <div class="card">
 <ul>
   <li><strong>Be specific:</strong> "Change the hook to lead with the number" not "make it better"</li>
-  <li><strong>Use ClickUp comments:</strong> All feedback lives on the task. Not Slack, not text messages.</li>
+  <li><strong>Use Asana comments:</strong> All feedback lives on the task. Not Slack, not text messages.</li>
   <li><strong>Tag the person:</strong> @mention the person who needs to action the feedback</li>
   <li><strong>One round max:</strong> If it needs more than one round of revisions, jump on a 5-minute call</li>
   <li><strong>Time-box:</strong> Reviews must be completed within 4 hours of assignment (business hours)</li>
@@ -803,8 +796,8 @@ Workspace: Collective Shift
 <h3>Version Control</h3>
 <div class="card">
 <ul>
-  <li>Every revision gets uploaded as a new attachment on the task (v1, v2, v3)</li>
-  <li>The approved version is pinned as the top comment with "FINAL" label</li>
+  <li>Every revision gets uploaded as a new attachment on the Asana task (v1, v2, v3)</li>
+  <li>The approved version is pinned as a comment with "FINAL" label</li>
   <li>Never overwrite previous versions. Keep the trail.</li>
   <li>Google Drive links in the task always point to the latest version</li>
 </ul>
@@ -822,49 +815,51 @@ Workspace: Collective Shift
 </ul>
 </div>
 
-<h3>Emergency Publishing Protocol</h3>
-<div class="callout">
-<strong>Market-moving events (Bitcoin crashes/surges, regulatory news, major hacks)</strong>
-</div>
-<div class="card">
-<ol>
-  <li><strong>Ben decides to publish</strong> (no one else triggers emergency protocol)</li>
-  <li>ClawBot drafts a take within 15 minutes, sent to Ben for review</li>
-  <li>Ben edits and approves in one pass (skip normal review flow)</li>
-  <li>Post to X/Twitter first (fastest reach), then Instagram Story, then reel if warranted</li>
-  <li>Status in ClickUp: create task, set status directly to "Published", tag as "Emergency"</li>
-  <li>EDM can be triggered same-day if Ben decides the event warrants it</li>
-  <li><strong>Rule:</strong> Emergency content must still pass voice and brand checks. Speed does not override quality.</li>
-</ol>
-</div>
-
-<h3>ClawBot in the Review Process</h3>
+<h3>Jarvis in the Review Process</h3>
 <div class="callout-teal callout">
-<strong>Before any content reaches a human reviewer, ClawBot runs a brand compliance scan.</strong>
+<strong>Before any content reaches a human reviewer, Jarvis runs a brand compliance scan.</strong>
 </div>
 <ul>
   <li>Checks for banned words: "crypto" (should be "digital assets"), em dashes, "to the moon", "WAGMI", "not financial advice" (CS never uses this disclaimer), hype language</li>
   <li>Checks CTA: ManyChat keyword matches the content pillar</li>
   <li>Checks voice: Compares against Ben's Voice Profile for tone and style markers</li>
-  <li>Flags issues as comments on the ClickUp task before it hits Ben's queue</li>
+  <li>Flags issues as comments on the Asana task before it hits Ben's queue</li>
   <li>This saves Ben 2-3 minutes per piece (across 61 pieces/week = ~3 hours saved)</li>
 </ul>
+
+<h3>Emergency Publishing Protocol</h3>
+<div class="card" style="border-left: 4px solid #EF4444;">
+<p style="font-weight:700; color: #EF4444; margin-bottom:8px;">For market crashes, regulatory news, major hacks, or breaking events:</p>
+<ol>
+  <li><strong>Ben triggers.</strong> No one else decides to go to emergency mode.</li>
+  <li><strong>Jarvis drafts</strong> a take within 15 minutes.</li>
+  <li><strong>Ben edits + approves</strong> in a single pass (5-10 minutes).</li>
+  <li><strong>Post order:</strong> X/Twitter (fastest) then Instagram Story then Reel (if warranted).</li>
+  <li><strong>Asana:</strong> Jarvis creates task, moves directly to Published section, tags as P1 Urgent.</li>
+  <li><strong>Optional:</strong> Same-day EDM if Ben decides the event warrants it.</li>
+  <li><strong>Rule:</strong> Speed does not override quality. Voice and brand checks still apply.</li>
+</ol>
+</div>
 </section>
 
 <!-- SECTION 5: CALENDAR -->
 <section id="calendar">
 <h2><span class="section-num">05</span> Content Calendar Integration</h2>
 
-<h3>Mapping the 90-Day Calendar into ClickUp</h3>
+<h3>Mapping the 90-Day Calendar into Asana</h3>
 <div class="card">
-<p>The Evergreen Content System contains 103+ content concepts organized by pillar and format. Here is how to bring that into ClickUp:</p>
+<p>The Evergreen Content System contains 103+ content concepts organized by pillar and format. Here is how to bring that into Asana:</p>
 <ol>
-  <li><strong>Create "90-Day Content Calendar" list</strong> in the Content Strategy space</li>
-  <li><strong>Import all 103 concepts</strong> as tasks with Content Pillar, Content Type, and Target Platform fields pre-filled</li>
-  <li><strong>Assign to weeks:</strong> Spread across 13 weeks (90 days). Use the "Week Number" custom field.</li>
-  <li><strong>Each Monday standup:</strong> Pull that week's concepts from the 90-day list and create production tasks in the appropriate Content Production lists</li>
-  <li><strong>Recycle:</strong> At week 14, the cycle restarts. Evergreen content gets refreshed with updated data and re-queued.</li>
+  <li><strong>Jarvis batch-creates all 103 concepts</strong> as tasks in the Content Calendar project via the Asana API. Each task has Content Pillar, Content Type, Platform, and Person fields pre-filled.</li>
+  <li><strong>Assign to weeks:</strong> Spread across 13 weeks (90 days). Jarvis sets the Publish Date field for each task.</li>
+  <li><strong>Calendar View:</strong> Switch to Calendar View to see the full 90 days laid out visually. Color by Content Pillar for balance at a glance.</li>
+  <li><strong>Each Monday standup:</strong> Review that week's tasks in Asana. Move from "Idea" to "Draft" to kick off production.</li>
+  <li><strong>Recycle:</strong> At week 14, the cycle restarts. Jarvis refreshes evergreen content with updated data and re-creates tasks.</li>
 </ol>
+</div>
+
+<div class="callout-jarvis callout">
+<strong>Jarvis can populate the entire 90-day calendar in one batch.</strong> One command. 103+ tasks created with all custom fields, descriptions, subtasks, and publish dates. The team opens Asana Monday morning and the next 13 weeks are planned.
 </div>
 
 <h3>Weekly Planning Session</h3>
@@ -873,25 +868,25 @@ Workspace: Collective Shift
 <p><strong>Who:</strong> Ben, Travis, Alice (Chief of Staff). Matt/Sarn optional.</p>
 <p><strong>Agenda:</strong></p>
 <ol>
-  <li><strong>[2 min]</strong> Last week's numbers: pieces published vs target, top performer, any misses</li>
+  <li><strong>[2 min]</strong> Last week's numbers: pieces published vs target, top performer, any misses (Jarvis pre-generates this report)</li>
   <li><strong>[3 min]</strong> This week's YouTube topics confirmed (Travis, Matt, Sarn)</li>
-  <li><strong>[3 min]</strong> Reel themes for the week (check pillar distribution: 40/25/25/10)</li>
+  <li><strong>[3 min]</strong> Reel themes for the week (check pillar distribution)</li>
   <li><strong>[2 min]</strong> EDM topics confirmed (Mon/Wed/Fri)</li>
   <li><strong>[2 min]</strong> Any urgent/time-sensitive content (events, market conditions)</li>
   <li><strong>[3 min]</strong> Blockers, capacity issues, handoff needs</li>
 </ol>
-<p><strong>Output:</strong> All tasks for the week created in ClickUp with owners and due dates.</p>
+<p><strong>Output:</strong> All tasks for the week confirmed in Asana with owners and due dates.</p>
 </div>
 
 <h3>Batch-Planning 2 Weeks Ahead</h3>
 <div class="card">
 <p>Every other Friday (Weeks 1, 3, 5, etc.), run a 30-minute forward planning session:</p>
 <ul>
-  <li>Review the 90-day calendar for the next 2 weeks</li>
-  <li>Pre-create task shells in ClickUp for all 122 pieces (2 weeks x 61/week)</li>
-  <li>Assign owners and target dates</li>
+  <li>Review the 90-day calendar in Asana Calendar View for the next 2 weeks</li>
+  <li>Jarvis has already pre-created task shells for all ~122 pieces (2 weeks x 61/week)</li>
+  <li>Confirm owners and target dates. Move tasks from "Idea" to "Draft" as needed.</li>
   <li>Flag any dependencies (e.g., YouTube video must publish before clips are extracted)</li>
-  <li>ClawBot pre-generates briefs for reel topics, tweet angles, and EDM outlines</li>
+  <li>Jarvis pre-generates briefs for reel topics, tweet angles, and EDM outlines as task comments</li>
   <li>This gives Ben a full picture of what is coming so Sunday batch filming is never a surprise</li>
 </ul>
 </div>
@@ -900,26 +895,26 @@ Workspace: Collective Shift
 <div class="card">
 <p>There is no scheduling tool right now. That is fine. Here is the interim process:</p>
 <ol>
-  <li>Approved content sits in "Scheduled" status in ClickUp with exact post time in the Scheduled Time field</li>
-  <li>The person posting (currently Ben for his platforms, Alice/David for CS brand) opens ClickUp at the scheduled time</li>
+  <li>Approved content sits in the "Scheduled" section in Asana with the exact post time in the Publish Date field</li>
+  <li>The person posting (currently Ben for his platforms, Alice/David for CS brand) opens Asana at the scheduled time</li>
   <li>Posts manually to the platform</li>
-  <li>Changes status to "Published" in ClickUp</li>
+  <li>Moves the task to the "Published" section in Asana</li>
   <li>Adds the live post URL as a comment</li>
 </ol>
-<p style="color: var(--cs-gray); font-size:13px;">When the team is ready for a scheduling tool (see Section 7), Later or Buffer slots in here. The ClickUp status flow stays the same.</p>
+<p style="color: var(--cs-gray); font-size:13px;">When the team is ready for a scheduling tool (see Section 7), Later or Buffer slots in here. The Asana workflow stays the same.</p>
 </div>
 
 <h3>Email Calendar Sync</h3>
 <div class="table-wrap">
 <table>
 <thead>
-<tr><th>Day</th><th>Time</th><th>Email Type</th><th>ClickUp Task</th><th>Customer.io Campaign</th></tr>
+<tr><th>Day</th><th>Time</th><th>Email Type</th><th>Asana Task</th><th>Customer.io Campaign</th></tr>
 </thead>
 <tbody>
-<tr><td>Monday</td><td>5:00pm AEST</td><td>EDM: Educational Deep Dive</td><td>EDMs list, Week X</td><td>Triggered by Make webhook when status = Approved</td></tr>
-<tr><td>Wednesday</td><td>5:00pm AEST</td><td>EDM: Story + Belief Break</td><td>EDMs list, Week X</td><td>Triggered by Make webhook when status = Approved</td></tr>
-<tr><td>Thursday</td><td>5:00pm AEST</td><td>Weekly Shift Newsletter</td><td>Newsletter list, Week X</td><td>Matt loads directly into Customer.io template</td></tr>
-<tr><td>Friday</td><td>5:00pm AEST</td><td>EDM: Open Loop into VSL</td><td>EDMs list, Week X</td><td>Triggered by Make webhook when status = Approved</td></tr>
+<tr><td>Monday</td><td>5:00pm AEST</td><td>EDM: Educational Deep Dive</td><td>Email Production project, Week X</td><td>Triggered by Make webhook when task moves to Approved</td></tr>
+<tr><td>Wednesday</td><td>5:00pm AEST</td><td>EDM: Story + Belief Break</td><td>Email Production project, Week X</td><td>Triggered by Make webhook when task moves to Approved</td></tr>
+<tr><td>Thursday</td><td>5:00pm AEST</td><td>Weekly Shift Newsletter</td><td>Email Production project, Week X</td><td>Matt loads directly into Customer.io template</td></tr>
+<tr><td>Friday</td><td>5:00pm AEST</td><td>EDM: Open Loop into VSL</td><td>Email Production project, Week X</td><td>Triggered by Make webhook when task moves to Approved</td></tr>
 </tbody>
 </table>
 </div>
@@ -929,7 +924,7 @@ Workspace: Collective Shift
 <p>When two pieces compete for the same time slot:</p>
 <ol>
   <li><strong>Time-sensitive wins.</strong> Market events, product launches, and limited-time content always take priority.</li>
-  <li><strong>Higher-pillar wins.</strong> BUILD (40%) content takes priority over YIELD (10%) content.</li>
+  <li><strong>Higher-pillar wins.</strong> Protect/Strategy content takes priority over Community/Results content.</li>
   <li><strong>The bumped piece moves to the next available slot</strong> on the same platform, same day if possible.</li>
   <li><strong>Never stack.</strong> Do not post two pieces on the same platform within 2 hours of each other (algorithm penalty).</li>
   <li><strong>Ben breaks ties.</strong> If it is not obvious, Ben decides. This should happen less than once per week.</li>
@@ -945,14 +940,14 @@ Workspace: Collective Shift
 <div class="card">
 <h4 style="margin-top:0;">Reel Editing (Georgio / Future Hire)</h4>
 <ol>
-  <li>Check ClickUp: filter "In Edit" tasks assigned to you each morning</li>
+  <li>Check Asana: filter "In Edit" section tasks assigned to you each morning</li>
   <li>Download raw footage from Google Drive link in the task</li>
   <li>Edit per CS standards: vertical 9:16, auto-captions (white text, dark background), light music if appropriate</li>
   <li>Keep reels under 60 seconds. Ideal: 30-45 seconds.</li>
   <li>First 2 seconds must match the hook line in the task brief</li>
   <li>Export at 1080x1920, H.264, high quality</li>
-  <li>Upload final to Google Drive + attach to ClickUp task</li>
-  <li>Move status to "In Review"</li>
+  <li>Upload final to Google Drive + attach to Asana task</li>
+  <li>Move task to "In Review" section</li>
   <li>Turnaround target: 4 hours per reel, all 21 Ben reels done by Wednesday EOD</li>
 </ol>
 
@@ -964,32 +959,20 @@ Workspace: Collective Shift
   <li>Color grade to match CS brand look (clean, slightly warm)</li>
   <li>Export at 1920x1080, H.264</li>
   <li>Mark 3 best clip timestamps in task comments (for reel extraction)</li>
-  <li>Upload to Google Drive + attach to task</li>
+  <li>Upload to Google Drive + attach to Asana task</li>
   <li>Turnaround: 48 hours from filming session</li>
-</ol>
-</div>
-
-<h3>Thumbnail Designer SOP</h3>
-<div class="card">
-<ol>
-  <li>Use the CS YouTube Thumbnail template in Canva (ask Alice for access)</li>
-  <li>Every thumbnail must include: presenter face (clear, high-contrast), 3-5 word text overlay, CS brand colors</li>
-  <li>Create 3 options per video. Upload all three to the ClickUp task.</li>
-  <li>Ben picks the winner. Do not ask which one is best. Give him options and let him choose.</li>
-  <li>Final thumbnail exported at 1280x720, PNG</li>
-  <li>Turnaround: 24 hours from request</li>
 </ol>
 </div>
 
 <h3>Copy Reviewer SOP</h3>
 <div class="card">
 <ol>
-  <li>Open the ClickUp task. Read the copy in the description or attached document.</li>
+  <li>Open the Asana task. Read the copy in the description or attached document.</li>
   <li>Run through the Brand Compliance Checklist (below)</li>
   <li>Check voice: Does this sound like Ben? Or the brand it is meant to represent?</li>
   <li>Check facts: Are stats current? Is the 116% CAGR noted as "verified and audited by Crypto Tax Australia"?</li>
-  <li>Leave specific feedback as ClickUp comments. Tag the original author.</li>
-  <li>If the copy is good, move status to "In Review" (for Ben's final approval)</li>
+  <li>Leave specific feedback as Asana comments. Tag the original author.</li>
+  <li>If the copy is good, move task to "In Review" section (for Ben's final approval)</li>
   <li>Time target: 15 minutes per review</li>
 </ol>
 </div>
@@ -997,10 +980,10 @@ Workspace: Collective Shift
 <h3>Ben's SOP (Final Approver)</h3>
 <div class="card" style="border-left: 4px solid var(--cs-orange);">
 <ol>
-  <li><strong>Morning block (9:30am, 20 min):</strong> Open "Ben's Approval Queue" view in ClickUp. Review and approve/return everything from overnight.</li>
+  <li><strong>Morning block (9:30am, 20 min):</strong> Open "Ben's Approval Queue" view in Asana. Review and approve/return everything from overnight.</li>
   <li><strong>Afternoon block (2:00pm, 15 min):</strong> Second pass for anything that came in during the day.</li>
-  <li><strong>Approval:</strong> Change status to "Approved". Add a thumbs-up reaction to the asset comment.</li>
-  <li><strong>Rejection:</strong> Add a comment with specific feedback. Change status back to "In Edit" or "Draft".</li>
+  <li><strong>Approval:</strong> Move task to "Approved" section. Add a thumbs-up reaction to the asset comment.</li>
+  <li><strong>Rejection:</strong> Add a comment with specific feedback. Move task back to "In Edit" or "Draft" section.</li>
   <li><strong>Batch reels:</strong> After Sunday filming + editing, approve all 21 reels in one 30-minute session (Wed or Thu).</li>
   <li><strong>Goal:</strong> Nothing sits in "In Review" for more than 8 business hours.</li>
 </ol>
@@ -1009,18 +992,18 @@ Workspace: Collective Shift
 <h3>Content Creator SOP (Travis, Sarn, Matt)</h3>
 <div class="card">
 <ol>
-  <li>Check ClickUp every morning. Your "By Person" view shows everything assigned to you.</li>
-  <li>When creating content: update the ClickUp task at every stage (Draft, filming complete, etc.)</li>
+  <li>Check Asana every morning. Your "By Person" view shows everything assigned to you.</li>
+  <li>When creating content: move the Asana task to the correct section at every stage (Draft, In Edit, etc.)</li>
   <li>All raw footage goes to Google Drive. Link it in the task.</li>
-  <li>Write your own caption first. ClawBot can polish it, but your expertise must be the foundation.</li>
-  <li>Move to "In Review" when you believe it is ready. Do not send half-finished work for review.</li>
+  <li>Write your own caption first. Jarvis can polish it, but your expertise must be the foundation.</li>
+  <li>Move to "In Review" section when you believe it is ready. Do not send half-finished work for review.</li>
   <li>Respond to review feedback within 4 hours (business hours).</li>
 </ol>
 </div>
 
 <h3>Ben's Voice Checklist</h3>
 <div class="callout">
-<strong>For anyone writing in Ben's voice (including ClawBot):</strong>
+<strong>For anyone writing in Ben's voice (including Jarvis):</strong>
 </div>
 <div class="do-dont">
 <div class="do-col">
@@ -1073,7 +1056,7 @@ Workspace: Collective Shift
 <tr><th>Day</th><th>Activity</th><th>Owner</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Day 1</strong></td><td>ClickUp account created, added to Content Production space. Read Brand Bible + this document. Watch 10 of Ben's latest reels.</td><td>Alice</td></tr>
+<tr><td><strong>Day 1</strong></td><td>Asana account created, added to Content Calendar project. Read Brand Bible + this document. Watch 10 of Ben's latest reels.</td><td>Alice</td></tr>
 <tr><td><strong>Day 2</strong></td><td>Shadow the role they are replacing. Access to Google Drive, Canva, Customer.io (if relevant). Complete first task as a test.</td><td>Direct manager</td></tr>
 <tr><td><strong>Day 3</strong></td><td>Complete 3 tasks independently. All go through normal review process. Feedback from reviewer + Ben.</td><td>Self + reviewer</td></tr>
 <tr><td><strong>Day 4</strong></td><td>Join Monday standup. Run full day of production independently with check-ins.</td><td>Self</td></tr>
@@ -1082,12 +1065,12 @@ Workspace: Collective Shift
 </table>
 </div>
 
-<h3>Using ClawBot for Content Drafting</h3>
+<h3>Using Jarvis for Content Drafting</h3>
 <div class="card">
-<p><strong>Prompt templates for common content types:</strong></p>
+<p><strong>Prompt templates for common content types (Jarvis posts drafts as Asana comments):</strong></p>
 <div style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 16px; margin: 10px 0; font-size: 13px; font-family: monospace;">
 <strong>Reel Brief:</strong><br>
-"Write a 30-second reel script for Ben Simpson about [TOPIC]. Content pillar: [BUILD/PROTECT/PROOF/YIELD]. Hook must grab attention in the first 2 seconds. Include a ManyChat keyword CTA at the end. Use Ben's voice: direct, educational, no hype. No em dashes. Say 'digital assets' not 'crypto'."
+"Write a 30-second reel script for Ben Simpson about [TOPIC]. Content pillar: [Protect/Strategy/Confidence/Community/Results]. Hook must grab attention in the first 2 seconds. Include a ManyChat keyword CTA at the end. Use Ben's voice: direct, educational, no hype. No em dashes. Say 'digital assets' not 'crypto'."
 </div>
 <div style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 16px; margin: 10px 0; font-size: 13px; font-family: monospace;">
 <strong>Tweet:</strong><br>
@@ -1115,32 +1098,33 @@ Workspace: Collective Shift
 <tr><th>#</th><th>Automation</th><th>Tool</th><th>Setup Time</th></tr>
 </thead>
 <tbody>
-<tr><td>1</td><td>Status to "In Edit" assigns Georgio + notifies</td><td>ClickUp native</td><td>5 min</td></tr>
-<tr><td>2</td><td>Status to "In Review" assigns Ben + notifies</td><td>ClickUp native</td><td>5 min</td></tr>
-<tr><td>3</td><td>Deadline tomorrow + not Approved = notify owner</td><td>ClickUp native</td><td>5 min</td></tr>
-<tr><td>4</td><td>New content request = notify Alice</td><td>ClickUp native</td><td>5 min</td></tr>
-<tr><td>5</td><td>Sunday 7am: create 21 Ben reel tasks from template</td><td>ClickUp recurring</td><td>10 min</td></tr>
-<tr><td>6</td><td>Monday 7am: create 3 EDM tasks for the week</td><td>ClickUp recurring</td><td>10 min</td></tr>
-<tr><td>7</td><td>Published status = add comment "Add performance in 48h"</td><td>ClickUp native</td><td>5 min</td></tr>
-<tr><td>8</td><td>ClickUp "Published" EDM = trigger Customer.io send via Make</td><td>Make.com</td><td>30 min</td></tr>
+<tr><td>1</td><td>Task moved to "In Edit" adds Georgio as follower + notifies</td><td>Asana Rules</td><td>3 min</td></tr>
+<tr><td>2</td><td>Task moved to "In Review" assigns to Ben + notifies</td><td>Asana Rules</td><td>3 min</td></tr>
+<tr><td>3</td><td>Task moved to "Approved" auto-moves to "Scheduled" section</td><td>Asana Rules</td><td>3 min</td></tr>
+<tr><td>4</td><td>Due date tomorrow + not in Approved/Scheduled/Published = comment warning</td><td>Asana Rules</td><td>5 min</td></tr>
+<tr><td>5</td><td>New task added = set Priority to P3 Normal</td><td>Asana Rules</td><td>2 min</td></tr>
+<tr><td>6</td><td>Task moved to "Published" = add comment "Add performance data within 48h"</td><td>Asana Rules</td><td>3 min</td></tr>
+<tr><td>7</td><td>Asana task "Approved" + Content Type = "EDM" triggers Customer.io send via Make</td><td>Make.com</td><td>30 min</td></tr>
+<tr><td>8</td><td>Jarvis auto-creates weekly reel tasks every Sunday at 7am</td><td>Jarvis + Asana API</td><td>10 min (one-time config)</td></tr>
+<tr><td>9</td><td>Jarvis auto-creates 3 EDM tasks every Monday at 7am</td><td>Jarvis + Asana API</td><td>5 min (one-time config)</td></tr>
 </tbody>
 </table>
 </div>
-<p style="font-size:13px; color: var(--cs-gray);">Total setup time: ~75 minutes. All automations operational by end of day one.</p>
+<p style="font-size:13px; color: var(--cs-gray);">Total setup time: ~65 minutes. All automations operational by end of day one. Asana Starter includes up to 20 rules per project.</p>
 
 <h3>Integration Recipes (Zapier / Make)</h3>
 <div class="card-grid">
 <div class="card">
-  <h4 style="margin-top:0;">ClickUp to Customer.io</h4>
-  <p style="font-size:13px;"><strong>Trigger:</strong> ClickUp task status changes to "Approved" where Content Type = "EDM"<br>
+  <h4 style="margin-top:0;">Asana to Customer.io</h4>
+  <p style="font-size:13px;"><strong>Trigger:</strong> Asana task moved to "Approved" section where Content Type = "EDM"<br>
   <strong>Action:</strong> Update Customer.io campaign draft with subject line and body from task description<br>
-  <strong>Second action:</strong> Schedule campaign for the time in the "Scheduled Time" field<br>
+  <strong>Second action:</strong> Schedule campaign for the time in the Publish Date field<br>
   <strong>Tool:</strong> Make.com (better Customer.io module than Zapier)</p>
 </div>
 <div class="card">
-  <h4 style="margin-top:0;">ClickUp to Google Sheets (Reporting)</h4>
-  <p style="font-size:13px;"><strong>Trigger:</strong> ClickUp task status changes to "Published"<br>
-  <strong>Action:</strong> Add row to "Content Tracker" Google Sheet with: title, type, platform, pillar, publish date, owner<br>
+  <h4 style="margin-top:0;">Asana to Google Sheets (Reporting)</h4>
+  <p style="font-size:13px;"><strong>Trigger:</strong> Asana task moved to "Published" section<br>
+  <strong>Action:</strong> Add row to "Content Tracker" Google Sheet with: title, type, platform, pillar, publish date, person<br>
   <strong>Tool:</strong> Zapier or Make</p>
 </div>
 <div class="card">
@@ -1150,26 +1134,11 @@ Workspace: Collective Shift
   <strong>Tool:</strong> Make.com or ManyChat native webhook</p>
 </div>
 <div class="card">
-  <h4 style="margin-top:0;">Weekly Report Auto-Generate</h4>
-  <p style="font-size:13px;"><strong>Trigger:</strong> Every Friday at 4pm AEST (scheduled)<br>
-  <strong>Action:</strong> Pull ClickUp tasks published this week, compile into summary, post to Slack/Discord #content-ops<br>
-  <strong>Tool:</strong> Make.com + ClickUp API</p>
+  <h4 style="margin-top:0;">Jarvis Weekly Report</h4>
+  <p style="font-size:13px;"><strong>Trigger:</strong> Every Friday at 4pm AEST (Jarvis cron)<br>
+  <strong>Action:</strong> Query Asana API for tasks published this week, compile into summary, post to Discord #content-ops<br>
+  <strong>Tool:</strong> Jarvis + Asana API (no Zapier needed)</p>
 </div>
-</div>
-
-<h3>Reporting Dashboard</h3>
-<div class="card">
-<p><strong>Build a ClickUp Dashboard called "Content Performance" with these widgets:</strong></p>
-<ul>
-  <li><strong>Tasks by Status (pie chart):</strong> See pipeline health at a glance</li>
-  <li><strong>Published This Week (number):</strong> Target = 61</li>
-  <li><strong>Published by Platform (bar chart):</strong> Instagram, YouTube, X, LinkedIn, Email</li>
-  <li><strong>Published by Pillar (bar chart):</strong> Verify 40/25/25/10 distribution</li>
-  <li><strong>Overdue Tasks (list):</strong> Anything past due date and not Published</li>
-  <li><strong>By Person (bar chart):</strong> Workload distribution</li>
-  <li><strong>Approval Turnaround (calculated):</strong> Average time from "In Review" to "Approved"</li>
-</ul>
-<p>Review this dashboard every Monday standup. Screenshot and share in Slack weekly.</p>
 </div>
 
 <h3>Scaling from 61 to 120+ Pieces/Week</h3>
@@ -1179,7 +1148,7 @@ Workspace: Collective Shift
 <tr><th>Phase</th><th>Output</th><th>What Changes</th><th>Trigger to Start</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Phase 1 (Now)</strong></td><td>61/week</td><td>Current team, ClickUp, manual posting</td><td>You are here</td></tr>
+<tr><td><strong>Phase 1 (Now)</strong></td><td>61/week</td><td>Current team, Asana, manual posting, Jarvis managing the board</td><td>You are here</td></tr>
 <tr><td><strong>Phase 2 (+30%)</strong></td><td>~80/week</td><td>Add scheduling tool (Later/Buffer). Add Matt's Twitter (3/week). Add podcast clips (6/week).</td><td>Team consistently hits 61/week for 4 weeks</td></tr>
 <tr><td><strong>Phase 3 (+60%)</strong></td><td>~100/week</td><td>Hire YouTube long-form editor. Add SEO articles (2/week). Add Facebook cross-posts. Travis increases to 2 reels/day.</td><td>YouTube editor hired + onboarded</td></tr>
 <tr><td><strong>Phase 4 (+100%)</strong></td><td>~120/week</td><td>Hire short-form/reels editor. Double reel output. Add podcast (2 episodes/week). LinkedIn for company page (daily).</td><td>Revenue growth supports second editor hire</td></tr>
@@ -1189,14 +1158,14 @@ Workspace: Collective Shift
 
 <h3>When to Add Scheduling Tools</h3>
 <div class="card">
-<p><strong>Not yet.</strong> At 61 pieces/week with a small team, adding a scheduling tool creates another system to learn and maintain. The team should first prove it can consistently hit targets with ClickUp + manual posting for 4 weeks.</p>
+<p><strong>Not yet.</strong> At 61 pieces/week with a small team, adding a scheduling tool creates another system to learn and maintain. The team should first prove it can consistently hit targets with Asana + manual posting for 4 weeks.</p>
 <p><strong>When to pull the trigger:</strong></p>
 <ul>
   <li>Team consistently hits 61/week for 4+ consecutive weeks</li>
   <li>Manual posting becomes the bottleneck (missed times, human error)</li>
   <li>Phase 2 scaling begins (80+ pieces/week)</li>
 </ul>
-<p><strong>Recommended:</strong> Later (Instagram/TikTok/LinkedIn native scheduling, $40/mo for 6 social profiles) or Buffer ($60/mo for team plan). Both integrate with ClickUp via Zapier.</p>
+<p><strong>Recommended:</strong> Later (Instagram/TikTok/LinkedIn native scheduling, $40/mo for 6 social profiles) or Buffer ($60/mo for team plan). Both integrate with Asana via Zapier.</p>
 </div>
 
 <h3>When to Hire Next</h3>
@@ -1221,11 +1190,11 @@ Workspace: Collective Shift
 <tr><th>Item</th><th>Phase 1 (Now)</th><th>Phase 2</th><th>Phase 3</th><th>Phase 4</th></tr>
 </thead>
 <tbody>
-<tr><td>ClickUp</td><td>$96/mo</td><td>$96/mo</td><td>$120/mo (10 users)</td><td>$144/mo (12 users)</td></tr>
+<tr><td>Asana</td><td>$88/mo</td><td>$88/mo</td><td>$110/mo (10 users)</td><td>$132/mo (12 users)</td></tr>
 <tr><td>Scheduling Tool</td><td>$0</td><td>$40-60/mo</td><td>$40-60/mo</td><td>$60-80/mo</td></tr>
 <tr><td>Make.com</td><td>$9/mo (Core)</td><td>$16/mo (Pro)</td><td>$16/mo</td><td>$29/mo</td></tr>
 <tr><td>Additional Editors</td><td>$0</td><td>$0</td><td>$3-5K/mo</td><td>$5-9K/mo</td></tr>
-<tr class="table-highlight"><td><strong>Total Tools</strong></td><td><strong>$105/mo</strong></td><td><strong>$152-172/mo</strong></td><td><strong>$3,176-5,196/mo</strong></td><td><strong>$5,233-9,253/mo</strong></td></tr>
+<tr class="table-highlight"><td><strong>Total Tools</strong></td><td><strong>$97/mo</strong></td><td><strong>$144-164/mo</strong></td><td><strong>$3,166-5,186/mo</strong></td><td><strong>$5,221-9,241/mo</strong></td></tr>
 </tbody>
 </table>
 </div>
@@ -1240,8 +1209,8 @@ Workspace: Collective Shift
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; align-items: center;">
   <div style="background: rgba(252,92,3,0.1); border: 2px solid var(--cs-orange); border-radius: 10px; padding: 12px 20px; text-align: center;">
     <div style="font-size: 20px;">💡</div>
-    <div style="font-size: 12px; font-weight: 700;">IDEATION</div>
-    <div style="font-size: 10px; color: var(--cs-gray);">ClawBot briefs<br>Monday standup</div>
+    <div style="font-size: 12px; font-weight: 700;">IDEA</div>
+    <div style="font-size: 10px; color: var(--cs-gray);">Jarvis creates tasks<br>Monday standup</div>
   </div>
   <div style="color: var(--cs-orange); font-size: 24px; padding: 0 4px;">&#8594;</div>
   <div style="background: rgba(36,4,252,0.1); border: 2px solid var(--cs-blue); border-radius: 10px; padding: 12px 20px; text-align: center;">
@@ -1252,31 +1221,31 @@ Workspace: Collective Shift
   <div style="color: var(--cs-orange); font-size: 24px; padding: 0 4px;">&#8594;</div>
   <div style="background: rgba(11,244,185,0.1); border: 2px solid var(--cs-teal); border-radius: 10px; padding: 12px 20px; text-align: center;">
     <div style="font-size: 20px;">🎬</div>
-    <div style="font-size: 12px; font-weight: 700;">EDIT</div>
-    <div style="font-size: 10px; color: var(--cs-gray);">Georgio / Editor<br>ClawBot polish</div>
+    <div style="font-size: 12px; font-weight: 700;">IN EDIT</div>
+    <div style="font-size: 10px; color: var(--cs-gray);">Georgio / Editor<br>Jarvis polish</div>
   </div>
   <div style="color: var(--cs-orange); font-size: 24px; padding: 0 4px;">&#8594;</div>
   <div style="background: rgba(168,85,247,0.1); border: 2px solid #A855F7; border-radius: 10px; padding: 12px 20px; text-align: center;">
     <div style="font-size: 20px;">🔍</div>
-    <div style="font-size: 12px; font-weight: 700;">REVIEW</div>
-    <div style="font-size: 10px; color: var(--cs-gray);">Brand scan<br>ClawBot check</div>
+    <div style="font-size: 12px; font-weight: 700;">IN REVIEW</div>
+    <div style="font-size: 10px; color: var(--cs-gray);">Brand scan<br>Jarvis check</div>
   </div>
   <div style="color: var(--cs-orange); font-size: 24px; padding: 0 4px;">&#8594;</div>
   <div style="background: rgba(252,92,3,0.2); border: 2px solid var(--cs-orange); border-radius: 10px; padding: 12px 20px; text-align: center;">
     <div style="font-size: 20px;">✅</div>
-    <div style="font-size: 12px; font-weight: 700;">APPROVE</div>
+    <div style="font-size: 12px; font-weight: 700;">APPROVED</div>
     <div style="font-size: 10px; color: var(--cs-gray);">Ben signs off<br>All content</div>
   </div>
   <div style="color: var(--cs-orange); font-size: 24px; padding: 0 4px;">&#8594;</div>
   <div style="background: rgba(250,204,21,0.1); border: 2px solid #FACC15; border-radius: 10px; padding: 12px 20px; text-align: center;">
     <div style="font-size: 20px;">📅</div>
-    <div style="font-size: 12px; font-weight: 700;">SCHEDULE</div>
+    <div style="font-size: 12px; font-weight: 700;">SCHEDULED</div>
     <div style="font-size: 10px; color: var(--cs-gray);">Time set<br>Queue ready</div>
   </div>
   <div style="color: var(--cs-orange); font-size: 24px; padding: 0 4px;">&#8594;</div>
   <div style="background: rgba(34,197,94,0.1); border: 2px solid #22C55E; border-radius: 10px; padding: 12px 20px; text-align: center;">
     <div style="font-size: 20px;">📊</div>
-    <div style="font-size: 12px; font-weight: 700;">PUBLISH</div>
+    <div style="font-size: 12px; font-weight: 700;">PUBLISHED</div>
     <div style="font-size: 10px; color: var(--cs-gray);">Post + measure<br>Track KPIs</div>
   </div>
 </div>
@@ -1302,25 +1271,25 @@ Workspace: Collective Shift
     <li>Film or review own reel</li>
     <li>3pm: Reel posted</li>
     <li>YouTube days: review edit or film</li>
-    <li>Check ClickUp for feedback</li>
+    <li>Check Asana for feedback</li>
   </ul>
 </div>
 <div class="card">
   <h4 style="margin-top:0;"><span class="role-tag role-editor">Georgio</span> Daily</h4>
   <ul class="checklist">
-    <li>Check "In Edit" queue in ClickUp</li>
+    <li>Check "In Edit" section in Asana</li>
     <li>Edit assigned reels (target: 4-6/day)</li>
     <li>Upload finals to Google Drive</li>
-    <li>Move completed tasks to "In Review"</li>
+    <li>Move completed tasks to "In Review" section</li>
   </ul>
 </div>
 <div class="card">
-  <h4 style="margin-top:0;"><span class="role-tag role-clawbot">ClawBot</span> Daily</h4>
+  <h4 style="margin-top:0;"><span class="role-tag role-jarvis">Jarvis</span> Daily</h4>
   <ul class="checklist">
-    <li>Generate daily tweet + LinkedIn draft</li>
+    <li>Generate daily tweet + LinkedIn draft (posted as Asana comments)</li>
     <li>EDM days: draft email copy</li>
     <li>Run brand compliance scan on review queue</li>
-    <li>Sunday: deliver 21 reel briefs</li>
+    <li>Sunday: create 21 reel tasks with full briefs</li>
   </ul>
 </div>
 </div>
@@ -1334,7 +1303,7 @@ Workspace: Collective Shift
 <tr><th>Time</th><th>Topic</th><th>Owner</th></tr>
 </thead>
 <tbody>
-<tr><td>0-2 min</td><td><strong>Last week's scorecard:</strong> Published count vs 61 target. Top performer. Misses.</td><td>Alice</td></tr>
+<tr><td>0-2 min</td><td><strong>Last week's scorecard:</strong> Published count vs 61 target. Top performer. Misses. (Jarvis pre-generates this)</td><td>Alice</td></tr>
 <tr><td>2-5 min</td><td><strong>YouTube topics:</strong> Confirm this week's 3 videos (Travis, Matt, Sarn)</td><td>Travis</td></tr>
 <tr><td>5-8 min</td><td><strong>Reel themes:</strong> Check pillar balance. Any timely angles?</td><td>Ben</td></tr>
 <tr><td>8-10 min</td><td><strong>EDM topics:</strong> Mon/Wed/Fri emails confirmed</td><td>Ben</td></tr>
@@ -1343,20 +1312,20 @@ Workspace: Collective Shift
 </tbody>
 </table>
 </div>
-<p style="font-size:13px; color: var(--cs-gray); margin-top:12px;"><strong>Output:</strong> All tasks for the week exist in ClickUp with owners and due dates before the meeting ends.</p>
+<p style="font-size:13px; color: var(--cs-gray); margin-top:12px;"><strong>Output:</strong> All tasks for the week confirmed in Asana with owners and due dates before the meeting ends.</p>
 </div>
 
 <h3>Content Status Definitions</h3>
 <div class="table-wrap">
 <table>
 <thead>
-<tr><th>Status</th><th>Color</th><th>Meaning</th><th>Who Owns It</th></tr>
+<tr><th>Status / Section</th><th>Color</th><th>Meaning</th><th>Who Owns It</th></tr>
 </thead>
 <tbody>
-<tr><td><span class="badge badge-gray">Ideation</span></td><td>Gray</td><td>Topic identified, brief not yet written. In the backlog.</td><td>Anyone</td></tr>
+<tr><td><span class="badge badge-gray">Idea</span></td><td>Gray</td><td>Topic identified, brief not yet written. In the backlog.</td><td>Anyone</td></tr>
 <tr><td><span class="badge badge-blue">Draft</span></td><td>Blue</td><td>Being written, filmed, or designed. Creator actively working.</td><td>Creator</td></tr>
-<tr><td><span class="badge badge-teal">In Edit</span></td><td>Teal</td><td>With editor for video editing, design, or copy polish.</td><td>Editor / ClawBot</td></tr>
-<tr><td><span class="badge" style="background:rgba(168,85,247,0.15);color:#A855F7;">In Review</span></td><td>Purple</td><td>Ready for Ben's approval. In his queue.</td><td>Ben</td></tr>
+<tr><td><span class="badge badge-teal">In Edit</span></td><td>Teal</td><td>With editor for video editing, design, or copy polish.</td><td>Editor / Jarvis</td></tr>
+<tr><td><span class="badge badge-purple">In Review</span></td><td>Purple</td><td>Ready for Ben's approval. In his queue.</td><td>Ben</td></tr>
 <tr><td><span class="badge badge-orange">Approved</span></td><td>Orange</td><td>Ben signed off. Ready to schedule/post.</td><td>Poster</td></tr>
 <tr><td><span class="badge" style="background:rgba(250,204,21,0.15);color:#FACC15;">Scheduled</span></td><td>Yellow</td><td>Post time set. Waiting to go live.</td><td>Poster</td></tr>
 <tr><td><span class="badge badge-green">Published</span></td><td>Green</td><td>Live. Performance tracking begins.</td><td>Team</td></tr>
@@ -1372,13 +1341,13 @@ Workspace: Collective Shift
 </thead>
 <tbody>
 <tr><td>Content sits in "In Review" for days</td><td>Ben reviews twice daily (9:30am + 2pm). Nothing stays more than 8 business hours.</td></tr>
-<tr><td>Pillar distribution drifts (too much BUILD, not enough PROOF)</td><td>Check "By Pillar" view every Monday. Adjust next week's plan.</td></tr>
-<tr><td>Sunday batch filming runs long</td><td>Cap at 21 reels. ClawBot delivers briefs by 8am. Ben starts filming by 10am sharp.</td></tr>
+<tr><td>Pillar distribution drifts</td><td>Check "By Pillar" view in Asana every Monday. Adjust next week's plan.</td></tr>
+<tr><td>Sunday batch filming runs long</td><td>Cap at 21 reels. Jarvis delivers briefs as Asana tasks by 8am. Ben starts filming by 10am sharp.</td></tr>
 <tr><td>Reels not cross-posted to TikTok/Shorts</td><td>Subtask on every reel template: "Cross-post to TikTok + Shorts." Cannot be marked done without it.</td></tr>
 <tr><td>Missed EDM send time</td><td>Make.com automation triggers Customer.io. If automation fails, Alice is the backup poster.</td></tr>
 <tr><td>Feedback is vague ("make it better")</td><td>Comment guidelines: be specific. If you cannot articulate the fix, jump on a 5-min call.</td></tr>
 <tr><td>New hire takes too long to ramp</td><td>5-day onboarding plan above. Day 3 they produce independently. Day 5 they are fully operational.</td></tr>
-<tr><td>Tool fatigue (too many platforms)</td><td>Two tools only: ClickUp (production) + Notion (knowledge). Everything else is a posting destination, not a workflow tool.</td></tr>
+<tr><td>Tool fatigue (too many platforms)</td><td>Two tools only: Asana (production) + Notion (knowledge). Everything else is a posting destination, not a workflow tool.</td></tr>
 </tbody>
 </table>
 </div>
@@ -1388,12 +1357,12 @@ Workspace: Collective Shift
 <div class="do-col">
   <h4>&#10003; Do This</h4>
   <ul>
-    <li>Update ClickUp status at every stage change</li>
-    <li>All feedback as ClickUp comments (not Slack DMs)</li>
+    <li>Move tasks between Asana sections at every stage change</li>
+    <li>All feedback as Asana comments (not Slack DMs)</li>
     <li>Use templates for every new task</li>
     <li>Check the approval queue twice daily</li>
     <li>Film in batches (Sunday for reels, weekly for YouTube)</li>
-    <li>Let ClawBot draft first, then add your voice</li>
+    <li>Let Jarvis draft first, then add your voice</li>
     <li>Track performance 48 hours after publish</li>
     <li>Plan 2 weeks ahead, execute 1 week at a time</li>
   </ul>
@@ -1404,7 +1373,7 @@ Workspace: Collective Shift
     <li>Request content via Slack messages or verbal asks</li>
     <li>Skip the review stage "because it is urgent"</li>
     <li>Leave tasks in Draft for more than 48 hours</li>
-    <li>Approve your own content (even Ben gets ClawBot scan first)</li>
+    <li>Approve your own content (even Ben gets Jarvis scan first)</li>
     <li>Post without checking ManyChat keyword is set</li>
     <li>Use scheduling tools before the team can hit 61/week manually</li>
     <li>Add new platforms before mastering current ones</li>
@@ -1412,28 +1381,194 @@ Workspace: Collective Shift
   </ul>
 </div>
 </div>
+</section>
 
-<h3>Emergency Content Protocol</h3>
-<div class="card" style="border-left: 4px solid #EF4444;">
-<p style="font-weight:700; color: #EF4444; margin-bottom:8px;">For market crashes, regulatory news, major hacks, or breaking events:</p>
+<!-- SECTION 9: JARVIS + ASANA API -->
+<section id="jarvis">
+<h2><span class="section-num">🤖</span> Jarvis + Asana API Management</h2>
+
+<p class="lead">Jarvis connects directly to the Asana API to manage the entire content board. No manual data entry. No copy-pasting. The AI runs the production engine while the team focuses on creating.</p>
+
+<h3>What Jarvis Can Do via Asana API</h3>
+<div class="card-grid">
+<div class="card">
+  <h4 style="margin-top:0; color: #FACC15;">Create Tasks</h4>
+  <p style="font-size:13px;">Batch-create 100+ tasks from the 90-day content calendar. Each task includes title, description, custom fields (type, pillar, platform, person), subtasks, and publish date. One command populates a month of content.</p>
+</div>
+<div class="card">
+  <h4 style="margin-top:0; color: #FACC15;">Update Statuses</h4>
+  <p style="font-size:13px;">Move tasks between sections (Idea, Draft, In Edit, In Review, Approved, Scheduled, Published) and update the Status custom field to match. Keep the board current without manual dragging.</p>
+</div>
+<div class="card">
+  <h4 style="margin-top:0; color: #FACC15;">Add Draft Copy</h4>
+  <p style="font-size:13px;">Post AI-generated first drafts as Asana comments on tasks. Tweets, LinkedIn posts, EDM copy, reel scripts, and captions. The creator opens the task and finds a ready-to-edit draft waiting.</p>
+</div>
+<div class="card">
+  <h4 style="margin-top:0; color: #FACC15;">Weekly Reports</h4>
+  <p style="font-size:13px;">Query all tasks published in the past 7 days. Count by platform, pillar, and person. Compare to the 61/week target. Generate a summary and post to Discord or as an Asana project status update.</p>
+</div>
+<div class="card">
+  <h4 style="margin-top:0; color: #FACC15;">Auto-Assign</h4>
+  <p style="font-size:13px;">When creating tasks, Jarvis assigns them based on content type rules. Reels go to Ben or Travis. YouTube goes to Matt/Travis/Sarn. EDMs go to Jarvis (draft) then Ben (approve). Carousels go to Collaborative.</p>
+</div>
+<div class="card">
+  <h4 style="margin-top:0; color: #FACC15;">Brand Compliance</h4>
+  <p style="font-size:13px;">Scan task descriptions and comments for banned words ("crypto", em dashes, hype language). Flag issues as comments before Ben reviews. Acts as an automated pre-review layer.</p>
+</div>
+</div>
+
+<h3>Setup: Connect Jarvis to Asana</h3>
+<div class="card" style="border-left: 4px solid #FACC15;">
+<p><strong>Step 1: Generate a Personal Access Token (PAT)</strong></p>
 <ol>
-  <li><strong>Ben triggers.</strong> No one else decides to go to emergency mode.</li>
-  <li><strong>ClawBot drafts</strong> a take within 15 minutes.</li>
-  <li><strong>Ben edits + approves</strong> in a single pass (5-10 minutes).</li>
-  <li><strong>Post order:</strong> X/Twitter (fastest) then Instagram Story then Reel (if warranted).</li>
-  <li><strong>ClickUp:</strong> Create task, status = Published, tag = Emergency.</li>
-  <li><strong>Optional:</strong> Same-day EDM if Ben decides the event warrants it.</li>
-  <li><strong>Rule:</strong> Speed does not override quality. Voice and brand checks still apply.</li>
+  <li>Go to <strong>https://app.asana.com/0/developer-console</strong></li>
+  <li>Click "Create new token"</li>
+  <li>Name it "Jarvis Bot" (or "ClawBot")</li>
+  <li>Copy the token. Store it securely (1Password or environment variable).</li>
+  <li>This token gives Jarvis read/write access to all projects in the workspace.</li>
+</ol>
+<p style="margin-top:16px;"><strong>Step 2: Find Your Project GID</strong></p>
+<ol>
+  <li>Open the Content Calendar project in Asana</li>
+  <li>Look at the URL: <code style="color: var(--cs-teal);">https://app.asana.com/0/<strong>PROJECT_GID</strong>/...</code></li>
+  <li>The number after /0/ is the project GID. Copy it.</li>
+  <li>Do the same for Email Production and YouTube Pipeline projects.</li>
+</ol>
+<p style="margin-top:16px;"><strong>Step 3: Find Section GIDs</strong></p>
+<ol>
+  <li>Use the API to list sections: <code style="color: var(--cs-teal);">GET /projects/{project_gid}/sections</code></li>
+  <li>Note the GID for each section (Idea, Draft, In Edit, In Review, Approved, Scheduled, Published)</li>
+  <li>Jarvis uses these GIDs to move tasks between sections.</li>
+</ol>
+<p style="margin-top:16px;"><strong>Step 4: Find Custom Field GIDs</strong></p>
+<ol>
+  <li>Use the API to list custom fields: <code style="color: var(--cs-teal);">GET /projects/{project_gid}/custom_field_settings</code></li>
+  <li>Note the GID for each custom field and its enum option GIDs (for dropdown values).</li>
+  <li>Jarvis uses these to set Content Type, Pillar, Platform, Person, etc. on every task.</li>
 </ol>
 </div>
 
-<div style="margin-top: 60px; padding: 32px; background: var(--cs-card); border: 1px solid var(--cs-border); border-radius: 12px; text-align: center;">
-  <p style="font-size: 20px; font-weight: 800; margin-bottom: 8px; max-width: none;">Ready to Build?</p>
-  <p style="font-size: 14px; color: var(--cs-gray); max-width: none;">Sign up for ClickUp Business. Follow the setup in Section 2. Create templates from Section 3. Run your first Monday standup next week. The system works when the team works the system.</p>
-  <p style="font-size: 12px; color: var(--cs-gray); margin-top: 16px; max-width: none;">Collective Shift Content Ops v1.0 | April 2026</p>
+<h3>API Examples</h3>
+
+<h4>Create a Task</h4>
+<div class="code-block"><span class="comment"># Create a new reel task in the Content Calendar project</span>
+curl -X POST https://app.asana.com/api/1.0/tasks \
+  -H "Authorization: Bearer {ASANA_PAT}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    <span class="key">"data"</span>: {
+      <span class="key">"name"</span>: <span class="str">"Reel: Why 95% of investors sell too early"</span>,
+      <span class="key">"projects"</span>: [<span class="str">"{PROJECT_GID}"</span>],
+      <span class="key">"memberships"</span>: [{
+        <span class="key">"project"</span>: <span class="str">"{PROJECT_GID}"</span>,
+        <span class="key">"section"</span>: <span class="str">"{IDEA_SECTION_GID}"</span>
+      }],
+      <span class="key">"due_on"</span>: <span class="str">"2026-04-14"</span>,
+      <span class="key">"notes"</span>: <span class="str">"Hook: The #1 reason investors lose money...\n\nScript outline:\n1. Open with stat\n2. Explain the psychology\n3. Give the framework\n4. CTA: Comment BLUEPRINT"</span>,
+      <span class="key">"custom_fields"</span>: {
+        <span class="key">"{CONTENT_TYPE_GID}"</span>: <span class="str">"{REEL_OPTION_GID}"</span>,
+        <span class="key">"{PILLAR_GID}"</span>: <span class="str">"{STRATEGY_OPTION_GID}"</span>,
+        <span class="key">"{PLATFORM_GID}"</span>: <span class="str">"{INSTAGRAM_OPTION_GID}"</span>,
+        <span class="key">"{PERSON_GID}"</span>: <span class="str">"{BEN_OPTION_GID}"</span>,
+        <span class="key">"{PRIORITY_GID}"</span>: <span class="str">"{P3_OPTION_GID}"</span>,
+        <span class="key">"{MANYCHAT_GID}"</span>: <span class="str">"BLUEPRINT"</span>
+      }
+    }
+  }'</div>
+
+<h4>Move a Task to a Different Section</h4>
+<div class="code-block"><span class="comment"># Move task from "In Review" to "Approved" section</span>
+curl -X POST https://app.asana.com/api/1.0/sections/{APPROVED_SECTION_GID}/addTask \
+  -H "Authorization: Bearer {ASANA_PAT}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    <span class="key">"data"</span>: {
+      <span class="key">"task"</span>: <span class="str">"{TASK_GID}"</span>
+    }
+  }'</div>
+
+<h4>Add a Comment (Draft Copy)</h4>
+<div class="code-block"><span class="comment"># Post AI-generated draft copy as a comment on the task</span>
+curl -X POST https://app.asana.com/api/1.0/tasks/{TASK_GID}/stories \
+  -H "Authorization: Bearer {ASANA_PAT}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    <span class="key">"data"</span>: {
+      <span class="key">"text"</span>: <span class="str">"DRAFT v1 (Jarvis):\n\nMost investors sell too early.\n\nNot because they lack conviction. Because they lack a framework.\n\nHere is what I teach every Collective Shift member..."</span>
+    }
+  }'</div>
+
+<h4>Query Published Tasks (Weekly Report)</h4>
+<div class="code-block"><span class="comment"># Get all tasks in the "Published" section for reporting</span>
+curl "https://app.asana.com/api/1.0/sections/{PUBLISHED_SECTION_GID}/tasks?opt_fields=name,custom_fields,completed_at,due_on" \
+  -H "Authorization: Bearer {ASANA_PAT}"</div>
+
+<h4>Batch Create (90-Day Calendar)</h4>
+<div class="code-block"><span class="comment"># Jarvis runs a loop to create all tasks for the 90-day calendar</span>
+<span class="comment"># Each task gets: title, description, custom fields, section, due date</span>
+<span class="comment"># Rate limit: Asana allows ~150 requests/minute</span>
+<span class="comment"># 103 tasks = under 1 minute to populate the full calendar</span>
+<span class="comment"># Jarvis handles this automatically with built-in rate limiting</span>
+
+for each content_item in 90_day_calendar:
+    POST /tasks with:
+      - name: content_item.title
+      - due_on: content_item.publish_date
+      - notes: content_item.brief
+      - custom_fields: {type, pillar, platform, person, priority}
+      - section: Idea section GID
+    
+    <span class="comment"># Add subtasks from the template</span>
+    for each subtask in content_item.template.subtasks:
+        POST /tasks/{task_gid}/subtasks with:
+          - name: subtask.name</div>
+
+<h3>Zapier / Make Alternative</h3>
+<div class="card">
+<p>If you prefer not to use the Asana API directly, you can achieve most of the same functionality with Zapier or Make.com:</p>
+<ul>
+  <li><strong>Zapier:</strong> "Create Task in Asana" action. Supports custom fields, sections, assignees. Good for simple automations (e.g., form submission creates task).</li>
+  <li><strong>Make.com:</strong> More powerful Asana module. Supports batch operations, custom field updates, section moves, and comment creation. Better for complex workflows.</li>
+  <li><strong>Limitation:</strong> External tools add latency and cost. The direct API approach via Jarvis is faster, free, and more flexible.</li>
+</ul>
+<p style="font-size:13px; color: var(--cs-gray);">Recommendation: Use the Asana API via Jarvis for everything. Use Make.com only for the Customer.io integration (where you need webhook triggers that Jarvis does not run 24/7).</p>
 </div>
 
+<h3>Jarvis Weekly Workflow</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>When</th><th>What Jarvis Does</th><th>How</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Sunday 7am</strong></td><td>Create 21 reel tasks for Ben with full briefs, hooks, and scripts</td><td>Asana API: batch task creation from reel brief generator</td></tr>
+<tr><td><strong>Monday 7am</strong></td><td>Create 3 EDM tasks (Mon/Wed/Fri) with draft copy as comments</td><td>Asana API: task creation + comment with draft</td></tr>
+<tr><td><strong>Monday 8am</strong></td><td>Generate weekly report (last week's published count, platform breakdown, pillar balance)</td><td>Asana API: query Published section + compile summary</td></tr>
+<tr><td><strong>Daily 6am</strong></td><td>Draft daily tweet + LinkedIn post as comments on today's tasks</td><td>Asana API: find today's tasks by due date, add comment</td></tr>
+<tr><td><strong>Daily 8am</strong></td><td>Brand compliance scan on all tasks in "In Review" section</td><td>Asana API: read task descriptions/comments, flag issues</td></tr>
+<tr><td><strong>Friday 4pm</strong></td><td>Generate end-of-week content performance report</td><td>Asana API: query Published tasks, post to Discord</td></tr>
+<tr><td><strong>Monthly</strong></td><td>Populate next month's content calendar (batch create tasks)</td><td>Asana API: batch creation from 90-day calendar</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Security & Access</h3>
+<div class="card">
+<ul>
+  <li><strong>PAT Scope:</strong> The Personal Access Token has access to everything in the workspace. Use a dedicated Asana account for Jarvis if you want to limit scope.</li>
+  <li><strong>Token Storage:</strong> Store the PAT in an environment variable (<code style="color: var(--cs-teal);">ASANA_PAT</code>) or in 1Password. Never commit it to code.</li>
+  <li><strong>Rate Limits:</strong> Asana allows ~150 requests per minute. Jarvis handles rate limiting automatically. Batch operations (90-day calendar) complete in under 2 minutes.</li>
+  <li><strong>Audit Trail:</strong> All Jarvis actions show up in Asana as created/modified by the PAT owner. Full visibility for the team.</li>
+</ul>
+</div>
 </section>
+
+<!-- FOOTER -->
+<div style="margin-top: 60px; padding: 32px; background: var(--cs-card); border: 1px solid var(--cs-border); border-radius: 12px; text-align: center;">
+  <p style="font-size: 20px; font-weight: 800; margin-bottom: 8px; max-width: none;">Ready to Build?</p>
+  <p style="font-size: 14px; color: var(--cs-gray); max-width: none;">Open Asana. Create the Content Calendar project. Add the custom fields from Section 2. Set up the 6 rules. Let Jarvis populate the 90-day calendar. Run your first Monday standup next week. The system works when the team works the system.</p>
+  <p style="font-size: 12px; color: var(--cs-gray); margin-top: 16px; max-width: none;">Collective Shift Content Ops v2.0 | April 2026 | Built on Asana + Jarvis</p>
+</div>
 
 </main>
 
