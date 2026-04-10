@@ -1,0 +1,2516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collective Shift - Social Media Content System</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cs-dark: #0D0B14;
+  --cs-dark-alt: #1B1925;
+  --cs-orange: #FC5C03;
+  --cs-teal: #0BF4B9;
+  --cs-blue: #2404FC;
+  --cs-white: #FFFFFF;
+  --cs-light-gray: #A0A0B0;
+  --cs-card-bg: #1B1925;
+  --cs-card-border: #2a2838;
+  --cs-green: #22c55e;
+  --cs-red: #ef4444;
+  --sidebar-width: 280px;
+  --content-max: 840px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--cs-dark);
+  color: var(--cs-white);
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: var(--cs-dark-alt);
+  border-right: 1px solid var(--cs-card-border);
+  overflow-y: auto;
+  z-index: 100;
+  padding: 24px 0;
+  transition: transform 0.3s ease;
+}
+.sidebar-logo {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid var(--cs-card-border);
+  margin-bottom: 16px;
+}
+.sidebar-logo h2 {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--cs-orange);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+.sidebar-logo p {
+  font-size: 11px;
+  color: var(--cs-light-gray);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.sidebar nav { padding: 0 12px; }
+.sidebar nav a {
+  display: block;
+  padding: 8px 12px;
+  color: var(--cs-light-gray);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: all 0.2s;
+  margin-bottom: 2px;
+}
+.sidebar nav a:hover { color: var(--cs-white); background: rgba(252,92,3,0.1); }
+.sidebar nav a.active { color: var(--cs-orange); background: rgba(252,92,3,0.12); font-weight: 600; }
+.sidebar nav .nav-section {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--cs-light-gray);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  padding: 16px 12px 6px;
+  opacity: 0.6;
+}
+.sidebar nav a.sub {
+  padding-left: 24px;
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 0.85;
+}
+
+/* HAMBURGER */
+.hamburger {
+  display: none;
+  position: fixed;
+  top: 16px; left: 16px;
+  z-index: 200;
+  width: 40px; height: 40px;
+  background: var(--cs-dark-alt);
+  border: 1px solid var(--cs-card-border);
+  border-radius: 8px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+}
+.hamburger span {
+  display: block;
+  width: 20px; height: 2px;
+  background: var(--cs-white);
+  transition: all 0.3s;
+}
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 90;
+}
+
+/* MAIN CONTENT */
+.main {
+  margin-left: var(--sidebar-width);
+  padding: 48px 48px 120px;
+}
+.content-wrap {
+  max-width: var(--content-max);
+  margin: 0 auto;
+}
+
+/* TYPOGRAPHY */
+h1 {
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  color: var(--cs-white);
+}
+h1 .accent { color: var(--cs-orange); }
+h2 {
+  font-size: 28px;
+  font-weight: 800;
+  margin-top: 64px;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--cs-orange);
+  color: var(--cs-white);
+}
+h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 40px;
+  margin-bottom: 16px;
+  color: var(--cs-teal);
+}
+h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 24px;
+  margin-bottom: 8px;
+  color: var(--cs-white);
+}
+p { margin-bottom: 16px; color: #d0d0dc; }
+strong { color: var(--cs-white); font-weight: 600; }
+ul, ol { margin-bottom: 16px; padding-left: 20px; color: #d0d0dc; }
+li { margin-bottom: 6px; }
+.subtitle {
+  font-size: 14px;
+  color: var(--cs-light-gray);
+  margin-bottom: 40px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* EXECUTIVE SUMMARY */
+.exec-summary {
+  background: linear-gradient(135deg, rgba(252,92,3,0.12), rgba(36,4,252,0.08));
+  border: 1px solid rgba(252,92,3,0.3);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 48px;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #e0e0ec;
+}
+
+/* STAT GRID */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.stat-card {
+  background: var(--cs-card-bg);
+  border: 1px solid var(--cs-card-border);
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+}
+.stat-card .number {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--cs-orange);
+}
+.stat-card .label {
+  font-size: 12px;
+  color: var(--cs-light-gray);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* PILLAR BADGES */
+.pillar-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+.pillar-protect { background: rgba(239,68,68,0.2); color: #f87171; }
+.pillar-strategy { background: rgba(11,244,185,0.2); color: #0BF4B9; }
+.pillar-confidence { background: rgba(252,92,3,0.2); color: #FC5C03; }
+.pillar-community { background: rgba(36,4,252,0.2); color: #818cf8; }
+.pillar-results { background: rgba(34,197,94,0.2); color: #22c55e; }
+
+/* TABLES */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+thead th {
+  background: var(--cs-dark-alt);
+  color: var(--cs-orange);
+  font-weight: 700;
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  border-bottom: 2px solid var(--cs-card-border);
+}
+tbody td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--cs-card-border);
+  color: #d0d0dc;
+}
+tbody tr:hover { background: rgba(252,92,3,0.04); }
+tbody tr:nth-child(even) { background: rgba(27,25,37,0.5); }
+
+/* CONTENT CARDS */
+.concept-card {
+  background: var(--cs-card-bg);
+  border: 1px solid var(--cs-card-border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+.concept-card:hover { border-color: var(--cs-orange); }
+.concept-card .card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.concept-card .card-id {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--cs-orange);
+  opacity: 0.7;
+  white-space: nowrap;
+}
+.concept-card .card-hook {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--cs-white);
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+.concept-card .card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.concept-card .meta-tag {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.06);
+  color: var(--cs-light-gray);
+  font-weight: 500;
+}
+.concept-card .card-body {
+  font-size: 14px;
+  color: #b0b0c0;
+  line-height: 1.7;
+}
+.concept-card .card-body p { margin-bottom: 8px; }
+.concept-card .card-cta {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(252,92,3,0.1);
+  border: 1px solid rgba(252,92,3,0.2);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--cs-orange);
+}
+.concept-card .card-cta strong { color: var(--cs-orange); }
+.concept-card .card-expand {
+  display: none;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--cs-card-border);
+}
+.concept-card.expanded .card-expand { display: block; }
+.expand-btn {
+  background: none;
+  border: 1px solid var(--cs-card-border);
+  color: var(--cs-light-gray);
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 8px;
+  font-family: inherit;
+}
+.expand-btn:hover { border-color: var(--cs-orange); color: var(--cs-orange); }
+
+/* VIRAL POTENTIAL STARS */
+.viral-rating {
+  display: inline-flex;
+  gap: 2px;
+}
+.viral-rating .star {
+  width: 14px; height: 14px;
+  display: inline-block;
+  background: rgba(252,92,3,0.2);
+  border-radius: 2px;
+}
+.viral-rating .star.filled { background: var(--cs-orange); }
+
+/* DO THIS / NOT THAT */
+.do-dont-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.do-col, .dont-col {
+  border-radius: 10px;
+  padding: 20px;
+}
+.do-col {
+  background: rgba(34,197,94,0.08);
+  border: 1px solid rgba(34,197,94,0.25);
+}
+.dont-col {
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.25);
+}
+.do-col h4 { color: var(--cs-green); margin-top: 0; }
+.dont-col h4 { color: var(--cs-red); margin-top: 0; }
+.do-col li { color: #a5d6b0; }
+.dont-col li { color: #e8a0a0; }
+
+/* HOOK TYPE BADGES */
+.hook-type {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.hook-contrarian { background: rgba(239,68,68,0.2); color: #f87171; }
+.hook-curiosity { background: rgba(252,92,3,0.2); color: #fb923c; }
+.hook-labeling { background: rgba(168,85,247,0.2); color: #c084fc; }
+.hook-reframe { background: rgba(11,244,185,0.2); color: #0BF4B9; }
+.hook-pattern { background: rgba(36,4,252,0.2); color: #818cf8; }
+
+/* CALENDAR GRID */
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.cal-day {
+  background: var(--cs-card-bg);
+  border: 1px solid var(--cs-card-border);
+  border-radius: 8px;
+  padding: 12px;
+  min-height: 120px;
+}
+.cal-day .day-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--cs-orange);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.cal-day .cal-item {
+  font-size: 11px;
+  color: var(--cs-light-gray);
+  margin-bottom: 4px;
+  padding-left: 8px;
+  border-left: 2px solid var(--cs-card-border);
+}
+
+/* FILTER CONTROLS */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: var(--cs-card-bg);
+  border-radius: 10px;
+  border: 1px solid var(--cs-card-border);
+}
+.filter-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--cs-card-border);
+  border-radius: 100px;
+  background: transparent;
+  color: var(--cs-light-gray);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.filter-btn:hover { border-color: var(--cs-orange); color: var(--cs-white); }
+.filter-btn.active { background: var(--cs-orange); color: var(--cs-white); border-color: var(--cs-orange); }
+
+/* SEARCH */
+.search-box {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--cs-card-bg);
+  border: 1px solid var(--cs-card-border);
+  border-radius: 8px;
+  color: var(--cs-white);
+  font-size: 14px;
+  font-family: inherit;
+  margin-bottom: 16px;
+}
+.search-box::placeholder { color: var(--cs-light-gray); }
+.search-box:focus { outline: none; border-color: var(--cs-orange); }
+
+/* CHECKLIST */
+.checklist { list-style: none; padding: 0; }
+.checklist li {
+  padding: 8px 0 8px 28px;
+  position: relative;
+  color: #d0d0dc;
+}
+.checklist li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 10px;
+  width: 16px; height: 16px;
+  border: 2px solid var(--cs-card-border);
+  border-radius: 4px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+  .hamburger { display: flex; }
+  .main { margin-left: 0; padding: 48px 24px 120px; }
+  .cal-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 640px) {
+  .main { padding: 64px 16px 80px; }
+  h1 { font-size: 28px; }
+  h2 { font-size: 22px; }
+  .do-dont-grid { grid-template-columns: 1fr; }
+  .cal-grid { grid-template-columns: 1fr 1fr; }
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* PRINT */
+@media print {
+  .sidebar, .hamburger, .sidebar-overlay, .filter-bar, .search-box, .expand-btn { display: none !important; }
+  .main { margin-left: 0; padding: 20px; }
+  body { background: #fff; color: #000; font-size: 11px; }
+  h1, h2, h3, h4, strong { color: #000; }
+  p, li, td { color: #333; }
+  .concept-card { border: 1px solid #ccc; page-break-inside: avoid; }
+  .concept-card .card-expand { display: block !important; }
+  .exec-summary { border: 1px solid #ccc; background: #f8f8f8; }
+  table { font-size: 10px; }
+  thead th { background: #eee; color: #000; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cs-dark); }
+::-webkit-scrollbar-thumb { background: var(--cs-card-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--cs-orange); }
+
+/* Pillar section headers */
+.pillar-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 32px;
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  background: var(--cs-card-bg);
+  border-radius: 10px;
+  border-left: 4px solid;
+}
+.pillar-section-header .count {
+  font-size: 12px;
+  color: var(--cs-light-gray);
+  font-weight: 500;
+}
+.pillar-section-header h3 { margin: 0; }
+
+/* Quick ref cards */
+.qr-card {
+  background: var(--cs-card-bg);
+  border: 1px solid var(--cs-card-border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.qr-card h4 { margin-top: 0; }
+
+/* Concept count badges */
+.concept-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--cs-orange);
+  color: var(--cs-white);
+}
+</style>
+</head>
+<body>
+
+<!-- HAMBURGER -->
+<button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+  <span></span><span></span><span></span>
+</button>
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h2>Collective Shift</h2>
+    <p>Social Media Content System</p>
+  </div>
+  <nav>
+    <a href="#executive-summary">Executive Summary</a>
+    <div class="nav-section">Strategy</div>
+    <a href="#strategy-overview">1. Content Strategy Overview</a>
+    <a href="#goals-kpis" class="sub">Goals & KPIs</a>
+    <a href="#icp-profile" class="sub">ICP Deep-Dive</a>
+    <a href="#content-pillars" class="sub">Content Pillars</a>
+    <a href="#themes-hooks" class="sub">Themes & Seasonal Hooks</a>
+
+    <div class="nav-section">Content Bank</div>
+    <a href="#viral-content-bank">2. Viral Content Bank</a>
+    <a href="#bank-protect" class="sub">Protect (24)</a>
+    <a href="#bank-strategy" class="sub">Strategy (29)</a>
+    <a href="#bank-confidence" class="sub">Confidence (18)</a>
+    <a href="#bank-community" class="sub">Community (12)</a>
+    <a href="#bank-results" class="sub">Results (20)</a>
+
+    <div class="nav-section">Operations</div>
+    <a href="#content-calendar">3. Content Calendar</a>
+    <a href="#platform-guidelines">4. Platform Guidelines</a>
+    <a href="#creation-playbook">5. Creation Playbook</a>
+    <a href="#engagement-growth">6. Engagement & Growth</a>
+    <a href="#measurement">7. Measurement & Optimization</a>
+
+    <div class="nav-section">Reference</div>
+    <a href="#cheatsheets">8. Quick-Reference Cheatsheets</a>
+    <a href="#hook-formulas" class="sub">Hook Formulas</a>
+    <a href="#cta-library" class="sub">CTA Library</a>
+    <a href="#do-dont" class="sub">Do This / Not That</a>
+    <a href="#manychat-ref" class="sub">ManyChat Reference</a>
+  </nav>
+</aside>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+<div class="content-wrap">
+
+<!-- HEADER -->
+<h1>Social Media <span class="accent">Content System</span></h1>
+<p class="subtitle">Collective Shift - April 2026 - 103 Concepts - 6 Platforms - 61 Posts/Week</p>
+
+<!-- EXECUTIVE SUMMARY -->
+<div id="executive-summary" class="exec-summary">
+  <strong>This is the complete social media operating system for Collective Shift.</strong> It merges 102 filmable content concepts (organized by five emotional pillars), a plug-and-play weekly calendar producing 61 pieces of content per week, platform-specific playbooks for six channels, hook formulas, ManyChat keyword flows, and measurement frameworks into a single reference document. Every concept is mapped to our ICP (the Strategic Wealth Builder - a time-poor professional aged 40-59 with $500K-$2M+ in assets who wants a plan, not a tip). Every reel includes a tested hook, a clear CTA, a ManyChat keyword trigger, and a viral potential rating. The system is designed so Ben can batch-film 15 reels on a Sunday, the team can post 3 reels per day plus supporting content across all platforms, and every piece drives toward one outcome: qualified strategy calls from people who match our Platinum profile. No hype. No income claims. Just the most research-backed, educator-first content engine in the digital asset space.
+</div>
+
+<!-- KEY METRICS -->
+<div class="stat-grid">
+  <div class="stat-card"><div class="number">102</div><div class="label">Content Concepts</div></div>
+  <div class="stat-card"><div class="number">61</div><div class="label">Posts Per Week</div></div>
+  <div class="stat-card"><div class="number">5</div><div class="label">Content Pillars</div></div>
+  <div class="stat-card"><div class="number">6</div><div class="label">Platforms</div></div>
+  <div class="stat-card"><div class="number">3</div><div class="label">Reels Per Day (Ben)</div></div>
+  <div class="stat-card"><div class="number">116%</div><div class="label">CAGR (Audited)</div></div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 1: CONTENT STRATEGY OVERVIEW -->
+<!-- ============================================ -->
+<h2 id="strategy-overview">1. Content Strategy Overview</h2>
+
+<h3 id="goals-kpis">Goals & KPIs</h3>
+
+<h4>Primary Goal</h4>
+<p>Generate qualified strategy calls from Strategic Wealth Builders (professionals with $100K+ investable assets) through organic content that educates, builds trust, and demonstrates the Shift OS framework - driving them toward the Blueprint Assessment and ultimately Platinum membership ($15K USD).</p>
+
+<h4>90-Day Targets</h4>
+<table>
+  <thead><tr><th>Metric</th><th>Current</th><th>90-Day Target</th><th>Owner</th></tr></thead>
+  <tbody>
+    <tr><td>Instagram followers (@bensimpsonau)</td><td>~150K</td><td>180K</td><td>Social Team</td></tr>
+    <tr><td>Reels posted per week</td><td>~20</td><td>37</td><td>Clipper / Social</td></tr>
+    <tr><td>ManyChat keyword triggers/week</td><td>Tracking TBD</td><td>100+</td><td>DM Setter</td></tr>
+    <tr><td>Strategy calls booked (organic)</td><td>Tracking TBD</td><td>20/week</td><td>Sales Team</td></tr>
+    <tr><td>Email list growth/week</td><td>~100</td><td>300</td><td>Marketing</td></tr>
+    <tr><td>YouTube subscribers</td><td>TBD</td><td>+5K in 90 days</td><td>YouTube Editor</td></tr>
+    <tr><td>Email open rate (EDMs)</td><td>~20%</td><td>25%+</td><td>Marketing</td></tr>
+  </tbody>
+</table>
+
+<h3 id="icp-profile">ICP Deep-Dive: The Strategic Wealth Builder</h3>
+
+<div class="concept-card">
+  <div class="card-hook">Who They Are</div>
+  <div class="card-body">
+    <p>A successful, time-poor professional or business owner aged 40-59 with significant wealth in traditional assets (property, stocks, super) who lacks a coherent digital asset strategy and is willing to pay a premium for trusted, high-touch guidance to build generational wealth.</p>
+  </div>
+</div>
+
+<table>
+  <thead><tr><th>Attribute</th><th>Detail</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Age</strong></td><td>40-59 (67% of members). 60+ = 17% with larger assets.</td></tr>
+    <tr><td><strong>Professions</strong></td><td>Business owners, senior professionals (FIFO, corporate), real estate developers, mortgage brokers, tech entrepreneurs, former investment bankers</td></tr>
+    <tr><td><strong>Location</strong></td><td>Primarily Australia. Emerging: USA, UK/Europe</td></tr>
+    <tr><td><strong>Digital Asset Portfolio</strong></td><td>$50K-$250K (46%). 30% have less than $50K and are just starting allocation.</td></tr>
+    <tr><td><strong>Total Net Worth</strong></td><td>$500K-$2M+ across property, super, other investments</td></tr>
+    <tr><td><strong>Ready to Deploy</strong></td><td>$25K-$250K+ more in the next 12 months</td></tr>
+    <tr><td><strong>Experience</strong></td><td>24% in digital assets for 4+ years but still feel lost. Time does not equal confidence.</td></tr>
+  </tbody>
+</table>
+
+<h4>Their Deepest Fears (Content Goldmines)</h4>
+<table>
+  <thead><tr><th>Fear / Pain</th><th>Data</th><th>Content Pillar</th></tr></thead>
+  <tbody>
+    <tr><td><strong>No Exit Strategy</strong></td><td>Confidence in exit strategy: 2.8/10. #1 pain point.</td><td><span class="pillar-badge pillar-protect">Protect</span></td></tr>
+    <tr><td><strong>Information Overload</strong></td><td>Confidence in own research: 3.7/10. No trusted source.</td><td><span class="pillar-badge pillar-strategy">Strategy</span></td></tr>
+    <tr><td><strong>Feeling Isolated</strong></td><td>Support network: 3.2/10. Making decisions alone.</td><td><span class="pillar-badge pillar-community">Community</span></td></tr>
+    <tr><td><strong>No Time</strong></td><td>#1 concern in market testing (38% of leads).</td><td><span class="pillar-badge pillar-confidence">Confidence</span></td></tr>
+    <tr><td><strong>Self-Doubt</strong></td><td>"Am I too old / too late / too non-technical?"</td><td><span class="pillar-badge pillar-confidence">Confidence</span></td></tr>
+  </tbody>
+</table>
+
+<h4>Top Performing Ad Angles</h4>
+<p><strong>"The Silent Thief"</strong> - 3,266x ROAS. Taps into fear of inflation and currency debasement.</p>
+<p><strong>"Building a Legacy"</strong> - Highly profitable. Family-oriented, generational wealth angle.</p>
+<p><strong>Personal stories get 50x more engagement than educational content</strong> (82K views vs 980 views on X). Lead with narrative. Save frameworks for carousels.</p>
+
+<h3 id="content-pillars">Content Pillars with Emotional Mapping</h3>
+
+<table>
+  <thead><tr><th>Pain Point</th><th>Pillar</th><th>Emotional Trigger</th><th>% of Content</th><th>Key Message</th></tr></thead>
+  <tbody>
+    <tr><td>Fear of loss</td><td><span class="pillar-badge pillar-protect">Protect</span></td><td>Safety, security</td><td>20%</td><td>"Your wealth is at risk. Here's how to secure it."</td></tr>
+    <tr><td>Overwhelm</td><td><span class="pillar-badge pillar-strategy">Strategy</span></td><td>Clarity, simplicity</td><td>30%</td><td>"Cut the noise. Follow a system."</td></tr>
+    <tr><td>Self-doubt</td><td><span class="pillar-badge pillar-confidence">Confidence</span></td><td>Empowerment</td><td>20%</td><td>"You're not too late, too old, or too new."</td></tr>
+    <tr><td>Loneliness</td><td><span class="pillar-badge pillar-community">Community</span></td><td>Belonging</td><td>15%</td><td>"You don't have to do this alone."</td></tr>
+    <tr><td>Skepticism</td><td><span class="pillar-badge pillar-results">Results</span></td><td>Proof, trust</td><td>15%</td><td>"Here are the audited numbers. Judge for yourself."</td></tr>
+  </tbody>
+</table>
+
+<h3 id="themes-hooks">Themes & Seasonal Hooks</h3>
+<table>
+  <thead><tr><th>Month</th><th>Theme</th><th>Content Hook</th></tr></thead>
+  <tbody>
+    <tr><td>January</td><td>New Year, New Strategy</td><td>Reset your portfolio. Write your investment policy.</td></tr>
+    <tr><td>February</td><td>Protection Month</td><td>Self-custody. Hardware wallets. Estate planning.</td></tr>
+    <tr><td>March</td><td>Tax Planning</td><td>End of financial year prep (AU). Tax-loss harvesting.</td></tr>
+    <tr><td>April</td><td>Bitcoin Halving Anniversary</td><td>Cycle positioning. Where are we now?</td></tr>
+    <tr><td>May</td><td>"Sell in May?" Myth-Busting</td><td>Why timing doesn't work. Framework beats seasonality.</td></tr>
+    <tr><td>June</td><td>Mid-Year Review</td><td>Portfolio check-in. Rebalancing. Course correction.</td></tr>
+    <tr><td>July</td><td>EOFY (Australia)</td><td>Tax strategy. CGT discount. Structure your holdings.</td></tr>
+    <tr><td>August</td><td>Education Month</td><td>Beginner series. Origin story content. "Start here."</td></tr>
+    <tr><td>September</td><td>Community Spotlight</td><td>Member stories. In-person events. Testimonials.</td></tr>
+    <tr><td>October</td><td>Uptober / Q4 Positioning</td><td>Historically strong quarter. Allocation check.</td></tr>
+    <tr><td>November</td><td>Black Friday / Gratitude</td><td>What we're thankful for. Membership value stack.</td></tr>
+    <tr><td>December</td><td>Year in Review</td><td>Annual performance recap. Lessons learned. Plan for next year.</td></tr>
+  </tbody>
+</table>
+
+
+<!-- ============================================ -->
+<!-- SECTION 2: VIRAL CONTENT BANK -->
+<!-- ============================================ -->
+<h2 id="viral-content-bank">2. Viral Content Bank</h2>
+
+<p>102 filmable concepts organized by pillar. Each card includes the hook, ICP value, ManyChat CTA, format recommendation, and viral potential rating. Click "Show Full Script" on any card to see the complete script flow.</p>
+
+<!-- SEARCH & FILTERS -->
+<input type="text" class="search-box" id="conceptSearch" placeholder="Search concepts by hook, keyword, or topic..." onkeyup="filterConcepts()">
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterByPillar('all', this)">All (103)</button>
+  <button class="filter-btn" onclick="filterByPillar('protect', this)">Protect (24)</button>
+  <button class="filter-btn" onclick="filterByPillar('strategy', this)">Strategy (29)</button>
+  <button class="filter-btn" onclick="filterByPillar('confidence', this)">Confidence (18)</button>
+  <button class="filter-btn" onclick="filterByPillar('community', this)">Community (12)</button>
+  <button class="filter-btn" onclick="filterByPillar('results', this)">Results (20)</button>
+</div>
+
+<!-- ====== PROTECT PILLAR ====== -->
+<div class="pillar-section-header" id="bank-protect" style="border-color: #f87171;">
+  <h3 style="color: #f87171;">Protect Pillar</h3>
+  <span class="count">24 concepts - Fear of loss, security, risk management</span>
+</div>
+
+<!-- PROTECT: Evergreen #13 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">E-13</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-pattern">Pattern Interrupt</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div>
+  </div>
+  <div class="card-hook">"Your Bitcoin on an exchange is not your Bitcoin."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel</span>
+    <span class="meta-tag">Keyword: PROTECT</span>
+    <span class="meta-tag">Trigger: Fear, Surprise</span>
+  </div>
+  <div class="card-body"><p>When your Bitcoin sits on an exchange, you own an IOU. Ask FTX customers how that worked out. Self-custody means you hold the keys.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment PROTECT for the portfolio risk audit checklist."</div>
+  <button class="expand-btn" onclick="toggleExpand(this)">Show Full Script</button>
+  <div class="card-expand">
+    <p><strong>Full Script:</strong> When your Bitcoin sits on an exchange, you own an IOU. The exchange holds the keys. If they go down, your assets go with them. Self-custody means you hold the keys. Not the exchange. You. Hardware wallet. Seed phrase. Offline. This is Step 6 of the Shift OS. Don't skip it.</p>
+    <p><strong>ICP Value:</strong> HNW investors need to understand custody risk immediately. Many have six-figure holdings on exchanges.</p>
+    <p><strong>Hook 2 (Curiosity Gap):</strong> The one thing that separates people who survived 2022 from people who lost everything had nothing to do with what they bought.</p>
+  </div>
+</div>
+
+<!-- PROTECT: Evergreen #14 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">E-14</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-reframe">Reframe</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div>
+  </div>
+  <div class="card-hook">"The tax mistake almost every digital asset holder makes."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel</span>
+    <span class="meta-tag">Keyword: PROTECT</span>
+    <span class="meta-tag">Trigger: Surprise, Fear</span>
+  </div>
+  <div class="card-body"><p>Every swap between digital assets is a taxable event. Bitcoin to Ethereum? Taxable. Most people don't know this until tax time.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment PROTECT for the tax strategy decision tree."</div>
+  <button class="expand-btn" onclick="toggleExpand(this)">Show Full Script</button>
+  <div class="card-expand">
+    <p><strong>Full Script:</strong> Every swap between digital assets is a taxable event. Bitcoin to Ethereum? Taxable. Ethereum to a stablecoin? Taxable. Most people don't know this until tax time. Set up tracking from day one. Tools like Koinly make it automatic.</p>
+    <p><strong>ICP Value:</strong> HNW professionals are especially sensitive to tax surprises. This is a top concern for new members.</p>
+  </div>
+</div>
+
+<!-- PROTECT: Evergreen #15 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">E-15</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-curiosity">Curiosity Gap</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div>
+  </div>
+  <div class="card-hook">"One member accessed $200K without selling a single Bitcoin."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel</span>
+    <span class="meta-tag">Keyword: PROTECT</span>
+    <span class="meta-tag">Trigger: Curiosity, FOMO</span>
+  </div>
+  <div class="card-body"><p>Lending against Bitcoin. Use your Bitcoin as collateral, get cash. No sale means no taxable event. Your Bitcoin stays yours and keeps growing.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment PROTECT for the strategy breakdown."</div>
+  <button class="expand-btn" onclick="toggleExpand(this)">Show Full Script</button>
+  <div class="card-expand">
+    <p><strong>Full Script:</strong> Lending against Bitcoin. You use your Bitcoin as collateral. You get cash. No sale means no taxable event. Your Bitcoin stays yours and keeps growing. This is how sophisticated investors access liquidity. It's Step 7 of the Shift OS.</p>
+  </div>
+</div>
+
+<!-- PROTECT: Evergreen #16 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">E-16</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-contrarian">Contrarian</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div>
+  </div>
+  <div class="card-hook">"12,763 digital assets have fallen 95% or more."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel</span>
+    <span class="meta-tag">Keyword: BLUEPRINT</span>
+    <span class="meta-tag">Trigger: Fear, Surprise</span>
+  </div>
+  <div class="card-body"><p>That's not fear-mongering. That's data. This is why we start every member with Bitcoin. Not because it's boring. Because it's the only digital asset that's survived every cycle.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT and I'll send you the 8-step guide that starts with risk."</div>
+</div>
+
+<!-- PROTECT: Evergreen #17 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">E-17</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-labeling">Labeling</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span><span class="star"></span></div>
+  </div>
+  <div class="card-hook">"The 6 signs of a digital asset scam."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Carousel + Reel</span>
+    <span class="meta-tag">Keyword: PROTECT</span>
+    <span class="meta-tag">Trigger: Fear, Social Proof</span>
+  </div>
+  <div class="card-body"><p>Too good to be true returns. Spelling errors. Urgency. Unknown sender. Suspicious links. Request for seed phrase. If you see ANY of these, stop.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment PROTECT for the full security checklist."</div>
+</div>
+
+<!-- PROTECT: Evergreen #18 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">E-18</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-reframe">Reframe</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span><span class="star"></span></div>
+  </div>
+  <div class="card-hook">"If more than 40% of your portfolio is in one coin, we need to talk."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel</span>
+    <span class="meta-tag">Keyword: PROTECT</span>
+    <span class="meta-tag">Trigger: Fear, Curiosity</span>
+  </div>
+  <div class="card-body"><p>Concentration risk is the silent killer. Diversification isn't exciting. It's survival.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment PROTECT for the 7-question risk audit."</div>
+</div>
+
+<!-- PROTECT: Evergreen #19 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">E-19</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-pattern">Pattern Interrupt</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span><span class="star"></span></div>
+  </div>
+  <div class="card-hook">"Hardware wallet or exchange? Here's the $2,000 rule."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel</span>
+    <span class="meta-tag">Keyword: STARTERKIT</span>
+    <span class="meta-tag">Trigger: Curiosity</span>
+  </div>
+  <div class="card-body"><p>Under $2,000? Exchange is fine. Over $2,000? Hardware wallet. Over $10,000? Non-negotiable.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment STARTERKIT for a step-by-step guide to buying and securing Bitcoin."</div>
+</div>
+
+<!-- PROTECT: Evergreen #20 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">E-20</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-contrarian">Contrarian</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div>
+  </div>
+  <div class="card-hook">"The FTX collapse taught us one lesson. Most people still haven't learned it."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel</span>
+    <span class="meta-tag">Keyword: PROTECT</span>
+    <span class="meta-tag">Trigger: Fear, Surprise</span>
+  </div>
+  <div class="card-body"><p>FTX held billions in customer assets. Then it didn't. Self-custody would have prevented every loss. Move your assets off-exchange. Do it today.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment PROTECT for the risk audit checklist."</div>
+</div>
+
+<!-- PROTECT: Viral #1 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">V-01</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-contrarian">Contrarian</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div>
+  </div>
+  <div class="card-hook">"The most dangerous investor in digital assets isn't the beginner. It's the successful professional who thinks intelligence transfers."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel</span>
+    <span class="meta-tag">Keyword: BLUEPRINT</span>
+    <span class="meta-tag">Trigger: Curiosity, Emotion</span>
+  </div>
+  <div class="card-body"><p>A guy built a $3M construction business over 20 years. Put $200K into digital assets and treated it like a property deal. No exit plan. Within 8 months he was down 65%. That's not a skill problem. That's a humility problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT and I'll send you the 8-step system that protects your wealth before you make your first move."</div>
+  <button class="expand-btn" onclick="toggleExpand(this)">Show Full Script</button>
+  <div class="card-expand">
+    <p><strong>Lesson:</strong> Intelligence doesn't protect you. Systems do. The market doesn't care about your track record. Write your rules before you invest a dollar.</p>
+    <p><strong>Hook 2 (Reframe):</strong> Confidence isn't knowing you'll win. Confidence is knowing exactly what you'll do when you're losing.</p>
+  </div>
+</div>
+
+<!-- PROTECT: Viral #2 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">V-02</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-pattern">Pattern Interrupt</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div>
+  </div>
+  <div class="card-hook">"Your exchange balance is not your money. Full stop."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel</span>
+    <span class="meta-tag">Keyword: BLUEPRINT</span>
+    <span class="meta-tag">Trigger: Fear, Surprise</span>
+  </div>
+  <div class="card-body"><p>Voyager. Celsius. FTX. Three exchanges that looked bulletproof. One member had $180K on Voyager. Woke up one morning and couldn't log in. That's not a bad luck problem. That's a custody problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the free guide that covers self-custody, security, and the exact steps to protect your portfolio."</div>
+</div>
+
+<!-- PROTECT: Viral #3 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">V-03</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-labeling">Labeling</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div>
+  </div>
+  <div class="card-hook">"If you're trading digital assets without a tax strategy, you're not investing. You're donating money to the government."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel</span>
+    <span class="meta-tag">Keyword: BLUEPRINT</span>
+    <span class="meta-tag">Trigger: Emotion, Surprise</span>
+  </div>
+  <div class="card-body"><p>A member made $400K in gains. Then realized he'd made 200+ swaps. His tax bill was over $90K. He hadn't set aside a cent. That's not a gains problem. That's a planning problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the free guide that includes Step 7: tax strategy basics."</div>
+</div>
+
+<!-- PROTECT: Viral #4 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">V-04</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-curiosity">Curiosity Gap</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div>
+  </div>
+  <div class="card-hook">"The average investor underperforms the very funds they invest in by 4% per year. And it's not because of bad picks."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel</span>
+    <span class="meta-tag">Keyword: BLUEPRINT</span>
+    <span class="meta-tag">Trigger: Curiosity, Emotion</span>
+  </div>
+  <div class="card-body"><p>March 2020. Bitcoin dropped 50% in a day. The people who sold locked in their losses. The people who held were up 10x within 18 months. That's not a market problem. That's a psychology problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT and I'll send you the system that removes emotion from your investing."</div>
+</div>
+
+<!-- PROTECT: Viral #5 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">V-05</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-contrarian">Contrarian</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div>
+  </div>
+  <div class="card-hook">"The biggest risk in digital assets isn't volatility. It's doing nothing."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel</span>
+    <span class="meta-tag">Keyword: BLUEPRINT</span>
+    <span class="meta-tag">Trigger: Surprise, FOMO</span>
+  </div>
+  <div class="card-body"><p>A surgeon watched Bitcoin for 4 years. From $10K to $100K. Four years of research. Zero action. Meanwhile his $500K in savings lost 25% of its purchasing power. That's not a timing problem. That's an inaction problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the free 8-step system that gets you started with a real plan."</div>
+</div>
+
+<!-- PROTECT: Viral #6 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">V-06</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-labeling">Labeling</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div>
+  </div>
+  <div class="card-hook">"If you've ever gotten a DM from someone 'helping you invest,' you've already been targeted."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel</span>
+    <span class="meta-tag">Keyword: BLUEPRINT</span>
+    <span class="meta-tag">Trigger: Fear, Emotion</span>
+  </div>
+  <div class="card-body"><p>A business owner joined a Telegram group that looked professional. He sent $45K to a smart contract address. Gone. No recovery. That's not a gullibility problem. That's an environment problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the free guide that includes security fundamentals."</div>
+</div>
+
+<!-- PROTECT: Viral #7 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">V-07</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-contrarian">Contrarian</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div>
+  </div>
+  <div class="card-hook">"People have been saying 'it's too late for Bitcoin' since it was $100. They've been wrong every single time."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel + Thread</span>
+    <span class="meta-tag">Keyword: BLUEPRINT</span>
+    <span class="meta-tag">Trigger: Curiosity, FOMO</span>
+  </div>
+  <div class="card-body"><p>The people who bought $50 of Bitcoin every week since 2019 are up over 200%. Bitcoin is not expensive or cheap. It's early or late. We're still early.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT and I'll send you the free guide that explains where we are in the cycle."</div>
+</div>
+
+<!-- PROTECT: Viral #8 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">V-08</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-pattern">Pattern Interrupt</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span><span class="star"></span></div>
+  </div>
+  <div class="card-hook">"Your hardware wallet breaking is not the disaster. Losing your seed phrase is."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel</span>
+    <span class="meta-tag">Keyword: BLUEPRINT</span>
+    <span class="meta-tag">Trigger: Surprise, Fear</span>
+  </div>
+  <div class="card-body"><p>A member dropped his Ledger in the ocean. Ordered a new one, entered his 24 words, everything appeared. Compare that to the guy who wrote his seed phrase on a napkin and threw it away. $340K. Gone forever.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the free guide that walks you through custody step by step."</div>
+</div>
+
+<!-- PROTECT: Viral #9 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">V-09</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-contrarian">Contrarian</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div>
+  </div>
+  <div class="card-hook">"Most financial advisors know less about digital assets than you do. And they're not allowed to admit it."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel + Thread</span>
+    <span class="meta-tag">Keyword: BLUEPRINT</span>
+    <span class="meta-tag">Trigger: Surprise, Emotion</span>
+  </div>
+  <div class="card-body"><p>A member's advisor said digital assets were "too risky" while her super fund quietly allocated 2% to Bitcoin ETFs. The advisor was protecting his compliance, not her portfolio. That's not a risk management problem. That's an incentive alignment problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the education framework that fills the gap your advisor can't."</div>
+</div>
+
+<!-- PROTECT: Viral #10 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">V-10</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-reframe">Reframe</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div>
+  </div>
+  <div class="card-hook">"Buying at the top isn't the mistake. Having no plan for what to do after is."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel</span>
+    <span class="meta-tag">Keyword: BLUEPRINT</span>
+    <span class="meta-tag">Trigger: Emotion, Curiosity</span>
+  </div>
+  <div class="card-body"><p>Two members both bought Bitcoin at $65K. Member A panicked at $20K and sold. Member B followed the framework, held, DCA'd through the bottom. Same entry point. Opposite outcomes. That's not a timing problem. That's a framework problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the free system that gives you a plan for every market condition."</div>
+</div>
+
+<!-- PROTECT: Viral #11 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">V-11</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-pattern">Pattern Interrupt</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div>
+  </div>
+  <div class="card-hook">"The first rule of owning digital assets: stop telling people you own digital assets."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel</span>
+    <span class="meta-tag">Keyword: BLUEPRINT</span>
+    <span class="meta-tag">Trigger: Surprise, Fear</span>
+  </div>
+  <div class="card-body"><p>A member mentioned his holdings at a dinner party. Two weeks later, a phishing email with his full name and the exchange he used. The attacker didn't hack anything. They just listened. That's not a cybersecurity problem. That's a privacy problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the free guide that covers security threats you don't see coming."</div>
+</div>
+
+<!-- PROTECT: Viral #12 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">V-12</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-curiosity">Curiosity Gap</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div>
+  </div>
+  <div class="card-hook">"If you died tomorrow, could your family access your digital assets? Most people's honest answer is terrifying."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel</span>
+    <span class="meta-tag">Keyword: BLUEPRINT</span>
+    <span class="meta-tag">Trigger: Fear, Emotion</span>
+  </div>
+  <div class="card-body"><p>A member had $600K across three wallets. His wife knew he "had Bitcoin" but had never touched a hardware wallet. No instructions. No written plan. That's not a technology problem. That's an estate planning problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the free guide. Step 6 covers what your family needs to know."</div>
+</div>
+
+<!-- PROTECT: NEW #1 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">N-01</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-reframe">Reframe</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div>
+  </div>
+  <div class="card-hook">"Inflation ate 25% of your savings in 4 years. Here's the math nobody shows you."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel + Carousel</span>
+    <span class="meta-tag">Keyword: BLUEPRINT</span>
+    <span class="meta-tag">Trigger: Surprise, Fear</span>
+    <span class="meta-tag">NEW</span>
+  </div>
+  <div class="card-body"><p>80% of US dollars were printed after 2020. Your savings account paying 4% while real inflation runs higher means you're losing ground every year. $500K in 2020 buys what $375K buys today. Bitcoin has a hard cap of 21 million. No one can print more. That's the thesis.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the 8-step wealth protection guide."</div>
+</div>
+
+<!-- PROTECT: NEW #2 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">N-02</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-labeling">Labeling</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div>
+  </div>
+  <div class="card-hook">"The $500K mistake I see professionals make every single week."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel</span>
+    <span class="meta-tag">Keyword: PROTECT</span>
+    <span class="meta-tag">Trigger: Curiosity, Fear</span>
+    <span class="meta-tag">NEW</span>
+  </div>
+  <div class="card-body"><p>They have $500K+ sitting in a savings account earning 4% while losing purchasing power. They've "researched" digital assets for 2 years. They've watched every YouTube video. They still haven't bought a single sat. The cost of waiting is invisible. But it's real. And it compounds.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment PROTECT for the risk audit that shows you what inaction is actually costing you."</div>
+</div>
+
+<!-- PROTECT: NEW #3 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">N-03</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-contrarian">Contrarian</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div>
+  </div>
+  <div class="card-hook">"Why your accountant and your financial advisor are giving you different advice about Bitcoin."</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel + Thread</span>
+    <span class="meta-tag">Keyword: BLUEPRINT</span>
+    <span class="meta-tag">Trigger: Curiosity</span>
+    <span class="meta-tag">NEW</span>
+  </div>
+  <div class="card-body"><p>Your accountant sees the tax implications. Your advisor sees the compliance risk. Neither sees the full picture. The accountant wants structure. The advisor wants safety. You need strategy. That's the gap nobody fills because it sits between two professions.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the framework that bridges what your accountant and advisor can't."</div>
+</div>
+
+<!-- PROTECT: NEW #4 -->
+<div class="concept-card" data-pillar="protect">
+  <div class="card-header">
+    <span class="card-id">N-04</span>
+    <span class="pillar-badge pillar-protect">Protect</span>
+    <span class="hook-type hook-curiosity">Curiosity Gap</span>
+    <div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div>
+  </div>
+  <div class="card-hook">"Nation states are buying Bitcoin. Your super fund is buying Bitcoin ETFs. But your advisor says it's 'too risky.'"</div>
+  <div class="card-meta">
+    <span class="meta-tag">Reel + Thread</span>
+    <span class="meta-tag">Keyword: BLUEPRINT</span>
+    <span class="meta-tag">Trigger: Surprise, FOMO</span>
+    <span class="meta-tag">NEW</span>
+  </div>
+  <div class="card-body"><p>BlackRock offers a Bitcoin ETF. Sovereign wealth funds are allocating. Central banks are researching CBDCs because they see the writing on the wall. The institutions moved. The question is whether you'll follow your advisor's fear or the market's direction.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the guide that covers institutional adoption and what it means for you."</div>
+</div>
+
+<!-- ====== STRATEGY PILLAR ====== -->
+<div class="pillar-section-header" id="bank-strategy" style="border-color: #0BF4B9;">
+  <h3 style="color: #0BF4B9;">Strategy Pillar</h3>
+  <span class="count">29 concepts - Cutting through overwhelm with clear frameworks</span>
+</div>
+
+<!-- STRATEGY: Evergreen #1-12 (BUILD) + Viral #13-24 + new concepts -->
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">E-01</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"If you have $100K to invest in digital assets, here's where most people go wrong."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BUILD</span><span class="meta-tag">Trigger: Curiosity</span></div>
+  <div class="card-body"><p>Most people start by picking coins. That's backwards. Start with allocation percentage. Then ratio. Then assets. Framework before selection. The order matters more than the picks.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BUILD and I'll send you the allocation calculator."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">E-02</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-pattern">Pattern Interrupt</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span><span class="star"></span></div></div>
+  <div class="card-hook">"You don't need a whole Bitcoin."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: STARTERKIT</span><span class="meta-tag">Trigger: Surprise</span></div>
+  <div class="card-body"><p>1 Bitcoin = 100 million sats. You can buy $50 worth. Nobody says "I can't afford gold" and then doesn't buy any. Start with what you can. DCA from there.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment STARTERKIT and I'll send you the 7-day course."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">E-03</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-contrarian">Contrarian</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"DCA vs lump sum. The debate is over."</div>
+  <div class="card-meta"><span class="meta-tag">Reel + Carousel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Curiosity</span></div>
+  <div class="card-body"><p>Data from every 4-year cycle shows DCA outperforms lump sum for most people. Not because of returns. Because of behaviour. The best strategy is the one you'll actually stick to.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the full Wealth Protection Blueprint."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">E-04</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-curiosity">Curiosity Gap</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"The question I ask every new member before they buy anything."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Curiosity</span></div>
+  <div class="card-body"><p>"Under what conditions would you sell?" If you can't answer that, you don't have a strategy. You have a hope. Write your sell rules before you buy. Not after.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the free assessment that scores you across all 8 areas."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">E-05</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-labeling">Labeling</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span><span class="star"></span></div></div>
+  <div class="card-hook">"3 investor types. Most people pick the wrong one."</div>
+  <div class="card-meta"><span class="meta-tag">Carousel + Reel</span><span class="meta-tag">Keyword: BUILD</span><span class="meta-tag">Trigger: Curiosity</span></div>
+  <div class="card-body"><p>Accumulators: buy and hold. Strategists: tactical entries. Compounders: active, rebalancing. Most beginners try to be Compounders. Start as an Accumulator.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BUILD for the allocation calculator that matches your type."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">E-06</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-pattern">Pattern Interrupt</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"80% of US dollars were printed after 2020. Let that sink in."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Surprise, Fear</span></div>
+  <div class="card-body"><p>That's Federal Reserve data. Your cash is losing purchasing power every year. Bitcoin has a hard cap of 21 million. That's the thesis. Not "number go up." Purchasing power protection.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the 8-step wealth protection guide."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">E-07</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"Stop watching Bitcoin's price. Start watching this instead."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Curiosity</span></div>
+  <div class="card-body"><p>The 4-phase market cycle: Accumulation, Markup, Distribution, Markdown. Knowing where we are tells you more than today's price. This is how our members make decisions with conviction.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the guide that covers all 4 phases."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">E-08</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-contrarian">Contrarian</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"The worst time to figure out your strategy is when the market is moving."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BUILD</span><span class="meta-tag">Trigger: Emotion</span></div>
+  <div class="card-body"><p>Bull market: you feel invincible. Bear market: you feel terrified. The strategy should be written when you're calm. That's Step 4 of the Shift OS.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BUILD for the free allocation calculator."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">E-09</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-labeling">Labeling</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"Only 20% of altcoins beat Bitcoin over a full cycle."</div>
+  <div class="card-meta"><span class="meta-tag">Reel + Carousel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Surprise</span></div>
+  <div class="card-body"><p>4 out of 5 altcoins underperform Bitcoin over 4 years. Most people diversify into altcoins thinking they're reducing risk. They're increasing it. Start with Bitcoin. Add altcoins only with a framework.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the framework we use."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">E-10</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-curiosity">Curiosity Gap</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"I've helped 1,100+ professionals build digital asset portfolios. Here's what they all have in common."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: STARTERKIT</span><span class="meta-tag">Trigger: Curiosity, Social Proof</span></div>
+  <div class="card-body"><p>Not huge starting amounts. Not technical knowledge. Not perfect timing. They all had ONE thing: a written plan. A bad plan beats no plan every single time.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment STARTERKIT if you want to build your plan in 7 days."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">E-11</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"The first thing I'd do with $10K to invest in digital assets."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BUILD</span><span class="meta-tag">Trigger: Curiosity</span></div>
+  <div class="card-body"><p>Not buy the hottest coin. Step 1: decide allocation percentage. Step 2: 80% Bitcoin minimum. Step 3: set up DCA. Step 4: write your sell rules. Then buy.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BUILD for the calculator that figures out your number."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">E-12</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-contrarian">Contrarian</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"Everyone asks me what to buy. Nobody asks me when to sell."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Curiosity, Emotion</span></div>
+  <div class="card-body"><p>Buying is the easy part. 3 types of sell strategies: target-based, time-based, signal-based. Most people have zero. Our members average 2.8 out of 10 confidence in their exit strategy when they join.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the full 8-step framework including sell strategy."</div>
+</div>
+
+<!-- STRATEGY: Viral #13-24 -->
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">V-13</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-contrarian">Contrarian</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"Owning 30 different digital assets isn't diversification. It's confusion with a spreadsheet."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Surprise, Emotion</span></div>
+  <div class="card-body"><p>A member came in with 47 tokens. Couldn't explain half. His portfolio tracked identically to Bitcoin. Same return. Ten times the stress. That's not a diversification problem. That's a focus problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the framework that shows you how to build a focused portfolio."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">V-14</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"The question isn't how much to put into digital assets. It's how much can you afford to ignore them."</div>
+  <div class="card-meta"><span class="meta-tag">Reel + Thread</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: FOMO, Curiosity</span></div>
+  <div class="card-body"><p>Two business owners. Same net worth: $2M. One allocated 2% ($40K). The other 15% ($300K). Over 3 years, the 15% allocation changed his financial trajectory. That's not a risk tolerance problem. That's an ambition problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the assessment that helps you figure out the right allocation."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">V-15</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-pattern">Pattern Interrupt</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"If you don't know the exact number at which you sell, you won't sell."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, Fear</span></div>
+  <div class="card-body"><p>A member watched $580K drop to $250K because he never wrote a number on paper. His wife asked 3 times. He said "not yet" every time. That's not a greed problem. That's a planning problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT. Step 8 is the exact sell strategy framework our members use."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">V-16</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"Bitcoin is not a digital asset. Bitcoin is digital property. Everything else is a bet."</div>
+  <div class="card-meta"><span class="meta-tag">Reel + Thread</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Surprise, Curiosity</span></div>
+  <div class="card-body"><p>Fixed supply, no management team, 15 years of unbroken operation. Over a full 4-year cycle, 80% of altcoins underperform Bitcoin. That's not a preference. That's a framework.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the Bitcoin-first allocation framework."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">V-17</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-labeling">Labeling</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"If you bought an altcoin because someone on YouTube told you to, you don't have a thesis. You have a recommendation from a stranger."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, Surprise</span></div>
+  <div class="card-body"><p>Our 5-point analysis: use case, team, tokenomics, adoption, valuation. A member was excited about a token that passed 4 of 5. Failed on tokenomics. Pumped 300%. Then crashed 95% when the team dumped. That's not bad luck. That's incomplete analysis.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the framework to evaluate any digital asset in 15 minutes."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">V-18</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"Lump sum vs DCA isn't a math question. It's a behaviour question."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Curiosity</span></div>
+  <div class="card-body"><p>The lump sum investor called at 11pm asking if he should sell. The DCA investor didn't even notice the dip. She was still buying. That's not a returns problem. That's a sleep problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the guide that helps you figure out the right entry strategy."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">V-19</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-contrarian">Contrarian</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"The most successful investors don't make better decisions. They make fewer decisions."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Surprise, Curiosity</span></div>
+  <div class="card-body"><p>When the market drops 30%, our members check their written rules. "Is my allocation still within range? Yes. Then the answer is: do nothing." That 5-minute check replaces 4 hours of anxious research. That's not discipline. That's design.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the 8-step Shift OS overview."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">V-20</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-pattern">Pattern Interrupt</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"If you check your portfolio every day, you're not investing. You're watching a scoreboard for a game that takes 10 years."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion</span></div>
+  <div class="card-body"><p>Members who check daily trade 4x more often. Their returns? 12% lower on average over 12 months. The daily checkers felt more informed. They were actually less profitable.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the system that tells you exactly when to check and what to look for."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">V-21</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-contrarian">Contrarian</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"We've made 25 trades in 3 years. Most 'experts' make 25 trades in a week. Guess who has better returns."</div>
+  <div class="card-meta"><span class="meta-tag">Reel + Thread</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Surprise, Social Proof</span></div>
+  <div class="card-body"><p>A member switched from a signal group making 5-10 trades/day to our framework. 6 trades in year one. Portfolio up 90%. Same market. Different approach. That's not a market problem. That's a frequency problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the low-frequency, high-conviction approach."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">V-22</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"You don't need to predict the market. You need to know which of the 4 phases you're in."</div>
+  <div class="card-meta"><span class="meta-tag">Carousel + Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Curiosity</span></div>
+  <div class="card-body"><p>When your neighbor starts asking about Bitcoin, you should probably be selling some. That's not timing. That's pattern recognition. Each of the 4 phases has a different playbook.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the guide that maps out all 4 cycle phases."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">V-23</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-curiosity">Curiosity Gap</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"One member saved $47K in taxes by changing a single word on his ownership structure."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Curiosity, FOMO</span></div>
+  <div class="card-body"><p>How you hold digital assets can be as important as what you hold. Company, trust, SMSF, or personal. Each has different tax implications. Most people spend 20 hours researching coins and 0 hours researching structure.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the guide that includes tax and structure basics in Step 7."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">V-24</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-labeling">Labeling</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"If you're investing without a written investment policy, you're gambling with rules you haven't defined."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion</span></div>
+  <div class="card-body"><p>One page. 30 minutes. Allocation targets, sell rules, risk limits. When the market drops 40%, that piece of paper saves more money than any research report. That's not a knowledge problem. That's a preparation problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the assessment that helps you build your personal framework."</div>
+</div>
+
+<!-- STRATEGY: Evergreen yield concepts mapped to Strategy -->
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">E-28</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"Your savings account is paying you to lose money."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Surprise, Fear</span></div>
+  <div class="card-body"><p>If your savings rate is 4% and inflation is running above 4%, your purchasing power is shrinking. Every year. Bitcoin's thesis: a store of value with a hard cap. That doesn't guarantee returns. But it does guarantee scarcity.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the full wealth protection guide."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">E-29</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-curiosity">Curiosity Gap</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span><span class="star"></span></div></div>
+  <div class="card-hook">"What is DeFi and should you care?"</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Curiosity</span></div>
+  <div class="card-body"><p>Decentralized finance. Lending, borrowing, trading without banks. It's real and growing. But it's advanced. For most people: Bitcoin first, DCA, self-custody. DeFi comes later.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT if you want the 8-step foundation first."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">E-30</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-curiosity">Curiosity Gap</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span><span class="star"></span></div></div>
+  <div class="card-hook">"The stablecoin question nobody asks."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: YIELD</span><span class="meta-tag">Trigger: Curiosity</span></div>
+  <div class="card-body"><p>USDT, USDC, DAI. Different backing, different risk. Most people hold stablecoins and assume they're safe. Do you know what's backing yours?</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment YIELD for the portfolio risk audit."</div>
+</div>
+
+<!-- STRATEGY: NEW concepts -->
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">N-05</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-contrarian">Contrarian</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"The one question that predicts whether you'll succeed with digital assets."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Curiosity</span><span class="meta-tag">NEW</span></div>
+  <div class="card-body"><p>"Do you have your sell rules written down?" That's it. In 6 years of coaching 1,100+ investors, the people who write their rules outperform the people who don't. Every single time. Not by a little. By a lot. Because written rules turn panic into process.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the sell strategy template our members use."</div>
+</div>
+
+<div class="concept-card" data-pillar="strategy">
+  <div class="card-header"><span class="card-id">N-06</span><span class="pillar-badge pillar-strategy">Strategy</span><span class="hook-type hook-pattern">Pattern Interrupt</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"The 4-hour investor: how to build a digital asset portfolio on 1 hour per week."</div>
+  <div class="card-meta"><span class="meta-tag">Carousel + Reel</span><span class="meta-tag">Keyword: BUILD</span><span class="meta-tag">Trigger: Curiosity, FOMO</span><span class="meta-tag">NEW</span></div>
+  <div class="card-body"><p>Week 1: 15 min DCA setup (automated). Week 2: 15 min portfolio check. Week 3: 15 min research review. Week 4: 15 min rebalancing assessment. 4 hours per month. Our CEO members do exactly this. Their returns match daily traders. Without the stress.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BUILD for the time-poor investor framework."</div>
+</div>
+
+<!-- ====== CONFIDENCE PILLAR ====== -->
+<div class="pillar-section-header" id="bank-confidence" style="border-color: #FC5C03;">
+  <h3 style="color: #FC5C03;">Confidence Pillar</h3>
+  <span class="count">18 concepts - Overcoming self-doubt, age, tech barriers</span>
+</div>
+
+<div class="concept-card" data-pillar="confidence">
+  <div class="card-header"><span class="card-id">V-25</span><span class="pillar-badge pillar-confidence">Confidence</span><span class="hook-type hook-contrarian">Contrarian</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"Our oldest member is 72. He's building a family trust for his grandchildren using Bitcoin. Age is not the barrier. Inaction is."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, Social Proof</span></div>
+  <div class="card-body"><p>Derek is 72. Retired teacher. 39 years coaching college gymnastics. He's setting up an LLC and family trust for his children and 5 grandchildren. When his son (an anesthesiologist) saw the framework, he joined too.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the free guide designed for beginners at every age."</div>
+</div>
+
+<div class="concept-card" data-pillar="confidence">
+  <div class="card-header"><span class="card-id">V-26</span><span class="pillar-badge pillar-confidence">Confidence</span><span class="hook-type hook-contrarian">Contrarian</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"You don't need to understand blockchain to invest in digital assets. Just like you don't need to understand SWIFT to use a bank."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Surprise</span></div>
+  <div class="card-body"><p>Leslie is 62. Former investment banker. MBA. Zero digital asset experience. Within 4 weeks she'd set up a wallet, built a portfolio, and had a written exit strategy. That's not a tech problem. That's a starting problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the guide that starts with foundations. No tech jargon."</div>
+</div>
+
+<div class="concept-card" data-pillar="confidence">
+  <div class="card-header"><span class="card-id">V-27</span><span class="pillar-badge pillar-confidence">Confidence</span><span class="hook-type hook-curiosity">Curiosity Gap</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"The biggest obstacle for most investors isn't the market. It's the conversation at the dinner table."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, Curiosity</span></div>
+  <div class="card-body"><p>A couple joined together. She was skeptical. Charts and Twitter threads never worked. What worked? A 10-minute video about inflation eating purchasing power. Her savings. Her retirement. Lead with protection and purchasing power, not price predictions.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT. Share it with your partner. It's designed for complete beginners."</div>
+</div>
+
+<div class="concept-card" data-pillar="confidence">
+  <div class="card-header"><span class="card-id">V-28</span><span class="pillar-badge pillar-confidence">Confidence</span><span class="hook-type hook-pattern">Pattern Interrupt</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span><span class="star"></span></div></div>
+  <div class="card-hook">"You don't need $100K to start investing in digital assets. You need $50 and a plan."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Surprise</span></div>
+  <div class="card-body"><p>A member started with $200/week into Bitcoin. After 18 months, his position outperformed a $15K lump sum. Not because the math was different. Because the DCA investor never panicked. That's not a capital problem. That's a consistency problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the free guide with a step-by-step first purchase plan."</div>
+</div>
+
+<div class="concept-card" data-pillar="confidence">
+  <div class="card-header"><span class="card-id">V-29</span><span class="pillar-badge pillar-confidence">Confidence</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"'Going to zero' is the question everyone asks and nobody models. Let's actually look at what would have to happen."</div>
+  <div class="card-meta"><span class="meta-tag">Reel + Thread</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Curiosity</span></div>
+  <div class="card-body"><p>Bitcoin has been declared dead 477 times. Coinbase is publicly traded. BlackRock offers a Bitcoin ETF. Nation states are adding it to reserves. "Going to zero" would require the entire global financial system to reverse course simultaneously.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the guide that builds conviction with data, not hype."</div>
+</div>
+
+<div class="concept-card" data-pillar="confidence">
+  <div class="card-header"><span class="card-id">V-30</span><span class="pillar-badge pillar-confidence">Confidence</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"The fear of losing everything is valid. The solution isn't avoiding digital assets. It's learning the 3 mistakes that actually cause catastrophic loss."</div>
+  <div class="card-meta"><span class="meta-tag">Carousel + Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Fear, Curiosity</span></div>
+  <div class="card-body"><p>Exchange failure (custody). Over-concentration (allocation). No exit strategy (planning). Fix those three and the "lose everything" scenario becomes nearly impossible. A diversified, self-custodied portfolio with written sell rules has never gone to zero.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the 8-step system that addresses all three."</div>
+</div>
+
+<div class="concept-card" data-pillar="confidence">
+  <div class="card-header"><span class="card-id">V-31</span><span class="pillar-badge pillar-confidence">Confidence</span><span class="hook-type hook-contrarian">Contrarian</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"Most people who sound confident about digital assets online are just loud. Loud and right are not the same thing."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, Surprise</span></div>
+  <div class="card-body"><p>The "experts" our members compare themselves to on Twitter? Most have never managed real money. They're performing confidence, not demonstrating competence. That's not an experience gap. That's an illusion gap.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the guide designed so a complete beginner can build real conviction."</div>
+</div>
+
+<div class="concept-card" data-pillar="confidence">
+  <div class="card-header"><span class="card-id">V-32</span><span class="pillar-badge pillar-confidence">Confidence</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span><span class="star"></span></div></div>
+  <div class="card-hook">"Buying the wrong digital asset isn't the disaster. Holding it too long because you're emotionally attached is."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion</span></div>
+  <div class="card-body"><p>A member held XRP for 4 years because "it had to come back." Her opportunity cost: over $200K in foregone gains. She sold. Portfolio grew 40% in 6 months. That's not a loyalty problem. That's a sunk cost problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the framework on when to hold, sell, or cut losses."</div>
+</div>
+
+<div class="concept-card" data-pillar="confidence">
+  <div class="card-header"><span class="card-id">V-33</span><span class="pillar-badge pillar-confidence">Confidence</span><span class="hook-type hook-labeling">Labeling</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"If someone in digital assets says 'trust me,' run. If they say 'here's my audited track record,' listen."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, Surprise</span></div>
+  <div class="card-body"><p>A member followed 8 YouTube channels. Later discovered 6 had paid affiliate deals. She spent a year buying their picks and lost $80K. When she found us: zero affiliates. Zero token promotions. Revenue only from members who stay. That's an incentive alignment problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the guide from a company with zero affiliates and audited returns."</div>
+</div>
+
+<div class="concept-card" data-pillar="confidence">
+  <div class="card-header"><span class="card-id">V-34</span><span class="pillar-badge pillar-confidence">Confidence</span><span class="hook-type hook-contrarian">Contrarian</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"The best digital asset investors spend less time on their portfolios than the worst ones. Not more."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Surprise</span></div>
+  <div class="card-body"><p>A CEO has 20 minutes per week. Monthly DCA, quarterly rebalance, annual review. Total active time: 1 hour per month. His returns? 90%. Same as our most active members. That's not a time problem. That's a design problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the guide designed for busy professionals."</div>
+</div>
+
+
+<!-- CONFIDENCE: Origin Story Reels -->
+<div class="concept-card" data-pillar="confidence">
+  <div class="card-header"><span class="card-id">E-31</span><span class="pillar-badge pillar-confidence">Confidence</span><span class="hook-type hook-curiosity">Curiosity Gap</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"I started a business at 16 and it changed the direction of my life."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, Curiosity</span><span class="meta-tag">ORIGIN STORY</span></div>
+  <div class="card-body"><p>Small town Tasmania. Parents rented. Started a sportswear business at 16. Sourced uniforms from Alibaba, sold to Tasmanian sporting teams. First sale: $3,000 invoice, $2,000 cost, $1,000 profit. Moved to Melbourne at 17. That business taught me more than school ever did.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the framework I wish I had back then."</div>
+</div>
+
+<div class="concept-card" data-pillar="confidence">
+  <div class="card-header"><span class="card-id">E-32</span><span class="pillar-badge pillar-confidence">Confidence</span><span class="hook-type hook-pattern">Pattern Interrupt</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"I discovered Bitcoin because banks kept blocking my money."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BUILD</span><span class="meta-tag">Trigger: Curiosity, Emotion</span><span class="meta-tag">ORIGIN STORY</span></div>
+  <div class="card-body"><p>At 17, sending money to China for the sportswear business. Banks kept blocking transfers. A friend introduced me to Bitcoin. "I had no idea how he could just send money without a bank." That confusion is exactly why I built Collective Shift.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BUILD for our beginner's framework."</div>
+</div>
+
+<div class="concept-card" data-pillar="confidence">
+  <div class="card-header"><span class="card-id">E-33</span><span class="pillar-badge pillar-confidence">Confidence</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"I made hundreds of thousands on paper. Then I lost nearly all of it."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, Surprise</span><span class="meta-tag">ORIGIN STORY</span></div>
+  <div class="card-body"><p>No exit strategy. No accountability. No research framework. Roundtripped the entire thing. Was living above a 7-Eleven in Bali. That's when I knew things had to change. That system became the Shift OS. Now 1,100+ members use it.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the exit strategy framework that came from that experience."</div>
+</div>
+
+<!-- CONFIDENCE: NEW concepts -->
+<div class="concept-card" data-pillar="confidence">
+  <div class="card-header"><span class="card-id">N-07</span><span class="pillar-badge pillar-confidence">Confidence</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"I went bankrupt twice before 25. Here's what nobody tells you about comebacks."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, Curiosity</span><span class="meta-tag">NEW</span><span class="meta-tag">ORIGIN STORY</span></div>
+  <div class="card-body"><p>Lost hundreds of thousands. Followed a YouTuber's theory that Bitcoin would crash to $100. Living above a 7-Eleven in Bali. Bookkeeper said we had weeks of cash left. The system I built from that rock bottom is what 1,100+ investors use today. The worst seasons build the best frameworks.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the framework born from failure."</div>
+</div>
+
+<div class="concept-card" data-pillar="confidence">
+  <div class="card-header"><span class="card-id">N-08</span><span class="pillar-badge pillar-confidence">Confidence</span><span class="hook-type hook-curiosity">Curiosity Gap</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"The Bali 7-Eleven story: rock bottom to building a seven-figure company."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, Curiosity</span><span class="meta-tag">NEW</span><span class="meta-tag">ORIGIN STORY</span></div>
+  <div class="card-body"><p>"A bed with a toilet." Not even a bedroom. Too scared to leave the house. Then Matt and I got positioned early in metaverse plays before Facebook renamed to Meta. 30-40x returns. Hundreds of thousands in the bank. "If I can make it through that, we're back." That comeback built Collective Shift.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the framework I wish I had during those years."</div>
+</div>
+
+<div class="concept-card" data-pillar="confidence">
+  <div class="card-header"><span class="card-id">N-09</span><span class="pillar-badge pillar-confidence">Confidence</span><span class="hook-type hook-labeling">Labeling</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"I've coached 1,100+ investors. The ones who fail all do this one thing."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Curiosity, Fear</span><span class="meta-tag">NEW</span></div>
+  <div class="card-body"><p>They treat investing like a side thought instead of a system. No written rules. No scheduled reviews. No accountability partner. They react to the market instead of following a plan. The fix takes 30 minutes: write your investment policy statement. One page. Review it quarterly.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the free assessment and framework."</div>
+</div>
+
+<div class="concept-card" data-pillar="confidence">
+  <div class="card-header"><span class="card-id">N-10</span><span class="pillar-badge pillar-confidence">Confidence</span><span class="hook-type hook-contrarian">Contrarian</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"Stop comparing your chapter 1 to someone else's chapter 20."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion</span><span class="meta-tag">NEW</span></div>
+  <div class="card-body"><p>The guy on Twitter showing 1000% gains? He's been in the space since 2013. He survived 3 bear markets. He lost 80% twice before he learned. You're not behind. You're at the start. And having a framework from day one is an advantage he never had.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the beginner-friendly guide."</div>
+</div>
+
+<div class="concept-card" data-pillar="confidence">
+  <div class="card-header"><span class="card-id">N-11</span><span class="pillar-badge pillar-confidence">Confidence</span><span class="hook-type hook-curiosity">Curiosity Gap</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"Your kids will ask why you didn't buy Bitcoin. What will you tell them?"</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, FOMO</span><span class="meta-tag">NEW</span></div>
+  <div class="card-body"><p>In 10 years, digital assets will be as normal as online banking. The question won't be "is this real?" It'll be "why didn't you start sooner?" Derek, our 72-year-old member, won't have to answer that question. He's building a family trust right now. That's what action looks like.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT to start your journey today."</div>
+</div>
+
+<!-- ====== COMMUNITY PILLAR ====== -->
+<div class="pillar-section-header" id="bank-community" style="border-color: #818cf8;">
+  <h3 style="color: #818cf8;">Community Pillar</h3>
+  <span class="count">12 concepts - Belonging, accountability, not doing this alone</span>
+</div>
+
+<div class="concept-card" data-pillar="community">
+  <div class="card-header"><span class="card-id">V-35</span><span class="pillar-badge pillar-community">Community</span><span class="hook-type hook-curiosity">Curiosity Gap</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"The average digital asset investor's support network scores 3.2 out of 10. That's lower than their confidence in the market."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion</span></div>
+  <div class="card-body"><p>A member made every decision alone for 3 years. His biggest loss happened because he had nobody to call at 2am when the market dropped 40%. One phone call would have saved him $120K. That's not a knowledge problem. That's an isolation problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT. Your first step toward not doing this alone."</div>
+</div>
+
+<div class="concept-card" data-pillar="community">
+  <div class="card-header"><span class="card-id">V-36</span><span class="pillar-badge pillar-community">Community</span><span class="hook-type hook-contrarian">Contrarian</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"99% of digital asset 'communities' are just strangers sharing price predictions. That's not community. That's noise in a group chat."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, Surprise</span></div>
+  <div class="card-body"><p>Adrian said: "We're all here to build wealth. We're all here to help each other build wealth." Nobody in our WhatsApp group is pumping their bags. They're asking "does this align with my plan?" That's not a chat. That's a board of advisors.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT to start the journey. The community is what members stay for."</div>
+</div>
+
+<div class="concept-card" data-pillar="community">
+  <div class="card-header"><span class="card-id">V-37</span><span class="pillar-badge pillar-community">Community</span><span class="hook-type hook-pattern">Pattern Interrupt</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"When was the last time you had an honest conversation about money with someone who actually understood digital assets?"</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion</span></div>
+  <div class="card-body"><p>Bruce tried YouTube gurus, paid newsletters, and Telegram groups before he found a team he trusted enough to open up his portfolio to. Once he did, they spotted two positions bleeding him. Fixed in one call. That's not a portfolio problem. That's an access problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT. The coaching is what changes everything."</div>
+</div>
+
+<div class="concept-card" data-pillar="community">
+  <div class="card-header"><span class="card-id">V-38</span><span class="pillar-badge pillar-community">Community</span><span class="hook-type hook-contrarian">Contrarian</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"Our members aren't digital asset bros. They're surgeons, CEOs, real estate developers, and retired teachers."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Social Proof, Emotion</span></div>
+  <div class="card-body"><p>A retired gymnastics coach building a family trust. A business owner in Adelaide. An investment banker from Newport Beach. They found each other because they couldn't find this conversation anywhere else. That's not a networking problem. That's a "where do people like me go?" problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT. Join 1,000+ professionals building this together."</div>
+</div>
+
+<div class="concept-card" data-pillar="community">
+  <div class="card-header"><span class="card-id">V-39</span><span class="pillar-badge pillar-community">Community</span><span class="hook-type hook-curiosity">Curiosity Gap</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"Our retention rate is 74%. In an industry where the average online course has less than 10% completion. Here's what that tells you."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Social Proof, Curiosity</span></div>
+  <div class="card-body"><p>Wes has been with us for 5 years. Simon said he has confidence to work through a bull AND the next bear. They're not staying because they need more education. They renewed because they're better investors inside than outside. That's not loyalty. That's ROI.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT. Start with education. Stay for results."</div>
+</div>
+
+<div class="concept-card" data-pillar="community">
+  <div class="card-header"><span class="card-id">V-40</span><span class="pillar-badge pillar-community">Community</span><span class="hook-type hook-labeling">Labeling</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"If you think you don't need help with digital assets, you're either outperforming 116% CAGR. Or you're overestimating yourself."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, Surprise</span></div>
+  <div class="card-body"><p>A member with $10-15 million in digital assets joined. When asked why: "I want someone to tell me when I'm wrong." If the person with the most money in the room still wants a second opinion, what does that tell you?</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT. The assessment will show you what you're missing."</div>
+</div>
+
+<div class="concept-card" data-pillar="community">
+  <div class="card-header"><span class="card-id">V-41</span><span class="pillar-badge pillar-community">Community</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"We're not a course. Courses end. We're a team you invest alongside for as long as you want to build wealth."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion</span></div>
+  <div class="card-body"><p>Christine lost $15K on an options course. Lost $30K on a property group. What convinced her? "Our only revenue comes from members who stay. No partnerships. No sponsorships." First time an education company admitted their model depends on results.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT. No upsell. No bait and switch. Just the framework."</div>
+</div>
+
+<div class="concept-card" data-pillar="community">
+  <div class="card-header"><span class="card-id">V-42</span><span class="pillar-badge pillar-community">Community</span><span class="hook-type hook-pattern">Pattern Interrupt</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"You haven't experienced digital asset investing until you've been in a room with 150 people who are all building the same thing you are."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, FOMO</span></div>
+  <div class="card-body"><p>At our Melbourne event, a member met another member. Same city. Similar portfolio. Same fears. They now meet monthly and review each other's portfolios. One lunch created more accountability than 4 years of solo investing.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT. The events are where the community comes to life."</div>
+</div>
+
+<!-- COMMUNITY: NEW concepts -->
+<div class="concept-card" data-pillar="community">
+  <div class="card-header"><span class="card-id">N-12</span><span class="pillar-badge pillar-community">Community</span><span class="hook-type hook-curiosity">Curiosity Gap</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"Why I film 15 reels every Sunday and what it's taught me about discipline."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Curiosity, Emotion</span><span class="meta-tag">NEW</span><span class="meta-tag">BEHIND THE SCENES</span></div>
+  <div class="card-body"><p>Every Sunday. 10am-1pm. Same location. Same setup. 15 reels in one session. No decision-making on the day. Everything pre-decided. The same discipline that makes our content consistent is the same discipline that makes our investing framework work. Systems beat motivation every time.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the system behind the content."</div>
+</div>
+
+<div class="concept-card" data-pillar="community">
+  <div class="card-header"><span class="card-id">N-13</span><span class="pillar-badge pillar-community">Community</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"I turned down hundreds of thousands in sponsorship money. Here's what it cost me. And why I'd do it again."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, Social Proof</span><span class="meta-tag">NEW</span></div>
+  <div class="card-body"><p>Exchanges, advertisers, projects. All wanting us to promote their product. We said no. Every single time. Because the moment we take affiliate money, our research is compromised. Our members pay us to be unbiased. That alignment is worth more than any sponsorship cheque.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the research from a team with zero conflicts of interest."</div>
+</div>
+
+<div class="concept-card" data-pillar="community">
+  <div class="card-header"><span class="card-id">N-14</span><span class="pillar-badge pillar-community">Community</span><span class="hook-type hook-pattern">Pattern Interrupt</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"18 months as a nomad. Solo. 8 countries. One bag and a laptop."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, Curiosity</span><span class="meta-tag">NEW</span><span class="meta-tag">PERSONAL STORY</span></div>
+  <div class="card-body"><p>Digital assets didn't just change my portfolio. They changed my life. The freedom to work from anywhere. To spend time with family in Vietnam. To build a company from a laptop. This isn't about getting rich. It's about buying back your time. And time is the asset nobody can print more of.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT to start building your version of freedom."</div>
+</div>
+
+<div class="concept-card" data-pillar="community">
+  <div class="card-header"><span class="card-id">N-15</span><span class="pillar-badge pillar-community">Community</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"My parents rented their whole lives. I'm buying them a house."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion</span><span class="meta-tag">NEW</span><span class="meta-tag">PERSONAL STORY</span></div>
+  <div class="card-body"><p>That's always been the goal. Not the Lamborghini. Not the Rolex. My parents. They taught me: if you want anything, you work for it. Mum was a school teacher who let me quit school to chase this. The biggest goal since day one. And it's happening.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the framework that got us here."</div>
+</div>
+
+<!-- ====== RESULTS PILLAR ====== -->
+<div class="pillar-section-header" id="bank-results" style="border-color: #22c55e;">
+  <h3 style="color: #22c55e;">Results Pillar</h3>
+  <span class="count">20 concepts - Proof, audited returns, member transformations</span>
+</div>
+
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">E-21</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-pattern">Pattern Interrupt</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"116% CAGR over 6 financial years (audited by Crypto Tax Australia). But that's not why members stay."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Social Proof, Curiosity</span></div>
+  <div class="card-body"><p>Our audited returns speak for themselves. But the 74% retention rate tells a different story. Members stay because of the framework. The community. The coaching calls. Returns attract. Framework retains.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT to see where you stand on the 8-step framework."</div>
+</div>
+
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">E-22</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"We told our members to look at Solana at $22. Here's why that doesn't matter."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Curiosity, Social Proof</span></div>
+  <div class="card-body"><p>The Solana pick only worked because of the framework behind it. The 5-point fundamental analysis. The risk allocation rules. The sell strategy. Tips without frameworks are gambling. Frameworks with discipline are investing.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the full Wealth Protection Blueprint."</div>
+</div>
+
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">E-23</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-curiosity">Curiosity Gap</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"I asked 76 members their biggest fear. It wasn't losing money."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Curiosity, Emotion</span></div>
+  <div class="card-body"><p>The #1 fear wasn't a crash. It wasn't volatility. It was having no exit strategy. Confidence in sell strategy: 2.8 out of 10. That's fixable.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the assessment."</div>
+</div>
+
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">E-24</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-pattern">Pattern Interrupt</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"A 72-year-old retired teacher is building a Bitcoin trust for his grandchildren."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, Social Proof</span></div>
+  <div class="card-body"><p>Derek spent 39 years coaching college gymnastics. He's not a tech bro. He's a grandfather who wants to leave a legacy. This space isn't just for young people. It's for anyone thinking generationally.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT to start your own journey."</div>
+</div>
+
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">E-25</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-contrarian">Contrarian</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"No affiliates. No sponsors. Here's how we make money."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: PROOF</span><span class="meta-tag">Trigger: Curiosity, Social Proof</span></div>
+  <div class="card-body"><p>Our only revenue comes from membership. If our members don't succeed, they leave. If they leave, we lose revenue. We don't get paid to recommend exchanges or push coins. We get paid when you stay because the framework works.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment PROOF to see how 1,400+ professionals scored on our assessment."</div>
+</div>
+
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">E-26</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"She lost $15K on an options group before she found us."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, Social Proof</span></div>
+  <div class="card-body"><p>Christine was burnt. What changed her mind? No affiliates, no sponsorships, and 116% CAGR (audited by Crypto Tax Australia). Trust has to be earned. We earn it.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the free assessment. Zero commitment."</div>
+</div>
+
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">E-27</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-contrarian">Contrarian</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"1,163 members. 25 trades in 3 years. That's not a mistake."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Surprise, Social Proof</span></div>
+  <div class="card-body"><p>We're not a trading platform. 25 trades in 3 years means selective. Quality over quantity. Each trade backed by 5-point fundamental analysis. Less activity, more conviction. That's the Collective Shift way.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the 8-step framework."</div>
+</div>
+
+<!-- RESULTS: Viral #43-50 -->
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">V-43</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-pattern">Pattern Interrupt</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"116% CAGR over 6 financial years (audited). Zero affiliates. 25 trades total. Those aren't projections. They're audited numbers."</div>
+  <div class="card-meta"><span class="meta-tag">Reel + Carousel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Social Proof, Surprise</span></div>
+  <div class="card-body"><p>Jason was heading for a loss. After learning the sell strategy, he turned it around. His own words: "I've moved from a situation where I undoubtedly would have been in a loss to being two and a half X." That's 250%.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the free guide built from the same framework."</div>
+</div>
+
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">V-44</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"The best member results aren't the biggest gains. They're the disasters that didn't happen."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Curiosity, Emotion</span></div>
+  <div class="card-body"><p>Alex has millions invested. His portfolio swung $400K in a single week. He didn't sell. Checked his plan. Went back to his life. "Can't talk highly enough about Collective Shift." That's not courage. That's preparation.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the framework that keeps you calm when the market isn't."</div>
+</div>
+
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">V-45</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-pattern">Pattern Interrupt</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"One member paid off his entire mortgage with Bitcoin profits. Not a hypothetical. His actual mortgage."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Social Proof, FOMO</span></div>
+  <div class="card-body"><p>Chris said: "I managed to get rid of a little bit of BTC and pay off my mortgage." Years of patience. A clear sell strategy. Discipline to execute when the target was hit. That's not a Bitcoin story. That's an execution story.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT. Step 8 is where mortgages get paid off."</div>
+</div>
+
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">V-46</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-labeling">Labeling</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"If a digital asset educator won't show you audited returns, they're not an educator. They're a marketer with opinions."</div>
+  <div class="card-meta"><span class="meta-tag">Reel + Thread</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, Surprise</span></div>
+  <div class="card-body"><p>Ciaran: "Having visibility to what people who spent all day doing this do with their own portfolios is invaluable." He's up 250%. We invest our own capital alongside every member. Skin in the game is the only trust signal that matters.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the guide from a team with 6 years of audited, transparent results."</div>
+</div>
+
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">V-47</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"The transformation isn't a bigger portfolio. It's going from 'Am I doing this right?' to 'I know exactly what I'm doing.'"</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion</span></div>
+  <div class="card-body"><p>Heidi: "The biggest achievement is the education and the strategy." Warren: "I feel more confident moving forward." Ted, one week in: "I feel like I'm in the right environment." Three people. Same transformation. From uncertainty to clarity.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT. The transformation starts with Step 1."</div>
+</div>
+
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">V-48</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-curiosity">Curiosity Gap</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"When the market dropped 40% in 2022, our community got quieter, not louder. Here's why that matters."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Curiosity, Social Proof</span></div>
+  <div class="card-body"><p>In most groups, a crash triggers panic. In ours, it triggers plan-checking. Simon: "I have confidence to work through this bull market and the next bear." The community is calmest when the market is loudest. That tells you everything.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the guide that prepares you for every phase."</div>
+</div>
+
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">V-49</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-contrarian">Contrarian</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"Our Platinum membership starts at $5,000. One member said his first coaching call paid for the entire year."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Curiosity, Social Proof</span></div>
+  <div class="card-body"><p>Joe: "Joining Collective Shift and talking to the guys here has turned it around for me." The turnaround came from one conversation. Someone looked at his portfolio and said "sell that, hold that, and here's why." That's not an expense. That's insurance.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT. Start with the free version."</div>
+</div>
+
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">V-50</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"The members who get the best results don't have bigger portfolios or more knowledge. They have one thing in common: they follow the plan."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Curiosity, Emotion</span></div>
+  <div class="card-body"><p>Eric: "It's the aspect of holding myself accountable." The framework works. But only if you work the framework. Show up. Ask questions. Write your plan. Review it quarterly. That's not a talent problem. That's an engagement problem.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT. But actually do the assessment. Don't just download it."</div>
+</div>
+
+<!-- RESULTS: NEW concepts -->
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">N-16</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-curiosity">Curiosity Gap</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"We bought Solana at $22 (1,236% return). ETH at $80 (6,091%). BTC at $3,000 (4,113%). Those aren't brags. They're publicly verifiable data points."</div>
+  <div class="card-meta"><span class="meta-tag">Carousel + Reel</span><span class="meta-tag">Keyword: PROOF</span><span class="meta-tag">Trigger: Social Proof, FOMO</span><span class="meta-tag">NEW</span></div>
+  <div class="card-body"><p>Audited by Crypto Tax Australia. Every position verifiable. Not screenshots. Not claims. Receipts. The reason we publish this data is because nobody else will. In a space full of opinions, audited results are rare. Ask any educator: "Will you show me your portfolio?" If no, walk away.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment PROOF for the full track record breakdown."</div>
+</div>
+
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">N-17</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-reframe">Reframe</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"The couple who retired 10 years early because of one allocation decision."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, FOMO</span><span class="meta-tag">NEW</span></div>
+  <div class="card-body"><p>They had $1.5M in traditional assets. Allocated 15% to digital assets with a framework. Over 3 years, that allocation grew enough to fund their early retirement. Not because they got lucky. Because they had a written plan, stuck to it, and took profits at their targets. The boring stuff works.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the allocation and exit strategy framework."</div>
+</div>
+
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">N-18</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-contrarian">Contrarian</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span></div></div>
+  <div class="card-hook">"None of our competitors have audited returns. Not one. Here's why that should concern you."</div>
+  <div class="card-meta"><span class="meta-tag">Reel + Thread</span><span class="meta-tag">Keyword: PROOF</span><span class="meta-tag">Trigger: Fear, Social Proof</span><span class="meta-tag">NEW</span></div>
+  <div class="card-body"><p>We analyzed every major digital asset education company. Decentralized Masters: no audit. Yield School: unverified claims. Signal groups: screenshots anyone can fake. We publish our returns because Crypto Tax Australia audits them independently. That's the difference between marketing and transparency.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment PROOF for the audited track record comparison."</div>
+</div>
+
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">N-19</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-pattern">Pattern Interrupt</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"From a $49/month Facebook group to a seven-figure-per-month research company. In 5 years."</div>
+  <div class="card-meta"><span class="meta-tag">Reel</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Emotion, Social Proof</span><span class="meta-tag">NEW</span><span class="meta-tag">ORIGIN STORY</span></div>
+  <div class="card-body"><p>Started with a vision: change what digital asset research looks like. Independent. No affiliates. No sponsors. Turned down hundreds of thousands. Built a team. Doubled down on data. Now thousands of clients worldwide. Coinbase became a client. The model works because results are the product.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the research-driven framework."</div>
+</div>
+
+<div class="concept-card" data-pillar="results">
+  <div class="card-header"><span class="card-id">N-20</span><span class="pillar-badge pillar-results">Results</span><span class="hook-type hook-labeling">Labeling</span><div class="viral-rating"><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star filled"></span><span class="star"></span></div></div>
+  <div class="card-hook">"3,266x ROAS on a single ad. Here's the one word that made it work."</div>
+  <div class="card-meta"><span class="meta-tag">Reel + Thread</span><span class="meta-tag">Keyword: BLUEPRINT</span><span class="meta-tag">Trigger: Curiosity</span><span class="meta-tag">NEW</span></div>
+  <div class="card-body"><p>"Protection." Not "gains." Not "moon." Not "opportunity." Protection. Our highest-performing ad was called "The Silent Thief." It spoke to inflation eating purchasing power. Our ICP doesn't want to get rich quick. They want to protect what they've already built. Lead with protection. Close with framework.</p></div>
+  <div class="card-cta"><strong>CTA:</strong> "Comment BLUEPRINT for the wealth protection framework."</div>
+</div>
+
+
+<!-- ============================================ -->
+<!-- SECTION 3: CONTENT CALENDAR -->
+<!-- ============================================ -->
+<h2 id="content-calendar">3. Monthly/Quarterly Content Calendar</h2>
+
+<h3>Weekly Output: 61 Pieces</h3>
+<table>
+  <thead><tr><th>Content Type</th><th>Quantity/Week</th><th>Owner</th></tr></thead>
+  <tbody>
+    <tr><td>Ben's original reels</td><td>21 (3/day)</td><td>Ben + Georgio</td></tr>
+    <tr><td>Travis's original reels</td><td>7 (1/day)</td><td>Travis + Clipper</td></tr>
+    <tr><td>YouTube-derived reels</td><td>9 (3 per video)</td><td>Clipper</td></tr>
+    <tr><td>YouTube long-form videos</td><td>3</td><td>Matt, Travis, Sarn</td></tr>
+    <tr><td>Ben's tweets</td><td>7 (1/day)</td><td>Ben / Social</td></tr>
+    <tr><td>Ben's LinkedIn posts</td><td>7 (1/day)</td><td>Ben / Social</td></tr>
+    <tr><td>EDMs (email)</td><td>3 (Mon, Wed, Fri)</td><td>Marketing</td></tr>
+    <tr><td>The Weekly Shift Newsletter</td><td>1 (Thursday)</td><td>Matt</td></tr>
+    <tr><td>Client result posts</td><td>3</td><td>Social Team</td></tr>
+    <tr><td><strong>Total</strong></td><td><strong>61</strong></td><td></td></tr>
+  </tbody>
+</table>
+
+<h3>Daily Posting Schedule</h3>
+<table>
+  <thead><tr><th>Time (AEST)</th><th>Content</th><th>Platform</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>8:00 AM</td><td>Ben Reel #1</td><td>IG, TikTok, Shorts</td><td>ManyChat keyword CTA</td></tr>
+    <tr><td>10:00 AM</td><td>Ben Tweet</td><td>X/Twitter</td><td>Market take or framework insight</td></tr>
+    <tr><td>12:00 PM</td><td>Ben Reel #2</td><td>IG, TikTok, Shorts</td><td>ManyChat keyword CTA</td></tr>
+    <tr><td>1:00 PM</td><td>Ben LinkedIn</td><td>LinkedIn</td><td>Story, insight, or framework</td></tr>
+    <tr><td>3:00 PM</td><td>Travis Reel</td><td>IG, TikTok, Shorts</td><td>Original content</td></tr>
+    <tr><td>4:00 PM</td><td>Ben Reel #3</td><td>IG, TikTok, Shorts</td><td>ManyChat keyword CTA</td></tr>
+    <tr><td>5:00 PM (M/W/F)</td><td>EDM</td><td>Email</td><td>See email cadence below</td></tr>
+  </tbody>
+</table>
+
+<h3>Sunday Batch Filming Protocol</h3>
+<div class="concept-card">
+  <div class="card-hook">Every Sunday, 10am-1pm. Non-negotiable.</div>
+  <div class="card-body">
+    <p><strong>Before filming:</strong> Review evergreen bank, pick 10-15 reels. Check ideation notes from member questions and sales calls. Set up filming environment (same location, equipment, outfit). No decision-making on the day - everything pre-decided.</p>
+    <p><strong>During filming:</strong> Film 10-15 reels. Each reel: read hook, deliver flow, CTA. 30-60 seconds each. Authentic over polished. Raw footage uploaded to Google Drive immediately.</p>
+    <p><strong>After filming:</strong> Georgio edits and adds text overlays/captions. Georgio queues 3 reels/day for Mon-Sat. Ben reviews Monday morning and approves the week's batch.</p>
+  </div>
+</div>
+
+<h3>Theme Weeks (Quarterly Rotation)</h3>
+<table>
+  <thead><tr><th>Week</th><th>Theme</th><th>Pillar Focus</th><th>Key Content</th></tr></thead>
+  <tbody>
+    <tr><td>Week 1</td><td>Protection Week</td><td><span class="pillar-badge pillar-protect">Protect</span></td><td>Custody, scams, tax, estate planning</td></tr>
+    <tr><td>Week 2</td><td>Strategy Week</td><td><span class="pillar-badge pillar-strategy">Strategy</span></td><td>Allocation, sell rules, cycle phases</td></tr>
+    <tr><td>Week 3</td><td>Confidence Week</td><td><span class="pillar-badge pillar-confidence">Confidence</span></td><td>Origin story, beginner content, partner reels</td></tr>
+    <tr><td>Week 4</td><td>Results Week</td><td><span class="pillar-badge pillar-results">Results</span></td><td>Member stories, audited returns, testimonials</td></tr>
+  </tbody>
+</table>
+
+<h3>Email Cadence</h3>
+<table>
+  <thead><tr><th>Day</th><th>Type</th><th>From</th><th>Format</th></tr></thead>
+  <tbody>
+    <tr><td>Monday</td><td>Educational Deep Dive</td><td>Ben (founder inbox)</td><td>Plain text. One Shift OS concept.</td></tr>
+    <tr><td>Wednesday</td><td>Story + Belief Break</td><td>Ben (founder inbox)</td><td>Plain text. Member story or market narrative.</td></tr>
+    <tr><td>Thursday</td><td>The Weekly Shift</td><td>Matt Willemsen</td><td>Designed newsletter. Market update + research.</td></tr>
+    <tr><td>Friday</td><td>Open Loop into VSL</td><td>Ben (founder inbox)</td><td>Plain text. Curiosity hook that the free training resolves.</td></tr>
+  </tbody>
+</table>
+
+<h3>90-Day Target Milestones</h3>
+<table>
+  <thead><tr><th>Phase</th><th>Timeline</th><th>Focus</th><th>Target</th></tr></thead>
+  <tbody>
+    <tr><td>Phase 1</td><td>Days 1-30</td><td>Volume & consistency</td><td>Hit 61 posts/week target. Build Sunday filming habit.</td></tr>
+    <tr><td>Phase 2</td><td>Days 31-60</td><td>Optimization</td><td>Identify top 10 hooks by performance. Double production of winner formats.</td></tr>
+    <tr><td>Phase 3</td><td>Days 61-90</td><td>Scale & iterate</td><td>100+ ManyChat triggers/week. 20+ organic strategy calls booked/week.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================ -->
+<!-- SECTION 4: PLATFORM GUIDELINES -->
+<!-- ============================================ -->
+<h2 id="platform-guidelines">4. Platform-Specific Guidelines</h2>
+
+<h3>Instagram (Primary Channel)</h3>
+<table>
+  <thead><tr><th>Element</th><th>Guideline</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Handle</strong></td><td>@bensimpsonau</td></tr>
+    <tr><td><strong>Content</strong></td><td>3 reels/day (Ben) + 1/day (Travis) + YouTube clips + client results</td></tr>
+    <tr><td><strong>Tone</strong></td><td>Direct, warm, educator. Australian but globally accessible.</td></tr>
+    <tr><td><strong>Format</strong></td><td>Vertical 9:16. 30-60 second reels. Captions always on.</td></tr>
+    <tr><td><strong>Hashtags</strong></td><td>5-8 per post. Mix of branded (#collectiveshift #shiftOS) and discovery (#bitcoininvesting #digitalassets)</td></tr>
+    <tr><td><strong>Best times</strong></td><td>8am, 12pm, 4pm AEST (catches AU morning, UK evening, US morning)</td></tr>
+    <tr><td><strong>Bio link</strong></td><td>collectiveshift.co/cryptoblueprint (single link, no Linktree)</td></tr>
+    <tr><td><strong>What works</strong></td><td>Personal stories (50x engagement), contrarian hooks, specific data points</td></tr>
+    <tr><td><strong>What doesn't</strong></td><td>Generic market commentary, news regurgitation, overly polished content</td></tr>
+  </tbody>
+</table>
+
+<h3>YouTube</h3>
+<table>
+  <thead><tr><th>Element</th><th>Guideline</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Channels</strong></td><td>Collective Shift (main), Wealth Shift Podcast, Travis Thomas, Sarn Elliott</td></tr>
+    <tr><td><strong>Long-form</strong></td><td>3/week: Matt (research), Travis (framework), Sarn (tutorial). 15-30 min.</td></tr>
+    <tr><td><strong>Shorts</strong></td><td>9/week (3 clips per long-form video)</td></tr>
+    <tr><td><strong>Tone</strong></td><td>Professional but accessible. More depth than Instagram.</td></tr>
+    <tr><td><strong>Best times</strong></td><td>Tue, Wed, Thu/Fri mornings AEST</td></tr>
+    <tr><td><strong>Personas</strong></td><td>Matt (research/macro), Travis (coaching/psychology), Sarn (tutorials/education)</td></tr>
+  </tbody>
+</table>
+
+<h3>X/Twitter</h3>
+<table>
+  <thead><tr><th>Element</th><th>Guideline</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Handle</strong></td><td>@bensimpsonau</td></tr>
+    <tr><td><strong>Cadence</strong></td><td>1 tweet/day + 2-3 threads/week (repurposed from best reels)</td></tr>
+    <tr><td><strong>Tone</strong></td><td>Sharper, more opinionated. Hot takes welcome. Personal stories dominate.</td></tr>
+    <tr><td><strong>Format</strong></td><td>Short tweets + 5-7 tweet threads. Threads end with CTA.</td></tr>
+    <tr><td><strong>Best times</strong></td><td>10am AEST (catches US evening + UK early morning)</td></tr>
+    <tr><td><strong>What works</strong></td><td>Personal narrative (82K views), vulnerability, contrarian takes</td></tr>
+    <tr><td><strong>What doesn't</strong></td><td>News commentary (under 1K views), generic educational posts</td></tr>
+  </tbody>
+</table>
+
+<h3>LinkedIn</h3>
+<table>
+  <thead><tr><th>Element</th><th>Guideline</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Cadence</strong></td><td>1 post/day (7/week)</td></tr>
+    <tr><td><strong>Tone</strong></td><td>Professional educator. More narrative form (200-400 words).</td></tr>
+    <tr><td><strong>Format</strong></td><td>Long-form text posts. Personal experience + member stories.</td></tr>
+    <tr><td><strong>Best times</strong></td><td>1pm AEST (matches business hours globally)</td></tr>
+    <tr><td><strong>Personas</strong></td><td>Ben (primary), Travis (secondary)</td></tr>
+  </tbody>
+</table>
+
+<h3>TikTok</h3>
+<table>
+  <thead><tr><th>Element</th><th>Guideline</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Content</strong></td><td>Same reels as Instagram (cross-post)</td></tr>
+    <tr><td><strong>Tone</strong></td><td>Slightly more casual. Can be edgier.</td></tr>
+    <tr><td><strong>Format</strong></td><td>Vertical 9:16. 30-60 seconds. Fast-paced hooks.</td></tr>
+    <tr><td><strong>Personas</strong></td><td>Ben, Travis, Sarn</td></tr>
+  </tbody>
+</table>
+
+<h3>Podcast (The Wealth Shift)</h3>
+<table>
+  <thead><tr><th>Element</th><th>Guideline</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Hosts</strong></td><td>Ben Simpson + Aaron Berghuber (Bergs)</td></tr>
+    <tr><td><strong>Cadence</strong></td><td>2/week: Tuesday (interview, 60-90 min) + Friday (breakdown, 20-30 min)</td></tr>
+    <tr><td><strong>Platforms</strong></td><td>YouTube, Apple Podcasts, Spotify</td></tr>
+    <tr><td><strong>Audience</strong></td><td>30-55, $100K-$5M+ portfolio, wants structured guidance</td></tr>
+    <tr><td><strong>Tone</strong></td><td>Conversational but substantial. Zero fluff.</td></tr>
+  </tbody>
+</table>
+
+<h3>House of Brands: Platform Assignments</h3>
+<table>
+  <thead><tr><th>Brand/Person</th><th>Platforms</th><th>Focus</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Ben Simpson</strong></td><td>IG, YT, X, LinkedIn, TikTok</td><td>Thought leadership, personal brand, portfolio strategy</td></tr>
+    <tr><td><strong>Collective Shift</strong></td><td>IG, YT, LinkedIn, Email, Website</td><td>Company brand, newsletter, EDMs, SEO</td></tr>
+    <tr><td><strong>Travis Thomas</strong></td><td>IG, YT, LinkedIn, TikTok</td><td>Investor psychology, goal architecture, coaching</td></tr>
+    <tr><td><strong>Sarn Elliott</strong></td><td>YouTube</td><td>Tutorials, explainers, technical education</td></tr>
+    <tr><td><strong>Matt Willemsen</strong></td><td>YT (CS channel), X</td><td>Research, altcoins, macro, economics</td></tr>
+    <tr><td><strong>Wealth Shift Podcast</strong></td><td>YT, Apple, Spotify, IG, TikTok, X</td><td>Interviews, market breakdowns, wealth building</td></tr>
+  </tbody>
+</table>
+
+
+<!-- ============================================ -->
+<!-- SECTION 5: CREATION PLAYBOOK -->
+<!-- ============================================ -->
+<h2 id="creation-playbook">5. Content Creation Playbook</h2>
+
+<h3>Hook Formulas (12 Proven Frameworks)</h3>
+<table>
+  <thead><tr><th>#</th><th>Type</th><th>Formula</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td><span class="hook-type hook-contrarian">Contrarian</span></td><td>Flip a widely-held belief</td><td>"The biggest risk in digital assets isn't volatility. It's doing nothing."</td></tr>
+    <tr><td>2</td><td><span class="hook-type hook-labeling">Labeling</span></td><td>If/then challenge calling out behavior</td><td>"If you check your portfolio every day, you're not investing."</td></tr>
+    <tr><td>3</td><td><span class="hook-type hook-curiosity">Curiosity Gap</span></td><td>Surprising fact pulls viewer forward</td><td>"I asked 76 members their biggest fear. It wasn't losing money."</td></tr>
+    <tr><td>4</td><td><span class="hook-type hook-reframe">Reframe</span></td><td>Give a familiar word a new meaning</td><td>"Bitcoin is not a digital asset. Bitcoin is digital property."</td></tr>
+    <tr><td>5</td><td><span class="hook-type hook-pattern">Pattern Interrupt</span></td><td>Unexpected statement that contradicts expectations</td><td>"Your exchange balance is not your money. Full stop."</td></tr>
+    <tr><td>6</td><td>Number + Specificity</td><td>"[Specific number] + [unexpected outcome]"</td><td>"12,763 digital assets have fallen 95% or more."</td></tr>
+    <tr><td>7</td><td>Personal Confession</td><td>"I [did something vulnerable/unexpected]"</td><td>"I made hundreds of thousands on paper. Then I lost nearly all of it."</td></tr>
+    <tr><td>8</td><td>Direct Address</td><td>"If you have [situation], here's [what matters]"</td><td>"If you have $100K to invest, here's where most people go wrong."</td></tr>
+    <tr><td>9</td><td>Authority + Surprise</td><td>"I've [credibility marker]. Here's [unexpected finding]"</td><td>"I've helped 1,100+ professionals. Here's what they all have in common."</td></tr>
+    <tr><td>10</td><td>Question Nobody Asks</td><td>"Everyone asks [common]. Nobody asks [real question]"</td><td>"Everyone asks me what to buy. Nobody asks me when to sell."</td></tr>
+    <tr><td>11</td><td>Diagnostic Line</td><td>"That's not a [surface problem]. That's a [real problem]."</td><td>"That's not a market problem. That's a psychology problem."</td></tr>
+    <tr><td>12</td><td>Stakes Escalation</td><td>"If you died tomorrow, could your [family] [do critical thing]?"</td><td>"If you died tomorrow, could your family access your digital assets?"</td></tr>
+  </tbody>
+</table>
+
+<h3>Caption Templates</h3>
+
+<h4>Educational Post Template</h4>
+<div class="qr-card">
+  <p>[Hook - one line that stops the scroll]</p>
+  <p>[2-3 lines explaining the concept with specificity]</p>
+  <p>[Real example or data point]</p>
+  <p>[Action step the viewer can take today]</p>
+  <p>[CTA: Comment [KEYWORD] for [specific deliverable]]</p>
+</div>
+
+<h4>Story Post Template</h4>
+<div class="qr-card">
+  <p>[Personal hook - vulnerability or surprise]</p>
+  <p>[The situation - what happened]</p>
+  <p>[The turning point - what changed]</p>
+  <p>[The lesson - what I learned]</p>
+  <p>[CTA: Comment [KEYWORD] for [related resource]]</p>
+</div>
+
+<h4>CTA-Driven Post Template</h4>
+<div class="qr-card">
+  <p>[Data-backed hook with specific number]</p>
+  <p>[Brief context - why this matters to the ICP]</p>
+  <p>[Social proof or credibility marker]</p>
+  <p>[Direct CTA: Comment [KEYWORD] for [deliverable]]</p>
+</div>
+
+<h3>Content Repurposing System: 1 Video to 5 Platforms</h3>
+<table>
+  <thead><tr><th>Step</th><th>Platform</th><th>Format</th><th>Adaptation</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Instagram</td><td>30-60s Reel</td><td>Original vertical video. Caption with CTA.</td></tr>
+    <tr><td>2</td><td>TikTok</td><td>30-60s Video</td><td>Same video, adjusted caption for platform.</td></tr>
+    <tr><td>3</td><td>YouTube Shorts</td><td>Under 60s Short</td><td>Same video with end card.</td></tr>
+    <tr><td>4</td><td>X/Twitter</td><td>5-7 Tweet Thread</td><td>Expand script into thread. CTA at end.</td></tr>
+    <tr><td>5</td><td>LinkedIn</td><td>200-400 word Post</td><td>Narrative form. More professional tone.</td></tr>
+  </tbody>
+</table>
+
+<h3>Georgio's Editing Brief Template</h3>
+<div class="qr-card">
+  <h4 style="margin-top: 0;">Reel Editing Brief</h4>
+  <p><strong>Reel ID:</strong> [from content bank]</p>
+  <p><strong>Hook text overlay:</strong> [first line, bold, top of screen]</p>
+  <p><strong>Captions:</strong> Auto-generated, white text, bottom third</p>
+  <p><strong>Text overlays:</strong> Key stats/numbers appear as Ben says them</p>
+  <p><strong>CTA overlay:</strong> "Comment [KEYWORD]" appears in final 5 seconds</p>
+  <p><strong>Music:</strong> Subtle background, trending audio if applicable</p>
+  <p><strong>Length:</strong> 30-60 seconds (tighter is better)</p>
+  <p><strong>Style:</strong> Clean, minimal. CS brand colors for any graphics.</p>
+</div>
+
+<h3>Hashtag Strategy</h3>
+<table>
+  <thead><tr><th>Category</th><th>Hashtags</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Branded</strong></td><td>#collectiveshift #shiftOS #wealthshift #bensimpson</td></tr>
+    <tr><td><strong>Primary</strong></td><td>#bitcoin #digitalassets #bitcoininvesting #wealthbuilding #financialfreedom</td></tr>
+    <tr><td><strong>Secondary</strong></td><td>#investingtips #portfoliostrategy #generationalwealth #selfcustody #exitstrategy</td></tr>
+    <tr><td><strong>Trending</strong></td><td>Rotate based on current topics. Check weekly.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================ -->
+<!-- SECTION 6: ENGAGEMENT & GROWTH -->
+<!-- ============================================ -->
+<h2 id="engagement-growth">6. Engagement & Growth Tactics</h2>
+
+<h3>Comment Response Guidelines</h3>
+<table>
+  <thead><tr><th>Comment Type</th><th>Response</th><th>Speed</th></tr></thead>
+  <tbody>
+    <tr><td>ManyChat keyword (BLUEPRINT, BUILD, etc.)</td><td>Auto-triggered DM flow</td><td>Instant</td></tr>
+    <tr><td>Genuine question</td><td>Helpful 1-2 line answer + "Comment BLUEPRINT for more detail"</td><td>Within 2 hours</td></tr>
+    <tr><td>Positive feedback</td><td>Thank them. Ask what resonated. Build relationship.</td><td>Within 4 hours</td></tr>
+    <tr><td>Skepticism/challenge</td><td>Respectful, data-backed response. Never argue. "Here's the data..."</td><td>Within 4 hours</td></tr>
+    <tr><td>Troll/spam</td><td>Ignore or hide. Never engage.</td><td>-</td></tr>
+    <tr><td>Competitor mention</td><td>Don't acknowledge competitors. Redirect to our track record.</td><td>-</td></tr>
+  </tbody>
+</table>
+
+<h3>ManyChat DM Flows</h3>
+<table>
+  <thead><tr><th>Keyword</th><th>Trigger</th><th>DM Flow</th></tr></thead>
+  <tbody>
+    <tr><td>BLUEPRINT</td><td>Any content</td><td>Free assessment link + follow-up sequence (3 messages over 48 hours)</td></tr>
+    <tr><td>BUILD</td><td>Strategy content</td><td>Allocation calculator + "Want the full framework?" sequence</td></tr>
+    <tr><td>PROTECT</td><td>Security content</td><td>Risk audit checklist + follow-up to assessment</td></tr>
+    <tr><td>STARTERKIT</td><td>Beginner content</td><td>7-day course link + onboarding sequence</td></tr>
+    <tr><td>PROOF</td><td>Results content</td><td>Track record page + "See how you score" CTA</td></tr>
+    <tr><td>YIELD</td><td>Income content</td><td>Portfolio risk audit + follow-up</td></tr>
+  </tbody>
+</table>
+
+<h3>Trend-Jacking Framework</h3>
+<div class="concept-card">
+  <div class="card-body">
+    <p><strong>When news breaks:</strong></p>
+    <ol>
+      <li>Does this affect our ICP? (If no, skip it.)</li>
+      <li>Can we add a unique perspective? (If we'd just repeat the news, skip it.)</li>
+      <li>Does it connect to a Shift OS principle? (If yes, film same-day.)</li>
+      <li>Ben films a topical reel and it replaces the 12pm scheduled reel.</li>
+      <li>Same ManyChat CTA framework applies.</li>
+    </ol>
+    <p><strong>Rule:</strong> We're educators, not news anchors. Only cover news when we can teach something from it.</p>
+  </div>
+</div>
+
+<h3>UGC/Testimonial Content Strategy</h3>
+<table>
+  <thead><tr><th>Day</th><th>Format</th><th>Content</th></tr></thead>
+  <tbody>
+    <tr><td>Monday</td><td>Screenshot + highlight</td><td>Real message from a Platinum member. Orange highlight on key quote.</td></tr>
+    <tr><td>Wednesday</td><td>Story format</td><td>Longer anonymized member transformation.</td></tr>
+    <tr><td>Friday</td><td>Data proof point</td><td>116% CAGR, Solana at $22, retention rate, or similar.</td></tr>
+  </tbody>
+</table>
+<p><strong>Rules:</strong> Anonymize always (first name + last initial). Keep raw language - imperfect phrasing equals real. Rotate themes: returns, exit strategy confidence, community support, time saved.</p>
+
+<h3>Crisis Content Rules</h3>
+<div class="concept-card">
+  <div class="card-body">
+    <p><strong>If a major market crash occurs (25%+ drop):</strong></p>
+    <ol>
+      <li>Pause all scheduled reels immediately.</li>
+      <li>Ben films one calm, data-driven response reel within 4 hours.</li>
+      <li>Framework: "Here's what happened. Here's what our framework says. Here's what we're doing."</li>
+      <li>No price predictions. No panic. No "buy the dip" language.</li>
+      <li>Resume normal schedule after 48 hours if market stabilizes.</li>
+    </ol>
+    <p><strong>If negative press about CS:</strong> Do not respond publicly. Ben addresses in private member channels first. Marketing drafts a response for review. Never post reactively.</p>
+  </div>
+</div>
+
+
+<!-- ============================================ -->
+<!-- SECTION 7: MEASUREMENT -->
+<!-- ============================================ -->
+<h2 id="measurement">7. Measurement & Optimization</h2>
+
+<h3>Weekly KPIs by Platform</h3>
+<table>
+  <thead><tr><th>Platform</th><th>Metric</th><th>Target</th></tr></thead>
+  <tbody>
+    <tr><td>Instagram</td><td>Reels posted (Ben + Travis + YouTube clips)</td><td>37/week</td></tr>
+    <tr><td>Instagram</td><td>ManyChat keyword triggers</td><td>100+/week</td></tr>
+    <tr><td>Instagram</td><td>DMs received</td><td>20+/week</td></tr>
+    <tr><td>YouTube</td><td>Videos published</td><td>3/week</td></tr>
+    <tr><td>X/Twitter</td><td>Tweets posted</td><td>7/week</td></tr>
+    <tr><td>LinkedIn</td><td>Posts published</td><td>7/week</td></tr>
+    <tr><td>Email</td><td>Emails sent</td><td>4/week</td></tr>
+    <tr><td>Email</td><td>Open rate (EDMs)</td><td>25%+</td></tr>
+    <tr><td>Sales</td><td>Strategy calls booked (organic)</td><td>20/week</td></tr>
+  </tbody>
+</table>
+
+<h3>A/B Testing Framework for Hooks</h3>
+<div class="concept-card">
+  <div class="card-body">
+    <p><strong>What to test:</strong> Hook type (contrarian vs curiosity gap vs pattern interrupt). Test 2 different hooks for the same concept over 2 weeks.</p>
+    <p><strong>Sample size:</strong> Minimum 5 reels per hook type before drawing conclusions.</p>
+    <p><strong>Metrics to compare:</strong> Watch-through rate (primary), saves/bookmarks (secondary), keyword triggers (conversion).</p>
+    <p><strong>Decision rule:</strong> If one hook type consistently gets 2x+ the engagement, shift more concepts to that format.</p>
+  </div>
+</div>
+
+<h3>Content Scoring System</h3>
+<table>
+  <thead><tr><th>Score</th><th>Criteria</th><th>Action</th></tr></thead>
+  <tbody>
+    <tr><td style="color: var(--cs-green);">5 - Viral</td><td>10x average reach, high saves, keyword triggers</td><td>Create 3 variations immediately. Make it a series.</td></tr>
+    <tr><td style="color: var(--cs-green);">4 - Strong</td><td>3-5x average reach, good saves</td><td>Keep in rotation. Test different hooks.</td></tr>
+    <tr><td style="color: var(--cs-orange);">3 - Average</td><td>Normal reach, some engagement</td><td>Keep but don't prioritize. May re-film with better hook.</td></tr>
+    <tr><td style="color: var(--cs-red);">2 - Weak</td><td>Below average, low engagement</td><td>Retire after 90 days. Replace with stronger concept.</td></tr>
+    <tr><td style="color: var(--cs-red);">1 - Dead</td><td>Minimal reach, no keyword triggers</td><td>Remove from bank. Analyze why it failed.</td></tr>
+  </tbody>
+</table>
+
+<h3>Weekly Review Process</h3>
+<div class="qr-card">
+  <h4 style="margin-top:0;">Every Monday, 30 minutes</h4>
+  <ol>
+    <li>Pull last week's reel performance data (reach, saves, keyword triggers).</li>
+    <li>Score each piece using the 1-5 system above.</li>
+    <li>Identify the top 3 and bottom 3 pieces.</li>
+    <li>For top 3: create variations, re-shoot with different hooks, or extend into threads.</li>
+    <li>For bottom 3: diagnose why (weak hook? wrong pillar? bad timing?).</li>
+    <li>Adjust this week's content plan based on findings.</li>
+    <li>Update the content bank: mark winners, retire failures.</li>
+  </ol>
+</div>
+
+<h3>Monthly Reporting Template</h3>
+<div class="qr-card">
+  <h4 style="margin-top:0;">Monthly Content Report</h4>
+  <ul>
+    <li><strong>Total content published:</strong> [number] (target: 244/month)</li>
+    <li><strong>Top 5 performing reels:</strong> [list with metrics]</li>
+    <li><strong>ManyChat triggers:</strong> [total] by keyword breakdown</li>
+    <li><strong>Strategy calls booked (organic):</strong> [number]</li>
+    <li><strong>Email list growth:</strong> [number]</li>
+    <li><strong>Pillar distribution:</strong> [% breakdown vs targets]</li>
+    <li><strong>Best hook type this month:</strong> [type + data]</li>
+    <li><strong>Content to double-down on:</strong> [2-3 concepts]</li>
+    <li><strong>Content to kill:</strong> [concepts that failed]</li>
+    <li><strong>Next month focus:</strong> [theme + pillar adjustments]</li>
+  </ul>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 8: CHEATSHEETS -->
+<!-- ============================================ -->
+<h2 id="cheatsheets">8. Quick-Reference Cheatsheets</h2>
+
+<h3 id="hook-formulas">Hook Formulas - One Page Reference</h3>
+<div class="qr-card">
+  <table>
+    <thead><tr><th>Type</th><th>Formula</th><th>Fill-in Template</th></tr></thead>
+    <tbody>
+      <tr><td><span class="hook-type hook-contrarian">Contrarian</span></td><td>Flip belief</td><td>"The biggest [risk/mistake] isn't [obvious thing]. It's [surprising thing]."</td></tr>
+      <tr><td><span class="hook-type hook-labeling">Labeling</span></td><td>Call out behavior</td><td>"If you [common behavior], you're not [what they think]. You're [reality]."</td></tr>
+      <tr><td><span class="hook-type hook-curiosity">Curiosity Gap</span></td><td>Open a loop</td><td>"I [surveyed/helped/coached] [number] [people]. Here's what [surprised me]."</td></tr>
+      <tr><td><span class="hook-type hook-reframe">Reframe</span></td><td>Redefine a word</td><td>"[Concept] isn't [common definition]. It's [new precise definition]."</td></tr>
+      <tr><td><span class="hook-type hook-pattern">Pattern Interrupt</span></td><td>Unexpected statement</td><td>"[Something they assume is true] is [actually the opposite]."</td></tr>
+      <tr><td>Number</td><td>Specific data</td><td>"[Big specific number] [people/assets/dollars] [unexpected outcome]."</td></tr>
+      <tr><td>Confession</td><td>Vulnerability</td><td>"I [did/lost/failed at] [specific thing]. Here's what I learned."</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h3 id="cta-library">CTA Library</h3>
+<div class="qr-card">
+  <table>
+    <thead><tr><th>Keyword</th><th>CTA Copy</th><th>Best Used On</th></tr></thead>
+    <tbody>
+      <tr><td><strong>BLUEPRINT</strong></td><td>"Comment BLUEPRINT for the free 8-step assessment"</td><td>Any content (primary CTA)</td></tr>
+      <tr><td><strong>BUILD</strong></td><td>"Comment BUILD for the allocation calculator"</td><td>Strategy, allocation, framework content</td></tr>
+      <tr><td><strong>PROTECT</strong></td><td>"Comment PROTECT for the tax strategy decision tree"</td><td>Tax, risk, security content</td></tr>
+      <tr><td><strong>STARTERKIT</strong></td><td>"Comment STARTERKIT for the 7-day course"</td><td>Beginner content</td></tr>
+      <tr><td><strong>PROOF</strong></td><td>"Comment PROOF to see how 1,400+ investors scored"</td><td>Results, social proof content</td></tr>
+      <tr><td><strong>YIELD</strong></td><td>"Comment YIELD for the portfolio risk audit"</td><td>Income, DeFi, risk content</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top: 12px; font-size: 13px;"><strong>Rule:</strong> 3-4 keyword CTAs per day across Ben's reels. Not every post needs one. "Link in bio" or no CTA is fine for the rest.</p>
+</div>
+
+<h3 id="do-dont">Do This / Not That</h3>
+
+<div class="do-dont-grid">
+  <div class="do-col">
+    <h4>Do This</h4>
+    <ul>
+      <li>Say "digital assets" - sounds sophisticated</li>
+      <li>Use specific numbers and data points</li>
+      <li>Lead with personal stories (50x engagement)</li>
+      <li>Say "audited by Crypto Tax Australia" when citing returns</li>
+      <li>Write "Bitcoin" with a capital B</li>
+      <li>Use dashes (-) for punctuation</li>
+      <li>Film authentic, slightly imperfect reels</li>
+      <li>Include member stories with first name + last initial</li>
+      <li>End with actionable takeaway</li>
+      <li>Maintain educator tone at all times</li>
+    </ul>
+  </div>
+  <div class="dont-col">
+    <h4>Not That</h4>
+    <ul>
+      <li>Never say "crypto" - sounds amateur</li>
+      <li>No vague claims ("huge returns possible")</li>
+      <li>Don't lead with news commentary (under 1K views)</li>
+      <li>Never make income claims or guaranteed returns</li>
+      <li>Don't write "bitcoin" lowercase</li>
+      <li>NEVER use em dashes. They look like AI.</li>
+      <li>Don't over-produce or over-polish</li>
+      <li>Never use full names without permission</li>
+      <li>Don't end with "let me know in the comments"</li>
+      <li>Never be salesy, hype-driven, or use urgency tactics</li>
+    </ul>
+  </div>
+</div>
+
+<div class="do-dont-grid">
+  <div class="do-col">
+    <h4>Language - Do</h4>
+    <ul>
+      <li>"Strategic Wealth Builder"</li>
+      <li>"Framework" / "System" / "Operating System"</li>
+      <li>"Generational wealth"</li>
+      <li>"Conviction" / "Clarity"</li>
+      <li>"Audited returns"</li>
+      <li>"Self-custody"</li>
+      <li>"Research-driven"</li>
+    </ul>
+  </div>
+  <div class="dont-col">
+    <h4>Language - Don't</h4>
+    <ul>
+      <li>"Get rich quick"</li>
+      <li>"Secret" / "Hack" / "Trick"</li>
+      <li>"Financial freedom" (overused)</li>
+      <li>"HODL" / "To the moon" / "WAGMI"</li>
+      <li>"Guaranteed" / "Risk-free"</li>
+      <li>"Crypto" (say "digital assets")</li>
+      <li>"Trust me" (show data instead)</li>
+    </ul>
+  </div>
+</div>
+
+<h3 id="manychat-ref">ManyChat Keyword Quick Reference</h3>
+<div class="qr-card">
+  <table>
+    <thead><tr><th>Keyword</th><th>Delivers</th><th>Follow-up</th><th>Use Frequency</th></tr></thead>
+    <tbody>
+      <tr><td>BLUEPRINT</td><td>Free assessment link</td><td>3-message sequence over 48 hours</td><td>Primary - use daily</td></tr>
+      <tr><td>BUILD</td><td>Allocation calculator</td><td>2-message sequence to assessment</td><td>3-4x per week</td></tr>
+      <tr><td>PROTECT</td><td>Risk audit checklist</td><td>2-message sequence to assessment</td><td>3-4x per week</td></tr>
+      <tr><td>STARTERKIT</td><td>7-day course link</td><td>Onboarding sequence</td><td>2-3x per week</td></tr>
+      <tr><td>PROOF</td><td>Track record page</td><td>"See your score" CTA</td><td>2-3x per week</td></tr>
+      <tr><td>YIELD</td><td>Portfolio risk audit</td><td>Follow-up to assessment</td><td>1-2x per week</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>Posting Checklist (Daily)</h3>
+<ul class="checklist">
+  <li>3 Ben reels posted (8am, 12pm, 4pm)</li>
+  <li>1 Travis reel posted (3pm)</li>
+  <li>1 Ben tweet posted (10am)</li>
+  <li>1 Ben LinkedIn post posted (1pm)</li>
+  <li>YouTube-derived reels queued (Tue, Thu, Sat batches)</li>
+  <li>Client result post published (Mon/Wed/Fri)</li>
+  <li>ManyChat keywords verified on each post</li>
+  <li>Comments monitored for keyword triggers</li>
+  <li>Topical reel filmed if news breaks (replaces 12pm slot)</li>
+</ul>
+
+<h3>Emergency Content Ideas (When Stuck)</h3>
+<div class="qr-card">
+  <ol>
+    <li>Re-film a top-performing reel with a new hook</li>
+    <li>Pull a question from the latest sales call transcript</li>
+    <li>Share a member quote (anonymized) with your reaction</li>
+    <li>Film a "here's what I'd do with $10K today" reel</li>
+    <li>React to a mainstream media article about Bitcoin</li>
+    <li>Share a personal story from your investing journey</li>
+    <li>Do a "this vs that" comparison (DCA vs lump sum, exchange vs hardware wallet)</li>
+    <li>Answer the most common DM question from the past week</li>
+    <li>Film a "3 things I'd tell my younger self about investing"</li>
+    <li>Share a behind-the-scenes of your filming setup</li>
+  </ol>
+</div>
+
+<!-- FOOTER -->
+<div style="margin-top: 80px; padding-top: 40px; border-top: 1px solid var(--cs-card-border); text-align: center;">
+  <p style="color: var(--cs-light-gray); font-size: 13px;">Collective Shift Social Media Content System v1.0 - April 2026</p>
+  <p style="color: var(--cs-light-gray); font-size: 12px;">103 concepts across 5 pillars. 61 posts per week. Built for the Strategic Wealth Builder.</p>
+  <p style="color: var(--cs-light-gray); font-size: 11px; opacity: 0.5;">This document is internal and confidential. Do not share outside the Collective Shift team.</p>
+</div>
+
+</div><!-- /content-wrap -->
+</div><!-- /main -->
+
+<script>
+// Sidebar toggle
+function toggleSidebar() {
+  document.querySelector('.sidebar').classList.toggle('open');
+  document.querySelector('.sidebar-overlay').classList.toggle('open');
+}
+
+// Active nav highlighting
+const sections = document.querySelectorAll('h2[id], h3[id], .pillar-section-header[id]');
+const navLinks = document.querySelectorAll('.sidebar nav a');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    const top = section.offsetTop;
+    if (scrollY >= top - 100) current = section.getAttribute('id');
+  });
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+  });
+});
+
+// Expand/collapse concept cards
+function toggleExpand(btn) {
+  const card = btn.closest('.concept-card');
+  card.classList.toggle('expanded');
+  btn.textContent = card.classList.contains('expanded') ? 'Hide Script' : 'Show Full Script';
+}
+
+// Filter by pillar
+function filterByPillar(pillar, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  document.querySelectorAll('.concept-card').forEach(card => {
+    if (pillar === 'all' || card.dataset.pillar === pillar) {
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  document.querySelectorAll('.pillar-section-header').forEach(header => {
+    if (pillar === 'all') {
+      header.style.display = '';
+    } else {
+      const id = header.getAttribute('id');
+      header.style.display = id && id.includes(pillar) ? '' : 'none';
+    }
+  });
+}
+
+// Search concepts
+function filterConcepts() {
+  const query = document.getElementById('conceptSearch').value.toLowerCase();
+  document.querySelectorAll('.concept-card').forEach(card => {
+    const text = card.textContent.toLowerCase();
+    card.style.display = text.includes(query) ? '' : 'none';
+  });
+  document.querySelectorAll('.pillar-section-header').forEach(h => h.style.display = '');
+  if (query) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  }
+}
+
+// Close sidebar on nav click (mobile)
+document.querySelectorAll('.sidebar nav a').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 1024) toggleSidebar();
+  });
+});
+</script>
+
+</body>
+</html>
