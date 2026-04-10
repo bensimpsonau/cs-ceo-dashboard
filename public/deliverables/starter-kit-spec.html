@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Starter Kit Spec — Collective Shift</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #0D0B14;
+  color: #E8E4F0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+}
+a { color: #0BF4B9; text-decoration: none; }
+a:hover { color: #FC5C03; text-decoration: underline; }
+
+/* Top nav bar */
+.topbar {
+  background: #1B1925;
+  border-bottom: 2px solid #FC5C03;
+  padding: 12px 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.topbar .back-link {
+  color: #FC5C03;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.topbar .back-link:hover { color: #0BF4B9; text-decoration: none; }
+.topbar .brand {
+  color: #9B92B0;
+  font-size: 13px;
+  margin-left: auto;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Page wrapper */
+.page-wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 32px 80px;
+}
+
+/* Document header */
+.doc-header {
+  border-bottom: 1px solid #2A2438;
+  padding-bottom: 24px;
+  margin-bottom: 40px;
+}
+.doc-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+.doc-meta {
+  color: #9B92B0;
+  font-size: 14px;
+}
+.doc-meta span {
+  margin-right: 16px;
+}
+.doc-meta .tag {
+  background: #1B1925;
+  border: 1px solid #2A2438;
+  border-radius: 4px;
+  padding: 2px 10px;
+  font-size: 12px;
+  color: #0BF4B9;
+}
+
+/* Content typography */
+.content h1 { font-size: 1.9rem; font-weight: 700; color: #fff; margin: 40px 0 16px; line-height: 1.25; }
+.content h2 { font-size: 1.45rem; font-weight: 700; color: #fff; margin: 36px 0 14px; padding-top: 8px; border-top: 1px solid #2A2438; }
+.content h3 { font-size: 1.15rem; font-weight: 600; color: #0BF4B9; margin: 28px 0 10px; }
+.content h4 { font-size: 1rem; font-weight: 600; color: #FC5C03; margin: 20px 0 8px; text-transform: uppercase; letter-spacing: 0.04em; }
+.content h5, .content h6 { font-size: 0.95rem; font-weight: 600; color: #9B92B0; margin: 16px 0 6px; }
+
+.content p { margin: 0 0 16px; color: #E8E4F0; }
+.content p:last-child { margin-bottom: 0; }
+
+.content ul, .content ol { margin: 0 0 16px 24px; }
+.content li { margin-bottom: 6px; color: #E8E4F0; }
+.content li > ul, .content li > ol { margin-top: 6px; margin-bottom: 0; }
+
+.content strong { color: #fff; font-weight: 700; }
+.content em { color: #0BF4B9; font-style: italic; }
+
+/* Blockquotes */
+.content blockquote {
+  border-left: 3px solid #FC5C03;
+  margin: 24px 0;
+  padding: 12px 20px;
+  background: #1B1925;
+  border-radius: 0 6px 6px 0;
+  color: #E8E4F0;
+}
+.content blockquote p { margin: 0; color: #E8E4F0; }
+
+/* Code */
+.content code {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.85em;
+  background: #13111C;
+  color: #0BF4B9;
+  border: 1px solid #2A2438;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+.content pre {
+  background: #13111C;
+  border: 1px solid #2A2438;
+  border-radius: 8px;
+  padding: 20px 24px;
+  overflow-x: auto;
+  margin: 20px 0;
+}
+.content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.875rem;
+  color: #0BF4B9;
+  line-height: 1.6;
+}
+
+/* Tables */
+.content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 0.9rem;
+  overflow-x: auto;
+  display: block;
+}
+.content thead th {
+  background: #231E35;
+  color: #FC5C03;
+  font-weight: 700;
+  text-align: left;
+  padding: 12px 16px;
+  border: 1px solid #2A2438;
+  white-space: nowrap;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+.content tbody td {
+  padding: 10px 16px;
+  border: 1px solid #2A2438;
+  color: #E8E4F0;
+  vertical-align: top;
+}
+.content tbody tr:nth-child(even) { background: #1B1925; }
+.content tbody tr:hover { background: #231E35; }
+
+/* Horizontal rule */
+.content hr {
+  border: none;
+  border-top: 1px solid #2A2438;
+  margin: 36px 0;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .page-wrapper { padding: 24px 16px 60px; }
+  .topbar { padding: 10px 16px; }
+  .doc-header h1 { font-size: 1.5rem; }
+  .content h1 { font-size: 1.5rem; }
+  .content h2 { font-size: 1.2rem; }
+}
+</style>
+</head>
+<body>
+  <nav class="topbar">
+    <a href="index.html" class="back-link">← Back to Deliverables</a>
+    <span class="brand">Collective Shift · Marketing</span>
+  </nav>
+  <div class="page-wrapper">
+    <div class="doc-header">
+      <h1>Starter Kit Spec</h1>
+      <div class="doc-meta">
+        <span>📅 April 10, 2026</span>
+        <span>📦 24 KB</span>
+        <span class="tag">Products & Funnels</span>
+      </div>
+    </div>
+    <div class="content">
+<h1 id="the-digital-asset-starter-kit-product-spec">The Digital Asset Starter Kit - Product Spec</h1>
+<p><em>Collective Shift | April 10, 2026</em><br />
+<em>Replaces: 2026-04-10-97-dollar-course-spec.md ("Your First Bitcoin in 14 Days")</em></p>
+<hr />
+<h2 id="product-overview">Product Overview</h2>
+<h3 id="name">Name</h3>
+<p><strong>The Digital Asset Starter Kit</strong></p>
+<h3 id="subtitle">Subtitle</h3>
+<p><strong>Get Your First Digital Asset Investment and Portfolio in 7 Days</strong></p>
+<h3 id="price">Price</h3>
+<p>$97 USD (one-time payment, lifetime access)</p>
+<h3 id="duration">Duration</h3>
+<p>7 days (2 lessons per day: morning Learn + afternoon Do)</p>
+<h3 id="delivery">Delivery</h3>
+<p>Go High Level landing page with checkout &gt; course modules inside Circle community</p>
+<h3 id="audience">Audience</h3>
+<p>Global. No Australian-specific content. References global exchanges (Coinbase, Kraken, Binance). No AU tax references. Currency-agnostic where possible.</p>
+<h3 id="manychat-keyword">ManyChat Keyword</h3>
+<p><strong>STARTERKIT</strong></p>
+<hr />
+<h2 id="the-problem">The Problem</h2>
+<p>Cautious Observers (score 6-10) and Hesitant First Allocators (score 11-15) from the Blueprint Assessment aren't ready for a $5,000 Accelerator or a strategy call. They need a structured, low-commitment entry point that builds foundational knowledge and creates a clear plan.</p>
+<p>From sales calls: "Flying blind, need some help." "I can't be with the techno bro. And I can't be with the old world solid bankers."</p>
+<p>Free YouTube content doesn't provide accountability or structure. The Blueprint PDF gives frameworks but no guided implementation. The Starter Kit bridges this gap.</p>
+<hr />
+<h2 id="why-97">Why $97</h2>
+<ul>
+<li>7 days of structured, daily guidance (morning learn + afternoon do)</li>
+<li>Built from the same education platform that has delivered 116% CAGR over 6 financial years (audited by Crypto Tax Australia)</li>
+<li>1,163+ members across Australia, the US, UK, Europe, and New Zealand</li>
+<li>Each day has two clear outcomes, not just "watch and learn"</li>
+<li>Access to the Circle community for peer support and questions</li>
+<li>Bridge to the full 8-step Shift OS framework</li>
+<li>$97 is below the "think about it" threshold for our ICP ($500K+ net worth)</li>
+<li>Less than the cost of one bad trade made without a framework</li>
+<li>Global pricing in USD makes it accessible worldwide</li>
+<li>Comparable education courses charge $500-$2,000 for less structured content</li>
+</ul>
+<h3 id="price-justification-for-landing-page">Price Justification (For Landing Page)</h3>
+<p><strong>What $97 gets you vs the alternatives:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Cost</th>
+<th>What You Get</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>YouTube research</td>
+<td>"Free" (but 40+ hours of your time)</td>
+<td>Scattered information, no structure, conflicting advice</td>
+</tr>
+<tr>
+<td>Other courses</td>
+<td>$500-$2,000</td>
+<td>Usually theory-heavy, no daily action steps, no community</td>
+</tr>
+<tr>
+<td>Financial advisor (digital assets)</td>
+<td>$300-$500/session</td>
+<td>One meeting, limited digital asset expertise</td>
+</tr>
+<tr>
+<td><strong>The Starter Kit</strong></td>
+<td><strong>$97</strong></td>
+<td><strong>7 days, 14 lessons, daily action steps, community access, clear portfolio plan</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7-day-structure">7-Day Structure</h2>
+<p>Each day has two sessions: Morning (Learn) and Afternoon (Do). Total time per day: 30-45 minutes.</p>
+<h3 id="day-1-foundations">Day 1: Foundations</h3>
+<p><strong>Morning: What Are Digital Assets?</strong><br />
+<em>Source: CS10023 Lesson 1 | Blueprint Step 01</em></p>
+<p>Content: Story of money (barter &gt; gold &gt; fiat &gt; digital). What digital assets are and why they exist. Types overview (Bitcoin, stablecoins, tokens). Why this matters for wealth preservation.</p>
+<p>Outcome: Understand the basics. Be able to explain digital assets to a friend without using jargon.</p>
+<p><strong>Afternoon: What They Can Do For Your Wealth</strong><br />
+<em>Source: CS10023 Lesson 2 | Blueprint Step 01</em></p>
+<p>Content: Use cases that matter for investors (store of wealth, inflation hedge, portfolio diversification, borderless transactions). Real-world examples. Advantages over traditional systems.</p>
+<p>Outcome: Identify 3 use cases that are personally relevant to your financial situation.</p>
+<hr />
+<h3 id="day-2-bitcoin-deep-dive">Day 2: Bitcoin Deep Dive</h3>
+<p><strong>Morning: Where Bitcoin Fits</strong><br />
+<em>Source: CS10023 Lesson 3 | Blueprint Step 02</em></p>
+<p>Content: Bitcoin history (Satoshi, 2009, born from the 2008 financial crisis). 6 properties (scarce at 21M cap, transparent, decentralised, borderless, freedom-preserving, fungible). 1 BTC = 100M sats. Bitcoin as digital gold and store of value.</p>
+<p>Outcome: Understand why Bitcoin is fundamentally different from every other digital asset.</p>
+<p><strong>Afternoon: What Bitcoin Can Do For You</strong><br />
+<em>Source: CS10023 Lesson 4 | Blueprint Step 02</em></p>
+<p>Content: Bitcoin as inflation hedge (80%+ of US dollars printed since 2020). Store of value thesis. Non-state money. Settlement advantages. Bitcoin as an alternative financial system.</p>
+<p>Outcome: Articulate your personal "why" for Bitcoin. Write one paragraph explaining the inflation hedge thesis in your own words.</p>
+<hr />
+<h3 id="day-3-risk-and-security">Day 3: Risk and Security</h3>
+<p><strong>Morning: Understanding Risks</strong><br />
+<em>Source: CS10023 Lessons 5 | Blueprint Step 04</em></p>
+<p>Content: Why risk management comes BEFORE buying. Terra LUNA example (top-10 to $0 in 48 hours). 12,763 digital assets have fallen 95%+. Risk tolerance assessment. The importance of starting with Bitcoin.</p>
+<p>Outcome: Develop a realistic understanding of risk. Complete the risk tolerance self-assessment.</p>
+<p><strong>Afternoon: Security Essentials + Top 3 Risks</strong><br />
+<em>Source: CS10023 Lessons 6-7 | Blueprint Step 06</em></p>
+<p>Content: Phishing deep-dive (6 warning signs). Exchange risk (your assets on an exchange are IOUs). Storage risk (lost passwords, seed phrases). Scam risk (verification, 2FA, bookmarks). 9 security tips that prevent 90% of problems.</p>
+<p>Outcome: Set up 2FA on your email. Understand the three biggest risks and one mitigation for each. Complete the security checklist.</p>
+<hr />
+<h3 id="day-4-planning">Day 4: Planning</h3>
+<p><strong>Morning: Create Your Investment Plan</strong><br />
+<em>Source: CS10023 Lesson 9 | Blueprint Step 04</em></p>
+<p>Content: Why planning matters. HODL vs DCA (dollar-cost averaging) explained. How much to allocate (percentage-based thinking, not dollar amounts). Time horizon. Basic exit triggers.</p>
+<p>Outcome: Write your investment plan: how much to invest monthly, which asset to start with (Bitcoin), and your time horizon.</p>
+<p><strong>Afternoon: Choose Your Exchange</strong><br />
+<em>Source: CS10023 Lesson 10 | Blueprint Step 05</em></p>
+<p>Content: Exchange selection criteria (your country, local currency support, fees, reputation, security track record). Recommended global exchanges: Coinbase (most trusted, beginner-friendly), Kraken (strong security, competitive fees), Binance (lowest fees, most options). How to compare.</p>
+<p>Outcome: Choose your exchange. Write down which one and why.</p>
+<hr />
+<h3 id="day-5-setup">Day 5: Setup</h3>
+<p><strong>Morning: Set Up Account + KYC</strong><br />
+<em>Source: CS10023 Lesson 11 | Blueprint Step 05</em></p>
+<p>Content: Account creation walkthrough. KYC (Know Your Customer) process explained. What identity documents you'll need. Step-by-step verification guide. What to do if verification is slow.</p>
+<p>Outcome: Create your exchange account and submit KYC verification.</p>
+<p><strong>Afternoon: Fund Your Account</strong><br />
+<em>Source: CS10023 Lesson 12 | Blueprint Step 05</em></p>
+<p>Content: Deposit methods (bank transfer, debit card, wire). Fees for each method. How much to start with (your plan from Day 4). Setting up recurring deposits for DCA. Common issues and troubleshooting.</p>
+<p>Outcome: Fund your account with your planned starting amount. Account is ready for purchase.</p>
+<hr />
+<h3 id="day-6-action">Day 6: Action</h3>
+<p><strong>Morning: Make Your First Purchase</strong><br />
+<em>Source: CS10023 Lesson 13 | Blueprint Step 05</em></p>
+<p>Content: Buying options (simple buy vs advanced/limit orders). Fee comparison. Fractional buying explained (you don't need a whole Bitcoin). Practical walkthrough. What to do after buying.</p>
+<p>Outcome: Buy your first Bitcoin. Screenshot the confirmation. You're now a digital asset investor.</p>
+<p><strong>Afternoon: Secure Your Storage</strong><br />
+<em>Source: CS10023 Lesson 14 | Blueprint Step 06</em></p>
+<p>Content: Exchange custody = IOUs (FTX cautionary tale). Self-custody explained. Hot wallets vs cold wallets. Hardware wallet recommendations (Ledger, Trezor). When to move to hardware wallet (threshold: ~$2,000 USD equivalent). Withdrawal walkthrough.</p>
+<p>Outcome: Understand self-custody. If holding &gt;$2,000, have a plan for a hardware wallet. Know how to withdraw from exchange to wallet.</p>
+<hr />
+<h3 id="day-7-strategy-next-steps">Day 7: Strategy + Next Steps</h3>
+<p><strong>Morning: Your Portfolio Plan</strong><br />
+<em>Source: Blueprint Steps 01-06 synthesis</em></p>
+<p>Content: Review everything you've built this week: knowledge foundation, risk awareness, investment plan, exchange account, first purchase, security setup. Consolidate into a single-page portfolio plan. DCA schedule confirmation. Portfolio tracking basics.</p>
+<p>Outcome: Complete your one-page portfolio plan. Set up your DCA schedule. You have a written strategy, not just a purchase.</p>
+<p><strong>Afternoon: What's Next: The Full Shift OS</strong><br />
+<em>Source: Blueprint Steps 01-08 overview</em></p>
+<p>Content: Introduce the complete 8-step Shift OS framework. Show them what they've accomplished:<br />
+- Step 1 (Foundations): DONE<br />
+- Step 2 (Bitcoin Conviction): DONE<br />
+- Step 5 (Buy &amp; Sell): DONE<br />
+- Step 6 (Send &amp; Store): DONE</p>
+<p>Show them what's left:<br />
+- Step 3 (Altcoins): Should you diversify beyond Bitcoin? The 80/20 rule says only 20% of altcoins beat Bitcoin over a full cycle. Knowing which ones requires a framework.<br />
+- Step 4 (Risk Frameworks): Your basic plan is a start. The full investor profile, 3 Investor Types, and 4 Pre-Start Questions take it to the next level.<br />
+- Step 7 (Tax): Every swap, sale, and transfer has tax implications. Holding structures, lending against Bitcoin, compliance strategies.<br />
+- Step 8 (Sell Strategy): You have basic exit triggers. The full framework covers 3 types of sell strategies, specific triggers, and the discipline system.</p>
+<p>CTA: "Book a free 15-minute strategy call and we'll map out your personalised next steps."</p>
+<p>Outcome: Understand where you are in the 8-step framework. Know exactly what gaps remain. Clear path forward.</p>
+<hr />
+<h2 id="day-7-upsell-mechanism-detail">Day 7 Upsell Mechanism (Detail)</h2>
+<h3 id="the-bridge">The Bridge</h3>
+<p>The Day 7 afternoon lesson is the natural upsell moment. After showing them they've completed 4 of 8 steps, the remaining 4 steps become the gap they can feel.</p>
+<h3 id="the-pitch">The Pitch</h3>
+<p>"You've done something most people never do. You've bought Bitcoin with a plan, secured it properly, and built a foundation of real understanding. That puts you ahead of 90% of people in this space.</p>
+<p>But you know there are gaps. Steps 3, 4, 7, and 8 are where the real money is made or lost. Altcoin selection. Full risk frameworks. Tax compliance. A complete sell strategy.</p>
+<p>Here's what I'd suggest: book a free 15-minute strategy call with our team. We'll look at where you are, identify which gaps matter most for your situation, and map out your next steps. No pressure, no pitch. Just clarity.</p>
+<p>If it makes sense, we'll talk about two options:<br />
+1. <strong>The Accelerator</strong> ($5,000 USD / 12 weeks): Create your complete digital asset strategy and portfolio. Full Platinum access for 90 days. Weekly coaching calls, 1:1 analyst access, community.<br />
+2. <strong>Platinum Membership</strong> (apply for pricing): Ongoing access to everything. 8 coaching calls/year, WhatsApp Inner Circle, live events, portfolio signals, in-person events. 116% CAGR over 6 financial years (verified &amp; audited by Crypto Tax Australia).</p>
+<p>But that conversation only happens if you want it. The strategy call is about YOUR plan, not our products."</p>
+<h3 id="post-completion-email-sequence-3-emails-over-5-days">Post-Completion Email Sequence (3 emails over 5 days)</h3>
+<p><strong>Email 1: Day 8 (1 day after completion)</strong><br />
+Subject: You finished the Starter Kit. Here's what most people miss next.<br />
+Alt 1: 4 steps done. 4 to go. Here's the gap.<br />
+Alt 2: Your Starter Kit is complete. Now what?</p>
+<p>Body: Congratulate them. Recap the 4 steps completed. Introduce the 4 gaps. Light CTA to book a strategy call.</p>
+<p>"You completed the Digital Asset Starter Kit. That means you've covered Steps 1, 2, 5, and 6 of the Shift OS framework. You understand the foundations, you have conviction in Bitcoin, you've made your first purchase, and you know how to secure it.</p>
+<p>Here's the honest truth about the 4 steps we didn't cover:</p>
+<p>Step 3 (Altcoins): Should you diversify beyond Bitcoin? Only 20% of altcoins beat Bitcoin over a full market cycle. Without a framework to evaluate them, you're guessing.</p>
+<p>Step 4 (Risk Frameworks): Your basic plan from Day 4 is a great start. But the full framework covers 3 Investor Types, position sizing, and diversification rules that protect your portfolio when markets get volatile.</p>
+<p>Step 7 (Tax): This is the one that catches people. Every swap between assets is a taxable event. Lending against Bitcoin instead of selling can save you significant money. Holding structures matter.</p>
+<p>Step 8 (Sell Strategy): This is where most people score lowest on our assessment. Confidence in exit strategy averages 2.8 out of 10. The full framework covers 3 types of sell strategies with specific triggers.</p>
+<p>If you want help mapping out which of these gaps matters most for your situation, book a free 15-minute strategy call:</p>
+<p>[STRATEGY CALL LINK]</p>
+<p>No pitch. Just your personalised next steps."</p>
+<p><strong>Email 2: Day 10 (3 days after completion)</strong><br />
+Subject: "I watched my portfolio drop 60% with no exit plan"<br />
+Alt 1: The one thing I'd change about my first year in digital assets<br />
+Alt 2: Why buying Bitcoin was the easy part</p>
+<p>Body: Story-driven. Use a member example (anonymised) about the cost of not having Steps 7 and 8. Someone who bought Bitcoin, watched it grow, then watched gains evaporate because they had no sell strategy. Tie to the strategy call.</p>
+<p>"One of our Platinum members told me something during their first coaching call that stuck with me.</p>
+<p>'I bought Bitcoin in 2021. Watched my portfolio go up 3x. Then I watched it come all the way back down. I didn't sell a single sat because I had no plan for when to sell.'</p>
+<p>That's not investing. That's hoping.</p>
+<p>The Starter Kit taught you how to buy. Steps 7 and 8 of the Shift OS teach you how to protect what you've built and when to take profits.</p>
+<p>Most of our Platinum members say the sell strategy framework was worth the entire membership fee on its own. Not because we told them what to do. Because we gave them a framework to make their own decisions with conviction.</p>
+<p>If you want to build that framework for yourself, start with a strategy call:</p>
+<p>[STRATEGY CALL LINK]</p>
+<p>15 minutes. We'll map out your gaps and your next steps."</p>
+<p><strong>Email 3: Day 12 (5 days after completion)</strong><br />
+Subject: Quick question about your Starter Kit<br />
+Alt 1: Did you set up your DCA yet?<br />
+Alt 2: One thing to check on your portfolio plan</p>
+<p>Body: Check-in email. Ask how their DCA is going. Offer the assessment as a diagnostic. Soft CTA to strategy call.</p>
+<p>"Quick check-in.</p>
+<p>It's been 5 days since you finished the Starter Kit. By now you should have:<br />
+- Your DCA running on a schedule<br />
+- Your Bitcoin secured (or a plan for hardware wallet if &gt;$2,000)<br />
+- Your one-page portfolio plan somewhere you can see it</p>
+<p>If any of those aren't done yet, this is your nudge. Go back to Days 4-6 and finish the action steps.</p>
+<p>If they ARE done and you want to see where you stand across all 8 areas of the Shift OS, take the 2-minute Digital Asset Readiness Assessment:</p>
+<p>[BLUEPRINT ASSESSMENT LINK]</p>
+<p>You'll get your score out of 24, your investor archetype, and the full 8-chapter Wealth Protection Blueprint Guide. It's free.</p>
+<p>Or if you already know you want structured guidance on the next steps:</p>
+<p>[STRATEGY CALL LINK]</p>
+<p>Talk soon."</p>
+<hr />
+<h2 id="7-day-email-drip-daily-lesson-delivery">7-Day Email Drip (Daily Lesson Delivery)</h2>
+<table>
+<thead>
+<tr>
+<th>Day</th>
+<th>Subject Line</th>
+<th>Preview (2 sentences)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Welcome to Day 1: What are digital assets, actually?</td>
+<td>Today you'll understand what digital assets are and what they can do for your wealth. Two lessons, under 30 minutes total. By tonight you'll be able to explain this to anyone.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Day 2: Why Bitcoin is different from everything else</td>
+<td>Most people lump Bitcoin in with thousands of other digital assets. Today you'll learn the 6 properties that make it fundamentally unique and what that means for your portfolio.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Day 3: The risks nobody talks about (before you buy anything)</td>
+<td>12,763 digital assets have fallen 95% or more. Today you'll learn the real risks, the real security essentials, and the 9 tips that prevent 90% of problems.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Day 4: Build your plan and choose your exchange</td>
+<td>Today's the day you create your investment plan and pick the exchange that's right for you. By tonight you'll have a written plan, not just good intentions.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Day 5: Set up your account and fund it</td>
+<td>Time to turn your plan into reality. Today you'll create your exchange account, verify your identity, and fund it with your planned amount. Tomorrow you buy.</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Day 6: Buy your first Bitcoin and secure it</td>
+<td>This is the day. Open your exchange, follow the walkthrough, make your first purchase, and learn how to keep it safe. Welcome to the future of money.</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Day 7: Your portfolio plan + what's next</td>
+<td>You did it. Today we consolidate everything into a one-page portfolio plan and show you the complete 8-step framework. Four steps done. Four to go.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ghl-landing-page-copy-summary">GHL Landing Page Copy (Summary)</h2>
+<p><em>Full standalone copy in separate doc: <code>2026-04-10-starter-kit-landing-page.md</code></em></p>
+<p><strong>Headline:</strong> Get Your First Digital Asset Investment and Portfolio in 7 Days</p>
+<p><strong>Subheadline:</strong> The structured 7-day course for busy professionals who want to invest in Bitcoin the right way. No jargon. No hype. Just a plan and a result.</p>
+<p><strong>CTA:</strong> Start Day 1 for $97</p>
+<p><strong>Key sections:</strong> Problem &gt; Solution &gt; 7-Day breakdown &gt; What you get &gt; Who it's for &gt; About CS &gt; FAQ &gt; Final CTA</p>
+<hr />
+<h2 id="checkout-page-structure-ghl">Checkout Page Structure (GHL)</h2>
+<h3 id="page-layout">Page Layout</h3>
+<ol>
+<li><strong>Header:</strong> Collective Shift logo + "The Digital Asset Starter Kit" + subtitle</li>
+<li><strong>Product summary:</strong> 7 days, 14 lessons, community access, portfolio plan</li>
+<li><strong>Price display:</strong> $97 USD (one-time, no subscription)</li>
+<li><strong>Payment form:</strong> Name, email, card details (Stripe integration via GHL)</li>
+<li><strong>What happens next:</strong> "After checkout, you'll get immediate access to Day 1 inside the Circle community. A daily email will guide you through each lesson."</li>
+<li><strong>Trust signals:</strong> "1,163+ members | Since 2018 | No affiliates, no sponsors"</li>
+<li><strong>Social proof:</strong> "Join 1,000+ members who've transformed their approach to digital assets"</li>
+<li><strong>Compliance footer:</strong> Educational purposes only. Not financial advice. Digital assets carry significant risk. Collective Shift Pty Ltd. ABN 78 650 977 325. Not an AFS licensee.</li>
+</ol>
+<h3 id="post-purchase-flow">Post-Purchase Flow</h3>
+<ol>
+<li>GHL confirmation page: "Welcome! Check your email for Day 1."</li>
+<li>GHL triggers Customer.io tag: <code>starterkit_purchased</code></li>
+<li>Customer.io sends Day 1 email immediately</li>
+<li>Circle community invite email (auto-generated from GHL webhook)</li>
+<li>Days 2-7: Customer.io drip, one email per day at 8am in user's timezone</li>
+<li>Day 8-12: Post-completion upsell sequence (3 emails)</li>
+<li>Day 14+: If no strategy call booked, enter Blueprint Assessment nurture</li>
+</ol>
+<hr />
+<h2 id="circle-community-setup-guide">Circle Community Setup Guide</h2>
+<h3 id="space-structure">Space Structure</h3>
+<p>Create a dedicated "Starter Kit" space inside the existing Circle community with the following structure:</p>
+<p><strong>Parent Space: The Digital Asset Starter Kit</strong><br />
+- Description: "Your 7-day guided course. Two lessons per day. Start with Day 1 and work through in order."<br />
+- Access: Locked behind purchase (GHL webhook adds to Circle group)</p>
+<p><strong>Sub-spaces (one per day):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Sub-space</th>
+<th>Name</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Day 1</td>
+<td>Foundations</td>
+<td>Morning video: What Are Digital Assets?</td>
+</tr>
+<tr>
+<td>Day 2</td>
+<td>Bitcoin Deep Dive</td>
+<td>Morning video: Where Bitcoin Fits</td>
+</tr>
+<tr>
+<td>Day 3</td>
+<td>Risk &amp; Security</td>
+<td>Morning video: Understanding Risks</td>
+</tr>
+<tr>
+<td>Day 4</td>
+<td>Planning</td>
+<td>Morning video: Create Your Investment Plan</td>
+</tr>
+<tr>
+<td>Day 5</td>
+<td>Setup</td>
+<td>Morning video: Set Up Account + KYC</td>
+</tr>
+<tr>
+<td>Day 6</td>
+<td>Action</td>
+<td>Morning video: Make Your First Purchase</td>
+</tr>
+<tr>
+<td>Day 7</td>
+<td>Strategy &amp; Next Steps</td>
+<td>Morning video: Your Portfolio Plan</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Additional resources space:</strong><br />
+- Exchange comparison guide (Coinbase vs Kraken vs Binance)<br />
+- Security checklist (printable)<br />
+- Investment plan template (fillable)<br />
+- One-page portfolio plan template<br />
+- FAQ and troubleshooting</p>
+<h3 id="drip-access">Drip Access</h3>
+<p>Days unlock sequentially. Day 1 available immediately. Each subsequent day unlocks at 8am in the user's timezone (managed via Customer.io trigger to Circle API). This prevents binge-and-refund.</p>
+<h3 id="community-features">Community Features</h3>
+<ul>
+<li>Discussion thread per day (ask questions, share wins)</li>
+<li>Pin a "Share your Day 6 purchase" celebration thread</li>
+<li>Starter Kit alumni badge after Day 7 completion</li>
+<li>Bridge to main community (view-only access to Beginners Lounge for first 30 days post-purchase)</li>
+</ul>
+<hr />
+<h2 id="manychat-integration">ManyChat Integration</h2>
+<h3 id="keyword-starterkit">Keyword: STARTERKIT</h3>
+<p><strong>Trigger:</strong> User comments "STARTERKIT" on any social post</p>
+<p><strong>Flow:</strong><br />
+1. Auto-DM: "Hey [name]! The Digital Asset Starter Kit is our 7-day guided course that takes you from zero to your first Bitcoin investment and portfolio plan. $97. Interested?"<br />
+2. If YES: Send checkout link with UTM: <code>[GHL_CHECKOUT_URL]?utm_source=instagram&amp;utm_medium=organic_manychat&amp;utm_campaign=starterkit</code><br />
+3. If "tell me more": Send 3-bullet summary + checkout link<br />
+4. 24hr follow-up if no purchase: "Any questions about the Starter Kit? Happy to answer anything."<br />
+5. 48hr follow-up: "Not sure if it's right for you? Take the free Digital Asset Readiness Assessment first: [BLUEPRINT LINK]. It'll tell you exactly where you stand."</p>
+<h3 id="social-post-cta-examples">Social Post CTA Examples</h3>
+<ul>
+<li>"Comment STARTERKIT and I'll send you the details on how to get your first digital asset investment and portfolio in 7 days."</li>
+<li>"If you've been meaning to buy Bitcoin but don't know where to start, comment STARTERKIT."</li>
+<li>"7 days. 14 lessons. Your first Bitcoin. Comment STARTERKIT."</li>
+</ul>
+<hr />
+<h2 id="gaps-vs-shift-os-deliberate-upsell-opportunities">Gaps vs Shift OS (Deliberate Upsell Opportunities)</h2>
+<table>
+<thead>
+<tr>
+<th>Shift OS Step</th>
+<th>Covered in Starter Kit?</th>
+<th>Gap = Upsell</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Step 01: Foundations</td>
+<td>Yes (Day 1)</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Step 02: Bitcoin Conviction</td>
+<td>Yes (Day 2)</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Step 03: Altcoins</td>
+<td><strong>NO</strong></td>
+<td>Accelerator/Platinum. "Learn to evaluate altcoins with the 5-Point Fundamental Analysis + 80/20 Rule."</td>
+</tr>
+<tr>
+<td>Step 04: Risk Frameworks</td>
+<td>Partially (Days 3-4)</td>
+<td>Accelerator for full risk framework: 3 Investor Types, 4 Pre-Start Questions, position sizing</td>
+</tr>
+<tr>
+<td>Step 05: Buy &amp; Sell</td>
+<td>Yes (Days 4-6)</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Step 06: Send &amp; Store</td>
+<td>Yes (Days 3, 6)</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Step 07: Tax</td>
+<td><strong>NO</strong></td>
+<td>Accelerator/Platinum. "CGT basics, holding structures, lending against BTC, compliance."</td>
+</tr>
+<tr>
+<td>Step 08: Sell Strategy</td>
+<td>Basic only (Day 4)</td>
+<td>Accelerator/Platinum. "3 types of sell strategies, specific triggers, discipline system."</td>
+</tr>
+</tbody>
+</table>
+<p>These gaps are deliberate. The Starter Kit solves the immediate problem (buying Bitcoin safely with a plan). The gaps create natural demand for the next tier.</p>
+<hr />
+<h2 id="tracking-attribution">Tracking &amp; Attribution</h2>
+<h3 id="utm-links-see-full-utm-doc-for-complete-list">UTM Links (See full UTM doc for complete list)</h3>
+<ul>
+<li>Campaign: <code>starterkit</code></li>
+<li>All platform links follow standard UTM convention</li>
+</ul>
+<h3 id="key-metrics-to-track">Key Metrics to Track</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Target</th>
+<th>Tool</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Checkout page visits</td>
+<td>Track weekly</td>
+<td>GHL</td>
+</tr>
+<tr>
+<td>Purchase conversion rate</td>
+<td>5-8% of page visits</td>
+<td>GHL</td>
+</tr>
+<tr>
+<td>Day 1 completion rate</td>
+<td>90%+</td>
+<td>Circle + Customer.io</td>
+</tr>
+<tr>
+<td>Day 7 completion rate</td>
+<td>60%+</td>
+<td>Circle + Customer.io</td>
+</tr>
+<tr>
+<td>Post-completion assessment starts</td>
+<td>30%+</td>
+<td>Typeform/GHL</td>
+</tr>
+<tr>
+<td>Strategy calls booked (from Starter Kit)</td>
+<td>15%+ of completers</td>
+<td>Calendly</td>
+</tr>
+<tr>
+<td>Accelerator/Platinum conversion</td>
+<td>Track all</td>
+<td>CRM</td>
+</tr>
+</tbody>
+</table>
+<h3 id="revenue-projections-conservative">Revenue Projections (Conservative)</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Monthly Purchases</th>
+<th>Revenue</th>
+<th>Downstream</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Low</td>
+<td>30</td>
+<td>$2,910/mo</td>
+<td>If 15% book calls, 4-5 strategy calls/mo</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>75</td>
+<td>$7,275/mo</td>
+<td>If 15% book calls, 11 strategy calls/mo</td>
+</tr>
+<tr>
+<td>High</td>
+<td>150</td>
+<td>$14,550/mo</td>
+<td>If 15% book calls, 22 strategy calls/mo</td>
+</tr>
+</tbody>
+</table>
+<p>The $97 course is not a profit centre. It's a qualification and relationship-building tool. The real revenue is in Accelerator and Platinum conversions from completers.</p>
+<hr />
+<h2 id="technical-implementation">Technical Implementation</h2>
+<ol>
+<li><strong>Landing page:</strong> Go High Level (standalone page, not behind login)</li>
+<li><strong>Checkout:</strong> GHL native checkout with Stripe</li>
+<li><strong>Course content:</strong> Circle community (Starter Kit space with drip access)</li>
+<li><strong>Email drip:</strong> Customer.io (7-day lesson delivery + 3-email upsell sequence)</li>
+<li><strong>ManyChat:</strong> Instagram keyword automation for STARTERKIT</li>
+<li><strong>Tracking:</strong> UTM parameters on all links, GHL &gt; Customer.io &gt; Calendly attribution</li>
+<li><strong>CRM tagging:</strong> <code>starterkit_purchased</code>, <code>starterkit_day7_complete</code>, <code>starterkit_call_booked</code></li>
+</ol>
+<hr />
+<p><em>Product spec v2.0 | April 10, 2026</em><br />
+<em>Updated: 7-day structure, global audience, USD pricing, GHL + Circle delivery, STARTERKIT ManyChat keyword</em></p>
+    </div>
+  </div>
+</body>
+</html>

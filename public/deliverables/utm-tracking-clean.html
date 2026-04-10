@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UTM Tracking System — Collective Shift</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #0D0B14;
+  color: #E8E4F0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+}
+a { color: #0BF4B9; text-decoration: none; }
+a:hover { color: #FC5C03; text-decoration: underline; }
+
+/* Top nav bar */
+.topbar {
+  background: #1B1925;
+  border-bottom: 2px solid #FC5C03;
+  padding: 12px 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.topbar .back-link {
+  color: #FC5C03;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.topbar .back-link:hover { color: #0BF4B9; text-decoration: none; }
+.topbar .brand {
+  color: #9B92B0;
+  font-size: 13px;
+  margin-left: auto;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Page wrapper */
+.page-wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 32px 80px;
+}
+
+/* Document header */
+.doc-header {
+  border-bottom: 1px solid #2A2438;
+  padding-bottom: 24px;
+  margin-bottom: 40px;
+}
+.doc-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+.doc-meta {
+  color: #9B92B0;
+  font-size: 14px;
+}
+.doc-meta span {
+  margin-right: 16px;
+}
+.doc-meta .tag {
+  background: #1B1925;
+  border: 1px solid #2A2438;
+  border-radius: 4px;
+  padding: 2px 10px;
+  font-size: 12px;
+  color: #0BF4B9;
+}
+
+/* Content typography */
+.content h1 { font-size: 1.9rem; font-weight: 700; color: #fff; margin: 40px 0 16px; line-height: 1.25; }
+.content h2 { font-size: 1.45rem; font-weight: 700; color: #fff; margin: 36px 0 14px; padding-top: 8px; border-top: 1px solid #2A2438; }
+.content h3 { font-size: 1.15rem; font-weight: 600; color: #0BF4B9; margin: 28px 0 10px; }
+.content h4 { font-size: 1rem; font-weight: 600; color: #FC5C03; margin: 20px 0 8px; text-transform: uppercase; letter-spacing: 0.04em; }
+.content h5, .content h6 { font-size: 0.95rem; font-weight: 600; color: #9B92B0; margin: 16px 0 6px; }
+
+.content p { margin: 0 0 16px; color: #E8E4F0; }
+.content p:last-child { margin-bottom: 0; }
+
+.content ul, .content ol { margin: 0 0 16px 24px; }
+.content li { margin-bottom: 6px; color: #E8E4F0; }
+.content li > ul, .content li > ol { margin-top: 6px; margin-bottom: 0; }
+
+.content strong { color: #fff; font-weight: 700; }
+.content em { color: #0BF4B9; font-style: italic; }
+
+/* Blockquotes */
+.content blockquote {
+  border-left: 3px solid #FC5C03;
+  margin: 24px 0;
+  padding: 12px 20px;
+  background: #1B1925;
+  border-radius: 0 6px 6px 0;
+  color: #E8E4F0;
+}
+.content blockquote p { margin: 0; color: #E8E4F0; }
+
+/* Code */
+.content code {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.85em;
+  background: #13111C;
+  color: #0BF4B9;
+  border: 1px solid #2A2438;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+.content pre {
+  background: #13111C;
+  border: 1px solid #2A2438;
+  border-radius: 8px;
+  padding: 20px 24px;
+  overflow-x: auto;
+  margin: 20px 0;
+}
+.content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.875rem;
+  color: #0BF4B9;
+  line-height: 1.6;
+}
+
+/* Tables */
+.content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 0.9rem;
+  overflow-x: auto;
+  display: block;
+}
+.content thead th {
+  background: #231E35;
+  color: #FC5C03;
+  font-weight: 700;
+  text-align: left;
+  padding: 12px 16px;
+  border: 1px solid #2A2438;
+  white-space: nowrap;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+.content tbody td {
+  padding: 10px 16px;
+  border: 1px solid #2A2438;
+  color: #E8E4F0;
+  vertical-align: top;
+}
+.content tbody tr:nth-child(even) { background: #1B1925; }
+.content tbody tr:hover { background: #231E35; }
+
+/* Horizontal rule */
+.content hr {
+  border: none;
+  border-top: 1px solid #2A2438;
+  margin: 36px 0;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .page-wrapper { padding: 24px 16px 60px; }
+  .topbar { padding: 10px 16px; }
+  .doc-header h1 { font-size: 1.5rem; }
+  .content h1 { font-size: 1.5rem; }
+  .content h2 { font-size: 1.2rem; }
+}
+</style>
+</head>
+<body>
+  <nav class="topbar">
+    <a href="index.html" class="back-link">← Back to Deliverables</a>
+    <span class="brand">Collective Shift · Marketing</span>
+  </nav>
+  <div class="page-wrapper">
+    <div class="doc-header">
+      <h1>UTM Tracking System</h1>
+      <div class="doc-meta">
+        <span>📅 April 10, 2026</span>
+        <span>📦 20 KB</span>
+        <span class="tag">Operations</span>
+      </div>
+    </div>
+    <div class="content">
+<h1 id="utm-tracking-clean-consolidated-document">UTM Tracking - Clean Consolidated Document</h1>
+<p><em>Collective Shift | April 10, 2026</em><br />
+<em>Replaces: UTM_LINKS_ALL.md, UTM_LINKS_TRACKED_UPDATED.md, and all legacy UTM docs</em></p>
+<hr />
+<h2 id="part-1-utm-convention-guide">PART 1: UTM Convention Guide</h2>
+<h3 id="standard-format">Standard Format</h3>
+<pre><code>?utm_source=[platform]&amp;utm_medium=[placement]&amp;utm_campaign=[funnel]&amp;utm_content=[specific]
+</code></pre>
+<h3 id="parameter-definitions">Parameter Definitions</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Purpose</th>
+<th>Format</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>utm_source</code></td>
+<td>Where the lead came from (platform)</td>
+<td>Lowercase, no spaces</td>
+</tr>
+<tr>
+<td><code>utm_medium</code></td>
+<td>How/where on that platform</td>
+<td>Lowercase, underscores</td>
+</tr>
+<tr>
+<td><code>utm_campaign</code></td>
+<td>Which funnel or campaign</td>
+<td>Lowercase, underscores</td>
+</tr>
+<tr>
+<td><code>utm_content</code></td>
+<td>Specific variant or content piece</td>
+<td>Lowercase, underscores</td>
+</tr>
+</tbody>
+</table>
+<h3 id="source-options">Source Options</h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Use For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>instagram</code></td>
+<td>Instagram (all placements)</td>
+</tr>
+<tr>
+<td><code>twitter</code></td>
+<td>X / Twitter</td>
+</tr>
+<tr>
+<td><code>tiktok</code></td>
+<td>TikTok</td>
+</tr>
+<tr>
+<td><code>youtube</code></td>
+<td>YouTube</td>
+</tr>
+<tr>
+<td><code>linkedin</code></td>
+<td>LinkedIn</td>
+</tr>
+<tr>
+<td><code>cio</code></td>
+<td>Customer.io (email sends)</td>
+</tr>
+<tr>
+<td><code>ghl</code></td>
+<td>Go High Level (landing pages, checkout)</td>
+</tr>
+<tr>
+<td><code>meta</code></td>
+<td>Meta/Facebook paid ads</td>
+</tr>
+<tr>
+<td><code>jc</code></td>
+<td>JustCall (SMS)</td>
+</tr>
+<tr>
+<td><code>googledoc</code></td>
+<td>Google Doc / lead magnet PDFs</td>
+</tr>
+<tr>
+<td><code>partner</code></td>
+<td>Partner referrals</td>
+</tr>
+<tr>
+<td><code>wealthshift</code></td>
+<td>Ben &amp; Bergs / WealthShift podcast (Apple: https://podcasts.apple.com/us/podcast/the-wealth-shift/id1629581403 / YouTube: https://www.youtube.com/@wealthshiftpodcast)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="medium-options">Medium Options</h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Use For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>organic_bio</code></td>
+<td>Bio link on any platform</td>
+</tr>
+<tr>
+<td><code>organic_post</code></td>
+<td>Organic feed post</td>
+</tr>
+<tr>
+<td><code>organic_reel</code></td>
+<td>Organic reel / short-form video</td>
+</tr>
+<tr>
+<td><code>organic_story</code></td>
+<td>Instagram/Facebook story</td>
+</tr>
+<tr>
+<td><code>organic_manychat</code></td>
+<td>ManyChat DM automation</td>
+</tr>
+<tr>
+<td><code>organic_email</code></td>
+<td>Organic email (non-campaign)</td>
+</tr>
+<tr>
+<td><code>organic_lead_magnet</code></td>
+<td>Embedded in lead magnet doc</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>Campaign email via Customer.io</td>
+</tr>
+<tr>
+<td><code>sms</code></td>
+<td>SMS sends</td>
+</tr>
+<tr>
+<td><code>paid_social</code></td>
+<td>Paid social ads (Meta, etc.)</td>
+</tr>
+<tr>
+<td><code>checkout</code></td>
+<td>GHL checkout/landing page</td>
+</tr>
+<tr>
+<td><code>setter_[name]</code></td>
+<td>Setter outreach (e.g., <code>setter_reece</code>, <code>setter_david</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="campaign-options">Campaign Options</h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Funnel/Campaign</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>blueprint</code></td>
+<td>Wealth Protection Blueprint (free lead magnet / assessment)</td>
+</tr>
+<tr>
+<td><code>starterkit</code></td>
+<td>The Digital Asset Starter Kit ($97 course)</td>
+</tr>
+<tr>
+<td><code>vslv5</code></td>
+<td>VSL free training (current version: v5)</td>
+</tr>
+<tr>
+<td><code>accelerator</code></td>
+<td>Pro Accelerator ($5,000)</td>
+</tr>
+<tr>
+<td><code>platinum</code></td>
+<td>Platinum membership / strategy call</td>
+</tr>
+<tr>
+<td><code>newsletter</code></td>
+<td>The Weekly Shift newsletter</td>
+</tr>
+<tr>
+<td><code>edm_[date]</code></td>
+<td>EDM campaigns (e.g., <code>edm_04-14</code>)</td>
+</tr>
+<tr>
+<td><code>cohortclosing_[date]</code></td>
+<td>End-of-month cohort closing campaigns</td>
+</tr>
+<tr>
+<td><code>morningshift</code></td>
+<td>Morning Shift engagement</td>
+</tr>
+<tr>
+<td><code>summit_[month_year]</code></td>
+<td>Summit events</td>
+</tr>
+<tr>
+<td><code>masterclass_[month_year]</code></td>
+<td>Masterclass events</td>
+</tr>
+</tbody>
+</table>
+<h3 id="content-options-optional-for-variants">Content Options (Optional, for variants)</h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Use For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>e1</code>, <code>e2</code>, <code>e3</code></td>
+<td>Email sequence number</td>
+</tr>
+<tr>
+<td><code>6hr</code>, <code>3hr</code>, <code>1hr</code></td>
+<td>Countdown urgency emails</td>
+</tr>
+<tr>
+<td><code>educational</code>, <code>story</code>, <code>openloop</code></td>
+<td>EDM type</td>
+</tr>
+<tr>
+<td><code>blueprint_[date]</code></td>
+<td>Newsletter CTA variant</td>
+</tr>
+<tr>
+<td><code>unsurebutton</code></td>
+<td>"Not sure" button on checkout</td>
+</tr>
+<tr>
+<td><code>[specific_post_id]</code></td>
+<td>Individual post tracking</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="part-2-active-links">PART 2: Active Links</h2>
+<h3 id="blueprint-free-lead-magnet-assessment-links">Blueprint (Free Lead Magnet / Assessment) Links</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Full URL</th>
+<th>Source</th>
+<th>Medium</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IG Bio → Blueprint</td>
+<td><code>collectiveshift.co/cryptoblueprint?utm_source=instagram&amp;utm_medium=organic_bio&amp;utm_campaign=blueprint</code></td>
+<td>instagram</td>
+<td>organic_bio</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>IG ManyChat → Blueprint</td>
+<td><code>collectiveshift.co/cryptoblueprint?utm_source=instagram&amp;utm_medium=organic_manychat&amp;utm_campaign=blueprint</code></td>
+<td>instagram</td>
+<td>organic_manychat</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>IG Story → Blueprint</td>
+<td><code>collectiveshift.co/cryptoblueprint?utm_source=instagram&amp;utm_medium=organic_story&amp;utm_campaign=blueprint</code></td>
+<td>instagram</td>
+<td>organic_story</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>Twitter Bio → Blueprint</td>
+<td><code>collectiveshift.co/cryptoblueprint?utm_source=twitter&amp;utm_medium=organic_bio&amp;utm_campaign=blueprint</code></td>
+<td>twitter</td>
+<td>organic_bio</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>Twitter Post → Blueprint</td>
+<td><code>collectiveshift.co/cryptoblueprint?utm_source=twitter&amp;utm_medium=organic_post&amp;utm_campaign=blueprint</code></td>
+<td>twitter</td>
+<td>organic_post</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>TikTok Bio → Blueprint</td>
+<td><code>collectiveshift.co/cryptoblueprint?utm_source=tiktok&amp;utm_medium=organic_bio&amp;utm_campaign=blueprint</code></td>
+<td>tiktok</td>
+<td>organic_bio</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>YouTube Bio → Blueprint</td>
+<td><code>collectiveshift.co/cryptoblueprint?utm_source=youtube&amp;utm_medium=organic_bio&amp;utm_campaign=blueprint</code></td>
+<td>youtube</td>
+<td>organic_bio</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>YouTube Description → Blueprint</td>
+<td><code>collectiveshift.co/cryptoblueprint?utm_source=youtube&amp;utm_medium=organic_post&amp;utm_campaign=blueprint</code></td>
+<td>youtube</td>
+<td>organic_post</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>LinkedIn Bio → Blueprint</td>
+<td><code>collectiveshift.co/cryptoblueprint?utm_source=linkedin&amp;utm_medium=organic_bio&amp;utm_campaign=blueprint</code></td>
+<td>linkedin</td>
+<td>organic_bio</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>LinkedIn Post → Blueprint</td>
+<td><code>collectiveshift.co/cryptoblueprint?utm_source=linkedin&amp;utm_medium=organic_post&amp;utm_campaign=blueprint</code></td>
+<td>linkedin</td>
+<td>organic_post</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>Email → Blueprint</td>
+<td><code>collectiveshift.co/cryptoblueprint?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=blueprint</code></td>
+<td>cio</td>
+<td>email</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>Newsletter → Blueprint</td>
+<td><code>collectiveshift.co/cryptoblueprint?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=newsletter&amp;utm_content=blueprint_[date]</code></td>
+<td>cio</td>
+<td>email</td>
+<td><strong>NEW</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="starter-kit-97-course-links-all-new">Starter Kit ($97 Course) Links — ALL NEW</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Full URL</th>
+<th>Source</th>
+<th>Medium</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IG Bio → Starter Kit</td>
+<td><code>[GHL_CHECKOUT_URL]?utm_source=instagram&amp;utm_medium=organic_bio&amp;utm_campaign=starterkit</code></td>
+<td>instagram</td>
+<td>organic_bio</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>IG ManyChat → Starter Kit</td>
+<td><code>[GHL_CHECKOUT_URL]?utm_source=instagram&amp;utm_medium=organic_manychat&amp;utm_campaign=starterkit</code></td>
+<td>instagram</td>
+<td>organic_manychat</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>IG Reel → Starter Kit</td>
+<td><code>[GHL_CHECKOUT_URL]?utm_source=instagram&amp;utm_medium=organic_reel&amp;utm_campaign=starterkit</code></td>
+<td>instagram</td>
+<td>organic_reel</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>Twitter Bio → Starter Kit</td>
+<td><code>[GHL_CHECKOUT_URL]?utm_source=twitter&amp;utm_medium=organic_bio&amp;utm_campaign=starterkit</code></td>
+<td>twitter</td>
+<td>organic_bio</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>Twitter Post → Starter Kit</td>
+<td><code>[GHL_CHECKOUT_URL]?utm_source=twitter&amp;utm_medium=organic_post&amp;utm_campaign=starterkit</code></td>
+<td>twitter</td>
+<td>organic_post</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>TikTok Bio → Starter Kit</td>
+<td><code>[GHL_CHECKOUT_URL]?utm_source=tiktok&amp;utm_medium=organic_bio&amp;utm_campaign=starterkit</code></td>
+<td>tiktok</td>
+<td>organic_bio</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>YouTube Bio → Starter Kit</td>
+<td><code>[GHL_CHECKOUT_URL]?utm_source=youtube&amp;utm_medium=organic_bio&amp;utm_campaign=starterkit</code></td>
+<td>youtube</td>
+<td>organic_bio</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>YouTube Description → Starter Kit</td>
+<td><code>[GHL_CHECKOUT_URL]?utm_source=youtube&amp;utm_medium=organic_post&amp;utm_campaign=starterkit</code></td>
+<td>youtube</td>
+<td>organic_post</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>LinkedIn Post → Starter Kit</td>
+<td><code>[GHL_CHECKOUT_URL]?utm_source=linkedin&amp;utm_medium=organic_post&amp;utm_campaign=starterkit</code></td>
+<td>linkedin</td>
+<td>organic_post</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>Email → Starter Kit</td>
+<td><code>[GHL_CHECKOUT_URL]?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=starterkit</code></td>
+<td>cio</td>
+<td>email</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>Newsletter → Starter Kit</td>
+<td><code>[GHL_CHECKOUT_URL]?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=newsletter&amp;utm_content=starterkit_[date]</code></td>
+<td>cio</td>
+<td>email</td>
+<td><strong>NEW</strong></td>
+</tr>
+</tbody>
+</table>
+<p><em>Note: Replace <code>[GHL_CHECKOUT_URL]</code> with the actual Go High Level landing page URL once built.</em></p>
+<hr />
+<h3 id="vsl-free-training-links-current-version-v5">VSL (Free Training) Links — Current Version: V5</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Full URL</th>
+<th>Source</th>
+<th>Medium</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BS IG Bio → VSL V5</td>
+<td><code>collectiveshift.net/trainingvslv5?utm_source=instagram&amp;utm_medium=organic_bio&amp;utm_campaign=vslv5</code></td>
+<td>instagram</td>
+<td>organic_bio</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>BS Twitter Bio → VSL V5</td>
+<td><code>collectiveshift.net/trainingvslv5?utm_source=twitter&amp;utm_medium=organic_bio&amp;utm_campaign=vslv5</code></td>
+<td>twitter</td>
+<td>organic_bio</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>BS TikTok Bio → VSL V5</td>
+<td><code>collectiveshift.net/trainingvslv5?utm_source=tiktok&amp;utm_medium=organic_bio&amp;utm_campaign=vslv5</code></td>
+<td>tiktok</td>
+<td>organic_bio</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>BS YouTube Bio → VSL V5</td>
+<td><code>collectiveshift.net/trainingvslv5?utm_source=youtube&amp;utm_medium=organic_bio&amp;utm_campaign=vslv5</code></td>
+<td>youtube</td>
+<td>organic_bio</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>BS YouTube Description → VSL V5</td>
+<td><code>collectiveshift.net/trainingvslv5?utm_source=youtube&amp;utm_medium=organic_post&amp;utm_campaign=vslv5</code></td>
+<td>youtube</td>
+<td>organic_post</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>BS LinkedIn → VSL V5</td>
+<td><code>collectiveshift.net/trainingvslv5?utm_source=linkedin&amp;utm_medium=organic_post&amp;utm_campaign=vslv5</code></td>
+<td>linkedin</td>
+<td>organic_post</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>BS Twitter Post → VSL V5</td>
+<td><code>collectiveshift.net/trainingvslv5?utm_source=twitter&amp;utm_medium=organic_post&amp;utm_campaign=vslv5</code></td>
+<td>twitter</td>
+<td>organic_post</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>Email General → VSL V5</td>
+<td><code>collectiveshift.net/trainingvslv5?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=vslv5</code></td>
+<td>cio</td>
+<td>email</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>Lead Magnet Doc → VSL V5</td>
+<td><code>collectiveshift.net/trainingvslv5?utm_source=googledoc&amp;utm_medium=organic_lead_magnet&amp;utm_campaign=vslv5</code></td>
+<td>googledoc</td>
+<td>organic_lead_magnet</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>EDM Open Loop → VSL V5</td>
+<td><code>collectiveshift.net/trainingvslv5?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=edm_[date]&amp;utm_content=openloop</code></td>
+<td>cio</td>
+<td>email</td>
+<td>Active</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="wealthshift-ben-bergs-podcast-vsl-links">WealthShift (Ben &amp; Bergs Podcast) → VSL Links</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Full URL</th>
+<th>Source</th>
+<th>Medium</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WS YouTube → VSL</td>
+<td><code>collectiveshift.net/trainingcso?utm_source=youtube&amp;utm_medium=organic_post&amp;utm_campaign=vsl&amp;utm_content=wealthshift</code></td>
+<td>youtube</td>
+<td>organic_post</td>
+<td>Active (legacy URL)</td>
+</tr>
+<tr>
+<td>WS Spotify → VSL</td>
+<td><code>collectiveshift.net/trainingcso?utm_source=spotify&amp;utm_medium=organic_post&amp;utm_campaign=vsl&amp;utm_content=wealthshift</code></td>
+<td>spotify</td>
+<td>organic_post</td>
+<td>Active (legacy URL)</td>
+</tr>
+<tr>
+<td>WS Instagram → VSL</td>
+<td><code>collectiveshift.net/trainingcso?utm_source=instagram&amp;utm_medium=organic_post&amp;utm_campaign=vsl&amp;utm_content=wealthshift</code></td>
+<td>instagram</td>
+<td>organic_post</td>
+<td>Active (legacy URL)</td>
+</tr>
+<tr>
+<td>WS Twitter → VSL</td>
+<td><code>collectiveshift.net/trainingcso?utm_source=twitter&amp;utm_medium=organic_post&amp;utm_campaign=vsl&amp;utm_content=wealthshift</code></td>
+<td>twitter</td>
+<td>organic_post</td>
+<td>Active (legacy URL)</td>
+</tr>
+<tr>
+<td>WS TikTok → VSL</td>
+<td><code>collectiveshift.net/trainingcso?utm_source=tiktok&amp;utm_medium=organic_post&amp;utm_campaign=vsl&amp;utm_content=wealthshift</code></td>
+<td>tiktok</td>
+<td>organic_post</td>
+<td>Active (legacy URL)</td>
+</tr>
+</tbody>
+</table>
+<p><em>Note: WealthShift links still use the old <code>/trainingcso</code> URL. Consider migrating to V5 URL.</em></p>
+<hr />
+<h3 id="accelerator-links-new">Accelerator Links — NEW</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Full URL</th>
+<th>Source</th>
+<th>Medium</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GHL Checkout → Accelerator</td>
+<td><code>calendly.com/d/cmzy-mph-k5r?utm_source=ghl&amp;utm_medium=checkout&amp;utm_campaign=accelerator</code></td>
+<td>ghl</td>
+<td>checkout</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>GHL Checkout (Unsure) → Accelerator</td>
+<td><code>calendly.com/d/cmzy-mph-k5r?utm_source=ghl&amp;utm_medium=checkout&amp;utm_campaign=accelerator&amp;utm_content=unsurebutton</code></td>
+<td>ghl</td>
+<td>checkout</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>Email → Accelerator</td>
+<td><code>calendly.com/d/cmzy-mph-k5r?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=accelerator</code></td>
+<td>cio</td>
+<td>email</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>IG ManyChat → Accelerator</td>
+<td><code>calendly.com/d/cmzy-mph-k5r?utm_source=instagram&amp;utm_medium=organic_manychat&amp;utm_campaign=accelerator</code></td>
+<td>instagram</td>
+<td>organic_manychat</td>
+<td><strong>NEW</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="platinum-strategy-call-links">Platinum / Strategy Call Links</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Full URL</th>
+<th>Source</th>
+<th>Medium</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platinum Page (Email)</td>
+<td><code>collectiveshift.co/platinum?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=platinum</code></td>
+<td>cio</td>
+<td>email</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>Strategy Call (Generic)</td>
+<td><code>calendly.com/d/cmzy-mph-k5r?utm_source=ghl&amp;utm_medium=checkout&amp;utm_campaign=platinum</code></td>
+<td>ghl</td>
+<td>checkout</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>Strategy Call (Starter Kit Upsell)</td>
+<td><code>calendly.com/d/cmzy-mph-k5r?utm_source=ghl&amp;utm_medium=checkout&amp;utm_campaign=starterkit&amp;utm_content=upsell</code></td>
+<td>ghl</td>
+<td>checkout</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>Strategy Call (Newsletter)</td>
+<td><code>calendly.com/d/cmzy-mph-k5r?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=newsletter&amp;utm_content=strategycall_[date]</code></td>
+<td>cio</td>
+<td>email</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>Accelerator Waitlist (Unsure Button)</td>
+<td><code>calendly.com/d/cmzy-mph-k5r?utm_source=ghl&amp;utm_medium=checkout&amp;utm_campaign=acceleratorwaitlist&amp;utm_content=unsurebutton</code></td>
+<td>ghl</td>
+<td>checkout</td>
+<td>Active</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="newsletter-links">Newsletter Links</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Full URL</th>
+<th>Source</th>
+<th>Medium</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Newsletter → Blueprint CTA</td>
+<td><code>collectiveshift.co/cryptoblueprint?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=newsletter&amp;utm_content=blueprint_[date]</code></td>
+<td>cio</td>
+<td>email</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>Newsletter → Starter Kit CTA</td>
+<td><code>[GHL_CHECKOUT_URL]?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=newsletter&amp;utm_content=starterkit_[date]</code></td>
+<td>cio</td>
+<td>email</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>Newsletter → Strategy Call CTA</td>
+<td><code>calendly.com/d/cmzy-mph-k5r?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=newsletter&amp;utm_content=strategycall_[date]</code></td>
+<td>cio</td>
+<td>email</td>
+<td><strong>NEW</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="edm-links">EDM Links</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Full URL</th>
+<th>Source</th>
+<th>Medium</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EDM → Blueprint (Educational)</td>
+<td><code>collectiveshift.co/cryptoblueprint?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=edm_[date]&amp;utm_content=educational</code></td>
+<td>cio</td>
+<td>email</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>EDM → Blueprint (Story)</td>
+<td><code>collectiveshift.co/cryptoblueprint?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=edm_[date]&amp;utm_content=story</code></td>
+<td>cio</td>
+<td>email</td>
+<td><strong>NEW</strong></td>
+</tr>
+<tr>
+<td>EDM → VSL (Open Loop)</td>
+<td><code>collectiveshift.net/trainingvslv5?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=edm_[date]&amp;utm_content=openloop</code></td>
+<td>cio</td>
+<td>email</td>
+<td><strong>NEW</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="setter-outreach-links">Setter Outreach Links</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Full URL</th>
+<th>Source</th>
+<th>Medium</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Setter Reece → Strategy Call</td>
+<td><code>calendly.com/d/cmzy-mph-k5r?utm_source=instagram&amp;utm_medium=setter_reece&amp;utm_campaign=platinum</code></td>
+<td>instagram</td>
+<td>setter_reece</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>Setter David → Strategy Call</td>
+<td><code>calendly.com/d/cmzy-mph-k5r?utm_source=instagram&amp;utm_medium=setter_david&amp;utm_campaign=platinum</code></td>
+<td>instagram</td>
+<td>setter_david</td>
+<td>Active</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="partner-guest-speaker-links">Partner / Guest Speaker Links</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Full URL</th>
+<th>Source</th>
+<th>Medium</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Adam Morse</td>
+<td><code>calendly.com/cs-consultation/platinum-membership-1-1-call-rr?utm_source=wealthseries&amp;utm_medium=adamm</code></td>
+<td>wealthseries</td>
+<td>adamm</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>Travis Thomas</td>
+<td><code>calendly.com/cs-consultation/platinum-membership-1-1-call-rr?utm_source=wealthseries&amp;utm_medium=travist</code></td>
+<td>wealthseries</td>
+<td>travist</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>Ravi Sharma</td>
+<td><code>calendly.com/cs-consultation/platinum-membership-1-1-call-rr?utm_source=wealthseries&amp;utm_medium=ravis</code></td>
+<td>wealthseries</td>
+<td>ravis</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>Swyftx Partner</td>
+<td><code>calendly.com/cs-consultation/platinum-membership-1-1-call-rr?utm_source=partner&amp;utm_medium=swyftx</code></td>
+<td>partner</td>
+<td>swyftx</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>CryptoTaxAus Partner</td>
+<td><code>calendly.com/cs-consultation/platinum-membership-1-1-call-rr?utm_source=partner&amp;utm_medium=cryptotaxaus</code></td>
+<td>partner</td>
+<td>cryptotaxaus</td>
+<td>Active</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="part-3-archived-links">PART 3: Archived Links</h2>
+<h3 id="old-vsl-links-pre-v5">Old VSL Links (Pre-V5)</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>URL</th>
+<th>Campaign</th>
+<th>Archived Date</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BS Socials → VSL V1</td>
+<td><code>collectiveshift.net/traininglpv1-ben?utm_source=Instagram&amp;utm_medium=Organic&amp;utm_campaign=VSL</code></td>
+<td>VSL v1</td>
+<td>Pre-2025</td>
+<td>Original VSL link</td>
+</tr>
+<tr>
+<td>BS All Platforms → VSL (old)</td>
+<td><code>collectiveshift.net/trainingcso?utm_source=[platform]&amp;utm_medium=Organic&amp;utm_campaign=VSL</code></td>
+<td>VSL (old)</td>
+<td>Pre-2025</td>
+<td>Old format, mixed case</td>
+</tr>
+<tr>
+<td>IG → VSL V3</td>
+<td><code>collectiveshift.net/trainingv3?utm_source=instagram&amp;utm_medium=organic_post&amp;utm_campaign=lead_magnet&amp;utm_content=vsl_v3</code></td>
+<td>VSL v3</td>
+<td>2025</td>
+<td>Superseded by V5</td>
+</tr>
+<tr>
+<td>Email → VSL V4 (Cohort Feb)</td>
+<td><code>collectiveshift.net/trainingv4?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=cohortclosing_02-26&amp;utm_content=e1-e3,6hr,3hr,1hr</code></td>
+<td>VSL v4</td>
+<td>Feb 2026</td>
+<td>Cohort closing series</td>
+</tr>
+</tbody>
+</table>
+<h3 id="old-masterclasssummit-links">Old Masterclass/Summit Links</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>URL</th>
+<th>Campaign</th>
+<th>Archived Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Masterclass Sep 2025 (Email)</td>
+<td><code>collectiveshift.co/masterclass?utm_source=newsletter&amp;utm_medium=email&amp;utm_campaign=Masterclass_Sep_2025</code></td>
+<td>Masterclass Sep 2025</td>
+<td>Sep 2025</td>
+</tr>
+<tr>
+<td>Masterclass Sep 2025 (IG)</td>
+<td><code>collectiveshift.co/masterclass?utm_source=Instagram&amp;utm_medium=Automation&amp;utm_campaign=Masterclass_Sep_2025</code></td>
+<td>Masterclass Sep 2025</td>
+<td>Sep 2025</td>
+</tr>
+<tr>
+<td>Summit Oct 2025 (Email)</td>
+<td><code>collectiveshift.co/summit?utm_source=newsletter&amp;utm_medium=email&amp;utm_campaign=Summit_Oct_2025</code></td>
+<td>Summit Oct 2025</td>
+<td>Oct 2025</td>
+</tr>
+<tr>
+<td>Summit Oct 2025 (IG)</td>
+<td><code>collectiveshift.co/summit?utm_source=Instagram&amp;utm_medium=story&amp;utm_campaign=Summit_Oct_2025</code></td>
+<td>Summit Oct 2025</td>
+<td>Oct 2025</td>
+</tr>
+<tr>
+<td>Summit Oct 2025 (ManyChat)</td>
+<td><code>collectiveshift.co/summit?utm_source=Instagram&amp;utm_medium=Manychat&amp;utm_campaign=Summit_Oct_2025</code></td>
+<td>Summit Oct 2025</td>
+<td>Oct 2025</td>
+</tr>
+<tr>
+<td>Masterclass Nov 2025 (IG)</td>
+<td><code>collectiveshift.co/masterclass?utm_source=Instagram&amp;utm_medium=Automation&amp;utm_campaign=Masterclass_Nov_2025</code></td>
+<td>Masterclass Nov 2025</td>
+<td>Nov 2025</td>
+</tr>
+<tr>
+<td>Fast Track Sep 2025 (Email)</td>
+<td><code>collectiveshift.co/masterclassftseptember?utm_source=newsletter&amp;utm_medium=email&amp;utm_campaign=Fasttracked_2025-09</code></td>
+<td>FT Sep 2025</td>
+<td>Sep 2025</td>
+</tr>
+<tr>
+<td>Summit Aug 2025</td>
+<td><code>calendly.com/d/cmzy-mph-k5r?utm_source=WebsiteGHL&amp;utm_medium=Summit&amp;utm_campaign=Fast_Tracked_Summit_Aug_2025-08</code></td>
+<td>Summit Aug 2025</td>
+<td>Aug 2025</td>
+</tr>
+<tr>
+<td>Warm Masterclass Sep 2025</td>
+<td><code>calendly.com/d/cmzy-mph-k5r?utm_source=WebsiteGHL&amp;utm_medium=Masterclass&amp;utm_campaign=WarmSeptember2025</code></td>
+<td>MC Sep 2025</td>
+<td>Sep 2025</td>
+</tr>
+<tr>
+<td>Summit Oct 2025 (Calendly)</td>
+<td><code>calendly.com/d/cmzy-mph-k5r?utm_source=WebsiteGHL&amp;utm_medium=Summit&amp;utm_campaign=SummitOctober2025</code></td>
+<td>Summit Oct 2025</td>
+<td>Oct 2025</td>
+</tr>
+</tbody>
+</table>
+<h3 id="old-campaign-links">Old Campaign Links</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>URL</th>
+<th>Campaign</th>
+<th>Archived Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Black Friday 2025 (Email)</td>
+<td><code>collectiveshift.co/bfpro2025?utm_source=newsletter&amp;utm_medium=email&amp;utm_campaign=BF2025</code></td>
+<td>BF 2025</td>
+<td>Nov 2025</td>
+</tr>
+<tr>
+<td>Black Friday 2025 (IG)</td>
+<td><code>collectiveshift.co/bfpro2025?utm_source=Instagram&amp;utm_medium=Manychat&amp;utm_campaign=BF2025</code></td>
+<td>BF 2025</td>
+<td>Nov 2025</td>
+</tr>
+<tr>
+<td>BF Waitlist (Email)</td>
+<td><code>collectiveshift.co/bfpro2025?utm_source=newsletter&amp;utm_medium=email&amp;utm_campaign=BFwaitlist2025</code></td>
+<td>BF Waitlist 2025</td>
+<td>Nov 2025</td>
+</tr>
+<tr>
+<td>BF Waitlist (IG)</td>
+<td><code>collectiveshift.co/bfpro2025?utm_source=Instagram&amp;utm_medium=Manychat&amp;utm_campaign=BFwaitlist2025</code></td>
+<td>BF Waitlist 2025</td>
+<td>Nov 2025</td>
+</tr>
+<tr>
+<td>5 Spots 2025 (Email)</td>
+<td><code>collectiveshift.co/platinum?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=cashmachine&amp;utm_content=last5_2025</code></td>
+<td>Cash Machine 2025</td>
+<td>2025</td>
+</tr>
+<tr>
+<td>Paid Event Jan 2026</td>
+<td><code>collectiveshift.co/platinum?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=paidevent_01-26&amp;utm_content=p1</code></td>
+<td>Paid Event Jan 2026</td>
+<td>Jan 2026</td>
+</tr>
+<tr>
+<td>Easter Promo Mar 2026</td>
+<td><code>form.typeform.com/to/P7nk6iSG?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=easterpromo_03-26</code></td>
+<td>Easter 2026</td>
+<td>Mar 2026</td>
+</tr>
+<tr>
+<td>Cohort Closing Mar 2026</td>
+<td><code>form.typeform.com/to/P7nk6iSG?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=cohortclosing_03-26&amp;utm_content=e1</code></td>
+<td>Cohort Mar 2026</td>
+<td>Mar 2026</td>
+</tr>
+</tbody>
+</table>
+<h3 id="other-active-but-legacy-format-links">Other Active but Legacy-Format Links</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>URL</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Morning Shift</td>
+<td><code>form.typeform.com/to/P7nk6iSG?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=morningshift</code></td>
+<td>Active, Typeform survey</td>
+</tr>
+<tr>
+<td>180-Day Follow Up</td>
+<td><code>calendly.com/d/cmzy-mph-k5r?utm_source=cio&amp;utm_medium=email&amp;utm_campaign=180d_fu</code></td>
+<td>Active, Calendly booking</td>
+</tr>
+<tr>
+<td>Accelerator Jan 2026 Checkout</td>
+<td><code>calendly.com/d/cmzy-mph-k5r?utm_source=ghl&amp;utm_medium=checkout&amp;utm_campaign=accelerator_01_2026</code></td>
+<td>Active but dated naming</td>
+</tr>
+<tr>
+<td>SMS Replay</td>
+<td><code>calendly.com/d/cmzy-mph-k5r?utm_source=cio&amp;utm_medium=sms&amp;utm_campaign=c1_2dec</code></td>
+<td>Active, SMS campaign</td>
+</tr>
+<tr>
+<td>US SMS Blast Mar 2026</td>
+<td><code>form.typeform.com/to/P7nk6iSG?utm_source=jc&amp;utm_medium=sms&amp;utm_campaign=engage</code></td>
+<td>Active, JustCall</td>
+</tr>
+<tr>
+<td>IG 100M Portfolio (YT)</td>
+<td><code>youtube.com/watch?v=55goHMsIt0U?utm_source=instagram&amp;utm_medium=organic_post&amp;utm_campaign=lead_magnet&amp;utm_content=vlog1</code></td>
+<td>Active, specific video</td>
+</tr>
+<tr>
+<td>Meta Paid → VSL</td>
+<td><code>?utm_source=meta&amp;utm_medium=paidsocial&amp;utm_campaign=vsl_hammer_them</code></td>
+<td>Active, Meta ads</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="naming-convention-migration-notes">Naming Convention Migration Notes</h2>
+<h3 id="old-format-vs-new-format">Old Format vs New Format</h3>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Old</th>
+<th>New</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Capitalisation</td>
+<td><code>utm_source=Instagram</code></td>
+<td><code>utm_source=instagram</code></td>
+</tr>
+<tr>
+<td>Medium naming</td>
+<td><code>utm_medium=Organic</code></td>
+<td><code>utm_medium=organic_bio</code> / <code>organic_post</code> / <code>organic_reel</code></td>
+</tr>
+<tr>
+<td>VSL versioning</td>
+<td><code>trainingcso</code>, <code>traininglpv1</code>, <code>trainingv3</code>, <code>trainingv4</code></td>
+<td><code>trainingvslv5</code> (current)</td>
+</tr>
+<tr>
+<td>Campaign clarity</td>
+<td><code>utm_campaign=VSL</code></td>
+<td><code>utm_campaign=vslv5</code></td>
+</tr>
+<tr>
+<td>Placement specificity</td>
+<td>Generic "Organic"</td>
+<td>Specific: <code>organic_bio</code>, <code>organic_post</code>, <code>organic_reel</code>, <code>organic_story</code>, <code>organic_manychat</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="action-items">Action Items</h3>
+<ol>
+<li>All new links use lowercase and the new convention</li>
+<li>WealthShift links should migrate from <code>/trainingcso</code> to <code>/trainingvslv5</code></li>
+<li>When Blueprint links go live, replace all bio links on platforms</li>
+<li>When Starter Kit GHL page is built, replace <code>[GHL_CHECKOUT_URL]</code> placeholders</li>
+<li>Audit all active links monthly to archive expired campaigns</li>
+</ol>
+<hr />
+<p><em>UTM Tracking v1.0 | April 10, 2026</em><br />
+<em>Consolidated from UTM_LINKS_ALL.md, UTM_LINKS_TRACKED_UPDATED.md, and CSV exports</em></p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Header Strategy & Specs — Collective Shift</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #0D0B14;
+  color: #E8E4F0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+}
+a { color: #0BF4B9; text-decoration: none; }
+a:hover { color: #FC5C03; text-decoration: underline; }
+
+/* Top nav bar */
+.topbar {
+  background: #1B1925;
+  border-bottom: 2px solid #FC5C03;
+  padding: 12px 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.topbar .back-link {
+  color: #FC5C03;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.topbar .back-link:hover { color: #0BF4B9; text-decoration: none; }
+.topbar .brand {
+  color: #9B92B0;
+  font-size: 13px;
+  margin-left: auto;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Page wrapper */
+.page-wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 32px 80px;
+}
+
+/* Document header */
+.doc-header {
+  border-bottom: 1px solid #2A2438;
+  padding-bottom: 24px;
+  margin-bottom: 40px;
+}
+.doc-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+.doc-meta {
+  color: #9B92B0;
+  font-size: 14px;
+}
+.doc-meta span {
+  margin-right: 16px;
+}
+.doc-meta .tag {
+  background: #1B1925;
+  border: 1px solid #2A2438;
+  border-radius: 4px;
+  padding: 2px 10px;
+  font-size: 12px;
+  color: #0BF4B9;
+}
+
+/* Content typography */
+.content h1 { font-size: 1.9rem; font-weight: 700; color: #fff; margin: 40px 0 16px; line-height: 1.25; }
+.content h2 { font-size: 1.45rem; font-weight: 700; color: #fff; margin: 36px 0 14px; padding-top: 8px; border-top: 1px solid #2A2438; }
+.content h3 { font-size: 1.15rem; font-weight: 600; color: #0BF4B9; margin: 28px 0 10px; }
+.content h4 { font-size: 1rem; font-weight: 600; color: #FC5C03; margin: 20px 0 8px; text-transform: uppercase; letter-spacing: 0.04em; }
+.content h5, .content h6 { font-size: 0.95rem; font-weight: 600; color: #9B92B0; margin: 16px 0 6px; }
+
+.content p { margin: 0 0 16px; color: #E8E4F0; }
+.content p:last-child { margin-bottom: 0; }
+
+.content ul, .content ol { margin: 0 0 16px 24px; }
+.content li { margin-bottom: 6px; color: #E8E4F0; }
+.content li > ul, .content li > ol { margin-top: 6px; margin-bottom: 0; }
+
+.content strong { color: #fff; font-weight: 700; }
+.content em { color: #0BF4B9; font-style: italic; }
+
+/* Blockquotes */
+.content blockquote {
+  border-left: 3px solid #FC5C03;
+  margin: 24px 0;
+  padding: 12px 20px;
+  background: #1B1925;
+  border-radius: 0 6px 6px 0;
+  color: #E8E4F0;
+}
+.content blockquote p { margin: 0; color: #E8E4F0; }
+
+/* Code */
+.content code {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.85em;
+  background: #13111C;
+  color: #0BF4B9;
+  border: 1px solid #2A2438;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+.content pre {
+  background: #13111C;
+  border: 1px solid #2A2438;
+  border-radius: 8px;
+  padding: 20px 24px;
+  overflow-x: auto;
+  margin: 20px 0;
+}
+.content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.875rem;
+  color: #0BF4B9;
+  line-height: 1.6;
+}
+
+/* Tables */
+.content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 0.9rem;
+  overflow-x: auto;
+  display: block;
+}
+.content thead th {
+  background: #231E35;
+  color: #FC5C03;
+  font-weight: 700;
+  text-align: left;
+  padding: 12px 16px;
+  border: 1px solid #2A2438;
+  white-space: nowrap;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+.content tbody td {
+  padding: 10px 16px;
+  border: 1px solid #2A2438;
+  color: #E8E4F0;
+  vertical-align: top;
+}
+.content tbody tr:nth-child(even) { background: #1B1925; }
+.content tbody tr:hover { background: #231E35; }
+
+/* Horizontal rule */
+.content hr {
+  border: none;
+  border-top: 1px solid #2A2438;
+  margin: 36px 0;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .page-wrapper { padding: 24px 16px 60px; }
+  .topbar { padding: 10px 16px; }
+  .doc-header h1 { font-size: 1.5rem; }
+  .content h1 { font-size: 1.5rem; }
+  .content h2 { font-size: 1.2rem; }
+}
+</style>
+</head>
+<body>
+  <nav class="topbar">
+    <a href="index.html" class="back-link">← Back to Deliverables</a>
+    <span class="brand">Collective Shift · Marketing</span>
+  </nav>
+  <div class="page-wrapper">
+    <div class="doc-header">
+      <h1>Header Strategy & Specs</h1>
+      <div class="doc-meta">
+        <span>📅 April 10, 2026</span>
+        <span>📦 14 KB</span>
+        <span class="tag">Brand & Identity</span>
+      </div>
+    </div>
+    <div class="content">
+<h1 id="social-media-header-strategy-specs">Social Media Header Strategy + Specs</h1>
+<p><em>Collective Shift | April 10, 2026</em><br />
+<em>Unified header design system for all 6 brands across all platforms</em></p>
+<hr />
+<h2 id="design-philosophy">Design Philosophy</h2>
+<p>Every header communicates one thing: <strong>this is a team of real people who manage real money alongside their members.</strong> The group photo is the hero element across all channels. It creates visual unity. When someone finds Matt on Twitter, then visits the CS YouTube, then checks Ben's LinkedIn, the same team photo connects everything.</p>
+<p>The aesthetic is wealth management, not trading floor. Think Bloomberg terminal meets private bank. Dark, clean, confident.</p>
+<hr />
+<h2 id="core-design-system">Core Design System</h2>
+<h3 id="colours">Colours</h3>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Colour</th>
+<th>Hex</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Background</td>
+<td>CS Dark</td>
+<td>#0D0B14</td>
+</tr>
+<tr>
+<td>Background gradient target</td>
+<td>CS Dark Alt</td>
+<td>#1B1925</td>
+</tr>
+<tr>
+<td>Primary accent</td>
+<td>Brand Orange</td>
+<td>#FC5C03</td>
+</tr>
+<tr>
+<td>Secondary accent / glow</td>
+<td>Brand Teal</td>
+<td>#0BF4B9</td>
+</tr>
+<tr>
+<td>CTA button / link highlight</td>
+<td>Brand Blue</td>
+<td>#2404FC</td>
+</tr>
+<tr>
+<td>Text primary</td>
+<td>White</td>
+<td>#FFFFFF</td>
+</tr>
+<tr>
+<td>Text secondary</td>
+<td>Muted Light</td>
+<td>#B0B0B0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="typography">Typography</h3>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Font</th>
+<th>Weight</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Brand name / headline</td>
+<td>Plus Jakarta Sans</td>
+<td>700-800</td>
+<td>Large, left or right aligned</td>
+</tr>
+<tr>
+<td>Tagline / descriptor</td>
+<td>Barlow</td>
+<td>400-500</td>
+<td>Below headline</td>
+</tr>
+<tr>
+<td>CTA text</td>
+<td>Plus Jakarta Sans</td>
+<td>600, uppercase</td>
+<td>Small, letter-spaced</td>
+</tr>
+<tr>
+<td>Event/deck headlines</td>
+<td>Oswald or Bebas Neue</td>
+<td>700</td>
+<td>Only for presentation-style headers</td>
+</tr>
+</tbody>
+</table>
+<h3 id="photography-direction">Photography Direction</h3>
+<ul>
+<li>Group photo: Ben, Travis, Matt, Sarn standing together</li>
+<li>Dark clothing, confident posture, natural expressions</li>
+<li>Moody warm lighting. Subtle orange glow or gradient behind subjects</li>
+<li>Shot from chest up or waist up depending on banner dimensions</li>
+<li>No stock elements. No blockchain iconography. No candlestick charts.</li>
+<li>Editorial, professional, team-oriented</li>
+</ul>
+<h3 id="layout-principles">Layout Principles</h3>
+<ul>
+<li>Group photo: left side or centre (60% of frame width)</li>
+<li>Brand name / tagline: right side (40% of frame width)</li>
+<li>CTA text: bottom bar or lower right</li>
+<li>Teal accent: thin horizontal line (2-3px) separating CTA from main content, or subtle glow behind team</li>
+<li>Orange accent: used sparingly (logo mark, underline on key word, or dot separator)</li>
+<li>Safe zone padding: 60px minimum from all edges (platform-specific safe areas noted below)</li>
+</ul>
+<hr />
+<h2 id="header-specs-by-platform">HEADER SPECS BY PLATFORM</h2>
+<hr />
+<h3 id="1-youtube-banner-ben-simpson">1. YouTube Banner: Ben Simpson</h3>
+<p><strong>Dimensions:</strong> 2560 x 1440px (safe area: 1546 x 423px centred)</p>
+<p><strong>Layout:</strong><br />
+- LEFT (safe area): Group photo of team, chest-up, positioned so Ben is most prominent (front-left). Photo fills left 55% of safe area.<br />
+- RIGHT (safe area): Text block, right-aligned<br />
+- BOTTOM (safe area): CTA bar</p>
+<p><strong>Text Overlay:</strong></p>
+<pre><code>BEN SIMPSON
+Founder, Collective Shift
+Digital Asset Investor | TEDx Speaker
+
+Free Wealth Protection Blueprint → collectiveshift.co/cryptoblueprint
+</code></pre>
+<p><strong>Design Details:</strong><br />
+- Background: Linear gradient left-to-right, #0D0B14 to #1B1925<br />
+- Team photo with subtle Brand Teal (#0BF4B9) edge glow at 15% opacity behind subjects<br />
+- "BEN SIMPSON" in Plus Jakarta Sans 800, white, 48px equivalent<br />
+- "Founder, Collective Shift" in Barlow 500, #B0B0B0, 24px<br />
+- "Digital Asset Investor | TEDx Speaker" in Barlow 400, #B0B0B0, 20px<br />
+- CTA line: Plus Jakarta Sans 600, uppercase, 16px, #FC5C03 for "Free Wealth Protection Blueprint", white for the URL<br />
+- CS icon mark watermark bottom-right at 10% opacity<br />
+- 2px Brand Teal line above CTA text</p>
+<p><strong>Safe Area Notes:</strong> All text must fall within the 1546x423 centre safe zone. Photo can bleed outside safe area. Mobile crops to centre 1546x423.</p>
+<hr />
+<h3 id="2-youtube-banner-collective-shift">2. YouTube Banner: Collective Shift</h3>
+<p><strong>Dimensions:</strong> 2560 x 1440px (safe area: 1546 x 423px centred)</p>
+<p><strong>Layout:</strong><br />
+- LEFT (safe area): Group photo of full team, equal prominence<br />
+- RIGHT (safe area): CS logo (white on dark) + tagline</p>
+<p><strong>Text Overlay:</strong></p>
+<pre><code>[CS LOGO - WHITE]
+The world's most trusted
+digital asset education company
+
+116% CAGR (audited by Crypto Tax Australia) | Zero affiliates | 1,000+ members
+
+Free Blueprint → collectiveshift.co/cryptoblueprint
+</code></pre>
+<p><strong>Design Details:</strong><br />
+- Background: Linear gradient, #0D0B14 to #1B1925<br />
+- CS full logo (cs-logo-white.png) top-right of text block, width ~300px<br />
+- Tagline "The world's most trusted..." in Barlow 500, white, 22px<br />
+- Stats line in Plus Jakarta Sans 600, #B0B0B0, 16px<br />
+- CTA in Plus Jakarta Sans 600, uppercase, 16px, Brand Orange text<br />
+- Subtle Brand Teal glow behind team photo (15% opacity, gaussian blur)<br />
+- 2px Brand Teal horizontal rule between stats and CTA</p>
+<hr />
+<h3 id="3-youtube-banner-the-wealth-shift">3. YouTube Banner: The Wealth Shift</h3>
+<p><strong>Dimensions:</strong> 2560 x 1440px (safe area: 1546 x 423px centred)</p>
+<p><strong>Layout:</strong><br />
+- LEFT (safe area): Photo of Ben and Bergs only (not full team), seated or standing, conversational pose<br />
+- RIGHT (safe area): Show name + descriptor</p>
+<p><strong>Text Overlay:</strong></p>
+<pre><code>THE WEALTH SHIFT
+Building Wealth in the Digital Era
+
+with Ben Simpson &amp; Bergs
+New episodes every Tuesday &amp; Friday
+
+Listen → collectiveshift.co/podcast
+</code></pre>
+<p><strong>Design Details:</strong><br />
+- Background: #0D0B14 solid or very subtle gradient<br />
+- "THE WEALTH SHIFT" in Oswald 700, white, 52px<br />
+- "Building Wealth in the Digital Era" in Barlow 500, #B0B0B0, 22px<br />
+- "with Ben Simpson &amp; Bergs" in Barlow 400, #FC5C03, 18px<br />
+- Episode schedule in Barlow 400, white, 16px<br />
+- Microphone icon or subtle audio waveform element in Brand Teal at 20% opacity<br />
+- 2px Brand Orange line under show name</p>
+<hr />
+<h3 id="4-twitterx-header-ben-simpson">4. Twitter/X Header: Ben Simpson</h3>
+<p><strong>Dimensions:</strong> 1500 x 500px</p>
+<p><strong>Layout:</strong><br />
+- LEFT: Group team photo, waist-up, filling left 50%<br />
+- RIGHT: Name + role + CTA</p>
+<p><strong>Text Overlay:</strong></p>
+<pre><code>BEN SIMPSON
+Founder &amp; CEO, Collective Shift
+9 years in digital assets | TEDx Speaker
+
+collectiveshift.co/cryptoblueprint
+</code></pre>
+<p><strong>Design Details:</strong><br />
+- Background: #0D0B14 solid<br />
+- "BEN SIMPSON" in Plus Jakarta Sans 800, white, 42px<br />
+- Role line in Barlow 500, #B0B0B0, 18px<br />
+- Descriptor in Barlow 400, #B0B0B0, 14px<br />
+- URL in Plus Jakarta Sans 600, #FC5C03, 14px<br />
+- Subtle Brand Teal glow behind team (10% opacity)<br />
+- No CTA button (text link only, banners aren't clickable)</p>
+<p><strong>Safe Area Notes:</strong> Twitter crops ~60px from top and bottom on some views. Keep all text within centre 380px vertical band.</p>
+<hr />
+<h3 id="5-twitterx-header-collective-shift">5. Twitter/X Header: Collective Shift</h3>
+<p><strong>Dimensions:</strong> 1500 x 500px</p>
+<p><strong>Layout:</strong><br />
+- LEFT: Group team photo (50%)<br />
+- RIGHT: Logo + stats</p>
+<p><strong>Text Overlay:</strong></p>
+<pre><code>[CS LOGO - WHITE]
+116% CAGR over 6 financial years (verified &amp; audited by Crypto Tax Australia)
+Zero affiliates. Just education.
+
+collectiveshift.co/cryptoblueprint
+</code></pre>
+<p><strong>Design Details:</strong><br />
+- Background: #0D0B14 solid<br />
+- CS logo top-right, width ~250px<br />
+- Stats in Barlow 500, white, 16px<br />
+- "Zero affiliates. Just education." in Barlow 400, #B0B0B0, 14px<br />
+- URL in Plus Jakarta Sans 600, #FC5C03, 14px<br />
+- 2px Brand Teal horizontal accent line between logo and text</p>
+<hr />
+<h3 id="6-linkedin-banner-ben-simpson">6. LinkedIn Banner: Ben Simpson</h3>
+<p><strong>Dimensions:</strong> 1584 x 396px</p>
+<p><strong>Layout:</strong><br />
+- LEFT: Group team photo (55%), cropped tighter (chest-up)<br />
+- RIGHT: Title + CTA</p>
+<p><strong>Text Overlay:</strong></p>
+<pre><code>Founder &amp; CEO, Collective Shift
+Helping 1,000+ investors build generational wealth with digital assets
+
+collectiveshift.co/cryptoblueprint
+</code></pre>
+<p><strong>Design Details:</strong><br />
+- Background: Linear gradient #0D0B14 to #1B1925<br />
+- Note: Ben's name and headshot already display via LinkedIn profile. Header should NOT repeat "Ben Simpson" prominently.<br />
+- Role text in Plus Jakarta Sans 700, white, 28px<br />
+- Descriptor in Barlow 500, #B0B0B0, 16px<br />
+- URL in Plus Jakarta Sans 600, #FC5C03, 14px<br />
+- Subtle Brand Teal glow behind team<br />
+- CS icon mark bottom-right at 15% opacity</p>
+<p><strong>Safe Area Notes:</strong> LinkedIn overlaps the profile photo on the bottom-left corner. Keep all text in the right 60% and above bottom 80px.</p>
+<hr />
+<h3 id="7-linkedin-banner-collective-shift-company-page">7. LinkedIn Banner: Collective Shift (Company Page)</h3>
+<p><strong>Dimensions:</strong> 1128 x 191px</p>
+<p><strong>Layout:</strong><br />
+- This is a narrow banner. Simplified layout.<br />
+- LEFT: Team photo cropped tight (head and shoulders only, 40%)<br />
+- CENTRE-RIGHT: Logo + one-liner</p>
+<p><strong>Text Overlay:</strong></p>
+<pre><code>[CS LOGO - WHITE]
+Trusted digital asset education | 116% CAGR (audited by Crypto Tax Australia) | Zero affiliates
+</code></pre>
+<p><strong>Design Details:</strong><br />
+- Background: #0D0B14 solid<br />
+- CS logo, width ~180px, left of text<br />
+- Stats line in Barlow 500, white, 12px<br />
+- Single line. No multi-line text at this size.<br />
+- Brand Orange thin bar (2px) along the very bottom edge<br />
+- No CTA URL (too small to be readable)</p>
+<p><strong>Safe Area Notes:</strong> Extremely narrow format. Every element must be readable at this size. Test at 50% zoom.</p>
+<hr />
+<h3 id="8-facebook-cover-collective-shift">8. Facebook Cover: Collective Shift</h3>
+<p><strong>Dimensions:</strong> 820 x 312px</p>
+<p><strong>Layout:</strong><br />
+- LEFT: Group team photo (50%)<br />
+- RIGHT: Logo + tagline + CTA</p>
+<p><strong>Text Overlay:</strong></p>
+<pre><code>[CS LOGO - WHITE]
+Build generational wealth with digital assets
+
+Free Blueprint → collectiveshift.co/cryptoblueprint
+</code></pre>
+<p><strong>Design Details:</strong><br />
+- Background: #0D0B14 solid<br />
+- CS logo, width ~200px<br />
+- Tagline in Plus Jakarta Sans 700, white, 22px<br />
+- CTA in Plus Jakarta Sans 600, #FC5C03, 14px<br />
+- Teal accent line (2px) between tagline and CTA<br />
+- Team photo with subtle orange glow at 10%</p>
+<p><strong>Safe Area Notes:</strong> Facebook overlaps the profile picture on the bottom-left. Desktop and mobile crop differently. Keep text in the right 55% and vertically centred.</p>
+<hr />
+<h2 id="instagram-highlight-covers">INSTAGRAM HIGHLIGHT COVERS</h2>
+<p><strong>Dimensions:</strong> 1080 x 1920px (displayed as circle crop, 330px diameter at centre)<br />
+<strong>Design:</strong> Minimal icon + word on dark background. The circle crop only shows the centre portion.</p>
+<h3 id="design-system-for-all-highlight-covers">Design System for All Highlight Covers</h3>
+<ul>
+<li>Background: #0D0B14 solid</li>
+<li>Icon: Simple line icon, white stroke, centred, 200px</li>
+<li>Word: Below icon, Plus Jakarta Sans 700, uppercase, 28px, letter-spaced</li>
+<li>Accent: Thin Brand Orange circle border (2px) at crop edge</li>
+<li>All icons should be consistent line weight and style (Phosphor Icons or similar)</li>
+</ul>
+<h3 id="collective-shift-highlights">Collective Shift Highlights</h3>
+<table>
+<thead>
+<tr>
+<th>Highlight</th>
+<th>Icon</th>
+<th>Label</th>
+<th>Accent Colour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Protect</strong></td>
+<td>Shield icon</td>
+<td>PROTECT</td>
+<td>#FC5C03 (orange)</td>
+</tr>
+<tr>
+<td><strong>Strategy</strong></td>
+<td>Target/crosshair icon</td>
+<td>STRATEGY</td>
+<td>#FC5C03</td>
+</tr>
+<tr>
+<td><strong>Confidence</strong></td>
+<td>Compass icon</td>
+<td>CONFIDENCE</td>
+<td>#FC5C03</td>
+</tr>
+<tr>
+<td><strong>Community</strong></td>
+<td>People/group icon</td>
+<td>COMMUNITY</td>
+<td>#FC5C03</td>
+</tr>
+<tr>
+<td><strong>Results</strong></td>
+<td>Chart-up/trophy icon</td>
+<td>RESULTS</td>
+<td>#FC5C03</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ben-simpson-highlights">Ben Simpson Highlights</h3>
+<table>
+<thead>
+<tr>
+<th>Highlight</th>
+<th>Icon</th>
+<th>Label</th>
+<th>Accent Colour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Protect</strong></td>
+<td>Shield icon</td>
+<td>PROTECT</td>
+<td>#FC5C03</td>
+</tr>
+<tr>
+<td><strong>Strategy</strong></td>
+<td>Target/crosshair icon</td>
+<td>STRATEGY</td>
+<td>#FC5C03</td>
+</tr>
+<tr>
+<td><strong>Confidence</strong></td>
+<td>Compass icon</td>
+<td>CONFIDENCE</td>
+<td>#FC5C03</td>
+</tr>
+<tr>
+<td><strong>Community</strong></td>
+<td>People/group icon</td>
+<td>COMMUNITY</td>
+<td>#FC5C03</td>
+</tr>
+<tr>
+<td><strong>Results</strong></td>
+<td>Chart-up/trophy icon</td>
+<td>RESULTS</td>
+<td>#FC5C03</td>
+</tr>
+</tbody>
+</table>
+<h3 id="travis-highlights">Travis Highlights</h3>
+<table>
+<thead>
+<tr>
+<th>Highlight</th>
+<th>Icon</th>
+<th>Label</th>
+<th>Accent Colour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Protect</strong></td>
+<td>Shield icon</td>
+<td>PROTECT</td>
+<td>#FC5C03</td>
+</tr>
+<tr>
+<td><strong>Strategy</strong></td>
+<td>Target/crosshair icon</td>
+<td>STRATEGY</td>
+<td>#FC5C03</td>
+</tr>
+<tr>
+<td><strong>Confidence</strong></td>
+<td>Compass icon</td>
+<td>CONFIDENCE</td>
+<td>#FC5C03</td>
+</tr>
+<tr>
+<td><strong>Community</strong></td>
+<td>People/group icon</td>
+<td>COMMUNITY</td>
+<td>#FC5C03</td>
+</tr>
+<tr>
+<td><strong>Results</strong></td>
+<td>Chart-up/trophy icon</td>
+<td>RESULTS</td>
+<td>#FC5C03</td>
+</tr>
+</tbody>
+</table>
+<h3 id="the-wealth-shift-highlights">The Wealth Shift Highlights</h3>
+<table>
+<thead>
+<tr>
+<th>Highlight</th>
+<th>Icon</th>
+<th>Label</th>
+<th>Accent Colour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Protect</strong></td>
+<td>Shield icon</td>
+<td>PROTECT</td>
+<td>#FC5C03</td>
+</tr>
+<tr>
+<td><strong>Strategy</strong></td>
+<td>Target/crosshair icon</td>
+<td>STRATEGY</td>
+<td>#FC5C03</td>
+</tr>
+<tr>
+<td><strong>Confidence</strong></td>
+<td>Compass icon</td>
+<td>CONFIDENCE</td>
+<td>#FC5C03</td>
+</tr>
+<tr>
+<td><strong>Community</strong></td>
+<td>People/group icon</td>
+<td>COMMUNITY</td>
+<td>#FC5C03</td>
+</tr>
+<tr>
+<td><strong>Results</strong></td>
+<td>Chart-up/trophy icon</td>
+<td>RESULTS</td>
+<td>#FC5C03</td>
+</tr>
+</tbody>
+</table>
+<h3 id="notes-on-highlight-covers">Notes on Highlight Covers</h3>
+<ul>
+<li>Same 5 icons across ALL brands for visual consistency</li>
+<li>When a user taps between Ben's profile, CS profile, and Travis's profile, they see the same 5 pillar structure</li>
+<li>This reinforces the content pillar system and makes the brand feel unified</li>
+<li>Inside each highlight: save relevant stories/reels tagged to that pillar</li>
+</ul>
+<hr />
+<h2 id="design-production-checklist">DESIGN PRODUCTION CHECKLIST</h2>
+<h3 id="what-the-designer-needs">What the designer needs:</h3>
+<ol>
+<li>
+<p><strong>Group photo shoot</strong> of Ben, Travis Thomas, Matt Willemsen, Sarn Elliott, and Aaron Berghuber (Bergs) (PRIORITY)<br />
+   - Dark clothing (black or navy)<br />
+   - Studio setting with controllable lighting<br />
+   - Multiple poses: standing together, seated around table, walking<br />
+   - Shot on dark/neutral background (easier to composite onto headers)<br />
+   - Both landscape and portrait crops<br />
+   - Minimum resolution: 4000px on longest edge</p>
+</li>
+<li>
+<p><strong>Ben + Bergs photo</strong> for The Wealth Shift headers<br />
+   - Same aesthetic as team photo<br />
+   - Conversational pose (not stiff portrait)</p>
+</li>
+<li>
+<p><strong>Brand assets</strong><br />
+   - cs-logo-white.png (vector/SVG preferred)<br />
+   - cs_icon_mark.png<br />
+   - Plus Jakarta Sans and Barlow font files</p>
+</li>
+<li>
+<p><strong>Template files</strong> (Figma or Photoshop)<br />
+   - Master template with all dimensions pre-set<br />
+   - Smart object for team photo (swap easily)<br />
+   - Colour swatches loaded<br />
+   - Grid guides for safe areas</p>
+</li>
+</ol>
+<h3 id="production-priority-order">Production Priority Order:</h3>
+<ol>
+<li>YouTube banners (Ben, CS, Wealth Shift) - highest visibility</li>
+<li>Twitter/X headers (Ben, CS) - most frequently viewed</li>
+<li>LinkedIn banners (Ben, CS) - highest-value audience</li>
+<li>Facebook cover (CS) - supports paid ads</li>
+<li>Instagram highlight covers - quick wins, immediate implementation</li>
+</ol>
+<hr />
+<h2 id="header-text-copy-quick-reference">HEADER TEXT COPY - QUICK REFERENCE</h2>
+<table>
+<thead>
+<tr>
+<th>Platform + Brand</th>
+<th>Primary Text</th>
+<th>CTA Text</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>YT - Ben</td>
+<td>BEN SIMPSON / Founder, Collective Shift</td>
+<td>Free Wealth Protection Blueprint → collectiveshift.co/cryptoblueprint</td>
+</tr>
+<tr>
+<td>YT - CS</td>
+<td>The world's most trusted digital asset education company</td>
+<td>Free Blueprint → collectiveshift.co/cryptoblueprint</td>
+</tr>
+<tr>
+<td>YT - TWS</td>
+<td>THE WEALTH SHIFT / Building Wealth in the Digital Era</td>
+<td>Apple: https://podcasts.apple.com/us/podcast/the-wealth-shift/id1629581403 / YouTube: https://www.youtube.com/@wealthshiftpodcast</td>
+</tr>
+<tr>
+<td>X - Ben</td>
+<td>BEN SIMPSON / Founder &amp; CEO, Collective Shift</td>
+<td>collectiveshift.co/cryptoblueprint</td>
+</tr>
+<tr>
+<td>X - CS</td>
+<td>116% CAGR over 6 financial years (verified &amp; audited by Crypto Tax Australia) / Zero affiliates</td>
+<td>collectiveshift.co/cryptoblueprint</td>
+</tr>
+<tr>
+<td>LI - Ben</td>
+<td>Founder &amp; CEO, Collective Shift / 1,000+ investors</td>
+<td>collectiveshift.co/cryptoblueprint</td>
+</tr>
+<tr>
+<td>LI - CS</td>
+<td>Trusted digital asset education / 116% CAGR (audited by Crypto Tax Australia)</td>
+<td>(none - too small)</td>
+</tr>
+<tr>
+<td>FB - CS</td>
+<td>Build generational wealth with digital assets</td>
+<td>Free Blueprint → collectiveshift.co/cryptoblueprint</td>
+</tr>
+</tbody>
+</table>
+    </div>
+  </div>
+</body>
+</html>
