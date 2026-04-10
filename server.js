@@ -88,7 +88,7 @@ async function postToDiscord(content) {
     const res = await fetch(DISCORD_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content })
+      body: JSON.stringify({ content, username: 'Jarvis Dashboard' })
     });
     if (!res.ok) console.log('Discord webhook error:', res.status);
   } catch (err) {
@@ -203,11 +203,11 @@ app.post('/api/tasks/complete', async (req, res) => {
     task.status = 'done';
     task.completedAt = completedAt || new Date().toISOString().split('T')[0];
     task.updatedAt = new Date().toISOString().split('T')[0];
-    await writeTasks(data, `Auto-sync: Task completed — ${task.name}`);
+    await writeTasks(data, `Auto-sync: Task completed — ${task.title || task.name}`);
 
     // Post Discord notification
     await postToDiscord(
-      `✅ Task completed from dashboard\n**${task.name}**\nCategory: ${task.category || 'general'} | Completed: ${task.completedAt}`
+      `✅ Task completed from dashboard\n**${task.title || task.name}**\nCategory: ${task.category || 'general'} | Completed: ${task.completedAt}`
     );
 
     res.json({ success: true, task });
@@ -230,12 +230,12 @@ app.post('/api/tasks/update', async (req, res) => {
 
     const oldStatus = task.status;
     Object.assign(task, updates, { updatedAt: new Date().toISOString().split('T')[0] });
-    await writeTasks(data, `Auto-sync: Task updated — ${task.name}`);
+    await writeTasks(data, `Auto-sync: Task updated — ${task.title || task.name}`);
 
     // Notify Discord if status changed
     if (updates.status && updates.status !== oldStatus) {
       await postToDiscord(
-        `🔄 Task updated from dashboard\n**${task.name}**\nStatus: ${oldStatus} → ${updates.status}`
+        `🔄 Task updated from dashboard\n**${task.title || task.name}**\nStatus: ${oldStatus} → ${updates.status}`
       );
     }
 
