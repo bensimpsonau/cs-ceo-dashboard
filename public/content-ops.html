@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Production & Scheduling System | Collective Shift</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cs-dark: #0D0B14;
+  --cs-dark-alt: #1B1925;
+  --cs-orange: #FC5C03;
+  --cs-teal: #0BF4B9;
+  --cs-blue: #2404FC;
+  --cs-white: #F5F5F7;
+  --cs-gray: #8E8E93;
+  --cs-gray-light: #2C2A36;
+  --cs-card: #1B1925;
+  --cs-border: #2C2A36;
+  --sidebar-w: 260px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', -apple-system, sans-serif; background: var(--cs-dark); color: var(--cs-white); line-height: 1.7; font-size: 15px; -webkit-font-smoothing: antialiased; }
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh;
+  background: var(--cs-dark-alt); border-right: 1px solid var(--cs-border);
+  padding: 28px 16px; overflow-y: auto; z-index: 100;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--cs-gray-light); border-radius: 4px; }
+.sidebar .logo { font-size: 13px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; color: var(--cs-orange); margin-bottom: 4px; }
+.sidebar .subtitle { font-size: 10px; color: var(--cs-gray); margin-bottom: 28px; letter-spacing: 1.5px; text-transform: uppercase; line-height: 1.5; }
+.sidebar nav a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; margin-bottom: 2px; border-radius: 8px;
+  color: var(--cs-gray); text-decoration: none; font-size: 12.5px; font-weight: 500;
+  transition: all 0.2s;
+}
+.sidebar nav a:hover { color: var(--cs-white); background: rgba(255,255,255,0.05); }
+.sidebar nav a.active { color: var(--cs-orange); background: rgba(252,92,3,0.1); font-weight: 600; }
+.sidebar nav a .nav-icon { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
+.sidebar nav .nav-divider { height: 1px; background: var(--cs-border); margin: 12px 0; }
+.sidebar .nav-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cs-gray); padding: 8px 12px 4px; }
+
+/* HAMBURGER */
+.hamburger { display: none; position: fixed; top: 14px; left: 14px; z-index: 200; background: var(--cs-dark-alt); border: 1px solid var(--cs-border); border-radius: 8px; padding: 8px 12px; cursor: pointer; color: var(--cs-white); font-size: 18px; }
+
+/* MAIN */
+main { margin-left: var(--sidebar-w); max-width: 900px; padding: 40px 48px 120px; }
+
+section { margin-bottom: 72px; scroll-margin-top: 24px; }
+h1 { font-size: 38px; font-weight: 900; letter-spacing: -1px; margin-bottom: 6px; line-height: 1.15; }
+h1 span { color: var(--cs-orange); }
+h2 { font-size: 26px; font-weight: 800; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--cs-border); }
+h2 .section-num { color: var(--cs-orange); }
+h3 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; color: var(--cs-teal); }
+h4 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--cs-white); }
+p { margin-bottom: 14px; color: rgba(245,245,247,0.85); max-width: 720px; }
+.lead { font-size: 17px; line-height: 1.8; color: rgba(245,245,247,0.9); margin-bottom: 28px; max-width: 720px; }
+ul, ol { margin: 0 0 16px 20px; color: rgba(245,245,247,0.85); }
+li { margin-bottom: 6px; }
+strong { color: var(--cs-white); font-weight: 600; }
+
+/* CARDS */
+.card { background: var(--cs-card); border: 1px solid var(--cs-border); border-radius: 12px; padding: 24px; margin-bottom: 16px; }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 16px 0; }
+
+/* STAT BOXES */
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 20px 0 28px; }
+.stat-box { background: var(--cs-card); border: 1px solid var(--cs-border); border-radius: 10px; padding: 18px 14px; text-align: center; }
+.stat-number { font-size: 32px; font-weight: 900; color: var(--cs-orange); line-height: 1.1; }
+.stat-label { font-size: 11px; color: var(--cs-gray); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+/* TABLES */
+.table-wrap { overflow-x: auto; margin: 16px 0; border-radius: 10px; border: 1px solid var(--cs-border); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: var(--cs-dark-alt); color: var(--cs-orange); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; padding: 12px 14px; text-align: left; border-bottom: 2px solid var(--cs-border); white-space: nowrap; }
+td { padding: 10px 14px; border-bottom: 1px solid var(--cs-border); color: rgba(245,245,247,0.85); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(252,92,3,0.03); }
+.table-highlight td { background: rgba(252,92,3,0.06); font-weight: 600; }
+
+/* CHECKLIST */
+.checklist { list-style: none; margin: 12px 0 16px 0; padding: 0; }
+.checklist li { padding: 8px 0 8px 28px; position: relative; border-bottom: 1px solid rgba(44,42,54,0.5); color: rgba(245,245,247,0.85); font-size: 14px; }
+.checklist li:last-child { border-bottom: none; }
+.checklist li::before { content: ''; position: absolute; left: 0; top: 11px; width: 16px; height: 16px; border: 2px solid var(--cs-orange); border-radius: 4px; }
+
+/* WORKFLOW DIAGRAM */
+.workflow { display: flex; flex-wrap: wrap; gap: 0; align-items: center; margin: 20px 0; }
+.wf-step { background: var(--cs-card); border: 1px solid var(--cs-border); border-radius: 10px; padding: 14px 18px; text-align: center; min-width: 100px; }
+.wf-step .wf-icon { font-size: 22px; margin-bottom: 4px; }
+.wf-step .wf-label { font-size: 12px; font-weight: 700; color: var(--cs-white); text-transform: uppercase; letter-spacing: 0.5px; }
+.wf-step .wf-sub { font-size: 10px; color: var(--cs-gray); margin-top: 2px; }
+.wf-arrow { color: var(--cs-orange); font-size: 20px; padding: 0 6px; font-weight: 700; }
+.wf-step.active { border-color: var(--cs-orange); background: rgba(252,92,3,0.08); }
+
+/* STATUS BADGES */
+.badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.badge-orange { background: rgba(252,92,3,0.15); color: var(--cs-orange); }
+.badge-teal { background: rgba(11,244,185,0.15); color: var(--cs-teal); }
+.badge-blue { background: rgba(36,4,252,0.2); color: #7B68EE; }
+.badge-gray { background: rgba(142,142,147,0.15); color: var(--cs-gray); }
+.badge-green { background: rgba(34,197,94,0.15); color: #22C55E; }
+
+/* CALLOUT */
+.callout { background: rgba(252,92,3,0.06); border-left: 4px solid var(--cs-orange); border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 16px 0; font-size: 14px; }
+.callout-teal { background: rgba(11,244,185,0.06); border-left-color: var(--cs-teal); }
+.callout-blue { background: rgba(36,4,252,0.08); border-left-color: var(--cs-blue); }
+.callout strong { color: var(--cs-orange); }
+.callout-teal strong { color: var(--cs-teal); }
+
+/* TEMPLATE CARD */
+.tmpl { background: var(--cs-card); border: 1px solid var(--cs-border); border-radius: 12px; padding: 20px; margin-bottom: 14px; }
+.tmpl-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+.tmpl-title { font-weight: 700; font-size: 15px; }
+.tmpl-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+.tmpl-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin-bottom: 12px; font-size: 13px; }
+.tmpl-field { padding: 6px 10px; background: rgba(255,255,255,0.03); border-radius: 6px; }
+.tmpl-field .label { color: var(--cs-gray); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* COMPARISON TABLE SPECIAL */
+.compare-winner td:first-child { position: relative; }
+.compare-winner td:first-child::after { content: 'RECOMMENDED'; position: absolute; top: 6px; right: 8px; font-size: 9px; background: var(--cs-orange); color: white; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+
+/* DO/DONT */
+.do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+.do-col, .dont-col { padding: 20px; border-radius: 10px; }
+.do-col { background: rgba(11,244,185,0.06); border: 1px solid rgba(11,244,185,0.2); }
+.dont-col { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2); }
+.do-col h4 { color: var(--cs-teal); margin-top: 0; }
+.dont-col h4 { color: #EF4444; margin-top: 0; }
+
+/* ROLE TAG */
+.role-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-right: 4px; }
+.role-ben { background: rgba(252,92,3,0.15); color: var(--cs-orange); }
+.role-travis { background: rgba(36,4,252,0.2); color: #7B68EE; }
+.role-editor { background: rgba(11,244,185,0.15); color: var(--cs-teal); }
+.role-clawbot { background: rgba(250,204,21,0.15); color: #FACC15; }
+.role-matt { background: rgba(168,85,247,0.15); color: #A855F7; }
+
+/* RESPONSIVE */
+@media (max-width: 800px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .hamburger { display: block; }
+  main { margin-left: 0; padding: 60px 20px 80px; }
+  .do-dont { grid-template-columns: 1fr; }
+  .workflow { justify-content: center; }
+  .tmpl-fields { grid-template-columns: 1fr; }
+}
+
+/* PRINT */
+@media print {
+  .sidebar, .hamburger { display: none !important; }
+  main { margin-left: 0; padding: 20px; max-width: 100%; }
+  body { background: white; color: #1a1a1a; font-size: 12px; }
+  .card, .tmpl, .callout { border: 1px solid #ddd; background: #f9f9f9; }
+  table { font-size: 11px; }
+  h1 { font-size: 28px; }
+  h2 { font-size: 20px; }
+  section { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="logo">Collective Shift</div>
+  <div class="subtitle">Content Production &<br>Scheduling System</div>
+  <nav>
+    <a href="#exec-summary"><span class="nav-icon">&#9679;</span> Executive Summary</a>
+    <div class="nav-divider"></div>
+    <div class="nav-label">System</div>
+    <a href="#workflow"><span class="nav-icon">1</span> Production Workflow</a>
+    <a href="#platform"><span class="nav-icon">2</span> Platform & Setup</a>
+    <a href="#templates"><span class="nav-icon">3</span> Task Templates</a>
+    <a href="#approval"><span class="nav-icon">4</span> Approval & Review</a>
+    <div class="nav-divider"></div>
+    <div class="nav-label">Operations</div>
+    <a href="#calendar"><span class="nav-icon">5</span> Calendar Integration</a>
+    <a href="#onboarding"><span class="nav-icon">6</span> Onboarding & SOPs</a>
+    <a href="#scaling"><span class="nav-icon">7</span> Automation & Scaling</a>
+    <a href="#cheatsheets"><span class="nav-icon">8</span> Cheatsheets</a>
+  </nav>
+</div>
+
+<!-- HAMBURGER -->
+<button class="hamburger" id="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">&#9776;</button>
+
+<!-- MAIN CONTENT -->
+<main>
+
+<!-- EXECUTIVE SUMMARY -->
+<section id="exec-summary">
+<h1>Content Production &<br><span>Scheduling System</span></h1>
+<p class="lead">The operational layer that turns 61 weekly content pieces into a repeatable, measurable machine.</p>
+
+<div class="stat-grid">
+  <div class="stat-box"><div class="stat-number">61</div><div class="stat-label">Pieces / Week</div></div>
+  <div class="stat-box"><div class="stat-number">6</div><div class="stat-label">Platforms</div></div>
+  <div class="stat-box"><div class="stat-number">5</div><div class="stat-label">Content Creators</div></div>
+  <div class="stat-box"><div class="stat-number">7</div><div class="stat-label">Days Active</div></div>
+</div>
+
+<div class="card">
+<p><strong>Recommendation: ClickUp Business.</strong> At $12/user/month, ClickUp gives Collective Shift the content calendar views, Kanban boards, automation rules, and Zapier/Make integrations the team needs to go from manual posting and scattered briefs to a single system of record. Ben already uses Notion for the company wiki, and ClickUp slots in alongside it without overlap: Notion stays the knowledge base, ClickUp becomes the production engine. The combination of custom fields, multiple views (calendar, board, list, workload), built-in time tracking, and 100+ native integrations means the team can start building Monday, be operational by Friday, and scale from 61 to 120+ pieces per week without adding tools. Every section of this document contains exact field names, automation triggers, and step-by-step setup instructions so there is nothing left to figure out.</p>
+</div>
+</section>
+
+<!-- SECTION 1: WORKFLOW -->
+<section id="workflow">
+<h2><span class="section-num">01</span> Content Production Workflow</h2>
+
+<h3>End-to-End Process Map</h3>
+<p>Every piece of content moves through seven stages. No exceptions. No skipping Approve.</p>
+
+<div class="workflow">
+  <div class="wf-step"><div class="wf-icon">💡</div><div class="wf-label">Ideate</div><div class="wf-sub">Brief created</div></div>
+  <div class="wf-arrow">&#10142;</div>
+  <div class="wf-step"><div class="wf-icon">✍️</div><div class="wf-label">Draft</div><div class="wf-sub">Content written</div></div>
+  <div class="wf-arrow">&#10142;</div>
+  <div class="wf-step"><div class="wf-icon">🎬</div><div class="wf-label">Edit</div><div class="wf-sub">Video/design</div></div>
+  <div class="wf-arrow">&#10142;</div>
+  <div class="wf-step"><div class="wf-icon">🔍</div><div class="wf-label">Review</div><div class="wf-sub">Copy + brand</div></div>
+  <div class="wf-arrow">&#10142;</div>
+  <div class="wf-step active"><div class="wf-icon">✅</div><div class="wf-label">Approve</div><div class="wf-sub">Ben signs off</div></div>
+  <div class="wf-arrow">&#10142;</div>
+  <div class="wf-step"><div class="wf-icon">📅</div><div class="wf-label">Schedule</div><div class="wf-sub">Queue + time</div></div>
+  <div class="wf-arrow">&#10142;</div>
+  <div class="wf-step"><div class="wf-icon">📊</div><div class="wf-label">Measure</div><div class="wf-sub">Track KPIs</div></div>
+</div>
+
+<h3>Roles & Responsibilities Matrix</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Stage</th><th>Ben (CEO/CMO)</th><th>Travis (CGO)</th><th>Matt / Sarn</th><th>Georgio (Editor)</th><th>ClawBot / Jarvis</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Ideate</strong></td><td>Sets weekly themes, approves topics</td><td>Own reel + YouTube topics</td><td>Research topics, tutorials</td><td>-</td><td>Generates briefs from pillar rotation, suggests hooks</td></tr>
+<tr><td><strong>Draft</strong></td><td>Films reels (Sunday batch), writes EDMs</td><td>Films own reels + YouTube</td><td>Draft scripts, analysis</td><td>-</td><td>Drafts tweets, LinkedIn, captions, EDM copy</td></tr>
+<tr><td><strong>Edit</strong></td><td>-</td><td>-</td><td>-</td><td>Reel editing, YouTube cuts</td><td>Copy polish, grammar check</td></tr>
+<tr><td><strong>Review</strong></td><td>-</td><td>Reviews own team content</td><td>Peer review research</td><td>-</td><td>Brand compliance scan, voice check</td></tr>
+<tr><td><strong>Approve</strong></td><td>Final sign-off on ALL content</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+<tr><td><strong>Schedule</strong></td><td>-</td><td>-</td><td>-</td><td>-</td><td>Prep scheduling queue, set times</td></tr>
+<tr><td><strong>Measure</strong></td><td>Reviews weekly dashboard</td><td>Reviews growth metrics</td><td>Newsletter open rates</td><td>-</td><td>Compiles weekly report</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Weekly Rhythm</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Day</th><th>Morning</th><th>Midday</th><th>Afternoon</th><th>Evening</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Monday</strong></td><td>Weekly planning standup (15 min, all content team)<br>Confirm YouTube topics<br>Review reel queue</td><td>Ben reels #1 + #2 post<br>Tweet + LinkedIn</td><td>Travis reel posts<br>Ben reel #3<br>Client result post #1</td><td>EDM: Educational Deep Dive sends (5pm)</td></tr>
+<tr><td><strong>Tuesday</strong></td><td>Ben reels post<br>YouTube-derived reels batch</td><td>Tweet + LinkedIn</td><td>Travis reel<br>Ben reel #3</td><td>YouTube video edit review</td></tr>
+<tr><td><strong>Wednesday</strong></td><td>Ben reels post</td><td>Tweet + LinkedIn</td><td>Travis reel<br>Client result post #2</td><td>EDM: Story + Belief Break sends (5pm)</td></tr>
+<tr><td><strong>Thursday</strong></td><td>Ben reels post<br>YouTube-derived reels batch</td><td>Tweet + LinkedIn</td><td>Travis reel</td><td>Weekly Shift Newsletter sends (5pm, Matt)</td></tr>
+<tr><td><strong>Friday</strong></td><td>Ben reels post<br>Week-in-review: content published + tracked</td><td>Tweet + LinkedIn</td><td>Travis reel<br>Client result post #3</td><td>EDM: Open Loop into VSL sends (5pm)<br>Next week's topics confirmed</td></tr>
+<tr><td><strong>Saturday</strong></td><td>Ben reels post<br>YouTube-derived reels batch</td><td>Ben reel #2</td><td>Travis reel + Ben reel #3</td><td>-</td></tr>
+<tr><td><strong>Sunday</strong></td><td colspan="3"><strong>BATCH FILMING</strong> (see below)</td><td>Batch prep for next week. Review ideation list, confirm YouTube topics.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Sunday Batch Filming Workflow</h3>
+<div class="card">
+<p><strong>Ben films all 21 reels for the week in a single Sunday session.</strong></p>
+<ol>
+  <li><strong>8:00am</strong> - ClawBot delivers 21 reel briefs (hook, script outline, ManyChat keyword, pillar tag) to ClickUp</li>
+  <li><strong>9:00am</strong> - Ben reviews briefs, reorders, trims. Marks any cuts.</li>
+  <li><strong>10:00am - 1:00pm</strong> - Ben films all 21 reels (approx 8 min per reel including setup)</li>
+  <li><strong>1:30pm</strong> - Raw footage uploaded to shared Google Drive folder</li>
+  <li><strong>2:00pm</strong> - Georgio (editor) picks up footage. Target: all 21 reels edited by Wednesday EOD.</li>
+  <li><strong>As edited</strong> - Each reel moves to "In Review" in ClickUp. Ben batch-approves in 30 min blocks.</li>
+  <li><strong>Post-approval</strong> - Approved reels queued with scheduled post times for the week</li>
+</ol>
+</div>
+
+<h3>How ClawBot / Jarvis Fits In</h3>
+<div class="callout-teal callout">
+<strong>ClawBot is the invisible team member that never sleeps.</strong> It doesn't replace anyone. It removes the blank-page problem for everyone.
+</div>
+<ul>
+  <li><strong>Ideation:</strong> Generates weekly reel briefs from content pillar rotation (40% BUILD, 25% PROTECT, 25% PROOF, 10% YIELD)</li>
+  <li><strong>Drafting:</strong> Writes first-draft tweets, LinkedIn posts, EDM copy, and Instagram captions in Ben's voice</li>
+  <li><strong>Polishing:</strong> Runs copy through brand compliance check (no "crypto", no em dashes, no hype language)</li>
+  <li><strong>Scheduling prep:</strong> Sets optimal post times, assigns ManyChat keywords, tags content pillars</li>
+  <li><strong>Reporting:</strong> Compiles weekly performance data into a dashboard summary for Monday standup</li>
+</ul>
+</section>
+
+<!-- SECTION 2: PLATFORM -->
+<section id="platform">
+<h2><span class="section-num">02</span> Recommended Platform & Setup</h2>
+
+<h3>Platform Comparison</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Platform</th><th>Content Calendar</th><th>Automations</th><th>Integrations</th><th>Mobile App</th><th>Price (8 users/mo)</th><th>Verdict</th></tr>
+</thead>
+<tbody>
+<tr class="table-highlight compare-winner"><td><strong>ClickUp</strong></td><td>Native calendar, Kanban, list, workload views</td><td>100+ automation triggers, custom rules</td><td>Zapier, Make, 100+ native</td><td>Strong (iOS/Android)</td><td>$96/mo (Business)</td><td><span class="badge badge-orange">PICK</span></td></tr>
+<tr><td>Notion</td><td>Database calendar view (basic)</td><td>Limited (formula-based)</td><td>Zapier, Make, API</td><td>Decent, slower</td><td>$80/mo (Plus)</td><td>Great wiki, weak ops</td></tr>
+<tr><td>Asana</td><td>Good calendar + timeline</td><td>Good rules engine</td><td>Zapier, Make, native</td><td>Strong</td><td>$88/mo (Premium)</td><td>Clean but less flexible</td></tr>
+<tr><td>Airtable</td><td>Excellent (database-first)</td><td>Strong automations</td><td>Zapier, Make, scripts</td><td>Good</td><td>$160/mo (Team)</td><td>Powerful but pricey</td></tr>
+<tr><td>Monday.com</td><td>Good visual calendar</td><td>Good automations</td><td>Zapier, Make, native</td><td>Decent</td><td>$96/mo (Standard)</td><td>Visual but heavy</td></tr>
+<tr><td>Trello</td><td>Basic calendar power-up</td><td>Butler (limited)</td><td>Power-ups, Zapier</td><td>Good</td><td>$80/mo (Premium)</td><td>Too basic at 61/wk</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout">
+<strong>Why ClickUp over Notion?</strong> Ben already uses Notion for the company wiki and knowledge base. That stays. ClickUp is the production engine: task assignments, deadline tracking, automations, and the calendar views that Notion's databases can't match at 61 pieces per week. Different tools for different jobs. No overlap, no migration headache.
+</div>
+
+<h3>Pricing: ClickUp Business Plan</h3>
+<div class="card">
+<ul>
+  <li><strong>$12/user/month</strong> billed annually = <strong>$96/month for 8 users</strong></li>
+  <li>8 users: Ben, Travis, Matt, Sarn, Georgio, Alice (Chief of Staff), David Tran (Member Growth), future editor</li>
+  <li>Unlimited tasks, views, integrations, dashboards</li>
+  <li>Guests (external reviewers) are free on Business plan</li>
+  <li>Annual cost: <strong>$1,152/year</strong></li>
+</ul>
+</div>
+
+<h3>Step-by-Step Setup</h3>
+
+<h4>1. Workspace Structure</h4>
+<div class="card">
+<pre style="font-size:13px; color: var(--cs-teal); line-height:1.6; overflow-x:auto;">
+Workspace: Collective Shift
+  |
+  |- Space: CONTENT PRODUCTION
+  |    |
+  |    |- Folder: Social Media
+  |    |    |- List: Instagram Reels (Ben)
+  |    |    |- List: Instagram Reels (Travis/Sarn)
+  |    |    |- List: Twitter/X
+  |    |    |- List: LinkedIn
+  |    |    |- List: Instagram Carousels
+  |    |    |- List: Client Result Posts
+  |    |
+  |    |- Folder: YouTube
+  |    |    |- List: Long-Form Videos
+  |    |    |- List: YouTube Shorts/Clips
+  |    |    |- List: Thumbnails
+  |    |
+  |    |- Folder: Email
+  |    |    |- List: EDMs (Mon/Wed/Fri)
+  |    |    |- List: Weekly Shift Newsletter
+  |    |
+  |    |- Folder: Requests & Approvals
+  |         |- List: Content Requests
+  |         |- List: Copy Reviews
+  |         |- List: Final Approvals
+  |
+  |- Space: CONTENT STRATEGY
+       |- List: 90-Day Content Calendar
+       |- List: Content Ideas Backlog
+       |- List: Campaign Briefs
+</pre>
+</div>
+
+<h4>2. Custom Fields (Apply to All Lists)</h4>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Field Name</th><th>Type</th><th>Options / Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>Content Type</td><td>Dropdown</td><td>Reel, YouTube Long, YouTube Short, Tweet, LinkedIn, Carousel, EDM, Newsletter, Thumbnail, Story</td></tr>
+<tr><td>Content Pillar</td><td>Dropdown</td><td>BUILD (40%), PROTECT (25%), PROOF (25%), YIELD (10%)</td></tr>
+<tr><td>Platform</td><td>Dropdown (multi)</td><td>Instagram, TikTok, YouTube, X/Twitter, LinkedIn, Email, Facebook</td></tr>
+<tr><td>Status</td><td>Status</td><td>Ideation, Draft, In Edit, In Review, Approved, Scheduled, Published</td></tr>
+<tr><td>Owner</td><td>Assignee</td><td>Ben, Travis, Matt, Sarn, Georgio, ClawBot</td></tr>
+<tr><td>Reviewer</td><td>Assignee</td><td>Person responsible for review stage</td></tr>
+<tr><td>Due Date</td><td>Date</td><td>Publish date/time</td></tr>
+<tr><td>Scheduled Time</td><td>Date + Time</td><td>Exact post time (8am, 10am, 12pm, etc.)</td></tr>
+<tr><td>ManyChat Keyword</td><td>Dropdown</td><td>BLUEPRINT, PROTECT, BUILD, YIELD, PROOF, None</td></tr>
+<tr><td>CTA Type</td><td>Dropdown</td><td>ManyChat Keyword, Link in Bio, No CTA, YouTube Description</td></tr>
+<tr><td>Brand</td><td>Dropdown</td><td>Ben Simpson, Travis Thomas, Collective Shift, The Wealth Shift</td></tr>
+<tr><td>Week Number</td><td>Number</td><td>Calendar week for batch planning</td></tr>
+<tr><td>Batch Session</td><td>Dropdown</td><td>Sunday Batch [date], Standalone</td></tr>
+<tr><td>Google Drive Link</td><td>URL</td><td>Link to raw footage or final asset</td></tr>
+<tr><td>Performance</td><td>Text</td><td>Post-publish: views, engagement, saves</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>3. Views to Create</h4>
+<div class="card-grid">
+<div class="card">
+  <h4 style="margin-top:0;">📅 Calendar View</h4>
+  <p style="font-size:13px;">Group by: Scheduled Time. Filter: Status not "Ideation". Color by: Content Pillar. This is the master content calendar.</p>
+</div>
+<div class="card">
+  <h4 style="margin-top:0;">📋 Kanban Board</h4>
+  <p style="font-size:13px;">Group by: Status. Shows pipeline from Ideation to Published. Every team member's default view.</p>
+</div>
+<div class="card">
+  <h4 style="margin-top:0;">👤 By Person</h4>
+  <p style="font-size:13px;">Group by: Owner. Each person sees their tasks only. Filter: Status not "Published".</p>
+</div>
+<div class="card">
+  <h4 style="margin-top:0;">📱 By Platform</h4>
+  <p style="font-size:13px;">Group by: Platform. See what's going to Instagram vs YouTube vs Email today.</p>
+</div>
+<div class="card">
+  <h4 style="margin-top:0;">🎯 By Pillar</h4>
+  <p style="font-size:13px;">Group by: Content Pillar. Verify distribution matches targets (40/25/25/10).</p>
+</div>
+<div class="card">
+  <h4 style="margin-top:0;">✅ Ben's Approval Queue</h4>
+  <p style="font-size:13px;">Filter: Status = "In Review". Sorted by Due Date ascending. Ben's single inbox for sign-offs.</p>
+</div>
+</div>
+
+<h4>4. Content Request Form</h4>
+<div class="card">
+<p>Create a ClickUp Form linked to the "Content Requests" list. Fields:</p>
+<ul>
+  <li>What do you need? (dropdown: Reel, Carousel, Thumbnail, Copy Review, YouTube Video, Other)</li>
+  <li>Brief / Description (long text)</li>
+  <li>Target platform(s) (multi-select)</li>
+  <li>Requested publish date</li>
+  <li>Priority (Low, Normal, Urgent)</li>
+  <li>Attachments (reference images, scripts, data)</li>
+  <li>Requester name (auto-filled)</li>
+</ul>
+<p>Share the form URL with the team. Every request starts here. No Slack messages, no verbal asks.</p>
+</div>
+
+<h4>5. Automation Rules</h4>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Trigger</th><th>Action</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td>Status changes to "In Edit"</td><td>Assign to Georgio + notify</td><td>Editor picks up immediately</td></tr>
+<tr><td>Status changes to "In Review"</td><td>Assign to Ben + notify</td><td>Ben's approval queue updates</td></tr>
+<tr><td>Status changes to "Approved"</td><td>Move to Scheduled + set publish time</td><td>Ready for posting</td></tr>
+<tr><td>Due date is tomorrow + status not "Approved"</td><td>Notify Owner + Ben</td><td>Deadline warning</td></tr>
+<tr><td>Task created in "Content Requests"</td><td>Notify Alice (Chief of Staff)</td><td>Request triage</td></tr>
+<tr><td>Status changes to "Published"</td><td>Add comment: "Add performance data within 48h"</td><td>Close the loop on measurement</td></tr>
+<tr><td>Every Monday at 7am</td><td>Create recurring tasks for the week's EDMs</td><td>Auto-generate weekly email tasks</td></tr>
+<tr><td>Every Sunday at 7am</td><td>Create 21 reel tasks for Ben from template</td><td>Batch filming prep</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>6. Integration Setup</h4>
+<div class="card-grid">
+<div class="card">
+  <h4 style="margin-top:0;">Zapier / Make: Customer.io</h4>
+  <p style="font-size:13px;">When ClickUp task status = "Published" AND Content Type = "EDM" or "Newsletter", log send event to a tracking Sheet. Use Make webhook to trigger Customer.io campaign send at scheduled time.</p>
+</div>
+<div class="card">
+  <h4 style="margin-top:0;">Google Calendar Sync</h4>
+  <p style="font-size:13px;">Enable ClickUp's native Google Calendar two-way sync. All tasks with due dates appear on team calendar. Use for YouTube filming blocks and Monday standups.</p>
+</div>
+<div class="card">
+  <h4 style="margin-top:0;">Google Drive</h4>
+  <p style="font-size:13px;">Enable ClickUp + Google Drive integration. Attach raw footage and final assets directly to tasks. Link to shared Drive folders for batch uploads.</p>
+</div>
+<div class="card">
+  <h4 style="margin-top:0;">Slack / Discord Notifications</h4>
+  <p style="font-size:13px;">Push ClickUp notifications to a #content-ops channel. Status changes, comments, and deadline alerts show up where the team already communicates.</p>
+</div>
+</div>
+</section>
+
+<!-- SECTION 3: TEMPLATES -->
+<section id="templates">
+<h2><span class="section-num">03</span> Task Templates</h2>
+<p>Duplicate these templates for every new content piece. Each includes fields, subtasks, default assignees, and estimated time.</p>
+
+<div class="tmpl">
+<div class="tmpl-header">
+  <div class="tmpl-title">📱 Instagram Reel (Ben)</div>
+  <div class="tmpl-meta"><span class="badge badge-orange">REEL</span> <span class="role-tag role-ben">Ben</span> <span class="role-tag role-editor">Georgio</span></div>
+</div>
+<div class="tmpl-fields">
+  <div class="tmpl-field"><div class="label">Content Type</div>Reel</div>
+  <div class="tmpl-field"><div class="label">Brand</div>Ben Simpson</div>
+  <div class="tmpl-field"><div class="label">Platform</div>Instagram, TikTok, YouTube Shorts</div>
+  <div class="tmpl-field"><div class="label">Est. Time</div>45 min total (8 min film + 30 min edit + review)</div>
+</div>
+<p style="font-size:13px; margin-bottom:8px;"><strong>Subtasks / Checklist:</strong></p>
+<ul class="checklist">
+  <li>Hook line written (first 2 seconds)</li>
+  <li>Script outline in task description</li>
+  <li>Content pillar assigned (BUILD/PROTECT/PROOF/YIELD)</li>
+  <li>ManyChat keyword selected</li>
+  <li>Filmed (Sunday batch)</li>
+  <li>Raw footage uploaded to Google Drive</li>
+  <li>Edited by Georgio (captions, cuts, music)</li>
+  <li>Caption + hashtags written</li>
+  <li>Ben approval (voice + brand check)</li>
+  <li>Scheduled with post time</li>
+  <li>Cross-posted to TikTok + Shorts</li>
+</ul>
+</div>
+
+<div class="tmpl">
+<div class="tmpl-header">
+  <div class="tmpl-title">📱 Instagram Reel (Travis / Sarn)</div>
+  <div class="tmpl-meta"><span class="badge badge-blue">REEL</span> <span class="role-tag role-travis">Travis/Sarn</span></div>
+</div>
+<div class="tmpl-fields">
+  <div class="tmpl-field"><div class="label">Content Type</div>Reel</div>
+  <div class="tmpl-field"><div class="label">Brand</div>Travis Thomas / Collective Shift</div>
+  <div class="tmpl-field"><div class="label">Platform</div>Instagram, TikTok, YouTube Shorts</div>
+  <div class="tmpl-field"><div class="label">Est. Time</div>60 min (film + edit + review)</div>
+</div>
+<ul class="checklist">
+  <li>Topic aligned with weekly theme</li>
+  <li>Script / talking points drafted</li>
+  <li>Filmed by creator</li>
+  <li>Edited (self or Georgio)</li>
+  <li>Caption written (ClawBot can draft)</li>
+  <li>Ben approval</li>
+  <li>Scheduled and cross-posted</li>
+</ul>
+</div>
+
+<div class="tmpl">
+<div class="tmpl-header">
+  <div class="tmpl-title">🎥 YouTube Long-Form</div>
+  <div class="tmpl-meta"><span class="badge badge-teal">YOUTUBE</span> <span class="role-tag role-matt">Matt/Travis/Sarn</span></div>
+</div>
+<div class="tmpl-fields">
+  <div class="tmpl-field"><div class="label">Content Type</div>YouTube Long-Form</div>
+  <div class="tmpl-field"><div class="label">Brand</div>Collective Shift / The Wealth Shift</div>
+  <div class="tmpl-field"><div class="label">Platform</div>YouTube</div>
+  <div class="tmpl-field"><div class="label">Est. Time</div>6-8 hours (script + film + edit + thumbnail)</div>
+</div>
+<ul class="checklist">
+  <li>Topic confirmed in Monday standup</li>
+  <li>Script / outline drafted (ClawBot can assist)</li>
+  <li>Filming session completed</li>
+  <li>Raw footage to Google Drive</li>
+  <li>Video edited (YouTube editor)</li>
+  <li>Thumbnail designed</li>
+  <li>Title + description + tags written (SEO-optimized)</li>
+  <li>3 clip timestamps marked for reel extraction</li>
+  <li>Ben approval on final cut</li>
+  <li>Published + clips extracted for reels</li>
+</ul>
+<p style="font-size:12px; color: var(--cs-gray);">Dependencies: Thumbnail must be approved before publish. 3 reels extracted within 24h of publish.</p>
+</div>
+
+<div class="tmpl">
+<div class="tmpl-header">
+  <div class="tmpl-title">⚡ YouTube Short</div>
+  <div class="tmpl-meta"><span class="badge badge-teal">SHORT</span> <span class="role-tag role-editor">Editor</span></div>
+</div>
+<div class="tmpl-fields">
+  <div class="tmpl-field"><div class="label">Content Type</div>YouTube Short</div>
+  <div class="tmpl-field"><div class="label">Source</div>YouTube long-form clip extraction</div>
+  <div class="tmpl-field"><div class="label">Est. Time</div>30 min (clip + caption + review)</div>
+</div>
+<ul class="checklist">
+  <li>Source video and timestamp identified</li>
+  <li>Clip extracted and reformatted (vertical)</li>
+  <li>Captions added</li>
+  <li>Hook optimized for first 2 seconds</li>
+  <li>Caption + hashtags written</li>
+  <li>Ben approval</li>
+  <li>Published</li>
+</ul>
+</div>
+
+<div class="tmpl">
+<div class="tmpl-header">
+  <div class="tmpl-title">🐦 X/Twitter Thread</div>
+  <div class="tmpl-meta"><span class="badge badge-blue">TWITTER</span> <span class="role-tag role-ben">Ben</span> <span class="role-tag role-clawbot">ClawBot</span></div>
+</div>
+<div class="tmpl-fields">
+  <div class="tmpl-field"><div class="label">Content Type</div>Tweet / Thread</div>
+  <div class="tmpl-field"><div class="label">Brand</div>Ben Simpson</div>
+  <div class="tmpl-field"><div class="label">Platform</div>X/Twitter</div>
+  <div class="tmpl-field"><div class="label">Est. Time</div>15 min (ClawBot drafts, Ben edits)</div>
+</div>
+<ul class="checklist">
+  <li>Topic from daily content pillar</li>
+  <li>ClawBot generates first draft</li>
+  <li>Ben reviews and edits for voice</li>
+  <li>No "crypto" language check</li>
+  <li>Published at 10am AEST</li>
+</ul>
+</div>
+
+<div class="tmpl">
+<div class="tmpl-header">
+  <div class="tmpl-title">💼 LinkedIn Post</div>
+  <div class="tmpl-meta"><span class="badge badge-blue">LINKEDIN</span> <span class="role-tag role-ben">Ben</span> <span class="role-tag role-clawbot">ClawBot</span></div>
+</div>
+<div class="tmpl-fields">
+  <div class="tmpl-field"><div class="label">Content Type</div>LinkedIn Post</div>
+  <div class="tmpl-field"><div class="label">Brand</div>Ben Simpson</div>
+  <div class="tmpl-field"><div class="label">Platform</div>LinkedIn</div>
+  <div class="tmpl-field"><div class="label">Est. Time</div>20 min (ClawBot drafts, Ben edits)</div>
+</div>
+<ul class="checklist">
+  <li>Topic: thought leadership, frameworks, or market insight</li>
+  <li>ClawBot generates first draft in Ben's voice</li>
+  <li>Ben edits for authenticity and adds personal detail</li>
+  <li>Hook line optimized (first 2 lines before "see more")</li>
+  <li>Published at 1pm AEST</li>
+</ul>
+</div>
+
+<div class="tmpl">
+<div class="tmpl-header">
+  <div class="tmpl-title">🖼 Instagram Carousel</div>
+  <div class="tmpl-meta"><span class="badge badge-orange">CAROUSEL</span> <span class="role-tag role-clawbot">ClawBot</span></div>
+</div>
+<div class="tmpl-fields">
+  <div class="tmpl-field"><div class="label">Content Type</div>Carousel</div>
+  <div class="tmpl-field"><div class="label">Brand</div>Collective Shift</div>
+  <div class="tmpl-field"><div class="label">Platform</div>Instagram, LinkedIn</div>
+  <div class="tmpl-field"><div class="label">Est. Time</div>45 min (copy + design + review)</div>
+</div>
+<ul class="checklist">
+  <li>Topic and key data points identified</li>
+  <li>Copy for each slide (6-10 slides)</li>
+  <li>Designed in Canva using CS brand template</li>
+  <li>Caption + ManyChat keyword</li>
+  <li>Ben approval</li>
+  <li>Published</li>
+</ul>
+</div>
+
+<div class="tmpl">
+<div class="tmpl-header">
+  <div class="tmpl-title">📧 EDM Draft (Mon/Wed/Fri)</div>
+  <div class="tmpl-meta"><span class="badge badge-orange">EMAIL</span> <span class="role-tag role-clawbot">ClawBot</span> <span class="role-tag role-ben">Ben</span></div>
+</div>
+<div class="tmpl-fields">
+  <div class="tmpl-field"><div class="label">Content Type</div>EDM</div>
+  <div class="tmpl-field"><div class="label">Send Via</div>Customer.io</div>
+  <div class="tmpl-field"><div class="label">Format</div>Plain text, from Ben's founder inbox</div>
+  <div class="tmpl-field"><div class="label">Est. Time</div>25 min (ClawBot drafts, Ben finalises)</div>
+</div>
+<ul class="checklist">
+  <li>EDM type confirmed (Educational / Story / Open Loop)</li>
+  <li>ClawBot drafts in Ben's voice, plain text</li>
+  <li>Subject line written (3 options, Ben picks)</li>
+  <li>CTA included (Blueprint link or Platinum application)</li>
+  <li>Ben review and sign-off</li>
+  <li>Loaded into Customer.io campaign</li>
+  <li>Scheduled for 5pm AEST send</li>
+</ul>
+<p style="font-size:12px; color: var(--cs-gray);">Mon: Educational Deep Dive (Shift OS concept) | Wed: Story + Belief Break | Fri: Open Loop into VSL</p>
+</div>
+
+<div class="tmpl">
+<div class="tmpl-header">
+  <div class="tmpl-title">📰 Weekly Shift Newsletter (Thursday)</div>
+  <div class="tmpl-meta"><span class="badge badge-teal">NEWSLETTER</span> <span class="role-tag role-matt">Matt</span></div>
+</div>
+<div class="tmpl-fields">
+  <div class="tmpl-field"><div class="label">Content Type</div>Newsletter</div>
+  <div class="tmpl-field"><div class="label">Send Via</div>Customer.io</div>
+  <div class="tmpl-field"><div class="label">Format</div>Designed template (Matt's byline)</div>
+  <div class="tmpl-field"><div class="label">Est. Time</div>2-3 hours (write + design + review)</div>
+</div>
+<ul class="checklist">
+  <li>Market update section drafted (Matt)</li>
+  <li>Research highlights selected</li>
+  <li>Platinum teaser / member insight included</li>
+  <li>Designed in Customer.io template</li>
+  <li>Ben review and approval</li>
+  <li>Scheduled for Thursday 5pm AEST</li>
+  <li>Performance tracked (open rate target: 25%+)</li>
+</ul>
+</div>
+
+<div class="tmpl">
+<div class="tmpl-header">
+  <div class="tmpl-title">🎨 Thumbnail Design Request</div>
+  <div class="tmpl-meta"><span class="badge badge-gray">DESIGN</span></div>
+</div>
+<div class="tmpl-fields">
+  <div class="tmpl-field"><div class="label">Content Type</div>Thumbnail</div>
+  <div class="tmpl-field"><div class="label">For</div>YouTube video (linked task)</div>
+  <div class="tmpl-field"><div class="label">Est. Time</div>30-45 min</div>
+</div>
+<ul class="checklist">
+  <li>Video title confirmed</li>
+  <li>Thumbnail concept / text overlay specified</li>
+  <li>Designed in Canva (CS YouTube template)</li>
+  <li>3 options provided</li>
+  <li>Ben selects final</li>
+  <li>Uploaded to YouTube</li>
+</ul>
+</div>
+
+<div class="tmpl">
+<div class="tmpl-header">
+  <div class="tmpl-title">📝 Copy Review Request</div>
+  <div class="tmpl-meta"><span class="badge badge-gray">REVIEW</span></div>
+</div>
+<div class="tmpl-fields">
+  <div class="tmpl-field"><div class="label">Content Type</div>Copy Review</div>
+  <div class="tmpl-field"><div class="label">Est. Time</div>10-15 min</div>
+</div>
+<ul class="checklist">
+  <li>Copy pasted into task description</li>
+  <li>Source content type noted (email, caption, blog)</li>
+  <li>ClawBot brand compliance scan run first</li>
+  <li>Human reviewer assigned</li>
+  <li>Feedback added as comments</li>
+  <li>Final version marked in description</li>
+</ul>
+</div>
+
+<div class="tmpl">
+<div class="tmpl-header">
+  <div class="tmpl-title">✅ Final Approval Request</div>
+  <div class="tmpl-meta"><span class="badge badge-green">APPROVAL</span> <span class="role-tag role-ben">Ben</span></div>
+</div>
+<div class="tmpl-fields">
+  <div class="tmpl-field"><div class="label">Assignee</div>Always Ben</div>
+  <div class="tmpl-field"><div class="label">Est. Time</div>5-10 min per piece</div>
+</div>
+<ul class="checklist">
+  <li>Final asset attached (video, image, or copy)</li>
+  <li>All subtasks on parent task complete</li>
+  <li>Voice check: sounds like Ben / CS brand</li>
+  <li>Brand check: no "crypto", no em dashes, no hype</li>
+  <li>CTA check: correct ManyChat keyword or link</li>
+  <li>Platform check: correct format and dimensions</li>
+  <li>Approved or returned with specific feedback</li>
+</ul>
+</div>
+</section>
+
+<!-- SECTION 4: APPROVAL -->
+<section id="approval">
+<h2><span class="section-num">04</span> Approval & Review Process</h2>
+
+<h3>Gate System</h3>
+<p>Content moves forward only when the gate criteria are met. No stage-skipping.</p>
+
+<div class="workflow">
+  <div class="wf-step"><div class="wf-label">Draft</div><div class="wf-sub">Creator completes</div></div>
+  <div class="wf-arrow">&#10142;</div>
+  <div class="wf-step"><div class="wf-label">In Edit</div><div class="wf-sub">Editor works</div></div>
+  <div class="wf-arrow">&#10142;</div>
+  <div class="wf-step"><div class="wf-label">In Review</div><div class="wf-sub">Reviewer checks</div></div>
+  <div class="wf-arrow">&#10142;</div>
+  <div class="wf-step active"><div class="wf-label">Approved</div><div class="wf-sub">Ben signs off</div></div>
+  <div class="wf-arrow">&#10142;</div>
+  <div class="wf-step"><div class="wf-label">Scheduled</div><div class="wf-sub">Post time set</div></div>
+  <div class="wf-arrow">&#10142;</div>
+  <div class="wf-step"><div class="wf-label">Published</div><div class="wf-sub">Live + tracked</div></div>
+</div>
+
+<h3>Reviewer Mapping</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Content Type</th><th>First Reviewer</th><th>Final Approver</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>Ben's reels</td><td>Self-review (filmed by Ben)</td><td><strong>Ben</strong></td><td>Ben reviews edited version from Georgio</td></tr>
+<tr><td>Travis/Sarn reels</td><td>Travis (own) / Sarn (own)</td><td><strong>Ben</strong></td><td>Creator self-reviews, Ben final</td></tr>
+<tr><td>YouTube long-form</td><td>Presenter reviews own edit</td><td><strong>Ben</strong></td><td>Thumbnail approved separately</td></tr>
+<tr><td>Tweets (Ben)</td><td>ClawBot brand scan</td><td><strong>Ben</strong></td><td>Quick review, same-day turnaround</td></tr>
+<tr><td>LinkedIn (Ben)</td><td>ClawBot brand scan</td><td><strong>Ben</strong></td><td>Ben adds personal touch before posting</td></tr>
+<tr><td>EDMs</td><td>ClawBot draft + brand scan</td><td><strong>Ben</strong></td><td>Ben writes or heavily edits every email</td></tr>
+<tr><td>Weekly Shift Newsletter</td><td>Matt drafts + self-reviews</td><td><strong>Ben</strong></td><td>Research accuracy is Matt's responsibility</td></tr>
+<tr><td>Client result posts</td><td>David Tran (Growth) selects</td><td><strong>Ben</strong></td><td>Must be anonymised correctly</td></tr>
+<tr><td>Carousels</td><td>ClawBot copy + designer</td><td><strong>Ben</strong></td><td>Design approved via Canva link</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Comment & Feedback Guidelines</h3>
+<div class="card">
+<ul>
+  <li><strong>Be specific:</strong> "Change the hook to lead with the number" not "make it better"</li>
+  <li><strong>Use ClickUp comments:</strong> All feedback lives on the task. Not Slack, not text messages.</li>
+  <li><strong>Tag the person:</strong> @mention the person who needs to action the feedback</li>
+  <li><strong>One round max:</strong> If it needs more than one round of revisions, jump on a 5-minute call</li>
+  <li><strong>Time-box:</strong> Reviews must be completed within 4 hours of assignment (business hours)</li>
+</ul>
+</div>
+
+<h3>Version Control</h3>
+<div class="card">
+<ul>
+  <li>Every revision gets uploaded as a new attachment on the task (v1, v2, v3)</li>
+  <li>The approved version is pinned as the top comment with "FINAL" label</li>
+  <li>Never overwrite previous versions. Keep the trail.</li>
+  <li>Google Drive links in the task always point to the latest version</li>
+</ul>
+</div>
+
+<h3>Ben's Final Approval Checklist</h3>
+<div class="card" style="border-left: 4px solid var(--cs-orange);">
+<p style="font-weight:700; margin-bottom:12px;">Every piece of content must pass all five checks:</p>
+<ul class="checklist">
+  <li><strong>Voice Check:</strong> Does this sound like me / CS? Would I say this in a conversation?</li>
+  <li><strong>Brand Check:</strong> No "crypto" (use "digital assets"). No em dashes. No hype language. No urgency tactics.</li>
+  <li><strong>CTA Check:</strong> Correct ManyChat keyword? Link goes to collectiveshift.co/cryptoblueprint?</li>
+  <li><strong>Accuracy Check:</strong> Any claims backed by data? 116% CAGR noted as "verified and audited by Crypto Tax Australia"?</li>
+  <li><strong>Platform Check:</strong> Right format, dimensions, and character count for the target platform?</li>
+</ul>
+</div>
+
+<h3>Emergency Publishing Protocol</h3>
+<div class="callout">
+<strong>Market-moving events (Bitcoin crashes/surges, regulatory news, major hacks)</strong>
+</div>
+<div class="card">
+<ol>
+  <li><strong>Ben decides to publish</strong> (no one else triggers emergency protocol)</li>
+  <li>ClawBot drafts a take within 15 minutes, sent to Ben for review</li>
+  <li>Ben edits and approves in one pass (skip normal review flow)</li>
+  <li>Post to X/Twitter first (fastest reach), then Instagram Story, then reel if warranted</li>
+  <li>Status in ClickUp: create task, set status directly to "Published", tag as "Emergency"</li>
+  <li>EDM can be triggered same-day if Ben decides the event warrants it</li>
+  <li><strong>Rule:</strong> Emergency content must still pass voice and brand checks. Speed does not override quality.</li>
+</ol>
+</div>
+
+<h3>ClawBot in the Review Process</h3>
+<div class="callout-teal callout">
+<strong>Before any content reaches a human reviewer, ClawBot runs a brand compliance scan.</strong>
+</div>
+<ul>
+  <li>Checks for banned words: "crypto" (should be "digital assets"), em dashes, "to the moon", "WAGMI", "not financial advice" (CS never uses this disclaimer), hype language</li>
+  <li>Checks CTA: ManyChat keyword matches the content pillar</li>
+  <li>Checks voice: Compares against Ben's Voice Profile for tone and style markers</li>
+  <li>Flags issues as comments on the ClickUp task before it hits Ben's queue</li>
+  <li>This saves Ben 2-3 minutes per piece (across 61 pieces/week = ~3 hours saved)</li>
+</ul>
+</section>
+
+<!-- SECTION 5: CALENDAR -->
+<section id="calendar">
+<h2><span class="section-num">05</span> Content Calendar Integration</h2>
+
+<h3>Mapping the 90-Day Calendar into ClickUp</h3>
+<div class="card">
+<p>The Evergreen Content System contains 103+ content concepts organized by pillar and format. Here is how to bring that into ClickUp:</p>
+<ol>
+  <li><strong>Create "90-Day Content Calendar" list</strong> in the Content Strategy space</li>
+  <li><strong>Import all 103 concepts</strong> as tasks with Content Pillar, Content Type, and Target Platform fields pre-filled</li>
+  <li><strong>Assign to weeks:</strong> Spread across 13 weeks (90 days). Use the "Week Number" custom field.</li>
+  <li><strong>Each Monday standup:</strong> Pull that week's concepts from the 90-day list and create production tasks in the appropriate Content Production lists</li>
+  <li><strong>Recycle:</strong> At week 14, the cycle restarts. Evergreen content gets refreshed with updated data and re-queued.</li>
+</ol>
+</div>
+
+<h3>Weekly Planning Session</h3>
+<div class="card" style="border-left: 4px solid var(--cs-teal);">
+<p><strong>When:</strong> Every Monday, 9:00am AEST, 15 minutes</p>
+<p><strong>Who:</strong> Ben, Travis, Alice (Chief of Staff). Matt/Sarn optional.</p>
+<p><strong>Agenda:</strong></p>
+<ol>
+  <li><strong>[2 min]</strong> Last week's numbers: pieces published vs target, top performer, any misses</li>
+  <li><strong>[3 min]</strong> This week's YouTube topics confirmed (Travis, Matt, Sarn)</li>
+  <li><strong>[3 min]</strong> Reel themes for the week (check pillar distribution: 40/25/25/10)</li>
+  <li><strong>[2 min]</strong> EDM topics confirmed (Mon/Wed/Fri)</li>
+  <li><strong>[2 min]</strong> Any urgent/time-sensitive content (events, market conditions)</li>
+  <li><strong>[3 min]</strong> Blockers, capacity issues, handoff needs</li>
+</ol>
+<p><strong>Output:</strong> All tasks for the week created in ClickUp with owners and due dates.</p>
+</div>
+
+<h3>Batch-Planning 2 Weeks Ahead</h3>
+<div class="card">
+<p>Every other Friday (Weeks 1, 3, 5, etc.), run a 30-minute forward planning session:</p>
+<ul>
+  <li>Review the 90-day calendar for the next 2 weeks</li>
+  <li>Pre-create task shells in ClickUp for all 122 pieces (2 weeks x 61/week)</li>
+  <li>Assign owners and target dates</li>
+  <li>Flag any dependencies (e.g., YouTube video must publish before clips are extracted)</li>
+  <li>ClawBot pre-generates briefs for reel topics, tweet angles, and EDM outlines</li>
+  <li>This gives Ben a full picture of what is coming so Sunday batch filming is never a surprise</li>
+</ul>
+</div>
+
+<h3>Manual Posting Workflow (Until Scheduling Tool Added)</h3>
+<div class="card">
+<p>There is no scheduling tool right now. That is fine. Here is the interim process:</p>
+<ol>
+  <li>Approved content sits in "Scheduled" status in ClickUp with exact post time in the Scheduled Time field</li>
+  <li>The person posting (currently Ben for his platforms, Alice/David for CS brand) opens ClickUp at the scheduled time</li>
+  <li>Posts manually to the platform</li>
+  <li>Changes status to "Published" in ClickUp</li>
+  <li>Adds the live post URL as a comment</li>
+</ol>
+<p style="color: var(--cs-gray); font-size:13px;">When the team is ready for a scheduling tool (see Section 7), Later or Buffer slots in here. The ClickUp status flow stays the same.</p>
+</div>
+
+<h3>Email Calendar Sync</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Day</th><th>Time</th><th>Email Type</th><th>ClickUp Task</th><th>Customer.io Campaign</th></tr>
+</thead>
+<tbody>
+<tr><td>Monday</td><td>5:00pm AEST</td><td>EDM: Educational Deep Dive</td><td>EDMs list, Week X</td><td>Triggered by Make webhook when status = Approved</td></tr>
+<tr><td>Wednesday</td><td>5:00pm AEST</td><td>EDM: Story + Belief Break</td><td>EDMs list, Week X</td><td>Triggered by Make webhook when status = Approved</td></tr>
+<tr><td>Thursday</td><td>5:00pm AEST</td><td>Weekly Shift Newsletter</td><td>Newsletter list, Week X</td><td>Matt loads directly into Customer.io template</td></tr>
+<tr><td>Friday</td><td>5:00pm AEST</td><td>EDM: Open Loop into VSL</td><td>EDMs list, Week X</td><td>Triggered by Make webhook when status = Approved</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Conflict Resolution</h3>
+<div class="card">
+<p>When two pieces compete for the same time slot:</p>
+<ol>
+  <li><strong>Time-sensitive wins.</strong> Market events, product launches, and limited-time content always take priority.</li>
+  <li><strong>Higher-pillar wins.</strong> BUILD (40%) content takes priority over YIELD (10%) content.</li>
+  <li><strong>The bumped piece moves to the next available slot</strong> on the same platform, same day if possible.</li>
+  <li><strong>Never stack.</strong> Do not post two pieces on the same platform within 2 hours of each other (algorithm penalty).</li>
+  <li><strong>Ben breaks ties.</strong> If it is not obvious, Ben decides. This should happen less than once per week.</li>
+</ol>
+</div>
+</section>
+
+<!-- SECTION 6: ONBOARDING -->
+<section id="onboarding">
+<h2><span class="section-num">06</span> Team Onboarding & SOPs</h2>
+
+<h3>Editor SOP (Reel + YouTube Editing)</h3>
+<div class="card">
+<h4 style="margin-top:0;">Reel Editing (Georgio / Future Hire)</h4>
+<ol>
+  <li>Check ClickUp: filter "In Edit" tasks assigned to you each morning</li>
+  <li>Download raw footage from Google Drive link in the task</li>
+  <li>Edit per CS standards: vertical 9:16, auto-captions (white text, dark background), light music if appropriate</li>
+  <li>Keep reels under 60 seconds. Ideal: 30-45 seconds.</li>
+  <li>First 2 seconds must match the hook line in the task brief</li>
+  <li>Export at 1080x1920, H.264, high quality</li>
+  <li>Upload final to Google Drive + attach to ClickUp task</li>
+  <li>Move status to "In Review"</li>
+  <li>Turnaround target: 4 hours per reel, all 21 Ben reels done by Wednesday EOD</li>
+</ol>
+
+<h4>YouTube Long-Form Editing (Future Hire)</h4>
+<ol>
+  <li>Download raw footage from Google Drive</li>
+  <li>Edit for pacing: cut dead air, add B-roll where relevant, add lower-thirds with presenter name/title</li>
+  <li>Add CS intro bumper (3 seconds) and outro card with CTA</li>
+  <li>Color grade to match CS brand look (clean, slightly warm)</li>
+  <li>Export at 1920x1080, H.264</li>
+  <li>Mark 3 best clip timestamps in task comments (for reel extraction)</li>
+  <li>Upload to Google Drive + attach to task</li>
+  <li>Turnaround: 48 hours from filming session</li>
+</ol>
+</div>
+
+<h3>Thumbnail Designer SOP</h3>
+<div class="card">
+<ol>
+  <li>Use the CS YouTube Thumbnail template in Canva (ask Alice for access)</li>
+  <li>Every thumbnail must include: presenter face (clear, high-contrast), 3-5 word text overlay, CS brand colors</li>
+  <li>Create 3 options per video. Upload all three to the ClickUp task.</li>
+  <li>Ben picks the winner. Do not ask which one is best. Give him options and let him choose.</li>
+  <li>Final thumbnail exported at 1280x720, PNG</li>
+  <li>Turnaround: 24 hours from request</li>
+</ol>
+</div>
+
+<h3>Copy Reviewer SOP</h3>
+<div class="card">
+<ol>
+  <li>Open the ClickUp task. Read the copy in the description or attached document.</li>
+  <li>Run through the Brand Compliance Checklist (below)</li>
+  <li>Check voice: Does this sound like Ben? Or the brand it is meant to represent?</li>
+  <li>Check facts: Are stats current? Is the 116% CAGR noted as "verified and audited by Crypto Tax Australia"?</li>
+  <li>Leave specific feedback as ClickUp comments. Tag the original author.</li>
+  <li>If the copy is good, move status to "In Review" (for Ben's final approval)</li>
+  <li>Time target: 15 minutes per review</li>
+</ol>
+</div>
+
+<h3>Ben's SOP (Final Approver)</h3>
+<div class="card" style="border-left: 4px solid var(--cs-orange);">
+<ol>
+  <li><strong>Morning block (9:30am, 20 min):</strong> Open "Ben's Approval Queue" view in ClickUp. Review and approve/return everything from overnight.</li>
+  <li><strong>Afternoon block (2:00pm, 15 min):</strong> Second pass for anything that came in during the day.</li>
+  <li><strong>Approval:</strong> Change status to "Approved". Add a thumbs-up reaction to the asset comment.</li>
+  <li><strong>Rejection:</strong> Add a comment with specific feedback. Change status back to "In Edit" or "Draft".</li>
+  <li><strong>Batch reels:</strong> After Sunday filming + editing, approve all 21 reels in one 30-minute session (Wed or Thu).</li>
+  <li><strong>Goal:</strong> Nothing sits in "In Review" for more than 8 business hours.</li>
+</ol>
+</div>
+
+<h3>Content Creator SOP (Travis, Sarn, Matt)</h3>
+<div class="card">
+<ol>
+  <li>Check ClickUp every morning. Your "By Person" view shows everything assigned to you.</li>
+  <li>When creating content: update the ClickUp task at every stage (Draft, filming complete, etc.)</li>
+  <li>All raw footage goes to Google Drive. Link it in the task.</li>
+  <li>Write your own caption first. ClawBot can polish it, but your expertise must be the foundation.</li>
+  <li>Move to "In Review" when you believe it is ready. Do not send half-finished work for review.</li>
+  <li>Respond to review feedback within 4 hours (business hours).</li>
+</ol>
+</div>
+
+<h3>Ben's Voice Checklist</h3>
+<div class="callout">
+<strong>For anyone writing in Ben's voice (including ClawBot):</strong>
+</div>
+<div class="do-dont">
+<div class="do-col">
+  <h4>&#10003; Do This</h4>
+  <ul>
+    <li>Write like you talk. Short sentences.</li>
+    <li>Use "digital assets" not "crypto"</li>
+    <li>Lead with conviction, not hype</li>
+    <li>Use specific numbers (116% CAGR, $80 ETH entry)</li>
+    <li>Sound like an educator who invests his own money</li>
+    <li>Use "you" and "I" freely</li>
+    <li>Reference frameworks (Shift OS, Blueprint)</li>
+    <li>Keep paragraphs to 2-3 sentences max</li>
+  </ul>
+</div>
+<div class="dont-col">
+  <h4>&#10007; Not That</h4>
+  <ul>
+    <li>No em dashes anywhere. Ever.</li>
+    <li>No "crypto" (always "digital assets")</li>
+    <li>No hype: "massive gains", "to the moon", "generational opportunity"</li>
+    <li>No urgency tactics: "only 3 spots left", "price going up"</li>
+    <li>No "not financial advice" disclaimer</li>
+    <li>No corporate speak: "leverage", "synergize", "utilize"</li>
+    <li>No passive voice where active works</li>
+    <li>No emojis in emails (social is fine, sparingly)</li>
+  </ul>
+</div>
+</div>
+
+<h3>Brand Compliance Checklist</h3>
+<div class="card">
+<ul class="checklist">
+  <li>"Digital assets" not "crypto" (Bitcoin stays "Bitcoin")</li>
+  <li>No em dashes</li>
+  <li>116% CAGR always includes "verified and audited by Crypto Tax Australia"</li>
+  <li>FY performance figures noted as "audited by Crypto Tax Australia"</li>
+  <li>Zero affiliates / no token promotions messaging included where relevant</li>
+  <li>CTA goes to collectiveshift.co/cryptoblueprint (not .io, not other pages)</li>
+  <li>Member counts and stats are current (~1,000+ members)</li>
+  <li>No promises of returns or income</li>
+  <li>Tone is educator-first, not salesy</li>
+</ul>
+</div>
+
+<h3>First Week Onboarding (New Team Members)</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Day</th><th>Activity</th><th>Owner</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Day 1</strong></td><td>ClickUp account created, added to Content Production space. Read Brand Bible + this document. Watch 10 of Ben's latest reels.</td><td>Alice</td></tr>
+<tr><td><strong>Day 2</strong></td><td>Shadow the role they are replacing. Access to Google Drive, Canva, Customer.io (if relevant). Complete first task as a test.</td><td>Direct manager</td></tr>
+<tr><td><strong>Day 3</strong></td><td>Complete 3 tasks independently. All go through normal review process. Feedback from reviewer + Ben.</td><td>Self + reviewer</td></tr>
+<tr><td><strong>Day 4</strong></td><td>Join Monday standup. Run full day of production independently with check-ins.</td><td>Self</td></tr>
+<tr><td><strong>Day 5</strong></td><td>Week 1 review with Ben or Alice. Feedback, questions, adjust workflow. Fully operational by Monday.</td><td>Ben / Alice</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Using ClawBot for Content Drafting</h3>
+<div class="card">
+<p><strong>Prompt templates for common content types:</strong></p>
+<div style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 16px; margin: 10px 0; font-size: 13px; font-family: monospace;">
+<strong>Reel Brief:</strong><br>
+"Write a 30-second reel script for Ben Simpson about [TOPIC]. Content pillar: [BUILD/PROTECT/PROOF/YIELD]. Hook must grab attention in the first 2 seconds. Include a ManyChat keyword CTA at the end. Use Ben's voice: direct, educational, no hype. No em dashes. Say 'digital assets' not 'crypto'."
+</div>
+<div style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 16px; margin: 10px 0; font-size: 13px; font-family: monospace;">
+<strong>Tweet:</strong><br>
+"Write a tweet from Ben Simpson about [TOPIC]. Maximum 280 characters. Sharp, opinionated, educator tone. No hashtags. No emojis. Use 'digital assets' not 'crypto'. Make it the kind of thing a HNW investor would screenshot and share."
+</div>
+<div style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 16px; margin: 10px 0; font-size: 13px; font-family: monospace;">
+<strong>LinkedIn Post:</strong><br>
+"Write a LinkedIn post from Ben Simpson about [TOPIC]. 150-300 words. Start with a hook that makes people click 'see more'. Use personal stories or specific data where possible. End with a question or soft CTA. No em dashes. Educator tone. Say 'digital assets' not 'crypto'."
+</div>
+<div style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 16px; margin: 10px 0; font-size: 13px; font-family: monospace;">
+<strong>EDM:</strong><br>
+"Write a plain-text email from Ben Simpson to 15,000 subscribers. Type: [Educational / Story / Open Loop]. Topic: [TOPIC]. Write like Ben talks. Short paragraphs. No formatting. No images. CTA: Blueprint assessment at collectiveshift.co/cryptoblueprint. Generate 3 subject line options. No em dashes."
+</div>
+</div>
+</section>
+
+<!-- SECTION 7: SCALING -->
+<section id="scaling">
+<h2><span class="section-num">07</span> Automation & Scaling Playbook</h2>
+
+<h3>Day-One Automations (Set Up This Week)</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>#</th><th>Automation</th><th>Tool</th><th>Setup Time</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>Status to "In Edit" assigns Georgio + notifies</td><td>ClickUp native</td><td>5 min</td></tr>
+<tr><td>2</td><td>Status to "In Review" assigns Ben + notifies</td><td>ClickUp native</td><td>5 min</td></tr>
+<tr><td>3</td><td>Deadline tomorrow + not Approved = notify owner</td><td>ClickUp native</td><td>5 min</td></tr>
+<tr><td>4</td><td>New content request = notify Alice</td><td>ClickUp native</td><td>5 min</td></tr>
+<tr><td>5</td><td>Sunday 7am: create 21 Ben reel tasks from template</td><td>ClickUp recurring</td><td>10 min</td></tr>
+<tr><td>6</td><td>Monday 7am: create 3 EDM tasks for the week</td><td>ClickUp recurring</td><td>10 min</td></tr>
+<tr><td>7</td><td>Published status = add comment "Add performance in 48h"</td><td>ClickUp native</td><td>5 min</td></tr>
+<tr><td>8</td><td>ClickUp "Published" EDM = trigger Customer.io send via Make</td><td>Make.com</td><td>30 min</td></tr>
+</tbody>
+</table>
+</div>
+<p style="font-size:13px; color: var(--cs-gray);">Total setup time: ~75 minutes. All automations operational by end of day one.</p>
+
+<h3>Integration Recipes (Zapier / Make)</h3>
+<div class="card-grid">
+<div class="card">
+  <h4 style="margin-top:0;">ClickUp to Customer.io</h4>
+  <p style="font-size:13px;"><strong>Trigger:</strong> ClickUp task status changes to "Approved" where Content Type = "EDM"<br>
+  <strong>Action:</strong> Update Customer.io campaign draft with subject line and body from task description<br>
+  <strong>Second action:</strong> Schedule campaign for the time in the "Scheduled Time" field<br>
+  <strong>Tool:</strong> Make.com (better Customer.io module than Zapier)</p>
+</div>
+<div class="card">
+  <h4 style="margin-top:0;">ClickUp to Google Sheets (Reporting)</h4>
+  <p style="font-size:13px;"><strong>Trigger:</strong> ClickUp task status changes to "Published"<br>
+  <strong>Action:</strong> Add row to "Content Tracker" Google Sheet with: title, type, platform, pillar, publish date, owner<br>
+  <strong>Tool:</strong> Zapier or Make</p>
+</div>
+<div class="card">
+  <h4 style="margin-top:0;">ManyChat to Google Sheets</h4>
+  <p style="font-size:13px;"><strong>Trigger:</strong> ManyChat keyword triggered (BLUEPRINT, PROTECT, BUILD, YIELD, PROOF)<br>
+  <strong>Action:</strong> Log to "ManyChat Triggers" Google Sheet with: keyword, date, source post<br>
+  <strong>Tool:</strong> Make.com or ManyChat native webhook</p>
+</div>
+<div class="card">
+  <h4 style="margin-top:0;">Weekly Report Auto-Generate</h4>
+  <p style="font-size:13px;"><strong>Trigger:</strong> Every Friday at 4pm AEST (scheduled)<br>
+  <strong>Action:</strong> Pull ClickUp tasks published this week, compile into summary, post to Slack/Discord #content-ops<br>
+  <strong>Tool:</strong> Make.com + ClickUp API</p>
+</div>
+</div>
+
+<h3>Reporting Dashboard</h3>
+<div class="card">
+<p><strong>Build a ClickUp Dashboard called "Content Performance" with these widgets:</strong></p>
+<ul>
+  <li><strong>Tasks by Status (pie chart):</strong> See pipeline health at a glance</li>
+  <li><strong>Published This Week (number):</strong> Target = 61</li>
+  <li><strong>Published by Platform (bar chart):</strong> Instagram, YouTube, X, LinkedIn, Email</li>
+  <li><strong>Published by Pillar (bar chart):</strong> Verify 40/25/25/10 distribution</li>
+  <li><strong>Overdue Tasks (list):</strong> Anything past due date and not Published</li>
+  <li><strong>By Person (bar chart):</strong> Workload distribution</li>
+  <li><strong>Approval Turnaround (calculated):</strong> Average time from "In Review" to "Approved"</li>
+</ul>
+<p>Review this dashboard every Monday standup. Screenshot and share in Slack weekly.</p>
+</div>
+
+<h3>Scaling from 61 to 120+ Pieces/Week</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Phase</th><th>Output</th><th>What Changes</th><th>Trigger to Start</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Phase 1 (Now)</strong></td><td>61/week</td><td>Current team, ClickUp, manual posting</td><td>You are here</td></tr>
+<tr><td><strong>Phase 2 (+30%)</strong></td><td>~80/week</td><td>Add scheduling tool (Later/Buffer). Add Matt's Twitter (3/week). Add podcast clips (6/week).</td><td>Team consistently hits 61/week for 4 weeks</td></tr>
+<tr><td><strong>Phase 3 (+60%)</strong></td><td>~100/week</td><td>Hire YouTube long-form editor. Add SEO articles (2/week). Add Facebook cross-posts. Travis increases to 2 reels/day.</td><td>YouTube editor hired + onboarded</td></tr>
+<tr><td><strong>Phase 4 (+100%)</strong></td><td>~120/week</td><td>Hire short-form/reels editor. Double reel output. Add podcast (2 episodes/week). LinkedIn for company page (daily).</td><td>Revenue growth supports second editor hire</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>When to Add Scheduling Tools</h3>
+<div class="card">
+<p><strong>Not yet.</strong> At 61 pieces/week with a small team, adding a scheduling tool creates another system to learn and maintain. The team should first prove it can consistently hit targets with ClickUp + manual posting for 4 weeks.</p>
+<p><strong>When to pull the trigger:</strong></p>
+<ul>
+  <li>Team consistently hits 61/week for 4+ consecutive weeks</li>
+  <li>Manual posting becomes the bottleneck (missed times, human error)</li>
+  <li>Phase 2 scaling begins (80+ pieces/week)</li>
+</ul>
+<p><strong>Recommended:</strong> Later (Instagram/TikTok/LinkedIn native scheduling, $40/mo for 6 social profiles) or Buffer ($60/mo for team plan). Both integrate with ClickUp via Zapier.</p>
+</div>
+
+<h3>When to Hire Next</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Role</th><th>Hire When...</th><th>Est. Cost</th><th>Impact</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>YouTube Long-Form Editor</strong></td><td>Now (urgent). Editing is the bottleneck for YouTube scaling.</td><td>$3-5K/mo (contractor)</td><td>Unlocks consistent 3 YouTube videos/week</td></tr>
+<tr><td><strong>Short-Form/Reels Editor</strong></td><td>When Georgio is at capacity (all 28 reels/week taking 5+ days)</td><td>$2-4K/mo (contractor)</td><td>Faster turnaround, more volume</td></tr>
+<tr><td><strong>Social Media Manager</strong></td><td>When manual posting becomes the bottleneck (Phase 2+)</td><td>$4-6K/mo (part-time/full-time)</td><td>Owns scheduling, posting, community</td></tr>
+<tr><td><strong>Content Strategist</strong></td><td>When Ben can no longer review all content (120+ pieces/week)</td><td>$6-8K/mo</td><td>Shares approval load with Ben</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Cost Scaling Model</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Item</th><th>Phase 1 (Now)</th><th>Phase 2</th><th>Phase 3</th><th>Phase 4</th></tr>
+</thead>
+<tbody>
+<tr><td>ClickUp</td><td>$96/mo</td><td>$96/mo</td><td>$120/mo (10 users)</td><td>$144/mo (12 users)</td></tr>
+<tr><td>Scheduling Tool</td><td>$0</td><td>$40-60/mo</td><td>$40-60/mo</td><td>$60-80/mo</td></tr>
+<tr><td>Make.com</td><td>$9/mo (Core)</td><td>$16/mo (Pro)</td><td>$16/mo</td><td>$29/mo</td></tr>
+<tr><td>Additional Editors</td><td>$0</td><td>$0</td><td>$3-5K/mo</td><td>$5-9K/mo</td></tr>
+<tr class="table-highlight"><td><strong>Total Tools</strong></td><td><strong>$105/mo</strong></td><td><strong>$152-172/mo</strong></td><td><strong>$3,176-5,196/mo</strong></td><td><strong>$5,233-9,253/mo</strong></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- SECTION 8: CHEATSHEETS -->
+<section id="cheatsheets">
+<h2><span class="section-num">08</span> Quick-Reference Cheatsheets</h2>
+
+<h3>Workflow Diagram (Visual)</h3>
+<div class="card" style="text-align: center; padding: 32px;">
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; align-items: center;">
+  <div style="background: rgba(252,92,3,0.1); border: 2px solid var(--cs-orange); border-radius: 10px; padding: 12px 20px; text-align: center;">
+    <div style="font-size: 20px;">💡</div>
+    <div style="font-size: 12px; font-weight: 700;">IDEATION</div>
+    <div style="font-size: 10px; color: var(--cs-gray);">ClawBot briefs<br>Monday standup</div>
+  </div>
+  <div style="color: var(--cs-orange); font-size: 24px; padding: 0 4px;">&#8594;</div>
+  <div style="background: rgba(36,4,252,0.1); border: 2px solid var(--cs-blue); border-radius: 10px; padding: 12px 20px; text-align: center;">
+    <div style="font-size: 20px;">✍️</div>
+    <div style="font-size: 12px; font-weight: 700;">DRAFT</div>
+    <div style="font-size: 10px; color: var(--cs-gray);">Creator writes<br>or films</div>
+  </div>
+  <div style="color: var(--cs-orange); font-size: 24px; padding: 0 4px;">&#8594;</div>
+  <div style="background: rgba(11,244,185,0.1); border: 2px solid var(--cs-teal); border-radius: 10px; padding: 12px 20px; text-align: center;">
+    <div style="font-size: 20px;">🎬</div>
+    <div style="font-size: 12px; font-weight: 700;">EDIT</div>
+    <div style="font-size: 10px; color: var(--cs-gray);">Georgio / Editor<br>ClawBot polish</div>
+  </div>
+  <div style="color: var(--cs-orange); font-size: 24px; padding: 0 4px;">&#8594;</div>
+  <div style="background: rgba(168,85,247,0.1); border: 2px solid #A855F7; border-radius: 10px; padding: 12px 20px; text-align: center;">
+    <div style="font-size: 20px;">🔍</div>
+    <div style="font-size: 12px; font-weight: 700;">REVIEW</div>
+    <div style="font-size: 10px; color: var(--cs-gray);">Brand scan<br>ClawBot check</div>
+  </div>
+  <div style="color: var(--cs-orange); font-size: 24px; padding: 0 4px;">&#8594;</div>
+  <div style="background: rgba(252,92,3,0.2); border: 2px solid var(--cs-orange); border-radius: 10px; padding: 12px 20px; text-align: center;">
+    <div style="font-size: 20px;">✅</div>
+    <div style="font-size: 12px; font-weight: 700;">APPROVE</div>
+    <div style="font-size: 10px; color: var(--cs-gray);">Ben signs off<br>All content</div>
+  </div>
+  <div style="color: var(--cs-orange); font-size: 24px; padding: 0 4px;">&#8594;</div>
+  <div style="background: rgba(250,204,21,0.1); border: 2px solid #FACC15; border-radius: 10px; padding: 12px 20px; text-align: center;">
+    <div style="font-size: 20px;">📅</div>
+    <div style="font-size: 12px; font-weight: 700;">SCHEDULE</div>
+    <div style="font-size: 10px; color: var(--cs-gray);">Time set<br>Queue ready</div>
+  </div>
+  <div style="color: var(--cs-orange); font-size: 24px; padding: 0 4px;">&#8594;</div>
+  <div style="background: rgba(34,197,94,0.1); border: 2px solid #22C55E; border-radius: 10px; padding: 12px 20px; text-align: center;">
+    <div style="font-size: 20px;">📊</div>
+    <div style="font-size: 12px; font-weight: 700;">PUBLISH</div>
+    <div style="font-size: 10px; color: var(--cs-gray);">Post + measure<br>Track KPIs</div>
+  </div>
+</div>
+</div>
+
+<h3>Daily Task Checklist by Role</h3>
+
+<div class="card-grid">
+<div class="card">
+  <h4 style="margin-top:0;"><span class="role-tag role-ben">Ben</span> Daily</h4>
+  <ul class="checklist">
+    <li>9:30am: Approval queue review (20 min)</li>
+    <li>10am: Tweet posted</li>
+    <li>1pm: LinkedIn post published</li>
+    <li>2pm: Second approval pass (15 min)</li>
+    <li>Check reel posts went live (8am, 12pm, 4pm)</li>
+    <li>EDM days (Mon/Wed/Fri): review and approve email</li>
+  </ul>
+</div>
+<div class="card">
+  <h4 style="margin-top:0;"><span class="role-tag role-travis">Travis</span> Daily</h4>
+  <ul class="checklist">
+    <li>Film or review own reel</li>
+    <li>3pm: Reel posted</li>
+    <li>YouTube days: review edit or film</li>
+    <li>Check ClickUp for feedback</li>
+  </ul>
+</div>
+<div class="card">
+  <h4 style="margin-top:0;"><span class="role-tag role-editor">Georgio</span> Daily</h4>
+  <ul class="checklist">
+    <li>Check "In Edit" queue in ClickUp</li>
+    <li>Edit assigned reels (target: 4-6/day)</li>
+    <li>Upload finals to Google Drive</li>
+    <li>Move completed tasks to "In Review"</li>
+  </ul>
+</div>
+<div class="card">
+  <h4 style="margin-top:0;"><span class="role-tag role-clawbot">ClawBot</span> Daily</h4>
+  <ul class="checklist">
+    <li>Generate daily tweet + LinkedIn draft</li>
+    <li>EDM days: draft email copy</li>
+    <li>Run brand compliance scan on review queue</li>
+    <li>Sunday: deliver 21 reel briefs</li>
+  </ul>
+</div>
+</div>
+
+<h3>Weekly Planning Meeting Agenda</h3>
+<div class="card" style="border-left: 4px solid var(--cs-teal);">
+<p style="font-weight:700; font-size:16px; margin-bottom:12px;">Monday 9:00am AEST | 15 Minutes | Ben + Travis + Alice</p>
+<div class="table-wrap" style="margin: 0;">
+<table>
+<thead>
+<tr><th>Time</th><th>Topic</th><th>Owner</th></tr>
+</thead>
+<tbody>
+<tr><td>0-2 min</td><td><strong>Last week's scorecard:</strong> Published count vs 61 target. Top performer. Misses.</td><td>Alice</td></tr>
+<tr><td>2-5 min</td><td><strong>YouTube topics:</strong> Confirm this week's 3 videos (Travis, Matt, Sarn)</td><td>Travis</td></tr>
+<tr><td>5-8 min</td><td><strong>Reel themes:</strong> Check pillar balance. Any timely angles?</td><td>Ben</td></tr>
+<tr><td>8-10 min</td><td><strong>EDM topics:</strong> Mon/Wed/Fri emails confirmed</td><td>Ben</td></tr>
+<tr><td>10-12 min</td><td><strong>Urgent/timely:</strong> Events, market conditions, external factors</td><td>Anyone</td></tr>
+<tr><td>12-15 min</td><td><strong>Blockers:</strong> Capacity issues, handoffs, tool problems</td><td>Anyone</td></tr>
+</tbody>
+</table>
+</div>
+<p style="font-size:13px; color: var(--cs-gray); margin-top:12px;"><strong>Output:</strong> All tasks for the week exist in ClickUp with owners and due dates before the meeting ends.</p>
+</div>
+
+<h3>Content Status Definitions</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Status</th><th>Color</th><th>Meaning</th><th>Who Owns It</th></tr>
+</thead>
+<tbody>
+<tr><td><span class="badge badge-gray">Ideation</span></td><td>Gray</td><td>Topic identified, brief not yet written. In the backlog.</td><td>Anyone</td></tr>
+<tr><td><span class="badge badge-blue">Draft</span></td><td>Blue</td><td>Being written, filmed, or designed. Creator actively working.</td><td>Creator</td></tr>
+<tr><td><span class="badge badge-teal">In Edit</span></td><td>Teal</td><td>With editor for video editing, design, or copy polish.</td><td>Editor / ClawBot</td></tr>
+<tr><td><span class="badge" style="background:rgba(168,85,247,0.15);color:#A855F7;">In Review</span></td><td>Purple</td><td>Ready for Ben's approval. In his queue.</td><td>Ben</td></tr>
+<tr><td><span class="badge badge-orange">Approved</span></td><td>Orange</td><td>Ben signed off. Ready to schedule/post.</td><td>Poster</td></tr>
+<tr><td><span class="badge" style="background:rgba(250,204,21,0.15);color:#FACC15;">Scheduled</span></td><td>Yellow</td><td>Post time set. Waiting to go live.</td><td>Poster</td></tr>
+<tr><td><span class="badge badge-green">Published</span></td><td>Green</td><td>Live. Performance tracking begins.</td><td>Team</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Common Pitfalls & Fixes</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Pitfall</th><th>Fix</th></tr>
+</thead>
+<tbody>
+<tr><td>Content sits in "In Review" for days</td><td>Ben reviews twice daily (9:30am + 2pm). Nothing stays more than 8 business hours.</td></tr>
+<tr><td>Pillar distribution drifts (too much BUILD, not enough PROOF)</td><td>Check "By Pillar" view every Monday. Adjust next week's plan.</td></tr>
+<tr><td>Sunday batch filming runs long</td><td>Cap at 21 reels. ClawBot delivers briefs by 8am. Ben starts filming by 10am sharp.</td></tr>
+<tr><td>Reels not cross-posted to TikTok/Shorts</td><td>Subtask on every reel template: "Cross-post to TikTok + Shorts." Cannot be marked done without it.</td></tr>
+<tr><td>Missed EDM send time</td><td>Make.com automation triggers Customer.io. If automation fails, Alice is the backup poster.</td></tr>
+<tr><td>Feedback is vague ("make it better")</td><td>Comment guidelines: be specific. If you cannot articulate the fix, jump on a 5-min call.</td></tr>
+<tr><td>New hire takes too long to ramp</td><td>5-day onboarding plan above. Day 3 they produce independently. Day 5 they are fully operational.</td></tr>
+<tr><td>Tool fatigue (too many platforms)</td><td>Two tools only: ClickUp (production) + Notion (knowledge). Everything else is a posting destination, not a workflow tool.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Do This / Not That</h3>
+<div class="do-dont">
+<div class="do-col">
+  <h4>&#10003; Do This</h4>
+  <ul>
+    <li>Update ClickUp status at every stage change</li>
+    <li>All feedback as ClickUp comments (not Slack DMs)</li>
+    <li>Use templates for every new task</li>
+    <li>Check the approval queue twice daily</li>
+    <li>Film in batches (Sunday for reels, weekly for YouTube)</li>
+    <li>Let ClawBot draft first, then add your voice</li>
+    <li>Track performance 48 hours after publish</li>
+    <li>Plan 2 weeks ahead, execute 1 week at a time</li>
+  </ul>
+</div>
+<div class="dont-col">
+  <h4>&#10007; Not That</h4>
+  <ul>
+    <li>Request content via Slack messages or verbal asks</li>
+    <li>Skip the review stage "because it is urgent"</li>
+    <li>Leave tasks in Draft for more than 48 hours</li>
+    <li>Approve your own content (even Ben gets ClawBot scan first)</li>
+    <li>Post without checking ManyChat keyword is set</li>
+    <li>Use scheduling tools before the team can hit 61/week manually</li>
+    <li>Add new platforms before mastering current ones</li>
+    <li>Overwrite previous asset versions (keep v1, v2, v3)</li>
+  </ul>
+</div>
+</div>
+
+<h3>Emergency Content Protocol</h3>
+<div class="card" style="border-left: 4px solid #EF4444;">
+<p style="font-weight:700; color: #EF4444; margin-bottom:8px;">For market crashes, regulatory news, major hacks, or breaking events:</p>
+<ol>
+  <li><strong>Ben triggers.</strong> No one else decides to go to emergency mode.</li>
+  <li><strong>ClawBot drafts</strong> a take within 15 minutes.</li>
+  <li><strong>Ben edits + approves</strong> in a single pass (5-10 minutes).</li>
+  <li><strong>Post order:</strong> X/Twitter (fastest) then Instagram Story then Reel (if warranted).</li>
+  <li><strong>ClickUp:</strong> Create task, status = Published, tag = Emergency.</li>
+  <li><strong>Optional:</strong> Same-day EDM if Ben decides the event warrants it.</li>
+  <li><strong>Rule:</strong> Speed does not override quality. Voice and brand checks still apply.</li>
+</ol>
+</div>
+
+<div style="margin-top: 60px; padding: 32px; background: var(--cs-card); border: 1px solid var(--cs-border); border-radius: 12px; text-align: center;">
+  <p style="font-size: 20px; font-weight: 800; margin-bottom: 8px; max-width: none;">Ready to Build?</p>
+  <p style="font-size: 14px; color: var(--cs-gray); max-width: none;">Sign up for ClickUp Business. Follow the setup in Section 2. Create templates from Section 3. Run your first Monday standup next week. The system works when the team works the system.</p>
+  <p style="font-size: 12px; color: var(--cs-gray); margin-top: 16px; max-width: none;">Collective Shift Content Ops v1.0 | April 2026</p>
+</div>
+
+</section>
+
+</main>
+
+<!-- SCROLL SPY -->
+<script>
+const sections = document.querySelectorAll('section');
+const navLinks = document.querySelectorAll('.sidebar nav a');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => link.classList.remove('active'));
+      const activeLink = document.querySelector(`.sidebar nav a[href="#${entry.target.id}"]`);
+      if (activeLink) activeLink.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -75% 0px' });
+
+sections.forEach(section => observer.observe(section));
+
+// Close sidebar on mobile nav click
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 800) {
+      document.getElementById('sidebar').classList.remove('open');
+    }
+  });
+});
+</script>
+
+</body>
+</html>
