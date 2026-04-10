@@ -29,7 +29,7 @@ const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL || '';
 
 // Basic auth for the entire CEO dashboard
 const AUTH_USER = process.env.AUTH_USER || 'ben';
-const AUTH_PASS = process.env.AUTH_PASS || 'cs2026ceo';
+const AUTH_PASS = process.env.DASHBOARD_PASSWORD || process.env.AUTH_PASS || 'cs2026ceo';
 
 app.use((req, res, next) => {
   const auth = req.headers['authorization'];
