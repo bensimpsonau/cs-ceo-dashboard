@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Shift Engine - Collective Shift Marketing & Content Operating System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cs-dark: #0D0B14;
+  --cs-dark-alt: #1B1925;
+  --cs-orange: #FC5C03;
+  --cs-teal: #0BF4B9;
+  --cs-blue: #2404FC;
+  --cs-white: #FFFFFF;
+  --cs-gray: #A0A0B0;
+  --cs-muted: #8A8A8A;
+  --cs-muted-light: #B0B0B0;
+  --cs-card: #1E1C28;
+  --cs-border: #2A2838;
+  --cs-amber: #FFB800;
+  --cs-red: #E53E3E;
+  --cs-green: #22c55e;
+  --ben: #FC5C03;
+  --travis: #0BF4B9;
+  --sarn: #4A8AFF;
+  --matt: #A78BFA;
+  --sidebar-w: 260px;
+  --content-max: 740px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;scroll-padding-top:32px;}
+body{font-family:'Inter',sans-serif;background:var(--cs-dark);color:var(--cs-white);line-height:1.7;font-size:15px;-webkit-font-smoothing:antialiased;}
+h1,h2,h3,h4,h5,h6{font-weight:700;line-height:1.25;letter-spacing:-0.01em;}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:var(--cs-dark-alt);border-right:1px solid var(--cs-border);z-index:100;display:flex;flex-direction:column;overflow:hidden;transition:transform .3s ease;}
+.sidebar-hdr{padding:24px 20px 16px;border-bottom:1px solid var(--cs-border);flex-shrink:0;}
+.sidebar-logo{font-weight:900;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--cs-white);}
+.sidebar-logo span{color:var(--cs-orange);}
+.sidebar-sub{font-size:10px;color:var(--cs-muted);letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin-top:4px;}
+.sidebar-nav{flex:1;overflow-y:auto;padding:12px 0;scrollbar-width:thin;scrollbar-color:var(--cs-border) transparent;}
+.sidebar-nav::-webkit-scrollbar{width:4px;}
+.sidebar-nav::-webkit-scrollbar-thumb{background:var(--cs-border);border-radius:4px;}
+.nav-sec{padding:0 12px;margin-bottom:2px;}
+.nav-lbl{font-size:9px;font-weight:700;color:var(--cs-muted);text-transform:uppercase;letter-spacing:1.2px;padding:14px 12px 4px;opacity:.6;}
+.nav-a{display:flex;align-items:flex-start;gap:10px;padding:8px 10px;border-radius:6px;text-decoration:none;color:var(--cs-muted-light);font-size:12.5px;font-weight:500;transition:all .2s;line-height:1.35;}
+.nav-a:hover{background:rgba(252,92,3,.06);color:var(--cs-white);}
+.nav-a.active{background:rgba(252,92,3,.1);color:var(--cs-white);}
+.nav-a.active .nav-n{color:var(--cs-orange);}
+.nav-n{font-weight:800;font-size:10px;color:var(--cs-muted);min-width:20px;padding-top:2px;}
+.nav-a.sub{padding-left:34px;font-size:11.5px;font-weight:400;opacity:.85;}
+.sidebar-ft{padding:14px 20px;border-top:1px solid var(--cs-border);flex-shrink:0;}
+.sidebar-ft p{font-size:10px;color:var(--cs-muted);}
+
+/* HAMBURGER */
+.hamburger{display:none;position:fixed;top:14px;left:14px;z-index:200;width:42px;height:42px;background:var(--cs-dark-alt);border:1px solid var(--cs-border);border-radius:8px;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;}
+.hamburger span{display:block;width:18px;height:2px;background:var(--cs-white);border-radius:2px;transition:all .3s ease;}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:90;}
+
+/* MAIN */
+.main{margin-left:var(--sidebar-w);min-height:100vh;}
+.wrap{max-width:var(--content-max);margin:0 auto;padding:48px 36px 120px;}
+
+/* HERO */
+.hero{padding:56px 0 40px;margin-bottom:40px;border-bottom:1px solid var(--cs-border);}
+.hero-badge{display:inline-block;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--cs-orange);margin-bottom:16px;padding:5px 12px;border:1px solid rgba(252,92,3,.3);border-radius:100px;}
+.hero h1{font-size:36px;font-weight:900;margin-bottom:20px;letter-spacing:-.02em;line-height:1.15;}
+.hero-text{font-size:16px;line-height:1.7;color:var(--cs-muted-light);}
+.hero-text strong{color:var(--cs-white);font-weight:600;}
+
+/* SECTION */
+.section{margin-bottom:56px;scroll-margin-top:32px;}
+.s-label{font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--cs-orange);margin-bottom:10px;}
+.section>h2{font-size:28px;font-weight:800;margin-bottom:6px;letter-spacing:-.02em;}
+.s-intro{font-size:15px;color:var(--cs-muted-light);margin-bottom:32px;max-width:620px;}
+.accent-bar{width:44px;height:3px;background:var(--cs-orange);border-radius:3px;margin-bottom:28px;}
+h3{font-size:20px;font-weight:700;margin-top:40px;margin-bottom:14px;}
+h4{font-size:16px;font-weight:700;margin-top:28px;margin-bottom:10px;}
+h5{font-size:13px;font-weight:700;margin-top:20px;margin-bottom:6px;color:var(--cs-muted-light);text-transform:uppercase;letter-spacing:.06em;}
+p{margin-bottom:14px;color:var(--cs-muted-light);}
+p strong{color:var(--cs-white);}
+hr{border:none;height:1px;background:var(--cs-border);margin:40px 0;}
+ul,ol{padding-left:22px;margin-bottom:14px;}
+li{margin-bottom:6px;color:var(--cs-muted-light);line-height:1.5;}
+li strong{color:var(--cs-white);}
+li::marker{color:var(--cs-orange);}
+
+/* CARD */
+.card{background:var(--cs-card);border:1px solid var(--cs-border);border-radius:10px;padding:24px;margin-bottom:16px;}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:20px;}
+.card h4{margin-top:0;}
+
+/* VALUE CARD */
+.val{background:var(--cs-card);border:1px solid var(--cs-border);border-radius:10px;padding:20px 24px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;}
+.val-n{font-weight:800;font-size:22px;color:var(--cs-orange);min-width:32px;line-height:1;padding-top:2px;}
+.val h4{margin:0 0 4px;font-size:15px;}
+.val p{margin:0;font-size:14px;}
+
+/* STAT */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin:20px 0;}
+.stat{background:var(--cs-card);border:1px solid var(--cs-border);border-radius:8px;padding:18px;text-align:center;}
+.stat-n{font-weight:800;font-size:28px;color:var(--cs-orange);line-height:1;margin-bottom:4px;}
+.stat-l{font-size:11px;color:var(--cs-muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
+
+/* TABLE */
+.tw{overflow-x:auto;margin:16px 0 24px;border-radius:8px;border:1px solid var(--cs-border);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{background:var(--cs-card);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--cs-muted-light);padding:12px 14px;text-align:left;border-bottom:1px solid var(--cs-border);white-space:nowrap;}
+tbody td{padding:10px 14px;border-bottom:1px solid rgba(42,40,56,.5);color:var(--cs-muted-light);vertical-align:top;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:nth-child(even){background:rgba(30,28,40,.3);}
+tbody td:first-child{font-weight:600;color:var(--cs-white);}
+tbody td strong{color:var(--cs-white);}
+
+/* DO / DONT */
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0 24px;}
+.do-c,.dont-c{border-radius:8px;padding:20px;}
+.do-c{background:rgba(11,244,185,.05);border:1px solid rgba(11,244,185,.18);}
+.dont-c{background:rgba(229,62,62,.05);border:1px solid rgba(229,62,62,.18);}
+.do-c h4,.dont-c h4{margin:0 0 12px;font-size:12px;text-transform:uppercase;letter-spacing:.1em;}
+.do-c h4{color:var(--cs-teal);}
+.dont-c h4{color:var(--cs-red);}
+.do-c li,.dont-c li{font-size:13px;margin-bottom:8px;}
+
+/* PERSON TAG */
+.ptag{display:inline-block;font-weight:600;font-size:10px;padding:3px 10px;border-radius:100px;letter-spacing:.04em;text-transform:uppercase;margin-right:6px;margin-bottom:4px;}
+.ptag-ben{background:rgba(252,92,3,.14);color:var(--ben);}
+.ptag-travis{background:rgba(11,244,185,.12);color:var(--travis);}
+.ptag-sarn{background:rgba(74,138,255,.14);color:var(--sarn);}
+.ptag-matt{background:rgba(167,139,250,.14);color:var(--matt);}
+.ptag-collab{background:rgba(255,184,0,.12);color:var(--cs-amber);}
+
+/* PILLAR TAG */
+.pill{display:inline-block;font-weight:600;font-size:10px;padding:3px 10px;border-radius:100px;letter-spacing:.03em;text-transform:uppercase;margin-right:4px;}
+.pill-protect{background:rgba(248,113,113,.12);color:#f87171;}
+.pill-strategy{background:rgba(11,244,185,.10);color:var(--cs-teal);}
+.pill-confidence{background:rgba(252,92,3,.12);color:var(--cs-orange);}
+.pill-community{background:rgba(129,140,248,.12);color:#818cf8;}
+.pill-results{background:rgba(34,197,94,.10);color:var(--cs-green);}
+
+/* PERSON CARD */
+.pcard{background:var(--cs-card);border:1px solid var(--cs-border);border-radius:10px;padding:24px;margin-bottom:14px;border-left:3px solid var(--cs-orange);}
+.pcard.travis{border-left-color:var(--travis);}
+.pcard.sarn{border-left-color:var(--sarn);}
+.pcard.matt{border-left-color:var(--matt);}
+
+/* HOB DIAGRAM */
+.hob{background:var(--cs-card);border:1px solid var(--cs-border);border-radius:10px;padding:28px;margin:20px 0 28px;text-align:center;}
+.hob-master{background:var(--cs-dark);border:2px solid var(--cs-orange);border-radius:8px;padding:16px 24px;display:inline-block;margin-bottom:20px;}
+.hob-master h4{color:var(--cs-orange);margin:0;font-size:16px;}
+.hob-master p{margin:4px 0 0;font-size:12px;color:var(--cs-muted-light);}
+.hob-line{width:2px;height:24px;background:var(--cs-border);margin:0 auto;}
+.hob-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px;}
+.hob-brand{background:var(--cs-dark);border:1px solid var(--cs-border);border-radius:8px;padding:14px 10px;border-top:3px solid var(--cs-orange);}
+.hob-brand h5{margin:0 0 4px;font-size:12px;color:var(--cs-white);text-transform:none;letter-spacing:0;}
+.hob-brand p{font-size:11px;margin:0;color:var(--cs-muted);}
+.hob-brand.travis{border-top-color:var(--travis);}
+.hob-brand.sarn{border-top-color:var(--sarn);}
+.hob-brand.matt{border-top-color:var(--matt);}
+
+/* BLOCKQUOTE */
+blockquote{border-left:3px solid var(--cs-orange);padding:14px 20px;margin:16px 0 20px;background:rgba(252,92,3,.04);border-radius:0 8px 8px 0;}
+blockquote p{font-style:italic;color:var(--cs-white);font-weight:500;margin-bottom:4px;font-size:14px;}
+blockquote cite{font-size:12px;color:var(--cs-muted);font-style:normal;}
+
+/* CHECKLIST */
+.checklist{list-style:none;padding-left:0;}
+.checklist li{padding:8px 0 8px 28px;position:relative;border-bottom:1px solid rgba(42,40,56,.4);font-size:14px;}
+.checklist li::before{content:'';position:absolute;left:0;top:12px;width:14px;height:14px;border:2px solid var(--cs-orange);border-radius:3px;}
+
+/* FLOW */
+.flow{display:flex;flex-direction:column;gap:0;margin:16px 0 24px;}
+.flow-s{display:flex;align-items:flex-start;gap:14px;}
+.flow-l{display:flex;flex-direction:column;align-items:center;min-width:28px;}
+.flow-d{width:10px;height:10px;border-radius:50%;background:var(--cs-orange);flex-shrink:0;margin-top:5px;}
+.flow-c{width:2px;height:36px;background:var(--cs-border);}
+.flow-t{padding-bottom:16px;}
+.flow-t p{margin-bottom:2px;font-size:13px;}
+.flow-t strong{color:var(--cs-white);}
+
+/* BACK TO TOP */
+.back-top{position:fixed;bottom:28px;right:28px;width:40px;height:40px;background:var(--cs-card);border:1px solid var(--cs-border);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity .3s;z-index:50;color:var(--cs-white);font-size:16px;text-decoration:none;}
+.back-top.visible{opacity:1;}
+
+/* LINK */
+a.ref{color:var(--cs-orange);text-decoration:none;border-bottom:1px dotted rgba(252,92,3,.4);}
+a.ref:hover{border-bottom-style:solid;}
+
+/* PRINT */
+@media print{
+.sidebar,.hamburger,.overlay,.back-top{display:none!important;}
+.main{margin-left:0!important;}
+body{background:#fff;color:#111;font-size:11pt;}
+.wrap{max-width:100%;padding:0;}
+.card,.val,.stat,.pcard,.hob,.hob-brand,.hob-master{border-color:#ccc;background:#f9f9f9;}
+h1,h2,h3,h4,h5,h6,.s-label,.hero-badge,.nav-n,.stat-n,.val-n{color:#111!important;}
+p,li,td,blockquote cite{color:#333!important;}
+.section{page-break-inside:avoid;}
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+.sidebar{transform:translateX(-100%);}
+.sidebar.open{transform:translateX(0);}
+.hamburger{display:flex;}
+.main{margin-left:0;}
+.wrap{padding:72px 20px 100px;}
+.hero h1{font-size:26px;}
+.section>h2{font-size:22px;}
+.dd{grid-template-columns:1fr;}
+.card-grid{grid-template-columns:1fr;}
+.stat-row{grid-template-columns:repeat(2,1fr);}
+.hob-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:480px){
+.wrap{padding:64px 14px 80px;}
+.stat-row{grid-template-columns:1fr;}
+.hob-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- HAMBURGER -->
+<button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+<span></span><span></span><span></span>
+</button>
+<div class="overlay" id="overlay"></div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+<div class="sidebar-hdr">
+<div class="sidebar-logo">The Shift <span>Engine</span></div>
+<div class="sidebar-sub">Marketing Operating System</div>
+</div>
+<div class="sidebar-nav">
+<div class="nav-sec">
+<a href="#exec" class="nav-a active"><span class="nav-n">01</span>Executive Summary</a>
+<a href="#house-of-brands" class="nav-a"><span class="nav-n">02</span>House of Brands</a>
+<a href="#hob-model" class="nav-a sub">The Model</a>
+<a href="#hob-attribution" class="nav-a sub">Attribution Rules</a>
+<a href="#brand-foundations" class="nav-a"><span class="nav-n">03</span>Brand Foundations</a>
+<a href="#bf-voice" class="nav-a sub">Voice & Tone</a>
+<a href="#bf-visual" class="nav-a sub">Visual Identity</a>
+<a href="#content-pillars" class="nav-a"><span class="nav-n">04</span>Content Pillars</a>
+<a href="#cp-personal" class="nav-a sub">Per-Person Pillars</a>
+<a href="#social-system" class="nav-a"><span class="nav-n">05</span>Social Media System</a>
+<a href="#ss-cadence" class="nav-a sub">Posting Cadence</a>
+<a href="#ss-platforms" class="nav-a sub">Platform Guidelines</a>
+<a href="#content-engine" class="nav-a"><span class="nav-n">06</span>Content Engine</a>
+<a href="#ce-ben" class="nav-a sub">Ben's Concepts</a>
+<a href="#ce-travis" class="nav-a sub">Travis's Concepts</a>
+<a href="#ce-sarn" class="nav-a sub">Sarn's Concepts</a>
+<a href="#ce-matt" class="nav-a sub">Matt's Concepts</a>
+<a href="#email-system" class="nav-a"><span class="nav-n">07</span>Email System</a>
+<a href="#es-cadence" class="nav-a sub">4-Email Cadence</a>
+<a href="#workflow" class="nav-a"><span class="nav-n">08</span>Workflow & Cadence</a>
+<a href="#wf-calendar" class="nav-a sub">Weekly Calendar</a>
+<a href="#funnels" class="nav-a"><span class="nav-n">09</span>Products & Funnels</a>
+<a href="#personal-brands" class="nav-a"><span class="nav-n">10</span>Personal Brands</a>
+<a href="#pb-travis" class="nav-a sub">Travis Thomas</a>
+<a href="#pb-sarn" class="nav-a sub">Sarn Elliott</a>
+<a href="#pb-matt" class="nav-a sub">Matt Willemsen</a>
+<a href="#measurement" class="nav-a"><span class="nav-n">11</span>Measurement & Scaling</a>
+</div>
+</div>
+<div class="sidebar-ft">
+<p>Internal document - April 2026</p>
+<p style="margin-top:3px;">Collective Shift Pty Ltd</p>
+</div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+<div class="wrap">
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="exec">
+<div class="hero-badge">Final Unified System Document - April 2026</div>
+<h1>The Shift Engine: Marketing & Content Operating System</h1>
+<p class="hero-text">
+This is the single source of truth for how Collective Shift creates, distributes, and measures every piece of marketing content. It unifies brand identity, social strategy, email marketing, content production, and measurement into one operating system - powered by a <strong>House of Brands model</strong> with four distinct voices: Ben Simpson (founder), Travis Thomas (growth), Sarn Elliott (education), and Matt Willemsen (research). No more solo-creator dependency. One system. Four voices. Every channel.
+</p>
+</section>
+
+<!-- ===== SECTION 1: EXECUTIVE SUMMARY ===== -->
+<section class="section">
+<div class="s-label">Section 01</div>
+<h2>Executive Summary & Vision</h2>
+<div class="accent-bar"></div>
+
+<h3>Why the Shift</h3>
+<p>For five years, Collective Shift's content was synonymous with Ben Simpson. That was a strength (personal trust, founder intimacy) and a ceiling (one person can't scale to 61+ content pieces per week across six platforms). The House of Brands model solves this: Ben stays the primary face, but Travis, Sarn, and Matt each own content lanes that compound the brand's reach, credibility, and surface area without diluting what makes CS unique.</p>
+
+<h3>What This Document Covers</h3>
+<ul>
+<li><strong>House of Brands architecture</strong> - who creates what, where, and why</li>
+<li><strong>Brand foundations</strong> - mission, voice, visual identity, messaging (distilled from the Brand Bible)</li>
+<li><strong>Content pillars & themes</strong> - five pillars mapped to ICP fears, assigned per person</li>
+<li><strong>Social media system</strong> - platform strategy, posting cadence, 103+ content concepts</li>
+<li><strong>Evergreen content engine</strong> - 120+ concepts across all four voices</li>
+<li><strong>Email marketing</strong> - 4-email weekly cadence with team contributions</li>
+<li><strong>Production workflow</strong> - who does what, when, with what tools</li>
+<li><strong>Products & funnels</strong> - how content feeds the $97 to $15K pipeline</li>
+<li><strong>Personal brand guides</strong> - Travis, Sarn, Matt one-pagers</li>
+<li><strong>Measurement & scaling</strong> - KPIs, reviews, growth triggers</li>
+</ul>
+
+<h3>Key Metrics & Targets</h3>
+<div class="stat-row">
+<div class="stat"><div class="stat-n">1,163</div><div class="stat-l">Active Members</div></div>
+<div class="stat"><div class="stat-n">402</div><div class="stat-l">Platinum ($15K)</div></div>
+<div class="stat"><div class="stat-n">116%</div><div class="stat-l">CAGR (6 FY, Audited)</div></div>
+<div class="stat"><div class="stat-n">61+</div><div class="stat-l">Content Pieces/Week</div></div>
+</div>
+
+<div class="stat-row">
+<div class="stat"><div class="stat-n">180K</div><div class="stat-l">IG Target (90d)</div></div>
+<div class="stat"><div class="stat-n">100+</div><div class="stat-l">ManyChat Triggers/Wk</div></div>
+<div class="stat"><div class="stat-n">20</div><div class="stat-l">Strategy Calls/Wk</div></div>
+<div class="stat"><div class="stat-n">45%+</div><div class="stat-l">Email Open Rate</div></div>
+</div>
+</section>
+
+<!-- ===== SECTION 2: HOUSE OF BRANDS ===== -->
+<section class="section" id="house-of-brands">
+<div class="s-label">Section 02</div>
+<h2>House of Brands Strategy</h2>
+<div class="accent-bar"></div>
+<p class="s-intro">Collective Shift is the master brand. Four individual brands serve it. Each person owns specific content lanes and platforms, but all roads lead back to CS.</p>
+
+<h3 id="hob-model">The Model</h3>
+<div class="hob">
+<div class="hob-master">
+<h4>Collective Shift</h4>
+<p>Master Brand - The World's Most Trusted Digital Asset Education Company</p>
+</div>
+<div class="hob-line"></div>
+<div style="font-size:11px;color:var(--cs-muted);margin-bottom:8px;">INDIVIDUAL BRANDS</div>
+<div class="hob-grid">
+<div class="hob-brand">
+<h5 style="color:var(--ben);">Ben Simpson</h5>
+<p>Founder & CEO</p>
+<p>Vision, strategy, Bitcoin conviction, personal stories</p>
+</div>
+<div class="hob-brand travis">
+<h5 style="color:var(--travis);">Travis Thomas</h5>
+<p>Chief Growth Officer</p>
+<p>Investor psychology, wealth architecture, coaching</p>
+</div>
+<div class="hob-brand sarn">
+<h5 style="color:var(--sarn);">Sarn Elliott</h5>
+<p>Education Specialist</p>
+<p>Technical education, custody, DeFi, security</p>
+</div>
+<div class="hob-brand matt">
+<h5 style="color:var(--matt);">Matt Willemsen</h5>
+<p>Director of Research</p>
+<p>Market analysis, portfolio signals, macro data</p>
+</div>
+</div>
+<div style="margin-top:16px;font-size:11px;color:var(--cs-muted);">+ The Wealth Shift Podcast (Ben & Bergs) | Collective Shift Brand Account</div>
+</div>
+
+<h3>How Individual Brands Serve the Master</h3>
+<ul>
+<li><strong>Discovery:</strong> People find Travis on YouTube, Sarn's tutorial, or Matt's research thread. Each touchpoint routes them to the CS ecosystem.</li>
+<li><strong>Credibility:</strong> Multiple trusted voices are more convincing than one. When a prospect sees Ben's conviction, Matt's data, and Travis's framework - they're sold on the team, not a person.</li>
+<li><strong>Scalability:</strong> Ben can't film 37 reels/week forever. Four voices means 60+ pieces without burning out one person.</li>
+<li><strong>Resilience:</strong> If Ben takes a week off, content doesn't stop. The engine keeps running.</li>
+</ul>
+
+<h3 id="hob-attribution">Content Attribution Rules</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Content Type</th><th>Created By</th><th>Published On</th><th>Attribution</th></tr></thead>
+<tbody>
+<tr><td>Direct-to-camera reels</td><td>The person filming</td><td>Their personal account + CS reposts</td><td>"Ben Simpson, Founder @collectiveshift"</td></tr>
+<tr><td>Research reports / analysis</td><td>Matt + analyst team</td><td>CS YouTube, CS email, Matt's X</td><td>"Matt Willemsen, Dir. Research @collectiveshift"</td></tr>
+<tr><td>Tutorial / explainer videos</td><td>Sarn</td><td>CS YouTube, Sarn's YouTube</td><td>"Sarn Elliott, Education @collectiveshift"</td></tr>
+<tr><td>Coaching / framework content</td><td>Travis</td><td>Travis's accounts + CS reposts</td><td>"Travis Thomas, CGO @collectiveshift"</td></tr>
+<tr><td>Podcast episodes</td><td>Ben + Bergs</td><td>The Wealth Shift channels</td><td>"The Wealth Shift by Ben & Bergs"</td></tr>
+<tr><td>Company brand posts</td><td>Social team</td><td>CS brand accounts</td><td>"Collective Shift" (no individual)</td></tr>
+<tr><td>Email (Mon/Wed/Fri EDM)</td><td>Marketing team, Ben's voice</td><td>Customer.io</td><td>"Ben Simpson" (founder inbox)</td></tr>
+<tr><td>The Weekly Shift newsletter</td><td>Matt + research team</td><td>Customer.io</td><td>"Matt Willemsen" or "Collective Shift Research"</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Cross-Pollination Strategy</h3>
+<p>Content doesn't stay siloed. Here's how one person's work feeds the others:</p>
+<ul>
+<li><strong>Matt's research</strong> becomes the data backbone for Ben's reels and Friday email open loops</li>
+<li><strong>Sarn's tutorials</strong> get clipped into beginner-friendly IG carousels for the CS brand account</li>
+<li><strong>Travis's coaching frameworks</strong> provide the psychology angle for Wednesday story emails</li>
+<li><strong>Ben's personal stories</strong> get expanded into LinkedIn long-form posts and podcast episodes</li>
+<li><strong>Podcast conversations</strong> produce 6+ short-form clips per episode across IG, TikTok, and YouTube Shorts</li>
+</ul>
+</section>
+
+<!-- ===== SECTION 3: BRAND FOUNDATIONS ===== -->
+<section class="section" id="brand-foundations">
+<div class="s-label">Section 03</div>
+<h2>Brand Foundations</h2>
+<div class="accent-bar"></div>
+<p class="s-intro">Distilled from the <a href="brand-bible.html" class="ref">Brand Bible v3.0</a>. This is the bedrock every piece of content must honour.</p>
+
+<h3>Mission</h3>
+<p><strong>The world's most trusted digital asset education company.</strong> We help serious investors build generational wealth through systematic, research-driven frameworks. Free from hype, affiliates, and conflicting interests.</p>
+
+<h3>Core Values</h3>
+<div class="val"><div class="val-n">1</div><div><h4>Independence Above Everything</h4><p>Zero affiliates. Zero token promotions. Our only revenue comes from members who stay.</p></div></div>
+<div class="val"><div class="val-n">2</div><div><h4>Skin in the Game</h4><p>We invest our own capital alongside members. Public portfolio. If we're wrong, we lose money too.</p></div></div>
+<div class="val"><div class="val-n">3</div><div><h4>Education Over Advice</h4><p>Frameworks over signals. Conviction over dependency. We teach you how to think - not what to think.</p></div></div>
+<div class="val"><div class="val-n">4</div><div><h4>Radical Transparency</h4><p>Audited returns. Honest when we're wrong. Trust is built through verification, not claims.</p></div></div>
+<div class="val"><div class="val-n">5</div><div><h4>Respect for Intelligence</h4><p>Our audience are successful professionals. We speak to them as peers, not prospects.</p></div></div>
+
+<h3 id="bf-voice">Voice & Tone</h3>
+<h4>Master Brand Voice</h4>
+<p><strong>Archetype: The Sage / Mentor.</strong> Trusted guide who illuminates the path with knowledge. We don't lecture from a pedestal. We walk the path alongside our members.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th>Context</th><th>Tone</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td>Research Reports</td><td>Analytical, precise, data-forward</td><td>"On-chain data suggests accumulation is accelerating among wallets holding 100+ BTC."</td></tr>
+<tr><td>Instagram Reels</td><td>Energetic, punchy, educator</td><td>"Most people get this completely backwards. Here's why."</td></tr>
+<tr><td>Email (Ben's EDMs)</td><td>Personal, direct, one-to-one</td><td>"Let me walk you through one idea that changed how I think about allocation."</td></tr>
+<tr><td>Crisis / Market Events</td><td>Calm, factual, grounding</td><td>"Here's what happened. Here's what the data shows. Here's what we're doing."</td></tr>
+<tr><td>Podcast</td><td>Conversational, exploratory</td><td>"What do you reckon? Here's where I see it differently."</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Per-Person Voice Variations</h4>
+<div class="tw">
+<table>
+<thead><tr><th>Person</th><th>Tone</th><th>Key Traits</th><th>Sounds Like</th></tr></thead>
+<tbody>
+<tr><td><span class="ptag ptag-ben">Ben</span></td><td>Direct, warm, Australian, contrarian</td><td>Vulnerable + convicted. Personal stories. Bitcoin maximalist with nuance.</td><td>"I've made every mistake so you don't have to."</td></tr>
+<tr><td><span class="ptag ptag-travis">Travis</span></td><td>Energetic, tactical, structured</td><td>Coaching mode. Goal-driven. Psychology-aware. HNW-focused.</td><td>"Let's build your operating system for this market."</td></tr>
+<tr><td><span class="ptag ptag-sarn">Sarn</span></td><td>Patient, clear, practical</td><td>Teacher-mode. Step-by-step. Detail-oriented. Security-first.</td><td>"Let me show you exactly how this works."</td></tr>
+<tr><td><span class="ptag ptag-matt">Matt</span></td><td>Measured, data-driven, sharp</td><td>Academic but accessible. Market calls. Numbers-first.</td><td>"The data tells a different story than the headlines."</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>The Do This / Not That</h4>
+<div class="dd">
+<div class="do-c">
+<h4>Do This</h4>
+<ul>
+<li><strong>"Digital assets"</strong> - professional positioning</li>
+<li><strong>"Build generational wealth"</strong> - ICP's #1 goal</li>
+<li><strong>"Bitcoin"</strong> (capital B, always)</li>
+<li><strong>Dashes (-) or commas</strong> - clean writing</li>
+<li><strong>"Members / community"</strong> - not followers</li>
+<li><strong>"Educator / peer investor"</strong></li>
+<li><strong>Data-backed claims</strong> with sources</li>
+</ul>
+</div>
+<div class="dont-c">
+<h4>Not That</h4>
+<ul>
+<li><strong>"Crypto"</strong> - signals retail culture</li>
+<li><strong>Em dashes</strong> - look like AI text</li>
+<li><strong>"Moon / lambo / WAGMI / degen"</strong></li>
+<li><strong>"Financial advice" / "signals"</strong></li>
+<li><strong>"Guru" / "expert"</strong></li>
+<li><strong>Income claims or return guarantees</strong></li>
+<li><strong>All caps for body text</strong></li>
+</ul>
+</div>
+</div>
+
+<h3 id="bf-visual">Visual Identity Summary</h3>
+<h4>Colour Palette</h4>
+<div class="tw">
+<table>
+<thead><tr><th>Colour</th><th>Hex</th><th>Usage</th></tr></thead>
+<tbody>
+<tr><td><strong>CS Dark</strong></td><td>#0D0B14</td><td>Primary background (60%)</td></tr>
+<tr><td><strong>CS Dark Alt</strong></td><td>#1B1925</td><td>Cards, sidebar, secondary backgrounds</td></tr>
+<tr><td><strong>Brand Orange</strong></td><td>#FC5C03</td><td>Primary accent. Appears on every piece of content.</td></tr>
+<tr><td><strong>Brand Teal</strong></td><td>#0BF4B9</td><td>Positive indicators, growth metrics. Also: Travis accent.</td></tr>
+<tr><td><strong>Brand Blue</strong></td><td>#2404FC</td><td>CTA buttons, links. Use sparingly.</td></tr>
+<tr><td><strong>Amber</strong></td><td>#FFB800</td><td>Warnings, caution indicators</td></tr>
+<tr><td><strong>Red</strong></td><td>#E53E3E</td><td>Negative indicators, loss, risk</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Typography</h4>
+<div class="tw">
+<table>
+<thead><tr><th>Role</th><th>Font</th><th>Weight</th></tr></thead>
+<tbody>
+<tr><td>Headings</td><td>Plus Jakarta Sans</td><td>700-800</td></tr>
+<tr><td>Body Copy</td><td>Barlow</td><td>400-500</td></tr>
+<tr><td>Presentation Headlines</td><td>Oswald / Bebas Neue</td><td>700 (events only)</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Rules:</strong> Two fonts max (Plus Jakarta Sans + Barlow). Left-align body. Centre only titles. Max content width 720px. No neon effects, no floating coins, no blockchain diagrams.</p>
+
+<h4>Photography & Imagery</h4>
+<ul>
+<li>Real team photos only. No stock photography.</li>
+<li>Dark clothing (black/navy). Moody, warm lighting.</li>
+<li>Editorial, Bloomberg/institutional aesthetic. Not "tech startup" or "influencer."</li>
+<li>Group team photo is the hero connecting all personal brands.</li>
+</ul>
+
+<h3>Messaging Framework</h3>
+<h4>Elevator Pitch</h4>
+<div class="card">
+<p style="font-size:16px;color:var(--cs-white);font-weight:600;margin-bottom:8px;">A professional framework for building generational wealth with digital assets.</p>
+<p style="margin-bottom:0;">Independent, research-driven education backed by audited returns, zero conflicts of interest, and a team that invests alongside you.</p>
+</div>
+
+<h4>Proof Points</h4>
+<ul>
+<li>116% CAGR over 6 financial years (audited by Crypto Tax Australia)</li>
+<li>Zero affiliates. Zero token promotions. Revenue only from members who stay.</li>
+<li>Only 25 trades in 3 years. Long-term framework, not day trading.</li>
+<li>74% member retention rate</li>
+<li>Key picks: ETH at $80 (6,091%), BTC at $3,000 (4,113%), SOL at $22 (1,236%)</li>
+</ul>
+
+<h4>ICP: The Strategic Wealth Builder</h4>
+<div class="stat-row">
+<div class="stat"><div class="stat-n">40-59</div><div class="stat-l">Core Age (67%)</div></div>
+<div class="stat"><div class="stat-n">$500K+</div><div class="stat-l">Net Worth</div></div>
+<div class="stat"><div class="stat-n">2.8/10</div><div class="stat-l">Exit Strategy Confidence</div></div>
+<div class="stat"><div class="stat-n">3.2/10</div><div class="stat-l">Support Network</div></div>
+</div>
+<p>A successful, time-poor professional or business owner with significant wealth in traditional assets who lacks a coherent digital asset strategy and is willing to pay a premium for trusted, high-touch guidance to build generational wealth.</p>
+<p><strong>How they find us:</strong> Instagram (25-50% of leads) over weeks/months of following, then masterclass or seminar, then strategy call, then Platinum. Trust is built over time.</p>
+</section>
+
+<!-- ===== SECTION 4: CONTENT PILLARS ===== -->
+<section class="section" id="content-pillars">
+<div class="s-label">Section 04</div>
+<h2>Content Pillars & Themes</h2>
+<div class="accent-bar"></div>
+<p class="s-intro">Five pillars, each mapped to a real ICP fear or desire. Every piece of content traces back to one of these.</p>
+
+<h3>Master Brand Pillars</h3>
+<div class="tw">
+<table>
+<thead><tr><th>ICP Pain</th><th>Pillar</th><th>Emotional Trigger</th><th>% of Content</th><th>Key Message</th></tr></thead>
+<tbody>
+<tr><td>Fear of loss</td><td><span class="pill pill-protect">Protect</span></td><td>Safety, security</td><td>20%</td><td>"Your wealth is at risk. Here's how to secure it."</td></tr>
+<tr><td>Overwhelm</td><td><span class="pill pill-strategy">Strategy</span></td><td>Clarity, simplicity</td><td>30%</td><td>"Cut the noise. Follow a system."</td></tr>
+<tr><td>Self-doubt</td><td><span class="pill pill-confidence">Confidence</span></td><td>Empowerment</td><td>20%</td><td>"You're not too late, too old, or too new."</td></tr>
+<tr><td>Loneliness</td><td><span class="pill pill-community">Community</span></td><td>Belonging</td><td>15%</td><td>"You don't have to do this alone."</td></tr>
+<tr><td>Skepticism</td><td><span class="pill pill-results">Results</span></td><td>Proof, trust</td><td>15%</td><td>"Here are the audited numbers. Judge for yourself."</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 id="cp-personal">Pillar Ownership by Person</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Pillar</th><th>Ben (Primary)</th><th>Travis</th><th>Sarn</th><th>Matt</th></tr></thead>
+<tbody>
+<tr><td><span class="pill pill-protect">Protect</span></td><td>Personal loss stories, risk philosophy</td><td>Goal-setting to prevent panic</td><td>Self-custody, security, scams, wallets</td><td>On-chain risk metrics</td></tr>
+<tr><td><span class="pill pill-strategy">Strategy</span></td><td>Allocation, exit strategy, conviction</td><td>Investor OS, position sizing, game theory</td><td>DCA mechanics, swap execution</td><td>Market cycles, altcoin evaluation</td></tr>
+<tr><td><span class="pill pill-confidence">Confidence</span></td><td>Origin story, age barriers, partner convos</td><td>Investor psychology, mindset</td><td>Beginner reassurance, step-by-step</td><td>Data debunks myths</td></tr>
+<tr><td><span class="pill pill-community">Community</span></td><td>Member stories, events, retention</td><td>Coaching wins, accountability</td><td>Q&A sessions, group learning</td><td>Research community insights</td></tr>
+<tr><td><span class="pill pill-results">Results</span></td><td>Audited returns, origin, no affiliates</td><td>Member transformation journeys</td><td>$1M+ recovered assets story</td><td>Portfolio performance data</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Seasonal & Cyclical Themes</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Month</th><th>Theme</th><th>Content Hook</th></tr></thead>
+<tbody>
+<tr><td>Jan</td><td>New Year, New Strategy</td><td>Reset your portfolio. Write your investment policy.</td></tr>
+<tr><td>Feb</td><td>Protection Month</td><td>Self-custody. Hardware wallets. Estate planning.</td></tr>
+<tr><td>Mar</td><td>Tax Planning</td><td>EOFY prep (AU). Tax-loss harvesting.</td></tr>
+<tr><td>Apr</td><td>Bitcoin Halving Anniversary</td><td>Cycle positioning. Where are we now?</td></tr>
+<tr><td>May</td><td>"Sell in May?" Myth-Busting</td><td>Why timing doesn't work. Framework beats seasonality.</td></tr>
+<tr><td>Jun</td><td>Mid-Year Review</td><td>Portfolio check-in. Rebalancing.</td></tr>
+<tr><td>Jul</td><td>EOFY (Australia)</td><td>Tax strategy. CGT discount. Structure holdings.</td></tr>
+<tr><td>Aug</td><td>Education Month</td><td>Beginner series. Origin story. "Start here."</td></tr>
+<tr><td>Sep</td><td>Community Spotlight</td><td>Member stories. Events. Testimonials.</td></tr>
+<tr><td>Oct</td><td>Uptober / Q4 Positioning</td><td>Historically strong quarter. Allocation check.</td></tr>
+<tr><td>Nov</td><td>Black Friday / Gratitude</td><td>What we're thankful for. Membership value stack.</td></tr>
+<tr><td>Dec</td><td>Year in Review</td><td>Annual performance recap. Lessons learned.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Quarterly Pillar Rotation</h4>
+<div class="tw">
+<table>
+<thead><tr><th>Week</th><th>Focus</th><th>Key Content</th></tr></thead>
+<tbody>
+<tr><td>Week 1</td><td><span class="pill pill-protect">Protection Week</span></td><td>Custody, scams, tax, estate planning</td></tr>
+<tr><td>Week 2</td><td><span class="pill pill-strategy">Strategy Week</span></td><td>Allocation, sell rules, cycle phases</td></tr>
+<tr><td>Week 3</td><td><span class="pill pill-confidence">Confidence Week</span></td><td>Origin story, beginner content, partner reels</td></tr>
+<tr><td>Week 4</td><td><span class="pill pill-results">Results Week</span></td><td>Member stories, audited returns, testimonials</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ===== SECTION 5: SOCIAL MEDIA SYSTEM ===== -->
+<section class="section" id="social-system">
+<div class="s-label">Section 05</div>
+<h2>Social Media Content System</h2>
+<div class="accent-bar"></div>
+<p class="s-intro">Platform strategy, posting cadence, and content guidelines for the full House of Brands operation. Detailed concept library in <a href="social-content-system.html" class="ref">Social Content System</a>.</p>
+
+<h3>Platform Strategy Overview</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Platform</th><th>Role</th><th>Primary Voices</th><th>Format</th></tr></thead>
+<tbody>
+<tr><td><strong>Instagram</strong></td><td>Primary discovery channel (25-50% of leads)</td><td>Ben, Travis, CS brand</td><td>Reels (30-60s), carousels, stories</td></tr>
+<tr><td><strong>YouTube</strong></td><td>Depth, credibility, long-form education</td><td>Matt, Travis, Sarn (CS channel), Wealth Shift</td><td>Long-form (15-30m), Shorts</td></tr>
+<tr><td><strong>X / Twitter</strong></td><td>Hot takes, threads, personal narrative</td><td>Ben, Matt, CS brand</td><td>Tweets, 5-7 tweet threads</td></tr>
+<tr><td><strong>LinkedIn</strong></td><td>HNW professional audience, thought leadership</td><td>Ben (primary), Travis</td><td>Long-form posts (200-400 words)</td></tr>
+<tr><td><strong>TikTok</strong></td><td>Cross-posted reels, younger discovery</td><td>Ben, Travis</td><td>Vertical 9:16, 30-60s</td></tr>
+<tr><td><strong>Podcast</strong></td><td>Deep conversations, interview format</td><td>Ben + Bergs (The Wealth Shift)</td><td>Tue interview (60-90m), Fri breakdown (20-30m)</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 id="ss-cadence">House of Brands Posting Cadence</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Platform</th><th>Ben</th><th>Travis</th><th>Matt</th><th>Sarn</th><th>CS Brand</th><th>Wealth Shift</th></tr></thead>
+<tbody>
+<tr><td><strong>IG Reels</strong></td><td>5/wk</td><td>3/wk</td><td>-</td><td>-</td><td>3/wk</td><td>3/wk clips</td></tr>
+<tr><td><strong>IG Feed</strong></td><td>3/wk</td><td>2/wk</td><td>-</td><td>-</td><td>3/wk</td><td>2/wk promos</td></tr>
+<tr><td><strong>IG Stories</strong></td><td>Daily</td><td>3/wk</td><td>-</td><td>-</td><td>Daily</td><td>Post-ep</td></tr>
+<tr><td><strong>YouTube</strong></td><td>1-2/wk</td><td>1/wk</td><td>1/wk (CS)</td><td>1/wk</td><td>2/wk (Matt)</td><td>2/wk episodes</td></tr>
+<tr><td><strong>X/Twitter</strong></td><td>Daily</td><td>2/wk</td><td>3/wk</td><td>-</td><td>Daily</td><td>Post-ep</td></tr>
+<tr><td><strong>LinkedIn</strong></td><td>3/wk</td><td>1/wk</td><td>-</td><td>-</td><td>2/wk</td><td>-</td></tr>
+<tr><td><strong>TikTok</strong></td><td>5/wk</td><td>3/wk</td><td>-</td><td>-</td><td>3/wk</td><td>-</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Weekly Totals</h4>
+<div class="stat-row">
+<div class="stat"><div class="stat-n">14</div><div class="stat-l">Reels/Shorts</div></div>
+<div class="stat"><div class="stat-n">10</div><div class="stat-l">Feed Posts</div></div>
+<div class="stat"><div class="stat-n">19</div><div class="stat-l">Stories</div></div>
+<div class="stat"><div class="stat-n">21</div><div class="stat-l">Tweets</div></div>
+<div class="stat"><div class="stat-n">6</div><div class="stat-l">LinkedIn</div></div>
+<div class="stat"><div class="stat-n">2</div><div class="stat-l">Podcast Eps</div></div>
+</div>
+
+<h3 id="ss-platforms">Platform-Specific Guidelines</h3>
+
+<h4>Instagram (Primary)</h4>
+<div class="tw">
+<table>
+<thead><tr><th>Element</th><th>Guideline</th></tr></thead>
+<tbody>
+<tr><td>Handle</td><td>@bensimpsonau (Ben), @collectiveshift (brand)</td></tr>
+<tr><td>Format</td><td>Vertical 9:16. 30-60s reels. Captions always on.</td></tr>
+<tr><td>Hashtags</td><td>5-8 per post. Branded: #collectiveshift #shiftOS. Discovery: #bitcoininvesting #digitalassets</td></tr>
+<tr><td>Best times</td><td>8am, 12pm, 4pm AEST</td></tr>
+<tr><td>Bio link</td><td>collectiveshift.co/cryptoblueprint (single link, no Linktree)</td></tr>
+<tr><td>What works</td><td>Personal stories (50x engagement), contrarian hooks, specific data points</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>YouTube</h4>
+<p><strong>Channels:</strong> Collective Shift (main), The Wealth Shift, Travis Thomas, Sarn Elliott</p>
+<p><strong>Long-form:</strong> 3/week on CS channel (Matt research, Travis framework, Sarn tutorial). 15-30 min. Best days: Tue, Wed, Thu/Fri mornings AEST.</p>
+<p><strong>Shorts:</strong> 9/week (3 clips per long-form). Cross-posted from reels.</p>
+
+<h4>X / Twitter</h4>
+<p><strong>Tone:</strong> Sharper, more opinionated. Personal narrative dominates (82K views on top story vs 980 on education). Threads end with CTA. Best time: 10am AEST.</p>
+
+<h4>LinkedIn</h4>
+<p><strong>Ben's highest-value platform</strong> for HNW professional audience. 200-400 word narrative posts. More formal, more depth. 1pm AEST.</p>
+
+<h3>ManyChat Keyword Integration</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Keyword</th><th>Trigger</th><th>Delivers</th></tr></thead>
+<tbody>
+<tr><td><strong>BLUEPRINT</strong></td><td>Any content</td><td>Wealth Protection Blueprint (9-question assessment + PDF)</td></tr>
+<tr><td><strong>STARTERKIT</strong></td><td>Beginner content</td><td>$97 Starter Kit sales page</td></tr>
+<tr><td><strong>BUILD</strong></td><td>Strategy content</td><td>Allocation calculator + full framework sequence</td></tr>
+<tr><td><strong>PROTECT</strong></td><td>Security content</td><td>Risk audit checklist + follow-up to assessment</td></tr>
+<tr><td><strong>PROOF</strong></td><td>Results content</td><td>Track record page + "See how you score" CTA</td></tr>
+<tr><td><strong>YIELD</strong></td><td>Income content</td><td>Portfolio risk audit + follow-up</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Hook Formulas (12 Proven Frameworks)</h3>
+<div class="tw">
+<table>
+<thead><tr><th>#</th><th>Type</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Contrarian</td><td>"The biggest risk in digital assets isn't volatility. It's doing nothing."</td></tr>
+<tr><td>2</td><td>Labeling</td><td>"If you check your portfolio every day, you're not investing."</td></tr>
+<tr><td>3</td><td>Curiosity Gap</td><td>"I asked 76 members their biggest fear. It wasn't losing money."</td></tr>
+<tr><td>4</td><td>Reframe</td><td>"Bitcoin is not a digital asset. Bitcoin is digital property."</td></tr>
+<tr><td>5</td><td>Pattern Interrupt</td><td>"Your exchange balance is not your money. Full stop."</td></tr>
+<tr><td>6</td><td>Number + Specificity</td><td>"12,763 digital assets have fallen 95% or more."</td></tr>
+<tr><td>7</td><td>Personal Confession</td><td>"I made hundreds of thousands on paper. Then I lost nearly all of it."</td></tr>
+<tr><td>8</td><td>Direct Address</td><td>"If you have $100K to invest, here's where most people go wrong."</td></tr>
+<tr><td>9</td><td>Authority + Surprise</td><td>"I've helped 1,100+ professionals. Here's what they all have in common."</td></tr>
+<tr><td>10</td><td>Question Nobody Asks</td><td>"Everyone asks me what to buy. Nobody asks me when to sell."</td></tr>
+<tr><td>11</td><td>Diagnostic Line</td><td>"That's not a market problem. That's a psychology problem."</td></tr>
+<tr><td>12</td><td>Stakes Escalation</td><td>"If you died tomorrow, could your family access your digital assets?"</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Engagement & Crisis Guidelines</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Comment Type</th><th>Response</th></tr></thead>
+<tbody>
+<tr><td>ManyChat keyword</td><td>Auto-triggered DM flow (instant)</td></tr>
+<tr><td>Genuine question</td><td>Helpful 1-2 line answer + "Comment BLUEPRINT for more" (within 2 hrs)</td></tr>
+<tr><td>Skepticism</td><td>Respectful, data-backed. Never argue. "Here's the data..." (within 4 hrs)</td></tr>
+<tr><td>Troll/spam</td><td>Ignore or hide. Never engage.</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Crisis (25%+ market crash):</strong> Pause all scheduled content. Ben films one calm, data-driven response within 4 hours. No price predictions. No "buy the dip." Resume normal schedule after 48 hours.</p>
+</section>
+
+<!-- ===== SECTION 6: CONTENT ENGINE ===== -->
+<section class="section" id="content-engine">
+<div class="s-label">Section 06</div>
+<h2>House of Brands Evergreen Content Engine</h2>
+<div class="accent-bar"></div>
+<p class="s-intro">120+ ready-to-produce content concepts across all four voices. Each tagged by person, pillar, format, hook, CTA, and ManyChat keyword. Top 5 per person as detailed cards, rest in compact tables. Full library in <a href="social-content-system.html" class="ref">Social Content System</a> and <a href="evergreen-content-system.html" class="ref">Evergreen System</a>.</p>
+
+<!-- BEN'S CONCEPTS -->
+<h3 id="ce-ben"><span class="ptag ptag-ben">Ben Simpson</span> Evergreen Concepts (53 pieces)</h3>
+<p>Ben's direct-to-camera reels, LinkedIn posts, and X threads. Filmed in Sunday batch sessions. Personal stories get 50x more engagement than educational content - lead with narrative, save frameworks for carousels.</p>
+
+<div class="pcard">
+<h4>"The most dangerous investor isn't the beginner. It's the successful professional who thinks intelligence transfers."</h4>
+<p><span class="pill pill-protect">Protect</span> <span class="ptag ptag-ben">Ben</span> Reel | Keyword: BLUEPRINT</p>
+<p>A guy built a $3M construction business over 20 years. Put $200K into digital assets with no exit plan. Down 65% in 8 months. Intelligence doesn't protect you. Systems do.</p>
+</div>
+
+<div class="pcard">
+<h4>"I made hundreds of thousands on paper. Then I lost nearly all of it. Twice."</h4>
+<p><span class="pill pill-results">Results</span> <span class="ptag ptag-ben">Ben</span> Reel + LinkedIn | Keyword: BLUEPRINT</p>
+<p>Ben's origin story. Round-tripped everything in the first cycle. Followed a YouTuber's theory. Lived above a 7-Eleven in Bali. Rebuilt with a system. The comeback story that built CS.</p>
+</div>
+
+<div class="pcard">
+<h4>"80% of US dollars were printed after 2020. And people wonder why groceries cost more."</h4>
+<p><span class="pill pill-confidence">Confidence</span> <span class="ptag ptag-ben">Ben</span> Reel + X Thread | Keyword: BLUEPRINT</p>
+<p>The "risk of doing nothing" reframe. A surgeon watched Bitcoin from $10K to $100K over 4 years without acting. $500K in savings lost 25% purchasing power. Playing it safe isn't safe.</p>
+</div>
+
+<div class="pcard">
+<h4>"Everyone asks me what to buy. Nobody asks me when to sell. That's the problem."</h4>
+<p><span class="pill pill-strategy">Strategy</span> <span class="ptag ptag-ben">Ben</span> Reel | Keyword: BUILD</p>
+<p>Exit strategy = #1 pain point (2.8/10 confidence). This hooks directly into the assessment and VSL. The sell plan framework is the Platinum conversion trigger.</p>
+</div>
+
+<div class="pcard">
+<h4>"18 months. 8 countries. One bag and a laptop. Here's what I learned about wealth."</h4>
+<p><span class="pill pill-confidence">Confidence</span> <span class="ptag ptag-ben">Ben</span> Reel + X Thread | Keyword: BLUEPRINT</p>
+<p>Freedom/nomad story (82K views on X). Aspirational but grounded. Wraps the lifestyle dream around the framework lesson.</p>
+</div>
+
+<h5>Ben's Full Concept Library (48 additional)</h5>
+<div class="tw">
+<table>
+<thead><tr><th>#</th><th>Hook</th><th>Pillar</th><th>Format</th><th>Keyword</th></tr></thead>
+<tbody>
+<tr><td>6</td><td>"Your Bitcoin on an exchange is not your Bitcoin."</td><td><span class="pill pill-protect">Protect</span></td><td>Reel</td><td>PROTECT</td></tr>
+<tr><td>7</td><td>"The tax mistake almost every digital asset holder makes."</td><td><span class="pill pill-protect">Protect</span></td><td>Reel</td><td>PROTECT</td></tr>
+<tr><td>8</td><td>"One member accessed $200K without selling a single Bitcoin."</td><td><span class="pill pill-protect">Protect</span></td><td>Reel</td><td>PROTECT</td></tr>
+<tr><td>9</td><td>"12,763 digital assets have fallen 95% or more."</td><td><span class="pill pill-protect">Protect</span></td><td>Reel</td><td>BLUEPRINT</td></tr>
+<tr><td>10</td><td>"The FTX collapse taught one lesson. Most people still haven't learned it."</td><td><span class="pill pill-protect">Protect</span></td><td>Reel</td><td>PROTECT</td></tr>
+<tr><td>11</td><td>"If more than 40% of your portfolio is in one coin, we need to talk."</td><td><span class="pill pill-protect">Protect</span></td><td>Reel</td><td>PROTECT</td></tr>
+<tr><td>12</td><td>"Hardware wallet or exchange? Here's the $2,000 rule."</td><td><span class="pill pill-protect">Protect</span></td><td>Reel</td><td>STARTERKIT</td></tr>
+<tr><td>13</td><td>"I've been wrong before. Here's what I learned from that."</td><td><span class="pill pill-results">Results</span></td><td>LinkedIn</td><td>BLUEPRINT</td></tr>
+<tr><td>14</td><td>"Bitcoin is not a digital asset. Bitcoin is digital property."</td><td><span class="pill pill-strategy">Strategy</span></td><td>Reel</td><td>BLUEPRINT</td></tr>
+<tr><td>15</td><td>"People have been saying 'too late for Bitcoin' since $100."</td><td><span class="pill pill-confidence">Confidence</span></td><td>Reel</td><td>BLUEPRINT</td></tr>
+<tr><td>16</td><td>"Your sell strategy is more important than your buy strategy."</td><td><span class="pill pill-strategy">Strategy</span></td><td>Reel + X</td><td>BUILD</td></tr>
+<tr><td>17</td><td>"I've helped 1,100+ professionals. Here's what they all have in common."</td><td><span class="pill pill-community">Community</span></td><td>Reel + LinkedIn</td><td>BLUEPRINT</td></tr>
+<tr><td>18</td><td>"The average investor underperforms their own funds by 4%/year."</td><td><span class="pill pill-protect">Protect</span></td><td>Reel</td><td>BLUEPRINT</td></tr>
+<tr><td>19</td><td>"We turned down hundreds of thousands from exchanges."</td><td><span class="pill pill-results">Results</span></td><td>Reel + LinkedIn</td><td>BLUEPRINT</td></tr>
+<tr><td>20</td><td>"3 things I'd do differently if I started over with $100K."</td><td><span class="pill pill-strategy">Strategy</span></td><td>YouTube + Reel</td><td>BUILD</td></tr>
+<tr><td>21</td><td>"The dinner table conversation that changes everything."</td><td><span class="pill pill-confidence">Confidence</span></td><td>Reel</td><td>BLUEPRINT</td></tr>
+<tr><td>22</td><td>"A doctor doubled her portfolio in a year. Here's how."</td><td><span class="pill pill-community">Community</span></td><td>Reel</td><td>BLUEPRINT</td></tr>
+<tr><td>23</td><td>"Chris paid off his mortgage with Bitcoin. Here's his story."</td><td><span class="pill pill-community">Community</span></td><td>Reel</td><td>BLUEPRINT</td></tr>
+<tr><td>24</td><td>"I started a sportswear business at 16 in Tasmania."</td><td><span class="pill pill-results">Results</span></td><td>X Thread</td><td>BLUEPRINT</td></tr>
+<tr><td>25</td><td>"5 assets. Not 47. Here's why less is more."</td><td><span class="pill pill-strategy">Strategy</span></td><td>Reel + Carousel</td><td>BUILD</td></tr>
+<tr><td>26-53</td><td>28 additional concepts across all pillars (see full system)</td><td>Mixed</td><td>Mixed</td><td>Mixed</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- TRAVIS'S CONCEPTS -->
+<h3 id="ce-travis"><span class="ptag ptag-travis">Travis Thomas</span> Evergreen Concepts (25 pieces)</h3>
+<p>Travis owns the "operating system" angle: how goal-driven HNW investors build and stick to a plan through volatile markets. Coaching frameworks, investor psychology, wealth architecture.</p>
+
+<div class="pcard travis">
+<h4>"Most investors don't have an investing problem. They have a goal problem."</h4>
+<p><span class="pill pill-strategy">Strategy</span> <span class="ptag ptag-travis">Travis</span> Reel + YouTube | Keyword: BUILD</p>
+<p>Before you pick assets, define what you're building toward. Wealth goal architecture: timeline, target, risk tolerance, life stage. The framework that makes everything else click.</p>
+</div>
+
+<div class="pcard travis">
+<h4>"The number one reason investors fail isn't bad picks. It's emotional decisions."</h4>
+<p><span class="pill pill-confidence">Confidence</span> <span class="ptag ptag-travis">Travis</span> Reel | Keyword: BLUEPRINT</p>
+<p>Investor psychology deep-dive. How fear and greed override logic. The circuit breaker framework that keeps you in the game.</p>
+</div>
+
+<div class="pcard travis">
+<h4>"Your position size should be inversely proportional to your conviction uncertainty."</h4>
+<p><span class="pill pill-strategy">Strategy</span> <span class="ptag ptag-travis">Travis</span> YouTube | Keyword: BUILD</p>
+<p>Position sizing framework. Most people over-size on hype and under-size on conviction. The math behind smart allocation.</p>
+</div>
+
+<div class="pcard travis">
+<h4>"Game theory is the most underrated tool in digital asset investing."</h4>
+<p><span class="pill pill-strategy">Strategy</span> <span class="ptag ptag-travis">Travis</span> YouTube + LinkedIn | Keyword: BUILD</p>
+<p>How to think about what other market participants will do. The Nash equilibrium of selling. Why following the crowd always costs you.</p>
+</div>
+
+<div class="pcard travis">
+<h4>"A member came in with $500K, no plan, and panic-sold at 30% down. Here's what we fixed."</h4>
+<p><span class="pill pill-community">Community</span> <span class="ptag ptag-travis">Travis</span> Reel | Keyword: BLUEPRINT</p>
+<p>Coaching case study. Real transformation story. Before: reactive, emotional. After: structured, calm, up 2.5x. The coaching process that made the difference.</p>
+</div>
+
+<h5>Travis's Full Concept Library (20 additional)</h5>
+<div class="tw">
+<table>
+<thead><tr><th>#</th><th>Hook</th><th>Pillar</th><th>Format</th><th>Keyword</th></tr></thead>
+<tbody>
+<tr><td>6</td><td>"Write your sell strategy when you're calm. Execute it when you're not."</td><td><span class="pill pill-protect">Protect</span></td><td>Reel</td><td>BUILD</td></tr>
+<tr><td>7</td><td>"The 4-step framework for every digital asset decision."</td><td><span class="pill pill-strategy">Strategy</span></td><td>YouTube</td><td>BUILD</td></tr>
+<tr><td>8</td><td>"Why I coach investors to start with goals, not assets."</td><td><span class="pill pill-strategy">Strategy</span></td><td>LinkedIn</td><td>BUILD</td></tr>
+<tr><td>9</td><td>"The accountability gap is costing you real money."</td><td><span class="pill pill-community">Community</span></td><td>Reel</td><td>BLUEPRINT</td></tr>
+<tr><td>10</td><td>"Volatile markets reward the patient. Here's the data."</td><td><span class="pill pill-confidence">Confidence</span></td><td>Reel</td><td>BLUEPRINT</td></tr>
+<tr><td>11</td><td>"How to have the digital asset conversation with your partner."</td><td><span class="pill pill-confidence">Confidence</span></td><td>Reel</td><td>BLUEPRINT</td></tr>
+<tr><td>12</td><td>"The rebalancing framework nobody uses (but should)."</td><td><span class="pill pill-strategy">Strategy</span></td><td>YouTube</td><td>BUILD</td></tr>
+<tr><td>13</td><td>"Your risk tolerance is not what you think it is."</td><td><span class="pill pill-protect">Protect</span></td><td>Reel</td><td>PROTECT</td></tr>
+<tr><td>14</td><td>"Conviction isn't knowing you'll win. It's knowing what you'll do when you're losing."</td><td><span class="pill pill-confidence">Confidence</span></td><td>Reel + X</td><td>BLUEPRINT</td></tr>
+<tr><td>15-25</td><td>11 additional coaching/psychology concepts</td><td>Mixed</td><td>Mixed</td><td>Mixed</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- SARN'S CONCEPTS -->
+<h3 id="ce-sarn"><span class="ptag ptag-sarn">Sarn Elliott</span> Evergreen Concepts (25 pieces)</h3>
+<p>Sarn owns beginner-to-intermediate education: wallets, custody, DeFi mechanics, security, bridges, and step-by-step tutorials. His tone is patient and practical. His content removes the technical barrier that stops HNW investors from acting.</p>
+
+<div class="pcard sarn">
+<h4>"Setting up a hardware wallet in under 10 minutes. Step by step."</h4>
+<p><span class="pill pill-protect">Protect</span> <span class="ptag ptag-sarn">Sarn</span> YouTube Tutorial | Keyword: STARTERKIT</p>
+<p>The definitive self-custody tutorial. Screen recording + voiceover. Ledger/Trezor setup. Seed phrase storage. From unboxing to first Bitcoin transfer.</p>
+</div>
+
+<div class="pcard sarn">
+<h4>"I've helped recover over $1 million in lost digital assets. Here's what went wrong every time."</h4>
+<p><span class="pill pill-protect">Protect</span> <span class="ptag ptag-sarn">Sarn</span> YouTube + X Thread | Keyword: PROTECT</p>
+<p>Real recovery stories (anonymized). Common mistakes: wrong network, lost seed phrases, phishing. The 5 rules that prevent 95% of losses.</p>
+</div>
+
+<div class="pcard sarn">
+<h4>"DeFi explained like you're a busy CEO who has 5 minutes."</h4>
+<p><span class="pill pill-strategy">Strategy</span> <span class="ptag ptag-sarn">Sarn</span> YouTube | Keyword: STARTERKIT</p>
+<p>DeFi stripped to first principles. What it is, why it matters, what the risks are. No jargon. Visual diagrams. The 80/20 of DeFi for HNW investors.</p>
+</div>
+
+<div class="pcard sarn">
+<h4>"Bridges are the most dangerous thing in digital assets that nobody talks about."</h4>
+<p><span class="pill pill-protect">Protect</span> <span class="ptag ptag-sarn">Sarn</span> YouTube | Keyword: PROTECT</p>
+<p>Cross-chain bridge risks explained. Ronin ($625M hack), Wormhole ($320M), Nomad ($190M). Why moving assets between chains is where most money is lost.</p>
+</div>
+
+<div class="pcard sarn">
+<h4>"Your seed phrase is worth more than your hardware wallet. Here's how to protect it."</h4>
+<p><span class="pill pill-protect">Protect</span> <span class="ptag ptag-sarn">Sarn</span> YouTube + IG Carousel | Keyword: PROTECT</p>
+<p>Seed phrase security deep-dive. Steel backup plates. Geographic distribution. What happens if your house burns down. The $100 insurance for a $500K portfolio.</p>
+</div>
+
+<h5>Sarn's Full Concept Library (20 additional)</h5>
+<div class="tw">
+<table>
+<thead><tr><th>#</th><th>Hook</th><th>Pillar</th><th>Format</th><th>Keyword</th></tr></thead>
+<tbody>
+<tr><td>6</td><td>"How to buy your first Bitcoin in 5 minutes (Australia)."</td><td><span class="pill pill-strategy">Strategy</span></td><td>YouTube</td><td>STARTERKIT</td></tr>
+<tr><td>7</td><td>"The 6 signs of a digital asset scam."</td><td><span class="pill pill-protect">Protect</span></td><td>Carousel</td><td>PROTECT</td></tr>
+<tr><td>8</td><td>"What actually happens when you send Bitcoin."</td><td><span class="pill pill-strategy">Strategy</span></td><td>YouTube</td><td>STARTERKIT</td></tr>
+<tr><td>9</td><td>"Staking explained: free money or hidden risk?"</td><td><span class="pill pill-strategy">Strategy</span></td><td>YouTube</td><td>STARTERKIT</td></tr>
+<tr><td>10</td><td>"The complete self-custody checklist (print this)."</td><td><span class="pill pill-protect">Protect</span></td><td>Carousel</td><td>PROTECT</td></tr>
+<tr><td>11</td><td>"Multi-sig wallets: when and why to use one."</td><td><span class="pill pill-protect">Protect</span></td><td>YouTube</td><td>PROTECT</td></tr>
+<tr><td>12</td><td>"How to read a blockchain explorer (anyone can)."</td><td><span class="pill pill-strategy">Strategy</span></td><td>YouTube</td><td>STARTERKIT</td></tr>
+<tr><td>13</td><td>"Estate planning for digital assets: don't leave your family locked out."</td><td><span class="pill pill-protect">Protect</span></td><td>YouTube</td><td>PROTECT</td></tr>
+<tr><td>14-25</td><td>12 additional technical education concepts</td><td>Mixed</td><td>Mixed</td><td>Mixed</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- MATT'S CONCEPTS -->
+<h3 id="ce-matt"><span class="ptag ptag-matt">Matt Willemsen</span> Evergreen Concepts (25 pieces)</h3>
+<p>Matt owns research, data, and market analysis. His content proves CS knows what they're talking about. Sharp market calls. Data visualizations. The analytical backbone.</p>
+
+<div class="pcard matt">
+<h4>"The on-chain data is telling a different story than the headlines. Here's what I see."</h4>
+<p><span class="pill pill-strategy">Strategy</span> <span class="ptag ptag-matt">Matt</span> YouTube + X | Keyword: BLUEPRINT</p>
+<p>Weekly market analysis format. On-chain accumulation metrics, exchange flows, whale activity. The data layer that makes CS research credible.</p>
+</div>
+
+<div class="pcard matt">
+<h4>"We called SOL at $22. Here's the framework that flagged it."</h4>
+<p><span class="pill pill-results">Results</span> <span class="ptag ptag-matt">Matt</span> YouTube | Keyword: BLUEPRINT</p>
+<p>Reverse-engineering a winning call. Not to brag, but to teach. The 5-point evaluation framework. Fundamentals over technicals.</p>
+</div>
+
+<div class="pcard matt">
+<h4>"116% CAGR over 6 years. Here's every year broken down - including the bad ones."</h4>
+<p><span class="pill pill-results">Results</span> <span class="ptag ptag-matt">Matt</span> YouTube + LinkedIn | Keyword: BLUEPRINT</p>
+<p>Radical transparency. FY-by-FY breakdown. The years we were up big and the year we were flat. Showing losses builds more trust than showing wins.</p>
+</div>
+
+<div class="pcard matt">
+<h4>"The 3 on-chain metrics I check every Monday morning."</h4>
+<p><span class="pill pill-strategy">Strategy</span> <span class="ptag ptag-matt">Matt</span> YouTube + X Thread | Keyword: BUILD</p>
+<p>Practical on-chain analysis. Exchange reserves, active addresses, MVRV ratio. Simple metrics anyone can track. The "Bloomberg terminal for digital assets" approach.</p>
+</div>
+
+<div class="pcard matt">
+<h4>"Altcoin season is not what you think it is. Here's the data."</h4>
+<p><span class="pill pill-strategy">Strategy</span> <span class="ptag ptag-matt">Matt</span> YouTube | Keyword: BUILD</p>
+<p>Myth-busting with data. When altcoins actually outperform Bitcoin (and for how long). The rotation framework that prevents chasing hype.</p>
+</div>
+
+<h5>Matt's Full Concept Library (20 additional)</h5>
+<div class="tw">
+<table>
+<thead><tr><th>#</th><th>Hook</th><th>Pillar</th><th>Format</th><th>Keyword</th></tr></thead>
+<tbody>
+<tr><td>6</td><td>"The Shift List: how we decide what to buy and sell."</td><td><span class="pill pill-strategy">Strategy</span></td><td>YouTube</td><td>BUILD</td></tr>
+<tr><td>7</td><td>"Bitcoin dominance is the signal most people ignore."</td><td><span class="pill pill-strategy">Strategy</span></td><td>X Thread</td><td>BLUEPRINT</td></tr>
+<tr><td>8</td><td>"Why 90% of altcoins will not survive this cycle."</td><td><span class="pill pill-protect">Protect</span></td><td>YouTube</td><td>BLUEPRINT</td></tr>
+<tr><td>9</td><td>"The macro setup right now (and what it means for your portfolio)."</td><td><span class="pill pill-strategy">Strategy</span></td><td>YouTube</td><td>BUILD</td></tr>
+<tr><td>10</td><td>"Our portfolio made 25 trades in 3 years. Here's why."</td><td><span class="pill pill-results">Results</span></td><td>X Thread + LinkedIn</td><td>BLUEPRINT</td></tr>
+<tr><td>11</td><td>"FY24: +90%. FY25: +19%. Here's the honest breakdown."</td><td><span class="pill pill-results">Results</span></td><td>YouTube</td><td>BLUEPRINT</td></tr>
+<tr><td>12</td><td>"How to evaluate any digital asset in 15 minutes."</td><td><span class="pill pill-strategy">Strategy</span></td><td>YouTube</td><td>BUILD</td></tr>
+<tr><td>13-25</td><td>13 additional research/macro concepts</td><td>Mixed</td><td>Mixed</td><td>Mixed</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- COLLABORATIVE -->
+<h3><span class="ptag ptag-collab">Collaborative</span> Cross-Brand Concepts (10 pieces)</h3>
+<div class="tw">
+<table>
+<thead><tr><th>#</th><th>Hook</th><th>People</th><th>Format</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>"Ben's conviction + Matt's data: the Bitcoin thesis in 2026."</td><td>Ben + Matt</td><td>YouTube long-form</td></tr>
+<tr><td>2</td><td>"What does our research team actually do all day?"</td><td>Matt + Sarn</td><td>Behind-the-scenes reel</td></tr>
+<tr><td>3</td><td>"Travis coaches Ben through a live portfolio review."</td><td>Travis + Ben</td><td>YouTube + clips</td></tr>
+<tr><td>4</td><td>"The Shift OS explained: all 8 modules in 10 minutes."</td><td>All four</td><td>YouTube</td></tr>
+<tr><td>5</td><td>"Member Q&A: the team answers your top 10 questions."</td><td>All four</td><td>YouTube live</td></tr>
+<tr><td>6</td><td>"Bull market playbook: what each of us is watching."</td><td>All four</td><td>Podcast + clips</td></tr>
+<tr><td>7</td><td>"How Sarn secured a member's $800K wallet in one session."</td><td>Sarn + Ben (intro)</td><td>YouTube</td></tr>
+<tr><td>8</td><td>"The exit strategy that saved a member $200K in gains."</td><td>Travis + Matt (data)</td><td>YouTube</td></tr>
+<tr><td>9</td><td>"What we look for before adding anything to the Shift List."</td><td>Matt + Ben</td><td>YouTube</td></tr>
+<tr><td>10</td><td>"Platinum onboarding: what your first 5 weeks look like."</td><td>Travis + Rebecca</td><td>YouTube</td></tr>
+</tbody>
+</table>
+</div>
+
+<p style="margin-top:20px;"><strong>Total content engine: 138 concepts</strong> (53 Ben + 25 Travis + 25 Sarn + 25 Matt + 10 Collaborative)</p>
+</section>
+
+<!-- ===== SECTION 7: EMAIL SYSTEM ===== -->
+<section class="section" id="email-system">
+<div class="s-label">Section 07</div>
+<h2>Email Marketing System</h2>
+<div class="accent-bar"></div>
+<p class="s-intro">The 4-email weekly cadence built on the Jeremy Haynes framework. Three plain-text EDMs from Ben (Mon/Wed/Fri) plus one designed HTML newsletter on Saturday. Full emails and templates in the <a href="email-system.html" class="ref">Email System v2</a>.</p>
+
+<h3 id="es-cadence">The 4-Email Weekly Cadence</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Day</th><th>Type</th><th>From</th><th>Purpose</th><th>CTA</th></tr></thead>
+<tbody>
+<tr><td><strong>Monday</strong></td><td>Educational Deep Dive</td><td>Ben (founder inbox)</td><td>Build authority. Teach one concept deeply. Create micro-debt.</td><td>Link to YouTube video. No sales.</td></tr>
+<tr><td><strong>Wednesday</strong></td><td>Story + Belief Break</td><td>Ben (founder inbox)</td><td>Shift a limiting belief through story. Bypass intellectual resistance.</td><td>No hard CTA. The story does the work.</td></tr>
+<tr><td><strong>Friday</strong></td><td>Open Loop into VSL</td><td>Ben (founder inbox)</td><td>Create curiosity that only the VSL resolves (Zeigarnik Effect).</td><td>Link to VSL (collectiveshift.net/trainingvslv5)</td></tr>
+<tr><td><strong>Saturday</strong></td><td>The Weekly Shift</td><td>Matt / CS Research</td><td>Market intelligence. On-chain data. Position CS as the research team you don't have.</td><td>Rotating: Starter Kit, strategy call, or VSL</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>The Weekly Narrative Arc</h4>
+<p>Monday educates and builds authority. Wednesday shifts a belief through story. Friday creates an open loop that can only be closed by watching the VSL. Saturday proves the depth of the research. By Saturday, the reader has been educated, had a belief challenged, is primed to act, and sees the data quality. The sequence works as a unit.</p>
+
+<h4>How Each Team Member Contributes</h4>
+<div class="tw">
+<table>
+<thead><tr><th>Person</th><th>Email Contribution</th></tr></thead>
+<tbody>
+<tr><td><span class="ptag ptag-ben">Ben</span></td><td>Mon/Wed/Fri emails are written in Ben's voice. He provides stories, frameworks, and personal insights.</td></tr>
+<tr><td><span class="ptag ptag-matt">Matt</span></td><td>Saturday newsletter is Matt's domain. Market data, on-chain metrics, Shift Data cards, research highlights.</td></tr>
+<tr><td><span class="ptag ptag-travis">Travis</span></td><td>Wednesday stories often feature coaching wins. Travis provides member transformation narratives.</td></tr>
+<tr><td><span class="ptag ptag-sarn">Sarn</span></td><td>Monday education occasionally features technical topics from Sarn (custody, security, DeFi mechanics).</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Email KPIs</h3>
+<div class="stat-row">
+<div class="stat"><div class="stat-n">45%+</div><div class="stat-l">Open Rate</div></div>
+<div class="stat"><div class="stat-n">5-8%</div><div class="stat-l">Click Rate</div></div>
+<div class="stat"><div class="stat-n">20-30</div><div class="stat-l">VSL Views/Week</div></div>
+<div class="stat"><div class="stat-n">4-6</div><div class="stat-l">Calls/Month (Email)</div></div>
+</div>
+
+<h3>Segmentation Strategy (15K List)</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Segment</th><th>Criteria</th><th>Treatment</th></tr></thead>
+<tbody>
+<tr><td><strong>Hot</strong></td><td>Clicked VSL, 5+ opens, replied</td><td>Fast-track to strategy call CTA</td></tr>
+<tr><td><strong>Warm</strong></td><td>Opens consistently, clicked YouTube</td><td>Full 4-email cadence</td></tr>
+<tr><td><strong>Cool</strong></td><td>Opens sometimes, low clicks</td><td>Full cadence, heavier education</td></tr>
+<tr><td><strong>Cold</strong></td><td>No opens 30+ days</td><td>Re-engagement sequence, then suppress</td></tr>
+<tr><td><strong>Members</strong></td><td>Existing Pro/Platinum</td><td>Saturday newsletter only</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Subject Line Formulas</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Type</th><th>Formula</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td>Curiosity</td><td>Open loop, no resolution in subject</td><td>"Something changed this week"</td></tr>
+<tr><td>Benefit</td><td>Clear value promise</td><td>"The 3-step exit strategy framework"</td></tr>
+<tr><td>Personal</td><td>Starts with "I"</td><td>"I made this mistake so you don't have to"</td></tr>
+<tr><td>Data</td><td>Specific number in subject</td><td>"116% CAGR. Here's every year."</td></tr>
+<tr><td>Question</td><td>Direct question</td><td>"What would you do with $100K right now?"</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Copy Rules</h3>
+<ul>
+<li>Mon/Wed/Fri are <strong>plain text only</strong>. No design. Personal emails from Ben.</li>
+<li>Saturday is the <strong>only designed email</strong>. Dark theme, Shift Data cards, CS branding.</li>
+<li>Never use "crypto" - always "digital assets."</li>
+<li>No em dashes. No income claims. No guaranteed returns.</li>
+<li>Every email teaches something. Even Friday's open loop delivers value before the hook.</li>
+<li>The 90/10 rule applies: free content teaches WHAT and WHY. Platinum delivers HOW.</li>
+</ul>
+</section>
+
+<!-- ===== SECTION 8: WORKFLOW ===== -->
+<section class="section" id="workflow">
+<div class="s-label">Section 08</div>
+<h2>Content Creation Workflow & Cadence</h2>
+<div class="accent-bar"></div>
+
+<h3 id="wf-calendar">Weekly Production Calendar</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Day</th><th>Ben</th><th>Travis</th><th>CS Brand</th><th>Matt/Sarn</th><th>Email</th></tr></thead>
+<tbody>
+<tr><td><strong>Sunday</strong></td><td>Batch filming (10am-1pm, 10-15 reels)</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+<tr><td><strong>Monday</strong></td><td>1 reel + 1 tweet + 1 LinkedIn</td><td>1 reel</td><td>1 carousel + stories</td><td>Matt: research prep</td><td>EDM: Educational</td></tr>
+<tr><td><strong>Tuesday</strong></td><td>1 reel + tweets</td><td>1 reel</td><td>1 reel + stories</td><td>Matt/Sarn: YouTube filming</td><td>-</td></tr>
+<tr><td><strong>Wednesday</strong></td><td>1 reel + 1 tweet + 1 LinkedIn</td><td>-</td><td>1 carousel + stories</td><td>Sarn: YouTube edit review</td><td>EDM: Story</td></tr>
+<tr><td><strong>Thursday</strong></td><td>1 reel + tweets</td><td>1 reel</td><td>1 reel + stories</td><td>Matt: newsletter production</td><td>-</td></tr>
+<tr><td><strong>Friday</strong></td><td>1 reel + 1 tweet + 1 LinkedIn</td><td>-</td><td>1 carousel + stories</td><td>YouTube publish</td><td>EDM: Open Loop</td></tr>
+<tr><td><strong>Saturday</strong></td><td>Stories only</td><td>-</td><td>Stories only</td><td>-</td><td>The Weekly Shift</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Sunday Batch Filming Protocol</h3>
+<div class="card">
+<h4>Every Sunday, 10am-1pm. Non-negotiable.</h4>
+<p><strong>Before:</strong> Review evergreen bank. Pick 10-15 reels. Check member questions and sales call notes. Pre-decide everything. No decisions on the day.</p>
+<p><strong>During:</strong> Film 10-15 reels. Each: read hook, deliver flow, CTA. 30-60 seconds. Authentic over polished. Raw footage uploaded to Google Drive immediately.</p>
+<p><strong>After:</strong> Georgio edits with text overlays and captions. Queues 3 reels/day for Mon-Sat. Ben reviews and approves Monday morning.</p>
+</div>
+
+<h3>YouTube Production Pipeline</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Step</th><th>Who</th><th>When</th><th>Output</th></tr></thead>
+<tbody>
+<tr><td>Topic selection</td><td>Matt/Travis/Sarn</td><td>Monday</td><td>3 topics confirmed for the week</td></tr>
+<tr><td>Scripting/outline</td><td>Creator + research team</td><td>Mon-Tue</td><td>Script or bullet outline</td></tr>
+<tr><td>Filming</td><td>Creator</td><td>Tue-Wed</td><td>Raw footage uploaded</td></tr>
+<tr><td>Editing</td><td>Georgio</td><td>Wed-Thu</td><td>Edited video for review</td></tr>
+<tr><td>Review + publish</td><td>Creator + marketing</td><td>Thu-Fri</td><td>Published + 3 clips cut for Shorts</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Email Production Pipeline</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Day</th><th>Task</th><th>Owner</th></tr></thead>
+<tbody>
+<tr><td>Monday AM</td><td>Draft Monday educational email</td><td>Marketing team</td></tr>
+<tr><td>Tuesday</td><td>Draft Wednesday story email + research Saturday data</td><td>Marketing + Matt</td></tr>
+<tr><td>Wednesday AM</td><td>Review/send Wednesday email. Draft Friday open loop.</td><td>Marketing</td></tr>
+<tr><td>Thursday</td><td>Build Saturday newsletter (data cards, metrics, copy)</td><td>Matt + marketing</td></tr>
+<tr><td>Friday AM</td><td>Send Friday email. Final Saturday newsletter QA.</td><td>Marketing</td></tr>
+<tr><td>Saturday AM</td><td>Send The Weekly Shift newsletter.</td><td>Marketing</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Content Approval Workflow</h3>
+<ol>
+<li><strong>Draft created</strong> by the assigned person or marketing team</li>
+<li><strong>Review</strong> by Ben (for brand voice) or marketing lead (for consistency)</li>
+<li><strong>Approve or request changes</strong> within 24 hours</li>
+<li><strong>Schedule/publish</strong> via manual posting (no scheduling tools currently)</li>
+</ol>
+<p><strong>Rule:</strong> Nothing goes live without review. Speed matters, but brand integrity matters more.</p>
+
+<h3>Tools & Platforms</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Tool</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><strong>Manual posting</strong></td><td>All social content (no scheduling tool currently)</td></tr>
+<tr><td><strong>ManyChat</strong></td><td>Instagram/TikTok DM automation (keyword triggers)</td></tr>
+<tr><td><strong>Customer.io</strong></td><td>Email marketing (15K list, being set up)</td></tr>
+<tr><td><strong>Circle</strong></td><td>Course delivery (Starter Kit)</td></tr>
+<tr><td><strong>GHL (GoHighLevel)</strong></td><td>Landing pages, checkout, sales pipeline</td></tr>
+<tr><td><strong>Google Drive</strong></td><td>Raw footage, editing pipeline, asset storage</td></tr>
+<tr><td><strong>Typeform</strong></td><td>Blueprint Assessment (9-question scoring)</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Team Capacity & Output Targets</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Person</th><th>Weekly Output</th><th>Capacity Notes</th></tr></thead>
+<tbody>
+<tr><td><strong>Ben</strong></td><td>15-21 reels (batch filmed), 7 tweets, 3 LinkedIn, stories</td><td>Sunday filming session is the bottleneck. Everything flows from there.</td></tr>
+<tr><td><strong>Travis</strong></td><td>7 reels, 1 YouTube, 1 LinkedIn</td><td>Own filming schedule. Less volume, more coaching depth.</td></tr>
+<tr><td><strong>Matt</strong></td><td>1 YouTube (CS channel), 3 tweets, Saturday newsletter</td><td>Research is primary role. Content is secondary output.</td></tr>
+<tr><td><strong>Sarn</strong></td><td>1 YouTube (own channel + CS)</td><td>Contractor. Tutorial production is batched monthly.</td></tr>
+<tr><td><strong>Georgio</strong></td><td>All video editing + clip creation</td><td>Contractor. The editing pipeline.</td></tr>
+<tr><td><strong>Marketing team</strong></td><td>Email drafts, scheduling, reporting, CS brand posts</td><td>David + Reece support.</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ===== SECTION 9: PRODUCTS & FUNNELS ===== -->
+<section class="section" id="funnels">
+<div class="s-label">Section 09</div>
+<h2>Connection to Products & Funnels</h2>
+<div class="accent-bar"></div>
+<p class="s-intro">How content feeds the product ladder. Full funnel architecture, landing pages, and sales system in <a href="products-funnels.html" class="ref">Products & Funnels System</a>.</p>
+
+<h3>The Content-to-Conversion Pipeline</h3>
+<div class="flow">
+<div class="flow-s"><div class="flow-l"><div class="flow-d"></div><div class="flow-c"></div></div><div class="flow-t"><p><strong>Free Content</strong> (reels, YouTube, X, LinkedIn, podcast)</p><p>Build awareness. Teach the WHAT and WHY. ManyChat keywords trigger DM flows.</p></div></div>
+<div class="flow-s"><div class="flow-l"><div class="flow-d" style="background:var(--cs-teal);"></div><div class="flow-c"></div></div><div class="flow-t"><p><strong>Micro Magnets</strong> (Blueprint Assessment, risk audit, allocation calculator)</p><p>Capture email. Score readiness. Deliver value immediately.</p></div></div>
+<div class="flow-s"><div class="flow-l"><div class="flow-d" style="background:var(--cs-blue);"></div><div class="flow-c"></div></div><div class="flow-t"><p><strong>$97 Starter Kit</strong> (GHL checkout, Circle delivery)</p><p>Entry-level course. Proves the CS framework works. Builds email relationship.</p></div></div>
+<div class="flow-s"><div class="flow-l"><div class="flow-d" style="background:var(--cs-amber);"></div><div class="flow-c"></div></div><div class="flow-t"><p><strong>VSL V5</strong> (collectiveshift.net/trainingvslv5)</p><p>45-minute free training. Does the heavy selling. Open loops from Friday email resolve here.</p></div></div>
+<div class="flow-s"><div class="flow-l"><div class="flow-d" style="background:var(--matt);"></div><div class="flow-c"></div></div><div class="flow-t"><p><strong>Strategy Call</strong> (Zen/James set, sales team close)</p><p>Qualifier call. Assess fit. Present Accelerator or Platinum.</p></div></div>
+<div class="flow-s"><div class="flow-l"><div class="flow-d" style="background:var(--cs-green);"></div></div><div class="flow-t"><p><strong>$5K Accelerator or $15K Platinum</strong></p><p>The conversion goal. 87% of revenue comes from Platinum.</p></div></div>
+</div>
+
+<h3>Content-to-Funnel Mapping</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Content Type</th><th>Funnel Stage</th><th>ManyChat Keyword</th><th>Next Step</th></tr></thead>
+<tbody>
+<tr><td>Personal story reels (Ben)</td><td>Top of funnel - awareness</td><td>BLUEPRINT</td><td>Blueprint Assessment</td></tr>
+<tr><td>Strategy/framework reels</td><td>Mid funnel - consideration</td><td>BUILD</td><td>Allocation calculator, then VSL</td></tr>
+<tr><td>Beginner tutorials (Sarn)</td><td>Top of funnel - education</td><td>STARTERKIT</td><td>$97 Starter Kit</td></tr>
+<tr><td>Research/data (Matt)</td><td>Mid funnel - credibility</td><td>BLUEPRINT</td><td>Newsletter signup, then VSL</td></tr>
+<tr><td>Member stories / testimonials</td><td>Bottom funnel - conversion</td><td>PROOF</td><td>Track record page, strategy call</td></tr>
+<tr><td>Protection/security content</td><td>Mid funnel - trust</td><td>PROTECT</td><td>Risk audit, then Blueprint</td></tr>
+<tr><td>Friday email open loop</td><td>Bottom funnel - action</td><td>-</td><td>VSL V5 directly</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Key Funnel Metrics to Track</h3>
+<ul>
+<li>ManyChat triggers per week (target: 100+)</li>
+<li>Blueprint Assessment completions per week</li>
+<li>VSL views per week (target: 20-30 from email alone)</li>
+<li>Strategy calls booked per week (target: 20)</li>
+<li>Call-to-close conversion rate</li>
+<li>Starter Kit purchases per month</li>
+</ul>
+</section>
+
+<!-- ===== SECTION 10: PERSONAL BRANDS ===== -->
+<section class="section" id="personal-brands">
+<div class="s-label">Section 10</div>
+<h2>Personal Brand Guidelines</h2>
+<div class="accent-bar"></div>
+<p class="s-intro">One-page brand guide for each team voice. Ben's brand is defined throughout this document as the primary voice. Below are Travis, Sarn, and Matt.</p>
+
+<!-- TRAVIS -->
+<div class="pcard travis" id="pb-travis">
+<h3 style="margin-top:0;color:var(--travis);">Travis Thomas - Chief Growth Officer</h3>
+<h5>Bio</h5>
+<p><strong>Short:</strong> Chief Growth Officer at Collective Shift. Investor psychology + wealth architecture. Building your investing operating system.</p>
+<p><strong>Long:</strong> Travis is the Chief Growth Officer and Head Coach at Collective Shift. He specialises in wealth goal architecture and investor psychology, helping high-net-worth investors build and stick to a plan through volatile markets. Travis owns the "operating system" angle: how goal-driven investors use frameworks like position sizing, game theory, and structured exit plans to build generational wealth.</p>
+<h5>Voice Rules</h5>
+<ol>
+<li><strong>Coaching mode first.</strong> Every post is a mini coaching session. Ask questions, guide thinking.</li>
+<li><strong>Structured delivery.</strong> Use numbered steps, frameworks, acronyms. Make complex things actionable.</li>
+<li><strong>Results-oriented.</strong> Always connect psychology to outcomes. "This is why it matters for your portfolio."</li>
+<li><strong>Energetic but grounded.</strong> Motivating without being hype. No rah-rah. Data-backed motivation.</li>
+<li><strong>HNW-aware.</strong> Speak to people managing $500K+. Respect their sophistication.</li>
+</ol>
+<h5>Content Do's and Don'ts</h5>
+<div class="dd">
+<div class="do-c"><h4>Do This</h4><ul><li>Coaching frameworks (numbered steps)</li><li>Member transformation stories</li><li>"Operating system" language</li><li>Investor psychology insights</li></ul></div>
+<div class="dont-c"><h4>Not That</h4><ul><li>Price predictions</li><li>Technical analysis charts</li><li>Generic motivational quotes</li><li>Competing with Ben on macro takes</li></ul></div>
+</div>
+<h5>Platforms & Cadence</h5>
+<p>YouTube (1/wk), Instagram Reels (3/wk), Instagram Feed (2/wk), LinkedIn (1/wk), TikTok (3/wk cross-post), X (2/wk)</p>
+</div>
+
+<!-- SARN -->
+<div class="pcard sarn" id="pb-sarn">
+<h3 style="margin-top:0;color:var(--sarn);">Sarn Elliott - Education Specialist</h3>
+<h5>Bio</h5>
+<p><strong>Short:</strong> Education Specialist at Collective Shift. 7+ years in digital assets. $1M+ in recovered assets. Legal expert witness.</p>
+<p><strong>Long:</strong> Sarn Elliott is a digital asset education specialist at Collective Shift. Active in the space since 2017, he has worked across exchanges, consulting, and blockchain infrastructure with deep expertise in wallets, custody, operational security, DeFi protocols, and bridges. He has assisted in recovering more than $1 million in lost digital assets and has served as a legal expert witness in related cases.</p>
+<h5>Voice Rules</h5>
+<ol>
+<li><strong>Teacher-mode always.</strong> Step-by-step. Screen recordings. Visual diagrams. Never assume knowledge.</li>
+<li><strong>Patient and clear.</strong> The ICP feels overwhelmed by technical complexity. Sarn is the antidote.</li>
+<li><strong>Security-first mentality.</strong> Every tutorial includes the security implications.</li>
+<li><strong>Practical over theoretical.</strong> "Here's exactly how to do this" not "here's why this matters conceptually."</li>
+<li><strong>Credibility through recovery stories.</strong> The $1M+ recovered assets is Sarn's unique proof point.</li>
+</ol>
+<h5>Content Do's and Don'ts</h5>
+<div class="dd">
+<div class="do-c"><h4>Do This</h4><ul><li>Step-by-step tutorials</li><li>Screen recordings with voiceover</li><li>Security checklists (printable)</li><li>"I've seen this go wrong" stories</li></ul></div>
+<div class="dont-c"><h4>Not That</h4><ul><li>Market predictions or macro takes</li><li>Portfolio allocation advice</li><li>Overly technical jargon without explanation</li><li>Opinion-based content without data</li></ul></div>
+</div>
+<h5>Platforms & Cadence</h5>
+<p>YouTube (1/wk - own channel + CS channel). Contractor - tutorial batches produced monthly.</p>
+</div>
+
+<!-- MATT -->
+<div class="pcard matt" id="pb-matt">
+<h3 style="margin-top:0;color:var(--matt);">Matt Willemsen - Director of Research</h3>
+<h5>Bio</h5>
+<p><strong>Short:</strong> Director of Research at Collective Shift. In digital assets since 2017. Sharp market calls. Clear frameworks. No noise.</p>
+<p><strong>Long:</strong> Matt Willemsen has worked full-time in the digital asset industry since 2017. Holding a Bachelor of Business from Monash University (Accounting and Economics), he combines traditional financial rigour with deep market understanding to lead an internal team of analysts. Recognised for sharp market calls and his ability to simplify sophisticated narratives, Matt is a regular speaker at industry conferences.</p>
+<h5>Voice Rules</h5>
+<ol>
+<li><strong>Data first, always.</strong> Every claim backed by on-chain data, market metrics, or audited returns.</li>
+<li><strong>Sharp but accessible.</strong> Academic rigour, mainstream language. No jargon without explanation.</li>
+<li><strong>Measured tone.</strong> Not emotional. Not reactive. The calm analyst in a noisy market.</li>
+<li><strong>Honest about uncertainty.</strong> "The data suggests X" not "X will definitely happen."</li>
+<li><strong>The proof layer.</strong> Matt's content exists to prove CS knows what they're talking about.</li>
+</ol>
+<h5>Content Do's and Don'ts</h5>
+<div class="dd">
+<div class="do-c"><h4>Do This</h4><ul><li>On-chain analysis with charts</li><li>Market cycle breakdowns</li><li>"Here's what the data shows" framing</li><li>Showing losses alongside wins</li></ul></div>
+<div class="dont-c"><h4>Not That</h4><ul><li>Clickbait price predictions</li><li>Personal lifestyle content</li><li>Speculative altcoin calls</li><li>Emotional market reactions</li></ul></div>
+</div>
+<h5>Platforms & Cadence</h5>
+<p>YouTube (1/wk on CS channel), X (3/wk market analysis), Saturday newsletter (weekly). LinkedIn through CS brand posts featuring his research.</p>
+</div>
+</section>
+
+<!-- ===== SECTION 11: MEASUREMENT ===== -->
+<section class="section" id="measurement">
+<div class="s-label">Section 11</div>
+<h2>Measurement, Iteration & Scaling</h2>
+<div class="accent-bar"></div>
+
+<h3>KPIs by Platform</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Platform</th><th>Metric</th><th>Weekly Target</th></tr></thead>
+<tbody>
+<tr><td>Instagram</td><td>Reels posted (all brands)</td><td>14+</td></tr>
+<tr><td>Instagram</td><td>ManyChat triggers</td><td>100+</td></tr>
+<tr><td>Instagram</td><td>DMs received</td><td>20+</td></tr>
+<tr><td>YouTube</td><td>Videos published (CS + personal)</td><td>3+</td></tr>
+<tr><td>X/Twitter</td><td>Tweets/threads posted</td><td>21+</td></tr>
+<tr><td>LinkedIn</td><td>Posts published</td><td>6+</td></tr>
+<tr><td>Email</td><td>Emails sent</td><td>4</td></tr>
+<tr><td>Email</td><td>Open rate (EDMs)</td><td>45%+</td></tr>
+<tr><td>Sales</td><td>Strategy calls booked (organic)</td><td>20</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>KPIs by Person</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Person</th><th>Primary KPI</th><th>Secondary KPI</th></tr></thead>
+<tbody>
+<tr><td><span class="ptag ptag-ben">Ben</span></td><td>ManyChat triggers from reels</td><td>Instagram follower growth, DMs started</td></tr>
+<tr><td><span class="ptag ptag-travis">Travis</span></td><td>YouTube views + watch time</td><td>IG reel engagement, member coaching satisfaction</td></tr>
+<tr><td><span class="ptag ptag-sarn">Sarn</span></td><td>YouTube tutorial views</td><td>STARTERKIT keyword triggers</td></tr>
+<tr><td><span class="ptag ptag-matt">Matt</span></td><td>Newsletter open rate + clicks</td><td>YouTube research video views, X engagement</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Content Scoring System</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Score</th><th>Criteria</th><th>Action</th></tr></thead>
+<tbody>
+<tr><td style="color:var(--cs-green);">5 - Viral</td><td>10x average reach, high saves, keyword triggers</td><td>Create 3 variations. Make it a series.</td></tr>
+<tr><td style="color:var(--cs-green);">4 - Strong</td><td>3-5x average, good saves</td><td>Keep in rotation. Test different hooks.</td></tr>
+<tr><td style="color:var(--cs-orange);">3 - Average</td><td>Normal reach, some engagement</td><td>Keep but don't prioritize.</td></tr>
+<tr><td style="color:var(--cs-red);">2 - Weak</td><td>Below average, low engagement</td><td>Retire after 90 days. Replace.</td></tr>
+<tr><td style="color:var(--cs-red);">1 - Dead</td><td>Minimal reach, no triggers</td><td>Remove from bank. Analyse why.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Review Cadence</h3>
+<h4>Weekly Review (Every Monday)</h4>
+<ul class="checklist">
+<li>Review last week's content performance (all platforms, all people)</li>
+<li>Score top 5 and bottom 5 pieces of content</li>
+<li>Check ManyChat trigger volume and DM-to-call conversion</li>
+<li>Review email open rates and click rates</li>
+<li>Confirm this week's content calendar is loaded</li>
+<li>Flag any trending topics or market events to react to</li>
+</ul>
+
+<h4>Monthly Strategy Review (First Monday)</h4>
+<ul class="checklist">
+<li>Platform-level KPI review (month-over-month trends)</li>
+<li>Per-person output vs target assessment</li>
+<li>Content pillar balance check (are we overweighting one pillar?)</li>
+<li>Funnel metrics: email list growth, VSL views, calls booked, conversions</li>
+<li>A/B test results and learnings</li>
+<li>Next month's theme and hero content planned</li>
+</ul>
+
+<h3>When to Scale vs Optimise</h3>
+<div class="dd">
+<div class="do-c">
+<h4 style="color:var(--cs-teal);">Scale (Add Volume)</h4>
+<ul>
+<li>ManyChat triggers consistently above 100/week</li>
+<li>Content scores averaging 3.5+ across all brands</li>
+<li>Strategy calls fully booked with a waitlist</li>
+<li>Team capacity has headroom (Georgio under 80%)</li>
+</ul>
+</div>
+<div class="dont-c" style="border-color:rgba(252,92,3,.18);background:rgba(252,92,3,.04);">
+<h4 style="color:var(--cs-orange);">Optimise (Improve Quality)</h4>
+<ul>
+<li>ManyChat triggers below 50/week</li>
+<li>Content scores below 3.0 average</li>
+<li>High volume but low conversion to calls</li>
+<li>Any person consistently scoring 2 or below</li>
+</ul>
+</div>
+</div>
+
+<h3>Team Growth Triggers</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Trigger</th><th>Hire</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Ben filming 21+ reels/week consistently</td><td>Dedicated social media manager</td><td>Free Ben from scheduling/caption writing</td></tr>
+<tr><td>Georgio at 100% capacity</td><td>Second video editor</td><td>Editing is the content bottleneck</td></tr>
+<tr><td>Strategy calls booked 20+/week for 4 consecutive weeks</td><td>Additional sales setter</td><td>Don't let qualified leads wait</td></tr>
+<tr><td>Email list exceeds 25K</td><td>Dedicated email marketing specialist</td><td>Segmentation and automation complexity increases</td></tr>
+<tr><td>Travis/Sarn/Matt at full content capacity</td><td>Content coordinator</td><td>Someone to manage the cross-brand pipeline</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>90-Day Execution Phases</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Phase</th><th>Timeline</th><th>Focus</th><th>Target</th></tr></thead>
+<tbody>
+<tr><td><strong>Phase 1</strong></td><td>Days 1-30</td><td>Volume & consistency</td><td>Hit 61 posts/week. Build Sunday filming habit. Launch email cadence.</td></tr>
+<tr><td><strong>Phase 2</strong></td><td>Days 31-60</td><td>Optimization</td><td>Identify top 10 hooks. Double production of winner formats. Score all content.</td></tr>
+<tr><td><strong>Phase 3</strong></td><td>Days 61-90</td><td>Scale & iterate</td><td>100+ ManyChat triggers/wk. 20+ strategy calls/wk. All 4 voices at full cadence.</td></tr>
+</tbody>
+</table>
+</div>
+
+<hr>
+
+<div class="card" style="text-align:center;margin-top:40px;">
+<p style="font-size:18px;color:var(--cs-white);font-weight:700;margin-bottom:8px;">The Shift Engine v1.0</p>
+<p style="margin-bottom:4px;">One system. Four voices. Every channel.</p>
+<p style="font-size:13px;">Related systems: <a href="brand-bible.html" class="ref">Brand Bible</a> | <a href="social-content-system.html" class="ref">Social Content System</a> | <a href="email-system.html" class="ref">Email System</a> | <a href="products-funnels.html" class="ref">Products & Funnels</a> | <a href="evergreen-content-system.html" class="ref">Evergreen Content System</a></p>
+<p style="font-size:12px;color:var(--cs-muted);margin-top:12px;">Collective Shift Pty Ltd - April 2026 - Internal Use Only</p>
+</div>
+
+</div>
+</main>
+
+<!-- BACK TO TOP -->
+<a href="#exec" class="back-top" id="backTop">&#8593;</a>
+
+<script>
+// Sidebar navigation
+const links = document.querySelectorAll('.nav-a');
+const sections = document.querySelectorAll('.section, .hero');
+
+function setActive() {
+  let current = '';
+  sections.forEach(s => {
+    const top = s.getBoundingClientRect().top;
+    if (top < 120) current = s.id || '';
+  });
+  links.forEach(l => {
+    l.classList.remove('active');
+    const href = l.getAttribute('href');
+    if (href && href.substring(1) === current) l.classList.add('active');
+  });
+}
+window.addEventListener('scroll', setActive);
+
+// Back to top
+const backTop = document.getElementById('backTop');
+window.addEventListener('scroll', () => {
+  backTop.classList.toggle('visible', window.scrollY > 400);
+});
+
+// Hamburger
+const hamburger = document.getElementById('hamburger');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  sidebar.classList.toggle('open');
+  overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
+});
+
+overlay.addEventListener('click', () => {
+  hamburger.classList.remove('open');
+  sidebar.classList.remove('open');
+  overlay.style.display = 'none';
+});
+
+// Close sidebar on nav click (mobile)
+links.forEach(l => l.addEventListener('click', () => {
+  if (window.innerWidth <= 900) {
+    hamburger.classList.remove('open');
+    sidebar.classList.remove('open');
+    overlay.style.display = 'none';
+  }
+}));
+</script>
+</body>
+</html>
