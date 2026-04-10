@@ -32,6 +32,10 @@ const AUTH_USER = process.env.AUTH_USER || 'ben';
 const AUTH_PASS = process.env.DASHBOARD_PASSWORD || process.env.AUTH_PASS || 'cs2026ceo';
 
 app.use((req, res, next) => {
+  // Public pages - no auth required (lead magnet funnel)
+  const publicPaths = ['/funnel-optin.html', '/funnel-quiz.html', '/funnel-thankyou.html', '/wealth-shift-guide.html', '/blueprint-guide.html'];
+  if (publicPaths.includes(req.path)) return next();
+
   const auth = req.headers['authorization'];
   if (!auth || !auth.startsWith('Basic ')) {
     res.set('WWW-Authenticate', 'Basic realm="CS CEO Dashboard"');
