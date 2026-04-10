@@ -1,0 +1,2408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collective Shift Brand Bible</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cs-dark: #0D0B14;
+  --cs-dark-alt: #1B1925;
+  --brand-orange: #FC5C03;
+  --brand-teal: #0BF4B9;
+  --brand-blue: #2404FC;
+  --white: #FFFFFF;
+  --off-white: #F5F5F5;
+  --light-gray: #A0A0B0;
+  --text-muted: #8A8A8A;
+  --text-muted-light: #B0B0B0;
+  --card-bg: #1E1C28;
+  --card-border: #2A2838;
+  --amber: #FFB800;
+  --red-negative: #E53E3E;
+  --sidebar-width: 280px;
+  --content-max: 820px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 32px;
+}
+
+body {
+  font-family: 'Barlow', sans-serif;
+  background: var(--cs-dark);
+  color: var(--white);
+  line-height: 1.6;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: var(--cs-dark-alt);
+  border-right: 1px solid var(--card-border);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-header {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid var(--card-border);
+  flex-shrink: 0;
+}
+
+.sidebar-logo {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.sidebar-logo span { color: var(--brand-orange); }
+
+.sidebar-subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+}
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--card-border) transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar { width: 4px; }
+.sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
+
+.nav-section {
+  padding: 0 16px;
+  margin-bottom: 4px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text-muted-light);
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  line-height: 1.35;
+}
+
+.nav-link:hover {
+  background: rgba(252, 92, 3, 0.06);
+  color: var(--white);
+}
+
+.nav-link.active {
+  background: rgba(252, 92, 3, 0.1);
+  color: var(--white);
+}
+
+.nav-link.active .nav-num { color: var(--brand-orange); }
+
+.nav-num {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 11px;
+  color: var(--text-muted);
+  min-width: 18px;
+  padding-top: 2px;
+  transition: color 0.2s ease;
+}
+
+.sidebar-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--card-border);
+  flex-shrink: 0;
+}
+
+.sidebar-footer p {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* HAMBURGER */
+.hamburger {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 200;
+  width: 44px;
+  height: 44px;
+  background: var(--cs-dark-alt);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--white);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 90;
+}
+
+/* MAIN CONTENT */
+.main {
+  margin-left: var(--sidebar-width);
+  min-height: 100vh;
+}
+
+.content-wrapper {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 48px 40px 120px;
+}
+
+/* EXECUTIVE SUMMARY HERO */
+.hero {
+  padding: 64px 0 48px;
+  margin-bottom: 48px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.hero-badge {
+  display: inline-block;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--brand-orange);
+  margin-bottom: 20px;
+  padding: 6px 14px;
+  border: 1px solid rgba(252, 92, 3, 0.3);
+  border-radius: 100px;
+}
+
+.hero h1 {
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 24px;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.hero-text {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--text-muted-light);
+  font-weight: 400;
+}
+
+.hero-text strong { color: var(--white); font-weight: 600; }
+
+/* SECTIONS */
+.section {
+  margin-bottom: 64px;
+  scroll-margin-top: 32px;
+}
+
+.section-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--brand-orange);
+  margin-bottom: 12px;
+}
+
+.section > h2 {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.section-intro {
+  font-size: 16px;
+  color: var(--text-muted-light);
+  margin-bottom: 40px;
+  max-width: 640px;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 48px;
+  margin-bottom: 16px;
+  color: var(--white);
+}
+
+h4 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-top: 32px;
+  margin-bottom: 12px;
+  color: var(--white);
+}
+
+h5 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 24px;
+  margin-bottom: 8px;
+  color: var(--text-muted-light);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+p { margin-bottom: 16px; color: var(--text-muted-light); }
+p strong { color: var(--white); }
+
+/* ACCENT BAR */
+.accent-bar {
+  width: 48px;
+  height: 3px;
+  background: var(--brand-orange);
+  border-radius: 3px;
+  margin-bottom: 32px;
+}
+
+/* CARDS */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 20px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.card-sm {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 20px 24px;
+}
+
+.card-sm h4 { margin-top: 0; margin-bottom: 8px; font-size: 15px; }
+.card-sm p { font-size: 14px; margin-bottom: 0; }
+
+/* VALUE CARD */
+.value-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 12px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.value-num {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 24px;
+  color: var(--brand-orange);
+  min-width: 36px;
+  line-height: 1;
+  padding-top: 2px;
+}
+
+.value-card h4 { margin: 0 0 6px; font-size: 16px; }
+.value-card p { margin: 0; font-size: 14px; }
+
+/* STAT BLOCK */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.stat-block {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+}
+
+.stat-num {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 32px;
+  color: var(--brand-orange);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* TABLES */
+.table-wrap {
+  overflow-x: auto;
+  margin: 20px 0 28px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+thead th {
+  background: var(--card-bg);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted-light);
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--card-border);
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(42, 40, 56, 0.5);
+  color: var(--text-muted-light);
+  vertical-align: top;
+}
+
+tbody tr:last-child td { border-bottom: none; }
+
+tbody tr:nth-child(even) { background: rgba(30, 28, 40, 0.3); }
+
+tbody td:first-child {
+  font-weight: 600;
+  color: var(--white);
+}
+
+tbody td strong { color: var(--white); }
+
+/* DO THIS / NOT THAT */
+.do-dont {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 20px 0 28px;
+}
+
+.do-col, .dont-col {
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.do-col {
+  background: rgba(11, 244, 185, 0.06);
+  border: 1px solid rgba(11, 244, 185, 0.2);
+}
+
+.dont-col {
+  background: rgba(229, 62, 62, 0.06);
+  border: 1px solid rgba(229, 62, 62, 0.2);
+}
+
+.do-col h4, .dont-col h4 {
+  margin: 0 0 16px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.do-col h4 { color: var(--brand-teal); }
+.dont-col h4 { color: var(--red-negative); }
+
+.do-col li, .dont-col li {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: var(--text-muted-light);
+  line-height: 1.45;
+}
+
+/* COLOR SWATCHES */
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 20px 0 28px;
+}
+
+.swatch {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+}
+
+.swatch-color {
+  height: 72px;
+  position: relative;
+}
+
+.swatch-info {
+  background: var(--card-bg);
+  padding: 12px 14px;
+}
+
+.swatch-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--white);
+  margin-bottom: 2px;
+}
+
+.swatch-hex {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+.swatch-usage {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* BLOCKQUOTE */
+blockquote {
+  border-left: 3px solid var(--brand-orange);
+  padding: 16px 24px;
+  margin: 20px 0 24px;
+  background: rgba(252, 92, 3, 0.04);
+  border-radius: 0 8px 8px 0;
+}
+
+blockquote p {
+  font-style: italic;
+  color: var(--white);
+  font-weight: 500;
+  margin-bottom: 4px;
+  font-size: 15px;
+}
+
+blockquote cite {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: normal;
+}
+
+/* WIREFRAME */
+.wireframe {
+  background: var(--cs-dark);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 16px 0 24px;
+  font-family: 'Plus Jakarta Sans', monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* CODE */
+code {
+  font-family: 'Plus Jakarta Sans', monospace;
+  font-size: 13px;
+  background: rgba(252, 92, 3, 0.08);
+  color: var(--brand-orange);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+pre {
+  background: var(--cs-dark);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 16px 0 24px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: var(--text-muted-light);
+}
+
+/* LISTS */
+ul, ol {
+  padding-left: 24px;
+  margin-bottom: 16px;
+}
+
+li {
+  margin-bottom: 8px;
+  color: var(--text-muted-light);
+  line-height: 1.5;
+}
+
+li strong { color: var(--white); }
+
+li::marker { color: var(--brand-orange); }
+
+/* CHECKLIST */
+.checklist {
+  list-style: none;
+  padding-left: 0;
+}
+
+.checklist li {
+  padding: 10px 0 10px 32px;
+  position: relative;
+  border-bottom: 1px solid rgba(42, 40, 56, 0.4);
+}
+
+.checklist li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 14px;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--brand-orange);
+  border-radius: 4px;
+}
+
+/* PERSONA CARD */
+.persona-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 16px;
+  border-left: 3px solid var(--brand-orange);
+}
+
+.persona-card.teal { border-left-color: var(--brand-teal); }
+.persona-card.blue { border-left-color: #4A3AFF; }
+.persona-card.purple { border-left-color: #7C3AED; }
+.persona-card.amber { border-left-color: var(--amber); }
+
+.persona-card h4 { margin-top: 0; }
+
+.persona-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.persona-tag {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.persona-tag.orange { background: rgba(252,92,3,0.15); color: var(--brand-orange); }
+.persona-tag.teal { background: rgba(11,244,185,0.12); color: var(--brand-teal); }
+.persona-tag.blue { background: rgba(74,58,255,0.15); color: #8B7AFF; }
+.persona-tag.purple { background: rgba(124,58,237,0.15); color: #A78BFA; }
+.persona-tag.amber { background: rgba(255,184,0,0.12); color: var(--amber); }
+
+/* FLOW CHART */
+.flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 20px 0 28px;
+}
+
+.flow-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.flow-line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 32px;
+}
+
+.flow-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--brand-orange);
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+.flow-connector {
+  width: 2px;
+  height: 40px;
+  background: var(--card-border);
+}
+
+.flow-content {
+  padding-bottom: 20px;
+}
+
+.flow-content p { margin-bottom: 4px; font-size: 14px; }
+.flow-content strong { color: var(--white); }
+
+/* PILL BUTTON EXAMPLE */
+.pill-example {
+  display: inline-block;
+  padding: 10px 28px;
+  border-radius: 100px;
+  font-family: 'Barlow', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  margin-right: 12px;
+  margin-bottom: 8px;
+}
+
+.pill-primary { background: var(--brand-blue); color: var(--white); }
+.pill-secondary { background: transparent; border: 1px solid var(--card-border); color: var(--text-muted-light); }
+.pill-accent { background: var(--brand-orange); color: var(--white); }
+
+/* DIVIDER */
+hr {
+  border: none;
+  height: 1px;
+  background: var(--card-border);
+  margin: 48px 0;
+}
+
+/* BACK TO TOP */
+.back-top {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 44px;
+  height: 44px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 50;
+  color: var(--white);
+  font-size: 18px;
+  text-decoration: none;
+}
+
+.back-top.visible { opacity: 1; }
+
+/* PRINT */
+@media print {
+  .sidebar, .hamburger, .overlay, .back-top { display: none !important; }
+  .main { margin-left: 0 !important; }
+  body { background: #fff; color: #111; font-size: 11pt; }
+  .content-wrapper { max-width: 100%; padding: 0; }
+  .card, .card-sm, .value-card, .stat-block, .persona-card { border-color: #ccc; background: #f9f9f9; }
+  h1, h2, h3, h4, h5, h6, .section-label, .hero-badge, .nav-num, .stat-num, .value-num { color: #111 !important; }
+  p, li, td, .swatch-hex, .swatch-usage, blockquote cite, .sidebar-subtitle { color: #333 !important; }
+  .hero { border-bottom-color: #ccc; }
+  .swatch-color { border: 1px solid #ccc; }
+  table { font-size: 10pt; }
+  .section { page-break-inside: avoid; }
+  .do-col { border-color: #0a0; }
+  .dont-col { border-color: #c00; }
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .hamburger { display: flex; }
+  .main { margin-left: 0; }
+  .content-wrapper { padding: 80px 24px 100px; }
+  .hero h1 { font-size: 28px; }
+  .section > h2 { font-size: 24px; }
+  .do-dont { grid-template-columns: 1fr; }
+  .card-grid { grid-template-columns: 1fr; }
+  .stat-row { grid-template-columns: repeat(2, 1fr); }
+  .swatch-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .content-wrapper { padding: 72px 16px 80px; }
+  .stat-row { grid-template-columns: 1fr; }
+  .swatch-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HAMBURGER -->
+<button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+  <span></span><span></span><span></span>
+</button>
+<div class="overlay" id="overlay"></div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">Collective <span>Shift</span></div>
+    <div class="sidebar-subtitle">Brand Bible v3.0</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-section">
+      <a href="#executive-summary" class="nav-link active"><span class="nav-num">00</span> Executive Summary</a>
+      <a href="#brand-foundation" class="nav-link"><span class="nav-num">01</span> Brand Foundation</a>
+      <a href="#brand-voice" class="nav-link"><span class="nav-num">02</span> Brand Personality &amp; Voice</a>
+      <a href="#visual-identity" class="nav-link"><span class="nav-num">03</span> Visual Identity</a>
+      <a href="#messaging" class="nav-link"><span class="nav-num">04</span> Messaging Framework</a>
+      <a href="#social-media" class="nav-link"><span class="nav-num">05</span> Social Media Guidelines</a>
+      <a href="#brand-application" class="nav-link"><span class="nav-num">06</span> Brand Application &amp; Guardrails</a>
+      <a href="#measurement" class="nav-link"><span class="nav-num">07</span> Measurement &amp; Evolution</a>
+    </div>
+  </div>
+  <div class="sidebar-footer">
+    <p>Internal document - April 2026</p>
+    <p style="margin-top:4px;">Review: Quarterly</p>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+<div class="content-wrapper">
+
+<!-- ========== EXECUTIVE SUMMARY ========== -->
+<section class="hero" id="executive-summary">
+  <div class="hero-badge">Brand Bible v3.0 - April 2026</div>
+  <h1>The Definitive Brand System for Collective Shift</h1>
+  <p class="hero-text">
+    Collective Shift is <strong>the world's most trusted digital asset education company</strong>. Built on six years of audited performance (116% CAGR verified by Crypto Tax Australia), zero affiliate deals, and a research-first model that serves over 1,100 members across Australia, the US, UK, and Europe. This Brand Bible is the single source of truth for every piece of content, every pixel, every word that carries the Collective Shift name. It defines who we are, how we sound, how we look, and how we show up across every channel and touchpoint. Founded by Ben Simpson - a high school dropout turned TEDx speaker who nearly went bankrupt twice before building an eight-figure education company - Collective Shift exists because the digital asset industry needed an independent voice. One that puts skin in the game, invests alongside its members, and measures success by how long people stay, not how many people sign up. Every team member, every contractor, every piece of content must honour this standard. If it doesn't pass the test of "would a successful 50-year-old business owner feel respected reading this?" - it doesn't ship.
+  </p>
+</section>
+
+<!-- ========== 1. BRAND FOUNDATION ========== -->
+<section class="section" id="brand-foundation">
+  <div class="section-label">Section 01</div>
+  <h2>Brand Foundation</h2>
+  <div class="accent-bar"></div>
+  <p class="section-intro">The bedrock of everything we build. Our mission, origin, values, and positioning define why Collective Shift exists and who it serves.</p>
+
+  <h3>Mission</h3>
+  <p>The world's most trusted digital asset education company. We help serious investors build generational wealth through systematic, research-driven frameworks. Free from hype, affiliates, and conflicting interests.</p>
+
+  <h3>Vision</h3>
+  <p>A world where every serious investor has access to independent, institutional-quality digital asset research - regardless of their starting point. Where the default path to digital asset education is one built on transparency, audited performance, and frameworks that endure across market cycles.</p>
+
+  <h3>Purpose</h3>
+  <p>To replace noise with clarity. The digital asset industry is flooded with influencers shilling tokens for affiliate commissions, Telegram groups pumping and dumping, and gurus selling hype. Collective Shift exists to be the antidote: independent research, real skin in the game, and education that makes investors smarter - not more dependent.</p>
+
+  <h3>Core Values</h3>
+
+  <div class="value-card">
+    <div class="value-num">1</div>
+    <div>
+      <h4>Independence Above Everything</h4>
+      <p>Zero affiliates. Zero token promotions. Our only revenue comes from members who stay. When we recommend something, the only reason is because our research supports it.</p>
+    </div>
+  </div>
+  <div class="value-card">
+    <div class="value-num">2</div>
+    <div>
+      <h4>Skin in the Game</h4>
+      <p>We invest our own capital alongside members. Public portfolio. If we're wrong, we lose money too. That alignment changes everything.</p>
+    </div>
+  </div>
+  <div class="value-card">
+    <div class="value-num">3</div>
+    <div>
+      <h4>Education Over Advice</h4>
+      <p>Frameworks over signals. Conviction over dependency. We teach you how to think about digital assets - not what to think.</p>
+    </div>
+  </div>
+  <div class="value-card">
+    <div class="value-num">4</div>
+    <div>
+      <h4>Radical Transparency</h4>
+      <p>Audited returns. Honest when we're wrong. We publish our track record because we believe trust is built through verification, not claims.</p>
+    </div>
+  </div>
+  <div class="value-card">
+    <div class="value-num">5</div>
+    <div>
+      <h4>Long-Term Thinking</h4>
+      <p>Generational wealth over decades, not days. Only 25 trades in 3 years. We play the long game because that's where real wealth is built.</p>
+    </div>
+  </div>
+  <div class="value-card">
+    <div class="value-num">6</div>
+    <div>
+      <h4>Respect for Intelligence</h4>
+      <p>Our audience are successful professionals. We speak to them as peers, not prospects. Every piece of content should make them smarter.</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <h3>Origin Story - Ben Simpson</h3>
+  <p>Ben Simpson started a sportswear business at 16 in Tasmania. His parents rented. If he wanted anything, he had to work for it. At 17, while sending money to China for his business, a friend introduced him to Bitcoin as a way to bypass bank fees and conversion losses. That moment changed everything.</p>
+  <p>He went on a six-month deep dive trying to understand digital assets. The information was awful. He couldn't tell Bitcoin from Ethereum. It was the ICO era - a wild west with no trusted guides. He saw Vitalik Buterin speak in Sydney when ETH was $80 and bought in. Everyone thought he was insane.</p>
+  <p>At 18, he told his parents he was going all in on Bitcoin. His mum, a school teacher, made him a deal: if he couldn't make a salary in one year, he'd go back to school. He never went back.</p>
+
+  <blockquote>
+    <p>"I was literally living above a 7-Eleven in Bali. A bed with a toilet. My bookkeeper told me we had weeks of cash left before we went belly up."</p>
+    <cite>- Ben Simpson, Founder</cite>
+  </blockquote>
+
+  <p>But the journey wasn't linear. Ben made hundreds of thousands on paper in his first cycle - then round-tripped the entire thing. Down 80-90%. No exit strategy. No accountability. No mentor. He then followed a YouTuber's theory that BTC would crash to $100, sold everything, and lost more. That was the turning point: <strong>the whole game was backwards. Influencers weren't there for your best interest. They were there for affiliate links.</strong></p>
+  <p>He teamed up with Matt Willemsen (now Director of Research), and everything changed. But even then, he nearly went bankrupt a second time when a business he was involved in collapsed. He spent months too scared to leave the house. He moved to a room above a 7-Eleven in Bali because he couldn't afford anywhere else.</p>
+  <p>The comeback came when Ben and Matt got early positioning on metaverse investments before Facebook renamed to Meta. 30-40x returns. Hundreds of thousands back in the bank. And this time, he had a system. An exit strategy. Independent research. Fundamentals over technicals.</p>
+  <p>He started Collective Shift with a $49/month Facebook group. Turned down hundreds of thousands of dollars from exchanges and advertisers. Built the research framework from scratch. Today: over 1,100 members worldwide. 402 Platinum clients. 116% CAGR audited over six financial years. TEDx speaker. And the goal he set on day one? Buying his parents a house. Done.</p>
+
+  <hr>
+
+  <h3>Brand Promise</h3>
+  <div class="card">
+    <p style="font-size:18px;color:var(--white);font-weight:600;margin-bottom:8px;">A professional framework for building generational wealth with digital assets.</p>
+    <p style="margin-bottom:0;">We promise independent, research-driven education that makes you a better investor - not a more dependent one. Backed by audited returns, zero conflicts of interest, and a team that invests alongside you.</p>
+  </div>
+
+  <h3>Positioning Statement</h3>
+  <p>For successful professionals and business owners aged 35-55 who want a structured, trusted framework for digital asset investing, Collective Shift is the only digital asset education company that combines an audited track record (116% CAGR over 6 financial years), zero affiliate conflicts, and a team that invests its own capital alongside every member. Unlike Decentralised Masters (which focuses on risky DeFi yield farming with unverified "break even in 60-90 days" claims), Yield School (which has no audited performance and relies on opaque "primary market access"), or Mark Moss (whose content-first approach prioritises bold predictions over verified research), Collective Shift delivers institutional-grade analysis with full transparency.</p>
+
+  <h3>Competitive Differentiation</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Factor</th><th>Collective Shift</th><th>Competitors</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Audited Track Record</td><td style="color:var(--brand-teal)">116% CAGR (6 FYs, verified by Crypto Tax Australia)</td><td style="color:var(--red-negative)">None have audited, verified returns</td></tr>
+        <tr><td>Affiliate Revenue</td><td style="color:var(--brand-teal)">Zero. Only member subscriptions.</td><td>Token promotions, exchange affiliates, partnerships</td></tr>
+        <tr><td>Skin in the Game</td><td style="color:var(--brand-teal)">Public portfolio. Team invests alongside members.</td><td>No transparency on personal positions</td></tr>
+        <tr><td>Focus</td><td>Bitcoin-first, institutional research</td><td>DeFi yield (DM), primary markets (YS), macro predictions (Moss)</td></tr>
+        <tr><td>ICP</td><td>HNW professionals, 35-55, $500K-$5M+ net worth</td><td>Broader: beginners to advanced, lower portfolio minimums</td></tr>
+        <tr><td>Community Quality</td><td>402 Platinum at $5K-$20K/yr (curated)</td><td>Larger but lower-value communities</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Target Audience: The Strategic Wealth Builder</h3>
+  <p class="section-intro">Based on a 76-member onboarding survey (Feb 2026) and January 2026 sales call transcripts.</p>
+
+  <div class="stat-row">
+    <div class="stat-block"><div class="stat-num">40-59</div><div class="stat-label">Core Age Range (67%)</div></div>
+    <div class="stat-block"><div class="stat-num">$500K+</div><div class="stat-label">Total Net Worth</div></div>
+    <div class="stat-block"><div class="stat-num">$50K-250K</div><div class="stat-label">Digital Asset Portfolio (46%)</div></div>
+    <div class="stat-block"><div class="stat-num">2.8/10</div><div class="stat-label">Exit Strategy Confidence</div></div>
+  </div>
+
+  <h4>Who They Are</h4>
+  <p>A successful, time-poor professional or business owner with significant wealth in traditional assets (property, stocks, super) who lacks a coherent digital asset strategy and is willing to pay a premium for trusted, high-touch guidance to build generational wealth.</p>
+  <p><strong>Professions:</strong> Business owners (construction, digital media), senior professionals (FIFO, corporate), real estate developers, mortgage brokers, tech entrepreneurs, former investment bankers.</p>
+  <p><strong>Location:</strong> Primarily Australia. Emerging: USA, UK/Europe.</p>
+
+  <h4>What Drives Them</h4>
+  <ul>
+    <li><strong>Build Generational Wealth (53%):</strong> Top goal is generational wealth for family (28%) and growing wealth faster than traditional investments (25%)</li>
+    <li><strong>Buy Back Time:</strong> Replace active income, get out of the grind, spend more time with family</li>
+    <li><strong>Hedge Systemic Risk:</strong> Inflation, currency debasement - digital assets as a resilient portfolio component</li>
+  </ul>
+
+  <h4>Their Deepest Fears</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Fear / Pain</th><th>Data</th></tr></thead>
+      <tbody>
+        <tr><td>No Exit Strategy</td><td>#1 pain point. Confidence in exit strategy: 2.8/10. About 50 of 76 members explicitly mentioned this. They watched gains evaporate. They will not repeat that.</td></tr>
+        <tr><td>Information Overload</td><td>Confidence in own research: 3.7/10. The no-affiliate stance is a major trust signal.</td></tr>
+        <tr><td>Feeling Isolated</td><td>Support network rating: 3.2/10. Making high-stakes decisions alone.</td></tr>
+        <tr><td>No Time</td><td>#1 concern in market testing (38% of leads). Cannot watch charts. Need "done-for-you."</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <blockquote>
+    <p>"I can't be with the techno bro. And I can't be with the old world solid bankers... trying to discern who are really the deep integrity people."</p>
+    <cite>- Platinum Member, January 2026 Sales Call</cite>
+  </blockquote>
+
+  <h4>How They Find Collective Shift</h4>
+  <p><strong>Instagram is the primary channel</strong> (25% direct attribution, up to 50% including "social media" responses). The typical path: Instagram follow for weeks or months, then a masterclass or seminar, then a sales call, then Platinum membership. Trust is built over time, not in a single session.</p>
+
+  <h4>Product Ladder</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Product</th><th>Price</th><th>What It Delivers</th></tr></thead>
+      <tbody>
+        <tr><td>Starter Kit</td><td>$97 USD</td><td>Entry-level digital asset education course. Lead gen into email list.</td></tr>
+        <tr><td>Pro Accelerator</td><td>$5,000 USD</td><td>4 weeks live strategy building (cohort). 12 months Pro membership access.</td></tr>
+        <tr><td>Platinum</td><td>$15,000 USD / $20,000 AUD</td><td>Full research, portfolio access, 1:1 strategy sessions, WhatsApp community, weekly live calls, member dashboard. 87% of revenue.</td></tr>
+        <tr><td>Black Tier (planned)</td><td>TBD ($25K-$50K)</td><td>Invitation only. Eight-figure net worth. Direct Ben access. Strategic partnership beyond digital assets.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>The Team</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Role</th><th>Focus</th></tr></thead>
+      <tbody>
+        <tr><td>Ben Simpson</td><td>CEO + Chief Marketing Officer</td><td>Strategy, vision, founder brand, growth</td></tr>
+        <tr><td>Travis Thomas</td><td>Chief Growth Officer</td><td>Product, coaching, investor psychology, wealth architecture</td></tr>
+        <tr><td>Aaron Berghuber</td><td>Chief Technology Officer</td><td>Tech, systems, operations, podcast co-host</td></tr>
+        <tr><td>Matt Willemsen</td><td>Director of Research</td><td>Market analysis, The Weekly Shift newsletter, data</td></tr>
+        <tr><td>Sarn Elliott</td><td>Education Specialist</td><td>Wallets, custody, DeFi, security, tutorials</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:14px;color:var(--text-muted);">Total team: 18 (3 executive, 10 full-time, 5 contractors). See internal org chart for full structure.</p>
+</section>
+
+<!-- ========== 2. BRAND PERSONALITY & VOICE ========== -->
+<section class="section" id="brand-voice">
+  <div class="section-label">Section 02</div>
+  <h2>Brand Personality &amp; Voice</h2>
+  <div class="accent-bar"></div>
+  <p class="section-intro">How we sound matters as much as what we say. Every word shapes perception. We're educators, not salespeople. Peers, not gurus.</p>
+
+  <h3>Brand Archetype: The Sage / Mentor</h3>
+  <p>Collective Shift embodies the Sage archetype - the trusted guide who illuminates the path with knowledge, not the guru who demands followers. We combine the Sage's wisdom and research rigour with the Mentor's personal investment and skin-in-the-game authenticity. We don't lecture from a pedestal. We walk the path alongside our members, investing our own capital, sharing our own mistakes, and building frameworks that work because we use them ourselves.</p>
+
+  <h3>Tone-of-Voice Spectrum</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Context</th><th>Tone</th><th>Formality</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td>Research Reports</td><td>Analytical, precise, data-forward</td><td>More formal</td><td>"On-chain data suggests accumulation is accelerating among wallets holding 100+ BTC."</td></tr>
+        <tr><td>Weekly Newsletter</td><td>Informed, conversational, sharp</td><td>Mid-formal</td><td>"Three things jumped out this week. Let's break them down."</td></tr>
+        <tr><td>Ben's LinkedIn</td><td>Direct, personal, conviction-driven</td><td>Mid-casual</td><td>"I've been wrong before. Here's what I learned from that."</td></tr>
+        <tr><td>Instagram Reels</td><td>Energetic, punchy, educator</td><td>Casual</td><td>"Most people get this completely backwards. Here's why."</td></tr>
+        <tr><td>Sales Calls</td><td>Consultative, empathetic, direct</td><td>Mid-formal</td><td>"Tell me about your current strategy. Where do you feel most uncertain?"</td></tr>
+        <tr><td>Email (Mon edu)</td><td>Teacher, thoughtful, one concept</td><td>Mid-casual</td><td>"Let me walk you through one idea that changed how I think about allocation."</td></tr>
+        <tr><td>Email (Fri VSL)</td><td>Curiosity-driven, open loop</td><td>Casual</td><td>"Something happened this week that changed how I think about portfolio sizing."</td></tr>
+        <tr><td>Crisis / Market Events</td><td>Calm, factual, grounding</td><td>More formal</td><td>"Here's what happened. Here's what the data shows. Here's what we're doing."</td></tr>
+        <tr><td>Podcast</td><td>Conversational, exploratory</td><td>Casual</td><td>"What do you reckon? Here's where I see it differently."</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Voice Principles</h3>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4 style="margin-top:0;color:var(--brand-orange);">Conviction-Driven</h4>
+    <p>"I believe Bitcoin is the best savings technology ever created." We don't hedge with vague language. When we have conviction, we state it clearly. When we don't, we say that too.</p>
+  </div>
+  <div class="card" style="margin-bottom:16px;">
+    <h4 style="margin-top:0;color:var(--brand-orange);">Peer Investor</h4>
+    <p>"I invest my own capital alongside every member." We're not on a stage looking down. We're in the arena with our members, managing the same risks, facing the same decisions.</p>
+  </div>
+  <div class="card" style="margin-bottom:16px;">
+    <h4 style="margin-top:0;color:var(--brand-orange);">Direct and Honest</h4>
+    <p>"Most of the market is noise. We filter out 98% of it." No fluff. No padding. Say what needs to be said. If we're wrong, say that too.</p>
+  </div>
+  <div class="card" style="margin-bottom:16px;">
+    <h4 style="margin-top:0;color:var(--brand-orange);">Educator, Not Guru</h4>
+    <p>"I'll teach you how to think, not what to think." We build frameworks. We don't create dependency. If a member can't make their own decisions after working with us, we've failed.</p>
+  </div>
+  <div class="card" style="margin-bottom:16px;">
+    <h4 style="margin-top:0;color:var(--brand-orange);">Empathetic</h4>
+    <p>"I've made every mistake. So you don't have to." We understand the fear, the isolation, the overwhelm. Because we've lived it.</p>
+  </div>
+
+  <h3>Do This / Not That</h3>
+  <div class="do-dont">
+    <div class="do-col">
+      <h4>Do This</h4>
+      <ul>
+        <li><strong>"Digital assets"</strong> - Professional positioning</li>
+        <li><strong>"Protection, preservation, growth"</strong> - ICP fears loss more than they chase gains</li>
+        <li><strong>"Build generational wealth"</strong> - Long-term horizon matches ICP goals</li>
+        <li><strong>"Long-term wealth building"</strong> - Signals institutional thinking</li>
+        <li><strong>"Education / frameworks"</strong> - Legal and brand protection</li>
+        <li><strong>"Investment frameworks / research"</strong> - We teach systems, not trades</li>
+        <li><strong>Dashes (-) or full stops</strong> - Clean, human writing</li>
+        <li><strong>"Educator / peer investor"</strong> - We teach alongside, not above</li>
+        <li><strong>"Members / community"</strong> - We build membership, not followers</li>
+        <li><strong>"Bitcoin"</strong> (capital B, always)</li>
+      </ul>
+    </div>
+    <div class="dont-col">
+      <h4>Not That</h4>
+      <ul>
+        <li><strong>"Crypto"</strong> - Signals retail culture</li>
+        <li><strong>"Returns / gains"</strong> - Triggers compliance risk and hype perception</li>
+        <li><strong>"Get rich quick"</strong> - Attracts the wrong audience entirely</li>
+        <li><strong>"Moon / lambo / WAGMI"</strong> - Instant credibility destroyer</li>
+        <li><strong>"Financial advice"</strong> - Legal risk. We educate, we don't advise.</li>
+        <li><strong>"Signals / tips"</strong> - Makes us sound like a Telegram group</li>
+        <li><strong>Em dashes (--)</strong> - They look like AI-generated text. Never use them.</li>
+        <li><strong>"Guru / expert"</strong> - Creates a power dynamic we reject</li>
+        <li><strong>"Followers"</strong> - We don't want followers, we want members</li>
+        <li><strong>"Crypto" in any headline or CTA</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Forbidden Phrases</h3>
+  <div class="card" style="border-left:3px solid var(--red-negative);">
+    <p style="color:var(--red-negative);font-weight:600;margin-bottom:12px;">Never use these in any Collective Shift content:</p>
+    <p style="margin-bottom:0;font-size:14px;">
+      <code>crypto</code> (except "cryptocurrency" in legal context) -
+      <code>moon</code> -
+      <code>lambo</code> -
+      <code>WAGMI</code> -
+      <code>LFG</code> -
+      <code>degen</code> -
+      <code>alpha</code> (in trading context) -
+      <code>100x</code> -
+      <code>guaranteed returns</code> -
+      <code>passive income</code> -
+      <code>get rich quick</code> -
+      <code>financial advice</code> -
+      <code>signals</code> -
+      <code>tips</code> -
+      <code>guru</code> -
+      <code>expert</code> -
+      <code>followers</code> -
+      em dashes
+    </p>
+  </div>
+
+  <h3>Writing Rules</h3>
+  <ul>
+    <li><strong>No em dashes.</strong> Ever. They look like AI-generated content. Use a dash (-), a comma, or rewrite the sentence.</li>
+    <li><strong>"Digital assets" not "crypto."</strong> Exception: "cryptocurrency" in formal or legal contexts. "Bitcoin" is always "Bitcoin" (capital B).</li>
+    <li><strong>No corporate speak.</strong> If you wouldn't say it in a conversation with a smart friend, don't write it.</li>
+    <li><strong>Educator tone.</strong> Every piece of content should teach something. Not sell something.</li>
+    <li><strong>Left-align body text.</strong> Centre only titles and single-line labels.</li>
+    <li><strong>Never ALL CAPS for body text.</strong> Uppercase only for labels, tags, and short headings.</li>
+    <li><strong>Two fonts maximum.</strong> Plus Jakarta Sans for headings, Barlow for body. No exceptions.</li>
+    <li><strong>No income claims or return guarantees.</strong> We share audited historical performance. We never promise future results.</li>
+    <li><strong>Respect the 90/10 rule.</strong> Free content teaches the WHAT and the WHY (builds trust). Platinum delivers the HOW (delivers transformation).</li>
+  </ul>
+
+  <h3>The 90/10 Rule</h3>
+  <div class="do-dont">
+    <div class="do-col" style="border-color:rgba(11,244,185,0.2);background:rgba(11,244,185,0.04);">
+      <h4 style="color:var(--brand-teal);">Give Away (The 10%)</h4>
+      <ul>
+        <li>Why digital assets matter</li>
+        <li>The Bitcoin thesis</li>
+        <li>General allocation principles</li>
+        <li>Exit strategy importance</li>
+        <li>Common mistakes</li>
+        <li>Self-custody fundamentals</li>
+      </ul>
+    </div>
+    <div class="do-col" style="border-color:rgba(252,92,3,0.2);background:rgba(252,92,3,0.04);">
+      <h4 style="color:var(--brand-orange);">Reserve for Platinum (The 90%)</h4>
+      <ul>
+        <li>Specific allocation models</li>
+        <li>The Shift List</li>
+        <li>Exact entry/exit triggers</li>
+        <li>Portfolio alerts</li>
+        <li>1:1 coaching</li>
+        <li>WhatsApp community</li>
+        <li>Live events</li>
+        <li>Personalised portfolio reviews</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>The Ben Test</h3>
+  <p>Before publishing anything, run it through these four questions:</p>
+  <ul class="checklist">
+    <li>Would a successful 50-year-old business owner feel respected reading this?</li>
+    <li>Does this sound like Bloomberg or like a Telegram group?</li>
+    <li>Am I teaching a framework, or am I selling hype?</li>
+    <li>Would I be comfortable if a $5M net worth investor saw this?</li>
+  </ul>
+
+  <h3>ICP Language (From Actual Sales Calls)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>What They Say</th><th>How We Use It</th></tr></thead>
+      <tbody>
+        <tr><td>"Flying blind"</td><td>Lead with structure and clarity in messaging</td></tr>
+        <tr><td>"I can't be with the techno bro"</td><td>Emphasise professional positioning in all content</td></tr>
+        <tr><td>"Building multi-generational wealth"</td><td>Use "generational wealth" in headlines and CTAs</td></tr>
+        <tr><td>"Too busy to research"</td><td>Emphasise "we do the heavy lifting" angle</td></tr>
+        <tr><td>"Know when to take profits"</td><td>This is our highest-converting message. Use it everywhere.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ========== 3. VISUAL IDENTITY ========== -->
+<section class="section" id="visual-identity">
+  <div class="section-label">Section 03</div>
+  <h2>Visual Identity</h2>
+  <div class="accent-bar"></div>
+  <p class="section-intro">Our visual system is dark, clean, and confident. Think Bloomberg terminal meets private bank. Every element communicates trust, sophistication, and clarity.</p>
+
+  <h3>Logo System</h3>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Asset</th><th>File</th><th>Use On</th></tr></thead>
+      <tbody>
+        <tr><td>Primary Logo (White)</td><td><code>cs-logo-white.png</code></td><td>Dark backgrounds (#0D0B14, #1B1925)</td></tr>
+        <tr><td>Primary Logo (Dark)</td><td><code>cs-logo-dark.png</code></td><td>Light backgrounds (#FFFFFF, #F5F5F5)</td></tr>
+        <tr><td>Icon Mark</td><td><code>cs_icon_mark.png</code></td><td>Favicon, avatar, app icon (orange arrow, no wordmark)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Logo Rules</h4>
+  <ul>
+    <li><strong>Dimensions:</strong> 2530 x 454px (5.57:1 ratio). Height = width / 5.57</li>
+    <li><strong>Minimum size:</strong> 80px wide (web)</li>
+    <li><strong>Clear space:</strong> 1x logo height on all sides (minimum)</li>
+    <li><strong>Never</strong> stretch, distort, rotate, recolor, add effects, or place on busy backgrounds</li>
+    <li><strong>Watermark usage:</strong> CS icon mark at 15-20% opacity, bottom-right corner of social graphics</li>
+  </ul>
+
+  <h3>Colour Palette</h3>
+
+  <h4>Primary Colours</h4>
+  <div class="swatch-grid">
+    <div class="swatch">
+      <div class="swatch-color" style="background:#0D0B14;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">CS Dark</div>
+        <div class="swatch-hex">#0D0B14 - RGB(13, 11, 20)</div>
+        <div class="swatch-usage">Primary dark background - 60% usage</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#1B1925;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">CS Dark Alt</div>
+        <div class="swatch-hex">#1B1925 - RGB(27, 25, 37)</div>
+        <div class="swatch-usage">Secondary dark background, cards, gradients</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#FFFFFF;border-bottom:1px solid var(--card-border);"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">White</div>
+        <div class="swatch-hex">#FFFFFF - RGB(255, 255, 255)</div>
+        <div class="swatch-usage">Primary text on dark, light backgrounds</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#F5F5F5;border-bottom:1px solid var(--card-border);"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Off-White</div>
+        <div class="swatch-hex">#F5F5F5 - RGB(245, 245, 245)</div>
+        <div class="swatch-usage">Subtle light background variation</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#FC5C03;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Brand Orange</div>
+        <div class="swatch-hex">#FC5C03 - RGB(252, 92, 3)</div>
+        <div class="swatch-usage">Primary accent - appears on every piece of content</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#0BF4B9;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Brand Teal</div>
+        <div class="swatch-hex">#0BF4B9 - RGB(11, 244, 185)</div>
+        <div class="swatch-usage">Positive indicators, growth metrics</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#2404FC;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Brand Blue</div>
+        <div class="swatch-hex">#2404FC - RGB(36, 4, 252)</div>
+        <div class="swatch-usage">CTA buttons, links - use sparingly</div>
+      </div>
+    </div>
+  </div>
+
+  <h4>Functional Colours</h4>
+  <div class="swatch-grid">
+    <div class="swatch">
+      <div class="swatch-color" style="background:#8A8A8A;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Text Muted</div>
+        <div class="swatch-hex">#8A8A8A</div>
+        <div class="swatch-usage">Captions, secondary text</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#B0B0B0;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Text Muted Light</div>
+        <div class="swatch-hex">#B0B0B0</div>
+        <div class="swatch-usage">Muted text on dark (minimum floor)</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#1E1C28;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Card BG Dark</div>
+        <div class="swatch-hex">#1E1C28</div>
+        <div class="swatch-usage">Card fill on dark backgrounds</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#2A2838;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Card Border</div>
+        <div class="swatch-hex">#2A2838</div>
+        <div class="swatch-usage">Card borders, dividers on dark</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#FFB800;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Amber Warning</div>
+        <div class="swatch-hex">#FFB800</div>
+        <div class="swatch-usage">Warning indicators, caution</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#E53E3E;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Red Negative</div>
+        <div class="swatch-hex">#E53E3E</div>
+        <div class="swatch-usage">Negative indicators, loss, risk</div>
+      </div>
+    </div>
+  </div>
+
+  <h4>Colour Rules</h4>
+  <ul>
+    <li><strong>60-30-10 Rule:</strong> 60% background, 30% content/text, 10% accent</li>
+    <li>Orange is the thread across every piece of content but never dominates</li>
+    <li>Teal for good news. Blue for actions/CTAs. Never orange for body text.</li>
+    <li>No neon effects, glitch effects, or "futuristic" styling</li>
+    <li><strong>Chart colour sequence:</strong> Orange #FC5C03 > Blue #2404FC > Teal #0BF4B9 > Amber #FFB800 > Muted #8A8A8A > Red #E53E3E</li>
+  </ul>
+
+  <h3>Typography</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Role</th><th>Font</th><th>Weight</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Headings</td><td>Plus Jakarta Sans</td><td>700-800 Bold/ExtraBold</td><td>All headings, stat numbers, labels</td></tr>
+        <tr><td>Body Copy</td><td>Barlow</td><td>400-500 Regular/Medium</td><td>All body text, descriptions, paragraphs</td></tr>
+        <tr><td>Labels / Tags</td><td>Plus Jakarta Sans</td><td>600-700, uppercase, letter-spaced</td><td>Section labels, badges, categories</td></tr>
+        <tr><td>Data Numbers</td><td>Plus Jakarta Sans</td><td>800 ExtraBold</td><td>Hero stats, key figures, metrics</td></tr>
+        <tr><td>Presentation Headlines</td><td>Oswald / Bebas Neue</td><td>700 Bold</td><td>Decks and event-only usage</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p><strong>Google Fonts import:</strong></p>
+  <pre><code>Plus+Jakarta+Sans:wght@400;500;600;700;800&Barlow:wght@400;500;600;700&Barlow:ital,wght@1,400;1,500</code></pre>
+
+  <h4>Typography Rules</h4>
+  <ul>
+    <li>Two fonts maximum: Plus Jakarta Sans + Barlow. No exceptions.</li>
+    <li>Left-align body text. Centre only titles and single-line labels.</li>
+    <li>Never ALL CAPS for body text. Uppercase only for labels, tags, short headings.</li>
+    <li>Maximum content width: 720px for optimal readability.</li>
+    <li>Body line-height: 1.5-1.6. Headings: 1.2-1.3.</li>
+  </ul>
+
+  <h3>Photography &amp; Imagery Style</h3>
+  <ul>
+    <li><strong>Real team photos only.</strong> No stock photography. Every frame should be real CS content.</li>
+    <li><strong>Dark clothing.</strong> Black or navy. Confident posture, natural expressions.</li>
+    <li><strong>Moody, warm lighting.</strong> Key light from left. Subtle orange glow or gradient behind subjects.</li>
+    <li><strong>Editorial, modern aesthetic.</strong> Bloomberg/institutional feel. Not "tech startup" or "crypto bro."</li>
+    <li><strong>No digital asset iconography.</strong> No floating coins, blockchain diagrams, candlestick charts, rockets, moons, or matrix code.</li>
+    <li><strong>Group photo is the hero.</strong> When someone finds Matt on Twitter, then visits CS YouTube, then checks Ben's LinkedIn, the same team photo connects everything.</li>
+  </ul>
+
+  <h3>Design Principles</h3>
+  <div class="card-grid">
+    <div class="card-sm">
+      <h4>Clarity Over Cleverness</h4>
+      <p>Every design element should communicate, not decorate. If it doesn't serve the message, remove it.</p>
+    </div>
+    <div class="card-sm">
+      <h4>Consistent Restraint</h4>
+      <p>60-30-10 colour rule. Two fonts. Generous whitespace. Premium means knowing what to leave out.</p>
+    </div>
+    <div class="card-sm">
+      <h4>Data as Art</h4>
+      <p>Charts, stats, and metrics should be beautiful. Our data is our competitive advantage. Make it visual.</p>
+    </div>
+    <div class="card-sm">
+      <h4>Institutional Trust</h4>
+      <p>Every pixel should feel like it belongs in a wealth management firm, not a Telegram group.</p>
+    </div>
+  </div>
+
+  <h3>Dark Mode / Light Mode</h3>
+  <p><strong>Default is dark.</strong> CS brand is built on dark backgrounds. Dark mode is the primary design context for all social media, video, presentations, and the website.</p>
+  <p><strong>Light mode</strong> is used only for email templates (white background for inbox compatibility) and print materials. When designing for light mode:</p>
+  <ul>
+    <li>Use <code>cs-logo-dark.png</code> on white/off-white backgrounds</li>
+    <li>Body text: #555555 on white. Headings: #1B1925 on white.</li>
+    <li>Orange accent stays the same (#FC5C03)</li>
+    <li>CTA blue stays the same (#2404FC)</li>
+    <li>Test in email dark mode to ensure contrast and logo visibility</li>
+  </ul>
+
+  <h3>CTA Button Styles</h3>
+  <p>
+    <span class="pill-example pill-primary">Apply for Platinum</span>
+    <span class="pill-example pill-secondary">Learn More</span>
+    <span class="pill-example pill-accent">Watch Now</span>
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Type</th><th>Fill</th><th>Text</th><th>Usage</th></tr></thead>
+      <tbody>
+        <tr><td>Primary</td><td>#2404FC solid, pill shape</td><td>White, Barlow 600, 16px</td><td>Main actions: Apply, Watch, Join</td></tr>
+        <tr><td>Secondary</td><td>Transparent, 1px #2A2838 border</td><td>#B0B0B0, Barlow 600, 16px</td><td>Learn More, Read</td></tr>
+        <tr><td>Accent</td><td>#FC5C03 solid, pill shape</td><td>White, Barlow 600, 16px</td><td>High-urgency (limited use only)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:14px;color:var(--text-muted);">All buttons: border-radius 100px (full pill). Padding: 16px top/bottom, 32px left/right. Full width on mobile (under 480px).</p>
+</section>
+
+<!-- ========== 4. MESSAGING FRAMEWORK ========== -->
+<section class="section" id="messaging">
+  <div class="section-label">Section 04</div>
+  <h2>Messaging Framework</h2>
+  <div class="accent-bar"></div>
+  <p class="section-intro">The exact words, stats, and proof points that drive trust and conversion. Use these consistently across every channel.</p>
+
+  <h3>Core Message / Elevator Pitch</h3>
+  <div class="card" style="border-left:3px solid var(--brand-orange);">
+    <p style="font-size:20px;color:var(--white);font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:8px;">A professional framework for building generational wealth with digital assets.</p>
+    <p style="margin-bottom:0;font-size:15px;">Collective Shift is the world's most trusted digital asset education company. Six-year audited returns. Zero affiliates. A team that invests alongside you. We teach you how to think about digital assets - not what to think.</p>
+  </div>
+
+  <h3>Key Messages by Use Case</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Message</th><th>Use Case</th></tr></thead>
+      <tbody>
+        <tr><td>"A professional framework for building generational wealth with digital assets"</td><td>Core positioning - everywhere</td></tr>
+        <tr><td>"We teach you how to think about digital assets. Not what to think."</td><td>Education positioning</td></tr>
+        <tr><td>"6-year audited returns. Zero affiliates. 100% independent research."</td><td>Trust anchor - ads, sales pages, email signatures</td></tr>
+        <tr><td>"Join 402 high-net-worth investors who trust Collective Shift"</td><td>Social proof - landing pages, CTAs</td></tr>
+        <tr><td>"Stop guessing. Start building a strategy that actually works."</td><td>Pain-point lead - ads, reels</td></tr>
+        <tr><td>"Know when to take profits"</td><td>Highest-converting message. Use in ads and hooks.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Audience-Specific Messages</h3>
+
+  <div class="card" style="margin-bottom:12px;">
+    <h4 style="margin-top:0;font-size:14px;color:var(--brand-orange);text-transform:uppercase;letter-spacing:0.06em;">New to Digital Assets</h4>
+    <p style="margin-bottom:0;">"You don't need to understand blockchain to build a smart portfolio. You need a framework. That's what we teach."</p>
+  </div>
+  <div class="card" style="margin-bottom:12px;">
+    <h4 style="margin-top:0;font-size:14px;color:var(--brand-orange);text-transform:uppercase;letter-spacing:0.06em;">Experienced but Burned</h4>
+    <p style="margin-bottom:0;">"You've been in the market. You've watched gains evaporate. What you're missing isn't information - it's a system. An exit strategy. Accountability."</p>
+  </div>
+  <div class="card" style="margin-bottom:12px;">
+    <h4 style="margin-top:0;font-size:14px;color:var(--brand-orange);text-transform:uppercase;letter-spacing:0.06em;">High-Net-Worth Professional</h4>
+    <p style="margin-bottom:0;">"You don't have time to watch charts. You need independent research from a team that invests alongside you. One that's been audited, not just advertised."</p>
+  </div>
+  <div class="card" style="margin-bottom:12px;">
+    <h4 style="margin-top:0;font-size:14px;color:var(--brand-orange);text-transform:uppercase;letter-spacing:0.06em;">Family Legacy Focused</h4>
+    <p style="margin-bottom:0;">"This isn't about getting rich. It's about building something your children and grandchildren will benefit from. That takes a strategy, not a tip."</p>
+  </div>
+
+  <h3>Content Pillars</h3>
+  <div class="card-grid">
+    <div class="card-sm" style="border-top:3px solid var(--brand-orange);">
+      <h4 style="color:var(--brand-orange);">Protect</h4>
+      <p>Risk management, exit strategies, security, custody. The foundation. Address the #1 fear (no exit strategy, 2.8/10 confidence).</p>
+    </div>
+    <div class="card-sm" style="border-top:3px solid var(--brand-teal);">
+      <h4 style="color:var(--brand-teal);">Strategy</h4>
+      <p>Allocation models, portfolio frameworks, the Shift OS. Systematic approaches over gut feelings. Only 25 trades in 3 years.</p>
+    </div>
+    <div class="card-sm" style="border-top:3px solid var(--brand-blue);">
+      <h4 style="color:#8B7AFF;">Confidence</h4>
+      <p>Education, research, frameworks that build conviction. Transform "flying blind" into informed decision-making.</p>
+    </div>
+    <div class="card-sm" style="border-top:3px solid var(--amber);">
+      <h4 style="color:var(--amber);">Community</h4>
+      <p>The power of being surrounded by peers, not retail traders. WhatsApp groups of 20+ professionals. Events in Sydney, Melbourne, Miami.</p>
+    </div>
+    <div class="card-sm" style="border-top:3px solid var(--brand-teal);">
+      <h4 style="color:var(--brand-teal);">Results</h4>
+      <p>Audited performance. Member stories. Real outcomes. 116% CAGR, 74% retention, Chris paid off his mortgage.</p>
+    </div>
+  </div>
+
+  <h3>Key Statistics (Approved for Use)</h3>
+  <div class="stat-row">
+    <div class="stat-block"><div class="stat-num">116%</div><div class="stat-label">CAGR (6 FYs, Audited)</div></div>
+    <div class="stat-block"><div class="stat-num">1,163+</div><div class="stat-label">Total Members</div></div>
+    <div class="stat-block"><div class="stat-num">402</div><div class="stat-label">Platinum Members</div></div>
+    <div class="stat-block"><div class="stat-num">74%</div><div class="stat-label">Retention Rate</div></div>
+  </div>
+  <div class="stat-row">
+    <div class="stat-block"><div class="stat-num">25</div><div class="stat-label">Trades in 3 Years</div></div>
+    <div class="stat-block"><div class="stat-num">+3,013%</div><div class="stat-label">FY21 Return</div></div>
+    <div class="stat-block"><div class="stat-num">+90%</div><div class="stat-label">FY24 Return (Audited)</div></div>
+    <div class="stat-block"><div class="stat-num">+19%</div><div class="stat-label">FY25 Return (Audited)</div></div>
+  </div>
+
+  <h4>Key Entry Picks</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Asset</th><th>Entry Price</th><th>Return</th></tr></thead>
+      <tbody>
+        <tr><td>Ethereum (ETH)</td><td>~$80</td><td style="color:var(--brand-teal)">6,091%</td></tr>
+        <tr><td>Bitcoin (BTC)</td><td>~$3,000</td><td style="color:var(--brand-teal)">4,113%</td></tr>
+        <tr><td>Solana (SOL)</td><td>~$22</td><td style="color:var(--brand-teal)">1,236%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Top Performing Ad Angles</h3>
+  <ul>
+    <li><strong>"The Silent Thief"</strong> - 3,266x ROAS. Taps into fear of inflation/currency debasement.</li>
+    <li><strong>"Building a Legacy"</strong> - Highly profitable. Family-oriented angle confirmed by ICP data.</li>
+    <li><strong>"Know when to take profits"</strong> - Speaks directly to the #1 fear. Use in hooks and headlines.</li>
+  </ul>
+
+  <h3>Taglines &amp; Proof Points</h3>
+  <ul>
+    <li>"The world's most trusted digital asset education company"</li>
+    <li>"Research-driven. Independently audited. Zero affiliates."</li>
+    <li>"We invest alongside you. If we're wrong, we lose money too."</li>
+    <li>"Frameworks over signals. Conviction over dependency."</li>
+    <li>"Your digital asset investing operating system."</li>
+  </ul>
+
+  <h3>Social Proof: Member Testimonials</h3>
+  <p style="font-size:14px;color:var(--text-muted);">All testimonials must be anonymised (first name + last initial only) unless explicit written permission is on file. Usage requires Tier 3 (Ben) approval.</p>
+
+  <div class="card" style="border-left:3px solid var(--brand-orange);margin-bottom:12px;">
+    <p style="font-style:italic;color:var(--white);margin-bottom:4px;">"I managed to get rid of a little bit of BTC and pay off my mortgage. It's kept putting my mind a bit more at ease."</p>
+    <cite style="font-size:13px;color:var(--text-muted);">- Chris P., Platinum Member</cite>
+  </div>
+  <div class="card" style="border-left:3px solid var(--brand-orange);margin-bottom:12px;">
+    <p style="font-style:italic;color:var(--white);margin-bottom:4px;">"I think I've moved from a situation where I undoubtedly would have been in a loss to being two and a half X. Meeting the team and understanding the sell strategy has been a game changer."</p>
+    <cite style="font-size:13px;color:var(--text-muted);">- Jason, Platinum Member</cite>
+  </div>
+  <div class="card" style="border-left:3px solid var(--brand-orange);margin-bottom:12px;">
+    <p style="font-style:italic;color:var(--white);margin-bottom:4px;">"Probably about 10 to 15 mil at the moment in terms of my portfolio allocation. I think it's been great."</p>
+    <cite style="font-size:13px;color:var(--text-muted);">- Anonymous Member</cite>
+  </div>
+  <div class="card" style="border-left:3px solid var(--brand-orange);margin-bottom:12px;">
+    <p style="font-style:italic;color:var(--white);margin-bottom:4px;">"There is so much noise out there in the digital asset world that is very unreliable. They give us lots of insights, they're very transparent, honest and a great bunch of guys to work with."</p>
+    <cite style="font-size:13px;color:var(--text-muted);">- Liz, Platinum Member</cite>
+  </div>
+  <div class="card" style="border-left:3px solid var(--brand-orange);margin-bottom:12px;">
+    <p style="font-style:italic;color:var(--white);margin-bottom:4px;">"Collective Shift helped me build my foundational strategy. Five years with them."</p>
+    <cite style="font-size:13px;color:var(--text-muted);">- Wes, Platinum Member</cite>
+  </div>
+
+  <h3>Legal Disclaimers (Required)</h3>
+  <div class="card" style="border-left:3px solid var(--amber);">
+    <p style="font-size:14px;margin-bottom:8px;"><strong>On any content with performance claims:</strong></p>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">Past performance is not indicative of future results. Historical returns do not guarantee future performance. Collective Shift provides education, not financial advice. All investment decisions are the sole responsibility of the individual.</p>
+    <p style="font-size:14px;margin-bottom:8px;"><strong>On all emails and published content:</strong></p>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:0;">Collective Shift Pty Ltd | ABN XX XXX XXX XXX | Melbourne, Australia. This content is general in nature and does not constitute financial advice. Consider your own circumstances before making investment decisions.</p>
+  </div>
+</section>
+
+<!-- ========== 5. SOCIAL MEDIA GUIDELINES ========== -->
+<section class="section" id="social-media">
+  <div class="section-label">Section 05</div>
+  <h2>Social Media Guidelines</h2>
+  <div class="accent-bar"></div>
+  <p class="section-intro">Platform-by-platform rules, the House of Brands system, posting cadence, header specs, and engagement protocols.</p>
+
+  <h3>Platform-by-Platform Rules</h3>
+
+  <h4>Instagram (Primary Discovery Channel)</h4>
+  <ul>
+    <li><strong>Role:</strong> 25-50% of new leads originate here. This is where the ICP discovers us.</li>
+    <li><strong>Format:</strong> Feed posts (1080x1080), Stories (1080x1920), Reels (1080x1920)</li>
+    <li><strong>Style:</strong> Dark backgrounds, Plus Jakarta Sans headings, Barlow body, Brand Orange accent</li>
+    <li><strong>Cadence:</strong> CS Brand: 3x feed + 3x reels + daily stories. Ben: 3x feed + 5x reels + daily stories.</li>
+    <li><strong>ManyChat keywords:</strong> BLUEPRINT (Wealth Protection Blueprint), STARTERKIT (Digital Asset Starter Kit)</li>
+    <li><strong>Highlight covers:</strong> 5 pillars (Protect, Strategy, Confidence, Community, Results) with consistent icons across all brands</li>
+  </ul>
+
+  <h4>YouTube</h4>
+  <ul>
+    <li><strong>Role:</strong> Authority building. Long-form education. SEO discovery.</li>
+    <li><strong>CS channel:</strong> Matt's market analysis (2x/week), team educational content</li>
+    <li><strong>Ben's channel:</strong> 1-2x/week (reels + long-form). Cold open default (hook first, branded intro at 30-60s)</li>
+    <li><strong>Wealth Shift:</strong> 2x/week (Tuesday full episode, Friday breakdown)</li>
+    <li><strong>Thumbnails:</strong> Separate system from social templates. Optimise for CTR, not brand consistency. See Thumbnail section below.</li>
+  </ul>
+
+  <h4>Twitter / X</h4>
+  <ul>
+    <li><strong>Role:</strong> Thought leadership, market commentary, community engagement</li>
+    <li><strong>CS account:</strong> Daily (news, insights, research snippets)</li>
+    <li><strong>Ben:</strong> Daily (thoughts, threads, direct takes)</li>
+    <li><strong>Matt:</strong> 3x/week (market takes, data, research)</li>
+    <li><strong>Style:</strong> Punchy, data-driven. Link to longer-form content.</li>
+  </ul>
+
+  <h4>LinkedIn</h4>
+  <ul>
+    <li><strong>Role:</strong> Highest-value platform for HNW professional audience</li>
+    <li><strong>Ben:</strong> 3x/week (long-form thought leadership, personal stories, conviction pieces)</li>
+    <li><strong>CS Company:</strong> 2x/week (company updates, results, member milestones)</li>
+    <li><strong>Style:</strong> More formal, professional, data-heavy. Story-led for Ben's personal posts.</li>
+  </ul>
+
+  <h4>TikTok</h4>
+  <ul>
+    <li><strong>Role:</strong> Reach expansion. Repurposed reels from Instagram.</li>
+    <li><strong>Ben:</strong> 5x/week (repurposed reels). Travis: 3x/week. CS Brand: 3x/week.</li>
+    <li><strong>ManyChat keywords:</strong> BLUEPRINT, STARTERKIT (same as Instagram)</li>
+  </ul>
+
+  <h4>Podcast (The Wealth Shift)</h4>
+  <ul>
+    <li><strong>Schedule:</strong> Tuesday (main interview, 60-90 min) + Friday (Ben and Bergs Breakdown, 20-30 min)</li>
+    <li><strong>Distribution:</strong> Apple Podcasts, YouTube (@wealthshiftpodcast), Spotify</li>
+    <li><strong>Clips:</strong> 3x/week reels from episodes, cross-posted to Instagram, TikTok, Twitter/X</li>
+    <li><strong>Visual identity:</strong> Purple (#7C3AED) accent to differentiate from CS orange</li>
+  </ul>
+
+  <h4>Facebook</h4>
+  <ul>
+    <li><strong>Role:</strong> Primarily paid ads and the existing community group. 2x/week organic.</li>
+    <li><strong>Cross-post from Instagram</strong> at 1200x630px with layout adjustments.</li>
+  </ul>
+
+  <hr>
+
+  <h3>House of Brands</h3>
+  <p>Six distinct brand personas share the CS brand system but each has a unique accent colour, voice, and content focus. This creates a connected ecosystem where every touchpoint reinforces the others.</p>
+
+  <div class="persona-card">
+    <h4>Collective Shift (Company Brand)</h4>
+    <p><strong>Role:</strong> The institutional brand. Research, education, and product. All membership and revenue flows through CS.</p>
+    <p><strong>Voice:</strong> "We" language. Authoritative, educational, measured. "Our research shows..." "We've been tracking..."</p>
+    <p><strong>Content:</strong> Research teasers, portfolio updates, member testimonials, educational carousels, The Weekly Shift excerpts. Every post must reference data, research, or a specific framework.</p>
+    <div class="persona-meta">
+      <span class="persona-tag orange">Orange #FC5C03</span>
+      <span class="persona-tag orange">Full Wordmark</span>
+      <span class="persona-tag orange">"We" Voice</span>
+    </div>
+  </div>
+
+  <div class="persona-card">
+    <h4>Ben Simpson (Personal Brand)</h4>
+    <p><strong>Role:</strong> The face of CS. Top-of-funnel attention and trust. Ben's personal brand feeds the CS acquisition funnel independently.</p>
+    <p><strong>Voice:</strong> "I" language. Direct, personal, educator but more casual. "Here's what I learned..." "I made this mistake..."</p>
+    <p><strong>Content:</strong> Face-forward photos, direct-to-camera reels, text overlays, raw video. Human face is the brand. If Ben isn't visible or narrating, it's not a Ben post.</p>
+    <div class="persona-meta">
+      <span class="persona-tag orange">Orange #FC5C03</span>
+      <span class="persona-tag amber">Warm #FFB800</span>
+      <span class="persona-tag orange">No CS Logo</span>
+      <span class="persona-tag orange">"I" Voice</span>
+    </div>
+  </div>
+
+  <div class="persona-card teal">
+    <h4>Travis Thomas</h4>
+    <p><strong>Role:</strong> Teaches the psychological and goal-setting side of wealth building. Owns the "operating system for your life" positioning.</p>
+    <p><strong>Voice:</strong> Framework-driven. "Here's the 4-part framework..." "The psychology behind this is..." Motivational but grounded in evidence.</p>
+    <p><strong>Content:</strong> Coaching content, goal frameworks, investor psychology. Talking head clips, whiteboard sessions, framework diagrams.</p>
+    <div class="persona-meta">
+      <span class="persona-tag teal">Teal #0BF4B9</span>
+      <span class="persona-tag teal">CS Icon + Name</span>
+      <span class="persona-tag teal">Framework Voice</span>
+    </div>
+  </div>
+
+  <div class="persona-card blue">
+    <h4>Sarn Elliott</h4>
+    <p><strong>Role:</strong> The educator. Tutorials, step-by-step guides, security, wallets, DeFi. Makes complex technical concepts accessible.</p>
+    <p><strong>Voice:</strong> Teacher mode. Patient, detailed, methodical. "Let me walk you through this step by step..."</p>
+    <p><strong>Content:</strong> Screen recordings with annotations, numbered step posts, annotated screenshots, "how to" carousels. Screen is the star.</p>
+    <div class="persona-meta">
+      <span class="persona-tag blue">Blue #4A3AFF</span>
+      <span class="persona-tag blue">CS Icon + Name</span>
+      <span class="persona-tag blue">Tutorial Voice</span>
+    </div>
+  </div>
+
+  <div class="persona-card">
+    <h4>Matt Willemsen</h4>
+    <p><strong>Role:</strong> Head of research. Market analysis, deep-dives, macro economics. The analytical brain. Writes The Weekly Shift.</p>
+    <p><strong>Voice:</strong> Analytical, measured, data-first. "The data suggests..." "Based on our model..." "Here's what on-chain metrics show..."</p>
+    <p><strong>Content:</strong> Charts with commentary, data tables, research summaries, market take threads. Charts are the hero of every post.</p>
+    <div class="persona-meta">
+      <span class="persona-tag orange">Orange #FC5C03</span>
+      <span class="persona-tag orange">CS Icon + Name</span>
+      <span class="persona-tag orange">Analytical Voice</span>
+    </div>
+  </div>
+
+  <div class="persona-card purple">
+    <h4>The Wealth Shift Podcast (Ben + Bergs)</h4>
+    <p><strong>Role:</strong> Top-of-funnel audio content. Broader wealth topics beyond digital assets. Dual-host conversational format.</p>
+    <p><strong>Voice:</strong> Two voices in conversation. More relaxed, exploratory, sometimes contrarian. "What do you reckon?"</p>
+    <p><strong>Content:</strong> Audiogram clips, episode cards, guest feature graphics, quote clips. Purple differentiates podcast immediately from CS orange.</p>
+    <div class="persona-meta">
+      <span class="persona-tag purple">Purple #7C3AED</span>
+      <span class="persona-tag purple">Custom Wordmark</span>
+      <span class="persona-tag purple">Conversational Voice</span>
+    </div>
+  </div>
+
+  <h4>Brand Quick Reference Matrix</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Brand</th><th>Accent</th><th>Hex</th><th>Face Forward?</th><th>Logo</th><th>Voice</th><th>Primary Content</th></tr></thead>
+      <tbody>
+        <tr><td>CS (company)</td><td style="color:var(--brand-orange);">Orange</td><td>#FC5C03</td><td>No (team)</td><td>Full wordmark</td><td>"We," institutional</td><td>Research, data, newsletters</td></tr>
+        <tr><td>Ben Simpson</td><td style="color:var(--brand-orange);">Orange/Warm</td><td>#FC5C03/#FFB800</td><td>Yes (always)</td><td>None/handle</td><td>"I," personal</td><td>Opinion, stories, keynotes</td></tr>
+        <tr><td>Travis Thomas</td><td style="color:var(--brand-teal);">Teal</td><td>#0BF4B9</td><td>Yes</td><td>CS icon + name</td><td>Framework-driven</td><td>Leadership, psychology</td></tr>
+        <tr><td>Sarn Elliott</td><td style="color:#8B7AFF;">Blue</td><td>#4A3AFF</td><td>Sometimes</td><td>CS icon + name</td><td>Tutorial</td><td>How-to, education</td></tr>
+        <tr><td>Matt Willemsen</td><td style="color:var(--brand-orange);">Orange</td><td>#FC5C03</td><td>Sometimes</td><td>CS icon + name</td><td>Analytical</td><td>Research, charts</td></tr>
+        <tr><td>Wealth Shift</td><td style="color:#A78BFA;">Purple</td><td>#7C3AED</td><td>Yes (2 hosts)</td><td>Custom/CS icon</td><td>Conversational</td><td>Interviews, wealth</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <h3>Channel Matrix &amp; Posting Cadence</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Platform</th><th>Ben</th><th>Travis</th><th>Matt</th><th>CS Brand</th><th>Wealth Shift</th></tr></thead>
+      <tbody>
+        <tr><td>YouTube</td><td>1-2x/wk</td><td>1x/wk</td><td>1x/wk (CS ch.)</td><td>2x/wk</td><td>2x/wk</td></tr>
+        <tr><td>IG Feed</td><td>3x/wk</td><td>2x/wk</td><td>-</td><td>3x/wk</td><td>2x/wk</td></tr>
+        <tr><td>IG Reels</td><td>5x/wk</td><td>3x/wk</td><td>-</td><td>3x/wk</td><td>3x/wk</td></tr>
+        <tr><td>IG Stories</td><td>Daily</td><td>3x/wk</td><td>-</td><td>Daily</td><td>Post-episode</td></tr>
+        <tr><td>TikTok</td><td>5x/wk</td><td>3x/wk</td><td>-</td><td>3x/wk</td><td>-</td></tr>
+        <tr><td>Twitter/X</td><td>Daily</td><td>2x/wk</td><td>3x/wk</td><td>Daily</td><td>Post-episode</td></tr>
+        <tr><td>LinkedIn</td><td>3x/wk</td><td>1x/wk</td><td>-</td><td>2x/wk</td><td>-</td></tr>
+        <tr><td>Facebook</td><td>-</td><td>-</td><td>-</td><td>2x/wk</td><td>-</td></tr>
+        <tr><td>Podcast</td><td>-</td><td>-</td><td>-</td><td>-</td><td>2x/wk</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Weekly Totals</h4>
+  <div class="stat-row">
+    <div class="stat-block"><div class="stat-num">14</div><div class="stat-label">Reels / Shorts</div></div>
+    <div class="stat-block"><div class="stat-num">10</div><div class="stat-label">Feed Posts</div></div>
+    <div class="stat-block"><div class="stat-num">19</div><div class="stat-label">Stories</div></div>
+    <div class="stat-block"><div class="stat-num">21</div><div class="stat-label">Tweets</div></div>
+    <div class="stat-block"><div class="stat-num">6</div><div class="stat-label">LinkedIn Posts</div></div>
+    <div class="stat-block"><div class="stat-num">2</div><div class="stat-label">Podcast Episodes</div></div>
+  </div>
+
+  <hr>
+
+  <h3>Social Media Dimensions</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Platform</th><th>Format</th><th>Dimensions</th><th>BG Default</th><th>Font Min</th><th>Logo</th></tr></thead>
+      <tbody>
+        <tr><td>Instagram Post</td><td>Square</td><td>1080 x 1080px</td><td>#0D0B14</td><td>20px body</td><td>Icon mark, 15%</td></tr>
+        <tr><td>Instagram Story/Reel</td><td>Vertical</td><td>1080 x 1920px</td><td>#0D0B14</td><td>16px body</td><td>Icon mark, 20%</td></tr>
+        <tr><td>YouTube Thumbnail</td><td>Landscape</td><td>1280 x 720px</td><td>#0D0B14</td><td>90px headline</td><td>Optional icon</td></tr>
+        <tr><td>LinkedIn Post</td><td>Landscape</td><td>1200 x 627px</td><td>#0D0B14</td><td>14px body</td><td>Full logo, small</td></tr>
+        <tr><td>Twitter/X Post</td><td>Landscape</td><td>1200 x 675px</td><td>#0D0B14</td><td>12px caption</td><td>Icon mark, 15%</td></tr>
+        <tr><td>Facebook Post</td><td>Landscape</td><td>1200 x 630px</td><td>#0D0B14</td><td>20px body</td><td>Full logo, small</td></tr>
+        <tr><td>YouTube Banner</td><td>Channel art</td><td>2560 x 1440px</td><td>#0D0B14</td><td>-</td><td>Full logo or name</td></tr>
+        <tr><td>LinkedIn Personal Banner</td><td>Banner</td><td>1584 x 396px</td><td>#0D0B14</td><td>-</td><td>Icon mark, 15%</td></tr>
+        <tr><td>LinkedIn Company Banner</td><td>Banner</td><td>1128 x 191px</td><td>#0D0B14</td><td>12px</td><td>Full logo, 180px</td></tr>
+        <tr><td>Twitter/X Header</td><td>Banner</td><td>1500 x 500px</td><td>#0D0B14</td><td>-</td><td>Logo or name</td></tr>
+        <tr><td>Facebook Cover</td><td>Cover</td><td>820 x 312px</td><td>#0D0B14</td><td>-</td><td>Full logo, 200px</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <h3>Header / Banner Design System</h3>
+  <p>Every header communicates one thing: <strong>this is a team of real people who manage real money alongside their members.</strong> The group photo is the hero element across all channels.</p>
+
+  <h4>Design Philosophy</h4>
+  <ul>
+    <li>Group photo: left side or centre (60% of frame width)</li>
+    <li>Brand name / tagline: right side (40%)</li>
+    <li>CTA text: bottom bar or lower right</li>
+    <li>Teal accent: thin horizontal line (2-3px) separating CTA from main content</li>
+    <li>Orange accent: used sparingly (logo mark, underline, dot separator)</li>
+    <li>Safe zone padding: 60px minimum from all edges</li>
+  </ul>
+
+  <h4>Header Specs by Platform</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Platform + Brand</th><th>Primary Text</th><th>CTA Text</th></tr></thead>
+      <tbody>
+        <tr><td>YouTube - Ben</td><td>BEN SIMPSON / Founder, Collective Shift</td><td>Free Wealth Protection Blueprint - collectiveshift.co/cryptoblueprint</td></tr>
+        <tr><td>YouTube - CS</td><td>The world's most trusted digital asset education company</td><td>Free Blueprint - collectiveshift.co/cryptoblueprint</td></tr>
+        <tr><td>YouTube - Wealth Shift</td><td>THE WEALTH SHIFT / Building Wealth in the Digital Era</td><td>Listen on Apple Podcasts / YouTube</td></tr>
+        <tr><td>Twitter/X - Ben</td><td>BEN SIMPSON / Founder & CEO, Collective Shift</td><td>collectiveshift.co/cryptoblueprint</td></tr>
+        <tr><td>Twitter/X - CS</td><td>116% CAGR (audited) / Zero affiliates</td><td>collectiveshift.co/cryptoblueprint</td></tr>
+        <tr><td>LinkedIn - Ben</td><td>Founder & CEO / Helping 1,000+ investors</td><td>collectiveshift.co/cryptoblueprint</td></tr>
+        <tr><td>LinkedIn - CS</td><td>Trusted digital asset education / 116% CAGR</td><td>(Too small for CTA)</td></tr>
+        <tr><td>Facebook - CS</td><td>Build generational wealth with digital assets</td><td>Free Blueprint - collectiveshift.co/cryptoblueprint</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Instagram Highlight Covers</h4>
+  <p>Same 5 pillar icons across ALL brands for visual consistency. When a user taps between profiles, they see the same 5-pillar structure.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Highlight</th><th>Icon</th><th>Label</th></tr></thead>
+      <tbody>
+        <tr><td>Protect</td><td>Shield icon</td><td>PROTECT</td></tr>
+        <tr><td>Strategy</td><td>Target/crosshair icon</td><td>STRATEGY</td></tr>
+        <tr><td>Confidence</td><td>Compass icon</td><td>CONFIDENCE</td></tr>
+        <tr><td>Community</td><td>People/group icon</td><td>COMMUNITY</td></tr>
+        <tr><td>Results</td><td>Chart-up/trophy icon</td><td>RESULTS</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:14px;color:var(--text-muted);">Design: minimal line icon (white, 200px) on #0D0B14 background. PJS 700, uppercase, 28px label. 2px Brand Orange circle border at crop edge. Consistent line weight (Phosphor Icons or similar).</p>
+
+  <hr>
+
+  <h3>ManyChat Integration</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Platform</th><th>Keyword</th><th>Trigger</th><th>Delivers</th></tr></thead>
+      <tbody>
+        <tr><td>Instagram</td><td><code>BLUEPRINT</code></td><td>Comment on any reel/post</td><td>Wealth Protection Blueprint (9-question assessment + PDF)</td></tr>
+        <tr><td>Instagram</td><td><code>STARTERKIT</code></td><td>Comment on specific posts</td><td>Digital Asset Starter Kit sales page</td></tr>
+        <tr><td>TikTok</td><td><code>BLUEPRINT</code></td><td>Comment</td><td>Blueprint link via DM</td></tr>
+        <tr><td>TikTok</td><td><code>STARTERKIT</code></td><td>Comment</td><td>Starter Kit link via DM</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Engagement &amp; Crisis Guidelines</h3>
+
+  <h4>Engagement Rules</h4>
+  <ul>
+    <li>Respond to all genuine questions within 4 hours during business hours</li>
+    <li>Never argue with trolls. Ignore, block, or respond once with facts only.</li>
+    <li>Direct DM conversations toward the free quiz or membership page - never hard sell in public comments</li>
+    <li>Use member-first language: "our members" not "our subscribers" or "our followers"</li>
+    <li>Never promise specific returns or performance in any public comment or DM</li>
+  </ul>
+
+  <h4>Crisis Protocol</h4>
+  <ul>
+    <li><strong>Market crash (20%+ drawdown):</strong> Factual update only. No promotional CTAs. Matt or Ben can emergency publish.</li>
+    <li><strong>Exchange collapse / security event:</strong> Immediate factual post. Link to security resources. Prioritise member safety.</li>
+    <li><strong>Negative press / competitor attacks:</strong> Do not respond publicly without Ben's explicit approval (Tier 3).</li>
+    <li><strong>Member complaint public:</strong> Acknowledge, take to DM, escalate to Client Success (Rebecca Martin).</li>
+  </ul>
+</section>
+
+<!-- ========== 6. BRAND APPLICATION & GUARDRAILS ========== -->
+<section class="section" id="brand-application">
+  <div class="section-label">Section 06</div>
+  <h2>Brand Application &amp; Guardrails</h2>
+  <div class="accent-bar"></div>
+  <p class="section-intro">How the brand system applies to email, video, social templates, and content workflow. Plus the mistakes to avoid and legal notes to remember.</p>
+
+  <h3>Email Design (Customer.io)</h3>
+
+  <h4>Four Email Types</h4>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4 style="margin-top:0;color:var(--brand-orange);">Monday: Educational Deep Dive</h4>
+    <p><strong>From:</strong> Ben Simpson (founder inbox). Plain text preferred.</p>
+    <p><strong>Purpose:</strong> Teach ONE Shift OS concept (the WHAT and WHY, not the HOW).</p>
+    <p style="margin-bottom:0;"><strong>Structure:</strong> H1 title (PJS 700, 28px) > body text (Barlow 400, 16px) > blockquote with orange left border > key stat callout > CTA button.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4 style="margin-top:0;color:var(--brand-orange);">Wednesday: Story + Belief Break</h4>
+    <p><strong>From:</strong> Ben Simpson. Plain text preferred.</p>
+    <p><strong>Purpose:</strong> Member story or Ben's journey that shifts a limiting belief.</p>
+    <p style="margin-bottom:0;"><strong>Structure:</strong> Opens with a scene, not a summary. Pull quote (PJS 700, 24px, italic, orange quotation marks). Image from CS photo library.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4 style="margin-top:0;color:var(--brand-orange);">Friday: Open Loop into VSL</h4>
+    <p><strong>From:</strong> Ben Simpson. Short format (200-300 words).</p>
+    <p><strong>Purpose:</strong> Creates curiosity that the VSL resolves. 3-4 short paragraphs.</p>
+    <p style="margin-bottom:0;"><strong>Structure:</strong> Bold hook headline > body > CTA button ("Watch Now" / "Apply Now") > P.S. line with social proof.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4 style="margin-top:0;color:var(--brand-orange);">Thursday: The Weekly Shift Newsletter</h4>
+    <p><strong>From:</strong> Matt Willemsen. Designed format.</p>
+    <p><strong>Purpose:</strong> Weekly market intelligence. Demonstrates Platinum value (90/10 rule).</p>
+    <p style="margin-bottom:0;"><strong>Sections:</strong> Market Overview > Key Moves > What We're Watching > Research Pick (Platinum teaser) > CTA. Market data table uses green (#0BF4B9) / red (#E53E3E) for values.</p>
+  </div>
+
+  <h4>Email Design Specs</h4>
+  <ul>
+    <li><strong>Max width:</strong> 600px, centred. Single column always.</li>
+    <li><strong>Header:</strong> CS logo + 3px orange accent line (full width). White or dark background variant.</li>
+    <li><strong>CTA:</strong> Pill button, #2404FC fill, white text, Barlow 600, 16px. Full width on mobile.</li>
+    <li><strong>Footer:</strong> CS logo, social icons (24x24px), legal text (ABN, address, unsubscribe). Background #F5F5F5.</li>
+    <li><strong>Mobile:</strong> 14px min body, 22px min headlines. All buttons full-width under 480px.</li>
+    <li><strong>Dark mode:</strong> Test all emails. Logo needs transparent background. Avoid pure white backgrounds that invert to pure black.</li>
+  </ul>
+
+  <h4>Approved CTA Labels (Email)</h4>
+  <div class="card" style="border-left:3px solid var(--brand-blue);">
+    <ul style="margin-bottom:0;">
+      <li>"Apply for Platinum"</li>
+      <li>"Take the Free Quiz"</li>
+      <li>"Watch Now"</li>
+      <li>"Read the Full Analysis"</li>
+      <li>"Join the Waitlist"</li>
+      <li>"Learn More"</li>
+      <li>"Subscribe to The Weekly Shift"</li>
+    </ul>
+    <p style="margin-top:12px;font-size:13px;color:var(--text-muted);margin-bottom:0;">Do not invent new CTA labels. New CTAs require Tier 2 approval.</p>
+  </div>
+
+  <hr>
+
+  <h3>Video Brand Standards</h3>
+
+  <h4>Intro (3-5 Seconds Max)</h4>
+  <ul>
+    <li><strong>Cold Open (default for YouTube):</strong> Start with the hook (first 5-15 seconds = pure content). Insert branded intro at 30-60 seconds. 3 seconds max.</li>
+    <li><strong>Standard Intro:</strong> CS icon mark fades in > brief brand sound (1-2s) > presenter lower third. For LinkedIn, events, clips.</li>
+    <li>Never exceed 5 seconds on a branded intro. Every second costs retention.</li>
+    <li>No animation beyond simple fade/scale. Keep it premium, not flashy.</li>
+  </ul>
+
+  <h4>Outro (10-15 Seconds)</h4>
+  <ol>
+    <li><strong>Bridge CTA on camera:</strong> "If you found this useful, here's what to do next..." Direct to quiz, Platinum, subscribe, or next video.</li>
+    <li><strong>End screen zone:</strong> Two video suggestion boxes + subscribe button</li>
+    <li><strong>Brand close:</strong> CS logo (white) + collectiveshift.io on dark background. Fade to black.</li>
+  </ol>
+
+  <h4>Lower Thirds</h4>
+  <ul>
+    <li>2px top accent line (#FC5C03)</li>
+    <li>Semi-transparent dark bar (rgba(13,11,20,0.85), 64px height)</li>
+    <li>Name: PJS 700, 20px, white. Title: Barlow 400, 14px, #B0B0B0</li>
+    <li>Position: bottom-left. Fade in at 0.5s, hold 5s, fade out.</li>
+    <li>Guests: add company/title on third line. Hold 7 seconds.</li>
+  </ul>
+
+  <h4>Captions / Subtitles</h4>
+  <ul>
+    <li>Font: Barlow Medium (500), 48-56px (long-form) or 56-64px (short-form)</li>
+    <li>White text with dark shadow. Centre-bottom for long-form, centre for short-form.</li>
+    <li>Keyword highlighting: 1-2 key words per block in orange (#FC5C03)</li>
+    <li>Max 2 lines, 42 characters per line</li>
+  </ul>
+
+  <h4>On-Screen Graphics</h4>
+  <ul>
+    <li><strong>Stat callouts:</strong> Number in PJS 800, 72-96px, #FC5C03. Dark card container (#1E1C28). Number counts up from 0 over 1s.</li>
+    <li><strong>Charts:</strong> Use brand chart colour sequence. Dark background. Source attribution always.</li>
+    <li><strong>Quote cards:</strong> 4px left bar in #FC5C03. Dark card. Barlow 500 Italic, 24px.</li>
+    <li><strong>Chapter markers:</strong> Full-screen dark, section label in PJS 700, #FC5C03 uppercase. 2-3 seconds.</li>
+  </ul>
+
+  <h4>Video Format Specs</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Format</th><th>Resolution</th><th>Aspect</th><th>Duration</th><th>Frame Rate</th></tr></thead>
+      <tbody>
+        <tr><td>YouTube long-form</td><td>1920x1080</td><td>16:9</td><td>8-15 min</td><td>24/30fps</td></tr>
+        <tr><td>YouTube Shorts</td><td>1080x1920</td><td>9:16</td><td>30-60 sec</td><td>30fps</td></tr>
+        <tr><td>Instagram Reel</td><td>1080x1920</td><td>9:16</td><td>30-90 sec</td><td>30fps</td></tr>
+        <tr><td>TikTok</td><td>1080x1920</td><td>9:16</td><td>30-60 sec</td><td>30fps</td></tr>
+        <tr><td>LinkedIn video</td><td>1920x1080</td><td>16:9</td><td>2-5 min</td><td>30fps</td></tr>
+        <tr><td>Podcast clip (square)</td><td>1080x1080</td><td>1:1</td><td>60-120 sec</td><td>30fps</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:14px;color:var(--text-muted);">Export: H.264, 10-20 Mbps (1080p), AAC 256kbps min. Thumbnail: PNG, 1280x720, under 2MB, sRGB.</p>
+
+  <h4>B-Roll Rules</h4>
+  <ul>
+    <li><strong>Real CS footage only.</strong> No stock. No generic digital asset imagery.</li>
+    <li>Capture 30 min B-roll per shoot day (team working, screens, candid conversations)</li>
+    <li><strong>Never use:</strong> Floating coins, rockets, moon imagery, blockchain diagrams, matrix code, stock photos, AI-generated faces</li>
+    <li>Maintain a B-roll library organised by category in Google Drive. Review and refresh quarterly.</li>
+  </ul>
+
+  <hr>
+
+  <h3>YouTube Thumbnail System</h3>
+  <p>Thumbnails are a separate system from social templates. Optimise for CTR, not brand consistency. Thumbnails are read in under 2 seconds.</p>
+
+  <h4>Standard Layout (70% of thumbnails)</h4>
+  <ul>
+    <li><strong>Left 58%:</strong> 3-5 word headline (PJS 800, 100-120px, white + 2-4px dark stroke)</li>
+    <li><strong>Right 42%:</strong> Face cutout, shoulders up, eye line at 1/3 from top, orange glow behind</li>
+    <li>Never overlap the face. Text and face occupy separate zones with at least 30px gap.</li>
+    <li>Maximum 3 colours per thumbnail (background + text + 1 accent)</li>
+    <li>Background always dark (#0D0B14 or gradient variant)</li>
+  </ul>
+
+  <h4>Expression Categories</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Expression</th><th>When to Use</th><th>Content Type</th></tr></thead>
+      <tbody>
+        <tr><td>Shock / Surprise</td><td>Unexpected data, contrarian takes</td><td>"Bitcoin just did SOMETHING CRAZY"</td></tr>
+        <tr><td>Curiosity</td><td>Questions, explorations, "what if"</td><td>"Is Ethereum dead?"</td></tr>
+        <tr><td>Concern / Serious</td><td>Risk warnings, bear market</td><td>"The crash nobody sees coming"</td></tr>
+        <tr><td>Excitement / Smile</td><td>Positive results, good news</td><td>"Our portfolio hit a new high"</td></tr>
+        <tr><td>Confidence / Authority</td><td>Educational, how-to, frameworks</td><td>"How I evaluate any altcoin"</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Per-Presenter Thumbnail Style</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Presenter</th><th>Expression Default</th><th>Accent</th><th>Text Style</th><th>Logo</th></tr></thead>
+      <tbody>
+        <tr><td>Ben Simpson</td><td>Confidence, direct eye contact</td><td style="color:var(--brand-orange)">Orange glow</td><td>Bold, declarative</td><td>None</td></tr>
+        <tr><td>Travis Thomas</td><td>Leadership energy, hand gestures</td><td style="color:var(--brand-teal)">Teal accent</td><td>Framework-oriented</td><td>Small CS icon</td></tr>
+        <tr><td>Sarn Elliott</td><td>Educational, approachable</td><td style="color:#8B7AFF">Lighter blue</td><td>How-to oriented</td><td>CS icon</td></tr>
+        <tr><td>Matt Willemsen</td><td>Analytical, thoughtful</td><td style="color:var(--brand-orange)">Orange</td><td>Data-driven</td><td>CS icon</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Thumbnail Colour System</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Colour</th><th>Hex</th><th>Thumbnail Usage</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--brand-orange)">Brand Orange</td><td>#FC5C03</td><td>Accent borders, underlines, glow effects, authority topics</td></tr>
+        <tr><td style="color:var(--brand-teal)">Brand Teal</td><td>#0BF4B9</td><td>Positive/growth topics (portfolio up, bull market)</td></tr>
+        <tr><td style="color:var(--red-negative)">Red Negative</td><td>#E53E3E</td><td>Warning/risk topics (crash, mistakes, bear market)</td></tr>
+        <tr><td style="color:var(--amber)">Amber Warning</td><td>#FFB800</td><td>Neutral caution (market uncertainty, "be careful")</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:14px;color:var(--text-muted);">Never use blue (#2404FC) in thumbnails. It reads as generic/corporate and disappears on YouTube's blue UI.</p>
+
+  <h4>A/B Testing Framework</h4>
+  <ol>
+    <li>Create 2 thumbnail variants per video before upload</li>
+    <li>Upload the primary (best guess) as the default</li>
+    <li>Swap to variant B after 24 hours</li>
+    <li>Compare CTR after 48 total hours (minimum 1,000 impressions per variant)</li>
+    <li>Keep the higher-CTR thumbnail. If difference is less than 0.5%, keep original.</li>
+  </ol>
+  <p style="font-size:14px;color:var(--text-muted);">Maintain a log: video title, variant descriptions, CTRs, winner, lesson learned. Review monthly to identify patterns.</p>
+
+  <hr>
+
+  <h3>Social Media Template System</h3>
+  <p>All templates use: CS Dark (#0D0B14) background, Plus Jakarta Sans headings, Barlow body, Brand Orange accent, 60px safe zone padding, CS icon mark watermark at 15-20% opacity.</p>
+
+  <h4>Template Types</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Template</th><th>Use Case</th><th>Key Specs</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Stat/Insight Post</td><td>Hero number with context</td><td>Large stat: PJS 800, 120px, white. Orange accent bar at bottom.</td></tr>
+        <tr><td>2</td><td>Carousel (10 slides)</td><td>Educational deep-dives</td><td>Slide 1: bold hook + "SWIPE TO LEARN". Slides 2-8: one idea per slide (#1B1925). Slide 9: recap. Slide 10: CTA.</td></tr>
+        <tr><td>3</td><td>Quote/Testimonial Card</td><td>Member social proof</td><td>Orange left bar (4px). Open quotation mark. First name + last initial only. 48px circle photo.</td></tr>
+        <tr><td>4</td><td>Educational Tip</td><td>Numbered frameworks</td><td>Section label in orange. Numbered list with orange circle bullets (32x32px).</td></tr>
+        <tr><td>5</td><td>Hero Slide</td><td>Announcements, events</td><td>Split: headline left (60%), team photo right (40%) with orange glow. Pill CTA.</td></tr>
+        <tr><td>6</td><td>Team/Founder Profile</td><td>Personal brand content</td><td>Headshot with orange glow. Name, role, 2-3 line bio.</td></tr>
+        <tr><td>7</td><td>Lead-Gen / Quiz Promo</td><td>Driving quiz signups</td><td>Problem headline + short copy + pill CTA. ManyChat keyword in orange text.</td></tr>
+        <tr><td>8</td><td>Dark CTA / Offer Slide</td><td>Carousel closers</td><td>Centred transformation headline + pill CTA + trust badges row.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Instagram Story Templates</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Template</th><th>Use</th><th>Key Elements</th></tr></thead>
+      <tbody>
+        <tr><td>Poll/Question</td><td>Engagement</td><td>Gradient BG. Question in PJS 800, 36px. Native IG poll overlay. CS icon 20% opacity.</td></tr>
+        <tr><td>Content Teaser</td><td>YouTube/Podcast link</td><td>"NEW VIDEO" label. Thumbnail preview (920px, 12px radius). "Tap to watch" CTA in orange.</td></tr>
+        <tr><td>Testimonial Screenshot</td><td>Social proof</td><td>"MEMBER FEEDBACK" label. Screenshot with orange border. Blur profile photos/names.</td></tr>
+        <tr><td>Market Update</td><td>Breaking data</td><td>"MARKET UPDATE" label. Chart image (brand colours). One-liner insight. Weekly Shift CTA.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <h3>Content Approval Workflow</h3>
+
+  <h4>Tier 1: Self-Publish (No Approval Needed)</h4>
+  <ul>
+    <li>Reposts of existing approved content</li>
+    <li>Standard template posts with no new copy</li>
+    <li>Factual market data updates (no directional opinion)</li>
+    <li>Clips from published YouTube/podcast</li>
+  </ul>
+  <p style="font-size:14px;color:var(--text-muted);">Must use an approved template and pass the 12-item Brand Voice Audit. If in doubt, escalate.</p>
+
+  <h4>Tier 2: Team Lead Review (24-Hour Turnaround)</h4>
+  <ul>
+    <li>New blog/article drafts, email newsletter drafts, carousels, video titles/descriptions</li>
+    <li>New social media content with original copy</li>
+    <li>Updated landing page copy</li>
+    <li>Any content using a new template not yet in the brand bible</li>
+  </ul>
+  <p style="font-size:14px;color:var(--text-muted);">Process: Creator moves Asana card to "Review" and tags reviewer. Reviewer approves, requests changes, or escalates within 24 hours.</p>
+
+  <h4>Tier 3: Ben Approval Required (Before Publish)</h4>
+  <ul>
+    <li>Performance claims, return stats, member testimonials</li>
+    <li>Pricing, promotions, limited-time campaigns</li>
+    <li>Specific coins with directional opinion</li>
+    <li>Press/media responses, interview transcripts</li>
+    <li>Content from guest contributors</li>
+    <li>Anything that could be interpreted as financial advice</li>
+    <li>Changes to website hero, pricing page, or application flow</li>
+  </ul>
+  <p style="font-size:14px;color:var(--red-negative);font-weight:600;">No exceptions. No "Ben would probably approve this." Get the approval.</p>
+
+  <h4>Tier 4: Legal Review</h4>
+  <ul>
+    <li>Financial disclaimers on performance claims</li>
+    <li>Terms of service or privacy policy changes</li>
+    <li>AFSL or ASIC compliance content</li>
+    <li>Member data use in marketing (even anonymised)</li>
+  </ul>
+
+  <h4>Emergency Publishing Protocol</h4>
+  <p><strong>Who can emergency publish:</strong> Matt Willemsen (data-only) or Ben Simpson (any content).</p>
+  <ul>
+    <li>Factual only. No directional opinions on price.</li>
+    <li>No promotional CTAs. Trust-building, not selling.</li>
+    <li>Flag in Asana within 48 hours with "EMERGENCY PUBLISH" tag.</li>
+  </ul>
+  <p><strong>What qualifies as emergency:</strong> Major market crash (20%+ drawdown), exchange collapse, critical security vulnerability, regulatory action directly impacting Australian digital asset investors.</p>
+  <p style="font-size:14px;color:var(--text-muted);">A coin going up 10%, a competitor publishing something, or a trending topic on Twitter/X are NOT emergencies.</p>
+
+  <hr>
+
+  <h3>Brand Voice Audit Checklist</h3>
+  <p>Run this 12-item check before publishing any Tier 2+ content. If any item fails, the content goes back for revision.</p>
+
+  <ul class="checklist">
+    <li>No em dashes anywhere in the content</li>
+    <li>"Digital assets" used instead of "crypto" (exception: "cryptocurrency" in formal/legal context)</li>
+    <li>No hype language (moon, rocket, alpha, degen, LFG, WAGMI, lambo, 100x)</li>
+    <li>No income claims, return guarantees, or "you will make money" language</li>
+    <li>Language appropriate for ICP (Strategic Wealth Builder, 35-55, HNW professional)</li>
+    <li>90/10 rule respected (give away the what/why, reserve the how for Platinum)</li>
+    <li>Correct brand palette used per sub-brand matrix</li>
+    <li>Logo placement correct per brand guidelines</li>
+    <li>Font stack correct (Plus Jakarta Sans headings, Barlow body, no unapproved fonts)</li>
+    <li>CTA matches the approved CTA list</li>
+    <li>Social proof and testimonials properly anonymised (first name + last initial only)</li>
+    <li>Spelling and grammar clean (run spellcheck, read aloud)</li>
+  </ul>
+
+  <hr>
+
+  <h3>Common Mistakes to Avoid</h3>
+  <div class="do-dont">
+    <div class="dont-col">
+      <h4>Design Mistakes</h4>
+      <ul>
+        <li>Using stock photography or AI-generated faces</li>
+        <li>Adding blockchain iconography (floating coins, candlestick charts)</li>
+        <li>Breaking the 60-30-10 colour rule</li>
+        <li>Using more than 2 fonts</li>
+        <li>Neon, glitch, or "futuristic" visual effects</li>
+        <li>Logo on busy backgrounds without clear space</li>
+        <li>ALL CAPS body text</li>
+      </ul>
+    </div>
+    <div class="dont-col">
+      <h4>Copy Mistakes</h4>
+      <ul>
+        <li>Using em dashes (the #1 tell of AI writing)</li>
+        <li>Saying "crypto" instead of "digital assets"</li>
+        <li>Hype language (moon, lambo, alpha, WAGMI)</li>
+        <li>Income claims or return promises</li>
+        <li>Calling Ben a "guru" or "expert"</li>
+        <li>Using "followers" instead of "members"</li>
+        <li>Hard-selling in educational content</li>
+        <li>Inventing new CTA labels without approval</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Legal Notes</h3>
+  <ul>
+    <li><strong>ABN:</strong> All published content must include Collective Shift Pty Ltd ABN in the footer or legal section</li>
+    <li><strong>Disclaimers:</strong> Required on any content with performance claims. Past performance is not indicative of future results.</li>
+    <li><strong>Testimonials:</strong> Anonymise (first name + last initial only) unless explicit written permission. Usage requires Tier 3 approval.</li>
+    <li><strong>No financial advice.</strong> We provide education and frameworks. All investment decisions are the individual's responsibility.</li>
+    <li><strong>No income claims.</strong> We share audited historical performance. We never promise future returns.</li>
+    <li><strong>Member data:</strong> Even anonymised data in marketing requires legal review (Tier 4).</li>
+    <li><strong>"Bitcoin" always capitalised.</strong> "Cryptocurrency" acceptable in legal context only.</li>
+  </ul>
+</section>
+
+<!-- ========== 7. MEASUREMENT & EVOLUTION ========== -->
+<section class="section" id="measurement">
+  <div class="section-label">Section 07</div>
+  <h2>Measurement &amp; Evolution</h2>
+  <div class="accent-bar"></div>
+  <p class="section-intro">How we track brand performance, when we review, and what comes next.</p>
+
+  <h3>Brand KPIs</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>KPI</th><th>Target</th><th>Frequency</th><th>Owner</th></tr></thead>
+      <tbody>
+        <tr><td>Platinum member count</td><td>500 by end of 2026</td><td>Monthly</td><td>Ben / Travis</td></tr>
+        <tr><td>Member retention rate</td><td>Maintain 74%+</td><td>Quarterly</td><td>Rebecca Martin</td></tr>
+        <tr><td>Instagram follower growth</td><td>+20% quarter-on-quarter</td><td>Monthly</td><td>Growth team</td></tr>
+        <tr><td>YouTube subscriber growth</td><td>+15% quarter-on-quarter</td><td>Monthly</td><td>Growth team</td></tr>
+        <tr><td>Email list size</td><td>25,000+ subscribers</td><td>Monthly</td><td>Growth team</td></tr>
+        <tr><td>Email open rate</td><td>30%+ (Mon/Wed/Fri), 40%+ (The Weekly Shift)</td><td>Weekly</td><td>Matt</td></tr>
+        <tr><td>Blueprint quiz completions</td><td>500+/month</td><td>Monthly</td><td>Growth team</td></tr>
+        <tr><td>Sales call conversion rate</td><td>25%+ to Platinum</td><td>Monthly</td><td>Zen / James</td></tr>
+        <tr><td>Brand voice audit pass rate</td><td>100% on Tier 2+ content</td><td>Ongoing</td><td>All creators</td></tr>
+        <tr><td>Trustpilot reviews</td><td>200+ five-star reviews by end of 2026</td><td>Quarterly</td><td>Rebecca Martin</td></tr>
+        <tr><td>Content output (weekly)</td><td>14 reels + 10 feed + 21 tweets + 2 podcasts</td><td>Weekly</td><td>Growth team</td></tr>
+        <tr><td>Thumbnail A/B test win rate</td><td>60%+ variant wins per month</td><td>Monthly</td><td>Video team</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Review Cadence</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Review Type</th><th>Frequency</th><th>Participants</th><th>Scope</th></tr></thead>
+      <tbody>
+        <tr><td>Brand Bible Full Review</td><td>Quarterly (next: July 2026)</td><td>Ben, Travis, Matt, Marketing Lead</td><td>All 8 sections. Update metrics, add new templates, refine voice.</td></tr>
+        <tr><td>Content Performance Review</td><td>Monthly</td><td>Growth team</td><td>Top/bottom performing content. Platform algorithm changes. A/B test results.</td></tr>
+        <tr><td>Brand Audit</td><td>Bi-annually</td><td>Ben + external review (optional)</td><td>Full audit of published content against brand bible. Identify drift.</td></tr>
+        <tr><td>Competitor Review</td><td>Quarterly</td><td>Research team</td><td>Monitor competitor positioning, pricing, content strategy changes.</td></tr>
+        <tr><td>Thumbnail Performance Log</td><td>Monthly</td><td>Video team</td><td>Identify winning expression, colour, and layout patterns.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Next Steps &amp; Rollout Plan</h3>
+
+  <h4>Immediate (April 2026)</h4>
+  <ol>
+    <li><strong>Group photo shoot</strong> - Ben, Travis, Matt, Sarn, Aaron. Dark clothing, studio lighting. Both landscape and portrait crops. Minimum 4000px on longest edge.</li>
+    <li><strong>Ben + Bergs photo</strong> for The Wealth Shift headers. Conversational pose.</li>
+    <li><strong>Create Figma/Photoshop template files</strong> with all dimensions, smart objects, colour swatches, and grid guides.</li>
+    <li><strong>Deploy all platform headers</strong> in priority order: YouTube banners > Twitter/X headers > LinkedIn banners > Facebook cover > Instagram highlight covers.</li>
+    <li><strong>Begin systematic Trustpilot collection</strong> from Platinum members.</li>
+  </ol>
+
+  <h4>Q2 2026</h4>
+  <ol>
+    <li>Build Customer.io email templates matching the four email types defined in this document</li>
+    <li>Create Canva/Figma template library for all 8 social media template types</li>
+    <li>Establish content calendar tool (Asana) with approval workflow columns</li>
+    <li>Onboard all team members on the Brand Voice Audit checklist</li>
+    <li>Launch full weekly posting cadence across all platforms</li>
+  </ol>
+
+  <h4>Q3 2026</h4>
+  <ol>
+    <li>First quarterly Brand Bible review (July 2026)</li>
+    <li>Assess Black Tier launch readiness and develop brand extensions</li>
+    <li>Video intro/outro template production (motion graphics)</li>
+    <li>First external brand audit</li>
+    <li>International expansion brand considerations (US/UK localisation)</li>
+  </ol>
+
+  <h4>Ongoing</h4>
+  <ul>
+    <li>Monthly content performance reviews</li>
+    <li>Quarterly competitor analysis updates</li>
+    <li>B-roll library refresh every quarter</li>
+    <li>Thumbnail A/B testing on every YouTube video</li>
+    <li>Continuous collection of ICP language from sales calls for messaging refinement</li>
+  </ul>
+
+  <hr>
+
+  <h3>Key Links</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Resource</th><th>Link</th></tr></thead>
+      <tbody>
+        <tr><td>Website</td><td>collectiveshift.co</td></tr>
+        <tr><td>Free Training (Blueprint)</td><td>collectiveshift.co/cryptoblueprint</td></tr>
+        <tr><td>Platinum Application</td><td>collectiveshift.co/platinum</td></tr>
+        <tr><td>YouTube (Ben)</td><td>@BenCollectiveShift</td></tr>
+        <tr><td>YouTube (Wealth Shift)</td><td>@wealthshiftpodcast</td></tr>
+        <tr><td>Twitter/X</td><td>@bensimpsonau</td></tr>
+        <tr><td>Instagram (Ben)</td><td>@bensimpsonau</td></tr>
+        <tr><td>Instagram (CS)</td><td>@collectiveshift_</td></tr>
+        <tr><td>LinkedIn</td><td>linkedin.com/in/bensimpsonau</td></tr>
+        <tr><td>Podcast (Apple)</td><td>podcasts.apple.com/us/podcast/the-wealth-shift/id1629581403</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card" style="margin-top:40px;border-left:3px solid var(--brand-orange);">
+    <p style="font-size:14px;margin-bottom:4px;"><strong>This is a living document.</strong></p>
+    <p style="font-size:14px;color:var(--text-muted);margin-bottom:0;">Version 3.0 - April 2026. Review quarterly. Next review: July 2026. For questions or suggested updates, contact the Marketing Lead or Ben Simpson.</p>
+  </div>
+</section>
+
+</div><!-- /content-wrapper -->
+</main>
+
+<!-- BACK TO TOP -->
+<a href="#executive-summary" class="back-top" id="backTop" aria-label="Back to top">&uarr;</a>
+
+<script>
+// Sidebar toggle
+const hamburger = document.getElementById('hamburger');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  sidebar.classList.toggle('open');
+  overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
+});
+
+overlay.addEventListener('click', () => {
+  hamburger.classList.remove('open');
+  sidebar.classList.remove('open');
+  overlay.style.display = 'none';
+});
+
+// Close sidebar on nav click (mobile)
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      hamburger.classList.remove('open');
+      sidebar.classList.remove('open');
+      overlay.style.display = 'none';
+    }
+  });
+});
+
+// Active nav highlighting on scroll
+const sections = document.querySelectorAll('.section, .hero');
+const navLinks = document.querySelectorAll('.nav-link');
+
+const observerOpts = {
+  root: null,
+  rootMargin: '-20% 0px -70% 0px',
+  threshold: 0
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, observerOpts);
+
+sections.forEach(section => observer.observe(section));
+
+// Back to top
+const backTop = document.getElementById('backTop');
+window.addEventListener('scroll', () => {
+  backTop.classList.toggle('visible', window.scrollY > 600);
+});
+</script>
+</body>
+</html>
