@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Score Is On Its Way | Collective Shift</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0a0a0f;
+    color: #e8e8ea;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 72px; /* space for sticky bar */
+  }
+  a { color: inherit; text-decoration: none; }
+
+  .logo {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 24px 32px;
+    background: linear-gradient(180deg, rgba(10,10,15,0.95) 0%, rgba(10,10,15,0) 100%);
+  }
+  .logo-text { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; color: #f0a500; }
+
+  .container {
+    max-width: 800px; margin: 0 auto; padding: 100px 24px 60px;
+  }
+
+  /* Progress */
+  .progress {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 48px;
+  }
+  .progress-step {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.3);
+  }
+  .progress-step.done { color: rgba(240,165,0,0.5); }
+  .progress-step.complete { color: #22c55e; }
+  .progress-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+  .progress-step.done .progress-dot { border-color: rgba(240,165,0,0.4); color: rgba(240,165,0,0.6); }
+  .progress-step.complete .progress-dot { border-color: #22c55e; background: rgba(34,197,94,0.12); color: #22c55e; }
+  .progress-line { flex: 1; height: 2px; background: rgba(255,255,255,0.08); }
+  .progress-line.filled { background: rgba(240,165,0,0.3); }
+
+  /* Confirmation card */
+  .confirm-card {
+    background: #12121a; border: 1px solid rgba(34,197,94,0.2);
+    border-radius: 16px; padding: 48px 32px; text-align: center;
+    margin-bottom: 60px;
+  }
+  .checkmark {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: rgba(34,197,94,0.12); border: 2px solid rgba(34,197,94,0.3);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px; font-size: 36px;
+  }
+  .confirm-card h1 {
+    font-size: clamp(22px, 4vw, 30px); font-weight: 800;
+    color: #ffffff; margin-bottom: 14px; letter-spacing: -0.5px;
+  }
+  .confirm-card p {
+    font-size: 16px; color: rgba(255,255,255,0.55);
+    max-width: 520px; margin: 0 auto; line-height: 1.6;
+  }
+
+  /* VSL section */
+  .vsl-section { margin-bottom: 48px; }
+  .section-heading {
+    font-size: clamp(22px, 4vw, 30px); font-weight: 800;
+    color: #ffffff; margin-bottom: 8px; letter-spacing: -0.5px;
+  }
+  .section-sub {
+    font-size: 15px; color: rgba(255,255,255,0.45);
+    margin-bottom: 32px;
+  }
+
+  .video-placeholder {
+    width: 100%; aspect-ratio: 16/9;
+    background: #12121a; border: 1px solid rgba(240,165,0,0.15);
+    border-radius: 12px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 16px;
+    margin-bottom: 40px; position: relative; overflow: hidden;
+  }
+  .video-placeholder::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(240,165,0,0.04) 0%, transparent 70%);
+  }
+  .play-icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: rgba(240,165,0,0.15); border: 2px solid rgba(240,165,0,0.3);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; z-index: 1;
+  }
+  .play-icon::after {
+    content: ''; width: 0; height: 0;
+    border-top: 12px solid transparent; border-bottom: 12px solid transparent;
+    border-left: 20px solid #f0a500; margin-left: 4px;
+  }
+  .video-placeholder span {
+    font-size: 14px; color: rgba(255,255,255,0.4);
+    position: relative; z-index: 1;
+  }
+
+  /* CTA card */
+  .cta-card {
+    background: #12121a; border: 2px solid rgba(240,165,0,0.25);
+    border-radius: 16px; padding: 40px 32px; text-align: center;
+    margin-bottom: 60px;
+  }
+  .cta-card h2 {
+    font-size: 24px; font-weight: 800; color: #ffffff;
+    margin-bottom: 12px;
+  }
+  .cta-card p {
+    font-size: 15px; color: rgba(255,255,255,0.5);
+    max-width: 520px; margin: 0 auto 28px; line-height: 1.6;
+  }
+  .btn-gold {
+    display: inline-block; padding: 16px 40px; font-size: 17px; font-weight: 700;
+    background: #f0a500; color: #0a0a0f; border: none; border-radius: 8px;
+    cursor: pointer; font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+  }
+  .btn-gold:hover { background: #ffb820; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(240,165,0,0.25); }
+  .cta-fine-print {
+    font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 14px;
+  }
+
+  /* Sticky bar */
+  .sticky-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(10,10,15,0.95); backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(240,165,0,0.15);
+    padding: 14px 24px; text-align: center; z-index: 100;
+  }
+  .sticky-bar a {
+    display: inline-block; padding: 12px 32px; font-size: 15px; font-weight: 700;
+    background: #f0a500; color: #0a0a0f; border-radius: 8px;
+    transition: all 0.2s;
+  }
+  .sticky-bar a:hover { background: #ffb820; }
+
+  .footer {
+    text-align: center; padding: 32px 24px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    font-size: 12px; color: rgba(255,255,255,0.3);
+  }
+
+  @media (max-width: 600px) {
+    .logo { padding: 16px 20px; }
+    .confirm-card { padding: 32px 20px; }
+    .cta-card { padding: 28px 20px; }
+    .btn-gold { width: 100%; text-align: center; }
+    .sticky-bar a { width: 100%; display: block; }
+  }
+</style>
+</head>
+<body>
+
+<div class="logo">
+  <span class="logo-text">Collective Shift</span>
+</div>
+
+<div class="container">
+
+  <!-- Progress -->
+  <div class="progress">
+    <div class="progress-step done">
+      <div class="progress-dot">1</div>
+      <span>Sign Up</span>
+    </div>
+    <div class="progress-line filled"></div>
+    <div class="progress-step done">
+      <div class="progress-dot">2</div>
+      <span>Training</span>
+    </div>
+    <div class="progress-line filled"></div>
+    <div class="progress-step complete">
+      <div class="progress-dot">✓</div>
+      <span>Complete</span>
+    </div>
+  </div>
+
+  <!-- Confirmation -->
+  <div class="confirm-card">
+    <div class="checkmark">✅</div>
+    <h1>Your Portfolio Protection Score Is On Its Way</h1>
+    <p>Check your inbox — your personalised score and allocation blueprint will arrive within the next few minutes. While you wait, watch the video below.</p>
+  </div>
+
+  <!-- VSL -->
+  <div class="vsl-section">
+    <h2 class="section-heading">How Sophisticated Investors Are Allocating to Digital Assets</h2>
+    <p class="section-sub">Ben Simpson | Founder, Collective Shift | 27 minutes</p>
+
+    <div class="video-placeholder" data-video-url="">
+      <div class="play-icon"></div>
+      <span>📹 Video coming soon — check back shortly</span>
+    </div>
+  </div>
+
+  <!-- CTA card -->
+  <div class="cta-card">
+    <h2>Ready to Implement Your Blueprint?</h2>
+    <p>Book a free 30-minute Education Call with our team. We'll walk you through your score, answer your questions, and help you understand what a properly structured allocation looks like for your situation.</p>
+    <a href="https://collectiveshift.io/strategy-call" class="btn-gold">Book Your Free Education Call →</a>
+    <p class="cta-fine-print">Free. No obligation. Educational only.</p>
+  </div>
+
+</div>
+
+<footer class="footer">
+  © Collective Shift | ABN 78 650 977 325 | Not financial advice. Educational purposes only.
+</footer>
+
+<!-- Sticky bottom bar -->
+<div class="sticky-bar">
+  <a href="https://collectiveshift.io/strategy-call">📞 Book Your Free Education Call →</a>
+</div>
+
+</body>
+</html>

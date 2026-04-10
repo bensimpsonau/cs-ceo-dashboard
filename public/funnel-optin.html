@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Asset Readiness Score | Collective Shift</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --orange: #FC5C03;
+  --orange-dim: #C94902;
+  --orange-glow: rgba(252, 92, 3, 0.18);
+  --bg: #1B1925;
+  --bg-deep: #02000D;
+  --bg-card: #252530;
+  --border: #3A3A3A;
+  --white: #FFFFFF;
+  --grey-light: #D9D8DA;
+  --grey-mid: #B3B2B6;
+  --grey-dark: #807F86;
+  --teal: #08C394;
+  --heading-font: 'Plus Jakarta Sans', sans-serif;
+  --body-font: 'Barlow', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--body-font);
+  background: var(--bg);
+  color: var(--grey-light);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: -100px; left: 50%;
+  transform: translateX(-50%);
+  width: 1200px; height: 700px;
+  background: radial-gradient(ellipse at 50% 0%, var(--orange-glow) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── TOP BAR ── */
+.top-bar {
+  position: relative; z-index: 10;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: rgba(2, 0, 13, 0.4);
+  backdrop-filter: blur(8px);
+}
+
+.cs-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.cs-logo img {
+  width: 36px; height: 36px;
+  object-fit: contain;
+}
+
+.cs-wordmark {
+  font-family: var(--heading-font);
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: -0.5px;
+  color: var(--white);
+}
+
+.cs-wordmark span { color: var(--orange); }
+
+/* ── MAIN CONTAINER ── */
+.quiz-container {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 24px 40px;
+  width: 100%;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-wrapper {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 32px;
+}
+
+.progress-label {
+  font-family: var(--body-font);
+  font-size: 14px;
+  color: var(--grey-dark);
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.progress-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--orange);
+  border-radius: 100px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 0%;
+}
+
+/* ── SLIDE (question or gate) ── */
+.slide {
+  display: none;
+  width: 100%;
+  max-width: 600px;
+  animation: fadeSlideIn 0.4s ease forwards;
+}
+
+.slide.active {
+  display: block;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── INTRO SLIDE ── */
+.intro-eyebrow {
+  font-family: var(--body-font);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--grey-mid);
+  text-align: center;
+  margin-bottom: 16px;
+  line-height: 1.5;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.intro-disclaimer {
+  font-family: var(--body-font);
+  font-size: 11px;
+  color: var(--grey-dark);
+  text-align: center;
+  margin-top: 14px;
+  line-height: 1.6;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.intro-headline {
+  font-family: var(--heading-font);
+  font-size: clamp(28px, 4.5vw, 48px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.52px;
+  color: var(--white);
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.intro-sub {
+  font-family: var(--body-font);
+  font-size: 17px;
+  color: var(--grey-mid);
+  text-align: center;
+  line-height: 1.6;
+  max-width: 520px;
+  margin: 0 auto 32px;
+}
+
+.start-btn {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 16px 32px;
+  font-family: var(--heading-font);
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--white);
+  background: var(--orange);
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: box-shadow 0.3s, transform 0.2s;
+  box-shadow: 0 0 24px var(--orange-glow), 0 4px 16px rgba(252,92,3,0.25);
+}
+
+.start-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 36px var(--orange-glow), 0 6px 24px rgba(252,92,3,0.35);
+}
+
+.intro-fine {
+  font-size: 13px;
+  color: var(--grey-dark);
+  text-align: center;
+  margin-top: 16px;
+}
+
+/* ── VARIANT SWITCHER ── */
+.variant-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.variant-label {
+  font-family: var(--mono-font);
+  font-size: 11px;
+  color: var(--grey-dark);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-right: 4px;
+}
+.variant-btn {
+  font-family: var(--mono-font);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--grey-mid);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  letter-spacing: 0.5px;
+}
+.variant-btn:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+.variant-btn.active {
+  border-color: var(--orange);
+  background: rgba(252,92,3,0.12);
+  color: var(--orange);
+}
+
+/* ── QUESTION CARD ── */
+.q-label {
+  font-family: var(--body-font);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--orange);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.q-text {
+  font-family: var(--heading-font);
+  font-size: clamp(20px, 3vw, 26px);
+  font-weight: 600;
+  color: var(--white);
+  line-height: 1.35;
+  margin-bottom: 8px;
+}
+
+.q-micro {
+  font-family: var(--body-font);
+  font-size: 14px;
+  color: var(--grey-dark);
+  line-height: 1.55;
+  margin-bottom: 24px;
+}
+
+/* ── ANSWER OPTIONS ── */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--grey-light);
+  font-family: var(--body-font);
+  font-size: 15px;
+  line-height: 1.45;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+}
+
+.option-btn:hover {
+  border-color: var(--orange);
+  background: rgba(252, 92, 3, 0.06);
+  transform: translateX(4px);
+}
+
+.option-btn.selected {
+  border-color: var(--orange);
+  background: rgba(252, 92, 3, 0.1);
+}
+
+.option-letter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.06);
+  font-family: var(--heading-font);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--grey-mid);
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.option-btn:hover .option-letter,
+.option-btn.selected .option-letter {
+  background: var(--orange);
+  color: var(--white);
+}
+
+/* ── BACK BUTTON ── */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 20px;
+  padding: 8px 0;
+  background: none;
+  border: none;
+  color: var(--grey-dark);
+  font-family: var(--body-font);
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.back-btn:hover {
+  color: var(--grey-light);
+}
+
+.back-btn svg {
+  width: 16px; height: 16px;
+}
+
+/* ── EMAIL GATE ── */
+.gate-heading {
+  font-family: var(--heading-font);
+  font-size: clamp(24px, 3.5vw, 36px);
+  font-weight: 700;
+  color: var(--white);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.gate-sub {
+  font-family: var(--body-font);
+  font-size: 16px;
+  color: var(--grey-mid);
+  text-align: center;
+  line-height: 1.55;
+  max-width: 460px;
+  margin: 0 auto 28px;
+}
+
+.gate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.gate-input {
+  width: 100%;
+  padding: 14px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--white);
+  font-family: var(--body-font);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.gate-input::placeholder {
+  color: var(--grey-dark);
+}
+
+.gate-input:focus {
+  border-color: var(--orange);
+}
+
+.gate-submit {
+  width: 100%;
+  padding: 16px 32px;
+  font-family: var(--heading-font);
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--white);
+  background: var(--orange);
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: box-shadow 0.3s, transform 0.2s;
+  box-shadow: 0 0 24px var(--orange-glow), 0 4px 16px rgba(252,92,3,0.25);
+}
+
+.gate-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 36px var(--orange-glow), 0 6px 24px rgba(252,92,3,0.35);
+}
+
+.gate-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.gate-fine {
+  font-size: 13px;
+  color: var(--grey-dark);
+  text-align: center;
+  margin-top: 8px;
+}
+
+.gate-error {
+  color: #FF0A00;
+  font-size: 14px;
+  text-align: center;
+  display: none;
+}
+
+/* ── FOOTER ── */
+.quiz-footer {
+  position: relative;
+  z-index: 1;
+  padding: 20px 24px;
+  text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  background: rgba(2, 0, 13, 0.3);
+}
+
+.quiz-footer p {
+  font-size: 12px;
+  color: var(--grey-dark);
+  line-height: 1.6;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .quiz-container {
+    padding: 24px 16px 32px;
+  }
+  .option-btn {
+    padding: 14px 16px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <a href="https://collectiveshift.io" class="cs-logo">
+    <img src="/cs_icon_mark.png" alt="Collective Shift">
+    <div class="cs-wordmark">collective<span>Shift</span></div>
+  </a>
+</div>
+
+<!-- QUIZ CONTAINER -->
+<div class="quiz-container">
+
+  <!-- PROGRESS BAR (hidden on intro, visible during questions) -->
+  <div class="progress-wrapper" id="progressWrapper" style="display:none;">
+    <div class="progress-label" id="progressLabel">Question 1 of 8</div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 0: INTRO / ABOVE THE FOLD -->
+  <div class="slide active" id="slide-intro">
+
+    <!-- VARIANT SWITCHER (for internal testing) -->
+    <div class="variant-switcher no-print" id="variantSwitcher">
+      <span class="variant-label">Test variant:</span>
+      <button class="variant-btn active" onclick="setVariant(0)" id="vbtn-0">Control</button>
+      <button class="variant-btn" onclick="setVariant(1)" id="vbtn-1">V1</button>
+      <button class="variant-btn" onclick="setVariant(2)" id="vbtn-2">V2</button>
+      <button class="variant-btn" onclick="setVariant(3)" id="vbtn-3">V3</button>
+    </div>
+
+    <p class="intro-eyebrow" id="intro-eyebrow-text"></p>
+    <h1 class="intro-headline" id="intro-headline-text"></h1>
+    <p class="intro-sub" id="intro-sub-text"></p>
+    <button class="start-btn" id="intro-cta-btn" onclick="startQuiz()"></button>
+    <p class="intro-fine">Takes under 2 minutes. No sign-up required to begin.</p>
+    <p class="intro-disclaimer">This assessment is for educational purposes only and does not constitute financial advice, investment advice, or a recommendation to buy or sell any asset.</p>
+  </div>
+
+  <!-- SLIDE 1: Q1 — Your Starting Point (QUALIFIER - unscored) -->
+  <div class="slide" id="slide-1">
+    <div class="q-label">Question 1 — Your Starting Point</div>
+    <div class="q-text">Where are you right now with digital assets?</div>
+    <div class="q-micro">There's no right answer here. This helps us tailor your blueprint to where you actually are, not where you think you should be.</div>
+    <div class="options">
+      <button class="option-btn" onclick="selectAnswer(1, 'A')">
+        <span class="option-letter">A</span>
+        <span>Researching only — I haven't made any moves yet</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(1, 'B')">
+        <span class="option-letter">B</span>
+        <span>Made some purchases but I don't have a clear strategy</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(1, 'C')">
+        <span class="option-letter">C</span>
+        <span>Have active positions but I'm making reactive decisions without a real system</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(1, 'D')">
+        <span class="option-letter">D</span>
+        <span>I'm experienced — I want a better framework to optimise what I already have</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: Q2 — Your Primary Goal (QUALIFIER - unscored) -->
+  <div class="slide" id="slide-2">
+    <div class="q-label">Question 2 — Your Primary Goal</div>
+    <div class="q-text">What's your primary reason for getting serious about digital assets now?</div>
+    <div class="q-micro">Most people have more than one goal. Pick the one that matters most — it shapes which parts of the framework are most relevant for you.</div>
+    <div class="options">
+      <button class="option-btn" onclick="selectAnswer(2, 'A')">
+        <span class="option-letter">A</span>
+        <span>Protect my wealth from inflation and currency debasement</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(2, 'B')">
+        <span class="option-letter">B</span>
+        <span>Build long-term generational wealth for my family</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(2, 'C')">
+        <span class="option-letter">C</span>
+        <span>Grow my wealth faster than traditional assets allow</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(2, 'D')">
+        <span class="option-letter">D</span>
+        <span>Buy back my time and build genuine financial freedom</span>
+      </button>
+    </div>
+    <button class="back-btn" onclick="goBack(2)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back
+    </button>
+  </div>
+
+  <!-- SLIDE 3: Q3 — Capital Outlook (QUALIFIER - unscored, 5 options) -->
+  <div class="slide" id="slide-3">
+    <div class="q-label">Question 3 — Capital Outlook</div>
+    <div class="q-text">How much are you looking to deploy into digital assets over the next 12 months?</div>
+    <div class="q-micro">This is about your intention, not a commitment. It helps us calibrate the scale of the framework you need.</div>
+    <div class="options">
+      <button class="option-btn" onclick="selectAnswer(3, 'A')">
+        <span class="option-letter">A</span>
+        <span>Under $25,000</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(3, 'B')">
+        <span class="option-letter">B</span>
+        <span>$25,000 – $100,000</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(3, 'C')">
+        <span class="option-letter">C</span>
+        <span>$100,000 – $500,000</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(3, 'D')">
+        <span class="option-letter">D</span>
+        <span>$500,000 – $1,000,000</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(3, 'E')">
+        <span class="option-letter">E</span>
+        <span>$1,000,000+</span>
+      </button>
+    </div>
+    <button class="back-btn" onclick="goBack(3)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back
+    </button>
+  </div>
+
+  <!-- SLIDE 4: Q4 — Investment Thesis (SCORED) -->
+  <div class="slide" id="slide-4">
+    <div class="q-label">Question 4 — Investment Thesis</div>
+    <div class="q-text">How would you describe your current view on why Bitcoin and digital assets may belong in a wealth portfolio?</div>
+    <div class="q-micro">Most people at this stage have done the research but haven't been able to articulate a clear view. That's normal — this is exactly what we help with.</div>
+    <div class="options">
+      <button class="option-btn" onclick="selectAnswer(4, 'A')">
+        <span class="option-letter">A</span>
+        <span>Still researching — I haven't formed a clear view yet</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(4, 'B')">
+        <span class="option-letter">B</span>
+        <span>I have a general sense but can't articulate it clearly</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(4, 'C')">
+        <span class="option-letter">C</span>
+        <span>I understand the macro case but haven't committed to a written thesis</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(4, 'D')">
+        <span class="option-letter">D</span>
+        <span>I have a clear, written thesis I'm confident in</span>
+      </button>
+    </div>
+    <button class="back-btn" onclick="goBack(4)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back
+    </button>
+  </div>
+
+  <!-- SLIDE 5: Q5 — Information Sources (SCORED) -->
+  <div class="slide" id="slide-5">
+    <div class="q-label">Question 5 — Information Sources</div>
+    <div class="q-text">How do you currently stay informed about digital assets?</div>
+    <div class="q-micro">Information overload is the second biggest pain point we see. The problem isn't access to information — it's filtering what actually matters.</div>
+    <div class="options">
+      <button class="option-btn" onclick="selectAnswer(5, 'A')">
+        <span class="option-letter">A</span>
+        <span>Social media, YouTube, influencers — wherever the news is</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(5, 'B')">
+        <span class="option-letter">B</span>
+        <span>Mix of news and some research — hard to filter signal from noise</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(5, 'C')">
+        <span class="option-letter">C</span>
+        <span>A small number of trusted sources, trying to build my own view</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(5, 'D')">
+        <span class="option-letter">D</span>
+        <span>On-chain data and primary research — I have a clear filter for what I act on</span>
+      </button>
+    </div>
+    <button class="back-btn" onclick="goBack(5)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back
+    </button>
+  </div>
+
+  <!-- SLIDE 6: Q6 — Risk Framework (SCORED) -->
+  <div class="slide" id="slide-6">
+    <div class="q-label">Question 6 — Risk Framework</div>
+    <div class="q-text">Do you have written rules for your digital asset allocation and what you'd do in a major drawdown?</div>
+    <div class="q-micro">Written rules sound formal, but they're the difference between a strategy and a guess. Most high-net-worth investors we work with start without them.</div>
+    <div class="options">
+      <button class="option-btn" onclick="selectAnswer(6, 'A')">
+        <span class="option-letter">A</span>
+        <span>No — I'd work it out when the time comes</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(6, 'B')">
+        <span class="option-letter">B</span>
+        <span>Rough ideas, nothing written down</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(6, 'C')">
+        <span class="option-letter">C</span>
+        <span>Some guidelines but not formalised</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(6, 'D')">
+        <span class="option-letter">D</span>
+        <span>Written allocation rules and a clear drawdown plan</span>
+      </button>
+    </div>
+    <button class="back-btn" onclick="goBack(6)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back
+    </button>
+  </div>
+
+  <!-- SLIDE 7: Q7 — Time Available (SCORED) -->
+  <div class="slide" id="slide-7">
+    <div class="q-label">Question 7 — Time Available</div>
+    <div class="q-text">How much time can you realistically dedicate to managing a digital asset portfolio each month?</div>
+    <div class="q-micro">Be honest here. The right strategy depends on how much time you actually have, not how much you think you should have.</div>
+    <div class="options">
+      <button class="option-btn" onclick="selectAnswer(7, 'A')">
+        <span class="option-letter">A</span>
+        <span>Very little — I need something I can almost set and forget</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(7, 'B')">
+        <span class="option-letter">B</span>
+        <span>A few hours a month if it's clearly directed</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(7, 'C')">
+        <span class="option-letter">C</span>
+        <span>A few hours a week — I want to stay actively informed</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(7, 'D')">
+        <span class="option-letter">D</span>
+        <span>As much as needed — I'm prepared to put in the work</span>
+      </button>
+    </div>
+    <button class="back-btn" onclick="goBack(7)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back
+    </button>
+  </div>
+
+  <!-- SLIDE 8: Q8 — Exit Strategy (SCORED) -->
+  <div class="slide" id="slide-8">
+    <div class="q-label">Question 8 — Exit Strategy</div>
+    <div class="q-text">Do you have a written plan for when and how you'd exit your digital asset positions?</div>
+    <div class="q-micro">An entry without an exit isn't a strategy. This is the question that separates investors from speculators — and the most common gap we see.</div>
+    <div class="options">
+      <button class="option-btn" onclick="selectAnswer(8, 'A')">
+        <span class="option-letter">A</span>
+        <span>No — I'd decide when the time comes</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(8, 'B')">
+        <span class="option-letter">B</span>
+        <span>Rough idea but nothing specific or written</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(8, 'C')">
+        <span class="option-letter">C</span>
+        <span>Some targets but haven't thought through all scenarios</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(8, 'D')">
+        <span class="option-letter">D</span>
+        <span>Written sell strategy with specific triggers and targets</span>
+      </button>
+    </div>
+    <button class="back-btn" onclick="goBack(8)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back
+    </button>
+  </div>
+
+  <!-- SLIDE 9: Q9 — Advanced Strategies (SCORED) -->
+  <div class="slide" id="slide-9">
+    <div class="q-label">Question 9 — Advanced Strategies</div>
+    <div class="q-text">How familiar are you with using your digital assets to generate income — through lending, yield, or tax-efficient structures?</div>
+    <div class="q-micro">Yield and tax optimisation are two of the most underutilised advantages available to serious digital asset investors. This helps us know how much of the advanced framework is relevant for you.</div>
+    <div class="options">
+      <button class="option-btn" onclick="selectAnswer(9, 'A')">
+        <span class="option-letter">A</span>
+        <span>Not familiar at all — I didn't know this was possible</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(9, 'B')">
+        <span class="option-letter">B</span>
+        <span>I've heard of it but don't know how to approach it safely</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(9, 'C')">
+        <span class="option-letter">C</span>
+        <span>I understand the basics but haven't set anything up yet</span>
+      </button>
+      <button class="option-btn" onclick="selectAnswer(9, 'D')">
+        <span class="option-letter">D</span>
+        <span>I actively use lending/yield strategies and have a tax structure in place</span>
+      </button>
+    </div>
+    <button class="back-btn" onclick="goBack(9)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back
+    </button>
+  </div>
+
+  <!-- SLIDE 9: EMAIL GATE -->
+  <div class="slide" id="slide-gate">
+    <h2 class="gate-heading">Your results are ready.</h2>
+    <p class="gate-sub">Enter your details and we'll show you your Digital Asset Readiness Score and tailored blueprint.</p>
+    <form class="gate-form" id="gateForm" onsubmit="submitGate(event)">
+      <input class="gate-input" type="text" id="gateName" placeholder="First name" required autocomplete="given-name">
+      <input class="gate-input" type="email" id="gateEmail" placeholder="Email address" required autocomplete="email">
+      <input class="gate-input" type="tel" id="gateMobile" placeholder="Mobile number" required autocomplete="tel">
+      <div class="gate-error" id="gateError">Something went wrong. Please try again.</div>
+      <button class="gate-submit" type="submit" id="gateBtn">Show Me My Score →</button>
+    </form>
+    <p class="gate-fine">Free. Educational purposes only. Not financial advice.</p>
+    <button class="back-btn" onclick="goBack('gate')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back
+    </button>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="quiz-footer">
+  <p>Collective Shift Pty Ltd · ABN 78 650 977 325 · Educational purposes only. Not financial advice.</p>
+</footer>
+
+<script>
+// ── SPLIT TEST VARIANTS ──
+const VARIANTS = [
+  {
+    id: 'control',
+    eyebrow: 'Designed for high-income professionals and investors who want to enter digital assets with more structure, protection, and conviction.',
+    headline: 'Discover Your Digital Asset Wealth Blueprint.',
+    subhead: 'Complete this short investor assessment to discover how ready you are to position intelligently for the next wave of digital asset adoption - and receive a tailored blueprint highlighting potential gaps in your decision-making, risk awareness, and entry readiness.',
+    cta: 'Begin Your Free Assessment →'
+  },
+  {
+    id: 'v1-identity-threat',
+    eyebrow: 'For professionals and investors earning $250K+ who refuse to get digital assets wrong.',
+    headline: 'Most High-Income Investors Will Make the Same Costly Mistake With Digital Assets. This 3-Minute Assessment Shows If You’re One of Them.',
+    subhead: 'Find out where the gaps are in your risk awareness, timing, and entry strategy before you commit capital. Get a tailored breakdown in minutes.',
+    cta: 'Show Me My Gaps →'
+  },
+  {
+    id: 'v2-blind-spots',
+    eyebrow: 'For professionals and investors with $250K+ income who are serious about digital assets but not willing to guess.',
+    headline: 'Before You Allocate a Single Dollar to Digital Assets, You Need to Know Your Three Biggest Blind Spots.',
+    subhead: 'This short investor assessment identifies the gaps in your decision-making and risk awareness, then delivers a tailored blueprint to fix them.',
+    cta: 'Reveal My Blind Spots →'
+  },
+  {
+    id: 'v3-social-proof',
+    eyebrow: 'Built for high-income professionals and investors. Not for day traders or speculators.',
+    headline: 'The Assessment 1,400+ Professionals Worldwide Took Before Making Their First Serious Digital Asset Decision.',
+    subhead: '3 minutes. 8 questions. A tailored blueprint showing where your strategy, risk awareness, and entry timing stand today.',
+    cta: 'Take the Assessment Now →'
+  }
+];
+
+let activeVariant = 0;
+
+function setVariant(idx) {
+  activeVariant = idx;
+  const v = VARIANTS[idx];
+  document.getElementById('intro-eyebrow-text').textContent = v.eyebrow;
+  document.getElementById('intro-headline-text').textContent = v.headline;
+  document.getElementById('intro-sub-text').textContent = v.subhead;
+  document.getElementById('intro-cta-btn').textContent = v.cta;
+  document.querySelectorAll('.variant-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+  // persist in sessionStorage so results page can log it
+  sessionStorage.setItem('cs_variant', v.id);
+}
+
+// Initialise on load
+document.addEventListener('DOMContentLoaded', function() {
+  // Check URL param ?v=1|2|3 for direct linking
+  const urlParam = new URLSearchParams(window.location.search).get('v');
+  const startIdx = urlParam ? Math.min(Math.max(parseInt(urlParam), 0), 3) : 0;
+  setVariant(startIdx);
+});
+
+(function() {
+  const TOTAL_QUESTIONS = 9;
+  // Questions 1-3 are qualifier (unscored), 4-9 are scored
+  const QUALIFIER_QUESTIONS = [1, 2, 3];
+  const SCORED_QUESTIONS = [4, 5, 6, 7, 8, 9];
+  const answers = {};
+  let currentSlide = 'intro';
+
+  function showSlide(id) {
+    document.querySelectorAll('.slide').forEach(s => {
+      s.classList.remove('active');
+      s.style.display = 'none';
+    });
+    const target = document.getElementById('slide-' + id);
+    if (target) {
+      target.style.display = 'block';
+      // Force reflow for animation
+      void target.offsetWidth;
+      target.classList.add('active');
+    }
+
+    const pw = document.getElementById('progressWrapper');
+    if (typeof id === 'number' && id >= 1 && id <= TOTAL_QUESTIONS) {
+      pw.style.display = 'block';
+      document.getElementById('progressLabel').textContent = 'Question ' + id + ' of ' + TOTAL_QUESTIONS;
+      document.getElementById('progressFill').style.width = ((id - 1) / TOTAL_QUESTIONS * 100) + '%';
+    } else if (id === 'gate') {
+      pw.style.display = 'block';
+      document.getElementById('progressLabel').textContent = 'Almost there';
+      document.getElementById('progressFill').style.width = '100%';
+    } else {
+      pw.style.display = 'none';
+    }
+
+    currentSlide = id;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  window.startQuiz = function() {
+    showSlide(1);
+  };
+
+  window.selectAnswer = function(questionNum, answer) {
+    answers[questionNum] = answer;
+
+    // Brief highlight then advance
+    const slide = document.getElementById('slide-' + questionNum);
+    const btns = slide.querySelectorAll('.option-btn');
+    btns.forEach(b => b.classList.remove('selected'));
+    // Find the clicked button
+    btns.forEach(b => {
+      if (b.querySelector('.option-letter').textContent === answer) {
+        b.classList.add('selected');
+      }
+    });
+
+    setTimeout(function() {
+      if (questionNum < TOTAL_QUESTIONS) {
+        showSlide(questionNum + 1);
+      } else {
+        showSlide('gate');
+      }
+    }, 350);
+  };
+
+  window.goBack = function(from) {
+    if (from === 'gate') {
+      showSlide(TOTAL_QUESTIONS);
+    } else if (typeof from === 'number' && from > 1) {
+      showSlide(from - 1);
+    } else {
+      showSlide('intro');
+    }
+  };
+
+  window.submitGate = function(e) {
+    e.preventDefault();
+    const name = document.getElementById('gateName').value.trim();
+    const email = document.getElementById('gateEmail').value.trim();
+    const mobile = document.getElementById('gateMobile').value.trim();
+    const btn = document.getElementById('gateBtn');
+    const errEl = document.getElementById('gateError');
+
+    if (!name || !email || !mobile) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Loading...';
+    errEl.style.display = 'none';
+
+    // Store qualifier answers (unscored) for personalisation
+    localStorage.setItem('cs_q1_exp', answers[1] || '');
+    localStorage.setItem('cs_q2_goal', answers[2] || '');
+    localStorage.setItem('cs_q3_capital', answers[3] || '');
+
+    // Build score — only scored questions (Q4-Q9): A=1, B=2, C=3, D=4
+    const scoreMap = { A: 1, B: 2, C: 3, D: 4 };
+    let total = 0;
+    for (let i = 0; i < SCORED_QUESTIONS.length; i++) {
+      total += scoreMap[answers[SCORED_QUESTIONS[i]]] || 1;
+    }
+
+    // Store answers in localStorage for results page
+    localStorage.setItem('cs_quiz_answers', JSON.stringify(answers));
+    localStorage.setItem('cs_score', total);
+    localStorage.setItem('cs_quiz_score', total); // backward compat
+    localStorage.setItem('cs_quiz_name', name);
+    localStorage.setItem('cs_quiz_email', email);
+
+    // Send to backend (fire-and-forget, then redirect)
+    localStorage.setItem('cs_quiz_mobile', mobile);
+    const payload = { name: name, email: email, mobile: mobile, answers: answers, score: total, qualifiers: { experience: answers[1], goal: answers[2], capital: answers[3] } };
+
+    fetch('/api/quiz-lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function() {
+      window.location.href = '/blueprint-guide.html?score=' + total + '&name=' + encodeURIComponent(name);
+    }).catch(function() {
+      // Redirect anyway — don't block the user
+      window.location.href = '/blueprint-guide.html?score=' + total + '&name=' + encodeURIComponent(name);
+    });
+
+    // Fallback redirect after 3s if fetch hangs
+    setTimeout(function() {
+      window.location.href = '/blueprint-guide.html?score=' + total + '&name=' + encodeURIComponent(name);
+    }, 3000);
+  };
+
+})();
+</script>
+</body>
+</html>
