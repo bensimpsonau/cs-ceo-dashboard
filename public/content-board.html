@@ -21,12 +21,6 @@
     --plat-linkedin:   #0A66C2;
     --plat-instagram:  #E4405F;
     --plat-youtube:    #FF0000;
-    --status-draft:          #807F86;
-    --status-pending_review: #F59E0B;
-    --status-approved:       #10B981;
-    --status-scheduled:      #6366F1;
-    --status-published:      #0BF4B9;
-    --status-cancelled:      #EF4444;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -56,7 +50,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 0 12px;
+    padding: 18px 0 14px;
     gap: 16px;
     flex-wrap: wrap;
   }
@@ -72,7 +66,6 @@
     background: rgba(252,92,3,0.15);
     border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
-    color: var(--cs-orange);
     font-size: 18px;
     flex-shrink: 0;
   }
@@ -86,18 +79,17 @@
     color: #F59E0B;
     font-size: 12px;
     font-weight: 600;
-    padding: 4px 12px;
+    padding: 5px 14px;
     border-radius: 20px;
     white-space: nowrap;
   }
-
   .pending-badge.zero {
     background: rgba(16,185,129,0.1);
     border-color: rgba(16,185,129,0.2);
     color: #10B981;
   }
 
-  /* Stats bar */
+  /* ── Stats bar ── */
   .stats-bar {
     display: flex;
     gap: 6px;
@@ -109,32 +101,74 @@
     background: var(--cs-dark-3);
     border: 1px solid var(--cs-border);
     border-radius: 8px;
-    padding: 8px 16px;
+    padding: 8px 14px;
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 13px;
   }
 
-  .stat-num {
-    font-weight: 700;
-    font-size: 16px;
-    color: var(--cs-text);
-  }
-
+  .stat-num { font-weight: 700; font-size: 15px; }
   .stat-label { color: var(--cs-muted); font-size: 12px; }
+  .stat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
-  .stat-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
+  /* ── Tab bar ── */
+  .tab-bar {
+    background: var(--cs-dark-2);
+    border-bottom: 1px solid var(--cs-border);
+    padding: 0 24px;
+    display: flex;
+    gap: 0;
+  }
+
+  .tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--cs-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 13px 20px 11px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .tab-btn:hover { color: var(--cs-text); }
+
+  .tab-btn.active {
+    color: var(--cs-text);
+    border-bottom-color: var(--cs-orange);
+  }
+
+  .tab-count {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--cs-dark-4);
+    color: var(--cs-muted);
+    transition: all 0.15s;
+  }
+
+  .tab-btn.active .tab-count {
+    background: rgba(252,92,3,0.15);
+    color: var(--cs-orange);
+  }
+
+  .tab-btn.drafts-tab.active .tab-count {
+    background: rgba(245,158,11,0.15);
+    color: #F59E0B;
   }
 
   /* ── Filter bar ── */
   .filter-bar {
     background: var(--cs-dark-2);
     border-bottom: 1px solid var(--cs-border);
-    padding: 12px 24px;
+    padding: 10px 24px;
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
@@ -143,12 +177,7 @@
 
   .filter-label { font-size: 12px; color: var(--cs-muted); font-weight: 500; white-space: nowrap; }
 
-  .filter-group {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
+  .filter-group { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
 
   .filter-btn {
     background: var(--cs-dark-3);
@@ -157,7 +186,7 @@
     font-family: 'Inter', sans-serif;
     font-size: 12px;
     font-weight: 500;
-    padding: 6px 14px;
+    padding: 5px 13px;
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.15s;
@@ -165,7 +194,6 @@
   }
 
   .filter-btn:hover { border-color: rgba(252,92,3,0.4); color: var(--cs-text); }
-
   .filter-btn.active {
     background: rgba(252,92,3,0.15);
     border-color: rgba(252,92,3,0.5);
@@ -179,7 +207,7 @@
     font-family: 'Inter', sans-serif;
     font-size: 12px;
     font-weight: 500;
-    padding: 6px 12px;
+    padding: 5px 28px 5px 10px;
     border-radius: 6px;
     cursor: pointer;
     outline: none;
@@ -187,24 +215,20 @@
     -webkit-appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23807F86' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 10px center;
-    padding-right: 30px;
-    min-width: 140px;
+    background-position: right 8px center;
+    min-width: 130px;
+    color-scheme: dark;
   }
 
   .filter-select:focus { border-color: rgba(252,92,3,0.4); }
 
-  .filter-divider {
-    width: 1px; height: 24px;
-    background: var(--cs-border);
-    flex-shrink: 0;
-  }
+  .filter-divider { width: 1px; height: 22px; background: var(--cs-border); flex-shrink: 0; }
 
-  /* ── Main content ── */
+  /* ── Main ── */
   .main {
     max-width: 960px;
     margin: 0 auto;
-    padding: 28px 24px 60px;
+    padding: 28px 24px 80px;
   }
 
   /* ── Date group ── */
@@ -213,24 +237,12 @@
   .date-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin-bottom: 14px;
     gap: 12px;
+    margin-bottom: 14px;
     flex-wrap: wrap;
   }
 
-  .date-header-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .date-label {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--cs-text);
-    letter-spacing: -0.2px;
-  }
+  .date-label { font-size: 14px; font-weight: 700; letter-spacing: -0.2px; white-space: nowrap; }
 
   .date-count {
     font-size: 11px;
@@ -240,7 +252,10 @@
     border: 1px solid var(--cs-border);
     padding: 2px 8px;
     border-radius: 10px;
+    white-space: nowrap;
   }
+
+  .date-line { flex: 1; height: 1px; background: var(--cs-border); min-width: 16px; }
 
   .approve-all-btn {
     background: rgba(16,185,129,0.1);
@@ -256,35 +271,22 @@
     white-space: nowrap;
   }
 
-  .approve-all-btn:hover {
-    background: rgba(16,185,129,0.2);
-    border-color: rgba(16,185,129,0.5);
-  }
-
-  .approve-all-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-
-  .date-line {
-    flex: 1;
-    height: 1px;
-    background: var(--cs-border);
-    min-width: 20px;
-  }
+  .approve-all-btn:hover { background: rgba(16,185,129,0.2); border-color: rgba(16,185,129,0.5); }
+  .approve-all-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
   /* ── Card ── */
   .card {
     background: var(--cs-dark-2);
     border: 1px solid var(--cs-border);
     border-radius: 12px;
-    padding: 18px;
-    margin-bottom: 12px;
+    padding: 18px 18px 16px 21px;
+    margin-bottom: 10px;
     transition: border-color 0.15s;
     position: relative;
     overflow: hidden;
   }
 
+  /* Platform stripe */
   .card::before {
     content: '';
     position: absolute;
@@ -293,46 +295,45 @@
     height: 100%;
     border-radius: 12px 0 0 12px;
   }
-
   .card[data-platform="instagram"]::before { background: var(--plat-instagram); }
-  .card[data-platform="twitter"]::before, .card[data-platform="x"]::before { background: var(--plat-x); }
-  .card[data-platform="linkedin"]::before { background: var(--plat-linkedin); }
-  .card[data-platform="youtube"]::before { background: var(--plat-youtube); }
+  .card[data-platform="twitter"]::before,
+  .card[data-platform="x"]::before         { background: var(--plat-x); }
+  .card[data-platform="linkedin"]::before  { background: var(--plat-linkedin); }
+  .card[data-platform="youtube"]::before   { background: var(--plat-youtube); }
 
-  .card:hover { border-color: rgba(252,92,3,0.25); }
-
-  .card.pending-review { border-color: rgba(245,158,11,0.25); }
-  .card.approved { border-color: rgba(16,185,129,0.15); }
-  .card.cancelled { opacity: 0.5; }
+  .card:hover { border-color: rgba(252,92,3,0.2); }
+  .card.status-pending_review { border-color: rgba(245,158,11,0.22); }
+  .card.status-approved  { border-color: rgba(16,185,129,0.15); }
+  .card.status-scheduled { border-color: rgba(99,102,241,0.15); }
+  .card.status-published { border-color: rgba(11,244,185,0.15); }
+  .card.status-cancelled { opacity: 0.45; }
 
   .card-header {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
-    margin-bottom: 12px;
+    gap: 8px;
+    margin-bottom: 10px;
     flex-wrap: wrap;
   }
 
-  .badges { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; flex: 1; }
+  .badges { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; flex: 1; min-width: 0; }
 
   .badge {
     font-size: 11px;
     font-weight: 600;
-    padding: 3px 10px;
+    padding: 3px 9px;
     border-radius: 20px;
     text-transform: capitalize;
     letter-spacing: 0.2px;
+    white-space: nowrap;
   }
 
-  .badge-platform {
-    color: #fff;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-  }
-
+  .badge-platform { color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.25); }
   .badge-platform.instagram { background: var(--plat-instagram); }
-  .badge-platform.twitter, .badge-platform.x { background: var(--plat-x); }
-  .badge-platform.linkedin { background: var(--plat-linkedin); }
-  .badge-platform.youtube { background: var(--plat-youtube); }
+  .badge-platform.twitter,
+  .badge-platform.x         { background: var(--plat-x); }
+  .badge-platform.linkedin  { background: var(--plat-linkedin); }
+  .badge-platform.youtube   { background: var(--plat-youtube); }
 
   .badge-type {
     background: var(--cs-dark-4);
@@ -340,71 +341,55 @@
     color: var(--cs-muted);
   }
 
-  .badge-status {
+  .status-badge {
     font-size: 11px;
     font-weight: 600;
     padding: 3px 10px;
     border-radius: 20px;
-    margin-left: auto;
     white-space: nowrap;
+    flex-shrink: 0;
   }
-
-  .status-draft          { background: rgba(128,127,134,0.15); color: #807F86; border: 1px solid rgba(128,127,134,0.2); }
-  .status-pending_review { background: rgba(245,158,11,0.15); color: #F59E0B; border: 1px solid rgba(245,158,11,0.25); }
-  .status-approved       { background: rgba(16,185,129,0.12); color: #10B981; border: 1px solid rgba(16,185,129,0.2); }
-  .status-scheduled      { background: rgba(99,102,241,0.15); color: #6366F1; border: 1px solid rgba(99,102,241,0.2); }
-  .status-published      { background: rgba(11,244,185,0.1); color: #0BF4B9; border: 1px solid rgba(11,244,185,0.2); }
-  .status-cancelled      { background: rgba(239,68,68,0.12); color: #EF4444; border: 1px solid rgba(239,68,68,0.2); }
+  .st-draft          { background: rgba(128,127,134,0.15); color: #807F86;  border: 1px solid rgba(128,127,134,0.2); }
+  .st-pending_review { background: rgba(245,158,11,0.15);  color: #F59E0B;  border: 1px solid rgba(245,158,11,0.25); }
+  .st-approved       { background: rgba(16,185,129,0.12);  color: #10B981;  border: 1px solid rgba(16,185,129,0.2); }
+  .st-scheduled      { background: rgba(99,102,241,0.15);  color: #6366F1;  border: 1px solid rgba(99,102,241,0.2); }
+  .st-published      { background: rgba(11,244,185,0.1);   color: #0BF4B9;  border: 1px solid rgba(11,244,185,0.2); }
+  .st-cancelled      { background: rgba(239,68,68,0.12);   color: #EF4444;  border: 1px solid rgba(239,68,68,0.2); }
 
   .card-title {
     font-size: 15px;
     font-weight: 600;
-    color: var(--cs-text);
-    margin-bottom: 8px;
     line-height: 1.4;
+    margin-bottom: 8px;
   }
 
-  .card-copy {
-    font-size: 13px;
-    color: var(--cs-muted);
-    line-height: 1.6;
-    margin-bottom: 10px;
-  }
+  .card-copy { font-size: 13px; color: var(--cs-muted); line-height: 1.65; margin-bottom: 10px; }
 
-  .card-copy .copy-text {
+  .copy-text {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-
-  .card-copy .copy-text.expanded {
-    display: block;
-    -webkit-line-clamp: unset;
-  }
+  .copy-text.expanded { display: block; -webkit-line-clamp: unset; }
 
   .expand-btn {
-    background: none;
-    border: none;
+    background: none; border: none;
     color: var(--cs-orange);
     font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    padding: 2px 0;
-    margin-top: 2px;
+    font-size: 12px; font-weight: 500;
+    cursor: pointer; padding: 2px 0; margin-top: 3px;
   }
-
   .expand-btn:hover { text-decoration: underline; }
 
   .card-cta {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     font-size: 12px;
     color: var(--cs-orange);
     background: rgba(252,92,3,0.08);
-    border: 1px solid rgba(252,92,3,0.2);
+    border: 1px solid rgba(252,92,3,0.18);
     border-radius: 6px;
     padding: 4px 10px;
     margin-bottom: 12px;
@@ -417,82 +402,56 @@
     justify-content: space-between;
     gap: 10px;
     flex-wrap: wrap;
-    margin-top: 4px;
+    margin-top: 6px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(42,42,69,0.6);
   }
 
-  .card-meta {
-    font-size: 11px;
-    color: var(--cs-muted);
-  }
+  .card-meta { font-size: 11px; color: var(--cs-muted); display: flex; gap: 12px; flex-wrap: wrap; }
 
-  .action-btns {
-    display: flex;
-    gap: 8px;
-  }
+  .action-btns { display: flex; gap: 8px; }
 
   .btn-approve {
     background: rgba(16,185,129,0.12);
     border: 1px solid rgba(16,185,129,0.3);
     color: #10B981;
     font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 12px; font-weight: 600;
     padding: 7px 16px;
     border-radius: 7px;
     cursor: pointer;
     transition: all 0.15s;
-    white-space: nowrap;
   }
-
-  .btn-approve:hover {
-    background: rgba(16,185,129,0.22);
-    border-color: rgba(16,185,129,0.5);
-  }
+  .btn-approve:hover { background: rgba(16,185,129,0.22); border-color: rgba(16,185,129,0.5); }
 
   .btn-reject {
     background: rgba(239,68,68,0.1);
     border: 1px solid rgba(239,68,68,0.25);
     color: #EF4444;
     font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 12px; font-weight: 600;
     padding: 7px 16px;
     border-radius: 7px;
     cursor: pointer;
     transition: all 0.15s;
-    white-space: nowrap;
   }
+  .btn-reject:hover { background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.4); }
+  .btn-approve:disabled, .btn-reject:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  .btn-reject:hover {
-    background: rgba(239,68,68,0.2);
-    border-color: rgba(239,68,68,0.4);
-  }
-
-  .btn-approve:disabled, .btn-reject:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-
-  /* ── Empty / loading states ── */
-  .state-box {
-    text-align: center;
-    padding: 64px 24px;
-    color: var(--cs-muted);
-  }
-
-  .state-box .state-icon { font-size: 40px; margin-bottom: 14px; }
-  .state-box h3 { font-size: 16px; font-weight: 600; color: var(--cs-text); margin-bottom: 6px; }
+  /* ── States ── */
+  .state-box { text-align: center; padding: 60px 24px; color: var(--cs-muted); }
+  .state-box .icon { font-size: 38px; margin-bottom: 12px; }
+  .state-box h3 { font-size: 15px; font-weight: 600; color: var(--cs-text); margin-bottom: 6px; }
   .state-box p { font-size: 13px; }
 
   .spinner {
-    width: 32px; height: 32px;
+    width: 30px; height: 30px;
     border: 3px solid var(--cs-border);
     border-top-color: var(--cs-orange);
     border-radius: 50%;
     animation: spin 0.7s linear infinite;
-    margin: 0 auto 14px;
+    margin: 0 auto 12px;
   }
-
   @keyframes spin { to { transform: rotate(360deg); } }
 
   /* ── Toast ── */
@@ -509,38 +468,36 @@
     background: var(--cs-dark-3);
     border: 1px solid var(--cs-border);
     border-radius: 10px;
-    padding: 12px 18px;
+    padding: 11px 16px;
     font-size: 13px;
     font-weight: 500;
     display: flex;
     align-items: center;
-    gap: 10px;
-    animation: slideUp 0.2s ease;
-    max-width: 340px;
+    gap: 8px;
+    max-width: 320px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    animation: toastIn 0.2s ease;
   }
-
   .toast.success { border-color: rgba(16,185,129,0.3); color: #10B981; }
-  .toast.error   { border-color: rgba(239,68,68,0.3); color: #EF4444; }
-  .toast.info    { border-color: rgba(252,92,3,0.3); color: var(--cs-orange); }
+  .toast.error   { border-color: rgba(239,68,68,0.3);  color: #EF4444; }
+  .toast.info    { border-color: rgba(252,92,3,0.3);    color: var(--cs-orange); }
 
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(12px); }
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateY(10px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
   /* ── Responsive ── */
   @media (max-width: 640px) {
-    .header { padding: 0 16px; }
-    .header-top { padding: 14px 0 10px; }
+    .header, .tab-bar, .filter-bar { padding-left: 16px; padding-right: 16px; }
+    .main { padding: 18px 14px 80px; }
     .header-title { font-size: 17px; }
-    .filter-bar { padding: 10px 16px; }
-    .main { padding: 20px 16px 60px; }
-    .card { padding: 14px; }
-    .stats-bar { gap: 6px; }
-    .stat-pill { padding: 7px 12px; }
+    .card { padding: 14px 14px 12px 17px; }
+    .stats-bar { gap: 5px; }
+    .stat-pill { padding: 7px 11px; }
     .stat-num { font-size: 14px; }
     .filter-select { min-width: 110px; }
+    .tab-btn { padding: 12px 14px 10px; font-size: 12px; }
   }
 </style>
 </head>
@@ -553,13 +510,13 @@
       <div class="header-icon">📋</div>
       <div>
         <div class="header-title">Content Board</div>
-        <div class="header-subtitle">Review, approve, and schedule content</div>
+        <div class="header-subtitle">Review drafts and track scheduled content</div>
       </div>
     </div>
     <div id="pending-badge" class="pending-badge" style="display:none"></div>
   </div>
 
-  <div class="stats-bar" id="stats-bar">
+  <div class="stats-bar">
     <div class="stat-pill">
       <span class="stat-dot" style="background:#807F86"></span>
       <span class="stat-num" id="stat-total">—</span>
@@ -588,10 +545,22 @@
   </div>
 </header>
 
+<!-- ── Tabs ── -->
+<div class="tab-bar">
+  <button class="tab-btn drafts-tab active" id="tab-drafts" onclick="switchTab('drafts')">
+    ✏️ Drafts
+    <span class="tab-count" id="tab-count-drafts">—</span>
+  </button>
+  <button class="tab-btn" id="tab-scheduled" onclick="switchTab('scheduled')">
+    🗓 Scheduled
+    <span class="tab-count" id="tab-count-scheduled">—</span>
+  </button>
+</div>
+
 <!-- ── Filter bar ── -->
 <div class="filter-bar">
   <span class="filter-label">Platform</span>
-  <div class="filter-group" id="platform-filters">
+  <div class="filter-group">
     <button class="filter-btn active" data-filter="platform" data-value="all">All</button>
     <button class="filter-btn" data-filter="platform" data-value="instagram">Instagram</button>
     <button class="filter-btn" data-filter="platform" data-value="twitter">Twitter/X</button>
@@ -601,72 +570,72 @@
 
   <div class="filter-divider"></div>
 
-  <span class="filter-label">Status</span>
-  <select class="filter-select" id="status-filter">
-    <option value="all">All Statuses</option>
-    <option value="pending_review">Pending Review</option>
-    <option value="draft">Draft</option>
-    <option value="approved">Approved</option>
-    <option value="scheduled">Scheduled</option>
-    <option value="published">Published</option>
-    <option value="cancelled">Cancelled</option>
-  </select>
-
-  <div class="filter-divider"></div>
-
   <span class="filter-label">Date</span>
-  <input type="date" class="filter-select" id="date-filter" style="min-width:120px;padding-right:12px;background-image:none;color-scheme:dark;">
-  <button class="filter-btn" id="clear-date-btn" style="display:none;padding:6px 10px;">✕ Clear</button>
+  <input type="date" class="filter-select" id="date-filter" style="min-width:120px;padding-right:10px;background-image:none;">
+  <button class="filter-btn" id="clear-date-btn" style="display:none;padding:5px 10px;">✕ Clear</button>
 </div>
 
 <!-- ── Content ── -->
 <main class="main" id="content-area">
   <div class="state-box">
     <div class="spinner"></div>
-    <p>Loading content cards…</p>
+    <p>Loading content…</p>
   </div>
 </main>
 
 <div id="toast-container"></div>
 
 <script>
-const AUTH = 'Basic ' + btoa('ben:collectiveshift');
-const API_BASE = '';  // same origin
+const AUTH   = 'Basic ' + btoa('ben:collectiveshift');
+const API    = '';
 
 // ── State
-let allCards = [];
-let filters = { platform: 'all', status: 'all', date: '' };
+let allCards  = [];
+let activeTab = 'drafts';   // 'drafts' | 'scheduled'
+let filters   = { platform: 'all', date: '' };
 
-// ── Fetch cards
+const DRAFT_STATUSES     = new Set(['draft', 'pending_review']);
+const SCHEDULED_STATUSES = new Set(['approved', 'scheduled', 'published']);
+
+// ── Boot
 async function loadCards() {
   try {
-    const res = await fetch(`${API_BASE}/api/content/cards`, {
+    const res = await fetch(`${API}/api/content/cards`, {
       headers: { 'Authorization': AUTH }
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     allCards = data.cards || [];
-    render();
     updateStats();
+    render();
   } catch (err) {
     document.getElementById('content-area').innerHTML = `
       <div class="state-box">
-        <div class="state-icon">⚠️</div>
+        <div class="icon">⚠️</div>
         <h3>Could not load cards</h3>
-        <p>${err.message}</p>
+        <p>${escHtml(err.message)}</p>
       </div>`;
   }
 }
 
-// ── Stats
+// ── Stats + tab counts
 function updateStats() {
   const cards = allCards;
-  const pending = cards.filter(c => c.status === 'pending_review');
-  document.getElementById('stat-total').textContent = cards.length;
-  document.getElementById('stat-pending').textContent = pending.length;
-  document.getElementById('stat-approved').textContent = cards.filter(c => c.status === 'approved').length;
-  document.getElementById('stat-scheduled').textContent = cards.filter(c => c.status === 'scheduled').length;
-  document.getElementById('stat-published').textContent = cards.filter(c => c.status === 'published').length;
+  const pending   = cards.filter(c => c.status === 'pending_review');
+  const approved  = cards.filter(c => c.status === 'approved');
+  const scheduled = cards.filter(c => c.status === 'scheduled');
+  const published = cards.filter(c => c.status === 'published');
+  const drafts    = cards.filter(c => DRAFT_STATUSES.has(c.status));
+  const sched     = cards.filter(c => SCHEDULED_STATUSES.has(c.status));
+
+  document.getElementById('stat-total').textContent     = cards.length;
+  document.getElementById('stat-pending').textContent   = pending.length;
+  document.getElementById('stat-approved').textContent  = approved.length;
+  document.getElementById('stat-scheduled').textContent = scheduled.length;
+  document.getElementById('stat-published').textContent = published.length;
+
+  document.getElementById('tab-count-drafts').textContent    = drafts.length;
+  document.getElementById('tab-count-scheduled').textContent = sched.length;
 
   const badge = document.getElementById('pending-badge');
   badge.style.display = 'block';
@@ -679,101 +648,107 @@ function updateStats() {
   }
 }
 
-// ── Filter + render
-function getFiltered() {
-  return allCards.filter(card => {
-    const plat = card.platform ? card.platform.toLowerCase() : '';
-    if (filters.platform !== 'all') {
-      const fp = filters.platform;
-      if (fp === 'twitter' && plat !== 'twitter' && plat !== 'x') return false;
-      if (fp !== 'twitter' && plat !== fp) return false;
-    }
-    if (filters.status !== 'all' && card.status !== filters.status) return false;
-    if (filters.date) {
-      const cardDate = (card.scheduledDate || '').slice(0, 10);
-      if (cardDate !== filters.date) return false;
-    }
-    return true;
-  });
+// ── Tab switch
+function switchTab(tab) {
+  activeTab = tab;
+  document.getElementById('tab-drafts').classList.toggle('active', tab === 'drafts');
+  document.getElementById('tab-scheduled').classList.toggle('active', tab === 'scheduled');
+  render();
 }
 
+// ── Filter helpers
+function platformKey(card) { return (card.platform || '').toLowerCase(); }
+
+function matchesPlatform(card) {
+  if (filters.platform === 'all') return true;
+  const p = platformKey(card);
+  if (filters.platform === 'twitter') return p === 'twitter' || p === 'x';
+  return p === filters.platform;
+}
+
+function matchesDate(card) {
+  if (!filters.date) return true;
+  return (card.scheduledDate || '').slice(0, 10) === filters.date;
+}
+
+function getFiltered() {
+  const statusSet = activeTab === 'drafts' ? DRAFT_STATUSES : SCHEDULED_STATUSES;
+  return allCards.filter(c =>
+    statusSet.has(c.status) &&
+    matchesPlatform(c) &&
+    matchesDate(c)
+  );
+}
+
+// ── Render
 function formatDateHeader(dateStr) {
-  if (!dateStr) return 'Unscheduled';
+  if (!dateStr || dateStr === 'unscheduled') return 'Unscheduled';
   const d = new Date(dateStr + 'T12:00:00');
   if (isNaN(d)) return dateStr;
   return d.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-function platformKey(card) {
-  return (card.platform || '').toLowerCase();
-}
-
-function platformLabel(card) {
+function platLabel(card) {
   const p = platformKey(card);
   if (p === 'x' || p === 'twitter') return 'Twitter/X';
   if (p === 'instagram') return 'Instagram';
-  if (p === 'linkedin') return 'LinkedIn';
-  if (p === 'youtube') return 'YouTube';
+  if (p === 'linkedin')  return 'LinkedIn';
+  if (p === 'youtube')   return 'YouTube';
   return card.platform || 'Unknown';
 }
 
-function statusLabel(status) {
-  const map = {
-    draft: 'Draft',
-    pending_review: 'Pending Review',
-    approved: 'Approved',
-    scheduled: 'Scheduled',
-    published: 'Published',
-    cancelled: 'Cancelled',
-  };
-  return map[status] || status;
-}
+const STATUS_LABELS = {
+  draft: 'Draft', pending_review: 'Pending Review',
+  approved: 'Approved', scheduled: 'Scheduled',
+  published: 'Published', cancelled: 'Cancelled'
+};
 
-function buildCardHTML(card) {
+function buildCard(card) {
   const plat = platformKey(card);
-  const platLabel = platformLabel(card);
-  const statusCls = `status-${card.status}`;
-  const cardCls = card.status === 'pending_review' ? 'card pending-review' :
-                  card.status === 'approved'       ? 'card approved' :
-                  card.status === 'cancelled'      ? 'card cancelled' : 'card';
+  const isCancelled = card.status === 'cancelled';
+  const isDraft = activeTab === 'drafts';
 
-  const ctaHTML = card.cta
-    ? `<div class="card-cta">🔗 ${escHtml(card.cta)}</div>`
-    : '';
+  // Copy block
+  const copyBlock = card.copy ? `
+    <div class="card-copy">
+      <div class="copy-text" id="copy-${card.id}">${escHtml(card.copy)}</div>
+      <button class="expand-btn" onclick="toggleCopy('${card.id}', this)">Show more</button>
+    </div>` : '';
 
-  const copyHTML = card.copy
-    ? `<div class="card-copy">
-        <div class="copy-text" id="copy-${card.id}">${escHtml(card.copy)}</div>
-        <button class="expand-btn" onclick="toggleCopy('${card.id}')">Show more</button>
-      </div>`
-    : '';
+  // CTA
+  const ctaBlock = card.cta
+    ? `<div class="card-cta">🔗 ${escHtml(card.cta)}</div>` : '';
 
-  const actionHTML = card.status === 'pending_review'
-    ? `<div class="action-btns">
-        <button class="btn-approve" onclick="updateStatus('${card.id}', 'approved', this)">✓ Approve</button>
-        <button class="btn-reject" onclick="updateStatus('${card.id}', 'cancelled', this)">✕ Reject</button>
-      </div>`
-    : '';
-
+  // Footer meta
   const scheduledTime = card.scheduledDate
     ? new Date(card.scheduledDate).toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit', hour12: true })
     : '';
+  const metaItems = [];
+  if (scheduledTime) metaItems.push(`🕐 ${scheduledTime}`);
+
+  // Action buttons (drafts only, pending_review status only)
+  const actionBlock = (isDraft && card.status === 'pending_review') ? `
+    <div class="action-btns">
+      <button class="btn-approve" onclick="updateStatus('${card.id}', 'approved', event)">✓ Approve</button>
+      <button class="btn-reject"  onclick="updateStatus('${card.id}', 'cancelled', event)">✕ Reject</button>
+    </div>` : '';
 
   return `
-    <div class="card ${cardCls.replace('card ', '')}" data-id="${card.id}" data-platform="${plat}" data-status="${card.status}">
+    <div class="card status-${card.status}${isCancelled ? ' status-cancelled' : ''}"
+         data-id="${card.id}" data-platform="${plat}" data-status="${card.status}">
       <div class="card-header">
         <div class="badges">
-          <span class="badge badge-platform ${plat}">${platLabel}</span>
+          <span class="badge badge-platform ${plat}">${platLabel(card)}</span>
           ${card.type ? `<span class="badge badge-type">${escHtml(card.type)}</span>` : ''}
         </div>
-        <span class="badge-status ${statusCls}">${statusLabel(card.status)}</span>
+        <span class="status-badge st-${card.status}">${STATUS_LABELS[card.status] || card.status}</span>
       </div>
       ${card.title ? `<div class="card-title">${escHtml(card.title)}</div>` : ''}
-      ${copyHTML}
-      ${ctaHTML}
+      ${copyBlock}
+      ${ctaBlock}
       <div class="card-footer">
-        <div class="card-meta">${scheduledTime ? '🕐 ' + scheduledTime : ''}</div>
-        ${actionHTML}
+        <div class="card-meta">${metaItems.join('<span style="color:var(--cs-border)">·</span>')}</div>
+        ${actionBlock}
       </div>
     </div>`;
 }
@@ -783,44 +758,42 @@ function render() {
   const area = document.getElementById('content-area');
 
   if (filtered.length === 0) {
+    const emptyMsg = activeTab === 'drafts'
+      ? 'No drafts or items pending review.'
+      : 'No approved or scheduled content yet.';
     area.innerHTML = `
       <div class="state-box">
-        <div class="state-icon">📭</div>
-        <h3>No cards found</h3>
-        <p>Try adjusting your filters.</p>
+        <div class="icon">${activeTab === 'drafts' ? '✏️' : '🗓'}</div>
+        <h3>Nothing here</h3>
+        <p>${emptyMsg}</p>
       </div>`;
     return;
   }
 
   // Group by date
-  const groups = {};
-  const order = [];
+  const groups = new Map();
   for (const card of filtered) {
     const key = (card.scheduledDate || '').slice(0, 10) || 'unscheduled';
-    if (!groups[key]) { groups[key] = []; order.push(key); }
-    groups[key].push(card);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(card);
   }
 
   let html = '';
-  for (const dateKey of order) {
-    const cards = groups[dateKey];
-    const pendingInGroup = cards.filter(c => c.status === 'pending_review');
-    const headerLabel = dateKey === 'unscheduled' ? 'Unscheduled' : formatDateHeader(dateKey);
-    const approveAllBtn = pendingInGroup.length > 0
-      ? `<button class="approve-all-btn" onclick="approveAllDay('${dateKey}', this)">Approve All (${pendingInGroup.length})</button>`
+  for (const [dateKey, cards] of groups) {
+    const pendingCount = cards.filter(c => c.status === 'pending_review').length;
+    const approveAllBtn = (activeTab === 'drafts' && pendingCount > 0)
+      ? `<button class="approve-all-btn" onclick="approveAllDay('${dateKey}', this)">Approve All (${pendingCount})</button>`
       : '';
 
     html += `
       <div class="date-group" data-date="${dateKey}">
         <div class="date-header">
-          <div class="date-header-left">
-            <div class="date-label">${headerLabel}</div>
-            <div class="date-count">${cards.length} card${cards.length !== 1 ? 's' : ''}</div>
-          </div>
+          <div class="date-label">${formatDateHeader(dateKey)}</div>
+          <div class="date-count">${cards.length} card${cards.length !== 1 ? 's' : ''}</div>
           <div class="date-line"></div>
           ${approveAllBtn}
         </div>
-        ${cards.map(buildCardHTML).join('')}
+        ${cards.map(buildCard).join('')}
       </div>`;
   }
 
@@ -828,37 +801,34 @@ function render() {
 }
 
 // ── Toggle copy expand
-function toggleCopy(id) {
+function toggleCopy(id, btn) {
   const el = document.getElementById(`copy-${id}`);
-  const btn = el ? el.nextElementSibling : null;
   if (!el) return;
   const expanded = el.classList.toggle('expanded');
-  if (btn) btn.textContent = expanded ? 'Show less' : 'Show more';
+  btn.textContent = expanded ? 'Show less' : 'Show more';
 }
 
 // ── Update single card status
-async function updateStatus(cardId, newStatus, triggerBtn) {
+async function updateStatus(cardId, newStatus, e) {
   const cardEl = document.querySelector(`.card[data-id="${cardId}"]`);
   const btns = cardEl ? cardEl.querySelectorAll('button') : [];
   btns.forEach(b => b.disabled = true);
 
   try {
-    const res = await fetch(`${API_BASE}/api/content/status`, {
+    const res = await fetch(`${API}/api/content/status`, {
       method: 'POST',
-      headers: {
-        'Authorization': AUTH,
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Authorization': AUTH, 'Content-Type': 'application/json' },
       body: JSON.stringify({ id: cardId, status: newStatus })
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-    // Update local state
     const card = allCards.find(c => c.id === cardId);
     if (card) card.status = newStatus;
 
-    const label = newStatus === 'approved' ? 'Approved' : 'Rejected';
-    toast(`${label} — card updated.`, newStatus === 'approved' ? 'success' : 'info');
+    toast(
+      newStatus === 'approved' ? '✓ Card approved - moved to Scheduled.' : '✕ Card rejected.',
+      newStatus === 'approved' ? 'success' : 'info'
+    );
 
     updateStats();
     render();
@@ -871,6 +841,7 @@ async function updateStatus(cardId, newStatus, triggerBtn) {
 // ── Approve all in a date group
 async function approveAllDay(dateKey, btn) {
   btn.disabled = true;
+  const origText = btn.textContent;
   btn.textContent = 'Approving…';
 
   const pending = allCards.filter(c =>
@@ -878,36 +849,33 @@ async function approveAllDay(dateKey, btn) {
     (c.scheduledDate || '').slice(0, 10) === dateKey
   );
 
-  let successCount = 0;
+  let ok = 0;
   for (const card of pending) {
     try {
-      const res = await fetch(`${API_BASE}/api/content/status`, {
+      const res = await fetch(`${API}/api/content/status`, {
         method: 'POST',
-        headers: {
-          'Authorization': AUTH,
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Authorization': AUTH, 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: card.id, status: 'approved' })
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       card.status = 'approved';
-      successCount++;
+      ok++;
     } catch (err) {
-      toast(`Error approving ${card.title || card.id}: ${err.message}`, 'error');
+      toast(`Error on "${card.title || card.id}": ${err.message}`, 'error');
     }
   }
 
-  if (successCount > 0) {
-    toast(`Approved ${successCount} card${successCount !== 1 ? 's' : ''}.`, 'success');
+  if (ok > 0) {
+    toast(`✓ Approved ${ok} card${ok !== 1 ? 's' : ''} - moved to Scheduled.`, 'success');
     updateStats();
     render();
   } else {
     btn.disabled = false;
-    btn.textContent = `Approve All (${pending.length})`;
+    btn.textContent = origText;
   }
 }
 
-// ── Filters
+// ── Filter listeners
 document.querySelectorAll('[data-filter="platform"]').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('[data-filter="platform"]').forEach(b => b.classList.remove('active'));
@@ -915,11 +883,6 @@ document.querySelectorAll('[data-filter="platform"]').forEach(btn => {
     filters.platform = btn.dataset.value;
     render();
   });
-});
-
-document.getElementById('status-filter').addEventListener('change', e => {
-  filters.status = e.target.value;
-  render();
 });
 
 document.getElementById('date-filter').addEventListener('change', e => {
@@ -936,30 +899,28 @@ document.getElementById('clear-date-btn').addEventListener('click', () => {
 });
 
 // ── Toast
-function toast(msg, type = 'info', durationMs = 3200) {
-  const container = document.getElementById('toast-container');
+function toast(msg, type = 'info', ms = 3500) {
+  const c = document.getElementById('toast-container');
   const el = document.createElement('div');
   el.className = `toast ${type}`;
   el.textContent = msg;
-  container.appendChild(el);
+  c.appendChild(el);
   setTimeout(() => {
-    el.style.opacity = '0';
     el.style.transition = 'opacity 0.3s';
+    el.style.opacity = '0';
     setTimeout(() => el.remove(), 350);
-  }, durationMs);
+  }, ms);
 }
 
-// ── Helpers
-function escHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
+// ── HTML escape
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
 }
 
-// ── Boot
+// ── Go
 loadCards();
 </script>
 </body>
