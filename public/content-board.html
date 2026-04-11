@@ -7,786 +7,960 @@
 <title>Content Board — Collective Shift</title>
 <style>
   :root {
-    --cs-dark: #0D0B14;
-    --cs-dark-2: #151320;
-    --cs-dark-3: #1C1A28;
-    --cs-dark-4: #252336;
-    --cs-orange: #FC5C03;
+    --cs-dark:    #0D0B14;
+    --cs-dark-2:  #151320;
+    --cs-dark-3:  #1C1A28;
+    --cs-dark-4:  #252336;
+    --cs-orange:  #FC5C03;
     --cs-orange-hover: #e04f00;
-    --cs-teal: #0BF4B9;
-    --cs-text: #E8E8EA;
-    --cs-muted: #807F86;
-    --cs-border: #2a2a45;
-    --plat-x: #1DA1F2;
-    --plat-linkedin: #0A66C2;
-    --plat-instagram: #E4405F;
-    --plat-youtube: #FF0000;
-    --sidebar-w: 220px;
+    --cs-teal:    #0BF4B9;
+    --cs-text:    #E8E8EA;
+    --cs-muted:   #807F86;
+    --cs-border:  #2a2a45;
+    --plat-x:          #1DA1F2;
+    --plat-linkedin:   #0A66C2;
+    --plat-instagram:  #E4405F;
+    --plat-youtube:    #FF0000;
+    --status-draft:          #807F86;
+    --status-pending_review: #F59E0B;
+    --status-approved:       #10B981;
+    --status-scheduled:      #6366F1;
+    --status-published:      #0BF4B9;
+    --status-cancelled:      #EF4444;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--cs-dark); color: var(--cs-text); font-family: 'Inter', sans-serif; }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cs-dark);
+    color: var(--cs-text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+  }
+
   ::-webkit-scrollbar { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #4D4C55; border-radius: 3px; }
 
-  /* ── Sidebar ── */
-  .sidebar {
-    width: var(--sidebar-w); height: 100vh; position: fixed; top: 0; left: 0;
-    background: #1A1A2E; color: #fff; z-index: 100;
-    display: flex; flex-direction: column;
-    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
-    overflow-y: auto; overflow-x: hidden;
-  }
-  .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); }
-  .sidebar-brand {
-    padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);
-    display: flex; align-items: center; gap: 10px; text-decoration: none;
-  }
-  .sidebar-brand-icon {
-    width: 32px; height: 32px; border-radius: 8px;
-    background: rgba(252,92,3,0.15); display: flex; align-items: center; justify-content: center;
-    color: var(--cs-orange); font-weight: 800; font-size: 13px;
-  }
-  .sidebar-brand-name { font-weight: 700; font-size: 14px; color: #fff; letter-spacing: 0.3px; }
-  .sidebar-brand-sub { font-size: 10px; color: rgba(255,255,255,0.35); font-family: monospace; }
-  .sidebar-section {
-    font-size: 10px; text-transform: uppercase; letter-spacing: 1.6px;
-    color: rgba(255,255,255,0.35); padding: 20px 16px 6px; font-weight: 600;
-  }
-  .sidebar-link {
-    display: flex; align-items: center; gap: 10px;
-    padding: 8px 16px; margin: 1px 8px; border-radius: 6px;
-    color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500;
-    transition: all 0.12s ease; cursor: pointer; text-decoration: none;
-    border-left: 3px solid transparent;
-  }
-  .sidebar-link:hover { color: #fff; background: rgba(255,255,255,0.07); }
-  .sidebar-link.active {
-    color: var(--cs-orange); background: rgba(252,92,3,0.08);
-    border-left-color: var(--cs-orange); font-weight: 600;
-  }
-  .sidebar-link .ico { width: 18px; text-align: center; font-size: 14px; flex-shrink: 0; }
-  .sidebar-footer {
-    padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.08);
-    font-size: 10px; color: rgba(255,255,255,0.25); font-family: monospace;
-  }
-  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 95; }
-
-  /* ── Topbar ── */
-  .topbar {
-    height: 52px; position: fixed; top: 0; left: var(--sidebar-w); right: 0;
-    background: var(--cs-dark-2); border-bottom: 1px solid var(--cs-border);
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 24px; z-index: 90;
-  }
-  .topbar-title { font-weight: 700; font-size: 15px; color: #fff; }
-  .topbar-sub { font-size: 11px; color: var(--cs-muted); margin-left: 10px; }
-  .topbar-actions { display: flex; align-items: center; gap: 10px; }
-  .btn-primary {
-    padding: 7px 16px; background: var(--cs-orange); color: #fff; border: none;
-    border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer;
-    font-family: 'Inter', sans-serif; transition: all 0.15s; text-decoration: none;
-    display: inline-flex; align-items: center; gap: 6px;
-  }
-  .btn-primary:hover { background: var(--cs-orange-hover); transform: translateY(-1px); }
-  .btn-ghost {
-    padding: 7px 14px; background: transparent; color: var(--cs-muted); border: 1px solid var(--cs-border);
-    border-radius: 7px; font-size: 12px; font-weight: 500; cursor: pointer;
-    font-family: 'Inter', sans-serif; transition: all 0.12s;
-  }
-  .btn-ghost:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
-  .mobile-hamburger {
-    background: none; border: none; cursor: pointer; color: var(--cs-muted);
-    padding: 4px; display: none;
-  }
-
-  /* ── Main ── */
-  .main-content { margin-left: var(--sidebar-w); padding-top: 52px; min-height: 100vh; }
-
-  /* ── Stats Bar ── */
-  .stats-bar {
-    display: flex; gap: 1px; background: var(--cs-border); border-bottom: 1px solid var(--cs-border);
-  }
-  .stat-card {
-    flex: 1; padding: 16px 20px; background: var(--cs-dark-2);
-    display: flex; flex-direction: column; gap: 4px;
-  }
-  .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--cs-muted); font-weight: 600; }
-  .stat-value { font-size: 22px; font-weight: 800; color: #fff; }
-  .stat-value.teal { color: var(--cs-teal); }
-  .stat-sub { font-size: 11px; color: var(--cs-muted); }
-  .platform-dots { display: flex; gap: 6px; margin-top: 4px; }
-  .platform-dot {
-    display: flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600;
-  }
-  .platform-dot .dot { width: 8px; height: 8px; border-radius: 50%; }
-
-  /* ── Week Nav ── */
-  .week-nav {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 24px; border-bottom: 1px solid var(--cs-border); background: var(--cs-dark);
-  }
-  .week-nav-center { display: flex; align-items: center; gap: 12px; }
-  .week-label { font-weight: 700; font-size: 15px; color: #fff; }
-  .week-range { font-size: 12px; color: var(--cs-muted); }
-  .nav-btn {
-    width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--cs-border);
-    background: var(--cs-dark-2); color: var(--cs-text); cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; transition: all 0.12s;
-  }
-  .nav-btn:hover { border-color: var(--cs-orange); color: var(--cs-orange); }
-  .today-btn {
-    padding: 5px 12px; border-radius: 6px; border: 1px solid var(--cs-border);
-    background: transparent; color: var(--cs-teal); font-size: 11px; font-weight: 600;
-    cursor: pointer; transition: all 0.12s; font-family: 'Inter', sans-serif;
-  }
-  .today-btn:hover { background: rgba(11,244,185,0.08); border-color: var(--cs-teal); }
-
-  /* ── Platform Filters ── */
-  .filters-bar {
-    display: flex; align-items: center; gap: 8px; padding: 12px 24px;
-    border-bottom: 1px solid var(--cs-border); background: var(--cs-dark);
-  }
-  .filter-label { font-size: 11px; color: var(--cs-muted); font-weight: 600; margin-right: 4px; }
-  .filter-btn {
-    padding: 5px 12px; border-radius: 100px; border: 1px solid var(--cs-border);
-    background: transparent; color: var(--cs-muted); font-size: 11px; font-weight: 600;
-    cursor: pointer; transition: all 0.15s; font-family: 'Inter', sans-serif;
-    display: flex; align-items: center; gap: 5px;
-  }
-  .filter-btn .f-dot { width: 8px; height: 8px; border-radius: 50%; opacity: 0.5; }
-  .filter-btn.active { color: #fff; border-color: rgba(255,255,255,0.3); background: var(--cs-dark-3); }
-  .filter-btn.active .f-dot { opacity: 1; }
-
-  /* ── Calendar Grid ── */
-  .calendar-grid {
-    display: grid; grid-template-columns: repeat(7, 1fr);
-    gap: 1px; background: var(--cs-border); margin: 0;
-  }
-  .day-header {
-    padding: 10px 8px; text-align: center; font-size: 11px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 1px; color: var(--cs-muted);
+  /* ── Header ── */
+  .header {
     background: var(--cs-dark-2);
+    border-bottom: 1px solid var(--cs-border);
+    padding: 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
   }
-  .day-cell {
-    background: var(--cs-dark); min-height: 140px; padding: 8px;
-    display: flex; flex-direction: column; transition: background 0.12s;
-  }
-  .day-cell:hover { background: var(--cs-dark-2); }
-  .day-cell.today { background: rgba(11,244,185,0.03); }
-  .day-cell.today .day-num { color: var(--cs-teal); font-weight: 800; }
-  .day-cell.outside { opacity: 0.35; }
-  .day-num {
-    font-size: 13px; font-weight: 600; color: var(--cs-text); margin-bottom: 6px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .day-num .count-badge {
-    font-size: 9px; font-weight: 700; background: var(--cs-dark-4); color: var(--cs-muted);
-    padding: 1px 6px; border-radius: 8px;
-  }
-  .day-posts { display: flex; flex-direction: column; gap: 4px; flex: 1; overflow-y: auto; }
 
-  /* ── Post Cards ── */
-  .post-card {
-    border-radius: 6px; padding: 8px 10px; cursor: pointer;
-    border-left: 3px solid transparent; transition: all 0.12s;
-    display: flex; flex-direction: column; gap: 4px;
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 0 12px;
+    gap: 16px;
+    flex-wrap: wrap;
   }
-  .post-card:hover { transform: translateX(2px); }
-  .post-card.plat-x { background: rgba(29,161,242,0.08); border-left-color: var(--plat-x); }
-  .post-card.plat-linkedin { background: rgba(10,102,194,0.08); border-left-color: var(--plat-linkedin); }
-  .post-card.plat-instagram { background: rgba(228,64,95,0.08); border-left-color: var(--plat-instagram); }
-  .post-card.plat-youtube { background: rgba(255,0,0,0.08); border-left-color: var(--plat-youtube); }
 
-  .post-header { display: flex; align-items: center; gap: 6px; }
-  .post-platform-icon {
-    width: 16px; height: 16px; border-radius: 4px; display: flex;
-    align-items: center; justify-content: center; flex-shrink: 0;
+  .header-title-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
   }
-  .post-platform-icon svg { width: 10px; height: 10px; }
-  .post-platform-icon.pi-x { background: var(--plat-x); }
-  .post-platform-icon.pi-linkedin { background: var(--plat-linkedin); }
-  .post-platform-icon.pi-instagram { background: var(--plat-instagram); }
-  .post-platform-icon.pi-youtube { background: var(--plat-youtube); }
 
-  .post-time { font-size: 10px; color: var(--cs-muted); font-weight: 600; }
-  .post-status {
-    font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
-    padding: 1px 6px; border-radius: 4px; margin-left: auto;
+  .header-icon {
+    width: 38px; height: 38px;
+    background: rgba(252,92,3,0.15);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--cs-orange);
+    font-size: 18px;
+    flex-shrink: 0;
   }
-  .status-scheduled { background: rgba(11,244,185,0.12); color: var(--cs-teal); }
-  .status-published { background: rgba(8,195,148,0.12); color: #08C394; }
-  .status-draft { background: rgba(128,127,134,0.15); color: var(--cs-muted); }
-  .status-error { background: rgba(255,60,60,0.12); color: #ff5555; }
 
-  .post-content {
-    font-size: 11px; color: rgba(255,255,255,0.7); line-height: 1.4;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  .header-title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header-subtitle { font-size: 12px; color: var(--cs-muted); margin-top: 1px; }
+
+  .pending-badge {
+    background: rgba(245,158,11,0.15);
+    border: 1px solid rgba(245,158,11,0.3);
+    color: #F59E0B;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .pending-badge.zero {
+    background: rgba(16,185,129,0.1);
+    border-color: rgba(16,185,129,0.2);
+    color: #10B981;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    gap: 6px;
+    padding-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .stat-pill {
+    background: var(--cs-dark-3);
+    border: 1px solid var(--cs-border);
+    border-radius: 8px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+
+  .stat-num {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--cs-text);
+  }
+
+  .stat-label { color: var(--cs-muted); font-size: 12px; }
+
+  .stat-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── Filter bar ── */
+  .filter-bar {
+    background: var(--cs-dark-2);
+    border-bottom: 1px solid var(--cs-border);
+    padding: 12px 24px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-label { font-size: 12px; color: var(--cs-muted); font-weight: 500; white-space: nowrap; }
+
+  .filter-group {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-btn {
+    background: var(--cs-dark-3);
+    border: 1px solid var(--cs-border);
+    color: var(--cs-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .filter-btn:hover { border-color: rgba(252,92,3,0.4); color: var(--cs-text); }
+
+  .filter-btn.active {
+    background: rgba(252,92,3,0.15);
+    border-color: rgba(252,92,3,0.5);
+    color: var(--cs-orange);
+  }
+
+  .filter-select {
+    background: var(--cs-dark-3);
+    border: 1px solid var(--cs-border);
+    color: var(--cs-text);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23807F86' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+    min-width: 140px;
+  }
+
+  .filter-select:focus { border-color: rgba(252,92,3,0.4); }
+
+  .filter-divider {
+    width: 1px; height: 24px;
+    background: var(--cs-border);
+    flex-shrink: 0;
+  }
+
+  /* ── Main content ── */
+  .main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 28px 24px 60px;
+  }
+
+  /* ── Date group ── */
+  .date-group { margin-bottom: 36px; }
+
+  .date-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .date-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .date-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--cs-text);
+    letter-spacing: -0.2px;
+  }
+
+  .date-count {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--cs-muted);
+    background: var(--cs-dark-3);
+    border: 1px solid var(--cs-border);
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+
+  .approve-all-btn {
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.3);
+    color: #10B981;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .approve-all-btn:hover {
+    background: rgba(16,185,129,0.2);
+    border-color: rgba(16,185,129,0.5);
+  }
+
+  .approve-all-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .date-line {
+    flex: 1;
+    height: 1px;
+    background: var(--cs-border);
+    min-width: 20px;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--cs-dark-2);
+    border: 1px solid var(--cs-border);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 12px;
+    transition: border-color 0.15s;
+    position: relative;
     overflow: hidden;
   }
-  .post-thumb {
-    width: 100%; height: 48px; border-radius: 4px; margin-top: 2px;
-    object-fit: cover; opacity: 0.8;
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: 12px 0 0 12px;
   }
 
-  /* ── Empty State ── */
-  .empty-state {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 80px 24px; text-align: center;
-  }
-  .empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.4; }
-  .empty-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 8px; }
-  .empty-sub { font-size: 13px; color: var(--cs-muted); max-width: 400px; line-height: 1.6; margin-bottom: 20px; }
+  .card[data-platform="instagram"]::before { background: var(--plat-instagram); }
+  .card[data-platform="twitter"]::before, .card[data-platform="x"]::before { background: var(--plat-x); }
+  .card[data-platform="linkedin"]::before { background: var(--plat-linkedin); }
+  .card[data-platform="youtube"]::before { background: var(--plat-youtube); }
 
-  /* ── Post Detail Modal ── */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-    z-index: 200; backdrop-filter: blur(4px); justify-content: center; align-items: center;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--cs-dark-2); border: 1px solid var(--cs-border); border-radius: 12px;
-    max-width: 520px; width: 90%; max-height: 80vh; overflow-y: auto; padding: 24px;
-  }
-  .modal-close {
-    float: right; background: none; border: none; color: var(--cs-muted);
-    font-size: 18px; cursor: pointer; padding: 4px;
-  }
-  .modal-close:hover { color: #fff; }
-  .modal h3 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px; }
-  .modal-field { margin-bottom: 14px; }
-  .modal-field-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--cs-muted); font-weight: 600; margin-bottom: 4px; }
-  .modal-field-value { font-size: 13px; color: var(--cs-text); line-height: 1.5; }
-  .modal-field-value img { max-width: 100%; border-radius: 8px; margin-top: 6px; }
+  .card:hover { border-color: rgba(252,92,3,0.25); }
 
-  /* ── Sync Info ── */
-  .sync-info {
-    padding: 8px 24px; font-size: 10px; color: var(--cs-muted); display: flex;
-    align-items: center; gap: 6px; border-bottom: 1px solid var(--cs-border);
-    background: var(--cs-dark);
-  }
-  .sync-dot {
-    width: 6px; height: 6px; border-radius: 50%; background: var(--cs-teal);
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .card.pending-review { border-color: rgba(245,158,11,0.25); }
+  .card.approved { border-color: rgba(16,185,129,0.15); }
+  .card.cancelled { opacity: 0.5; }
 
-  /* ── Mobile ── */
-  @media (max-width: 768px) {
-    .sidebar { transform: translateX(-100%); }
-    .sidebar.open { transform: translateX(0); }
-    .sidebar-overlay.open { display: block; }
-    .topbar { left: 0; }
-    .main-content { margin-left: 0; }
-    .mobile-hamburger { display: flex !important; }
-    .stats-bar { flex-wrap: wrap; }
-    .stat-card { min-width: 50%; }
-    .calendar-grid { grid-template-columns: 1fr; }
-    .day-header { display: none; }
-    .day-cell { min-height: 80px; }
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .badges { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; flex: 1; }
+
+  .badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: capitalize;
+    letter-spacing: 0.2px;
+  }
+
+  .badge-platform {
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+
+  .badge-platform.instagram { background: var(--plat-instagram); }
+  .badge-platform.twitter, .badge-platform.x { background: var(--plat-x); }
+  .badge-platform.linkedin { background: var(--plat-linkedin); }
+  .badge-platform.youtube { background: var(--plat-youtube); }
+
+  .badge-type {
+    background: var(--cs-dark-4);
+    border: 1px solid var(--cs-border);
+    color: var(--cs-muted);
+  }
+
+  .badge-status {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  .status-draft          { background: rgba(128,127,134,0.15); color: #807F86; border: 1px solid rgba(128,127,134,0.2); }
+  .status-pending_review { background: rgba(245,158,11,0.15); color: #F59E0B; border: 1px solid rgba(245,158,11,0.25); }
+  .status-approved       { background: rgba(16,185,129,0.12); color: #10B981; border: 1px solid rgba(16,185,129,0.2); }
+  .status-scheduled      { background: rgba(99,102,241,0.15); color: #6366F1; border: 1px solid rgba(99,102,241,0.2); }
+  .status-published      { background: rgba(11,244,185,0.1); color: #0BF4B9; border: 1px solid rgba(11,244,185,0.2); }
+  .status-cancelled      { background: rgba(239,68,68,0.12); color: #EF4444; border: 1px solid rgba(239,68,68,0.2); }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--cs-text);
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .card-copy {
+    font-size: 13px;
+    color: var(--cs-muted);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+
+  .card-copy .copy-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-copy .copy-text.expanded {
+    display: block;
+    -webkit-line-clamp: unset;
+  }
+
+  .expand-btn {
+    background: none;
+    border: none;
+    color: var(--cs-orange);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 2px 0;
+    margin-top: 2px;
+  }
+
+  .expand-btn:hover { text-decoration: underline; }
+
+  .card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--cs-orange);
+    background: rgba(252,92,3,0.08);
+    border: 1px solid rgba(252,92,3,0.2);
+    border-radius: 6px;
+    padding: 4px 10px;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .card-meta {
+    font-size: 11px;
+    color: var(--cs-muted);
+  }
+
+  .action-btns {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-approve {
+    background: rgba(16,185,129,0.12);
+    border: 1px solid rgba(16,185,129,0.3);
+    color: #10B981;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .btn-approve:hover {
+    background: rgba(16,185,129,0.22);
+    border-color: rgba(16,185,129,0.5);
+  }
+
+  .btn-reject {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.25);
+    color: #EF4444;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .btn-reject:hover {
+    background: rgba(239,68,68,0.2);
+    border-color: rgba(239,68,68,0.4);
+  }
+
+  .btn-approve:disabled, .btn-reject:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* ── Empty / loading states ── */
+  .state-box {
+    text-align: center;
+    padding: 64px 24px;
+    color: var(--cs-muted);
+  }
+
+  .state-box .state-icon { font-size: 40px; margin-bottom: 14px; }
+  .state-box h3 { font-size: 16px; font-weight: 600; color: var(--cs-text); margin-bottom: 6px; }
+  .state-box p { font-size: 13px; }
+
+  .spinner {
+    width: 32px; height: 32px;
+    border: 3px solid var(--cs-border);
+    border-top-color: var(--cs-orange);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto 14px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Toast ── */
+  #toast-container {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .toast {
+    background: var(--cs-dark-3);
+    border: 1px solid var(--cs-border);
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideUp 0.2s ease;
+    max-width: 340px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+
+  .toast.success { border-color: rgba(16,185,129,0.3); color: #10B981; }
+  .toast.error   { border-color: rgba(239,68,68,0.3); color: #EF4444; }
+  .toast.info    { border-color: rgba(252,92,3,0.3); color: var(--cs-orange); }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .header { padding: 0 16px; }
+    .header-top { padding: 14px 0 10px; }
+    .header-title { font-size: 17px; }
+    .filter-bar { padding: 10px 16px; }
+    .main { padding: 20px 16px 60px; }
+    .card { padding: 14px; }
+    .stats-bar { gap: 6px; }
+    .stat-pill { padding: 7px 12px; }
+    .stat-num { font-size: 14px; }
+    .filter-select { min-width: 110px; }
   }
 </style>
 </head>
 <body>
 
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-
-<!-- SIDEBAR -->
-<aside class="sidebar" id="sidebar">
-  <a href="index.html" class="sidebar-brand" style="text-decoration:none;">
-    <div class="sidebar-brand-icon">CS</div>
-    <div>
-      <div class="sidebar-brand-name">Collective Shift</div>
-      <div class="sidebar-brand-sub">CEO Dashboard</div>
+<!-- ── Header ── -->
+<header class="header">
+  <div class="header-top">
+    <div class="header-title-row">
+      <div class="header-icon">📋</div>
+      <div>
+        <div class="header-title">Content Board</div>
+        <div class="header-subtitle">Review, approve, and schedule content</div>
+      </div>
     </div>
-  </a>
-  <nav style="flex:1; padding: 8px 0;">
-    <div class="sidebar-section">Dashboard</div>
-    <a class="sidebar-link" href="index.html"><span class="ico">📊</span> CEO Dashboard</a>
-    <a class="sidebar-link active" href="content-board.html"><span class="ico">📅</span> Content Board</a>
-    <div class="sidebar-section">Marketing</div>
-    <a class="sidebar-link" href="marketing-os.html"><span class="ico">🎯</span> Marketing OS</a>
-    <a class="sidebar-link" href="call-booking-campaign.html"><span class="ico">📞</span> Call Booking</a>
-    <div class="sidebar-section">Content</div>
-    <a class="sidebar-link" href="content-studio.html"><span class="ico">🎬</span> Content Studio</a>
-    <a class="sidebar-link" href="content-ops.html"><span class="ico">⚙️</span> Content Ops</a>
-    <div class="sidebar-section">Strategy</div>
-    <a class="sidebar-link" href="brand-bible.html"><span class="ico">📄</span> Brand Bible</a>
-    <a class="sidebar-link" href="products-funnels.html"><span class="ico">🧭</span> Products & Funnels</a>
-  </nav>
-  <div class="sidebar-footer">v3.0 · April 2026</div>
-</aside>
-
-<!-- TOP BAR -->
-<header class="topbar">
-  <div style="display:flex; align-items:center; gap:12px;">
-    <button class="mobile-hamburger" onclick="toggleSidebar()">
-      <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-    </button>
-    <span class="topbar-title">📅 Content Board</span>
-    <span class="topbar-sub">Postiz Calendar</span>
+    <div id="pending-badge" class="pending-badge" style="display:none"></div>
   </div>
-  <div class="topbar-actions">
-    <button class="btn-ghost" onclick="refreshData()">↻ Refresh</button>
-    <a class="btn-primary" href="https://app.postiz.com" target="_blank" rel="noopener">+ Create Post</a>
+
+  <div class="stats-bar" id="stats-bar">
+    <div class="stat-pill">
+      <span class="stat-dot" style="background:#807F86"></span>
+      <span class="stat-num" id="stat-total">—</span>
+      <span class="stat-label">Total</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-dot" style="background:#F59E0B"></span>
+      <span class="stat-num" id="stat-pending">—</span>
+      <span class="stat-label">Pending Review</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-dot" style="background:#10B981"></span>
+      <span class="stat-num" id="stat-approved">—</span>
+      <span class="stat-label">Approved</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-dot" style="background:#6366F1"></span>
+      <span class="stat-num" id="stat-scheduled">—</span>
+      <span class="stat-label">Scheduled</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-dot" style="background:#0BF4B9"></span>
+      <span class="stat-num" id="stat-published">—</span>
+      <span class="stat-label">Published</span>
+    </div>
   </div>
 </header>
 
-<!-- MAIN -->
-<div class="main-content">
-
-  <!-- Sync Info -->
-  <div class="sync-info">
-    <span class="sync-dot"></span>
-    <span>Data synced from Postiz · Last updated: <span id="lastUpdated">loading...</span></span>
+<!-- ── Filter bar ── -->
+<div class="filter-bar">
+  <span class="filter-label">Platform</span>
+  <div class="filter-group" id="platform-filters">
+    <button class="filter-btn active" data-filter="platform" data-value="all">All</button>
+    <button class="filter-btn" data-filter="platform" data-value="instagram">Instagram</button>
+    <button class="filter-btn" data-filter="platform" data-value="twitter">Twitter/X</button>
+    <button class="filter-btn" data-filter="platform" data-value="linkedin">LinkedIn</button>
+    <button class="filter-btn" data-filter="platform" data-value="youtube">YouTube</button>
   </div>
 
-  <!-- Stats Bar -->
-  <div class="stats-bar">
-    <div class="stat-card">
-      <div class="stat-label">Scheduled This Week</div>
-      <div class="stat-value" id="statScheduled">0</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Published This Week</div>
-      <div class="stat-value teal" id="statPublished">0</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Next Post</div>
-      <div class="stat-value" id="statNextPost" style="font-size:14px;">--</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Platforms</div>
-      <div class="platform-dots" id="platformDots"></div>
-    </div>
-  </div>
+  <div class="filter-divider"></div>
 
-  <!-- Week Navigation -->
-  <div class="week-nav">
-    <button class="nav-btn" onclick="prevWeek()" title="Previous week">‹</button>
-    <div class="week-nav-center">
-      <span class="week-label" id="weekLabel">This Week</span>
-      <span class="week-range" id="weekRange"></span>
-      <button class="today-btn" onclick="goToday()">Today</button>
-    </div>
-    <button class="nav-btn" onclick="nextWeek()" title="Next week">›</button>
-  </div>
+  <span class="filter-label">Status</span>
+  <select class="filter-select" id="status-filter">
+    <option value="all">All Statuses</option>
+    <option value="pending_review">Pending Review</option>
+    <option value="draft">Draft</option>
+    <option value="approved">Approved</option>
+    <option value="scheduled">Scheduled</option>
+    <option value="published">Published</option>
+    <option value="cancelled">Cancelled</option>
+  </select>
 
-  <!-- Platform Filters -->
-  <div class="filters-bar">
-    <span class="filter-label">Show:</span>
-    <button class="filter-btn active" data-platform="all" onclick="toggleFilter('all')">All</button>
-    <button class="filter-btn active" data-platform="x" onclick="toggleFilter('x')">
-      <span class="f-dot" style="background:var(--plat-x)"></span> X
-    </button>
-    <button class="filter-btn active" data-platform="linkedin" onclick="toggleFilter('linkedin')">
-      <span class="f-dot" style="background:var(--plat-linkedin)"></span> LinkedIn
-    </button>
-    <button class="filter-btn active" data-platform="instagram-standalone" onclick="toggleFilter('instagram-standalone')">
-      <span class="f-dot" style="background:var(--plat-instagram)"></span> Instagram
-    </button>
-    <button class="filter-btn active" data-platform="youtube" onclick="toggleFilter('youtube')">
-      <span class="f-dot" style="background:var(--plat-youtube)"></span> YouTube
-    </button>
-  </div>
+  <div class="filter-divider"></div>
 
-  <!-- Calendar -->
-  <div id="calendarContainer"></div>
-
-  <!-- Empty state (shown when no posts at all) -->
-  <div class="empty-state" id="emptyState" style="display:none;">
-    <div class="empty-icon">📅</div>
-    <div class="empty-title">No posts scheduled yet</div>
-    <div class="empty-sub">Connect your social accounts in Postiz and start scheduling content. Posts will appear here automatically.</div>
-    <a class="btn-primary" href="https://app.postiz.com" target="_blank" rel="noopener">Open Postiz →</a>
-  </div>
+  <span class="filter-label">Date</span>
+  <input type="date" class="filter-select" id="date-filter" style="min-width:120px;padding-right:12px;background-image:none;color-scheme:dark;">
+  <button class="filter-btn" id="clear-date-btn" style="display:none;padding:6px 10px;">✕ Clear</button>
 </div>
 
-<!-- Post Detail Modal -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-  <div class="modal" onclick="event.stopPropagation()">
-    <button class="modal-close" onclick="closeModalDirect()">✕</button>
-    <h3 id="modalTitle">Post Detail</h3>
-    <div id="modalBody"></div>
+<!-- ── Content ── -->
+<main class="main" id="content-area">
+  <div class="state-box">
+    <div class="spinner"></div>
+    <p>Loading content cards…</p>
   </div>
-</div>
+</main>
+
+<div id="toast-container"></div>
 
 <script>
-// ══════════════════════════════════════
-// STATE
-// ══════════════════════════════════════
-let calendarData = { posts: [], integrations: [], lastUpdated: null };
-let currentWeekStart = getMonday(new Date());
-let activeFilters = new Set(['x', 'linkedin', 'instagram-standalone', 'youtube']);
+const AUTH = 'Basic ' + btoa('ben:collectiveshift');
+const API_BASE = '';  // same origin
 
-const PLATFORM_META = {
-  'x': { name: 'X', color: '#1DA1F2', icon: '<svg viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>' },
-  'linkedin': { name: 'LinkedIn', color: '#0A66C2', icon: '<svg viewBox="0 0 24 24" fill="white"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>' },
-  'instagram-standalone': { name: 'Instagram', color: '#E4405F', icon: '<svg viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>' },
-  'youtube': { name: 'YouTube', color: '#FF0000', icon: '<svg viewBox="0 0 24 24" fill="white"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>' }
-};
+// ── State
+let allCards = [];
+let filters = { platform: 'all', status: 'all', date: '' };
 
-const AEST_TZ = 'Australia/Melbourne';
-
-// ══════════════════════════════════════
-// HELPERS
-// ══════════════════════════════════════
-function getMonday(d) {
-  const date = new Date(d);
-  const day = date.getDay();
-  const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-  date.setDate(diff);
-  date.setHours(0, 0, 0, 0);
-  return date;
-}
-
-function formatDateAEST(dateStr) {
+// ── Fetch cards
+async function loadCards() {
   try {
-    return new Date(dateStr).toLocaleString('en-AU', { timeZone: AEST_TZ, hour: '2-digit', minute: '2-digit', hour12: true });
-  } catch { return ''; }
-}
-
-function formatFullDateAEST(dateStr) {
-  try {
-    return new Date(dateStr).toLocaleString('en-AU', { timeZone: AEST_TZ, weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
-  } catch { return dateStr; }
-}
-
-function formatDateRange(start, end) {
-  const s = new Date(start);
-  const e = new Date(end);
-  const opts = { day: 'numeric', month: 'short' };
-  return s.toLocaleDateString('en-AU', opts) + ' - ' + e.toLocaleDateString('en-AU', { ...opts, year: 'numeric' });
-}
-
-function isSameDay(d1, d2) {
-  return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
-}
-
-function getPlatformForPost(post) {
-  // Post may have integration array or integrationId
-  if (post.integration && post.integration.identifier) return post.integration.identifier;
-  if (post.integrations && post.integrations.length) return post.integrations[0].identifier || 'x';
-  if (post.integrationId) {
-    const found = calendarData.integrations.find(i => i.id === post.integrationId);
-    if (found) return found.identifier;
-  }
-  return 'x';
-}
-
-function getPostStatus(post) {
-  const s = (post.state || post.status || 'draft').toLowerCase();
-  if (s === 'published' || s === 'completed') return 'published';
-  if (s === 'scheduled' || s === 'queue') return 'scheduled';
-  if (s === 'error' || s === 'failed') return 'error';
-  return 'draft';
-}
-
-function getPostDate(post) {
-  return new Date(post.publishDate || post.scheduledDate || post.createdAt);
-}
-
-function getPostContent(post) {
-  return post.content || post.description || post.text || '';
-}
-
-function getPostMedia(post) {
-  if (post.image) return post.image;
-  if (post.media && post.media.length) return post.media[0].url || post.media[0];
-  return null;
-}
-
-// ══════════════════════════════════════
-// DATA
-// ══════════════════════════════════════
-async function loadData() {
-  try {
-    const resp = await fetch('postiz-calendar.json?t=' + Date.now());
-    if (!resp.ok) throw new Error('Failed to load');
-    calendarData = await resp.json();
-  } catch (e) {
-    console.warn('Could not load postiz-calendar.json:', e);
-    calendarData = { posts: [], integrations: [], lastUpdated: null };
-  }
-  render();
-}
-
-function refreshData() {
-  loadData();
-}
-
-// ══════════════════════════════════════
-// RENDER
-// ══════════════════════════════════════
-function render() {
-  updateSyncInfo();
-  updateStats();
-  renderCalendar();
-  updateEmptyState();
-}
-
-function updateSyncInfo() {
-  const el = document.getElementById('lastUpdated');
-  if (calendarData.lastUpdated) {
-    el.textContent = formatFullDateAEST(calendarData.lastUpdated);
-  } else {
-    el.textContent = 'never';
+    const res = await fetch(`${API_BASE}/api/content/cards`, {
+      headers: { 'Authorization': AUTH }
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    allCards = data.cards || [];
+    render();
+    updateStats();
+  } catch (err) {
+    document.getElementById('content-area').innerHTML = `
+      <div class="state-box">
+        <div class="state-icon">⚠️</div>
+        <h3>Could not load cards</h3>
+        <p>${err.message}</p>
+      </div>`;
   }
 }
 
+// ── Stats
 function updateStats() {
-  const weekEnd = new Date(currentWeekStart);
-  weekEnd.setDate(weekEnd.getDate() + 7);
+  const cards = allCards;
+  const pending = cards.filter(c => c.status === 'pending_review');
+  document.getElementById('stat-total').textContent = cards.length;
+  document.getElementById('stat-pending').textContent = pending.length;
+  document.getElementById('stat-approved').textContent = cards.filter(c => c.status === 'approved').length;
+  document.getElementById('stat-scheduled').textContent = cards.filter(c => c.status === 'scheduled').length;
+  document.getElementById('stat-published').textContent = cards.filter(c => c.status === 'published').length;
 
-  const weekPosts = calendarData.posts.filter(p => {
-    const d = getPostDate(p);
-    return d >= currentWeekStart && d < weekEnd;
-  });
-
-  const visiblePosts = weekPosts.filter(p => activeFilters.has(getPlatformForPost(p)));
-
-  const scheduled = visiblePosts.filter(p => getPostStatus(p) === 'scheduled').length;
-  const published = visiblePosts.filter(p => getPostStatus(p) === 'published').length;
-
-  document.getElementById('statScheduled').textContent = scheduled;
-  document.getElementById('statPublished').textContent = published;
-
-  // Next post
-  const now = new Date();
-  const upcoming = calendarData.posts
-    .filter(p => getPostDate(p) > now && getPostStatus(p) === 'scheduled')
-    .sort((a, b) => getPostDate(a) - getPostDate(b));
-
-  const nextEl = document.getElementById('statNextPost');
-  if (upcoming.length > 0) {
-    const plat = getPlatformForPost(upcoming[0]);
-    const meta = PLATFORM_META[plat] || PLATFORM_META['x'];
-    nextEl.innerHTML = '<span style="color:' + meta.color + '">' + meta.name + '</span> · ' + formatDateAEST(getPostDate(upcoming[0]));
+  const badge = document.getElementById('pending-badge');
+  badge.style.display = 'block';
+  if (pending.length === 0) {
+    badge.className = 'pending-badge zero';
+    badge.textContent = '✓ All clear';
   } else {
-    nextEl.textContent = 'No upcoming posts';
+    badge.className = 'pending-badge';
+    badge.textContent = `${pending.length} pending review`;
   }
+}
 
-  // Platform dots
-  const dotContainer = document.getElementById('platformDots');
-  const platCounts = {};
-  weekPosts.forEach(p => {
-    const plat = getPlatformForPost(p);
-    platCounts[plat] = (platCounts[plat] || 0) + 1;
+// ── Filter + render
+function getFiltered() {
+  return allCards.filter(card => {
+    const plat = card.platform ? card.platform.toLowerCase() : '';
+    if (filters.platform !== 'all') {
+      const fp = filters.platform;
+      if (fp === 'twitter' && plat !== 'twitter' && plat !== 'x') return false;
+      if (fp !== 'twitter' && plat !== fp) return false;
+    }
+    if (filters.status !== 'all' && card.status !== filters.status) return false;
+    if (filters.date) {
+      const cardDate = (card.scheduledDate || '').slice(0, 10);
+      if (cardDate !== filters.date) return false;
+    }
+    return true;
   });
-
-  dotContainer.innerHTML = Object.entries(PLATFORM_META).map(([key, meta]) => {
-    const count = platCounts[key] || 0;
-    return '<span class="platform-dot"><span class="dot" style="background:' + meta.color + '"></span>' + count + '</span>';
-  }).join('');
 }
 
-function renderCalendar() {
-  const container = document.getElementById('calendarContainer');
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  const today = new Date();
+function formatDateHeader(dateStr) {
+  if (!dateStr) return 'Unscheduled';
+  const d = new Date(dateStr + 'T12:00:00');
+  if (isNaN(d)) return dateStr;
+  return d.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
 
-  // Week label
-  const weekEnd = new Date(currentWeekStart);
-  weekEnd.setDate(weekEnd.getDate() + 6);
+function platformKey(card) {
+  return (card.platform || '').toLowerCase();
+}
 
-  const isThisWeek = isSameDay(getMonday(today), currentWeekStart);
-  document.getElementById('weekLabel').textContent = isThisWeek ? 'This Week' : 'Week of ' + currentWeekStart.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
-  document.getElementById('weekRange').textContent = formatDateRange(currentWeekStart, weekEnd);
+function platformLabel(card) {
+  const p = platformKey(card);
+  if (p === 'x' || p === 'twitter') return 'Twitter/X';
+  if (p === 'instagram') return 'Instagram';
+  if (p === 'linkedin') return 'LinkedIn';
+  if (p === 'youtube') return 'YouTube';
+  return card.platform || 'Unknown';
+}
 
-  let html = '<div class="calendar-grid">';
+function statusLabel(status) {
+  const map = {
+    draft: 'Draft',
+    pending_review: 'Pending Review',
+    approved: 'Approved',
+    scheduled: 'Scheduled',
+    published: 'Published',
+    cancelled: 'Cancelled',
+  };
+  return map[status] || status;
+}
 
-  // Headers
-  days.forEach(d => { html += '<div class="day-header">' + d + '</div>'; });
+function buildCardHTML(card) {
+  const plat = platformKey(card);
+  const platLabel = platformLabel(card);
+  const statusCls = `status-${card.status}`;
+  const cardCls = card.status === 'pending_review' ? 'card pending-review' :
+                  card.status === 'approved'       ? 'card approved' :
+                  card.status === 'cancelled'      ? 'card cancelled' : 'card';
 
-  // Day cells
-  for (let i = 0; i < 7; i++) {
-    const cellDate = new Date(currentWeekStart);
-    cellDate.setDate(cellDate.getDate() + i);
-    const isToday = isSameDay(cellDate, today);
+  const ctaHTML = card.cta
+    ? `<div class="card-cta">🔗 ${escHtml(card.cta)}</div>`
+    : '';
 
-    const dayPosts = calendarData.posts.filter(p => {
-      const pd = getPostDate(p);
-      const plat = getPlatformForPost(p);
-      return isSameDay(pd, cellDate) && activeFilters.has(plat);
-    }).sort((a, b) => getPostDate(a) - getPostDate(b));
+  const copyHTML = card.copy
+    ? `<div class="card-copy">
+        <div class="copy-text" id="copy-${card.id}">${escHtml(card.copy)}</div>
+        <button class="expand-btn" onclick="toggleCopy('${card.id}')">Show more</button>
+      </div>`
+    : '';
 
-    html += '<div class="day-cell' + (isToday ? ' today' : '') + '">';
-    html += '<div class="day-num"><span>' + cellDate.getDate() + '</span>';
-    if (dayPosts.length > 0) {
-      html += '<span class="count-badge">' + dayPosts.length + '</span>';
-    }
-    html += '</div>';
-    html += '<div class="day-posts">';
+  const actionHTML = card.status === 'pending_review'
+    ? `<div class="action-btns">
+        <button class="btn-approve" onclick="updateStatus('${card.id}', 'approved', this)">✓ Approve</button>
+        <button class="btn-reject" onclick="updateStatus('${card.id}', 'cancelled', this)">✕ Reject</button>
+      </div>`
+    : '';
 
-    dayPosts.forEach((post, idx) => {
-      const plat = getPlatformForPost(post);
-      const meta = PLATFORM_META[plat] || PLATFORM_META['x'];
-      const status = getPostStatus(post);
-      const content = getPostContent(post);
-      const preview = content.length > 80 ? content.substring(0, 80) + '...' : content;
-      const media = getPostMedia(post);
-      const postIdx = calendarData.posts.indexOf(post);
+  const scheduledTime = card.scheduledDate
+    ? new Date(card.scheduledDate).toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit', hour12: true })
+    : '';
 
-      html += '<div class="post-card plat-' + plat + '" onclick="openPostDetail(' + postIdx + ')">';
-      html += '<div class="post-header">';
-      html += '<div class="post-platform-icon pi-' + plat + '">' + meta.icon + '</div>';
-      html += '<span class="post-time">' + formatDateAEST(getPostDate(post)) + '</span>';
-      html += '<span class="post-status status-' + status + '">' + status + '</span>';
-      html += '</div>';
-      if (preview) {
-        html += '<div class="post-content">' + escapeHtml(preview) + '</div>';
-      }
-      if (media) {
-        html += '<img class="post-thumb" src="' + escapeHtml(media) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">';
-      }
-      html += '</div>';
-    });
+  return `
+    <div class="card ${cardCls.replace('card ', '')}" data-id="${card.id}" data-platform="${plat}" data-status="${card.status}">
+      <div class="card-header">
+        <div class="badges">
+          <span class="badge badge-platform ${plat}">${platLabel}</span>
+          ${card.type ? `<span class="badge badge-type">${escHtml(card.type)}</span>` : ''}
+        </div>
+        <span class="badge-status ${statusCls}">${statusLabel(card.status)}</span>
+      </div>
+      ${card.title ? `<div class="card-title">${escHtml(card.title)}</div>` : ''}
+      ${copyHTML}
+      ${ctaHTML}
+      <div class="card-footer">
+        <div class="card-meta">${scheduledTime ? '🕐 ' + scheduledTime : ''}</div>
+        ${actionHTML}
+      </div>
+    </div>`;
+}
 
-    if (dayPosts.length === 0) {
-      html += '<div style="font-size:10px; color:var(--cs-muted); opacity:0.5; padding:4px; text-align:center; margin-top:auto;">No posts</div>';
-    }
+function render() {
+  const filtered = getFiltered();
+  const area = document.getElementById('content-area');
 
-    html += '</div></div>';
+  if (filtered.length === 0) {
+    area.innerHTML = `
+      <div class="state-box">
+        <div class="state-icon">📭</div>
+        <h3>No cards found</h3>
+        <p>Try adjusting your filters.</p>
+      </div>`;
+    return;
   }
 
-  html += '</div>';
-  container.innerHTML = html;
+  // Group by date
+  const groups = {};
+  const order = [];
+  for (const card of filtered) {
+    const key = (card.scheduledDate || '').slice(0, 10) || 'unscheduled';
+    if (!groups[key]) { groups[key] = []; order.push(key); }
+    groups[key].push(card);
+  }
+
+  let html = '';
+  for (const dateKey of order) {
+    const cards = groups[dateKey];
+    const pendingInGroup = cards.filter(c => c.status === 'pending_review');
+    const headerLabel = dateKey === 'unscheduled' ? 'Unscheduled' : formatDateHeader(dateKey);
+    const approveAllBtn = pendingInGroup.length > 0
+      ? `<button class="approve-all-btn" onclick="approveAllDay('${dateKey}', this)">Approve All (${pendingInGroup.length})</button>`
+      : '';
+
+    html += `
+      <div class="date-group" data-date="${dateKey}">
+        <div class="date-header">
+          <div class="date-header-left">
+            <div class="date-label">${headerLabel}</div>
+            <div class="date-count">${cards.length} card${cards.length !== 1 ? 's' : ''}</div>
+          </div>
+          <div class="date-line"></div>
+          ${approveAllBtn}
+        </div>
+        ${cards.map(buildCardHTML).join('')}
+      </div>`;
+  }
+
+  area.innerHTML = html;
 }
 
-function updateEmptyState() {
-  const hasAnyPosts = calendarData.posts.length > 0;
-  document.getElementById('emptyState').style.display = hasAnyPosts ? 'none' : 'flex';
-  document.getElementById('calendarContainer').style.display = hasAnyPosts ? 'block' : 'none';
+// ── Toggle copy expand
+function toggleCopy(id) {
+  const el = document.getElementById(`copy-${id}`);
+  const btn = el ? el.nextElementSibling : null;
+  if (!el) return;
+  const expanded = el.classList.toggle('expanded');
+  if (btn) btn.textContent = expanded ? 'Show less' : 'Show more';
 }
 
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
+// ── Update single card status
+async function updateStatus(cardId, newStatus, triggerBtn) {
+  const cardEl = document.querySelector(`.card[data-id="${cardId}"]`);
+  const btns = cardEl ? cardEl.querySelectorAll('button') : [];
+  btns.forEach(b => b.disabled = true);
 
-// ══════════════════════════════════════
-// NAVIGATION
-// ══════════════════════════════════════
-function prevWeek() {
-  currentWeekStart.setDate(currentWeekStart.getDate() - 7);
-  render();
-}
-
-function nextWeek() {
-  currentWeekStart.setDate(currentWeekStart.getDate() + 7);
-  render();
-}
-
-function goToday() {
-  currentWeekStart = getMonday(new Date());
-  render();
-}
-
-// ══════════════════════════════════════
-// FILTERS
-// ══════════════════════════════════════
-function toggleFilter(platform) {
-  if (platform === 'all') {
-    const allBtn = document.querySelector('[data-platform="all"]');
-    const isActive = allBtn.classList.contains('active');
-    document.querySelectorAll('.filter-btn').forEach(b => {
-      if (isActive) {
-        b.classList.remove('active');
-        activeFilters.clear();
-      } else {
-        b.classList.add('active');
-        const p = b.dataset.platform;
-        if (p !== 'all') activeFilters.add(p);
-      }
+  try {
+    const res = await fetch(`${API_BASE}/api/content/status`, {
+      method: 'POST',
+      headers: {
+        'Authorization': AUTH,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ id: cardId, status: newStatus })
     });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    // Update local state
+    const card = allCards.find(c => c.id === cardId);
+    if (card) card.status = newStatus;
+
+    const label = newStatus === 'approved' ? 'Approved' : 'Rejected';
+    toast(`${label} — card updated.`, newStatus === 'approved' ? 'success' : 'info');
+
+    updateStats();
+    render();
+  } catch (err) {
+    btns.forEach(b => b.disabled = false);
+    toast(`Failed: ${err.message}`, 'error');
+  }
+}
+
+// ── Approve all in a date group
+async function approveAllDay(dateKey, btn) {
+  btn.disabled = true;
+  btn.textContent = 'Approving…';
+
+  const pending = allCards.filter(c =>
+    c.status === 'pending_review' &&
+    (c.scheduledDate || '').slice(0, 10) === dateKey
+  );
+
+  let successCount = 0;
+  for (const card of pending) {
+    try {
+      const res = await fetch(`${API_BASE}/api/content/status`, {
+        method: 'POST',
+        headers: {
+          'Authorization': AUTH,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id: card.id, status: 'approved' })
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      card.status = 'approved';
+      successCount++;
+    } catch (err) {
+      toast(`Error approving ${card.title || card.id}: ${err.message}`, 'error');
+    }
+  }
+
+  if (successCount > 0) {
+    toast(`Approved ${successCount} card${successCount !== 1 ? 's' : ''}.`, 'success');
+    updateStats();
+    render();
   } else {
-    const btn = document.querySelector('[data-platform="' + platform + '"]');
-    if (activeFilters.has(platform)) {
-      activeFilters.delete(platform);
-      btn.classList.remove('active');
-    } else {
-      activeFilters.add(platform);
-      btn.classList.add('active');
-    }
-    // Update "All" button state
-    const allPlatforms = ['x', 'linkedin', 'instagram-standalone', 'youtube'];
-    const allActive = allPlatforms.every(p => activeFilters.has(p));
-    document.querySelector('[data-platform="all"]').classList.toggle('active', allActive);
+    btn.disabled = false;
+    btn.textContent = `Approve All (${pending.length})`;
   }
+}
+
+// ── Filters
+document.querySelectorAll('[data-filter="platform"]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-filter="platform"]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filters.platform = btn.dataset.value;
+    render();
+  });
+});
+
+document.getElementById('status-filter').addEventListener('change', e => {
+  filters.status = e.target.value;
   render();
+});
+
+document.getElementById('date-filter').addEventListener('change', e => {
+  filters.date = e.target.value;
+  document.getElementById('clear-date-btn').style.display = filters.date ? '' : 'none';
+  render();
+});
+
+document.getElementById('clear-date-btn').addEventListener('click', () => {
+  filters.date = '';
+  document.getElementById('date-filter').value = '';
+  document.getElementById('clear-date-btn').style.display = 'none';
+  render();
+});
+
+// ── Toast
+function toast(msg, type = 'info', durationMs = 3200) {
+  const container = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  container.appendChild(el);
+  setTimeout(() => {
+    el.style.opacity = '0';
+    el.style.transition = 'opacity 0.3s';
+    setTimeout(() => el.remove(), 350);
+  }, durationMs);
 }
 
-// ══════════════════════════════════════
-// MODAL
-// ══════════════════════════════════════
-function openPostDetail(idx) {
-  const post = calendarData.posts[idx];
-  if (!post) return;
-
-  const plat = getPlatformForPost(post);
-  const meta = PLATFORM_META[plat] || PLATFORM_META['x'];
-  const status = getPostStatus(post);
-  const content = getPostContent(post);
-  const media = getPostMedia(post);
-
-  document.getElementById('modalTitle').innerHTML =
-    '<span style="color:' + meta.color + '">' + meta.name + '</span> Post';
-
-  let body = '';
-  body += '<div class="modal-field"><div class="modal-field-label">Status</div>';
-  body += '<div class="modal-field-value"><span class="post-status status-' + status + '" style="font-size:11px;padding:3px 10px;">' + status + '</span></div></div>';
-
-  body += '<div class="modal-field"><div class="modal-field-label">Scheduled Time (AEST)</div>';
-  body += '<div class="modal-field-value">' + formatFullDateAEST(getPostDate(post)) + '</div></div>';
-
-  if (content) {
-    body += '<div class="modal-field"><div class="modal-field-label">Content</div>';
-    body += '<div class="modal-field-value" style="white-space:pre-wrap;">' + escapeHtml(content) + '</div></div>';
-  }
-
-  if (media) {
-    body += '<div class="modal-field"><div class="modal-field-label">Media</div>';
-    body += '<div class="modal-field-value"><img src="' + escapeHtml(media) + '" alt="Post media" onerror="this.style.display=\'none\'"></div></div>';
-  }
-
-  if (post.id) {
-    body += '<div class="modal-field"><div class="modal-field-label">Post ID</div>';
-    body += '<div class="modal-field-value" style="font-family:monospace;font-size:11px;color:var(--cs-muted);">' + escapeHtml(post.id) + '</div></div>';
-  }
-
-  document.getElementById('modalBody').innerHTML = body;
-  document.getElementById('modalOverlay').classList.add('open');
+// ── Helpers
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
-function closeModal(e) {
-  if (e.target === document.getElementById('modalOverlay')) {
-    document.getElementById('modalOverlay').classList.remove('open');
-  }
-}
-
-function closeModalDirect() {
-  document.getElementById('modalOverlay').classList.remove('open');
-}
-
-// ══════════════════════════════════════
-// SIDEBAR
-// ══════════════════════════════════════
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('sidebarOverlay').classList.toggle('open');
-}
-
-function closeSidebar() {
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('sidebarOverlay').classList.remove('open');
-}
-
-// ══════════════════════════════════════
-// INIT
-// ══════════════════════════════════════
-loadData();
+// ── Boot
+loadCards();
 </script>
 </body>
 </html>
