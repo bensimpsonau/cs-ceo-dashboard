@@ -388,6 +388,18 @@ app.post('/api/content/add', async (req, res) => {
   res.json({ success: true, card: newCard });
 });
 
+// POST /api/content/update — update any fields on a content card
+app.post('/api/content/update', async (req, res) => {
+  const { id, cardId, ...updates } = req.body;
+  const lookupId = id || cardId;
+  const card = contentBoard.cards.find(c => c.id === lookupId);
+  if (!card) return res.status(404).json({ success: false, error: `Card not found: ${lookupId}` });
+  Object.assign(card, updates, { updatedAt: new Date().toISOString() });
+  fs.writeFileSync(CONTENT_BOARD_PATH, JSON.stringify(contentBoard, null, 2));
+  pushFileToGitHub(CONTENT_BOARD_PATH, contentBoard, `Auto-sync: Content updated — ${card.title}`).catch(() => {});
+  res.json({ success: true, card });
+});
+
 // GET /api/content/cards
 app.get('/api/content/cards', (req, res) => {
   res.json(contentBoard);
