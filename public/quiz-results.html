@@ -1,199 +1,920 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Digital Asset Readiness Results | Collective Shift</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --orange: #FC5C03;
-      --bg: #1B1925;
-      --bg-deep: #02000D;
-      --bg-card: #252530;
-      --border: #3A3A3A;
-      --teal: #08C394;
-      --white: #FFFFFF;
-      --traffic-red: #FF4444;
-      --traffic-amber: #FFB020;
-      --traffic-yellowgreen: #A8D840;
-      --traffic-green: #22C55E;
-      --heading-font: 'Plus Jakarta Sans', sans-serif;
-      --body-font: 'Barlow', sans-serif;
-    }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--body-font);
-      background: var(--bg);
-      color: var(--white);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    .container {
-      max-width: 580px;
-      margin: 32px auto;
-      padding: 16px;
-      background: var(--bg-deep);
-      border-radius: 18px;
-      box-shadow: 0 4px 36px rgba(2,0,13,0.10);
-    }
-    h1, h2, h3, h4 {
-      font-family: var(--heading-font);
-      color: var(--white);
-      margin-bottom: 0.5em;
-    }
-    h1 { font-size: 2.3em; font-weight: 700; }
-    h2 { font-size: 1.5em; font-weight: 600; }
-    h3 { font-size: 1.17em; }
-    .section {
-      margin-bottom: 40px;
-      background: var(--bg-card);
-      border-radius: 13px;
-      padding: 26px 18px 20px 18px;
-      box-shadow: 0 3px 16px rgba(28,25,37,.12);
-    }
-    .score-reveal {
-      font-size: 1.15em;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .score-number {
-      font-size: 3epx;
-      font-weight: 800;
-      color: var(--orange);
-    }
-    .loading-spinner {
-      display: flex; align-items: center; justify-content: center; flex-direction: column; height: 180px; font-size: 1.3em; }
-    .lds-dual-ring {
-      display: inline-block; width: 56px; height: 56px;
-    }
-    .lds-dual-ring:after {
-      content: " "; display: block; width: 46px; height: 46px; margin: 5px; border-radius: 50%; border: 6px solid var(--orange); border-color: var(--orange) transparent var(--orange) transparent; animation: lds-dual-ring 1.2s linear infinite;}
-    @keyframes lds-dual-ring { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
-    .radar-wrap { text-align: center; margin-top: 32px; }
-    @media (max-width:700px) { .container { max-width:98vw;} svg { max-width:95vw; height:auto; } }
-    .radar-label {
-      fill: var(--white);
-      font-family: var(--heading-font);
-      font-size: 0.97em;
-      font-weight: 600;
-      paint-order: stroke fill;
-      stroke: var(--bg-deep);
-      stroke-width: 6px;
-    }
-    .traffic-dot {
-      filter: drop-shadow(0 1px 4px #0002); stroke: var(--bg-card); stroke-width:2px;
-    }
-    .radar-legend { display: flex; gap:17px; justify-content: center; margin: 13px auto; font-size:0.93em; }
-    .radar-legend span { display: flex; align-items: center; gap:6px; }
-    .radar-legend .legend-dot { width:12px; height:12px; border-radius:50%; display:inline-block; margin-right:2px; }
-    .gap-list { list-style: none; padding-left: 0; }
-    .gap-item { margin-bottom: 21px; }
-    .testimonial-cards { display: flex; flex-wrap: wrap; gap: 14px; }
-    .t-card { flex: 1 1 230px; background: var(--bg); border: 1.3px solid var(--border); color: var(--white); border-radius: 11px; padding: 17px 18px 12px; min-width: 160px; }
-    .t-card-quote { font-style: italic; color: var(--teal); font-size: 1.07em; }
-    .cta-wrap { margin: 36px 0 14px 0; text-align: center; }
-    .cta-btn {
-      background: var(--orange); color: var(--white);
-      font-family: var(--heading-font); font-weight: 700; border: none;
-      border-radius: 30px; padding: 15px 38px; font-size: 1.19em; margin-top: 8px;
-      cursor:pointer; transition: filter .18s;
-      box-shadow: 0 4px 16px #FC5C0355;
-    }
-    .cta-btn:hover { filter: brightness(1.10); }
-    .download-btn { margin-top:14px; background:var(--teal); }
-    .print-btn { margin-top:10px; background:var(--bg-card); color:var(--orange); border:1px solid var(--orange); }
-    .archetype-emoji { font-size: 2.1em; margin-right:7px; vertical-align: -6px; }
-    .footer { color: var(--border); background: var(--bg-card); text-align: center; font-size: .99em; margin-top:50px; padding:16px 7px 10px; border-radius:16px; }
-    @media print {
-      .cta-btn,.print-btn,.no-print { display: none !important; }
-      body { background: #fff !important; color: #000; }
-      .container, .section { background: #fff !important; color: #000; box-shadow:none; }
-      .footer { background: #fff !important; color: #444; }
-      svg { background: #fff !important; }
-      .t-card { border-color: #ccc; color: #222; background: #fff; }
-      .radar-label { stroke: white; fill: black; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Digital Asset Readiness Results | Collective Shift</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --orange: #FC5C03;
+  --orange-dim: #C94902;
+  --orange-glow: rgba(252, 92, 3, 0.18);
+  --bg: #1B1925;
+  --bg-deep: #02000D;
+  --bg-card: #252530;
+  --border: #3A3A3A;
+  --white: #FFFFFF;
+  --grey-light: #D9D8DA;
+  --grey-mid: #B3B2B6;
+  --grey-dark: #807F86;
+  --teal: #08C394;
+  --red: #FF4444;
+  --amber: #FFB020;
+  --yellow-green: #A8D840;
+  --green: #22C55E;
+  --heading-font: 'Plus Jakarta Sans', sans-serif;
+  --body-font: 'Barlow', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--body-font);
+  background: var(--bg);
+  color: var(--grey-light);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: -100px; left: 50%;
+  transform: translateX(-50%);
+  width: 1200px; height: 700px;
+  background: radial-gradient(ellipse at 50% 0%, var(--orange-glow) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* TOP BAR */
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(27, 25, 37, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+}
+
+.top-bar .logo {
+  font-family: var(--heading-font);
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--white);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.top-bar .logo span { color: var(--orange); }
+
+.print-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--grey-mid);
+  font-family: var(--body-font);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.print-btn:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+/* LOADING STATE */
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  gap: 24px;
+  transition: opacity 0.5s ease;
+}
+
+#loading-screen.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loader-ring {
+  width: 64px;
+  height: 64px;
+  border: 3px solid var(--border);
+  border-top-color: var(--orange);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loader-text {
+  font-family: var(--heading-font);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--grey-mid);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+/* MAIN CONTENT */
+#results-content {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+}
+
+#results-content.visible {
+  display: flex;
+}
+
+main {
+  flex: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 40px 20px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+/* SECTION SPACING */
+section {
+  margin-bottom: 64px;
+}
+
+/* SECTION LABEL */
+.section-label {
+  font-family: var(--body-font);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 8px;
+}
+
+/* SCORE REVEAL */
+.score-hero {
+  text-align: center;
+  padding: 48px 24px 40px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.score-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 400px; height: 200px;
+  background: radial-gradient(ellipse at 50% 0%, var(--orange-glow) 0%, transparent 70%);
+}
+
+.score-hero-name {
+  font-family: var(--heading-font);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--grey-mid);
+  margin-bottom: 8px;
+}
+
+.score-hero-label {
+  font-family: var(--heading-font);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 32px;
+}
+
+.score-display {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.score-number {
+  font-family: var(--heading-font);
+  font-size: 5rem;
+  font-weight: 800;
+  color: var(--orange);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.score-denom {
+  font-family: var(--heading-font);
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--grey-dark);
+}
+
+.score-band-label {
+  font-size: 0.9rem;
+  color: var(--grey-mid);
+  margin-bottom: 24px;
+}
+
+/* RADAR CHART */
+.radar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  margin-top: 8px;
+}
+
+#radar-chart {
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+}
+
+.radar-legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 24px;
+  text-align: left;
+  width: 100%;
+  max-width: 360px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--grey-mid);
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* WEAKNESS NOTES */
+.weakness-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+  text-align: left;
+}
+
+.weakness-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(255,68,68,0.08);
+  border: 1px solid rgba(255,68,68,0.2);
+  border-radius: 10px;
+  font-size: 0.88rem;
+  color: var(--grey-light);
+}
+
+.weakness-note .wn-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ARCHETYPE */
+.archetype-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px;
+  position: relative;
+  overflow: hidden;
+}
+
+.archetype-card::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle at top right, var(--orange-glow), transparent 65%);
+}
+
+.archetype-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.archetype-title {
+  font-family: var(--heading-font);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+
+.archetype-oneliner {
+  font-size: 1rem;
+  color: var(--orange);
+  font-weight: 500;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.archetype-section-title {
+  font-family: var(--heading-font);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--grey-dark);
+  margin-bottom: 10px;
+  margin-top: 24px;
+}
+
+.archetype-people {
+  font-size: 0.95rem;
+  color: var(--grey-light);
+  line-height: 1.7;
+}
+
+.risk-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.risk-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--grey-light);
+}
+
+.risk-list li::before {
+  content: '⚠';
+  color: var(--amber);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.steps-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.step-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(252, 92, 3, 0.12);
+  border: 1px solid rgba(252, 92, 3, 0.3);
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.step-num {
+  font-family: var(--heading-font);
+  font-weight: 700;
+  color: var(--orange);
+}
+
+.step-label {
+  color: var(--grey-light);
+}
+
+/* GAP ANALYSIS */
+.gaps-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.gap-card {
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 24px;
+  border-left: 4px solid var(--red);
+}
+
+.gap-card.amber { border-left-color: var(--amber); }
+
+.gap-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gap-area {
+  font-family: var(--heading-font);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.gap-score-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: var(--heading-font);
+}
+
+.gap-copy {
+  font-size: 0.9rem;
+  color: var(--grey-mid);
+  line-height: 1.6;
+}
+
+/* TESTIMONIALS */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.testimonial-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.testimonial-quote {
+  font-size: 1rem;
+  color: var(--white);
+  line-height: 1.65;
+  font-style: italic;
+  margin-bottom: 16px;
+  position: relative;
+  padding-left: 20px;
+}
+
+.testimonial-quote::before {
+  content: '"';
+  position: absolute;
+  left: 0; top: -4px;
+  font-size: 2rem;
+  color: var(--orange);
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+.testimonial-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.testimonial-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--orange), var(--orange-dim));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--heading-font);
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--white);
+  flex-shrink: 0;
+}
+
+.testimonial-info {}
+
+.testimonial-name {
+  font-family: var(--heading-font);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--white);
+}
+
+.testimonial-headline {
+  font-size: 0.8rem;
+  color: var(--grey-dark);
+}
+
+.testimonial-years {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--teal);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* CTA */
+.cta-block {
+  background: linear-gradient(135deg, rgba(252,92,3,0.12) 0%, rgba(8,195,148,0.06) 100%);
+  border: 1px solid rgba(252,92,3,0.25);
+  border-radius: 20px;
+  padding: 40px 36px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-block::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 500px; height: 200px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(252,92,3,0.1), transparent 70%);
+}
+
+.cta-heading {
+  font-family: var(--heading-font);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+  position: relative;
+}
+
+.cta-copy {
+  font-size: 1rem;
+  color: var(--grey-mid);
+  line-height: 1.65;
+  max-width: 560px;
+  margin: 0 auto 28px;
+  position: relative;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 36px;
+  background: var(--orange);
+  color: var(--white);
+  font-family: var(--heading-font);
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.btn-primary:hover {
+  background: var(--orange-dim);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 32px rgba(252,92,3,0.3);
+}
+
+/* BLUEPRINT */
+.blueprint-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.blueprint-icon {
+  width: 56px; height: 56px;
+  background: rgba(8,195,148,0.12);
+  border: 1px solid rgba(8,195,148,0.25);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+}
+
+.blueprint-heading {
+  font-family: var(--heading-font);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.blueprint-sub {
+  font-size: 0.9rem;
+  color: var(--grey-mid);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: transparent;
+  color: var(--teal);
+  font-family: var(--heading-font);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 1px solid var(--teal);
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: rgba(8,195,148,0.1);
+}
+
+/* SECTION HEADINGS */
+.section-heading {
+  font-family: var(--heading-font);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+
+.section-subheading {
+  font-size: 0.95rem;
+  color: var(--grey-mid);
+  margin-bottom: 24px;
+}
+
+/* DIVIDER */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+/* FOOTER */
+footer {
+  background: var(--bg-deep);
+  border-top: 1px solid var(--border);
+  padding: 24px;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--grey-dark);
+  line-height: 1.6;
+}
+
+/* RESPONSIVE */
+@media (min-width: 640px) {
+  .testimonials-grid { grid-template-columns: 1fr 1fr; }
+  .gaps-grid { grid-template-columns: 1fr; }
+  .radar-legend { grid-template-columns: 1fr 1fr 1fr; }
+}
+
+/* PRINT */
+@media print {
+  .top-bar, .print-btn { display: none; }
+  body::before { display: none; }
+  #loading-screen { display: none; }
+  .archetype-card::after { display: none; }
+}
+
+/* FADE IN ANIMATION */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+section { animation: fadeInUp 0.6s ease forwards; }
+section:nth-child(2) { animation-delay: 0.1s; }
+section:nth-child(3) { animation-delay: 0.15s; }
+section:nth-child(4) { animation-delay: 0.2s; }
+section:nth-child(5) { animation-delay: 0.25s; }
+section:nth-child(6) { animation-delay: 0.3s; }
+</style>
 </head>
 <body>
-  <div class="container" id="main-container">
-    <div id="loading" class="loading-spinner">
-      <span>Calculating your score...</span>
-      <span class="lds-dual-ring"></span>
+
+<!-- LOADING SCREEN -->
+<div id="loading-screen">
+  <div style="text-align:center;">
+    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.3rem;font-weight:800;color:#fff;margin-bottom:32px;letter-spacing:-0.02em;">
+      Collective<span style="color:#FC5C03;">Shift</span>
     </div>
-    <!-- Results will load here -->
-    <div id="result-content" style="display:none;"></div>
+    <div class="loader-ring" style="margin:0 auto 24px;"></div>
+    <div class="loader-text">Calculating your personalised results...</div>
   </div>
-  <div class="footer">This assessment is for educational purposes only and does not constitute financial advice.</div>
-  <script>// Core Data
-const AREAS = [
-  { k: "q4", label: "Investment Thesis" },
-  { k: "q5", label: "Information Quality" },
-  { k: "q6", label: "Risk Framework" },
-  { k: "q7", label: "Time & Commitment" },
-  { k: "q8", label: "Exit Strategy" },
-  { k: "q9", label: "Advanced Strategies" }
-];
-const SCORE_COLORS = ["#FF4444","#FFB020","#A8D840","#22C55E"];
-const TRAFFIC = ['Red','Amber','Yellow-Green','Green'];
-const ARCHETYPES = [
-  {
-    key:"sidelined_professional", label:"The Sidelined Professional", emoji:"🛋️",
-    logic: ans=> ans.q1==="A",
-    desc:"You've been watching from the sideline. You know digital assets are important but you haven't found a trusted way in.",
-    people:"People like you typically have significant wealth in property, super, and traditional assets. You've seen others make money in digital assets but the noise, scams, and complexity have kept you on the fence. The longer you wait, the more the gap widens.",
-    risks:["Entry timing risk - institutions have been building positions for 18+ months. $50B+ has flowed into Bitcoin ETFs.","Information paralysis - you're consuming content but not making decisions."],
-    focus:["Step 1: Foundations","Step 2: Bitcoin thesis","Step 3: Portfolio construction"],
-    cta:"You're in the research phase. Smart. But research without action is procrastination. In a free 30-minute call, we'll map out exactly where to start based on your situation."
+</div>
+
+<!-- RESULTS CONTENT -->
+<div id="results-content">
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <a href="https://collectiveshift.io" class="logo">Collective<span>Shift</span></a>
+    <button class="print-btn" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/></svg>
+      Print Results
+    </button>
+  </div>
+
+  <main>
+    <!-- SECTION A: SCORE REVEAL -->
+    <section id="section-score">
+      <div class="score-hero">
+        <div class="score-hero-name" id="hero-name"></div>
+        <div class="score-hero-label">Your Digital Asset Readiness Score</div>
+        <div class="score-display">
+          <div class="score-number" id="score-number">—</div>
+          <div class="score-denom">/24</div>
+        </div>
+        <div class="score-band-label" id="score-band"></div>
+        <div class="radar-container">
+          <svg id="radar-chart" viewBox="0 0 400 360" xmlns="http://www.w3.org/2000/svg"></svg>
+          <div class="radar-legend" id="radar-legend"></div>
+        </div>
+        <div class="weakness-notes" id="weakness-notes" style="margin-top:24px;"></div>
+      </div>
+    </section>
+
+    <!-- SECTION B: ARCHETYPE -->
+    <section id="section-archetype">
+      <div class="section-label">Your Investor Profile</div>
+      <div class="archetype-card" id="archetype-card">
+        <!-- filled by JS -->
+      </div>
+    </section>
+
+    <!-- SECTION C: GAP ANALYSIS -->
+    <section id="section-gaps">
+      <div class="section-label">Where to Focus</div>
+      <div class="section-heading">Your 3 Biggest Gaps</div>
+      <div class="section-subheading">Based on your answers, these are the areas holding you back the most.</div>
+      <div class="gaps-grid" id="gaps-grid">
+        <!-- filled by JS -->
+      </div>
+    </section>
+
+    <!-- SECTION D: TESTIMONIALS -->
+    <section id="section-testimonials">
+      <div class="section-label">Member Results</div>
+      <div class="section-heading">People Like You Have Done This</div>
+      <div class="section-subheading">Real members, real outcomes.</div>
+      <div class="testimonials-grid" id="testimonials-grid">
+        <!-- filled by JS -->
+      </div>
+    </section>
+
+    <!-- SECTION E: CTA -->
+    <section id="section-cta">
+      <div class="cta-block">
+        <div class="cta-heading">Ready to Close the Gap?</div>
+        <div class="cta-copy" id="cta-copy"></div>
+        <a href="https://collectiveshift.io/strategy-call" class="btn-primary" target="_blank" rel="noopener">
+          Book Your Free Strategy Call
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- SECTION F: BLUEPRINT DOWNLOAD -->
+    <section id="section-blueprint">
+      <div class="blueprint-block">
+        <div class="blueprint-icon">📘</div>
+        <div class="blueprint-heading">The 8-Step Digital Asset Wealth Blueprint</div>
+        <div class="blueprint-sub">In the meantime, download the full blueprint and follow the steps mapped to your archetype.</div>
+        <a id="blueprint-link" href="/blueprint-guide.html" class="btn-secondary">
+          Download the Blueprint
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    This assessment is for educational purposes only and does not constitute financial advice. Collective Shift Pty Ltd. ABN 78 650 977 325.
+  </footer>
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+
+const ARCHETYPES = {
+  sidelined_professional: {
+    icon: "🔭",
+    title: "The Sidelined Professional",
+    oneliner: "You've been watching from the sideline. You know digital assets are important but you haven't found a trusted way in.",
+    people: "People like you typically have significant wealth in property, super, and traditional assets. You've seen others make money in digital assets but the noise, scams, and complexity have kept you on the fence. The longer you wait, the more the gap widens.",
+    risks: [
+      "Entry timing risk - institutions have been building positions for 18+ months. $50B+ has flowed into Bitcoin ETFs.",
+      "Information paralysis - you're consuming content but not making decisions."
+    ],
+    steps: [{ num: "1-3", label: "Foundations, Bitcoin thesis, portfolio construction" }]
   },
-  {
-    key:"unstructured_holder", label:"The Unstructured Holder", emoji:"🪁",
-    logic: ans=> ["B","C"].includes(ans.q1) && ["A","B"].includes(ans.q6),
-    desc:"You've bought digital assets but you're flying blind. No framework, no exit plan, no position sizing rules.",
-    people:"People like you typically bought on tips, news, or FOMO. You might be up overall but you have no idea if your allocation is right, when to take profits, or how to protect what you've built. The next drawdown will test that.",
-    risks:["No exit strategy means you'll give back 40-80% of gains in the next correction.","No risk framework means one bad trade can undo years of progress."],
-    focus:["Step 4: Risk frameworks","Step 8: Exit strategies"],
-    cta:"You already have exposure. The question is whether your current approach will protect what you've built. Let's review your portfolio structure in a free 30-minute call."
+  legacy_planner: {
+    icon: "🏛️",
+    title: "The Legacy Planner",
+    oneliner: "You're thinking in decades, not months. Generational wealth is the goal and digital assets are part of that picture.",
+    people: "People like you are allocating $100K+ and thinking about how to structure this for the next 20-30 years. SMSF, trust structures, tax efficiency, and estate planning are all on the table. This isn't about quick gains. It's about building something that lasts.",
+    risks: [
+      "Structural risk - wrong entity or tax structure can cost hundreds of thousands.",
+      "No succession plan for digital asset holdings."
+    ],
+    steps: [
+      { num: "4", label: "Risk frameworks" },
+      { num: "8", label: "Exit strategy" },
+      { num: "Advanced", label: "SMSF, trust, and tax structures" }
+    ]
   },
-  {
-    key:"burned_investor", label:"The Burned Investor", emoji:"🔥",
-    logic: ans=> ans.q1==="C" && ["A","B"].includes(ans.q4) && ["A","B"].includes(ans.q6) && ["A","B"].includes(ans.q8),
-    desc:"You've been in the digital asset space before and it didn't go well. But you're back because you know the opportunity is real.",
-    people:"People like you typically got burned because they didn't have a system. No position sizing, no exit plan, reacting to emotion instead of data. That's not a you problem. That's a structure problem. And it's fixable.",
-    risks:["Repeating past mistakes without a framework.", "Over-caution leading to missed opportunity while institutions accelerate."],
-    focus:["Step 4: Risk frameworks","Step 6: Sentiment analysis","Step 8: Exit strategies"],
-    cta:"The last thing you need is another person telling you to buy. What you need is a framework that prevents the mistakes that burned you last time. That's what the call is about."
+  active_builder: {
+    icon: "⚡",
+    title: "The Active Builder",
+    oneliner: "You've got the foundations. Now you want to optimise. You're past the basics and looking for edge.",
+    people: "People like you have a clear thesis, some exposure, and reasonable confidence. But you know you're leaving value on the table. Advanced analysis tools, yield strategies, and tax-efficient structures are the next layer.",
+    risks: [
+      "Overconfidence without stress-testing.",
+      "Missing advanced strategies like lending, yield, and tax optimisation that compound returns significantly."
+    ],
+    steps: [{ num: "5-7", label: "On-chain analysis, sentiment, advanced strategies" }]
   },
-  {
-    key:"conservative_protector", label:"The Conservative Protector", emoji:"🛡️",
-    logic: ans=> ans.q2==="A" && ["A","B"].includes(ans.q3) && ans.q7==="A",
-    desc:"You've built significant wealth through traditional means and you're watching inflation erode it. You want protection, not speculation.",
-    people:"People like you typically have the majority of their wealth in property, super, and cash. Traditional returns aren't keeping pace with real inflation. You're not looking to get rich quick. You want a disciplined approach to preserving purchasing power.",
-    risks:["Purchasing power erosion - your cash and bonds are losing real value every year.", "Over-concentration in a single asset class (property or equities)."],
-    focus:["Step 1: Macro environment","Step 2: Bitcoin as a treasury asset"],
-    cta:"You've spent years building wealth. Protecting it from here requires the right framework. We'll walk through how to allocate defensively in a 30-minute call."
+  burned_investor: {
+    icon: "🔥",
+    title: "The Burned Investor",
+    oneliner: "You've been in the digital asset space before and it didn't go well. But you're back because you know the opportunity is real.",
+    people: "People like you typically got burned because they didn't have a system. No position sizing, no exit plan, reacting to emotion instead of data. That's not a you problem. That's a structure problem. And it's fixable.",
+    risks: [
+      "Repeating past mistakes without a framework.",
+      "Over-caution leading to missed opportunity while institutions accelerate."
+    ],
+    steps: [
+      { num: "4", label: "Risk frameworks" },
+      { num: "6", label: "Sentiment analysis" },
+      { num: "8", label: "Exit strategy" }
+    ]
   },
-  {
-    key:"active_builder", label:"The Active Builder", emoji:"🛠️",
-    logic: (ans, score)=> ans.q1==="D" && ["C","D"].includes(ans.q4) && score>=18,
-    desc:"You've got the foundations. Now you want to optimise. You're past the basics and looking for edge.",
-    people:"People like you have a clear thesis, some exposure, and reasonable confidence. But you know you're leaving value on the table. Advanced analysis tools, yield strategies, and tax-efficient structures are the next layer.",
-    risks:["Overconfidence without stress-testing.", "Missing advanced strategies like lending, yield, and tax optimisation that compound returns significantly."],
-    focus:["Step 5: On-chain analysis","Step 6: Sentiment","Step 7: Advanced strategies"],
-    cta:"You've got the fundamentals. Now it's about optimising. We'll review your current structure and identify the 2-3 highest-leverage improvements in a free 30-minute call."
+  unstructured_holder: {
+    icon: "🎯",
+    title: "The Unstructured Holder",
+    oneliner: "You've bought digital assets but you're flying blind. No framework, no exit plan, no position sizing rules.",
+    people: "People like you typically bought on tips, news, or FOMO. You might be up overall but you have no idea if your allocation is right, when to take profits, or how to protect what you've built. The next drawdown will test that.",
+    risks: [
+      "No exit strategy means you'll give back 40-80% of gains in the next correction.",
+      "No risk framework means one bad trade can undo years of progress."
+    ],
+    steps: [
+      { num: "4", label: "Risk frameworks" },
+      { num: "8", label: "Exit strategies" }
+    ]
   },
-  {
-    key:"legacy_planner", label:"The Legacy Planner", emoji:"📜",
-    logic: ans=> ans.q2==="B" && ["C","D","E"].includes(ans.q3),
-    desc:"You're thinking in decades, not months. Generational wealth is the goal and digital assets are part of that picture.",
-    people:"People like you are allocating $100K+ and thinking about how to structure this for the next 20-30 years. SMSF, trust structures, tax efficiency, and estate planning are all on the table. This isn't about quick gains. It's about building something that lasts.",
-    risks:["Structural risk - wrong entity or tax structure can cost hundreds of thousands.","No succession plan for digital asset holdings."],
-    focus:["Step 4: Risk","Step 8: Exit","Advanced structures: SMSF/trust/tax"],
-    cta:"Building a portfolio that lasts across generations requires the right structure from day one. We'll discuss SMSF, trusts, and long-term allocation in a free 30-minute call."
+  conservative_protector: {
+    icon: "🛡️",
+    title: "The Conservative Protector",
+    oneliner: "You've built significant wealth through traditional means and you're watching inflation erode it. You want protection, not speculation.",
+    people: "People like you typically have the majority of their wealth in property, super, and cash. Traditional returns aren't keeping pace with real inflation. You're not looking to get rich quick. You want a disciplined approach to preserving purchasing power.",
+    risks: [
+      "Purchasing power erosion - your cash and bonds are losing real value every year.",
+      "Over-concentration in a single asset class (property or equities)."
+    ],
+    steps: [{ num: "1-2", label: "Macro environment and Bitcoin as a treasury asset" }]
   }
-];
+};
+
 const TESTIMONIALS = {
   sidelined_professional: [
     { name: "Wes", headline: "Built his foundational strategy over 5 years", quote: "Collective Shift helped me build my foundational strategy. I went from confused to confident.", years: 5 },
@@ -201,8 +922,7 @@ const TESTIMONIALS = {
   ],
   unstructured_holder: [
     { name: "Chris", headline: "Paid off his mortgage from digital asset returns", quote: "I managed to get rid of a little bit of BTC and pay off my mortgage. It's kept my mind at ease.", years: 3 },
-    { name: "Pete", headline: "Consolidated holdings and improved performance", quote: "My portfolio is now much healthier. I've consolidated into stronger assets.", years: 2 },
-    { name: "Martin", headline: "From scattered positions to a structured portfolio", quote: "Joining Collective Shift and talking to the guys turned it around for me.", years: 2 }
+    { name: "Pete", headline: "Consolidated holdings and improved performance", quote: "My portfolio is now much healthier. I've consolidated into stronger assets.", years: 2 }
   ],
   burned_investor: [
     { name: "Jason", headline: "From potential losses to structured gains", quote: "I think I've moved from a situation where I undoubtedly would have been in the red to making real progress.", years: 2 },
@@ -221,219 +941,361 @@ const TESTIMONIALS = {
     { name: "Chris", headline: "Portfolio under control, mortgage paid off", quote: "It's under control now. That peace of mind is everything.", years: 3 }
   ]
 };
-const GAP_COPY = {
-  q4: [
-    "You haven't formed a clear view on why digital assets belong in a portfolio. Without a thesis, every price move feels like noise. You'll buy high and sell low because you have no anchor.",
-    "You have a general sense but can't articulate it. That means when the market drops 30%, you won't have the conviction to hold. Conviction comes from clarity."
-  ],
-  q5: [
-    "You're relying on social media and influencers for investment decisions. 90% of that content is designed to generate views, not protect your capital.",
-    "You're consuming a lot of information but can't filter signal from noise. That's more dangerous than knowing nothing because it creates false confidence."
-  ],
-  q6: [
-    "You have no written rules for allocation or drawdowns. That means your strategy is 'hope it works out.' In our experience, hope-based portfolios lose 40-80% of gains in corrections.",
-    "Rough ideas aren't enough. When Bitcoin drops 30% overnight, you won't think clearly. The rules need to be written before the drawdown, not during it."
-  ],
-  q7: [
-    "You want set-and-forget, which is honest. But digital assets aren't index funds. Even a low-touch approach needs monthly check-ins and quarterly rebalancing. The Blueprint covers how to do this in under 2 hours per month.",
-    "A few hours a month is workable. The key is having those hours structured. Without a system, you'll spend that time consuming noise instead of making decisions."
-  ],
-  q8: [
-    "You have no exit plan. This is the number one gap we see across 1,400+ members. Entry without exit isn't a strategy. It's a gamble.",
-    "A rough idea isn't an exit plan. When Bitcoin hits your target price, will you sell 10%? 50%? All of it? If you can't answer that right now, you'll freeze when it matters."
-  ],
-  q9: [
-    "You don't know that digital assets can generate income through lending and yield. Most high-net-worth investors are leaving significant returns on the table because they don't know this exists.",
-    "You've heard about yield strategies but haven't acted. In the current rate environment, Bitcoin-backed lending can provide tax-efficient liquidity without triggering CGT events."
-  ]
+
+const CTA_COPY = {
+  sidelined_professional: "You're in the research phase. Smart. But research without action is procrastination. In a free 30-minute call, we'll map out exactly where to start based on your situation.",
+  unstructured_holder: "You already have exposure. The question is whether your current approach will protect what you've built. Let's review your portfolio structure in a free 30-minute call.",
+  burned_investor: "The last thing you need is another person telling you to buy. What you need is a framework that prevents the mistakes that burned you last time. That's what the call is about.",
+  conservative_protector: "You've spent years building wealth. Protecting it from here requires the right framework. We'll walk through how to allocate defensively in a 30-minute call.",
+  active_builder: "You've got the fundamentals. Now it's about optimising. We'll review your current structure and identify the 2-3 highest-leverage improvements in a free 30-minute call.",
+  legacy_planner: "Building a portfolio that lasts across generations requires the right structure from day one. We'll discuss SMSF, trusts, and long-term allocation in a free 30-minute call."
 };
 
-function scoreCharToNum(char) {
-  if (!char) return 1;
-  return {A:1,B:2,C:3,D:4}[char] || 1;
+const GAP_COPY = {
+  4: {
+    area: "Investment Thesis",
+    1: "You haven't formed a clear view on why digital assets belong in a portfolio. Without a thesis, every price move feels like noise.",
+    2: "You have a general sense but can't articulate it. When the market drops 30%, you won't have the conviction to hold."
+  },
+  5: {
+    area: "Information Quality",
+    1: "You're relying on social media and influencers. 90% of that content is designed to generate views, not protect your capital.",
+    2: "You're consuming a lot but can't filter signal from noise. That's more dangerous than knowing nothing because it creates false confidence."
+  },
+  6: {
+    area: "Risk Framework",
+    1: "You have no written rules for allocation or drawdowns. Your strategy is 'hope it works out.' Hope-based portfolios lose 40-80% of gains in corrections.",
+    2: "Rough ideas aren't enough. When Bitcoin drops 30% overnight, you won't think clearly. The rules need to be written before the drawdown."
+  },
+  7: {
+    area: "Time & Commitment",
+    1: "You want set-and-forget, which is honest. But even a low-touch approach needs monthly check-ins. The Blueprint covers how to do this in under 2 hours per month.",
+    2: "A few hours a month is workable. The key is having those hours structured so you're making decisions, not consuming noise."
+  },
+  8: {
+    area: "Exit Strategy",
+    1: "You have no exit plan. This is the number one gap we see across 1,400+ members. Entry without exit isn't a strategy. It's a gamble.",
+    2: "A rough idea isn't an exit plan. When Bitcoin hits your target, will you sell 10%? 50%? If you can't answer now, you'll freeze when it matters."
+  },
+  9: {
+    area: "Advanced Strategies",
+    1: "You don't know digital assets can generate income through lending and yield. Most high-net-worth investors are leaving significant returns on the table.",
+    2: "You've heard about yield strategies but haven't acted. Bitcoin-backed lending can provide tax-efficient liquidity without triggering CGT events."
+  }
+};
+
+const AXIS_COLORS = { 1: '#FF4444', 2: '#FFB020', 3: '#A8D840', 4: '#22C55E' };
+const SCORE_BAND = (s) => {
+  if (s <= 8) return "Early Stage - Strong foundation work ahead";
+  if (s <= 14) return "Developing - You have exposure but gaps remain";
+  if (s <= 19) return "Intermediate - Solid base, room to optimise";
+  return "Advanced - You're ahead of most investors";
+};
+
+// ─── MAIN INIT ───────────────────────────────────────────────────────────────
+
+function getAnswerScore(ans) {
+  const map = { A: 1, B: 2, C: 3, D: 4 };
+  return map[ans] || 1;
 }
 
-function getQuizData() {
-  // Try localStorage, then fallback to query params
-  try {
-    const a = JSON.parse(localStorage.getItem('cs_quiz_answers')||"null");
-    if(a){
-      let out = {
-        name: localStorage.getItem('cs_quiz_name')||'Investor',
-        score: parseInt(localStorage.getItem('cs_score')||'0',10),
-        answers: a
-      };
-      AREAS.forEach((q,idx)=>{ out[q.k]=scoreCharToNum(a[idx+4]) }); // q4-q9
-      // Also get q1,q2,q3
-      out.q1 = localStorage.getItem('cs_q1_exp')||a[1];
-      out.q2 = localStorage.getItem('cs_q2_goal')||a[2];
-      out.q3 = localStorage.getItem('cs_q3_capital')||a[3];
-      return out;
-    }
-  }catch(e){}
-  // fallback to query params
+function getData() {
   const params = new URLSearchParams(window.location.search);
-  const name = params.get('name') || 'Investor';
-  const score = parseInt(params.get('score')||'0',10);
-  // Without localstorage, try to spread the score evenly
-  let per = (score && score>=6 && score<=24) ? Math.round(score/6) : 2;
-  return {
-    name,
-    score,
-    q4:per, q5:per, q6:per, q7:per, q8:per, q9:per,
-    answers: {},
-    q1:'A',q2:'A',q3:'A' // Default fallback
-  };
+
+  let answers = {};
+  try { answers = JSON.parse(localStorage.getItem('cs_quiz_answers') || '{}'); } catch(e) {}
+
+  const score = parseInt(localStorage.getItem('cs_score') || params.get('score') || '12');
+  const name = localStorage.getItem('cs_quiz_name') || params.get('name') || 'Friend';
+
+  const q1 = (localStorage.getItem('cs_q1_exp') || answers['1'] || 'A').toUpperCase();
+  const q2 = (localStorage.getItem('cs_q2_goal') || answers['2'] || 'A').toUpperCase();
+  const q3 = (localStorage.getItem('cs_q3_capital') || answers['3'] || 'A').toUpperCase();
+
+  // Q4-Q9 scored
+  const q4 = getAnswerScore((answers['4'] || 'A').toUpperCase());
+  const q5 = getAnswerScore((answers['5'] || 'A').toUpperCase());
+  const q6 = getAnswerScore((answers['6'] || 'A').toUpperCase());
+  const q7 = getAnswerScore((answers['7'] || 'A').toUpperCase());
+  const q8 = getAnswerScore((answers['8'] || 'A').toUpperCase());
+  const q9 = getAnswerScore((answers['9'] || 'A').toUpperCase());
+
+  return { score, name, q1, q2, q3, q4, q5, q6, q7, q8, q9 };
 }
-function assignArchetype(data) {
-  for(const arch of ARCHETYPES){
-    if(arch.logic(data,data.score)) return arch;
-  }
-  // fallback
-  return ARCHETYPES[0];
+
+function assignArchetype(d) {
+  const { q1, q2, q3, q4, q6, q7, q8, score } = d;
+  if (q1 === 'A') return 'sidelined_professional';
+  if (q2 === 'B' && ['C','D','E'].includes(q3)) return 'legacy_planner';
+  if (q1 === 'D' && [3,4].includes(q4) && score >= 18) return 'active_builder';
+  if (q1 === 'C' && [1,2].includes(q6) && [1,2].includes(q8) && [1,2].includes(q4)) return 'burned_investor';
+  if (['B','C'].includes(q1) && [1,2].includes(q6)) return 'unstructured_holder';
+  if (q2 === 'A' && ['A','B'].includes(q3) && q7 === 1) return 'conservative_protector';
+  return 'sidelined_professional';
 }
-function getRadarScores(data){
-  return [data.q4, data.q5, data.q6, data.q7, data.q8];
-} 
-function radarColor(scoreIdx) { return SCORE_COLORS[scoreIdx-1]||SCORE_COLORS[0]; }
-function getGaps(data) {
-  // Sort by value (lowest 3), tie-breaker: lower index earlier
-  let arr = [
-    {i:0, k:"q4", val:data.q4},
-    {i:1, k:"q5", val:data.q5},
-    {i:2, k:"q6", val:data.q6},
-    {i:3, k:"q7", val:data.q7},
-    {i:4, k:"q8", val:data.q8},
-    {i:5, k:"q9", val:data.q9}
-  ];
-  arr.sort((a, b) => a.val - b.val || a.i - b.i);
-  return arr.slice(0,3);
-}
-function gapCopy(k, val) {
-  if(val<=2 && GAP_COPY[k] && GAP_COPY[k][val-1]) return GAP_COPY[k][val-1];
-  if(val===3) return "You're close, but a little structure will make a big difference here.";
-  if(val>=4) return "No gaps detected here.";
-  return "";
-}
+
+// ─── RADAR CHART ─────────────────────────────────────────────────────────────
+
 function buildRadar(scores) {
-  // 5 axes, pentagon, center is (250,200), radius=120
-  const center = {x:250,y:200}, r=120, axes = 5;
-  // Convert each to polar,
-  let points=[], dots=[], labels=[];
-  for(let i=0;i<axes;i++){
-    const angle = (Math.PI/2) + (i * 2*Math.PI/axes);
-    const scoreRatio = ((scores[i]-1)/3);
-    const px = center.x + Math.cos(angle)*r*scoreRatio;
-    const py = center.y - Math.sin(angle)*r*scoreRatio;
-    points.push([px,py]);
-    // Outer dot for color
-    dots.push({cx:center.x + Math.cos(angle)*r, cy:center.y - Math.sin(angle)*r, color:radarColor(scores[i]) });
-    // Label
-    let lx=center.x + Math.cos(angle)*(r+34);
-    let ly=center.y - Math.sin(angle)*(r+37)+(i==2||i==3?16:0);
-    let anchor = i===0?"middle":i<3?"start":"end";
-    labels.push({x:lx, y:ly,text:AREAS[i].label, anchor });
-  }
-  // Grid rings for 4 levels
-  let grids=[];
-  for(let lvl=1;lvl<=4;lvl++){
-    let ring=[];
-    let radius = r*((lvl-1)/3);
-    for(let i=0;i<axes;i++){
-      const angle = (Math.PI/2) + (i * 2*Math.PI/axes);
-      ring.push((center.x + Math.cos(angle)*radius)+","+(center.y - Math.sin(angle)*radius));
+  // scores: [q4,q5,q6,q7,q8] each 1-4
+  const svg = document.getElementById('radar-chart');
+  const cx = 200, cy = 190, r = 130;
+  const axes = 5;
+  const labels = ['Investment\nThesis', 'Information\nQuality', 'Risk\nFramework', 'Time &\nCommitment', 'Exit\nStrategy'];
+
+  // Pentagon points function
+  function pentagonPts(radius, offsetAngle) {
+    const pts = [];
+    for (let i = 0; i < axes; i++) {
+      const angle = (Math.PI * 2 / axes) * i + offsetAngle;
+      pts.push({
+        x: cx + radius * Math.sin(angle),
+        y: cy - radius * Math.cos(angle)
+      });
     }
-    grids.push(ring.join(" "));
+    return pts;
   }
-  return { points, dots, labels, grids, center, r };
-}
 
-function testimonialsFor(archKey) {
-  return TESTIMONIALS[archKey]||[];
-}
-function archetypeShortKey(k) {
-  // Hack for testimonial fallback: key is eg. "sidelined_professional"
-  return k.replace(/_/g,'-');
-}
-
-function render() {
-  const data = getQuizData();
-  const radarScores = getRadarScores(data);
-  const arch = assignArchetype(data);
-  const gaps = getGaps(data);
-  const radar = buildRadar(radarScores);
-  const testimonialKey = arch.key in TESTIMONIALS ? arch.key : "sidelined_professional";
-  const testimonials = testimonialsFor(testimonialKey);
-
+  const offset = 0; // top vertex up
   let html = '';
-  // Section: Score Reveal
-  html += `<div class="section score-sec"><h1>${data.name}, your Digital Asset Readiness Score is <span class="score-number">${data.score}/24</span></h1>`;
-  html += `<div class="score-reveal">Here's how you performed across each area:</div>`;
 
-  // Radar Chart
-  html += `<div class="radar-wrap"><svg viewBox="0 0 500 420" width="100%" height="320" style="background:none;">
-      <g opacity="0.19">${radar.grids.map(poly=>`<polygon points="${poly}" fill="none" stroke="#666" stroke-width="1"/>`).join('')}</g>`;
-      <polygon points="${radar.points.map(([x,y])=>`${x},${y}`).join(' ')}" fill="${SCORE_COLORS[data.q4-1]||'#FFB020'}40" stroke="var(--orange)" stroke-width="2.9"></polygon>
-      ${radar.dots.map((d,i)=>`<circle cx="${d.cx}" cy="${d.cy}" r="13" fill="${d.color}" class="traffic-dot"/>`).join('')}
-      ${radar.labels.map(l=>`<text x="${l.x}" y="${l.y}" class="radar-label" text-anchor="${l.anchor}">${l.text}</text>`).join('')}
-    </svg>
-    <div class="radar-legend">
-      <span><span class="legend-dot" style="background:#FF4444"></span>Red</span>
-      <span><span class="legend-dot" style="background:#FFB020"></span>Amber</span>
-      <span><span class="legend-dot" style="background:#A8D840"></span>Yellow-Green</span>
-      <span><span class="legend-dot" style="background:#22C55E"></span>Green</span>
-    </div></div>`;
+  // Grid rings (4 rings for max 4)
+  for (let level = 1; level <= 4; level++) {
+    const pts = pentagonPts((r / 4) * level, offset);
+    const path = pts.map((p, i) => (i === 0 ? `M${p.x},${p.y}` : `L${p.x},${p.y}`) ).join(' ') + 'Z';
+    html += `<path d="${path}" fill="none" stroke="#3A3A3A" stroke-width="1" opacity="0.6"/>`;
+  }
 
-    // Gaps: Weakest areas
-    let weak = gaps.filter(g=>g.val<=2);
-    if(weak.length){
-      html += `<div style="margin-top:30px; margin-bottom:4px; color:#FFA040; font-weight:600;">Your weakest area${weak.length>1?'s':''}: ${weak.map(g=>AREAS[g.i].label).join(' & ')}</div>`;
-      html += `<div style="color:#a5ffe0;">${weak.map(g=>gapCopy(g.k,g.val)).join(' ')}</div>`;
-    } else {
-      html += `<div style="margin:26px 0 2px; color:#A8D840; font-weight:600;">No red or amber zones detected. Good foundation—next level strategies will compound your results.</div>`;
-    }
-    html += `</div>`;
-
-  // Section: Archetype
-  html += `<div class="section archetype-sec"><h2>Archetype Assignment</h2><div style="font-size:1.25em;margin-bottom:7px;"><span class="archetype-emoji">${arch.emoji}</span><strong>${arch.label}</strong></div>`;
-  html += `<div>You're a <strong>${arch.label}</strong>. ${arch.desc}</div>`;
-  html += `<div style="margin:9px 0 6px; font-size:1.07em; color:#CCCCCC;">${arch.people}</div>`;
-  html += `<div style="margin:12px 0 2px; color:#FC5C03;font-weight:600;">Your biggest risks:</div><ul>`+
-    arch.risks.map(r=>`<li>${r}</li>`).join('')+`</ul>`;
-  html += `<div style="margin:7px 0 0 0;color:#08C394;font-weight:600;">The Blueprint steps that matter most for you:</div><ul>`+
-    arch.focus.map(f=>`<li>${f}</li>`).join('')+`</ul>`;
-  html += `</div>`;
-
-  // Section: Gap Analysis
-  html += `<div class="section gap-sec"><h2>Your 3 Biggest Gaps</h2><ul class="gap-list">`;
-  gaps.forEach(g=>{
-    html += `<li class="gap-item"><strong>You scored ${g.val}/4 on ${AREAS[g.i].label}</strong><br><span style="color:#FC5C03">${gapCopy(g.k,g.val)}</span><br><span style="color:#A8D840;">Blueprint focus: ${arch.focus[g.i%arch.focus.length]||'See main steps above'}.</span></li>`;
+  // Axis lines
+  const outerPts = pentagonPts(r, offset);
+  outerPts.forEach(p => {
+    html += `<line x1="${cx}" y1="${cy}" x2="${p.x}" y2="${p.y}" stroke="#3A3A3A" stroke-width="1" opacity="0.4"/>`;
   });
-  html += `</ul></div>`;
 
-  // Section: Testimonials
-  html += `<div class="section"><h2>Real Member Case Studies</h2><div class="testimonial-cards">`;
-  testimonials.slice(0,3).forEach(t=>{
-    html += `<div class="t-card"><div style="font-weight:700;">${t.name}</div><div>${t.headline}</div><div class="t-card-quote">“${t.quote}”</div><div style="font-size:0.95em;color:#a8d840;">Member for ${t.years} year${t.years>1?'s':''}</div></div>`;
+  // Data polygon
+  const dataPts = scores.map((score, i) => {
+    const angle = (Math.PI * 2 / axes) * i + offset;
+    const rad = (r / 4) * Math.max(score, 0.3);
+    return {
+      x: cx + rad * Math.sin(angle),
+      y: cy - rad * Math.cos(angle),
+      score
+    };
   });
-  html += `</div></div>`;
+  const dataPath = dataPts.map((p, i) => (i === 0 ? `M${p.x},${p.y}` : `L${p.x},${p.y}`)).join(' ') + 'Z';
+  html += `<path d="${dataPath}" fill="rgba(252,92,3,0.15)" stroke="#FC5C03" stroke-width="2"/>`;
+
+  // Dots per axis with traffic-light colour
+  dataPts.forEach((p, i) => {
+    const col = AXIS_COLORS[scores[i]] || '#FC5C03';
+    html += `<circle cx="${p.x}" cy="${p.y}" r="5" fill="${col}" stroke="#1B1925" stroke-width="2"/>`;
+  });
+
+  // Labels
+  const labelPts = pentagonPts(r + 36, offset);
+  labels.forEach((label, i) => {
+    const p = labelPts[i];
+    const lines = label.split('\n');
+    const isLeft = p.x < cx - 10;
+    const isRight = p.x > cx + 10;
+    const anchor = isLeft ? 'end' : isRight ? 'start' : 'middle';
+    const col = AXIS_COLORS[scores[i]] || '#B3B2B6';
+    let textHtml = `<text text-anchor="${anchor}" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" font-weight="600" fill="${col}">`;
+    lines.forEach((line, li) => {
+      const dy = li === 0 ? 0 : 14;
+      textHtml += `<tspan x="${p.x}" dy="${dy}">${line}</tspan>`;
+    });
+    textHtml += `</text>`;
+    html += textHtml;
+  });
+
+  // Centre label
+  html += `<text x="${cx}" y="${cy + 5}" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#807F86">Score</text>`;
+
+  svg.innerHTML = html;
+}
+
+function buildLegend(scores) {
+  const areas = ['Investment Thesis', 'Information Quality', 'Risk Framework', 'Time & Commitment', 'Exit Strategy'];
+  const legend = document.getElementById('radar-legend');
+  legend.innerHTML = areas.map((area, i) => {
+    const col = AXIS_COLORS[scores[i]] || '#B3B2B6';
+    return `<div class="legend-item">
+      <div class="legend-dot" style="background:${col}"></div>
+      <span>${area}: <strong style="color:${col}">${scores[i]}/4</strong></span>
+    </div>`;
+  }).join('');
+}
+
+// ─── WEAKNESS NOTES ──────────────────────────────────────────────────────────
+
+function buildWeaknessNotes(scores) {
+  // scores: [{area, score, qNum}] sorted by score asc
+  const areas = [
+    { area: 'Investment Thesis', qNum: 4 },
+    { area: 'Information Quality', qNum: 5 },
+    { area: 'Risk Framework', qNum: 6 },
+    { area: 'Time & Commitment', qNum: 7 },
+    { area: 'Exit Strategy', qNum: 8 }
+  ];
+  const sorted = areas.map((a, i) => ({ ...a, score: scores[i] })).sort((a, b) => a.score - b.score);
+  const weakest = sorted.slice(0, 2).filter(a => a.score <= 2);
+
+  const container = document.getElementById('weakness-notes');
+  if (!weakest.length) {
+    container.innerHTML = `<div class="weakness-note" style="background:rgba(8,195,148,0.08);border-color:rgba(8,195,148,0.2);"><span class="wn-icon">✅</span><span>Strong across all five areas. Your focus now is optimisation, not remediation.</span></div>`;
+    return;
+  }
+  const weakNotes = {
+    'Investment Thesis': 'Your investment thesis needs work - this is the foundation everything else builds on.',
+    'Information Quality': 'Your information sources are a weak point - signal versus noise is the critical skill.',
+    'Risk Framework': 'Your risk framework is underdeveloped - this is the most common cause of avoidable losses.',
+    'Time & Commitment': 'Your time allocation needs a structure - a system turns hours into decisions, not just consumption.',
+    'Exit Strategy': 'You don\'t have a clear exit plan - this is the single biggest gap we see in new members.'
+  };
+  container.innerHTML = weakest.map(a => `
+    <div class="weakness-note">
+      <span class="wn-icon">⚠️</span>
+      <span><strong style="color:#FFB020">${a.area} (${a.score}/4):</strong> ${weakNotes[a.area]}</span>
+    </div>`).join('');
+}
+
+// ─── ARCHETYPE CARD ──────────────────────────────────────────────────────────
+
+function buildArchetype(key) {
+  const a = ARCHETYPES[key];
+  const card = document.getElementById('archetype-card');
+  card.innerHTML = `
+    <span class="archetype-icon">${a.icon}</span>
+    <div class="archetype-title">${a.title}</div>
+    <div class="archetype-oneliner">${a.oneliner}</div>
+    <div class="archetype-section-title">People Like You</div>
+    <div class="archetype-people">${a.people}</div>
+    <div class="archetype-section-title">Your Biggest Risks</div>
+    <ul class="risk-list">${a.risks.map(r => `<li>${r}</li>`).join('')}</ul>
+    <div class="archetype-section-title">Blueprint Steps For You</div>
+    <div class="steps-list">${a.steps.map(s => `
+      <div class="step-chip">
+        <span class="step-num">Step ${s.num}</span>
+        <span class="step-label">${s.label}</span>
+      </div>`).join('')}
+    </div>`;
+}
+
+// ─── GAP ANALYSIS ────────────────────────────────────────────────────────────
+
+function buildGaps(d) {
+  const qScores = [
+    { q: 4, score: d.q4 },
+    { q: 5, score: d.q5 },
+    { q: 6, score: d.q6 },
+    { q: 7, score: d.q7 },
+    { q: 8, score: d.q8 },
+    { q: 9, score: d.q9 }
+  ];
+
+  // Sort by score asc, then by q asc for ties
+  const sorted = [...qScores].sort((a, b) => a.score - b.score || a.q - b.q);
+  const gaps = sorted.filter(item => item.score <= 2).slice(0, 3);
+
+  // If fewer than 3 gaps (<= 2), pad with next lowest even if score 3
+  let padded = gaps;
+  if (padded.length < 3) {
+    const remaining = sorted.filter(item => !padded.includes(item));
+    padded = [...padded, ...remaining].slice(0, 3);
+  }
+
+  const grid = document.getElementById('gaps-grid');
+  grid.innerHTML = padded.map(item => {
+    const info = GAP_COPY[item.q];
+    const col = AXIS_COLORS[item.score] || '#FF4444';
+    const isAmber = item.score === 2;
+    const copy = info[item.score] || info[2]; // fallback for score 3 if padded
+    const badgeBg = item.score <= 1 ? 'rgba(255,68,68,0.15)' : item.score === 2 ? 'rgba(255,176,32,0.15)' : 'rgba(168,216,64,0.15)';
+    return `
+      <div class="gap-card ${isAmber ? 'amber' : ''}" style="border-left-color:${col}">
+        <div class="gap-header">
+          <div class="gap-area">${info.area}</div>
+          <div class="gap-score-badge" style="background:${badgeBg};color:${col}">
+            <span>${item.score}/4</span>
+          </div>
+        </div>
+        <div class="gap-copy">${copy}</div>
+      </div>`;
+  }).join('');
+}
+
+// ─── TESTIMONIALS ────────────────────────────────────────────────────────────
+
+function buildTestimonials(key) {
+  const items = TESTIMONIALS[key] || TESTIMONIALS['sidelined_professional'];
+  const grid = document.getElementById('testimonials-grid');
+  grid.innerHTML = items.map(t => `
+    <div class="testimonial-card">
+      <div class="testimonial-quote">${t.quote}</div>
+      <div class="testimonial-meta">
+        <div class="testimonial-avatar">${t.name.charAt(0)}</div>
+        <div class="testimonial-info">
+          <div class="testimonial-name">${t.name}</div>
+          <div class="testimonial-headline">${t.headline}</div>
+        </div>
+        <div class="testimonial-years">${t.years} yr${t.years !== 1 ? 's' : ''}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ─── BOOT ────────────────────────────────────────────────────────────────────
+
+function boot() {
+  const d = getData();
+  const archetypeKey = assignArchetype(d);
+  const radarScores = [d.q4, d.q5, d.q6, d.q7, d.q8];
+
+  // Hero
+  document.getElementById('hero-name').textContent = d.name + ',';
+  document.getElementById('score-number').textContent = d.score;
+  document.getElementById('score-band').textContent = SCORE_BAND(d.score);
+
+  // Radar
+  buildRadar(radarScores);
+  buildLegend(radarScores);
+  buildWeaknessNotes(radarScores);
+
+  // Archetype
+  buildArchetype(archetypeKey);
+
+  // Gaps
+  buildGaps(d);
+
+  // Testimonials
+  buildTestimonials(archetypeKey);
 
   // CTA
-  html += `<div class="cta-wrap section no-print"><div style="font-size:1.15em;">${arch.cta}</div><a href="https://collectiveshift.io/strategy-call" class="cta-btn" target="_blank">Book Your Free Strategy Call</a>`;
-  // Download blueprint
-  html += `<div style="margin-top:19px;font-size:1em;">In the meantime, download the full 8-Step Digital Asset Wealth Blueprint:</div><a href="/blueprint-guide.html?score=${data.score}&name=${encodeURIComponent(data.name)}" class="cta-btn download-btn">Download Your Free Blueprint</a>`;
-  // Print
-  html += `<button class="cta-btn print-btn" onclick="window.print()">Print / Save PDF</button>`;
-  html += `</div>`;
+  document.getElementById('cta-copy').textContent = CTA_COPY[archetypeKey] || CTA_COPY['sidelined_professional'];
 
-  document.getElementById('result-content').innerHTML = html;
+  // Blueprint link
+  const bpLink = document.getElementById('blueprint-link');
+  bpLink.href = `/blueprint-guide.html?score=${d.score}&name=${encodeURIComponent(d.name)}`;
 }
-setTimeout(()=>{
-  document.getElementById('loading').style.display = 'none';
-  document.getElementById('result-content').style.display = '';
-  render();
-  window.scrollTo(0,0);
-}, 2800);
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Pre-compute everything
+  boot();
+
+  // 3 second loading animation
+  setTimeout(function() {
+    const loadingScreen = document.getElementById('loading-screen');
+    const resultsContent = document.getElementById('results-content');
+
+    loadingScreen.classList.add('fade-out');
+    setTimeout(function() {
+      loadingScreen.style.display = 'none';
+      resultsContent.classList.add('visible');
+    }, 500);
+  }, 3000);
+});
 </script>
 </body>
 </html>
