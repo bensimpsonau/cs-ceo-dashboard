@@ -503,6 +503,29 @@ app.post('/api/transcribe', transcribeUpload.single('file'), async (req, res) =>
 });
 
 // ──────────────────────────────────────────────────────
+// POST /api/quiz-lead
+// Capture all quiz data (for Lead Magnet 2.0)
+// ──────────────────────────────────────────────────────
+app.post('/api/quiz-lead', (req, res) => {
+  const { name, email, mobile, answers, score, qualifiers, archetype, subscores } = req.body;
+  if (!name || !email) {
+    return res.status(400).json({ error: 'Name and email are required' });
+  }
+  // Prepare data storage: log to a (local) JSONL file for offline review
+  const newLead = {
+    ts: new Date().toISOString(),
+    name, email, mobile, score, answers, qualifiers,
+    archetype: archetype || null,
+    subscores: subscores || null
+  };
+  const leadsFile = path.join(__dirname, 'dashboard-data', 'quiz-leads.jsonl');
+  fs.appendFile(leadsFile, JSON.stringify(newLead) + '\n', () => {});
+  // (Would add DB or more secure storage for prod)
+  console.log(`[QuizLead] ${name} <${email}> | Score: ${score} | Answers:`, JSON.stringify(answers));
+  res.json({ ok: true });
+});
+
+// ──────────────────────────────────────────────────────
 // POST /api/blueprint-email
 // Captures lead from allocation blueprint quiz
 // ──────────────────────────────────────────────────────

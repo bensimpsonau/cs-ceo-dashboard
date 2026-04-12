@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Digital Asset Readiness Results | Collective Shift</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --orange: #FC5C03;
+      --bg: #1B1925;
+      --bg-deep: #02000D;
+      --bg-card: #252530;
+      --border: #3A3A3A;
+      --teal: #08C394;
+      --white: #FFFFFF;
+      --traffic-red: #FF4444;
+      --traffic-amber: #FFB020;
+      --traffic-yellowgreen: #A8D840;
+      --traffic-green: #22C55E;
+      --heading-font: 'Plus Jakarta Sans', sans-serif;
+      --body-font: 'Barlow', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--body-font);
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .container {
+      max-width: 580px;
+      margin: 32px auto;
+      padding: 16px;
+      background: var(--bg-deep);
+      border-radius: 18px;
+      box-shadow: 0 4px 36px rgba(2,0,13,0.10);
+    }
+    h1, h2, h3, h4 {
+      font-family: var(--heading-font);
+      color: var(--white);
+      margin-bottom: 0.5em;
+    }
+    h1 { font-size: 2.3em; font-weight: 700; }
+    h2 { font-size: 1.5em; font-weight: 600; }
+    h3 { font-size: 1.17em; }
+    .section {
+      margin-bottom: 40px;
+      background: var(--bg-card);
+      border-radius: 13px;
+      padding: 26px 18px 20px 18px;
+      box-shadow: 0 3px 16px rgba(28,25,37,.12);
+    }
+    .score-reveal {
+      font-size: 1.15em;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .score-number {
+      font-size: 3epx;
+      font-weight: 800;
+      color: var(--orange);
+    }
+    .loading-spinner {
+      display: flex; align-items: center; justify-content: center; flex-direction: column; height: 180px; font-size: 1.3em; }
+    .lds-dual-ring {
+      display: inline-block; width: 56px; height: 56px;
+    }
+    .lds-dual-ring:after {
+      content: " "; display: block; width: 46px; height: 46px; margin: 5px; border-radius: 50%; border: 6px solid var(--orange); border-color: var(--orange) transparent var(--orange) transparent; animation: lds-dual-ring 1.2s linear infinite;}
+    @keyframes lds-dual-ring { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
+    .radar-wrap { text-align: center; margin-top: 32px; }
+    @media (max-width:700px) { .container { max-width:98vw;} svg { max-width:95vw; height:auto; } }
+    .radar-label {
+      fill: var(--white);
+      font-family: var(--heading-font);
+      font-size: 0.97em;
+      font-weight: 600;
+      paint-order: stroke fill;
+      stroke: var(--bg-deep);
+      stroke-width: 6px;
+    }
+    .traffic-dot {
+      filter: drop-shadow(0 1px 4px #0002); stroke: var(--bg-card); stroke-width:2px;
+    }
+    .radar-legend { display: flex; gap:17px; justify-content: center; margin: 13px auto; font-size:0.93em; }
+    .radar-legend span { display: flex; align-items: center; gap:6px; }
+    .radar-legend .legend-dot { width:12px; height:12px; border-radius:50%; display:inline-block; margin-right:2px; }
+    .gap-list { list-style: none; padding-left: 0; }
+    .gap-item { margin-bottom: 21px; }
+    .testimonial-cards { display: flex; flex-wrap: wrap; gap: 14px; }
+    .t-card { flex: 1 1 230px; background: var(--bg); border: 1.3px solid var(--border); color: var(--white); border-radius: 11px; padding: 17px 18px 12px; min-width: 160px; }
+    .t-card-quote { font-style: italic; color: var(--teal); font-size: 1.07em; }
+    .cta-wrap { margin: 36px 0 14px 0; text-align: center; }
+    .cta-btn {
+      background: var(--orange); color: var(--white);
+      font-family: var(--heading-font); font-weight: 700; border: none;
+      border-radius: 30px; padding: 15px 38px; font-size: 1.19em; margin-top: 8px;
+      cursor:pointer; transition: filter .18s;
+      box-shadow: 0 4px 16px #FC5C0355;
+    }
+    .cta-btn:hover { filter: brightness(1.10); }
+    .download-btn { margin-top:14px; background:var(--teal); }
+    .print-btn { margin-top:10px; background:var(--bg-card); color:var(--orange); border:1px solid var(--orange); }
+    .archetype-emoji { font-size: 2.1em; margin-right:7px; vertical-align: -6px; }
+    .footer { color: var(--border); background: var(--bg-card); text-align: center; font-size: .99em; margin-top:50px; padding:16px 7px 10px; border-radius:16px; }
+    @media print {
+      .cta-btn,.print-btn,.no-print { display: none !important; }
+      body { background: #fff !important; color: #000; }
+      .container, .section { background: #fff !important; color: #000; box-shadow:none; }
+      .footer { background: #fff !important; color: #444; }
+      svg { background: #fff !important; }
+      .t-card { border-color: #ccc; color: #222; background: #fff; }
+      .radar-label { stroke: white; fill: black; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="main-container">
+    <div id="loading" class="loading-spinner">
+      <span>Calculating your score...</span>
+      <span class="lds-dual-ring"></span>
+    </div>
+    <!-- Results will load here -->
+    <div id="result-content" style="display:none;"></div>
+  </div>
+  <div class="footer">This assessment is for educational purposes only and does not constitute financial advice.</div>
+  <script>// Core Data
+const AREAS = [
+  { k: "q4", label: "Investment Thesis" },
+  { k: "q5", label: "Information Quality" },
+  { k: "q6", label: "Risk Framework" },
+  { k: "q7", label: "Time & Commitment" },
+  { k: "q8", label: "Exit Strategy" },
+  { k: "q9", label: "Advanced Strategies" }
+];
+const SCORE_COLORS = ["#FF4444","#FFB020","#A8D840","#22C55E"];
+const TRAFFIC = ['Red','Amber','Yellow-Green','Green'];
+const ARCHETYPES = [
+  {
+    key:"sidelined_professional", label:"The Sidelined Professional", emoji:"🛋️",
+    logic: ans=> ans.q1==="A",
+    desc:"You've been watching from the sideline. You know digital assets are important but you haven't found a trusted way in.",
+    people:"People like you typically have significant wealth in property, super, and traditional assets. You've seen others make money in digital assets but the noise, scams, and complexity have kept you on the fence. The longer you wait, the more the gap widens.",
+    risks:["Entry timing risk - institutions have been building positions for 18+ months. $50B+ has flowed into Bitcoin ETFs.","Information paralysis - you're consuming content but not making decisions."],
+    focus:["Step 1: Foundations","Step 2: Bitcoin thesis","Step 3: Portfolio construction"],
+    cta:"You're in the research phase. Smart. But research without action is procrastination. In a free 30-minute call, we'll map out exactly where to start based on your situation."
+  },
+  {
+    key:"unstructured_holder", label:"The Unstructured Holder", emoji:"🪁",
+    logic: ans=> ["B","C"].includes(ans.q1) && ["A","B"].includes(ans.q6),
+    desc:"You've bought digital assets but you're flying blind. No framework, no exit plan, no position sizing rules.",
+    people:"People like you typically bought on tips, news, or FOMO. You might be up overall but you have no idea if your allocation is right, when to take profits, or how to protect what you've built. The next drawdown will test that.",
+    risks:["No exit strategy means you'll give back 40-80% of gains in the next correction.","No risk framework means one bad trade can undo years of progress."],
+    focus:["Step 4: Risk frameworks","Step 8: Exit strategies"],
+    cta:"You already have exposure. The question is whether your current approach will protect what you've built. Let's review your portfolio structure in a free 30-minute call."
+  },
+  {
+    key:"burned_investor", label:"The Burned Investor", emoji:"🔥",
+    logic: ans=> ans.q1==="C" && ["A","B"].includes(ans.q4) && ["A","B"].includes(ans.q6) && ["A","B"].includes(ans.q8),
+    desc:"You've been in the digital asset space before and it didn't go well. But you're back because you know the opportunity is real.",
+    people:"People like you typically got burned because they didn't have a system. No position sizing, no exit plan, reacting to emotion instead of data. That's not a you problem. That's a structure problem. And it's fixable.",
+    risks:["Repeating past mistakes without a framework.", "Over-caution leading to missed opportunity while institutions accelerate."],
+    focus:["Step 4: Risk frameworks","Step 6: Sentiment analysis","Step 8: Exit strategies"],
+    cta:"The last thing you need is another person telling you to buy. What you need is a framework that prevents the mistakes that burned you last time. That's what the call is about."
+  },
+  {
+    key:"conservative_protector", label:"The Conservative Protector", emoji:"🛡️",
+    logic: ans=> ans.q2==="A" && ["A","B"].includes(ans.q3) && ans.q7==="A",
+    desc:"You've built significant wealth through traditional means and you're watching inflation erode it. You want protection, not speculation.",
+    people:"People like you typically have the majority of their wealth in property, super, and cash. Traditional returns aren't keeping pace with real inflation. You're not looking to get rich quick. You want a disciplined approach to preserving purchasing power.",
+    risks:["Purchasing power erosion - your cash and bonds are losing real value every year.", "Over-concentration in a single asset class (property or equities)."],
+    focus:["Step 1: Macro environment","Step 2: Bitcoin as a treasury asset"],
+    cta:"You've spent years building wealth. Protecting it from here requires the right framework. We'll walk through how to allocate defensively in a 30-minute call."
+  },
+  {
+    key:"active_builder", label:"The Active Builder", emoji:"🛠️",
+    logic: (ans, score)=> ans.q1==="D" && ["C","D"].includes(ans.q4) && score>=18,
+    desc:"You've got the foundations. Now you want to optimise. You're past the basics and looking for edge.",
+    people:"People like you have a clear thesis, some exposure, and reasonable confidence. But you know you're leaving value on the table. Advanced analysis tools, yield strategies, and tax-efficient structures are the next layer.",
+    risks:["Overconfidence without stress-testing.", "Missing advanced strategies like lending, yield, and tax optimisation that compound returns significantly."],
+    focus:["Step 5: On-chain analysis","Step 6: Sentiment","Step 7: Advanced strategies"],
+    cta:"You've got the fundamentals. Now it's about optimising. We'll review your current structure and identify the 2-3 highest-leverage improvements in a free 30-minute call."
+  },
+  {
+    key:"legacy_planner", label:"The Legacy Planner", emoji:"📜",
+    logic: ans=> ans.q2==="B" && ["C","D","E"].includes(ans.q3),
+    desc:"You're thinking in decades, not months. Generational wealth is the goal and digital assets are part of that picture.",
+    people:"People like you are allocating $100K+ and thinking about how to structure this for the next 20-30 years. SMSF, trust structures, tax efficiency, and estate planning are all on the table. This isn't about quick gains. It's about building something that lasts.",
+    risks:["Structural risk - wrong entity or tax structure can cost hundreds of thousands.","No succession plan for digital asset holdings."],
+    focus:["Step 4: Risk","Step 8: Exit","Advanced structures: SMSF/trust/tax"],
+    cta:"Building a portfolio that lasts across generations requires the right structure from day one. We'll discuss SMSF, trusts, and long-term allocation in a free 30-minute call."
+  }
+];
+const TESTIMONIALS = {
+  sidelined_professional: [
+    { name: "Wes", headline: "Built his foundational strategy over 5 years", quote: "Collective Shift helped me build my foundational strategy. I went from confused to confident.", years: 5 },
+    { name: "Bruce", headline: "Comfortable the team knows what they're doing", quote: "We feel comfortable that the team knows what they're doing. That trust was everything for us.", years: 2 }
+  ],
+  unstructured_holder: [
+    { name: "Chris", headline: "Paid off his mortgage from digital asset returns", quote: "I managed to get rid of a little bit of BTC and pay off my mortgage. It's kept my mind at ease.", years: 3 },
+    { name: "Pete", headline: "Consolidated holdings and improved performance", quote: "My portfolio is now much healthier. I've consolidated into stronger assets.", years: 2 },
+    { name: "Martin", headline: "From scattered positions to a structured portfolio", quote: "Joining Collective Shift and talking to the guys turned it around for me.", years: 2 }
+  ],
+  burned_investor: [
+    { name: "Jason", headline: "From potential losses to structured gains", quote: "I think I've moved from a situation where I undoubtedly would have been in the red to making real progress.", years: 2 },
+    { name: "Simon", headline: "Confidence through bull and bear markets", quote: "I have confidence that I can work through this bull market and the next bear.", years: 3 }
+  ],
+  conservative_protector: [
+    { name: "Bruce", headline: "Found a team he trusts with his wealth decisions", quote: "We feel comfortable that the team knows what they're doing.", years: 2 },
+    { name: "Heidi", headline: "The education and strategy changed everything", quote: "The biggest achievement is the education and the strategy.", years: 2 }
+  ],
+  active_builder: [
+    { name: "Heidi", headline: "Education and strategy as the foundation", quote: "The biggest achievement is the education and the strategy.", years: 2 },
+    { name: "Adrian", headline: "Learning from a diverse, experienced community", quote: "The guidance from the team and the support from the community created a positive environment for growth.", years: 1 }
+  ],
+  legacy_planner: [
+    { name: "Bruce", headline: "Building wealth with trusted guidance", quote: "We feel comfortable that the team knows what they're doing.", years: 2 },
+    { name: "Chris", headline: "Portfolio under control, mortgage paid off", quote: "It's under control now. That peace of mind is everything.", years: 3 }
+  ]
+};
+const GAP_COPY = {
+  q4: [
+    "You haven't formed a clear view on why digital assets belong in a portfolio. Without a thesis, every price move feels like noise. You'll buy high and sell low because you have no anchor.",
+    "You have a general sense but can't articulate it. That means when the market drops 30%, you won't have the conviction to hold. Conviction comes from clarity."
+  ],
+  q5: [
+    "You're relying on social media and influencers for investment decisions. 90% of that content is designed to generate views, not protect your capital.",
+    "You're consuming a lot of information but can't filter signal from noise. That's more dangerous than knowing nothing because it creates false confidence."
+  ],
+  q6: [
+    "You have no written rules for allocation or drawdowns. That means your strategy is 'hope it works out.' In our experience, hope-based portfolios lose 40-80% of gains in corrections.",
+    "Rough ideas aren't enough. When Bitcoin drops 30% overnight, you won't think clearly. The rules need to be written before the drawdown, not during it."
+  ],
+  q7: [
+    "You want set-and-forget, which is honest. But digital assets aren't index funds. Even a low-touch approach needs monthly check-ins and quarterly rebalancing. The Blueprint covers how to do this in under 2 hours per month.",
+    "A few hours a month is workable. The key is having those hours structured. Without a system, you'll spend that time consuming noise instead of making decisions."
+  ],
+  q8: [
+    "You have no exit plan. This is the number one gap we see across 1,400+ members. Entry without exit isn't a strategy. It's a gamble.",
+    "A rough idea isn't an exit plan. When Bitcoin hits your target price, will you sell 10%? 50%? All of it? If you can't answer that right now, you'll freeze when it matters."
+  ],
+  q9: [
+    "You don't know that digital assets can generate income through lending and yield. Most high-net-worth investors are leaving significant returns on the table because they don't know this exists.",
+    "You've heard about yield strategies but haven't acted. In the current rate environment, Bitcoin-backed lending can provide tax-efficient liquidity without triggering CGT events."
+  ]
+};
+
+function scoreCharToNum(char) {
+  if (!char) return 1;
+  return {A:1,B:2,C:3,D:4}[char] || 1;
+}
+
+function getQuizData() {
+  // Try localStorage, then fallback to query params
+  try {
+    const a = JSON.parse(localStorage.getItem('cs_quiz_answers')||"null");
+    if(a){
+      let out = {
+        name: localStorage.getItem('cs_quiz_name')||'Investor',
+        score: parseInt(localStorage.getItem('cs_score')||'0',10),
+        answers: a
+      };
+      AREAS.forEach((q,idx)=>{ out[q.k]=scoreCharToNum(a[idx+4]) }); // q4-q9
+      // Also get q1,q2,q3
+      out.q1 = localStorage.getItem('cs_q1_exp')||a[1];
+      out.q2 = localStorage.getItem('cs_q2_goal')||a[2];
+      out.q3 = localStorage.getItem('cs_q3_capital')||a[3];
+      return out;
+    }
+  }catch(e){}
+  // fallback to query params
+  const params = new URLSearchParams(window.location.search);
+  const name = params.get('name') || 'Investor';
+  const score = parseInt(params.get('score')||'0',10);
+  // Without localstorage, try to spread the score evenly
+  let per = (score && score>=6 && score<=24) ? Math.round(score/6) : 2;
+  return {
+    name,
+    score,
+    q4:per, q5:per, q6:per, q7:per, q8:per, q9:per,
+    answers: {},
+    q1:'A',q2:'A',q3:'A' // Default fallback
+  };
+}
+function assignArchetype(data) {
+  for(const arch of ARCHETYPES){
+    if(arch.logic(data,data.score)) return arch;
+  }
+  // fallback
+  return ARCHETYPES[0];
+}
+function getRadarScores(data){
+  return [data.q4, data.q5, data.q6, data.q7, data.q8];
+} 
+function radarColor(scoreIdx) { return SCORE_COLORS[scoreIdx-1]||SCORE_COLORS[0]; }
+function getGaps(data) {
+  // Sort by value (lowest 3), tie-breaker: lower index earlier
+  let arr = [
+    {i:0, k:"q4", val:data.q4},
+    {i:1, k:"q5", val:data.q5},
+    {i:2, k:"q6", val:data.q6},
+    {i:3, k:"q7", val:data.q7},
+    {i:4, k:"q8", val:data.q8},
+    {i:5, k:"q9", val:data.q9}
+  ];
+  arr.sort((a, b) => a.val - b.val || a.i - b.i);
+  return arr.slice(0,3);
+}
+function gapCopy(k, val) {
+  if(val<=2 && GAP_COPY[k] && GAP_COPY[k][val-1]) return GAP_COPY[k][val-1];
+  if(val===3) return "You're close, but a little structure will make a big difference here.";
+  if(val>=4) return "No gaps detected here.";
+  return "";
+}
+function buildRadar(scores) {
+  // 5 axes, pentagon, center is (250,200), radius=120
+  const center = {x:250,y:200}, r=120, axes = 5;
+  // Convert each to polar,
+  let points=[], dots=[], labels=[];
+  for(let i=0;i<axes;i++){
+    const angle = (Math.PI/2) + (i * 2*Math.PI/axes);
+    const scoreRatio = ((scores[i]-1)/3);
+    const px = center.x + Math.cos(angle)*r*scoreRatio;
+    const py = center.y - Math.sin(angle)*r*scoreRatio;
+    points.push([px,py]);
+    // Outer dot for color
+    dots.push({cx:center.x + Math.cos(angle)*r, cy:center.y - Math.sin(angle)*r, color:radarColor(scores[i]) });
+    // Label
+    let lx=center.x + Math.cos(angle)*(r+34);
+    let ly=center.y - Math.sin(angle)*(r+37)+(i==2||i==3?16:0);
+    let anchor = i===0?"middle":i<3?"start":"end";
+    labels.push({x:lx, y:ly,text:AREAS[i].label, anchor });
+  }
+  // Grid rings for 4 levels
+  let grids=[];
+  for(let lvl=1;lvl<=4;lvl++){
+    let ring=[];
+    let radius = r*((lvl-1)/3);
+    for(let i=0;i<axes;i++){
+      const angle = (Math.PI/2) + (i * 2*Math.PI/axes);
+      ring.push((center.x + Math.cos(angle)*radius)+","+(center.y - Math.sin(angle)*radius));
+    }
+    grids.push(ring.join(" "));
+  }
+  return { points, dots, labels, grids, center, r };
+}
+
+function testimonialsFor(archKey) {
+  return TESTIMONIALS[archKey]||[];
+}
+function archetypeShortKey(k) {
+  // Hack for testimonial fallback: key is eg. "sidelined_professional"
+  return k.replace(/_/g,'-');
+}
+
+function render() {
+  const data = getQuizData();
+  const radarScores = getRadarScores(data);
+  const arch = assignArchetype(data);
+  const gaps = getGaps(data);
+  const radar = buildRadar(radarScores);
+  const testimonialKey = arch.key in TESTIMONIALS ? arch.key : "sidelined_professional";
+  const testimonials = testimonialsFor(testimonialKey);
+
+  let html = '';
+  // Section: Score Reveal
+  html += `<div class="section score-sec"><h1>${data.name}, your Digital Asset Readiness Score is <span class="score-number">${data.score}/24</span></h1>`;
+  html += `<div class="score-reveal">Here's how you performed across each area:</div>`;
+
+  // Radar Chart
+  html += `<div class="radar-wrap"><svg viewBox="0 0 500 420" width="100%" height="320" style="background:none;">
+      <g opacity="0.19">${radar.grids.map(poly=>`<polygon points="${poly}" fill="none" stroke="#666" stroke-width="1"/>`).join('')}</g>`;
+      <polygon points="${radar.points.map(([x,y])=>`${x},${y}`).join(' ')}" fill="${SCORE_COLORS[data.q4-1]||'#FFB020'}40" stroke="var(--orange)" stroke-width="2.9"></polygon>
+      ${radar.dots.map((d,i)=>`<circle cx="${d.cx}" cy="${d.cy}" r="13" fill="${d.color}" class="traffic-dot"/>`).join('')}
+      ${radar.labels.map(l=>`<text x="${l.x}" y="${l.y}" class="radar-label" text-anchor="${l.anchor}">${l.text}</text>`).join('')}
+    </svg>
+    <div class="radar-legend">
+      <span><span class="legend-dot" style="background:#FF4444"></span>Red</span>
+      <span><span class="legend-dot" style="background:#FFB020"></span>Amber</span>
+      <span><span class="legend-dot" style="background:#A8D840"></span>Yellow-Green</span>
+      <span><span class="legend-dot" style="background:#22C55E"></span>Green</span>
+    </div></div>`;
+
+    // Gaps: Weakest areas
+    let weak = gaps.filter(g=>g.val<=2);
+    if(weak.length){
+      html += `<div style="margin-top:30px; margin-bottom:4px; color:#FFA040; font-weight:600;">Your weakest area${weak.length>1?'s':''}: ${weak.map(g=>AREAS[g.i].label).join(' & ')}</div>`;
+      html += `<div style="color:#a5ffe0;">${weak.map(g=>gapCopy(g.k,g.val)).join(' ')}</div>`;
+    } else {
+      html += `<div style="margin:26px 0 2px; color:#A8D840; font-weight:600;">No red or amber zones detected. Good foundation—next level strategies will compound your results.</div>`;
+    }
+    html += `</div>`;
+
+  // Section: Archetype
+  html += `<div class="section archetype-sec"><h2>Archetype Assignment</h2><div style="font-size:1.25em;margin-bottom:7px;"><span class="archetype-emoji">${arch.emoji}</span><strong>${arch.label}</strong></div>`;
+  html += `<div>You're a <strong>${arch.label}</strong>. ${arch.desc}</div>`;
+  html += `<div style="margin:9px 0 6px; font-size:1.07em; color:#CCCCCC;">${arch.people}</div>`;
+  html += `<div style="margin:12px 0 2px; color:#FC5C03;font-weight:600;">Your biggest risks:</div><ul>`+
+    arch.risks.map(r=>`<li>${r}</li>`).join('')+`</ul>`;
+  html += `<div style="margin:7px 0 0 0;color:#08C394;font-weight:600;">The Blueprint steps that matter most for you:</div><ul>`+
+    arch.focus.map(f=>`<li>${f}</li>`).join('')+`</ul>`;
+  html += `</div>`;
+
+  // Section: Gap Analysis
+  html += `<div class="section gap-sec"><h2>Your 3 Biggest Gaps</h2><ul class="gap-list">`;
+  gaps.forEach(g=>{
+    html += `<li class="gap-item"><strong>You scored ${g.val}/4 on ${AREAS[g.i].label}</strong><br><span style="color:#FC5C03">${gapCopy(g.k,g.val)}</span><br><span style="color:#A8D840;">Blueprint focus: ${arch.focus[g.i%arch.focus.length]||'See main steps above'}.</span></li>`;
+  });
+  html += `</ul></div>`;
+
+  // Section: Testimonials
+  html += `<div class="section"><h2>Real Member Case Studies</h2><div class="testimonial-cards">`;
+  testimonials.slice(0,3).forEach(t=>{
+    html += `<div class="t-card"><div style="font-weight:700;">${t.name}</div><div>${t.headline}</div><div class="t-card-quote">“${t.quote}”</div><div style="font-size:0.95em;color:#a8d840;">Member for ${t.years} year${t.years>1?'s':''}</div></div>`;
+  });
+  html += `</div></div>`;
+
+  // CTA
+  html += `<div class="cta-wrap section no-print"><div style="font-size:1.15em;">${arch.cta}</div><a href="https://collectiveshift.io/strategy-call" class="cta-btn" target="_blank">Book Your Free Strategy Call</a>`;
+  // Download blueprint
+  html += `<div style="margin-top:19px;font-size:1em;">In the meantime, download the full 8-Step Digital Asset Wealth Blueprint:</div><a href="/blueprint-guide.html?score=${data.score}&name=${encodeURIComponent(data.name)}" class="cta-btn download-btn">Download Your Free Blueprint</a>`;
+  // Print
+  html += `<button class="cta-btn print-btn" onclick="window.print()">Print / Save PDF</button>`;
+  html += `</div>`;
+
+  document.getElementById('result-content').innerHTML = html;
+}
+setTimeout(()=>{
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('result-content').style.display = '';
+  render();
+  window.scrollTo(0,0);
+}, 2800);
+</script>
+</body>
+</html>
