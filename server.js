@@ -342,8 +342,9 @@ try { contentBoard = JSON.parse(fs.readFileSync(CONTENT_BOARD_PATH, 'utf8')); } 
 
 // POST /api/content/status
 app.post('/api/content/status', async (req, res) => {
-  const { cardId, status, updatedAt } = req.body;
-  const card = contentBoard.cards.find(c => c.id === cardId);
+  const { cardId, id, status, updatedAt } = req.body;
+  const lookupId = cardId || id;
+  const card = contentBoard.cards.find(c => c.id === lookupId);
   if (card) {
     card.status = status;
     card.updatedAt = updatedAt;
@@ -355,6 +356,8 @@ app.post('/api/content/status', async (req, res) => {
         `📤 Content posted: **${card.title}**\nPlatform: ${card.platform} | Date: ${(updatedAt || '').split('T')[0]}`
       );
     }
+  } else {
+    return res.status(404).json({ success: false, error: `Card not found: ${lookupId}` });
   }
   res.json({ success: true });
 });
