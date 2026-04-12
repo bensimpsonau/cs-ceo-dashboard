@@ -182,6 +182,48 @@ async function writeTasks(data, commitMsg) {
 }
 
 // ═══════════════════════════════════════════
+// GET /api/tasks
+// ═══════════════════════════════════════════
+app.get('/api/tasks', (req, res) => {
+  const data = readTasks();
+  res.json(data);
+});
+
+// ═══════════════════════════════════════════
+// PATCH /api/tasks/:id
+// ═══════════════════════════════════════════
+app.patch('/api/tasks/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+    if (!id) return res.status(400).json({ error: 'id required' });
+
+    const data = readTasks();
+    const task = data.tasks.find(t => t.id === id);
+    if (!task) return res.status(404).json({ error: 'Task not found' });
+
+    const oldStatus = task.status;
+    Object.assign(task, updates, { updatedAt: new Date().toISOString().split('T')[0] });
+    if (updates.status === 'done' && !task.completedAt) {
+      task.completedAt = new Date().toISOString().split('T')[0];
+    }
+    await writeTasks(data, `Auto-sync: Task updated — ${task.name}`);
+
+    // Notify Discord if status changed
+    if (updates.status && updates.status !== oldStatus) {
+      const emoji = updates.status === 'done' ? '✅' : '🔄';
+      await postToDiscord(
+        `${emoji} Task ${updates.status === 'done' ? 'completed' : 'updated'} from dashboard\n**${task.name}**\nStatus: ${oldStatus} → ${updates.status}`
+      );
+    }
+
+    res.json({ success: true, task });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update task', detail: err.message });
+  }
+});
+
+// ═══════════════════════════════════════════
 // GET /api/status
 // ═══════════════════════════════════════════
 app.get('/api/status', (req, res) => {
