@@ -364,7 +364,7 @@ app.post('/api/content/status', async (req, res) => {
 
 // POST /api/content/add
 app.post('/api/content/add', async (req, res) => {
-  const { title, platform, type, copy, cta, status, scheduledDate } = req.body;
+  const { title, platform, type, copy, cta, status, scheduledDate, brief, content } = req.body;
   const newCard = {
     id: 'c' + Date.now(),
     title,
@@ -372,7 +372,8 @@ app.post('/api/content/add', async (req, res) => {
     type,
     copy: copy || '',
     cta: cta || '',
-    status: status || 'draft',
+    content: content || brief || '',
+    status: status || 'pending_review',
     scheduledDate: scheduledDate || '',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()

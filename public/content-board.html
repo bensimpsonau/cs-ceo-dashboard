@@ -902,8 +902,8 @@ function buildCard(card) {
   if (scheduledTime) metaItems.push(`🕐 ${scheduledTime}`);
   metaItems.push(`<span style="color:var(--cs-orange);font-weight:500">Click to view full post →</span>`);
 
-  // Action buttons (drafts only, pending_review status only)
-  const actionBlock = (isDraft && card.status === 'pending_review') ? `
+  // Action buttons (drafts tab: show for draft OR pending_review status)
+  const actionBlock = (isDraft && (card.status === 'pending_review' || card.status === 'draft')) ? `
     <div class="action-btns">
       <button class="btn-approve" onclick="event.stopPropagation();updateStatus('${card.id}', 'approved', event)">✓ Approve</button>
       <button class="btn-reject"  onclick="event.stopPropagation();updateStatus('${card.id}', 'cancelled', event)">✕ Reject</button>
@@ -984,7 +984,7 @@ function openCardModal(cardId) {
 
   const plat = platformKey(card);
   const isDraft = DRAFT_STATUSES.has(card.status);
-  const isPending = card.status === 'pending_review';
+  const isPending = card.status === 'pending_review' || card.status === 'draft';
 
   // Build full content display
   const fullContent = card.content || card.copy || 'No content available for this card yet.';
