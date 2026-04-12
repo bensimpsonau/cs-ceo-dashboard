@@ -667,6 +667,182 @@
     .filter-select { min-width: 110px; }
     .tab-btn { padding: 12px 14px 10px; font-size: 12px; }
   }
+
+  /* ── Posted Checkbox ── */
+  .posted-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--cs-muted);
+    padding: 5px 10px;
+    border-radius: 7px;
+    border: 1px solid var(--cs-border);
+    background: var(--cs-dark-4);
+    transition: all 0.15s;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .posted-checkbox:hover { border-color: rgba(16,185,129,0.4); color: #10B981; }
+  .posted-checkbox input[type="checkbox"] {
+    accent-color: #10B981;
+    width: 14px; height: 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .posted-checkbox input[type="checkbox"]:disabled { cursor: default; }
+  .posted-checkbox.is-posted {
+    background: rgba(16,185,129,0.1);
+    border-color: rgba(16,185,129,0.35);
+    color: #10B981;
+  }
+
+  /* ── Calendar ── */
+  .calendar-wrap { padding: 0 0 60px; }
+
+  .calendar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    gap: 12px;
+  }
+
+  .cal-month-label {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .cal-nav-btn {
+    background: var(--cs-dark-3);
+    border: 1px solid var(--cs-border);
+    color: var(--cs-text);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .cal-nav-btn:hover {
+    background: var(--cs-dark-4);
+    border-color: rgba(252,92,3,0.45);
+    color: var(--cs-orange);
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    overflow-x: auto;
+  }
+
+  .cal-dow {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--cs-muted);
+    text-align: center;
+    padding: 8px 4px 6px;
+  }
+
+  .cal-cell {
+    background: var(--cs-dark-2);
+    border: 1px solid var(--cs-border);
+    border-radius: 8px;
+    min-height: 88px;
+    padding: 6px;
+    transition: border-color 0.12s, background 0.12s;
+    overflow: hidden;
+  }
+  .cal-cell:not(.cal-empty):hover { border-color: rgba(252,92,3,0.18); }
+  .cal-cell.cal-empty { background: transparent; border-color: transparent; }
+  .cal-cell.cal-today {
+    border-color: var(--cs-orange);
+    background: rgba(252,92,3,0.04);
+  }
+  .cal-cell.cal-drop-target {
+    border-color: var(--cs-orange) !important;
+    background: rgba(252,92,3,0.09);
+    box-shadow: 0 0 0 2px rgba(252,92,3,0.18) inset;
+  }
+
+  .cal-day-num {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--cs-muted);
+    margin-bottom: 4px;
+    line-height: 1;
+  }
+  .cal-cell.cal-today .cal-day-num { color: var(--cs-orange); font-size: 13px; }
+
+  .cal-cards-list { display: flex; flex-direction: column; gap: 3px; }
+
+  .cal-card {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 5px;
+    border-radius: 4px;
+    background: var(--cs-dark-3);
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1.35;
+    color: var(--cs-text);
+    transition: background 0.12s;
+    border-left-width: 3px;
+    border-left-style: solid;
+  }
+  .cal-card:hover { background: var(--cs-dark-4); }
+  .cal-card.cal-card-dragging { opacity: 0.35; }
+  .cal-card.cal-card-published { opacity: 0.65; }
+
+  .cal-card-plat {
+    font-size: 9px;
+    font-weight: 800;
+    padding: 1px 4px;
+    border-radius: 3px;
+    color: #fff;
+    flex-shrink: 0;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  .cal-posted-badge {
+    color: #10B981;
+    font-size: 10px;
+    font-weight: 700;
+    margin-left: auto;
+    padding-left: 3px;
+    flex-shrink: 0;
+  }
+
+  .cal-card-title-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+  }
+
+  @media (max-width: 640px) {
+    .calendar-grid { gap: 2px; }
+    .cal-cell { min-height: 56px; padding: 4px; }
+    .cal-card { font-size: 10px; padding: 2px 3px; }
+    .cal-card-plat { display: none; }
+    .cal-nav-btn { padding: 6px 12px; font-size: 12px; }
+    .cal-month-label { font-size: 15px; }
+    .cal-dow { font-size: 10px; padding: 6px 2px 4px; letter-spacing: 0.5px; }
+  }
 </style>
 </head>
 <body>
@@ -722,6 +898,10 @@
   <button class="tab-btn" id="tab-scheduled" onclick="switchTab('scheduled')">
     🗓 Scheduled
     <span class="tab-count" id="tab-count-scheduled">—</span>
+  </button>
+  <button class="tab-btn" id="tab-calendar" onclick="switchTab('calendar')">
+    📅 Calendar
+    <span class="tab-count" id="tab-count-calendar">—</span>
   </button>
 </div>
 
@@ -809,6 +989,7 @@ function updateStats() {
 
   document.getElementById('tab-count-drafts').textContent    = drafts.length;
   document.getElementById('tab-count-scheduled').textContent = sched.length;
+  document.getElementById('tab-count-calendar').textContent  = sched.length;
 
   const badge = document.getElementById('pending-badge');
   badge.style.display = 'block';
@@ -826,6 +1007,9 @@ function switchTab(tab) {
   activeTab = tab;
   document.getElementById('tab-drafts').classList.toggle('active', tab === 'drafts');
   document.getElementById('tab-scheduled').classList.toggle('active', tab === 'scheduled');
+  document.getElementById('tab-calendar').classList.toggle('active', tab === 'calendar');
+  // Show/hide filter bar - calendar has its own nav
+  document.querySelector('.filter-bar').style.display = tab === 'calendar' ? 'none' : '';
   render();
 }
 
@@ -909,6 +1093,14 @@ function buildCard(card) {
       <button class="btn-reject"  onclick="event.stopPropagation();updateStatus('${card.id}', 'cancelled', event)">✕ Reject</button>
     </div>` : '';
 
+  // Posted checkbox – shown on Scheduled tab for non-cancelled cards
+  const isPublished = card.status === 'published';
+  const postedCheck = (!isDraft && !isCancelled) ? `
+    <label class="posted-checkbox${isPublished ? ' is-posted' : ''}" onclick="event.stopPropagation()" title="${isPublished ? 'Already posted live' : 'Mark as posted live'}">
+      <input type="checkbox" ${isPublished ? 'checked disabled' : ''} onchange="markPosted('${card.id}', this)">
+      ${isPublished ? '✓ Posted' : 'Posted'}
+    </label>` : '';
+
   return `
     <div class="card status-${card.status}${isCancelled ? ' status-cancelled' : ''}"
          data-id="${card.id}" data-platform="${plat}" data-status="${card.status}"
@@ -925,12 +1117,16 @@ function buildCard(card) {
       ${ctaBlock}
       <div class="card-footer">
         <div class="card-meta">${metaItems.join('<span style="color:var(--cs-border)">·</span>')}</div>
-        ${actionBlock}
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          ${postedCheck}
+          ${actionBlock}
+        </div>
       </div>
     </div>`;
 }
 
 function render() {
+  if (activeTab === 'calendar') { renderCalendar(); return; }
   const filtered = getFiltered();
   const area = document.getElementById('content-area');
 
@@ -1176,6 +1372,186 @@ function escHtml(s) {
     .replace(/&/g,'&amp;').replace(/</g,'&lt;')
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;')
     .replace(/'/g,'&#039;');
+}
+
+// ── Mark Posted
+async function markPosted(cardId, checkbox) {
+  if (!checkbox.checked) return;
+  checkbox.disabled = true;
+
+  try {
+    const res = await fetch(`${API}/api/content/status`, {
+      method: 'POST',
+      headers: { 'Authorization': AUTH, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: cardId, status: 'published' })
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const card = allCards.find(c => c.id === cardId);
+    if (card) card.status = 'published';
+
+    toast('✓ Marked as posted live!', 'success');
+    updateStats();
+    render();
+  } catch (err) {
+    checkbox.checked = false;
+    checkbox.disabled = false;
+    toast(`Failed: ${err.message}`, 'error');
+  }
+}
+
+// ── Calendar
+let calYear   = new Date().getFullYear();
+let calMonth  = new Date().getMonth(); // 0-indexed
+let dragCardId = null;
+
+const PLAT_COLORS = {
+  instagram: '#E4405F', twitter: '#1DA1F2', x: '#1DA1F2',
+  linkedin: '#0A66C2', youtube: '#FF0000', email: '#10B981'
+};
+
+function renderCalendar() {
+  const area = document.getElementById('content-area');
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+
+  const firstDay = new Date(calYear, calMonth, 1);
+  const lastDay  = new Date(calYear, calMonth + 1, 0);
+  const monthName = firstDay.toLocaleDateString('en-AU', { month: 'long', year: 'numeric' });
+
+  // Build date → cards map (all scheduled-family statuses with a date)
+  const calCards = allCards.filter(c => SCHEDULED_STATUSES.has(c.status) && c.scheduledDate);
+  const cardsByDate = {};
+  for (const card of calCards) {
+    const d = (card.scheduledDate || '').slice(0, 10);
+    if (!cardsByDate[d]) cardsByDate[d] = [];
+    cardsByDate[d].push(card);
+  }
+
+  // Mon-first layout: Sunday (0) becomes index 6, Mon (1) becomes index 0
+  let startDow = (firstDay.getDay() + 6) % 7;
+
+  let cellsHtml = '';
+
+  // Empty leading cells
+  for (let i = 0; i < startDow; i++) {
+    cellsHtml += `<div class="cal-cell cal-empty"></div>`;
+  }
+
+  for (let d = 1; d <= lastDay.getDate(); d++) {
+    const mm = String(calMonth + 1).padStart(2, '0');
+    const dd = String(d).padStart(2, '0');
+    const dateStr = `${calYear}-${mm}-${dd}`;
+    const isToday = dateStr === todayStr;
+    const dayCards = cardsByDate[dateStr] || [];
+
+    const cardsHtml = dayCards.map(card => {
+      const plat = platformKey(card);
+      const color = PLAT_COLORS[plat] || '#807F86';
+      const pub = card.status === 'published';
+      const platShort = (card.platform || 'XX').slice(0, 2).toUpperCase();
+      const titleText = escHtml((card.title || card.platform || 'Untitled').slice(0, 30));
+      return `<div class="cal-card${pub ? ' cal-card-published' : ''}"
+        draggable="true"
+        data-id="${card.id}"
+        style="border-left-color:${color}"
+        ondragstart="calDragStart(event)"
+        ondragend="calDragEnd(event)"
+        onclick="event.stopPropagation();openCardModal('${card.id}')"
+        title="${escHtml(card.title || platShort)}"
+      ><span class="cal-card-plat" style="background:${color}">${platShort}</span><span class="cal-card-title-text">${titleText}</span>${pub ? '<span class="cal-posted-badge">✓</span>' : ''}</div>`;
+    }).join('');
+
+    cellsHtml += `<div class="cal-cell${isToday ? ' cal-today' : ''}"
+      data-date="${dateStr}"
+      ondragover="event.preventDefault();event.dataTransfer.dropEffect='move'"
+      ondragenter="calDragEnter(event)"
+      ondragleave="calDragLeave(event)"
+      ondrop="calDrop(event,'${dateStr}')"
+    ><div class="cal-day-num">${d}</div><div class="cal-cards-list">${cardsHtml}</div></div>`;
+  }
+
+  area.innerHTML = `
+    <div class="calendar-wrap">
+      <div class="calendar-nav">
+        <button class="cal-nav-btn" onclick="changeMonth(-1)">← Prev</button>
+        <div class="cal-month-label">${monthName}</div>
+        <button class="cal-nav-btn" onclick="changeMonth(1)">Next →</button>
+      </div>
+      <div class="calendar-grid">
+        <div class="cal-dow">Mon</div>
+        <div class="cal-dow">Tue</div>
+        <div class="cal-dow">Wed</div>
+        <div class="cal-dow">Thu</div>
+        <div class="cal-dow">Fri</div>
+        <div class="cal-dow">Sat</div>
+        <div class="cal-dow">Sun</div>
+        ${cellsHtml}
+      </div>
+    </div>`;
+}
+
+function changeMonth(dir) {
+  calMonth += dir;
+  if (calMonth < 0)  { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0;  calYear++; }
+  renderCalendar();
+}
+
+function calDragStart(event) {
+  dragCardId = event.currentTarget.dataset.id;
+  event.currentTarget.classList.add('cal-card-dragging');
+  event.dataTransfer.effectAllowed = 'move';
+  event.dataTransfer.setData('text/plain', dragCardId);
+}
+
+function calDragEnd(event) {
+  event.currentTarget.classList.remove('cal-card-dragging');
+}
+
+function calDragEnter(event) {
+  const cell = event.currentTarget;
+  if (!cell.classList.contains('cal-empty')) {
+    cell.classList.add('cal-drop-target');
+  }
+}
+
+function calDragLeave(event) {
+  if (!event.currentTarget.contains(event.relatedTarget)) {
+    event.currentTarget.classList.remove('cal-drop-target');
+  }
+}
+
+async function calDrop(event, newDate) {
+  event.currentTarget.classList.remove('cal-drop-target');
+  if (!dragCardId) return;
+
+  const card = allCards.find(c => c.id === dragCardId);
+  if (!card) { dragCardId = null; return; }
+
+  const oldDate = (card.scheduledDate || '').slice(0, 10);
+  if (oldDate === newDate) { dragCardId = null; return; }
+
+  // Optimistic update
+  card.scheduledDate = newDate;
+  renderCalendar();
+
+  try {
+    const res = await fetch(`${API}/api/content/update`, {
+      method: 'POST',
+      headers: { 'Authorization': AUTH, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: dragCardId, scheduledDate: newDate })
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    toast(`📅 Rescheduled to ${newDate}`, 'success');
+    updateStats();
+  } catch (err) {
+    // Revert
+    card.scheduledDate = oldDate;
+    renderCalendar();
+    toast(`Failed to reschedule: ${err.message}`, 'error');
+  }
+  dragCardId = null;
 }
 
 // ── Go
