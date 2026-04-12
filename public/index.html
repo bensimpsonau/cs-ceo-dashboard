@@ -1098,11 +1098,21 @@ function completeTask(id) {
   const card = document.getElementById('task-' + id);
   if (card) {
     card.classList.add('completing');
-    setTimeout(() => {
+    setTimeout(async () => {
       const task = tasksData.find(t => t.id === id);
       if (task) {
         task.status = 'done';
         task.completedAt = new Date().toISOString().split('T')[0];
+        // Persist to server
+        try {
+          await fetch('/api/tasks/' + id, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: 'done', completedAt: task.completedAt })
+          });
+        } catch (e) {
+          console.error('Failed to save task completion:', e);
+        }
       }
       renderTasks();
       renderAlerts();
