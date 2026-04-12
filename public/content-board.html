@@ -301,6 +301,7 @@
   .card[data-platform="linkedin"]::before  { background: var(--plat-linkedin); }
   .card[data-platform="youtube"]::before   { background: var(--plat-youtube); }
 
+  .card { cursor: pointer; }
   .card:hover { border-color: rgba(252,92,3,0.2); }
   .card.status-pending_review { border-color: rgba(245,158,11,0.22); }
   .card.status-approved  { border-color: rgba(16,185,129,0.15); }
@@ -437,6 +438,173 @@
   }
   .btn-reject:hover { background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.4); }
   .btn-approve:disabled, .btn-reject:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── Modal ── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 20px;
+    overflow-y: auto;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--cs-dark-2);
+    border: 1px solid var(--cs-border);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 720px;
+    padding: 0;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+    animation: modalIn 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  @keyframes modalIn { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .modal-stripe {
+    height: 4px;
+    width: 100%;
+  }
+  .modal-stripe.instagram { background: var(--plat-instagram); }
+  .modal-stripe.twitter, .modal-stripe.x { background: var(--plat-x); }
+  .modal-stripe.linkedin { background: var(--plat-linkedin); }
+  .modal-stripe.youtube { background: var(--plat-youtube); }
+
+  .modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 20px 24px 0;
+    gap: 12px;
+  }
+
+  .modal-close {
+    background: var(--cs-dark-4);
+    border: 1px solid var(--cs-border);
+    color: var(--cs-muted);
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .modal-close:hover { background: var(--cs-dark-3); color: var(--cs-text); }
+
+  .modal-body {
+    padding: 16px 24px 24px;
+  }
+
+  .modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+
+  .modal-meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .modal-section {
+    margin-bottom: 20px;
+  }
+
+  .modal-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--cs-orange);
+    margin-bottom: 8px;
+  }
+
+  .modal-content {
+    font-size: 14px;
+    color: var(--cs-text);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .modal-content strong {
+    color: var(--cs-orange);
+    font-weight: 700;
+  }
+
+  .modal-cta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    color: var(--cs-orange);
+    background: rgba(252,92,3,0.08);
+    border: 1px solid rgba(252,92,3,0.18);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-weight: 500;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    padding: 16px 24px;
+    border-top: 1px solid var(--cs-border);
+  }
+
+  .modal-btn {
+    flex: 1;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+    border: none;
+  }
+
+  .modal-btn-approve {
+    background: rgba(16,185,129,0.15);
+    color: #10B981;
+    border: 1px solid rgba(16,185,129,0.3);
+  }
+  .modal-btn-approve:hover { background: rgba(16,185,129,0.25); }
+
+  .modal-btn-reject {
+    background: rgba(239,68,68,0.1);
+    color: #EF4444;
+    border: 1px solid rgba(239,68,68,0.25);
+  }
+  .modal-btn-reject:hover { background: rgba(239,68,68,0.2); }
+
+  .modal-btn-copy {
+    background: var(--cs-dark-4);
+    color: var(--cs-text);
+    border: 1px solid var(--cs-border);
+  }
+  .modal-btn-copy:hover { background: var(--cs-dark-3); }
+  .modal-btn-copy.copied { background: rgba(16,185,129,0.15); color: #10B981; border-color: rgba(16,185,129,0.3); }
+
+  @media (max-width: 640px) {
+    .modal-overlay { padding: 20px 12px; }
+    .modal-header { padding: 16px 16px 0; }
+    .modal-body { padding: 12px 16px 20px; }
+    .modal-actions { padding: 12px 16px; }
+    .modal-title { font-size: 16px; }
+  }
 
   /* ── States ── */
   .state-box { text-align: center; padding: 60px 24px; color: var(--cs-muted); }
@@ -583,6 +751,11 @@
   </div>
 </main>
 
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="cardModal"></div>
+</div>
+
 <div id="toast-container"></div>
 
 <script>
@@ -708,11 +881,13 @@ function buildCard(card) {
   const isCancelled = card.status === 'cancelled';
   const isDraft = activeTab === 'drafts';
 
-  // Copy block
-  const copyBlock = card.copy ? `
+  // Copy block (truncated preview)
+  const previewText = card.content
+    ? (card.content.length > 200 ? card.content.slice(0, 200) + '...' : card.content)
+    : (card.copy ? (card.copy.length > 200 ? card.copy.slice(0, 200) + '...' : card.copy) : '');
+  const copyBlock = previewText ? `
     <div class="card-copy">
-      <div class="copy-text" id="copy-${card.id}">${escHtml(card.copy)}</div>
-      <button class="expand-btn" onclick="toggleCopy('${card.id}', this)">Show more</button>
+      <div class="copy-text">${escHtml(previewText)}</div>
     </div>` : '';
 
   // CTA
@@ -725,17 +900,19 @@ function buildCard(card) {
     : '';
   const metaItems = [];
   if (scheduledTime) metaItems.push(`🕐 ${scheduledTime}`);
+  metaItems.push(`<span style="color:var(--cs-orange);font-weight:500">Click to view full post →</span>`);
 
   // Action buttons (drafts only, pending_review status only)
   const actionBlock = (isDraft && card.status === 'pending_review') ? `
     <div class="action-btns">
-      <button class="btn-approve" onclick="updateStatus('${card.id}', 'approved', event)">✓ Approve</button>
-      <button class="btn-reject"  onclick="updateStatus('${card.id}', 'cancelled', event)">✕ Reject</button>
+      <button class="btn-approve" onclick="event.stopPropagation();updateStatus('${card.id}', 'approved', event)">✓ Approve</button>
+      <button class="btn-reject"  onclick="event.stopPropagation();updateStatus('${card.id}', 'cancelled', event)">✕ Reject</button>
     </div>` : '';
 
   return `
     <div class="card status-${card.status}${isCancelled ? ' status-cancelled' : ''}"
-         data-id="${card.id}" data-platform="${plat}" data-status="${card.status}">
+         data-id="${card.id}" data-platform="${plat}" data-status="${card.status}"
+         onclick="openCardModal('${card.id}')">
       <div class="card-header">
         <div class="badges">
           <span class="badge badge-platform ${plat}">${platLabel(card)}</span>
@@ -800,13 +977,94 @@ function render() {
   area.innerHTML = html;
 }
 
-// ── Toggle copy expand
-function toggleCopy(id, btn) {
-  const el = document.getElementById(`copy-${id}`);
-  if (!el) return;
-  const expanded = el.classList.toggle('expanded');
-  btn.textContent = expanded ? 'Show less' : 'Show more';
+// ── Card Modal
+function openCardModal(cardId) {
+  const card = allCards.find(c => c.id === cardId);
+  if (!card) return;
+
+  const plat = platformKey(card);
+  const isDraft = DRAFT_STATUSES.has(card.status);
+  const isPending = card.status === 'pending_review';
+
+  // Build full content display
+  const fullContent = card.content || card.copy || 'No content available for this card yet.';
+
+  // Parse sections from content if it has headers
+  let contentHtml = '';
+  const sections = fullContent.split(/\n---\n/);
+  if (sections.length > 1) {
+    sections.forEach(section => {
+      const trimmed = section.trim();
+      if (!trimmed) return;
+      contentHtml += `<div class="modal-section"><div class="modal-content">${escHtml(trimmed)}</div></div>`;
+    });
+  } else {
+    contentHtml = `<div class="modal-section"><div class="modal-content">${escHtml(fullContent)}</div></div>`;
+  }
+
+  // CTA section
+  const ctaHtml = card.cta ? `
+    <div class="modal-section">
+      <div class="modal-section-title">CALL TO ACTION</div>
+      <div class="modal-cta-badge">🔗 ManyChat keyword: ${escHtml(card.cta)}</div>
+    </div>` : '';
+
+  // Action buttons
+  let actionsHtml = `<div class="modal-actions">`;
+  actionsHtml += `<button class="modal-btn modal-btn-copy" onclick="copyCardContent('${cardId}', this)">📋 Copy Full Content</button>`;
+  if (isPending) {
+    actionsHtml += `<button class="modal-btn modal-btn-approve" onclick="updateStatus('${cardId}', 'approved', event);closeModal()">✓ Approve</button>`;
+    actionsHtml += `<button class="modal-btn modal-btn-reject" onclick="updateStatus('${cardId}', 'cancelled', event);closeModal()">✕ Reject</button>`;
+  }
+  actionsHtml += `</div>`;
+
+  const modalHtml = `
+    <div class="modal-stripe ${plat}"></div>
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">${escHtml(card.title || 'Untitled')}</div>
+        <div class="modal-meta">
+          <span class="badge badge-platform ${plat}">${platLabel(card)}</span>
+          ${card.type ? `<span class="badge badge-type">${escHtml(card.type)}</span>` : ''}
+          <span class="status-badge st-${card.status}">${STATUS_LABELS[card.status] || card.status}</span>
+          ${card.scheduledDate ? `<span style="font-size:12px;color:var(--cs-muted)">📅 ${formatDateHeader(card.scheduledDate.slice(0,10))}</span>` : ''}
+        </div>
+      </div>
+      <div class="modal-close" onclick="closeModal()">✕</div>
+    </div>
+    <div class="modal-body">
+      ${contentHtml}
+      ${ctaHtml}
+    </div>
+    ${actionsHtml}
+  `;
+
+  document.getElementById('cardModal').innerHTML = modalHtml;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function copyCardContent(cardId, btn) {
+  const card = allCards.find(c => c.id === cardId);
+  if (!card) return;
+  const text = card.content || card.copy || '';
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied');
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.textContent = '📋 Copy Full Content';
+    }, 2000);
+  });
+}
+
+// Close modal on overlay click or Escape
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 // ── Update single card status
 async function updateStatus(cardId, newStatus, e) {
