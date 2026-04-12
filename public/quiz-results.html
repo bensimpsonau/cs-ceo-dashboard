@@ -728,18 +728,73 @@ section:nth-child(3) { animation-delay: 0.15s; }
 section:nth-child(4) { animation-delay: 0.2s; }
 section:nth-child(5) { animation-delay: 0.25s; }
 section:nth-child(6) { animation-delay: 0.3s; }
+section:nth-child(7) { animation-delay: 0.35s; }
+
+/* ANSWER MIRROR CARDS */
+.answer-mirror-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.answer-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--orange);
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+
+.answer-card-label {
+  font-family: var(--heading-font);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 4px;
+}
+
+.answer-card-text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 6px;
+  line-height: 1.45;
+}
+
+.answer-card-context {
+  font-size: 0.84rem;
+  color: var(--grey-mid);
+  font-style: italic;
+  line-height: 1.55;
+}
+
+/* LOADER PROGRESS BAR */
+#loader-progress-bar {
+  transition: width 0.8s ease;
+}
+
+#loader-stage-text {
+  transition: opacity 0.4s ease;
+}
 </style>
 </head>
 <body>
 
 <!-- LOADING SCREEN -->
 <div id="loading-screen">
-  <div style="text-align:center;">
+  <div style="text-align:center;width:100%;max-width:500px;padding:0 24px;">
     <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.3rem;font-weight:800;color:#fff;margin-bottom:32px;letter-spacing:-0.02em;">
       Collective<span style="color:#FC5C03;">Shift</span>
     </div>
-    <div class="loader-ring" style="margin:0 auto 24px;"></div>
-    <div class="loader-text">Calculating your personalised results...</div>
+    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.4rem;font-weight:700;color:#fff;margin-bottom:10px;">Preparing Your Report</div>
+    <div id="loader-name-text" style="font-size:0.95rem;color:#B3B2B6;margin-bottom:32px;">Hang tight. We're building something just for you.</div>
+    <div style="background:#252530;border-radius:8px;height:8px;width:100%;margin-bottom:20px;overflow:hidden;">
+      <div id="loader-progress-bar" style="height:100%;width:0%;background:#FC5C03;border-radius:8px;"></div>
+    </div>
+    <div id="loader-stage-text" style="font-size:0.9rem;color:#B3B2B6;min-height:24px;">Analysing your answers...</div>
+    <div style="margin-top:28px;font-size:0.75rem;color:#807F86;">This typically takes 1-2 minutes</div>
   </div>
 </div>
 
@@ -773,9 +828,19 @@ section:nth-child(6) { animation-delay: 0.3s; }
       </div>
     </section>
 
+    <!-- SECTION A2: ANSWER MIRROR -->
+    <section id="section-answers">
+      <div class="section-label">YOUR ANSWERS</div>
+      <div class="section-heading" id="answers-section-heading">Here's What You Told Us</div>
+      <div class="section-subheading">Your exact answers, in plain language.</div>
+      <div class="answer-mirror-stack" id="answer-mirror-stack">
+        <!-- filled by JS -->
+      </div>
+    </section>
+
     <!-- SECTION B: ARCHETYPE -->
     <section id="section-archetype">
-      <div class="section-label">Your Investor Profile</div>
+      <div class="section-label" id="archetype-section-label">Your Investor Profile</div>
       <div class="archetype-card" id="archetype-card">
         <!-- filled by JS -->
       </div>
@@ -783,8 +848,8 @@ section:nth-child(6) { animation-delay: 0.3s; }
 
     <!-- SECTION C: GAP ANALYSIS -->
     <section id="section-gaps">
-      <div class="section-label">Where to Focus</div>
-      <div class="section-heading">Your 3 Biggest Gaps</div>
+      <div class="section-label" id="gaps-section-label">Where to Focus</div>
+      <div class="section-heading" id="gaps-section-heading">Your 3 Biggest Gaps</div>
       <div class="section-subheading">Based on your answers, these are the areas holding you back the most.</div>
       <div class="gaps-grid" id="gaps-grid">
         <!-- filled by JS -->
@@ -804,7 +869,7 @@ section:nth-child(6) { animation-delay: 0.3s; }
     <!-- SECTION E: CTA -->
     <section id="section-cta">
       <div class="cta-block">
-        <div class="cta-heading">Ready to Close the Gap?</div>
+        <div class="cta-heading" id="cta-heading">Ready to Close the Gap?</div>
         <div class="cta-copy" id="cta-copy"></div>
         <a href="https://collectiveshift.io/strategy-call" class="btn-primary" target="_blank" rel="noopener">
           Book Your Free Strategy Call
@@ -984,6 +1049,131 @@ const GAP_COPY = {
   }
 };
 
+const ANSWER_TEXT = {
+  1: {
+    label: "Your Starting Point",
+    A: "You're researching but haven't made any moves yet",
+    B: "You've made some purchases but don't have a clear strategy",
+    C: "You have active positions but you're making reactive decisions",
+    D: "You're experienced and want a better framework to optimise"
+  },
+  2: {
+    label: "Your Primary Goal",
+    A: "Protect your wealth from inflation and currency debasement",
+    B: "Build long-term generational wealth for your family",
+    C: "Grow your wealth faster than traditional assets allow",
+    D: "Buy back your time and build genuine financial freedom"
+  },
+  3: {
+    label: "Capital You're Looking to Deploy",
+    A: "Under $25,000 over the next 12 months",
+    B: "$25,000 - $100,000 over the next 12 months",
+    C: "$100,000 - $500,000 over the next 12 months",
+    D: "$500,000 - $1,000,000 over the next 12 months",
+    E: "$1,000,000+ over the next 12 months"
+  },
+  4: {
+    label: "Investment Thesis",
+    A: "You're still researching and haven't formed a clear view",
+    B: "You have a general sense but can't articulate it clearly",
+    C: "You understand the macro case but haven't committed to a written thesis",
+    D: "You have a clear, written thesis you're confident in"
+  },
+  5: {
+    label: "Information Sources",
+    A: "You're relying on social media, YouTube, and influencers",
+    B: "A mix of news and research, but it's hard to filter signal from noise",
+    C: "A small number of trusted sources, building your own view",
+    D: "On-chain data and primary research with a clear filter"
+  },
+  6: {
+    label: "Risk Framework",
+    A: "No written rules - you'd work it out when the time comes",
+    B: "Rough ideas but nothing written down",
+    C: "Some guidelines but not formalised",
+    D: "Written allocation rules and a clear drawdown plan"
+  },
+  7: {
+    label: "Time Available",
+    A: "Very little - you need something close to set-and-forget",
+    B: "A few hours a month if clearly directed",
+    C: "A few hours a week - you want to stay actively informed",
+    D: "As much as needed - you're prepared to put in the work"
+  },
+  8: {
+    label: "Exit Strategy",
+    A: "No plan - you'd decide when the time comes",
+    B: "A rough idea but nothing specific or written",
+    C: "Some targets but haven't thought through all scenarios",
+    D: "Written sell strategy with specific triggers and targets"
+  },
+  9: {
+    label: "Advanced Strategies",
+    A: "Not familiar at all - you didn't know this was possible",
+    B: "You've heard of it but don't know how to approach it safely",
+    C: "You understand the basics but haven't set anything up",
+    D: "Actively using lending/yield strategies with a tax structure in place"
+  }
+};
+
+const ANSWER_CONTEXT = {
+  1: {
+    A: "That puts you in the majority. 67% of investors at your level started in exactly the same position.",
+    B: "You've taken the first step. The challenge now is turning random purchases into a structured approach.",
+    C: "You're in the market but without a system. That's the riskiest position to be in during a drawdown.",
+    D: "You've got experience on your side. The question is whether your framework is optimised for what's coming next."
+  },
+  2: {
+    A: "Smart. With real inflation running well above reported figures, this is the most rational starting point.",
+    B: "This is the number one reason people join Collective Shift. 53% of our members share this exact goal.",
+    C: "Growth requires a different strategy than protection. The framework needs to match the ambition.",
+    D: "Financial freedom is achievable but it requires a specific exit strategy. Most people skip this step."
+  },
+  3: {
+    A: "At this level, getting the structure right from day one matters more than the dollar amount.",
+    B: "This is a meaningful allocation. At $25K-$100K, risk management becomes non-negotiable.",
+    C: "At this capital level, the difference between a structured and unstructured approach can be six figures.",
+    D: "Half a million to a million requires institutional-grade thinking. Structure, tax, and entity planning are critical.",
+    E: "At $1M+, you need a framework that most retail-focused content simply doesn't cover."
+  },
+  4: {
+    A: "Without a thesis, every price move feels like noise. This is the first gap to close.",
+    B: "A vague thesis won't hold up during a 30% drawdown. Conviction comes from clarity.",
+    C: "You're close. Writing it down is the step that turns understanding into actionable conviction.",
+    D: "Strong foundation. Your thesis will be the anchor that keeps you steady through volatility."
+  },
+  5: {
+    A: "90% of social media content is designed to generate engagement, not protect your capital.",
+    B: "Information overload creates false confidence. A filter for what matters is more valuable than more sources.",
+    C: "Good instinct. The next step is building a research process, not just a reading list.",
+    D: "You're ahead of most investors here. The key is making sure your data translates to timely decisions."
+  },
+  6: {
+    A: "This is the most common gap we see. When Bitcoin drops 30% overnight, you won't think clearly enough to wing it.",
+    B: "Rough ideas aren't enough when the pressure is real. The rules need to exist before the drawdown, not during it.",
+    C: "You're partway there. Formalising your guidelines into written rules is a single afternoon's work with the right framework.",
+    D: "This puts you ahead of 90% of digital asset investors. The question now is stress-testing those rules."
+  },
+  7: {
+    A: "Honest answer. A well-structured approach can work in under 2 hours per month. That's what the Blueprint is built for.",
+    B: "A few hours is plenty if those hours are structured. The system determines whether you're making decisions or just consuming content.",
+    C: "That's more than enough time. The key is directing that time toward decisions, not just information consumption.",
+    D: "That commitment is an advantage. Most investors at your level are time-poor. Use it wisely."
+  },
+  8: {
+    A: "This is the single biggest gap we see across 1,400+ members. Entry without exit is not a strategy.",
+    B: "A rough idea feels like enough until Bitcoin doubles and you freeze. Specifics matter.",
+    C: "You've started thinking about it. The next step is writing specific triggers and percentages for each scenario.",
+    D: "Excellent. A written exit plan is the single most valuable document a digital asset investor can have."
+  },
+  9: {
+    A: "Most high-net-worth investors don't know digital assets can generate income. You're leaving returns on the table.",
+    B: "You know it exists but haven't acted. That's common. The right framework makes this safe and straightforward.",
+    C: "You understand the basics. Implementation is the gap. The Blueprint walks through exactly how to set this up.",
+    D: "You're in the advanced minority. This report will focus on optimising what you already have in place."
+  }
+};
+
 const AXIS_COLORS = { 1: '#FF4444', 2: '#FFB020', 3: '#A8D840', 4: '#22C55E' };
 const SCORE_BAND = (s) => {
   if (s <= 8) return "Early Stage - Strong foundation work ahead";
@@ -1012,15 +1202,23 @@ function getData() {
   const q2 = (localStorage.getItem('cs_q2_goal') || answers['2'] || 'A').toUpperCase();
   const q3 = (localStorage.getItem('cs_q3_capital') || answers['3'] || 'A').toUpperCase();
 
-  // Q4-Q9 scored
-  const q4 = getAnswerScore((answers['4'] || 'A').toUpperCase());
-  const q5 = getAnswerScore((answers['5'] || 'A').toUpperCase());
-  const q6 = getAnswerScore((answers['6'] || 'A').toUpperCase());
-  const q7 = getAnswerScore((answers['7'] || 'A').toUpperCase());
-  const q8 = getAnswerScore((answers['8'] || 'A').toUpperCase());
-  const q9 = getAnswerScore((answers['9'] || 'A').toUpperCase());
+  // Q4-Q9 raw letters
+  const q4raw = (answers['4'] || 'A').toUpperCase();
+  const q5raw = (answers['5'] || 'A').toUpperCase();
+  const q6raw = (answers['6'] || 'A').toUpperCase();
+  const q7raw = (answers['7'] || 'A').toUpperCase();
+  const q8raw = (answers['8'] || 'A').toUpperCase();
+  const q9raw = (answers['9'] || 'A').toUpperCase();
 
-  return { score, name, q1, q2, q3, q4, q5, q6, q7, q8, q9 };
+  // Q4-Q9 scored
+  const q4 = getAnswerScore(q4raw);
+  const q5 = getAnswerScore(q5raw);
+  const q6 = getAnswerScore(q6raw);
+  const q7 = getAnswerScore(q7raw);
+  const q8 = getAnswerScore(q8raw);
+  const q9 = getAnswerScore(q9raw);
+
+  return { score, name, q1, q2, q3, q4, q5, q6, q7, q8, q9, q4raw, q5raw, q6raw, q7raw, q8raw, q9raw };
 }
 
 function assignArchetype(d) {
@@ -1160,6 +1358,38 @@ function buildWeaknessNotes(scores) {
     </div>`).join('');
 }
 
+// ─── ANSWER MIRROR ───────────────────────────────────────────────────────────
+
+function buildAnswerMirror(d) {
+  const rawAnswers = {
+    1: d.q1,
+    2: d.q2,
+    3: d.q3,
+    4: d.q4raw,
+    5: d.q5raw,
+    6: d.q6raw,
+    7: d.q7raw,
+    8: d.q8raw,
+    9: d.q9raw
+  };
+
+  const stack = document.getElementById('answer-mirror-stack');
+  stack.innerHTML = Object.keys(ANSWER_TEXT).map(qNum => {
+    const q = parseInt(qNum);
+    const raw = rawAnswers[q];
+    const info = ANSWER_TEXT[q];
+    const contextMap = ANSWER_CONTEXT[q];
+    const answerText = info[raw] || info['A'] || '';
+    const contextText = contextMap[raw] || contextMap['A'] || '';
+    return `
+      <div class="answer-card">
+        <div class="answer-card-label">${info.label}</div>
+        <div class="answer-card-text">${answerText}</div>
+        <div class="answer-card-context">${contextText}</div>
+      </div>`;
+  }).join('');
+}
+
 // ─── ARCHETYPE CARD ──────────────────────────────────────────────────────────
 
 function buildArchetype(key) {
@@ -1261,16 +1491,24 @@ function boot() {
   buildLegend(radarScores);
   buildWeaknessNotes(radarScores);
 
+  // Answer mirror
+  buildAnswerMirror(d);
+  document.getElementById('answers-section-heading').textContent = `Here's What You Told Us, ${d.name}`;
+
   // Archetype
   buildArchetype(archetypeKey);
+  const archetypeTitle = ARCHETYPES[archetypeKey].title;
+  document.getElementById('archetype-section-label').textContent = `${d.name}, You're ${archetypeTitle}`;
 
   // Gaps
   buildGaps(d);
+  document.getElementById('gaps-section-heading').textContent = `${d.name}, Here's Where to Focus`;
 
   // Testimonials
   buildTestimonials(archetypeKey);
 
   // CTA
+  document.getElementById('cta-heading').textContent = `${d.name}, Ready to Close the Gap?`;
   document.getElementById('cta-copy').textContent = CTA_COPY[archetypeKey] || CTA_COPY['sidelined_professional'];
 
   // Blueprint link
@@ -1281,20 +1519,58 @@ function boot() {
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Pre-compute everything
+  // Read name early so it appears in the loading screen immediately
+  const loaderName = localStorage.getItem('cs_quiz_name') || 'Friend';
+  document.getElementById('loader-name-text').textContent =
+    `Hang tight, ${loaderName}. We're building something just for you.`;
+
+  // Pre-compute everything (runs silently in background)
   boot();
 
-  // 3 second loading animation
-  setTimeout(function() {
-    const loadingScreen = document.getElementById('loading-screen');
-    const resultsContent = document.getElementById('results-content');
+  // Multi-stage loading experience (~2 minutes)
+  const stages = [
+    { time: 0,      progress: 0,   message: `Analysing your answers, ${loaderName}...` },
+    { time: 15000,  progress: 10,  message: 'Mapping your risk profile...' },
+    { time: 30000,  progress: 25,  message: 'Identifying gaps in your current strategy...' },
+    { time: 50000,  progress: 45,  message: 'Matching you with similar investor profiles...' },
+    { time: 70000,  progress: 60,  message: 'Building your personalised recommendations...' },
+    { time: 90000,  progress: 80,  message: 'Compiling your Digital Asset Readiness Report...' },
+    { time: 110000, progress: 95,  message: 'Your report is ready.' }
+  ];
 
-    loadingScreen.classList.add('fade-out');
+  const progressBar = document.getElementById('loader-progress-bar');
+  const stageText   = document.getElementById('loader-stage-text');
+
+  // Set initial state
+  stageText.textContent = stages[0].message;
+  progressBar.style.width = '0%';
+
+  // Schedule each stage transition
+  stages.forEach(function(stage, i) {
+    if (i === 0) return;
     setTimeout(function() {
-      loadingScreen.style.display = 'none';
-      resultsContent.classList.add('visible');
-    }, 500);
-  }, 3000);
+      progressBar.style.width = stage.progress + '%';
+      stageText.style.opacity = '0';
+      setTimeout(function() {
+        stageText.textContent = stage.message;
+        stageText.style.opacity = '1';
+      }, 400);
+    }, stage.time);
+  });
+
+  // Final reveal at 120 seconds
+  setTimeout(function() {
+    progressBar.style.width = '100%';
+    setTimeout(function() {
+      const loadingScreen = document.getElementById('loading-screen');
+      const resultsContent = document.getElementById('results-content');
+      loadingScreen.classList.add('fade-out');
+      setTimeout(function() {
+        loadingScreen.style.display = 'none';
+        resultsContent.classList.add('visible');
+      }, 500);
+    }, 1000);
+  }, 120000);
 });
 </script>
 </body>
