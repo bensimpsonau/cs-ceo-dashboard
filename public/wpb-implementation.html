@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wealth Protection Blueprint - Implementation Checklist</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dark: #1B1925;
+  --orange: #FC5C03;
+  --orange-hover: #e04f00;
+  --white: #FFFFFF;
+  --light-bg: #F8F8FA;
+  --border: #E8E8EC;
+  --text: #333340;
+  --text-light: #6B6B7B;
+  --text-muted: #A0A0B0;
+  --green: #43A047;
+  --green-bg: #E8F5E9;
+  --blue: #1E88E5;
+  --blue-bg: #E3F2FD;
+  --red: #E53935;
+  --red-bg: #FFEBEE;
+  --amber: #FB8C00;
+  --amber-bg: #FFF3E0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--light-bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* Header */
+.header {
+  background: var(--dark);
+  color: var(--white);
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-left { display: flex; align-items: center; gap: 16px; }
+.header-brand {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+.header-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+.header-right { display: flex; align-items: center; gap: 16px; }
+.progress-bar-wrapper {
+  width: 200px;
+  height: 8px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--orange);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+.progress-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--orange);
+  min-width: 36px;
+  text-align: right;
+}
+
+/* Layout */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+
+/* Overview cards */
+.overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.overview-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 20px 24px;
+  border: 1px solid var(--border);
+}
+.overview-card-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.overview-card-value {
+  font-size: 28px;
+  font-weight: 800;
+}
+.overview-card-sub {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+/* Phase sections */
+.phase {
+  margin-bottom: 40px;
+}
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  user-select: none;
+}
+.phase-number {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--white);
+  flex-shrink: 0;
+}
+.phase-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+.phase-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+.phase-toggle {
+  font-size: 18px;
+  color: var(--text-muted);
+  transition: transform 0.2s;
+}
+.phase-toggle.collapsed { transform: rotate(-90deg); }
+
+.phase-body {
+  background: var(--white);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.phase-body.collapsed { display: none; }
+
+/* Checklist items */
+.check-item {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  transition: background 0.15s;
+}
+.check-item:last-child { border-bottom: none; }
+.check-item:hover { background: var(--light-bg); }
+.check-item.done { opacity: 0.55; }
+.check-item.done .check-title { text-decoration: line-through; }
+
+.check-box {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  margin-top: 1px;
+}
+.check-box:hover { border-color: var(--orange); }
+.check-box.checked {
+  background: var(--green);
+  border-color: var(--green);
+}
+.check-box.checked::after {
+  content: '✓';
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.check-content { flex: 1; min-width: 0; }
+.check-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.check-desc {
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+.check-expand-btn {
+  font-size: 12px;
+  color: var(--orange);
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 6px;
+  display: inline-block;
+}
+.check-expand-btn:hover { text-decoration: underline; }
+.check-detail {
+  display: none;
+  margin-top: 12px;
+  padding: 14px 16px;
+  background: var(--light-bg);
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text);
+}
+.check-detail.visible { display: block; }
+.check-detail h4 {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin: 12px 0 6px;
+}
+.check-detail h4:first-child { margin-top: 0; }
+.check-detail pre {
+  background: var(--dark);
+  color: #E0E0E0;
+  padding: 14px 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 8px 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.check-detail code {
+  background: rgba(252,92,3,0.1);
+  color: var(--orange);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+}
+.check-detail ul {
+  margin: 6px 0;
+  padding-left: 20px;
+}
+.check-detail li {
+  margin-bottom: 4px;
+}
+.check-detail table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0;
+  font-size: 12px;
+}
+.check-detail th, .check-detail td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+.check-detail th {
+  background: var(--dark);
+  color: var(--white);
+  font-weight: 600;
+}
+
+/* Copy buttons */
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: var(--dark);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-top: 8px;
+}
+.copy-btn:hover { background: #2a2838; }
+.copy-btn.copied { background: var(--green); }
+
+/* Tag badges */
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-left: 8px;
+}
+.tag-typeform { background: #E3F2FD; color: #1565C0; }
+.tag-ghl { background: #FFF3E0; color: #E65100; }
+.tag-customerio { background: #F3E5F5; color: #7B1FA2; }
+.tag-code { background: #E8F5E9; color: #2E7D32; }
+.tag-pdf { background: #FFEBEE; color: #C62828; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header { padding: 16px; flex-wrap: wrap; gap: 12px; }
+  .header-right { width: 100%; }
+  .progress-bar-wrapper { flex: 1; }
+  .container { padding: 20px 16px 60px; }
+  .overview { grid-template-columns: 1fr 1fr; }
+  .check-item { padding: 14px 16px; }
+  .check-detail pre { font-size: 11px; padding: 10px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div>
+      <div class="header-brand">COLLECTIVE SHIFT</div>
+      <div class="header-title">Wealth Protection Blueprint - Implementation Guide</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="progress-bar-wrapper">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-label" id="progressLabel">0%</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Overview cards -->
+  <div class="overview">
+    <div class="overview-card">
+      <div class="overview-card-label">Total Steps</div>
+      <div class="overview-card-value" id="totalSteps">0</div>
+      <div class="overview-card-sub">across 6 phases</div>
+    </div>
+    <div class="overview-card">
+      <div class="overview-card-label">Completed</div>
+      <div class="overview-card-value" id="completedSteps" style="color:var(--green)">0</div>
+      <div class="overview-card-sub" id="completedSub">0 remaining</div>
+    </div>
+    <div class="overview-card">
+      <div class="overview-card-label">Current Phase</div>
+      <div class="overview-card-value" id="currentPhase" style="font-size:18px;line-height:1.3">-</div>
+    </div>
+    <div class="overview-card">
+      <div class="overview-card-label">Est. Time</div>
+      <div class="overview-card-value" id="estTime">~4 hrs</div>
+      <div class="overview-card-sub">end-to-end setup</div>
+    </div>
+  </div>
+
+  <!-- Phases get injected here -->
+  <div id="phasesContainer"></div>
+
+</div>
+
+<script>
+const PHASES = [
+  {
+    title: "Typeform Quiz Setup",
+    color: "#1E88E5",
+    items: [
+      {
+        title: "Create quiz in Typeform",
+        desc: "Create a new Typeform with the quiz questions and scoring logic.",
+        tag: "typeform",
+        detail: `<h4>Quiz Details</h4>
+<p>Form ID (if already created): <code>aQfJd7JN</code></p>
+<p>Create a Typeform with these 11 questions. Only Q2, Q3, Q5, Q7, Q9 are scored. The rest are for personalisation and sales context.</p>
+
+<h4>Q1: Financial Goal (Multi-select, NOT scored)</h4>
+<p>"What's your primary financial goal right now?"</p>
+<ul>
+<li>Protect and preserve the wealth I've already built</li>
+<li>Grow my portfolio with less risk and more structure</li>
+<li>Diversify beyond traditional assets (property, stocks, cash)</li>
+<li>Build a portfolio that lasts across generations</li>
+</ul>
+
+<h4>Q2: Risk Tolerance (Single select, 15 pts max)</h4>
+<p>"Where do you stand currently when it comes to your risk tolerance?"</p>
+<table>
+<tr><th>Answer</th><th>Points</th></tr>
+<tr><td>I'm actively building wealth and want to accelerate</td><td>15</td></tr>
+<tr><td>I'm focused on preserving and protecting what I've built</td><td>12</td></tr>
+<tr><td>I'm working toward retirement and need my portfolio to last</td><td>10</td></tr>
+<tr><td>I'm already retired and need my capital to outpace inflation</td><td>8</td></tr>
+</table>
+
+<h4>Q3: Investment Approach (Single select, 20 pts max)</h4>
+<p>"How would you describe your current investment approach?"</p>
+<table>
+<tr><th>Answer</th><th>Points</th></tr>
+<tr><td>Already includes some digital asset exposure</td><td>20</td></tr>
+<tr><td>Diversified across property, equities, and cash</td><td>15</td></tr>
+<tr><td>Mostly property and retirement accounts</td><td>10</td></tr>
+<tr><td>Heavily concentrated in one area</td><td>5</td></tr>
+</table>
+
+<h4>Q4: Reconsider Reason (Single select, NOT scored)</h4>
+<p>"What's making you reconsider your current approach?"</p>
+<ul>
+<li>Traditional investments aren't delivering the returns they used to</li>
+<li>I can see the financial system is shifting and I don't want to be left behind</li>
+<li>I've been watching institutions move into digital assets and I want to understand why</li>
+<li>I'm losing purchasing power faster than my portfolio is growing</li>
+<li>Something else</li>
+</ul>
+
+<h4>Q5: Portfolio Confidence (Scale 0-10, 30 pts max)</h4>
+<p>"On a scale of 1-10, how confident are you that your current portfolio will meet your long-term goals?"</p>
+<p>Score = answer value x 3 (e.g., 6/10 = 18 points)</p>
+
+<h4>Q6: 12-Month Concern (Single select, NOT scored)</h4>
+<p>"What concerns you most about the next 12 months?"</p>
+<ul>
+<li>Losing purchasing power while sitting in cash or bonds</li>
+<li>A major market correction wiping out years of gains</li>
+<li>Falling further behind while institutions reposition</li>
+<li>Continuing to do nothing while the opportunity passes</li>
+</ul>
+
+<h4>Q7: Digital Asset Experience (Single select, 25 pts max)</h4>
+<p>"Have you explored digital assets as part of your strategy?"</p>
+<table>
+<tr><th>Answer</th><th>Points</th></tr>
+<tr><td>Yes, with a structured approach</td><td>25</td></tr>
+<tr><td>Yes, but without a clear strategy</td><td>15</td></tr>
+<tr><td>No, but I've been paying attention</td><td>10</td></tr>
+<tr><td>I tried and it didn't go well</td><td>5</td></tr>
+</table>
+
+<h4>Q8: Best Case Scenario (Free text, NOT scored)</h4>
+<p>"In your own words, what is your absolute best-case scenario..."</p>
+
+<h4>Q9: Capital Capacity (Single select, 10 pts max)</h4>
+<p>"If you had 100% conviction, how much capital could you allocate?"</p>
+<table>
+<tr><th>Answer</th><th>Points</th></tr>
+<tr><td>More than $250K</td><td>10</td></tr>
+<tr><td>$100K - $250K</td><td>8</td></tr>
+<tr><td>$50K - $100K</td><td>6</td></tr>
+<tr><td>Under $50K</td><td>4</td></tr>
+</table>
+
+<h4>Q10: Contact Info</h4>
+<p>Phone number + email (use Typeform's contact info field type)</p>
+
+<h4>Q11: Name</h4>
+<p>First name + last name</p>
+
+<h4>Score Categories</h4>
+<table>
+<tr><th>Score</th><th>Category</th><th>Colour</th></tr>
+<tr><td>0-30</td><td>At Risk</td><td style="color:#E53935">Red (#E53935)</td></tr>
+<tr><td>31-50</td><td>Vulnerable</td><td style="color:#FB8C00">Orange (#FB8C00)</td></tr>
+<tr><td>51-70</td><td>Building</td><td style="color:#1E88E5">Blue (#1E88E5)</td></tr>
+<tr><td>71-100</td><td>Well Positioned</td><td style="color:#43A047">Green (#43A047)</td></tr>
+</table>
+
+<p><strong>Total possible score: 100 points</strong> (Q2: 15 + Q3: 20 + Q5: 30 + Q7: 25 + Q9: 10)</p>`
+      },
+      {
+        title: "Configure Typeform scoring (Calculator feature)",
+        desc: "Set up the built-in Typeform Calculator to auto-score responses. If your plan supports it, use score variables. Otherwise, the Node.js backend handles scoring.",
+        tag: "typeform",
+        detail: `<h4>Option A: Typeform Calculator (if on Business/Enterprise plan)</h4>
+<p>Use Typeform's Calculator feature to assign point values to each scored answer. Create a variable called <code>score</code> and add the point values from the scoring table above.</p>
+<p>For Q5 (opinion scale), you'll need to manually map each scale step to a point value since Typeform can't multiply. Map: 0=0, 1=3, 2=6, 3=9, 4=12, 5=15, 6=18, 7=21, 8=24, 9=27, 10=30.</p>
+
+<h4>Option B: Let the backend handle scoring (recommended)</h4>
+<p>Skip the Typeform Calculator. The Node.js webhook service calculates the score server-side from raw answers. This is more reliable and easier to adjust later.</p>
+<p>Either way works. Option B is simpler to set up.</p>`
+      },
+      {
+        title: "Configure Typeform webhook",
+        desc: "Set up the webhook to fire on form submission, pointing at your Node.js service.",
+        tag: "typeform",
+        detail: `<h4>Steps</h4>
+<ol>
+<li>Go to Typeform > Connect > Webhooks</li>
+<li>Add webhook URL: <code>https://YOUR-APP.onrender.com/webhook/typeform</code></li>
+<li>Copy the webhook signing secret (if available) and save it as <code>TYPEFORM_WEBHOOK_SECRET</code> in your Render env vars</li>
+<li>Test with a submission to confirm the webhook fires</li>
+</ol>
+<p>The webhook endpoint returns 200 OK immediately and processes in the background.</p>`
+      },
+      {
+        title: "Set Typeform completion redirect",
+        desc: "Configure where users go after completing the quiz.",
+        tag: "typeform",
+        detail: `<h4>Option A: Redirect to Node.js results page</h4>
+<p>In Typeform > Settings > Thank You Screen, set redirect URL to:</p>
+<pre>https://YOUR-APP.onrender.com/results?token={{hidden:submission_token}}</pre>
+<p>The backend stores results keyed by submission token, so the results page can fetch them.</p>
+
+<h4>Option B: Redirect to GHL confirmation pages</h4>
+<p>If using GHL pages instead of the Node.js results page, configure 4 different redirect URLs using Typeform's Logic feature based on the calculated score variable.</p>
+<ul>
+<li>Score 0-30: <code>https://YOUR-GHL-DOMAIN.com/wpb-results-at-risk?name={{field:first_name}}&score={{var:score}}</code></li>
+<li>Score 31-50: <code>https://YOUR-GHL-DOMAIN.com/wpb-results-vulnerable?name={{field:first_name}}&score={{var:score}}</code></li>
+<li>Score 51-70: <code>https://YOUR-GHL-DOMAIN.com/wpb-results-building?name={{field:first_name}}&score={{var:score}}</code></li>
+<li>Score 71-100: <code>https://YOUR-GHL-DOMAIN.com/wpb-results-strong?name={{field:first_name}}&score={{var:score}}</code></li>
+</ul>
+<p>Note: Option B requires Typeform Calculator to be set up (Step 1.2 Option A).</p>`
+      }
+    ]
+  },
+  {
+    title: "GHL Confirmation Pages",
+    color: "#FB8C00",
+    items: [
+      {
+        title: "Create 4 GHL landing pages",
+        desc: "Create one page per score category in GoHighLevel page builder.",
+        tag: "ghl",
+        detail: `<h4>Pages to Create</h4>
+<table>
+<tr><th>Page</th><th>URL Slug</th><th>Score Range</th><th>Colour</th></tr>
+<tr><td>At Risk</td><td>/wpb-results-at-risk</td><td>0-30</td><td>Red (#E53935)</td></tr>
+<tr><td>Vulnerable</td><td>/wpb-results-vulnerable</td><td>31-50</td><td>Orange (#FB8C00)</td></tr>
+<tr><td>Building</td><td>/wpb-results-building</td><td>51-70</td><td>Blue (#1E88E5)</td></tr>
+<tr><td>Well Positioned</td><td>/wpb-results-strong</td><td>71-100</td><td>Green (#43A047)</td></tr>
+</table>
+
+<h4>Instructions</h4>
+<ol>
+<li>In GHL, go to Sites > Funnels (or Websites)</li>
+<li>Create a new funnel/page for each category</li>
+<li>Set the URL slug as shown above</li>
+<li>Add a "Custom Code" or "Custom HTML" element</li>
+<li>Paste the embed code (next step) into it</li>
+<li>Set page background to white</li>
+<li>Remove any default header/footer elements</li>
+</ol>`
+      },
+      {
+        title: "Paste embed code into each page",
+        desc: "Add the custom HTML/CSS/JS embed code that displays the personalised score, category messaging, PDF download, and call booking CTA.",
+        tag: "ghl",
+        detail: `<h4>How to Use the Embed Code</h4>
+<ol>
+<li>Open the embed code file (copy button below)</li>
+<li>For each of the 4 pages, change the <code>category</code> variable at the top:
+  <ul>
+    <li>At Risk page: <code>category: "at-risk"</code></li>
+    <li>Vulnerable page: <code>category: "vulnerable"</code></li>
+    <li>Building page: <code>category: "building"</code></li>
+    <li>Well Positioned page: <code>category: "well-positioned"</code></li>
+  </ul>
+</li>
+<li>Update <code>pdfUrl</code> with your hosted PDF link</li>
+<li>Update <code>calendlyUrl</code> with your strategy call booking link</li>
+<li>Paste the modified code into GHL's Custom HTML element</li>
+<li>Save and publish</li>
+</ol>
+
+<h4>What the Embed Code Does</h4>
+<ul>
+<li>Shows a 3-second loading animation ("Calculating your Wealth Protection Score...")</li>
+<li>Reveals the score circle with category colour ring</li>
+<li>Shows personalised messaging based on category</li>
+<li>PDF download button (orange)</li>
+<li>Strategy call booking button (dark)</li>
+<li>Reads name and score from URL parameters</li>
+<li>Fully responsive, mobile-friendly</li>
+</ul>
+
+<h4>Page Copy by Category</h4>
+
+<p><strong>At Risk (0-30):</strong> "You have significant gaps in your wealth protection strategy." Focus on foundations (Step 1), risk frameworks (Step 4), security (Step 6), exit strategy (Step 8).</p>
+
+<p><strong>Vulnerable (31-50):</strong> "You have some awareness, but no structured system yet." Focus on conviction (Steps 2-3), risk frameworks (Step 4), tax (Step 7), sell strategy (Step 8).</p>
+
+<p><strong>Building (51-70):</strong> "You have a solid foundation. Now it is time to connect the dots." Focus on evaluation process (Step 3), formalising framework (Step 4), security scaling (Step 6), exit docs (Step 8).</p>
+
+<p><strong>Well Positioned (71-100):</strong> "You have a strong base. This is about optimising and ensuring nothing has been overlooked." Focus on written thesis (Step 4), security at scale (Step 6), refined exit (Step 8), compounding system (all 8 steps).</p>`
+      },
+      {
+        title: "Upload PDF to GHL Media Library",
+        desc: "Upload the Wealth Protection Blueprint PDF and get the hosted URL for the download button.",
+        tag: "ghl",
+        detail: `<h4>Steps</h4>
+<ol>
+<li>Go to GHL > Media Library</li>
+<li>Upload the Wealth Protection Blueprint PDF (19-page document)</li>
+<li>Copy the hosted URL</li>
+<li>Paste it into the <code>pdfUrl</code> config variable in each embed code</li>
+</ol>
+<p><strong>Note:</strong> The PDF needs to be created separately. It should be the 8-step system document covering: (1) Why Digital Assets Matter, (2) Bitcoin First Principles, (3) Altcoin Evaluation, (4) Risk Frameworks, (5) Buying Strategy, (6) Send and Store, (7) Tax Compliance, (8) Sell Strategy.</p>`
+      },
+      {
+        title: "Configure strategy call booking link",
+        desc: "Set the booking URL (Calendly or GHL calendar) in each embed code.",
+        tag: "ghl",
+        detail: `<h4>Options</h4>
+<ul>
+<li><strong>Calendly:</strong> Use your existing Calendly link (e.g., <code>https://calendly.com/collectiveshift/strategy-call</code>)</li>
+<li><strong>GHL Calendar:</strong> Create a calendar in GHL and use its booking page URL</li>
+</ul>
+<p>Update the <code>calendlyUrl</code> config in each embed code. Currently set to: <code>https://calendly.com/collectiveshift/strategy-call</code></p>`
+      },
+      {
+        title: "Test all 4 pages",
+        desc: "Visit each page with test URL parameters and confirm the score, category, colours, PDF download, and call booking all work.",
+        tag: "ghl",
+        detail: `<h4>Test URLs</h4>
+<p>Append these query params to each page URL:</p>
+<pre>/wpb-results-at-risk?name=Test&score=22
+/wpb-results-vulnerable?name=Test&score=42
+/wpb-results-building?name=Test&score=58
+/wpb-results-strong?name=Test&score=85</pre>
+
+<h4>Check</h4>
+<ul>
+<li>Loading animation shows for ~3 seconds</li>
+<li>Score circle displays with correct colour</li>
+<li>Category name and description match</li>
+<li>Bullet points are relevant to the category</li>
+<li>PDF download button works</li>
+<li>Strategy call button links correctly</li>
+<li>Mobile responsive (test on phone)</li>
+</ul>`
+      }
+    ]
+  },
+  {
+    title: "Customer.io Email Setup",
+    color: "#7B1FA2",
+    items: [
+      {
+        title: "Create Customer.io account and get API keys",
+        desc: "Sign up for Customer.io (if not already) and get your Site ID and API Key for the Track API.",
+        tag: "customerio",
+        detail: `<h4>Steps</h4>
+<ol>
+<li>Sign up at <a href="https://customer.io" target="_blank">customer.io</a></li>
+<li>Go to Settings > API Credentials</li>
+<li>Copy your <strong>Site ID</strong> and <strong>Track API Key</strong></li>
+<li>Save these as environment variables in your Node.js app:
+  <ul>
+    <li><code>CUSTOMERIO_SITE_ID</code></li>
+    <li><code>CUSTOMERIO_API_KEY</code></li>
+  </ul>
+</li>
+</ol>
+<p>The Track API uses Basic Auth: <code>base64(site_id:api_key)</code></p>`
+      },
+      {
+        title: "Build the email template in Customer.io",
+        desc: "Create the triggered email campaign that sends the personalised Blueprint results email.",
+        tag: "customerio",
+        detail: `<h4>Campaign Setup</h4>
+<ol>
+<li>Create a new Campaign in Customer.io</li>
+<li>Trigger: Event-triggered, event name = <code>wpb_quiz_completed</code></li>
+<li>Create the email using the copy below</li>
+</ol>
+
+<h4>Email Template</h4>
+<p><strong>Subject:</strong> {{customer.first_name}}, your Wealth Protection Score is ready</p>
+<p><strong>Preview text:</strong> You scored {{event.score}}/100. Here's your personalised Blueprint.</p>
+
+<p><strong>Body (plain text style):</strong></p>
+<pre>Hey {{customer.first_name}},
+
+Thanks for taking the Wealth Protection assessment.
+
+Your score: {{event.score}}/100
+Category: {{event.category}}
+
+[CONDITIONAL BLOCK based on event.category]
+
+At Risk: "Your score tells us you're at an earlier stage of the journey than you'd probably like to be. That's not a problem - it's information. The most important thing right now is getting the foundations in place: understanding why digital assets belong in a modern wealth strategy, building a risk framework, and addressing storage and tax before they become issues."
+
+Vulnerable: "Your score tells us you've got the awareness, but the structure isn't there yet. You're thinking about this - which already puts you ahead of a lot of people - but thinking about it and having a system aren't the same thing. Pay particular attention to Steps 4 and 8 - risk frameworks and sell strategy."
+
+Building: "Your score tells us you've made real progress. You have some exposure, some diversification, and growing confidence. What you need now is a framework to connect everything you've built into a coherent system."
+
+Well Positioned: "Your score tells us you've done the work. You have a strong foundation. The Blueprint is less about starting from scratch and more about making sure nothing's been overlooked."
+
+[END CONDITIONAL]
+
+We've put together a Wealth Protection Blueprint for you. It's an 8-step system that covers everything from why digital assets matter to exactly when and how to take profits.
+
+[DOWNLOAD YOUR BLUEPRINT] -> {{event.pdf_url}}
+
+19 pages. No jargon. No sales pitch. Just the framework I wish I'd had when I started.
+
+If you want to go deeper, book a free strategy call with our team. We'll walk through your results and help you build a plan.
+
+[BOOK YOUR FREE STRATEGY CALL] -> https://collectiveshift.co/call
+
+Talk soon,
+Ben Simpson
+Founder, Collective Shift
+
+P.S. The Blueprint covers the 8-step system used by thousands of Collective Shift members. Steps 4 and 8 (risk frameworks and exit strategies) are the ones most people skip. Don't skip them.</pre>
+
+<h4>Conditional Content in Customer.io</h4>
+<p>Use Liquid templating:</p>
+<pre>{% if event.category == "At Risk" %}
+  [At Risk paragraph]
+{% elsif event.category == "Vulnerable" %}
+  [Vulnerable paragraph]
+{% elsif event.category == "Building" %}
+  [Building paragraph]
+{% else %}
+  [Well Positioned paragraph]
+{% endif %}</pre>`
+      },
+      {
+        title: "Test the email flow",
+        desc: "Send a test event to Customer.io and confirm the email arrives with correct personalisation.",
+        tag: "customerio",
+        detail: `<h4>Test via API</h4>
+<pre>curl -X POST https://track.customer.io/api/v1/customers/test@example.com/events \\
+  -u "YOUR_SITE_ID:YOUR_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "name": "wpb_quiz_completed",
+    "data": {
+      "score": 42,
+      "category": "Vulnerable",
+      "summary": "Test personalisation bullet",
+      "pdf_url": "https://example.com/test.pdf",
+      "first_name": "Test"
+    }
+  }'</pre>
+
+<h4>Verify</h4>
+<ul>
+<li>Email arrives at test@example.com</li>
+<li>Subject line includes "Test"</li>
+<li>Score shows 42/100</li>
+<li>Category shows "Vulnerable"</li>
+<li>Correct conditional paragraph displays</li>
+<li>PDF download link works</li>
+<li>Strategy call link works</li>
+</ul>`
+      }
+    ]
+  },
+  {
+    title: "Node.js Backend (Optional - Automated Scoring)",
+    color: "#2E7D32",
+    items: [
+      {
+        title: "Deploy the webhook service to Render",
+        desc: "Use the Claude Code prompt to build and deploy the Node.js service that auto-scores Typeform submissions and sends to Customer.io.",
+        tag: "code",
+        detail: `<h4>Why This Step is Optional</h4>
+<p>If you're using Typeform's built-in Calculator for scoring AND manually adding contacts to Customer.io (or using a Zapier/Make integration), you can skip this step entirely.</p>
+<p>The Node.js service automates the full pipeline: Typeform webhook -> score calculation -> Customer.io contact creation -> email trigger. It's the "set it and forget it" version.</p>
+
+<h4>Steps</h4>
+<ol>
+<li>Open Claude Code (or your preferred coding tool)</li>
+<li>Paste the full prompt from the Claude Code Prompt document</li>
+<li>Let it build the service</li>
+<li>Push to a GitHub repo</li>
+<li>Deploy to Render as a Web Service</li>
+<li>Set environment variables in Render dashboard</li>
+</ol>
+
+<h4>Environment Variables Needed</h4>
+<pre>PORT=3000
+BASE_URL=https://your-app.onrender.com
+CUSTOMERIO_SITE_ID=your_site_id
+CUSTOMERIO_API_KEY=your_api_key
+TYPEFORM_WEBHOOK_SECRET=your_webhook_secret
+PDF_URL=https://your-hosted-pdf.com/blueprint.pdf
+CALENDLY_URL=https://collectiveshift.co/call</pre>
+
+<h4>Endpoints</h4>
+<ul>
+<li><code>POST /webhook/typeform</code> - Receives Typeform submissions</li>
+<li><code>GET /results?token=xxx</code> - Serves personalised results page</li>
+<li><code>GET /api/results/:token</code> - API for results data</li>
+<li><code>GET /health</code> - Health check</li>
+</ul>`
+      },
+      {
+        title: "Connect Typeform webhook to the service",
+        desc: "Point the Typeform webhook at your Render URL.",
+        tag: "code",
+        detail: `<h4>Steps</h4>
+<ol>
+<li>In Typeform > Connect > Webhooks</li>
+<li>Set URL to: <code>https://YOUR-APP.onrender.com/webhook/typeform</code></li>
+<li>Save and test with a real submission</li>
+<li>Check Render logs to confirm the webhook was received and processed</li>
+</ol>`
+      },
+      {
+        title: "Test end-to-end flow",
+        desc: "Submit the quiz, confirm scoring, confirm email, confirm results page.",
+        tag: "code",
+        detail: `<h4>Test Submission</h4>
+<p>Use the curl command from the Claude Code prompt to send a mock submission:</p>
+<pre>curl -X POST https://YOUR-APP.onrender.com/webhook/typeform \\
+  -H "Content-Type: application/json" \\
+  -d '{ test payload }'</pre>
+
+<h4>Expected Results for Test Payload</h4>
+<ul>
+<li>Score: 55/100 (Q2:12 + Q3:15 + Q5:12 + Q7:10 + Q9:6)</li>
+<li>Category: Building (blue)</li>
+<li>Email sent to test address</li>
+<li>Results page accessible at /results?token=test123a</li>
+</ul>
+
+<h4>Then Test with Real Typeform Submission</h4>
+<ol>
+<li>Fill out the actual Typeform quiz</li>
+<li>Confirm redirect to results page</li>
+<li>Confirm email arrives</li>
+<li>Confirm PDF download works</li>
+<li>Confirm strategy call link works</li>
+</ol>`
+      }
+    ]
+  },
+  {
+    title: "PDF Blueprint Document",
+    color: "#E53935",
+    items: [
+      {
+        title: "Create the 19-page Wealth Protection Blueprint PDF",
+        desc: "Design the 8-step system document that gets delivered as the lead magnet.",
+        tag: "pdf",
+        detail: `<h4>8 Steps to Cover</h4>
+<ol>
+<li><strong>Why Digital Assets Matter</strong> - Macro case, currency debasement, institutional adoption</li>
+<li><strong>Bitcoin - Building Conviction Through First Principles</strong> - Supply cap, decentralisation, store of value thesis</li>
+<li><strong>Altcoins - How to Evaluate Projects</strong> - The 3-question framework (PMF, tokenomics, revenue)</li>
+<li><strong>Risk Frameworks and Building Your Thesis</strong> - Position sizing, portfolio structure (60/20/20), written thesis</li>
+<li><strong>How to Buy</strong> - Exchanges, DCA, value areas</li>
+<li><strong>Send and Store - Securing Your Assets</strong> - Self-custody, hardware wallets, security practices</li>
+<li><strong>Tax - Staying Compliant</strong> - AU tax obligations, record keeping</li>
+<li><strong>Sell Strategy - When and How to Take Profits</strong> - Sentiment frameworks, exit triggers, the "nauseating sell"</li>
+</ol>
+
+<h4>Design Notes</h4>
+<ul>
+<li>Brand colours: Dark (#1B1925), Orange (#FC5C03), White</li>
+<li>Font: Plus Jakarta Sans or similar</li>
+<li>19 pages, clean layout, no fluff</li>
+<li>"Digital assets" not "crypto"</li>
+<li>No income claims or ROI promises</li>
+<li>Include CS branding and Blockies 2025 award</li>
+</ul>
+
+<p>This can be designed in Canva, Figma, or InDesign. The content above outlines what each step should cover.</p>`
+      },
+      {
+        title: "Host the PDF",
+        desc: "Upload to GHL Media Library, Google Drive, or your own CDN. Get the public URL.",
+        tag: "pdf",
+        detail: `<h4>Options</h4>
+<ul>
+<li><strong>GHL Media Library</strong> - Upload and copy URL</li>
+<li><strong>Google Drive</strong> - Upload, set sharing to "Anyone with the link", use the direct download URL</li>
+<li><strong>AWS S3 / CloudFront</strong> - For high-traffic reliability</li>
+</ul>
+<p>Paste the URL into the <code>pdfUrl</code> config in both the GHL embed code and the Node.js environment variables.</p>`
+      }
+    ]
+  },
+  {
+    title: "Go Live and Test",
+    color: "#43A047",
+    items: [
+      {
+        title: "Full end-to-end test",
+        desc: "Submit the quiz as a real user and verify every step of the funnel.",
+        tag: "typeform",
+        detail: `<h4>Test Checklist</h4>
+<ol>
+<li>Open the Typeform quiz link</li>
+<li>Complete all questions with test answers</li>
+<li>Confirm redirect to the correct GHL confirmation page (or Node.js results page)</li>
+<li>Verify score circle, category, and messaging are correct</li>
+<li>Click "Download Your Blueprint" - PDF opens/downloads</li>
+<li>Click "Book Your Free Strategy Call" - booking page loads</li>
+<li>Check email inbox - personalised email arrives</li>
+<li>Email has correct score, category, conditional paragraph</li>
+<li>Email PDF link works</li>
+<li>Email strategy call link works</li>
+<li>Test on mobile (both quiz and results page)</li>
+</ol>`
+      },
+      {
+        title: "Set up Meta ad traffic source",
+        desc: "Create the ad campaign pointing at the Typeform quiz URL.",
+        tag: "typeform",
+        detail: `<h4>Ad Setup</h4>
+<ul>
+<li>Campaign objective: Lead Generation or Conversions</li>
+<li>CTA: "Take the free Wealth Protection Quiz"</li>
+<li>Landing URL: Your Typeform quiz link</li>
+<li>Audience: See ICP document for targeting</li>
+<li>Use the ad creative production system (saved in memory) for image/video ads</li>
+</ul>
+<p>Start with a small daily budget ($20-50/day) to test conversion rates before scaling.</p>`
+      },
+      {
+        title: "Monitor and iterate",
+        desc: "Track quiz completion rates, email open rates, and strategy call bookings. Adjust as needed.",
+        tag: "customerio",
+        detail: `<h4>Key Metrics to Track</h4>
+<ul>
+<li><strong>Quiz completion rate</strong> - How many people who start the quiz finish it (target: 60%+)</li>
+<li><strong>Score distribution</strong> - Are most people falling in one category? Adjust quiz if too skewed</li>
+<li><strong>Email open rate</strong> - Target 40%+ (personalised subject line should help)</li>
+<li><strong>PDF download rate</strong> - From both the results page and email</li>
+<li><strong>Strategy call booking rate</strong> - The ultimate conversion metric</li>
+<li><strong>Cost per lead</strong> - Ad spend / quiz completions</li>
+<li><strong>Cost per call booked</strong> - Ad spend / strategy calls booked</li>
+</ul>`
+      }
+    ]
+  }
+];
+
+// State
+let checkState = {};
+try {
+  checkState = JSON.parse(localStorage.getItem('wpb-checklist') || '{}');
+} catch(e) { checkState = {}; }
+
+function saveState() {
+  localStorage.setItem('wpb-checklist', JSON.stringify(checkState));
+  updateProgress();
+}
+
+function getItemId(pi, ii) { return `p${pi}-i${ii}`; }
+
+function updateProgress() {
+  let total = 0, done = 0;
+  PHASES.forEach((p, pi) => {
+    p.items.forEach((_, ii) => {
+      total++;
+      if (checkState[getItemId(pi, ii)]) done++;
+    });
+  });
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = pct + '%';
+  document.getElementById('totalSteps').textContent = total;
+  document.getElementById('completedSteps').textContent = done;
+  document.getElementById('completedSub').textContent = (total - done) + ' remaining';
+
+  // Current phase
+  let currentPhase = 'All done!';
+  for (let pi = 0; pi < PHASES.length; pi++) {
+    const allDone = PHASES[pi].items.every((_, ii) => checkState[getItemId(pi, ii)]);
+    if (!allDone) {
+      currentPhase = PHASES[pi].title;
+      break;
+    }
+  }
+  document.getElementById('currentPhase').textContent = currentPhase;
+}
+
+function renderPhases() {
+  const container = document.getElementById('phasesContainer');
+  container.innerHTML = '';
+
+  PHASES.forEach((phase, pi) => {
+    const phaseDiv = document.createElement('div');
+    phaseDiv.className = 'phase';
+
+    const doneCount = phase.items.filter((_, ii) => checkState[getItemId(pi, ii)]).length;
+    const allDone = doneCount === phase.items.length;
+
+    phaseDiv.innerHTML = `
+      <div class="phase-header" data-phase="${pi}">
+        <div class="phase-number" style="background:${phase.color}">${pi + 1}</div>
+        <div class="phase-title">${phase.title}</div>
+        <div class="phase-meta">${doneCount}/${phase.items.length} complete</div>
+        <div class="phase-toggle" id="toggle-${pi}">▼</div>
+      </div>
+      <div class="phase-body" id="body-${pi}">
+        ${phase.items.map((item, ii) => {
+          const id = getItemId(pi, ii);
+          const isDone = checkState[id];
+          const tagClass = item.tag === 'typeform' ? 'tag-typeform' : item.tag === 'ghl' ? 'tag-ghl' : item.tag === 'customerio' ? 'tag-customerio' : item.tag === 'code' ? 'tag-code' : 'tag-pdf';
+          const tagLabel = item.tag.toUpperCase();
+          return `
+            <div class="check-item ${isDone ? 'done' : ''}" id="item-${id}">
+              <div class="check-box ${isDone ? 'checked' : ''}" data-id="${id}"></div>
+              <div class="check-content">
+                <div class="check-title">${item.title}<span class="tag ${tagClass}">${tagLabel}</span></div>
+                <div class="check-desc">${item.desc}</div>
+                ${item.detail ? `<div class="check-expand-btn" data-detail="${id}">Show details</div><div class="check-detail" id="detail-${id}">${item.detail}</div>` : ''}
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+    container.appendChild(phaseDiv);
+  });
+
+  // Event listeners
+  document.querySelectorAll('.phase-header').forEach(h => {
+    h.addEventListener('click', () => {
+      const pi = h.dataset.phase;
+      const body = document.getElementById('body-' + pi);
+      const toggle = document.getElementById('toggle-' + pi);
+      body.classList.toggle('collapsed');
+      toggle.classList.toggle('collapsed');
+    });
+  });
+
+  document.querySelectorAll('.check-box').forEach(box => {
+    box.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = box.dataset.id;
+      checkState[id] = !checkState[id];
+      saveState();
+      renderPhases();
+    });
+  });
+
+  document.querySelectorAll('.check-expand-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.detail;
+      const detail = document.getElementById('detail-' + id);
+      const isVisible = detail.classList.contains('visible');
+      detail.classList.toggle('visible');
+      btn.textContent = isVisible ? 'Show details' : 'Hide details';
+    });
+  });
+
+  updateProgress();
+}
+
+renderPhases();
+</script>
+</body>
+</html>
