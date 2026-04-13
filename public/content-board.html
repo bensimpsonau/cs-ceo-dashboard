@@ -4,1558 +4,1752 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<title>Content Board — Collective Shift</title>
+<title>Content Pipeline — Collective Shift</title>
 <style>
-  :root {
-    --cs-dark:    #0D0B14;
-    --cs-dark-2:  #151320;
-    --cs-dark-3:  #1C1A28;
-    --cs-dark-4:  #252336;
-    --cs-orange:  #FC5C03;
-    --cs-orange-hover: #e04f00;
-    --cs-teal:    #0BF4B9;
-    --cs-text:    #E8E8EA;
-    --cs-muted:   #807F86;
-    --cs-border:  #2a2a45;
-    --plat-x:          #1DA1F2;
-    --plat-linkedin:   #0A66C2;
-    --plat-instagram:  #E4405F;
-    --plat-youtube:    #FF0000;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--cs-dark);
-    color: var(--cs-text);
-    font-family: 'Inter', sans-serif;
-    min-height: 100vh;
-  }
-
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #4D4C55; border-radius: 3px; }
-
-  /* ── Header ── */
-  .header {
-    background: var(--cs-dark-2);
-    border-bottom: 1px solid var(--cs-border);
-    padding: 0 24px;
-    position: sticky;
-    top: 0;
-    z-index: 50;
-  }
-
-  .header-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 0 14px;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-
-  .header-title-row {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .header-icon {
-    width: 38px; height: 38px;
-    background: rgba(252,92,3,0.15);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-
-  .header-title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
-  .header-subtitle { font-size: 12px; color: var(--cs-muted); margin-top: 1px; }
-
-  .pending-badge {
-    background: rgba(245,158,11,0.15);
-    border: 1px solid rgba(245,158,11,0.3);
-    color: #F59E0B;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 5px 14px;
-    border-radius: 20px;
-    white-space: nowrap;
-  }
-  .pending-badge.zero {
-    background: rgba(16,185,129,0.1);
-    border-color: rgba(16,185,129,0.2);
-    color: #10B981;
-  }
-
-  /* ── Stats bar ── */
-  .stats-bar {
-    display: flex;
-    gap: 6px;
-    padding-bottom: 14px;
-    flex-wrap: wrap;
-  }
-
-  .stat-pill {
-    background: var(--cs-dark-3);
-    border: 1px solid var(--cs-border);
-    border-radius: 8px;
-    padding: 8px 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .stat-num { font-weight: 700; font-size: 15px; }
-  .stat-label { color: var(--cs-muted); font-size: 12px; }
-  .stat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-
-  /* ── Tab bar ── */
-  .tab-bar {
-    background: var(--cs-dark-2);
-    border-bottom: 1px solid var(--cs-border);
-    padding: 0 24px;
-    display: flex;
-    gap: 0;
-  }
-
-  .tab-btn {
-    background: none;
-    border: none;
-    border-bottom: 3px solid transparent;
-    color: var(--cs-muted);
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 13px 20px 11px;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    white-space: nowrap;
-  }
-
-  .tab-btn:hover { color: var(--cs-text); }
-
-  .tab-btn.active {
-    color: var(--cs-text);
-    border-bottom-color: var(--cs-orange);
-  }
-
-  .tab-count {
-    font-size: 11px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 10px;
-    background: var(--cs-dark-4);
-    color: var(--cs-muted);
-    transition: all 0.15s;
-  }
-
-  .tab-btn.active .tab-count {
-    background: rgba(252,92,3,0.15);
-    color: var(--cs-orange);
-  }
-
-  .tab-btn.drafts-tab.active .tab-count {
-    background: rgba(245,158,11,0.15);
-    color: #F59E0B;
-  }
-
-  /* ── Filter bar ── */
-  .filter-bar {
-    background: var(--cs-dark-2);
-    border-bottom: 1px solid var(--cs-border);
-    padding: 10px 24px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .filter-label { font-size: 12px; color: var(--cs-muted); font-weight: 500; white-space: nowrap; }
-
-  .filter-group { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-
-  .filter-btn {
-    background: var(--cs-dark-3);
-    border: 1px solid var(--cs-border);
-    color: var(--cs-muted);
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 5px 13px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-
-  .filter-btn:hover { border-color: rgba(252,92,3,0.4); color: var(--cs-text); }
-  .filter-btn.active {
-    background: rgba(252,92,3,0.15);
-    border-color: rgba(252,92,3,0.5);
-    color: var(--cs-orange);
-  }
-
-  .filter-select {
-    background: var(--cs-dark-3);
-    border: 1px solid var(--cs-border);
-    color: var(--cs-text);
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 5px 28px 5px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    outline: none;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23807F86' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    min-width: 130px;
-    color-scheme: dark;
-  }
-
-  .filter-select:focus { border-color: rgba(252,92,3,0.4); }
-
-  .filter-divider { width: 1px; height: 22px; background: var(--cs-border); flex-shrink: 0; }
-
-  /* ── Main ── */
-  .main {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 28px 24px 80px;
-  }
-
-  /* ── Date group ── */
-  .date-group { margin-bottom: 36px; }
-
-  .date-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-  }
-
-  .date-label { font-size: 14px; font-weight: 700; letter-spacing: -0.2px; white-space: nowrap; }
-
-  .date-count {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--cs-muted);
-    background: var(--cs-dark-3);
-    border: 1px solid var(--cs-border);
-    padding: 2px 8px;
-    border-radius: 10px;
-    white-space: nowrap;
-  }
-
-  .date-line { flex: 1; height: 1px; background: var(--cs-border); min-width: 16px; }
-
-  .approve-all-btn {
-    background: rgba(16,185,129,0.1);
-    border: 1px solid rgba(16,185,129,0.3);
-    color: #10B981;
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 6px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-
-  .approve-all-btn:hover { background: rgba(16,185,129,0.2); border-color: rgba(16,185,129,0.5); }
-  .approve-all-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  /* ── Card ── */
-  .card {
-    background: var(--cs-dark-2);
-    border: 1px solid var(--cs-border);
-    border-radius: 12px;
-    padding: 18px 18px 16px 21px;
-    margin-bottom: 10px;
-    transition: border-color 0.15s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  /* Platform stripe */
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 3px;
-    height: 100%;
-    border-radius: 12px 0 0 12px;
-  }
-  .card[data-platform="instagram"]::before { background: var(--plat-instagram); }
-  .card[data-platform="twitter"]::before,
-  .card[data-platform="x"]::before         { background: var(--plat-x); }
-  .card[data-platform="linkedin"]::before  { background: var(--plat-linkedin); }
-  .card[data-platform="youtube"]::before   { background: var(--plat-youtube); }
-
-  .card { cursor: pointer; }
-  .card:hover { border-color: rgba(252,92,3,0.2); }
-  .card.status-pending_review { border-color: rgba(245,158,11,0.22); }
-  .card.status-approved  { border-color: rgba(16,185,129,0.15); }
-  .card.status-scheduled { border-color: rgba(99,102,241,0.15); }
-  .card.status-published { border-color: rgba(11,244,185,0.15); }
-  .card.status-cancelled { opacity: 0.45; }
-
-  .card-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 10px;
-    flex-wrap: wrap;
-  }
-
-  .badges { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; flex: 1; min-width: 0; }
-
-  .badge {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 3px 9px;
-    border-radius: 20px;
-    text-transform: capitalize;
-    letter-spacing: 0.2px;
-    white-space: nowrap;
-  }
-
-  .badge-platform { color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.25); }
-  .badge-platform.instagram { background: var(--plat-instagram); }
-  .badge-platform.twitter,
-  .badge-platform.x         { background: var(--plat-x); }
-  .badge-platform.linkedin  { background: var(--plat-linkedin); }
-  .badge-platform.youtube   { background: var(--plat-youtube); }
-
-  .badge-type {
-    background: var(--cs-dark-4);
-    border: 1px solid var(--cs-border);
-    color: var(--cs-muted);
-  }
-
-  .status-badge {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 20px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .st-draft          { background: rgba(128,127,134,0.15); color: #807F86;  border: 1px solid rgba(128,127,134,0.2); }
-  .st-pending_review { background: rgba(245,158,11,0.15);  color: #F59E0B;  border: 1px solid rgba(245,158,11,0.25); }
-  .st-approved       { background: rgba(16,185,129,0.12);  color: #10B981;  border: 1px solid rgba(16,185,129,0.2); }
-  .st-scheduled      { background: rgba(99,102,241,0.15);  color: #6366F1;  border: 1px solid rgba(99,102,241,0.2); }
-  .st-published      { background: rgba(11,244,185,0.1);   color: #0BF4B9;  border: 1px solid rgba(11,244,185,0.2); }
-  .st-cancelled      { background: rgba(239,68,68,0.12);   color: #EF4444;  border: 1px solid rgba(239,68,68,0.2); }
-
-  .card-title {
-    font-size: 15px;
-    font-weight: 600;
-    line-height: 1.4;
-    margin-bottom: 8px;
-  }
-
-  .card-copy { font-size: 13px; color: var(--cs-muted); line-height: 1.65; margin-bottom: 10px; }
-
-  .copy-text {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .copy-text.expanded { display: block; -webkit-line-clamp: unset; }
-
-  .expand-btn {
-    background: none; border: none;
-    color: var(--cs-orange);
-    font-family: 'Inter', sans-serif;
-    font-size: 12px; font-weight: 500;
-    cursor: pointer; padding: 2px 0; margin-top: 3px;
-  }
-  .expand-btn:hover { text-decoration: underline; }
-
-  .card-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 12px;
-    color: var(--cs-orange);
-    background: rgba(252,92,3,0.08);
-    border: 1px solid rgba(252,92,3,0.18);
-    border-radius: 6px;
-    padding: 4px 10px;
-    margin-bottom: 12px;
-    font-weight: 500;
-  }
-
-  .card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 6px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(42,42,69,0.6);
-  }
-
-  .card-meta { font-size: 11px; color: var(--cs-muted); display: flex; gap: 12px; flex-wrap: wrap; }
-
-  .action-btns { display: flex; gap: 8px; }
-
-  .btn-approve {
-    background: rgba(16,185,129,0.12);
-    border: 1px solid rgba(16,185,129,0.3);
-    color: #10B981;
-    font-family: 'Inter', sans-serif;
-    font-size: 12px; font-weight: 600;
-    padding: 7px 16px;
-    border-radius: 7px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .btn-approve:hover { background: rgba(16,185,129,0.22); border-color: rgba(16,185,129,0.5); }
-
-  .btn-reject {
-    background: rgba(239,68,68,0.1);
-    border: 1px solid rgba(239,68,68,0.25);
-    color: #EF4444;
-    font-family: 'Inter', sans-serif;
-    font-size: 12px; font-weight: 600;
-    padding: 7px 16px;
-    border-radius: 7px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .btn-reject:hover { background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.4); }
-  .btn-approve:disabled, .btn-reject:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  /* ── Modal ── */
-  .modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 200;
-    display: none;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 40px 20px;
-    overflow-y: auto;
-    backdrop-filter: blur(4px);
-  }
-  .modal-overlay.open { display: flex; }
-
-  .modal {
-    background: var(--cs-dark-2);
-    border: 1px solid var(--cs-border);
-    border-radius: 16px;
-    width: 100%;
-    max-width: 720px;
-    padding: 0;
-    box-shadow: 0 24px 64px rgba(0,0,0,0.5);
-    animation: modalIn 0.2s ease;
-    position: relative;
-    overflow: hidden;
-  }
-  @keyframes modalIn { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
-
-  .modal-stripe {
-    height: 4px;
-    width: 100%;
-  }
-  .modal-stripe.instagram { background: var(--plat-instagram); }
-  .modal-stripe.twitter, .modal-stripe.x { background: var(--plat-x); }
-  .modal-stripe.linkedin { background: var(--plat-linkedin); }
-  .modal-stripe.youtube { background: var(--plat-youtube); }
-
-  .modal-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    padding: 20px 24px 0;
-    gap: 12px;
-  }
-
-  .modal-close {
-    background: var(--cs-dark-4);
-    border: 1px solid var(--cs-border);
-    color: var(--cs-muted);
-    width: 32px; height: 32px;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    font-size: 16px;
-    flex-shrink: 0;
-    transition: all 0.15s;
-  }
-  .modal-close:hover { background: var(--cs-dark-3); color: var(--cs-text); }
-
-  .modal-body {
-    padding: 16px 24px 24px;
-  }
-
-  .modal-title {
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 4px;
-    line-height: 1.4;
-  }
-
-  .modal-meta {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-  }
-
-  .modal-section {
-    margin-bottom: 20px;
-  }
-
-  .modal-section-title {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--cs-orange);
-    margin-bottom: 8px;
-  }
-
-  .modal-content {
-    font-size: 14px;
-    color: var(--cs-text);
-    line-height: 1.7;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-  }
-
-  .modal-content strong {
-    color: var(--cs-orange);
-    font-weight: 700;
-  }
-
-  .modal-cta-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 13px;
-    color: var(--cs-orange);
-    background: rgba(252,92,3,0.08);
-    border: 1px solid rgba(252,92,3,0.18);
-    border-radius: 6px;
-    padding: 6px 14px;
-    font-weight: 500;
-  }
-
-  .modal-actions {
-    display: flex;
-    gap: 10px;
-    padding: 16px 24px;
-    border-top: 1px solid var(--cs-border);
-  }
-
-  .modal-btn {
-    flex: 1;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s;
-    text-align: center;
-    border: none;
-  }
-
-  .modal-btn-approve {
-    background: rgba(16,185,129,0.15);
-    color: #10B981;
-    border: 1px solid rgba(16,185,129,0.3);
-  }
-  .modal-btn-approve:hover { background: rgba(16,185,129,0.25); }
-
-  .modal-btn-reject {
-    background: rgba(239,68,68,0.1);
-    color: #EF4444;
-    border: 1px solid rgba(239,68,68,0.25);
-  }
-  .modal-btn-reject:hover { background: rgba(239,68,68,0.2); }
-
-  .modal-btn-copy {
-    background: var(--cs-dark-4);
-    color: var(--cs-text);
-    border: 1px solid var(--cs-border);
-  }
-  .modal-btn-copy:hover { background: var(--cs-dark-3); }
-  .modal-btn-copy.copied { background: rgba(16,185,129,0.15); color: #10B981; border-color: rgba(16,185,129,0.3); }
-
-  @media (max-width: 640px) {
-    .modal-overlay { padding: 20px 12px; }
-    .modal-header { padding: 16px 16px 0; }
-    .modal-body { padding: 12px 16px 20px; }
-    .modal-actions { padding: 12px 16px; }
-    .modal-title { font-size: 16px; }
-  }
-
-  /* ── States ── */
-  .state-box { text-align: center; padding: 60px 24px; color: var(--cs-muted); }
-  .state-box .icon { font-size: 38px; margin-bottom: 12px; }
-  .state-box h3 { font-size: 15px; font-weight: 600; color: var(--cs-text); margin-bottom: 6px; }
-  .state-box p { font-size: 13px; }
-
-  .spinner {
-    width: 30px; height: 30px;
-    border: 3px solid var(--cs-border);
-    border-top-color: var(--cs-orange);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    margin: 0 auto 12px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── Toast ── */
-  #toast-container {
-    position: fixed;
-    bottom: 24px; right: 24px;
-    z-index: 999;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .toast {
-    background: var(--cs-dark-3);
-    border: 1px solid var(--cs-border);
-    border-radius: 10px;
-    padding: 11px 16px;
-    font-size: 13px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    max-width: 320px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-    animation: toastIn 0.2s ease;
-  }
-  .toast.success { border-color: rgba(16,185,129,0.3); color: #10B981; }
-  .toast.error   { border-color: rgba(239,68,68,0.3);  color: #EF4444; }
-  .toast.info    { border-color: rgba(252,92,3,0.3);    color: var(--cs-orange); }
-
-  @keyframes toastIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ── Responsive ── */
-  @media (max-width: 640px) {
-    .header, .tab-bar, .filter-bar { padding-left: 16px; padding-right: 16px; }
-    .main { padding: 18px 14px 80px; }
-    .header-title { font-size: 17px; }
-    .card { padding: 14px 14px 12px 17px; }
-    .stats-bar { gap: 5px; }
-    .stat-pill { padding: 7px 11px; }
-    .stat-num { font-size: 14px; }
-    .filter-select { min-width: 110px; }
-    .tab-btn { padding: 12px 14px 10px; font-size: 12px; }
-  }
-
-  /* ── Posted Checkbox ── */
-  .posted-checkbox {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--cs-muted);
-    padding: 5px 10px;
-    border-radius: 7px;
-    border: 1px solid var(--cs-border);
-    background: var(--cs-dark-4);
-    transition: all 0.15s;
-    user-select: none;
-    white-space: nowrap;
-  }
-  .posted-checkbox:hover { border-color: rgba(16,185,129,0.4); color: #10B981; }
-  .posted-checkbox input[type="checkbox"] {
-    accent-color: #10B981;
-    width: 14px; height: 14px;
-    cursor: pointer;
-    flex-shrink: 0;
-  }
-  .posted-checkbox input[type="checkbox"]:disabled { cursor: default; }
-  .posted-checkbox.is-posted {
-    background: rgba(16,185,129,0.1);
-    border-color: rgba(16,185,129,0.35);
-    color: #10B981;
-  }
-
-  /* ── Calendar ── */
-  .calendar-wrap { padding: 0 0 60px; }
-
-  .calendar-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 18px;
-    gap: 12px;
-  }
-
-  .cal-month-label {
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-  }
-
-  .cal-nav-btn {
-    background: var(--cs-dark-3);
-    border: 1px solid var(--cs-border);
-    color: var(--cs-text);
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 8px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .cal-nav-btn:hover {
-    background: var(--cs-dark-4);
-    border-color: rgba(252,92,3,0.45);
-    color: var(--cs-orange);
-  }
-
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
+:root {
+  --cs-dark:    #0D0B14;
+  --cs-dark-2:  #151320;
+  --cs-dark-3:  #1C1A28;
+  --cs-dark-4:  #252336;
+  --cs-orange:  #FC5C03;
+  --cs-orange-hover: #e04f00;
+  --cs-teal:    #0BF4B9;
+  --cs-text:    #E8E8EA;
+  --cs-muted:   #807F86;
+  --cs-border:  #2a2a45;
+  --plat-x:          #1DA1F2;
+  --plat-linkedin:   #0A66C2;
+  --plat-instagram:  #E4405F;
+  --plat-youtube:    #FF0000;
+  --stage-idea:      #F59E0B;
+  --stage-approved:  #3B82F6;
+  --stage-recorded:  #A855F7;
+  --stage-published: #10B981;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--cs-dark);
+  color: var(--cs-text);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #4D4C55; border-radius: 3px; }
+
+/* ── Header ── */
+.header {
+  background: var(--cs-dark-2);
+  border-bottom: 1px solid var(--cs-border);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0 12px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.header-icon {
+  width: 38px; height: 38px;
+  background: rgba(252,92,3,0.15);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.header-title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+.header-subtitle { font-size: 12px; color: var(--cs-muted); margin-top: 1px; }
+
+.header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+.btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-primary {
+  background: var(--cs-orange);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--cs-orange-hover); }
+
+.btn-ghost {
+  background: var(--cs-dark-3);
+  border: 1px solid var(--cs-border);
+  color: var(--cs-text);
+}
+.btn-ghost:hover { border-color: rgba(252,92,3,0.4); }
+
+/* ── Stats bar ── */
+.stats-bar {
+  display: flex;
+  gap: 6px;
+  padding-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.stat-pill {
+  background: var(--cs-dark-3);
+  border: 1px solid var(--cs-border);
+  border-radius: 8px;
+  padding: 7px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.stat-pill:hover { border-color: rgba(255,255,255,0.15); }
+.stat-num { font-weight: 700; font-size: 15px; }
+.stat-label { color: var(--cs-muted); font-size: 12px; }
+.stat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── Tab bar ── */
+.tab-bar {
+  background: var(--cs-dark-2);
+  border-bottom: 1px solid var(--cs-border);
+  padding: 0 24px;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--cs-muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 13px 20px 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.tab-btn:hover { color: var(--cs-text); }
+
+.tab-btn.active {
+  color: var(--cs-text);
+  border-bottom-color: var(--cs-orange);
+}
+
+/* ── Filter bar ── */
+.filter-bar {
+  background: var(--cs-dark-2);
+  border-bottom: 1px solid var(--cs-border);
+  padding: 10px 24px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-btn {
+  background: var(--cs-dark-3);
+  border: 1px solid var(--cs-border);
+  color: var(--cs-muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 13px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.filter-btn:hover { border-color: rgba(252,92,3,0.4); color: var(--cs-text); }
+.filter-btn.active {
+  background: rgba(252,92,3,0.15);
+  border-color: rgba(252,92,3,0.5);
+  color: var(--cs-orange);
+}
+
+/* ── Kanban Board ── */
+.view-container { display: none; }
+.view-container.active { display: block; }
+
+.kanban {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 20px 24px 80px;
+  min-height: calc(100vh - 200px);
+}
+
+.kanban-col {
+  background: var(--cs-dark-2);
+  border: 1px solid var(--cs-border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  min-height: 400px;
+}
+
+.col-header {
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid var(--cs-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.col-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.col-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+}
+
+.col-name {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.col-count {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 10px;
+  background: var(--cs-dark-4);
+  color: var(--cs-muted);
+}
+
+.col-body {
+  padding: 12px;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 100px;
+  transition: background 0.15s;
+}
+
+.col-body.drag-over {
+  background: rgba(252,92,3,0.04);
+  border-radius: 0 0 12px 12px;
+}
+
+/* ── Kanban Card ── */
+.k-card {
+  background: var(--cs-dark-3);
+  border: 1px solid var(--cs-border);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 10px;
+  cursor: grab;
+  transition: all 0.15s;
+  position: relative;
+}
+
+.k-card:hover {
+  border-color: rgba(255,255,255,0.15);
+  transform: translateY(-1px);
+}
+
+.k-card.dragging {
+  opacity: 0.5;
+  transform: rotate(2deg);
+}
+
+.k-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.k-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.k-card-badges {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.badge-instagram { background: rgba(228,64,95,0.15); color: #E4405F; }
+.badge-twitter, .badge-x { background: rgba(29,161,242,0.15); color: #1DA1F2; }
+.badge-linkedin { background: rgba(10,102,194,0.15); color: #0A66C2; }
+.badge-youtube { background: rgba(255,0,0,0.12); color: #FF4444; }
+.badge-type { background: var(--cs-dark-4); color: var(--cs-muted); }
+
+.k-card-preview {
+  font-size: 12px;
+  color: var(--cs-muted);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.k-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.k-card-date {
+  font-size: 11px;
+  color: var(--cs-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Sub-paths for recorded cards */
+.k-card-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.k-card-action-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 5px;
+  border: 1px solid var(--cs-border);
+  background: var(--cs-dark-4);
+  color: var(--cs-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.k-card-action-btn:hover {
+  border-color: rgba(168,85,247,0.4);
+  color: #A855F7;
+}
+
+/* Redistribution checklist for published cards */
+.k-card-redist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.redist-chip {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--cs-dark-4);
+  color: var(--cs-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid transparent;
+}
+
+.redist-chip.active {
+  background: rgba(16,185,129,0.12);
+  color: #10B981;
+  border-color: rgba(16,185,129,0.3);
+}
+
+/* ── Modal ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 100;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 24px;
+  overflow-y: auto;
+}
+
+.modal-overlay.open {
+  display: flex;
+}
+
+.modal {
+  background: var(--cs-dark-2);
+  border: 1px solid var(--cs-border);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 720px;
+  position: relative;
+  animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--cs-border);
+}
+
+.modal-header h2 {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--cs-muted);
+  font-size: 22px;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+}
+.modal-close:hover { color: var(--cs-text); }
+
+.modal-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+.field-group { display: flex; flex-direction: column; gap: 6px; }
+
+.field-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cs-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.field-input {
+  background: var(--cs-dark-3);
+  border: 1px solid var(--cs-border);
+  border-radius: 8px;
+  color: var(--cs-text);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+}
+
+.field-input:focus { border-color: rgba(252,92,3,0.5); }
+
+.field-textarea {
+  resize: vertical;
+  min-height: 120px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.field-textarea-caption {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.field-select {
+  background: var(--cs-dark-3);
+  border: 1px solid var(--cs-border);
+  border-radius: 8px;
+  color: var(--cs-text);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  padding: 10px 14px;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23807F86' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  width: 100%;
+}
+
+.field-select:focus { border-color: rgba(252,92,3,0.5); }
+
+.redist-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.redist-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--cs-dark-3);
+  border: 1px solid var(--cs-border);
+  transition: all 0.15s;
+}
+
+.redist-checkbox:hover { border-color: rgba(255,255,255,0.15); }
+
+.redist-checkbox.checked {
+  background: rgba(16,185,129,0.1);
+  border-color: rgba(16,185,129,0.3);
+  color: #10B981;
+}
+
+.redist-checkbox input { display: none; }
+
+.redist-check-icon {
+  width: 16px; height: 16px;
+  border: 2px solid var(--cs-border);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  transition: all 0.15s;
+}
+
+.redist-checkbox.checked .redist-check-icon {
+  background: #10B981;
+  border-color: #10B981;
+  color: #fff;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-top: 1px solid var(--cs-border);
+}
+
+.btn-danger {
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.3);
+  color: #EF4444;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-danger:hover { background: rgba(239,68,68,0.2); }
+
+.btn-save {
+  background: var(--cs-orange);
+  border: none;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-save:hover { background: var(--cs-orange-hover); }
+
+/* ── Calendar View ── */
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 12px;
+}
+
+.calendar-nav h3 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.nav-arrows {
+  display: flex;
+  gap: 6px;
+}
+
+.nav-btn {
+  background: var(--cs-dark-3);
+  border: 1px solid var(--cs-border);
+  color: var(--cs-text);
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.15s;
+}
+
+.nav-btn:hover { border-color: rgba(252,92,3,0.4); }
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: var(--cs-border);
+  border: 1px solid var(--cs-border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 0 24px 80px;
+}
+
+.cal-day-name {
+  background: var(--cs-dark-2);
+  padding: 10px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cs-muted);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.cal-day {
+  background: var(--cs-dark-2);
+  min-height: 110px;
+  padding: 8px;
+  position: relative;
+  transition: background 0.15s;
+}
+
+.cal-day.other-month { opacity: 0.35; }
+.cal-day.today { background: rgba(252,92,3,0.05); }
+
+.cal-day.drag-over { background: rgba(252,92,3,0.08); }
+
+.cal-day-num {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cs-muted);
+  margin-bottom: 6px;
+}
+
+.cal-day.today .cal-day-num { color: var(--cs-orange); font-weight: 700; }
+
+.cal-card {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 6px;
+  border-radius: 4px;
+  margin-bottom: 3px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.15s;
+}
+
+.cal-card:hover { filter: brightness(1.2); }
+
+.cal-card.plat-instagram { background: rgba(228,64,95,0.2); color: #E4405F; border-left: 2px solid #E4405F; }
+.cal-card.plat-twitter, .cal-card.plat-x { background: rgba(29,161,242,0.15); color: #1DA1F2; border-left: 2px solid #1DA1F2; }
+.cal-card.plat-linkedin { background: rgba(10,102,194,0.15); color: #6DB3F2; border-left: 2px solid #0A66C2; }
+.cal-card.plat-youtube { background: rgba(255,0,0,0.12); color: #FF6666; border-left: 2px solid #FF0000; }
+
+/* ── Weekly View ── */
+.weekly-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 12px;
+}
+
+.weekly-nav h3 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.weekly-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+  padding: 0 24px 80px;
+}
+
+.weekly-col {
+  background: var(--cs-dark-2);
+  border: 1px solid var(--cs-border);
+  border-radius: 10px;
+  min-height: 300px;
+}
+
+.weekly-col-header {
+  padding: 12px;
+  border-bottom: 1px solid var(--cs-border);
+  text-align: center;
+}
+
+.weekly-day-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cs-muted);
+  text-transform: uppercase;
+}
+
+.weekly-day-num {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.weekly-col.today .weekly-day-num { color: var(--cs-orange); }
+
+.weekly-col-body {
+  padding: 8px;
+  min-height: 200px;
+  transition: background 0.15s;
+}
+
+.weekly-col-body.drag-over { background: rgba(252,92,3,0.06); }
+
+.weekly-card {
+  background: var(--cs-dark-3);
+  border: 1px solid var(--cs-border);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.weekly-card:hover {
+  border-color: rgba(255,255,255,0.15);
+}
+
+.weekly-card-title {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.weekly-card-badge {
+  font-size: 9px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--cs-dark-2);
+  border: 1px solid var(--cs-border);
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 200;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s;
+  pointer-events: none;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast.success { border-color: rgba(16,185,129,0.4); color: #10B981; }
+.toast.error { border-color: rgba(239,68,68,0.4); color: #EF4444; }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .kanban {
+    grid-template-columns: repeat(4, minmax(260px, 1fr));
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .kanban {
+    grid-template-columns: repeat(4, 280px);
+    overflow-x: auto;
+    padding: 16px;
+  }
+
+  .weekly-grid {
+    grid-template-columns: repeat(7, minmax(120px, 1fr));
     overflow-x: auto;
   }
 
-  .cal-dow {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--cs-muted);
-    text-align: center;
-    padding: 8px 4px 6px;
+  .calendar-grid {
+    margin: 0 12px 80px;
   }
 
-  .cal-cell {
-    background: var(--cs-dark-2);
-    border: 1px solid var(--cs-border);
-    border-radius: 8px;
-    min-height: 88px;
-    padding: 6px;
-    transition: border-color 0.12s, background 0.12s;
-    overflow: hidden;
-  }
-  .cal-cell:not(.cal-empty):hover { border-color: rgba(252,92,3,0.18); }
-  .cal-cell.cal-empty { background: transparent; border-color: transparent; }
-  .cal-cell.cal-today {
-    border-color: var(--cs-orange);
-    background: rgba(252,92,3,0.04);
-  }
-  .cal-cell.cal-drop-target {
-    border-color: var(--cs-orange) !important;
-    background: rgba(252,92,3,0.09);
-    box-shadow: 0 0 0 2px rgba(252,92,3,0.18) inset;
+  .cal-day { min-height: 80px; padding: 4px; }
+  .cal-day-num { font-size: 10px; }
+
+  .modal {
+    border-radius: 0;
+    min-height: 100vh;
+    max-width: 100%;
   }
 
-  .cal-day-num {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--cs-muted);
-    margin-bottom: 4px;
-    line-height: 1;
-  }
-  .cal-cell.cal-today .cal-day-num { color: var(--cs-orange); font-size: 13px; }
-
-  .cal-cards-list { display: flex; flex-direction: column; gap: 3px; }
-
-  .cal-card {
-    font-size: 11px;
-    font-weight: 500;
-    padding: 3px 5px;
-    border-radius: 4px;
-    background: var(--cs-dark-3);
-    cursor: pointer;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    line-height: 1.35;
-    color: var(--cs-text);
-    transition: background 0.12s;
-    border-left-width: 3px;
-    border-left-style: solid;
-  }
-  .cal-card:hover { background: var(--cs-dark-4); }
-  .cal-card.cal-card-dragging { opacity: 0.35; }
-  .cal-card.cal-card-published { opacity: 0.65; }
-
-  .cal-card-plat {
-    font-size: 9px;
-    font-weight: 800;
-    padding: 1px 4px;
-    border-radius: 3px;
-    color: #fff;
-    flex-shrink: 0;
-    line-height: 1.5;
-    text-transform: uppercase;
+  .modal-overlay {
+    padding: 0;
+    align-items: stretch;
   }
 
-  .cal-posted-badge {
-    color: #10B981;
-    font-size: 10px;
-    font-weight: 700;
-    margin-left: auto;
-    padding-left: 3px;
-    flex-shrink: 0;
+  .modal-body {
+    max-height: none;
   }
 
-  .cal-card-title-text {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    flex: 1;
-    min-width: 0;
+  .field-row {
+    grid-template-columns: 1fr;
   }
 
-  @media (max-width: 640px) {
-    .calendar-grid { gap: 2px; }
-    .cal-cell { min-height: 56px; padding: 4px; }
-    .cal-card { font-size: 10px; padding: 2px 3px; }
-    .cal-card-plat { display: none; }
-    .cal-nav-btn { padding: 6px 12px; font-size: 12px; }
-    .cal-month-label { font-size: 15px; }
-    .cal-dow { font-size: 10px; padding: 6px 2px 4px; letter-spacing: 0.5px; }
-  }
+  .header-top { padding: 12px 0; }
+  .stats-bar { gap: 4px; }
+  .stat-pill { padding: 5px 10px; }
+  .stat-num { font-size: 13px; }
+  .stat-label { font-size: 11px; }
+}
+
+/* ── Loading ── */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  color: var(--cs-muted);
+  gap: 12px;
+}
+
+.spinner {
+  width: 28px; height: 28px;
+  border: 3px solid var(--cs-border);
+  border-top-color: var(--cs-orange);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Empty State ── */
+.empty-col {
+  text-align: center;
+  padding: 30px 10px;
+  color: var(--cs-muted);
+  font-size: 12px;
+}
 </style>
 </head>
 <body>
 
-<!-- ── Header ── -->
-<header class="header">
+<!-- Header -->
+<div class="header">
   <div class="header-top">
-    <div class="header-title-row">
-      <div class="header-icon">📋</div>
+    <div class="header-left">
+      <div class="header-icon">&#x1F4CB;</div>
       <div>
-        <div class="header-title">Content Board</div>
-        <div class="header-subtitle">Review drafts and track scheduled content</div>
+        <div class="header-title">Content Pipeline</div>
+        <div class="header-subtitle">Collective Shift</div>
       </div>
     </div>
-    <div id="pending-badge" class="pending-badge" style="display:none"></div>
-  </div>
-
-  <div class="stats-bar">
-    <div class="stat-pill">
-      <span class="stat-dot" style="background:#807F86"></span>
-      <span class="stat-num" id="stat-total">—</span>
-      <span class="stat-label">Total</span>
-    </div>
-    <div class="stat-pill">
-      <span class="stat-dot" style="background:#F59E0B"></span>
-      <span class="stat-num" id="stat-pending">—</span>
-      <span class="stat-label">Pending Review</span>
-    </div>
-    <div class="stat-pill">
-      <span class="stat-dot" style="background:#10B981"></span>
-      <span class="stat-num" id="stat-approved">—</span>
-      <span class="stat-label">Approved</span>
-    </div>
-    <div class="stat-pill">
-      <span class="stat-dot" style="background:#6366F1"></span>
-      <span class="stat-num" id="stat-scheduled">—</span>
-      <span class="stat-label">Scheduled</span>
-    </div>
-    <div class="stat-pill">
-      <span class="stat-dot" style="background:#0BF4B9"></span>
-      <span class="stat-num" id="stat-published">—</span>
-      <span class="stat-label">Published</span>
+    <div class="header-actions">
+      <button class="btn btn-primary" onclick="openNewCardModal()">+ New Card</button>
     </div>
   </div>
-</header>
+  <div class="stats-bar" id="statsBar"></div>
+</div>
 
-<!-- ── Tabs ── -->
+<!-- Tabs -->
 <div class="tab-bar">
-  <button class="tab-btn drafts-tab active" id="tab-drafts" onclick="switchTab('drafts')">
-    ✏️ Drafts
-    <span class="tab-count" id="tab-count-drafts">—</span>
-  </button>
-  <button class="tab-btn" id="tab-scheduled" onclick="switchTab('scheduled')">
-    🗓 Scheduled
-    <span class="tab-count" id="tab-count-scheduled">—</span>
-  </button>
-  <button class="tab-btn" id="tab-calendar" onclick="switchTab('calendar')">
-    📅 Calendar
-    <span class="tab-count" id="tab-count-calendar">—</span>
-  </button>
+  <button class="tab-btn active" data-tab="kanban" onclick="switchTab('kanban')">&#x1F4CB; Pipeline</button>
+  <button class="tab-btn" data-tab="calendar" onclick="switchTab('calendar')">&#x1F4C5; Calendar</button>
+  <button class="tab-btn" data-tab="weekly" onclick="switchTab('weekly')">&#x1F4C6; Weekly</button>
 </div>
 
-<!-- ── Filter bar ── -->
+<!-- Filters -->
 <div class="filter-bar">
-  <span class="filter-label">Platform</span>
-  <div class="filter-group">
-    <button class="filter-btn active" data-filter="platform" data-value="all">All</button>
-    <button class="filter-btn" data-filter="platform" data-value="instagram">Instagram</button>
-    <button class="filter-btn" data-filter="platform" data-value="twitter">Twitter/X</button>
-    <button class="filter-btn" data-filter="platform" data-value="linkedin">LinkedIn</button>
-    <button class="filter-btn" data-filter="platform" data-value="youtube">YouTube</button>
-  </div>
-
-  <div class="filter-divider"></div>
-
-  <span class="filter-label">Date</span>
-  <input type="date" class="filter-select" id="date-filter" style="min-width:120px;padding-right:10px;background-image:none;">
-  <button class="filter-btn" id="clear-date-btn" style="display:none;padding:5px 10px;">✕ Clear</button>
+  <button class="filter-btn active" data-platform="all" onclick="filterPlatform('all')">All</button>
+  <button class="filter-btn" data-platform="instagram" onclick="filterPlatform('instagram')">Instagram</button>
+  <button class="filter-btn" data-platform="twitter" onclick="filterPlatform('twitter')">Twitter / X</button>
+  <button class="filter-btn" data-platform="linkedin" onclick="filterPlatform('linkedin')">LinkedIn</button>
+  <button class="filter-btn" data-platform="youtube" onclick="filterPlatform('youtube')">YouTube</button>
 </div>
 
-<!-- ── Content ── -->
-<main class="main" id="content-area">
-  <div class="state-box">
-    <div class="spinner"></div>
-    <p>Loading content…</p>
+<!-- Kanban View -->
+<div class="view-container active" id="view-kanban">
+  <div class="kanban" id="kanbanBoard">
+    <div class="kanban-col" data-status="idea">
+      <div class="col-header">
+        <div class="col-title">
+          <div class="col-dot" style="background:var(--stage-idea)"></div>
+          <span class="col-name">Ideas</span>
+        </div>
+        <span class="col-count" id="count-idea">0</span>
+      </div>
+      <div class="col-body" id="col-idea"></div>
+    </div>
+    <div class="kanban-col" data-status="approved">
+      <div class="col-header">
+        <div class="col-title">
+          <div class="col-dot" style="background:var(--stage-approved)"></div>
+          <span class="col-name">Approved</span>
+        </div>
+        <span class="col-count" id="count-approved">0</span>
+      </div>
+      <div class="col-body" id="col-approved"></div>
+    </div>
+    <div class="kanban-col" data-status="recorded">
+      <div class="col-header">
+        <div class="col-title">
+          <div class="col-dot" style="background:var(--stage-recorded)"></div>
+          <span class="col-name">Recorded</span>
+        </div>
+        <span class="col-count" id="count-recorded">0</span>
+      </div>
+      <div class="col-body" id="col-recorded"></div>
+    </div>
+    <div class="kanban-col" data-status="published">
+      <div class="col-header">
+        <div class="col-title">
+          <div class="col-dot" style="background:var(--stage-published)"></div>
+          <span class="col-name">Published</span>
+        </div>
+        <span class="col-count" id="count-published">0</span>
+      </div>
+      <div class="col-body" id="col-published"></div>
+    </div>
   </div>
-</main>
-
-<!-- Modal -->
-<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
-  <div class="modal" id="cardModal"></div>
 </div>
 
-<div id="toast-container"></div>
+<!-- Calendar View -->
+<div class="view-container" id="view-calendar">
+  <div class="calendar-nav">
+    <button class="nav-btn" onclick="calNav(-1)">&larr;</button>
+    <h3 id="calMonthLabel"></h3>
+    <button class="nav-btn" onclick="calNav(1)">&rarr;</button>
+  </div>
+  <div class="calendar-grid" id="calendarGrid"></div>
+</div>
+
+<!-- Weekly View -->
+<div class="view-container" id="view-weekly">
+  <div class="weekly-nav">
+    <button class="nav-btn" onclick="weekNav(-1)">&larr;</button>
+    <h3 id="weekLabel"></h3>
+    <button class="nav-btn" onclick="weekNav(1)">&rarr;</button>
+  </div>
+  <div class="weekly-grid" id="weeklyGrid"></div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOverlay(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">Edit Card</h2>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="m-id">
+
+      <div class="field-group">
+        <label class="field-label">Title</label>
+        <input class="field-input" id="m-title" placeholder="Card title...">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Script / Content</label>
+        <textarea class="field-input field-textarea" id="m-content" placeholder="Write the script here..."></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Caption / Copy</label>
+        <textarea class="field-input field-textarea-caption" id="m-copy" placeholder="Social copy / caption..."></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">CTA</label>
+        <input class="field-input" id="m-cta" placeholder="Call to action...">
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Platform</label>
+          <select class="field-input field-select" id="m-platform">
+            <option value="instagram">Instagram</option>
+            <option value="twitter">Twitter / X</option>
+            <option value="linkedin">LinkedIn</option>
+            <option value="youtube">YouTube</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Type</label>
+          <select class="field-input field-select" id="m-type">
+            <option value="reel">Reel</option>
+            <option value="tweet">Tweet</option>
+            <option value="post">Post</option>
+            <option value="video">Video</option>
+            <option value="carousel">Carousel</option>
+            <option value="story">Story</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Status</label>
+          <select class="field-input field-select" id="m-status">
+            <option value="idea">Idea</option>
+            <option value="approved">Approved</option>
+            <option value="recorded">Recorded</option>
+            <option value="published">Published</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Scheduled Date</label>
+          <input class="field-input" type="date" id="m-scheduledDate">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Redistribution</label>
+        <div class="redist-group" id="m-redist">
+          <label class="redist-checkbox" data-key="twitter" onclick="toggleRedist(this)">
+            <input type="checkbox">
+            <span class="redist-check-icon"></span>
+            Twitter / X
+          </label>
+          <label class="redist-checkbox" data-key="linkedin" onclick="toggleRedist(this)">
+            <input type="checkbox">
+            <span class="redist-check-icon"></span>
+            LinkedIn
+          </label>
+          <label class="redist-checkbox" data-key="instagram" onclick="toggleRedist(this)">
+            <input type="checkbox">
+            <span class="redist-check-icon"></span>
+            Instagram
+          </label>
+          <label class="redist-checkbox" data-key="youtube" onclick="toggleRedist(this)">
+            <input type="checkbox">
+            <span class="redist-check-icon"></span>
+            YouTube
+          </label>
+          <label class="redist-checkbox" data-key="email" onclick="toggleRedist(this)">
+            <input type="checkbox">
+            <span class="redist-check-icon"></span>
+            Email
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-danger" id="modalDeleteBtn" onclick="deleteCard()">Delete</button>
+      <button class="btn-save" onclick="saveCard()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
 <script>
-const AUTH   = 'Basic ' + btoa('ben:collectiveshift');
-const API    = '';
-
-// ── State
-let allCards  = [];
-let activeTab = 'drafts';   // 'drafts' | 'scheduled'
-let filters   = { platform: 'all', date: '' };
-
-const DRAFT_STATUSES     = new Set(['draft', 'pending_review']);
-const SCHEDULED_STATUSES = new Set(['approved', 'scheduled', 'published']);
-
-// ── Boot
-async function loadCards() {
-  try {
-    const res = await fetch(`${API}/api/content/cards`, {
-      headers: { 'Authorization': AUTH }
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    allCards = data.cards || [];
-    updateStats();
-    render();
-  } catch (err) {
-    document.getElementById('content-area').innerHTML = `
-      <div class="state-box">
-        <div class="icon">⚠️</div>
-        <h3>Could not load cards</h3>
-        <p>${escHtml(err.message)}</p>
-      </div>`;
-  }
-}
-
-// ── Stats + tab counts
-function updateStats() {
-  const cards = allCards;
-  const pending   = cards.filter(c => c.status === 'pending_review');
-  const approved  = cards.filter(c => c.status === 'approved');
-  const scheduled = cards.filter(c => c.status === 'scheduled');
-  const published = cards.filter(c => c.status === 'published');
-  const drafts    = cards.filter(c => DRAFT_STATUSES.has(c.status));
-  const sched     = cards.filter(c => SCHEDULED_STATUSES.has(c.status));
-
-  document.getElementById('stat-total').textContent     = cards.length;
-  document.getElementById('stat-pending').textContent   = pending.length;
-  document.getElementById('stat-approved').textContent  = approved.length;
-  document.getElementById('stat-scheduled').textContent = scheduled.length;
-  document.getElementById('stat-published').textContent = published.length;
-
-  document.getElementById('tab-count-drafts').textContent    = drafts.length;
-  document.getElementById('tab-count-scheduled').textContent = sched.length;
-  document.getElementById('tab-count-calendar').textContent  = sched.length;
-
-  const badge = document.getElementById('pending-badge');
-  badge.style.display = 'block';
-  if (pending.length === 0) {
-    badge.className = 'pending-badge zero';
-    badge.textContent = '✓ All clear';
-  } else {
-    badge.className = 'pending-badge';
-    badge.textContent = `${pending.length} pending review`;
-  }
-}
-
-// ── Tab switch
-function switchTab(tab) {
-  activeTab = tab;
-  document.getElementById('tab-drafts').classList.toggle('active', tab === 'drafts');
-  document.getElementById('tab-scheduled').classList.toggle('active', tab === 'scheduled');
-  document.getElementById('tab-calendar').classList.toggle('active', tab === 'calendar');
-  // Show/hide filter bar - calendar has its own nav
-  document.querySelector('.filter-bar').style.display = tab === 'calendar' ? 'none' : '';
-  render();
-}
-
-// ── Filter helpers
-function platformKey(card) { return (card.platform || '').toLowerCase(); }
-
-function matchesPlatform(card) {
-  if (filters.platform === 'all') return true;
-  const p = platformKey(card);
-  if (filters.platform === 'twitter') return p === 'twitter' || p === 'x';
-  return p === filters.platform;
-}
-
-function matchesDate(card) {
-  if (!filters.date) return true;
-  return (card.scheduledDate || '').slice(0, 10) === filters.date;
-}
-
-function getFiltered() {
-  const statusSet = activeTab === 'drafts' ? DRAFT_STATUSES : SCHEDULED_STATUSES;
-  return allCards.filter(c =>
-    statusSet.has(c.status) &&
-    matchesPlatform(c) &&
-    matchesDate(c)
-  );
-}
-
-// ── Render
-function formatDateHeader(dateStr) {
-  if (!dateStr || dateStr === 'unscheduled') return 'Unscheduled';
-  const d = new Date(dateStr + 'T12:00:00');
-  if (isNaN(d)) return dateStr;
-  return d.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-}
-
-function platLabel(card) {
-  const p = platformKey(card);
-  if (p === 'x' || p === 'twitter') return 'Twitter/X';
-  if (p === 'instagram') return 'Instagram';
-  if (p === 'linkedin')  return 'LinkedIn';
-  if (p === 'youtube')   return 'YouTube';
-  return card.platform || 'Unknown';
-}
-
-const STATUS_LABELS = {
-  draft: 'Draft', pending_review: 'Pending Review',
-  approved: 'Approved', scheduled: 'Scheduled',
-  published: 'Published', cancelled: 'Cancelled'
+// ── Config ──
+const AUTH = 'Basic ' + btoa('ben:collectiveshift');
+const API = {
+  cards: '/api/content/cards',
+  update: '/api/content/update',
+  add: '/api/content/add'
 };
 
-function buildCard(card) {
-  const plat = platformKey(card);
-  const isCancelled = card.status === 'cancelled';
-  const isDraft = activeTab === 'drafts';
+// ── State ──
+let cards = [];
+let activeFilter = 'all';
+let activeTab = 'kanban';
+let calDate = new Date();
+let weekDate = new Date();
 
-  // Copy block (truncated preview)
-  const previewText = card.content
-    ? (card.content.length > 200 ? card.content.slice(0, 200) + '...' : card.content)
-    : (card.copy ? (card.copy.length > 200 ? card.copy.slice(0, 200) + '...' : card.copy) : '');
-  const copyBlock = previewText ? `
-    <div class="card-copy">
-      <div class="copy-text">${escHtml(previewText)}</div>
-    </div>` : '';
+// Status mapping for legacy data
+const STATUS_MAP = {
+  pending_review: 'idea',
+  draft: 'idea',
+  Recorded: 'recorded',
+  scheduled: 'approved'
+};
 
-  // CTA
-  const ctaBlock = card.cta
-    ? `<div class="card-cta">🔗 ${escHtml(card.cta)}</div>` : '';
+function normalizeStatus(s) {
+  if (!s) return 'idea';
+  return STATUS_MAP[s] || s;
+}
 
-  // Footer meta
-  const scheduledTime = card.scheduledDate
-    ? new Date(card.scheduledDate).toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit', hour12: true })
-    : '';
-  const metaItems = [];
-  if (scheduledTime) metaItems.push(`🕐 ${scheduledTime}`);
-  metaItems.push(`<span style="color:var(--cs-orange);font-weight:500">Click to view full post →</span>`);
+// ── Fetch Cards ──
+async function fetchCards() {
+  try {
+    const res = await fetch(API.cards, { headers: { Authorization: AUTH } });
+    const data = await res.json();
+    cards = (data.cards || []).map(c => ({
+      ...c,
+      status: normalizeStatus(c.status),
+      redistribute: c.redistribute || { twitter: false, linkedin: false, instagram: false, youtube: false, email: false }
+    }));
+    render();
+  } catch (e) {
+    console.error('Failed to fetch cards:', e);
+    showToast('Failed to load cards', 'error');
+  }
+}
 
-  // Action buttons (drafts tab: show for draft OR pending_review status)
-  const actionBlock = (isDraft && (card.status === 'pending_review' || card.status === 'draft')) ? `
-    <div class="action-btns">
-      <button class="btn-approve" onclick="event.stopPropagation();updateStatus('${card.id}', 'approved', event)">✓ Approve</button>
-      <button class="btn-reject"  onclick="event.stopPropagation();updateStatus('${card.id}', 'cancelled', event)">✕ Reject</button>
-    </div>` : '';
+// ── API Helpers ──
+async function apiUpdate(body) {
+  try {
+    const res = await fetch(API.update, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: AUTH },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error('Update failed');
+    return await res.json();
+  } catch (e) {
+    showToast('Failed to save', 'error');
+    throw e;
+  }
+}
 
-  // Posted checkbox – shown on Scheduled tab for non-cancelled cards
-  const isPublished = card.status === 'published';
-  const postedCheck = (!isDraft && !isCancelled) ? `
-    <label class="posted-checkbox${isPublished ? ' is-posted' : ''}" onclick="event.stopPropagation()" title="${isPublished ? 'Already posted live' : 'Mark as posted live'}">
-      <input type="checkbox" ${isPublished ? 'checked disabled' : ''} onchange="markPosted('${card.id}', this)">
-      ${isPublished ? '✓ Posted' : 'Posted'}
-    </label>` : '';
+async function apiAdd(body) {
+  try {
+    const res = await fetch(API.add, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: AUTH },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error('Add failed');
+    return await res.json();
+  } catch (e) {
+    showToast('Failed to add card', 'error');
+    throw e;
+  }
+}
+
+// ── Render ──
+function render() {
+  renderStats();
+  renderKanban();
+  renderCalendar();
+  renderWeekly();
+}
+
+function filteredCards() {
+  if (activeFilter === 'all') return cards;
+  return cards.filter(c => (c.platform || '').toLowerCase() === activeFilter);
+}
+
+// ── Stats ──
+function renderStats() {
+  const fc = filteredCards();
+  const counts = { idea: 0, approved: 0, recorded: 0, published: 0 };
+  fc.forEach(c => { if (counts[c.status] !== undefined) counts[c.status]++; });
+
+  const bar = document.getElementById('statsBar');
+  bar.innerHTML = [
+    { label: 'Ideas', count: counts.idea, color: 'var(--stage-idea)' },
+    { label: 'Approved', count: counts.approved, color: 'var(--stage-approved)' },
+    { label: 'Recorded', count: counts.recorded, color: 'var(--stage-recorded)' },
+    { label: 'Published', count: counts.published, color: 'var(--stage-published)' },
+  ].map(s => `
+    <div class="stat-pill">
+      <div class="stat-dot" style="background:${s.color}"></div>
+      <span class="stat-num">${s.count}</span>
+      <span class="stat-label">${s.label}</span>
+    </div>
+  `).join('');
+}
+
+// ── Kanban ──
+function renderKanban() {
+  const fc = filteredCards();
+  const statuses = ['idea', 'approved', 'recorded', 'published'];
+
+  statuses.forEach(status => {
+    const col = document.getElementById('col-' + status);
+    const statusCards = fc.filter(c => c.status === status);
+    document.getElementById('count-' + status).textContent = statusCards.length;
+
+    if (statusCards.length === 0) {
+      col.innerHTML = '<div class="empty-col">No cards</div>';
+      return;
+    }
+
+    col.innerHTML = statusCards.map(c => renderKanbanCard(c)).join('');
+  });
+
+  setupDragAndDrop();
+}
+
+function renderKanbanCard(c) {
+  const platform = (c.platform || 'instagram').toLowerCase();
+  const type = (c.type || 'post').toLowerCase();
+  const preview = (c.content || '').split('\n').slice(0, 2).join(' ').substring(0, 120);
+  const date = c.scheduledDate ? formatDate(c.scheduledDate) : '';
+
+  let extra = '';
+
+  if (c.status === 'recorded') {
+    extra = `
+      <div class="k-card-actions">
+        <button class="k-card-action-btn" onclick="event.stopPropagation()">Post manually</button>
+        <button class="k-card-action-btn" onclick="event.stopPropagation()">Send to editor</button>
+      </div>`;
+  }
+
+  if (c.status === 'published') {
+    const rd = c.redistribute || {};
+    const channels = ['twitter', 'linkedin', 'instagram', 'youtube', 'email'];
+    extra = `
+      <div class="k-card-redist">
+        ${channels.map(ch => `
+          <span class="redist-chip ${rd[ch] ? 'active' : ''}"
+                onclick="event.stopPropagation(); toggleCardRedist('${c.id}','${ch}')"
+                title="${ch}">
+            ${rd[ch] ? '&#10003;' : '&#9675;'} ${ch.charAt(0).toUpperCase() + ch.slice(1)}
+          </span>
+        `).join('')}
+      </div>`;
+  }
 
   return `
-    <div class="card status-${card.status}${isCancelled ? ' status-cancelled' : ''}"
-         data-id="${card.id}" data-platform="${plat}" data-status="${card.status}"
-         onclick="openCardModal('${card.id}')">
-      <div class="card-header">
-        <div class="badges">
-          <span class="badge badge-platform ${plat}">${platLabel(card)}</span>
-          ${card.type ? `<span class="badge badge-type">${escHtml(card.type)}</span>` : ''}
-        </div>
-        <span class="status-badge st-${card.status}">${STATUS_LABELS[card.status] || card.status}</span>
+    <div class="k-card" draggable="true" data-id="${c.id}" onclick="openEditModal('${c.id}')">
+      <div class="k-card-top">
+        <div class="k-card-title">${escHtml(c.title || 'Untitled')}</div>
       </div>
-      ${card.title ? `<div class="card-title">${escHtml(card.title)}</div>` : ''}
-      ${copyBlock}
-      ${ctaBlock}
-      <div class="card-footer">
-        <div class="card-meta">${metaItems.join('<span style="color:var(--cs-border)">·</span>')}</div>
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-          ${postedCheck}
-          ${actionBlock}
-        </div>
+      <div class="k-card-badges">
+        <span class="badge badge-${platform}">${platformLabel(platform)}</span>
+        <span class="badge badge-type">${type}</span>
       </div>
+      ${preview ? `<div class="k-card-preview">${escHtml(preview)}</div>` : ''}
+      <div class="k-card-meta">
+        ${date ? `<span class="k-card-date">&#128197; ${date}</span>` : '<span></span>'}
+      </div>
+      ${extra}
     </div>`;
 }
 
-function render() {
-  if (activeTab === 'calendar') { renderCalendar(); return; }
-  const filtered = getFiltered();
-  const area = document.getElementById('content-area');
-
-  if (filtered.length === 0) {
-    const emptyMsg = activeTab === 'drafts'
-      ? 'No drafts or items pending review.'
-      : 'No approved or scheduled content yet.';
-    area.innerHTML = `
-      <div class="state-box">
-        <div class="icon">${activeTab === 'drafts' ? '✏️' : '🗓'}</div>
-        <h3>Nothing here</h3>
-        <p>${emptyMsg}</p>
-      </div>`;
-    return;
-  }
-
-  // Group by date
-  const groups = new Map();
-  for (const card of filtered) {
-    const key = (card.scheduledDate || '').slice(0, 10) || 'unscheduled';
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key).push(card);
-  }
-
-  let html = '';
-  for (const [dateKey, cards] of groups) {
-    const pendingCount = cards.filter(c => c.status === 'pending_review').length;
-    const approveAllBtn = (activeTab === 'drafts' && pendingCount > 0)
-      ? `<button class="approve-all-btn" onclick="approveAllDay('${dateKey}', this)">Approve All (${pendingCount})</button>`
-      : '';
-
-    html += `
-      <div class="date-group" data-date="${dateKey}">
-        <div class="date-header">
-          <div class="date-label">${formatDateHeader(dateKey)}</div>
-          <div class="date-count">${cards.length} card${cards.length !== 1 ? 's' : ''}</div>
-          <div class="date-line"></div>
-          ${approveAllBtn}
-        </div>
-        ${cards.map(buildCard).join('')}
-      </div>`;
-  }
-
-  area.innerHTML = html;
+function platformLabel(p) {
+  const labels = { instagram: 'Instagram', twitter: 'Twitter', x: 'X', linkedin: 'LinkedIn', youtube: 'YouTube' };
+  return labels[p] || p;
 }
 
-// ── Card Modal
-function openCardModal(cardId) {
-  const card = allCards.find(c => c.id === cardId);
+// ── Drag & Drop (Kanban) ──
+function setupDragAndDrop() {
+  document.querySelectorAll('.k-card[draggable]').forEach(card => {
+    card.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', card.dataset.id);
+      e.dataTransfer.setData('source', 'kanban');
+      card.classList.add('dragging');
+    });
+    card.addEventListener('dragend', () => {
+      card.classList.remove('dragging');
+      document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+    });
+  });
+
+  document.querySelectorAll('.col-body').forEach(col => {
+    col.addEventListener('dragover', e => {
+      e.preventDefault();
+      col.classList.add('drag-over');
+    });
+    col.addEventListener('dragleave', () => col.classList.remove('drag-over'));
+    col.addEventListener('drop', e => {
+      e.preventDefault();
+      col.classList.remove('drag-over');
+      const id = e.dataTransfer.getData('text/plain');
+      const newStatus = col.id.replace('col-', '');
+      moveCardStatus(id, newStatus);
+    });
+  });
+}
+
+async function moveCardStatus(id, newStatus) {
+  const card = cards.find(c => c.id === id);
+  if (!card || card.status === newStatus) return;
+
+  const oldStatus = card.status;
+  card.status = newStatus;
+  render();
+
+  try {
+    await apiUpdate({ id, status: newStatus });
+    showToast('Moved to ' + newStatus, 'success');
+  } catch {
+    card.status = oldStatus;
+    render();
+  }
+}
+
+// ── Calendar ──
+function renderCalendar() {
+  const year = calDate.getFullYear();
+  const month = calDate.getMonth();
+  const label = calDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  document.getElementById('calMonthLabel').textContent = label;
+
+  const first = new Date(year, month, 1);
+  const startDay = first.getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const prevDays = new Date(year, month, 0).getDate();
+
+  const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
+
+  // Build card lookup by date
+  const fc = filteredCards();
+  const byDate = {};
+  fc.forEach(c => {
+    if (!c.scheduledDate) return;
+    const d = c.scheduledDate.split('T')[0];
+    if (!byDate[d]) byDate[d] = [];
+    byDate[d].push(c);
+  });
+
+  let html = '';
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  dayNames.forEach(d => { html += `<div class="cal-day-name">${d}</div>`; });
+
+  const totalCells = Math.ceil((startDay + daysInMonth) / 7) * 7;
+
+  for (let i = 0; i < totalCells; i++) {
+    const dayNum = i - startDay + 1;
+    let dateStr, displayNum, otherMonth = false;
+
+    if (dayNum < 1) {
+      displayNum = prevDays + dayNum;
+      const d = new Date(year, month - 1, displayNum);
+      dateStr = d.toISOString().split('T')[0];
+      otherMonth = true;
+    } else if (dayNum > daysInMonth) {
+      displayNum = dayNum - daysInMonth;
+      const d = new Date(year, month + 1, displayNum);
+      dateStr = d.toISOString().split('T')[0];
+      otherMonth = true;
+    } else {
+      displayNum = dayNum;
+      const d = new Date(year, month, dayNum);
+      dateStr = d.toISOString().split('T')[0];
+    }
+
+    const isToday = dateStr === todayStr;
+    const dayCards = byDate[dateStr] || [];
+
+    html += `<div class="cal-day ${otherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''}"
+                  data-date="${dateStr}"
+                  ondragover="event.preventDefault(); this.classList.add('drag-over')"
+                  ondragleave="this.classList.remove('drag-over')"
+                  ondrop="calDrop(event, '${dateStr}')">
+      <div class="cal-day-num">${displayNum}</div>
+      ${dayCards.map(c => `
+        <div class="cal-card plat-${(c.platform || '').toLowerCase()}"
+             draggable="true"
+             data-id="${c.id}"
+             onclick="openEditModal('${c.id}')"
+             ondragstart="event.dataTransfer.setData('text/plain','${c.id}'); event.dataTransfer.setData('source','calendar')">
+          ${escHtml(c.title || 'Untitled')}
+        </div>
+      `).join('')}
+    </div>`;
+  }
+
+  document.getElementById('calendarGrid').innerHTML = html;
+}
+
+async function calDrop(e, dateStr) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  const id = e.dataTransfer.getData('text/plain');
+  const card = cards.find(c => c.id === id);
   if (!card) return;
 
-  const plat = platformKey(card);
-  const isDraft = DRAFT_STATUSES.has(card.status);
-  const isPending = card.status === 'pending_review' || card.status === 'draft';
+  const old = card.scheduledDate;
+  card.scheduledDate = dateStr;
+  render();
 
-  // Build full content display
-  const fullContent = card.content || card.copy || 'No content available for this card yet.';
-
-  // Parse sections from content if it has headers
-  let contentHtml = '';
-  const sections = fullContent.split(/\n---\n/);
-  if (sections.length > 1) {
-    sections.forEach(section => {
-      const trimmed = section.trim();
-      if (!trimmed) return;
-      contentHtml += `<div class="modal-section"><div class="modal-content">${escHtml(trimmed)}</div></div>`;
-    });
-  } else {
-    contentHtml = `<div class="modal-section"><div class="modal-content">${escHtml(fullContent)}</div></div>`;
+  try {
+    await apiUpdate({ id, scheduledDate: dateStr });
+    showToast('Rescheduled to ' + formatDate(dateStr), 'success');
+  } catch {
+    card.scheduledDate = old;
+    render();
   }
+}
 
-  // CTA section
-  const ctaHtml = card.cta ? `
-    <div class="modal-section">
-      <div class="modal-section-title">CALL TO ACTION</div>
-      <div class="modal-cta-badge">🔗 ManyChat keyword: ${escHtml(card.cta)}</div>
-    </div>` : '';
+function calNav(dir) {
+  calDate.setMonth(calDate.getMonth() + dir);
+  renderCalendar();
+}
 
-  // Action buttons
-  let actionsHtml = `<div class="modal-actions">`;
-  actionsHtml += `<button class="modal-btn modal-btn-copy" onclick="copyCardContent('${cardId}', this)">📋 Copy Full Content</button>`;
-  if (isPending) {
-    actionsHtml += `<button class="modal-btn modal-btn-approve" onclick="updateStatus('${cardId}', 'approved', event);closeModal()">✓ Approve</button>`;
-    actionsHtml += `<button class="modal-btn modal-btn-reject" onclick="updateStatus('${cardId}', 'cancelled', event);closeModal()">✕ Reject</button>`;
-  }
-  actionsHtml += `</div>`;
+// ── Weekly ──
+function renderWeekly() {
+  const start = getWeekStart(weekDate);
+  const end = new Date(start);
+  end.setDate(end.getDate() + 6);
 
-  const modalHtml = `
-    <div class="modal-stripe ${plat}"></div>
-    <div class="modal-header">
-      <div>
-        <div class="modal-title">${escHtml(card.title || 'Untitled')}</div>
-        <div class="modal-meta">
-          <span class="badge badge-platform ${plat}">${platLabel(card)}</span>
-          ${card.type ? `<span class="badge badge-type">${escHtml(card.type)}</span>` : ''}
-          <span class="status-badge st-${card.status}">${STATUS_LABELS[card.status] || card.status}</span>
-          ${card.scheduledDate ? `<span style="font-size:12px;color:var(--cs-muted)">📅 ${formatDateHeader(card.scheduledDate.slice(0,10))}</span>` : ''}
+  const startLabel = start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const endLabel = end.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  document.getElementById('weekLabel').textContent = startLabel + ' – ' + endLabel;
+
+  const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
+
+  const fc = filteredCards();
+  const byDate = {};
+  fc.forEach(c => {
+    if (!c.scheduledDate) return;
+    const d = c.scheduledDate.split('T')[0];
+    if (!byDate[d]) byDate[d] = [];
+    byDate[d].push(c);
+  });
+
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  let html = '';
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(start);
+    d.setDate(d.getDate() + i);
+    const dateStr = d.toISOString().split('T')[0];
+    const isToday = dateStr === todayStr;
+    const dayCards = byDate[dateStr] || [];
+
+    html += `
+      <div class="weekly-col ${isToday ? 'today' : ''}">
+        <div class="weekly-col-header">
+          <div class="weekly-day-name">${dayNames[d.getDay()]}</div>
+          <div class="weekly-day-num">${d.getDate()}</div>
         </div>
-      </div>
-      <div class="modal-close" onclick="closeModal()">✕</div>
-    </div>
-    <div class="modal-body">
-      ${contentHtml}
-      ${ctaHtml}
-    </div>
-    ${actionsHtml}
-  `;
+        <div class="weekly-col-body" data-date="${dateStr}"
+             ondragover="event.preventDefault(); this.classList.add('drag-over')"
+             ondragleave="this.classList.remove('drag-over')"
+             ondrop="weekDrop(event, '${dateStr}')">
+          ${dayCards.map(c => `
+            <div class="weekly-card" data-id="${c.id}"
+                 draggable="true"
+                 onclick="openEditModal('${c.id}')"
+                 ondragstart="event.dataTransfer.setData('text/plain','${c.id}')">
+              <div class="weekly-card-title">${escHtml(c.title || 'Untitled')}</div>
+              <span class="weekly-card-badge badge-${(c.platform || '').toLowerCase()}">${platformLabel(c.platform || '')}</span>
+            </div>
+          `).join('')}
+          ${dayCards.length === 0 ? '<div class="empty-col" style="padding:20px 0">—</div>' : ''}
+        </div>
+      </div>`;
+  }
 
-  document.getElementById('cardModal').innerHTML = modalHtml;
+  document.getElementById('weeklyGrid').innerHTML = html;
+}
+
+async function weekDrop(e, dateStr) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  const id = e.dataTransfer.getData('text/plain');
+  const card = cards.find(c => c.id === id);
+  if (!card) return;
+
+  const old = card.scheduledDate;
+  card.scheduledDate = dateStr;
+  render();
+
+  try {
+    await apiUpdate({ id, scheduledDate: dateStr });
+    showToast('Rescheduled to ' + formatDate(dateStr), 'success');
+  } catch {
+    card.scheduledDate = old;
+    render();
+  }
+}
+
+function weekNav(dir) {
+  weekDate.setDate(weekDate.getDate() + (dir * 7));
+  renderWeekly();
+}
+
+function getWeekStart(d) {
+  const s = new Date(d);
+  s.setDate(s.getDate() - s.getDay());
+  s.setHours(0, 0, 0, 0);
+  return s;
+}
+
+// ── Modal ──
+function openEditModal(id) {
+  const card = cards.find(c => c.id === id);
+  if (!card) return;
+
+  document.getElementById('m-id').value = card.id;
+  document.getElementById('m-title').value = card.title || '';
+  document.getElementById('m-content').value = card.content || '';
+  document.getElementById('m-copy').value = card.copy || '';
+  document.getElementById('m-cta').value = card.cta || '';
+  document.getElementById('m-platform').value = (card.platform || 'instagram').toLowerCase();
+  document.getElementById('m-type').value = (card.type || 'post').toLowerCase();
+  document.getElementById('m-status').value = card.status || 'idea';
+  document.getElementById('m-scheduledDate').value = card.scheduledDate ? card.scheduledDate.split('T')[0] : '';
+
+  // Redistribution
+  const rd = card.redistribute || {};
+  document.querySelectorAll('#m-redist .redist-checkbox').forEach(el => {
+    const key = el.dataset.key;
+    const checked = !!rd[key];
+    el.querySelector('input').checked = checked;
+    el.classList.toggle('checked', checked);
+    updateCheckIcon(el, checked);
+  });
+
+  document.getElementById('modalTitle').textContent = 'Edit Card';
+  document.getElementById('modalDeleteBtn').style.display = '';
   document.getElementById('modalOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  autoResizeTextarea(document.getElementById('m-content'));
+}
+
+function openNewCardModal() {
+  document.getElementById('m-id').value = '';
+  document.getElementById('m-title').value = '';
+  document.getElementById('m-content').value = '';
+  document.getElementById('m-copy').value = '';
+  document.getElementById('m-cta').value = '';
+  document.getElementById('m-platform').value = 'instagram';
+  document.getElementById('m-type').value = 'reel';
+  document.getElementById('m-status').value = 'idea';
+  document.getElementById('m-scheduledDate').value = '';
+
+  document.querySelectorAll('#m-redist .redist-checkbox').forEach(el => {
+    el.querySelector('input').checked = false;
+    el.classList.remove('checked');
+    updateCheckIcon(el, false);
+  });
+
+  document.getElementById('modalTitle').textContent = 'New Card';
+  document.getElementById('modalDeleteBtn').style.display = 'none';
+  document.getElementById('modalOverlay').classList.add('open');
 }
 
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('open');
-  document.body.style.overflow = '';
 }
 
-function copyCardContent(cardId, btn) {
-  const card = allCards.find(c => c.id === cardId);
-  if (!card) return;
-  const text = card.content || card.copy || '';
-  navigator.clipboard.writeText(text).then(() => {
-    btn.classList.add('copied');
-    btn.textContent = '✓ Copied!';
-    setTimeout(() => {
-      btn.classList.remove('copied');
-      btn.textContent = '📋 Copy Full Content';
-    }, 2000);
+function closeModalOverlay(e) {
+  if (e.target === e.currentTarget) closeModal();
+}
+
+function toggleRedist(el) {
+  const input = el.querySelector('input');
+  input.checked = !input.checked;
+  el.classList.toggle('checked', input.checked);
+  updateCheckIcon(el, input.checked);
+}
+
+function updateCheckIcon(el, checked) {
+  el.querySelector('.redist-check-icon').innerHTML = checked ? '&#10003;' : '';
+}
+
+async function saveCard() {
+  const id = document.getElementById('m-id').value;
+  const data = {
+    title: document.getElementById('m-title').value,
+    content: document.getElementById('m-content').value,
+    copy: document.getElementById('m-copy').value,
+    cta: document.getElementById('m-cta').value,
+    platform: document.getElementById('m-platform').value,
+    type: document.getElementById('m-type').value,
+    status: document.getElementById('m-status').value,
+    scheduledDate: document.getElementById('m-scheduledDate').value || null
+  };
+
+  // Redistribution
+  const redistribute = {};
+  document.querySelectorAll('#m-redist .redist-checkbox').forEach(el => {
+    redistribute[el.dataset.key] = el.querySelector('input').checked;
   });
-}
-
-// Close modal on overlay click or Escape
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-// ── Update single card status
-async function updateStatus(cardId, newStatus, e) {
-  const cardEl = document.querySelector(`.card[data-id="${cardId}"]`);
-  const btns = cardEl ? cardEl.querySelectorAll('button') : [];
-  btns.forEach(b => b.disabled = true);
+  data.redistribute = redistribute;
 
   try {
-    const res = await fetch(`${API}/api/content/status`, {
-      method: 'POST',
-      headers: { 'Authorization': AUTH, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: cardId, status: newStatus })
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-    const card = allCards.find(c => c.id === cardId);
-    if (card) card.status = newStatus;
-
-    toast(
-      newStatus === 'approved' ? '✓ Card approved - moved to Scheduled.' : '✕ Card rejected.',
-      newStatus === 'approved' ? 'success' : 'info'
-    );
-
-    updateStats();
-    render();
-  } catch (err) {
-    btns.forEach(b => b.disabled = false);
-    toast(`Failed: ${err.message}`, 'error');
-  }
-}
-
-// ── Approve all in a date group
-async function approveAllDay(dateKey, btn) {
-  btn.disabled = true;
-  const origText = btn.textContent;
-  btn.textContent = 'Approving…';
-
-  const pending = allCards.filter(c =>
-    c.status === 'pending_review' &&
-    (c.scheduledDate || '').slice(0, 10) === dateKey
-  );
-
-  let ok = 0;
-  for (const card of pending) {
-    try {
-      const res = await fetch(`${API}/api/content/status`, {
-        method: 'POST',
-        headers: { 'Authorization': AUTH, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: card.id, status: 'approved' })
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      card.status = 'approved';
-      ok++;
-    } catch (err) {
-      toast(`Error on "${card.title || card.id}": ${err.message}`, 'error');
+    if (id) {
+      data.id = id;
+      await apiUpdate(data);
+      const idx = cards.findIndex(c => c.id === id);
+      if (idx >= 0) Object.assign(cards[idx], data);
+    } else {
+      data.id = 'card_' + Date.now();
+      const res = await apiAdd(data);
+      if (res && res.card) {
+        cards.push({ ...data, ...res.card, status: normalizeStatus(data.status) });
+      } else {
+        cards.push(data);
+      }
     }
-  }
 
-  if (ok > 0) {
-    toast(`✓ Approved ${ok} card${ok !== 1 ? 's' : ''} - moved to Scheduled.`, 'success');
-    updateStats();
+    closeModal();
     render();
-  } else {
-    btn.disabled = false;
-    btn.textContent = origText;
+    showToast('Saved!', 'success');
+  } catch (e) {
+    // toast already shown by apiUpdate/apiAdd
   }
 }
 
-// ── Filter listeners
-document.querySelectorAll('[data-filter="platform"]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('[data-filter="platform"]').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    filters.platform = btn.dataset.value;
+async function deleteCard() {
+  const id = document.getElementById('m-id').value;
+  if (!id || !confirm('Delete this card?')) return;
+
+  try {
+    await apiUpdate({ id, status: 'deleted' });
+    cards = cards.filter(c => c.id !== id);
+    closeModal();
     render();
-  });
-});
-
-document.getElementById('date-filter').addEventListener('change', e => {
-  filters.date = e.target.value;
-  document.getElementById('clear-date-btn').style.display = filters.date ? '' : 'none';
-  render();
-});
-
-document.getElementById('clear-date-btn').addEventListener('click', () => {
-  filters.date = '';
-  document.getElementById('date-filter').value = '';
-  document.getElementById('clear-date-btn').style.display = 'none';
-  render();
-});
-
-// ── Toast
-function toast(msg, type = 'info', ms = 3500) {
-  const c = document.getElementById('toast-container');
-  const el = document.createElement('div');
-  el.className = `toast ${type}`;
-  el.textContent = msg;
-  c.appendChild(el);
-  setTimeout(() => {
-    el.style.transition = 'opacity 0.3s';
-    el.style.opacity = '0';
-    setTimeout(() => el.remove(), 350);
-  }, ms);
+    showToast('Deleted', 'success');
+  } catch (e) {
+    // toast already shown
+  }
 }
 
-// ── HTML escape
+// ── Toggle redistribution from card chip ──
+async function toggleCardRedist(id, channel) {
+  const card = cards.find(c => c.id === id);
+  if (!card) return;
+  if (!card.redistribute) card.redistribute = {};
+  card.redistribute[channel] = !card.redistribute[channel];
+  render();
+
+  try {
+    await apiUpdate({ id, redistribute: card.redistribute });
+  } catch {
+    card.redistribute[channel] = !card.redistribute[channel];
+    render();
+  }
+}
+
+// ── Tabs ──
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.view-container').forEach(v => v.classList.toggle('active', v.id === 'view-' + tab));
+  render();
+}
+
+// ── Filters ──
+function filterPlatform(platform) {
+  activeFilter = platform;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.platform === platform));
+  render();
+}
+
+// ── Helpers ──
+function formatDate(d) {
+  if (!d) return '';
+  const date = new Date(d + (d.includes('T') ? '' : 'T00:00:00'));
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
 function escHtml(s) {
-  return String(s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;')
-    .replace(/'/g,'&#039;');
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
 }
 
-// ── Mark Posted
-async function markPosted(cardId, checkbox) {
-  if (!checkbox.checked) return;
-  checkbox.disabled = true;
-
-  try {
-    const res = await fetch(`${API}/api/content/status`, {
-      method: 'POST',
-      headers: { 'Authorization': AUTH, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: cardId, status: 'published' })
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-    const card = allCards.find(c => c.id === cardId);
-    if (card) card.status = 'published';
-
-    toast('✓ Marked as posted live!', 'success');
-    updateStats();
-    render();
-  } catch (err) {
-    checkbox.checked = false;
-    checkbox.disabled = false;
-    toast(`Failed: ${err.message}`, 'error');
-  }
+function autoResizeTextarea(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.max(120, el.scrollHeight) + 'px';
 }
 
-// ── Calendar
-let calYear   = new Date().getFullYear();
-let calMonth  = new Date().getMonth(); // 0-indexed
-let dragCardId = null;
-
-const PLAT_COLORS = {
-  instagram: '#E4405F', twitter: '#1DA1F2', x: '#1DA1F2',
-  linkedin: '#0A66C2', youtube: '#FF0000', email: '#10B981'
-};
-
-function renderCalendar() {
-  const area = document.getElementById('content-area');
-  const today = new Date();
-  const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-
-  const firstDay = new Date(calYear, calMonth, 1);
-  const lastDay  = new Date(calYear, calMonth + 1, 0);
-  const monthName = firstDay.toLocaleDateString('en-AU', { month: 'long', year: 'numeric' });
-
-  // Build date → cards map (all scheduled-family statuses with a date)
-  const calCards = allCards.filter(c => SCHEDULED_STATUSES.has(c.status) && c.scheduledDate);
-  const cardsByDate = {};
-  for (const card of calCards) {
-    const d = (card.scheduledDate || '').slice(0, 10);
-    if (!cardsByDate[d]) cardsByDate[d] = [];
-    cardsByDate[d].push(card);
-  }
-
-  // Mon-first layout: Sunday (0) becomes index 6, Mon (1) becomes index 0
-  let startDow = (firstDay.getDay() + 6) % 7;
-
-  let cellsHtml = '';
-
-  // Empty leading cells
-  for (let i = 0; i < startDow; i++) {
-    cellsHtml += `<div class="cal-cell cal-empty"></div>`;
-  }
-
-  for (let d = 1; d <= lastDay.getDate(); d++) {
-    const mm = String(calMonth + 1).padStart(2, '0');
-    const dd = String(d).padStart(2, '0');
-    const dateStr = `${calYear}-${mm}-${dd}`;
-    const isToday = dateStr === todayStr;
-    const dayCards = cardsByDate[dateStr] || [];
-
-    const cardsHtml = dayCards.map(card => {
-      const plat = platformKey(card);
-      const color = PLAT_COLORS[plat] || '#807F86';
-      const pub = card.status === 'published';
-      const platShort = (card.platform || 'XX').slice(0, 2).toUpperCase();
-      const titleText = escHtml((card.title || card.platform || 'Untitled').slice(0, 30));
-      return `<div class="cal-card${pub ? ' cal-card-published' : ''}"
-        draggable="true"
-        data-id="${card.id}"
-        style="border-left-color:${color}"
-        ondragstart="calDragStart(event)"
-        ondragend="calDragEnd(event)"
-        onclick="event.stopPropagation();openCardModal('${card.id}')"
-        title="${escHtml(card.title || platShort)}"
-      ><span class="cal-card-plat" style="background:${color}">${platShort}</span><span class="cal-card-title-text">${titleText}</span>${pub ? '<span class="cal-posted-badge">✓</span>' : ''}</div>`;
-    }).join('');
-
-    cellsHtml += `<div class="cal-cell${isToday ? ' cal-today' : ''}"
-      data-date="${dateStr}"
-      ondragover="event.preventDefault();event.dataTransfer.dropEffect='move'"
-      ondragenter="calDragEnter(event)"
-      ondragleave="calDragLeave(event)"
-      ondrop="calDrop(event,'${dateStr}')"
-    ><div class="cal-day-num">${d}</div><div class="cal-cards-list">${cardsHtml}</div></div>`;
-  }
-
-  area.innerHTML = `
-    <div class="calendar-wrap">
-      <div class="calendar-nav">
-        <button class="cal-nav-btn" onclick="changeMonth(-1)">← Prev</button>
-        <div class="cal-month-label">${monthName}</div>
-        <button class="cal-nav-btn" onclick="changeMonth(1)">Next →</button>
-      </div>
-      <div class="calendar-grid">
-        <div class="cal-dow">Mon</div>
-        <div class="cal-dow">Tue</div>
-        <div class="cal-dow">Wed</div>
-        <div class="cal-dow">Thu</div>
-        <div class="cal-dow">Fri</div>
-        <div class="cal-dow">Sat</div>
-        <div class="cal-dow">Sun</div>
-        ${cellsHtml}
-      </div>
-    </div>`;
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type + ' show';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-function changeMonth(dir) {
-  calMonth += dir;
-  if (calMonth < 0)  { calMonth = 11; calYear--; }
-  if (calMonth > 11) { calMonth = 0;  calYear++; }
-  renderCalendar();
-}
+// Auto-resize script textarea on input
+document.getElementById('m-content').addEventListener('input', function() {
+  autoResizeTextarea(this);
+});
 
-function calDragStart(event) {
-  dragCardId = event.currentTarget.dataset.id;
-  event.currentTarget.classList.add('cal-card-dragging');
-  event.dataTransfer.effectAllowed = 'move';
-  event.dataTransfer.setData('text/plain', dragCardId);
-}
+// Keyboard shortcut: Escape closes modal
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
 
-function calDragEnd(event) {
-  event.currentTarget.classList.remove('cal-card-dragging');
-}
-
-function calDragEnter(event) {
-  const cell = event.currentTarget;
-  if (!cell.classList.contains('cal-empty')) {
-    cell.classList.add('cal-drop-target');
-  }
-}
-
-function calDragLeave(event) {
-  if (!event.currentTarget.contains(event.relatedTarget)) {
-    event.currentTarget.classList.remove('cal-drop-target');
-  }
-}
-
-async function calDrop(event, newDate) {
-  event.currentTarget.classList.remove('cal-drop-target');
-  if (!dragCardId) return;
-
-  const card = allCards.find(c => c.id === dragCardId);
-  if (!card) { dragCardId = null; return; }
-
-  const oldDate = (card.scheduledDate || '').slice(0, 10);
-  if (oldDate === newDate) { dragCardId = null; return; }
-
-  // Optimistic update
-  card.scheduledDate = newDate;
-  renderCalendar();
-
-  try {
-    const res = await fetch(`${API}/api/content/update`, {
-      method: 'POST',
-      headers: { 'Authorization': AUTH, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: dragCardId, scheduledDate: newDate })
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    toast(`📅 Rescheduled to ${newDate}`, 'success');
-    updateStats();
-  } catch (err) {
-    // Revert
-    card.scheduledDate = oldDate;
-    renderCalendar();
-    toast(`Failed to reschedule: ${err.message}`, 'error');
-  }
-  dragCardId = null;
-}
-
-// ── Go
-loadCards();
+// ── Init ──
+fetchCards();
 </script>
 </body>
 </html>
