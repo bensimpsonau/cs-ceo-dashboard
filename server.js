@@ -115,9 +115,14 @@ async function pushFileToGitHub(filePath, content, commitMessage) {
   const repo = 'bensimpsonau/cs-ceo-dashboard';
   const branch = 'main';
   // Determine the relative path in the repo
-  const repoPath = filePath.includes('content-board-data') 
-    ? 'public/content-board-data.json'
-    : 'public/tasks.json';
+  let repoPath;
+  if (typeof filePath === 'string' && filePath.startsWith('public/')) {
+    repoPath = filePath;
+  } else if (filePath.includes('content-board-data')) {
+    repoPath = 'public/content-board-data.json';
+  } else {
+    repoPath = 'public/tasks.json';
+  }
   const apiUrl = `https://api.github.com/repos/${repo}/contents/${repoPath}`;
   
   try {
@@ -137,7 +142,8 @@ async function pushFileToGitHub(filePath, content, commitMessage) {
     
     const fileData = await getRes.json();
     const sha = fileData.sha;
-    const encodedContent = Buffer.from(JSON.stringify(content, null, 2)).toString('base64');
+    const rawContent = typeof content === 'string' ? content : JSON.stringify(content, null, 2);
+    const encodedContent = Buffer.from(rawContent).toString('base64');
     
     // Update file via GitHub API
     const putRes = await fetch(apiUrl, {
@@ -404,6 +410,28 @@ app.post('/api/content/update', async (req, res) => {
 // GET /api/content/cards
 app.get('/api/content/cards', (req, res) => {
   res.json(contentBoard);
+});
+
+// POST /api/push-file — push a static file to GitHub (uses server's GITHUB_TOKEN)
+app.post('/api/push-file', async (req, res) => {
+  const { path: filePath, content, message } = req.body;
+  if (!filePath || !content) {
+    return res.status(400).json({ success: false, error: 'path and content required' });
+  }
+  // Only allow public/ files for safety
+  if (!filePath.startsWith('public/') || filePath.includes('..')) {
+    return res.status(400).json({ success: false, error: 'path must start with public/ and not contain ..' });
+  }
+  // Write locally
+  const localPath = require('path').join(__dirname, filePath);
+  fs.writeFileSync(localPath, content);
+  // Push to GitHub
+  try {
+    await pushFileToGitHub(filePath, content, message || `Auto-sync: ${filePath} updated`);
+    res.json({ success: true, path: filePath, size: content.length });
+  } catch (err) {
+    res.json({ success: true, path: filePath, size: content.length, githubSync: 'failed: ' + err.message });
+  }
 });
 
 // ═══════════════════════════════════════════
