@@ -11,12 +11,12 @@
   --orange: #FC5C03;
   --dark-bg: #1B1925;
   --deeper-dark: #0D0B14;
-  --card-bg: #252530;
+  --card-bg: #242232;
   --card-border: #3A3A3A;
   --text: #E8E8EA;
   --muted: #807F86;
-  --green: #08C394;
-  --red: #FF0A00;
+  --green: #34D399;
+  --red: #EF4444;
   --blue: #3B82F6;
   --purple: #A855F7;
   --teal: #0BF4B9;
@@ -26,6 +26,7 @@
   --ig-pink: #E4405F;
   --li-blue: #0A66C2;
   --tw-blue: #1DA1F2;
+  --tk-black: #010101;
   --sidebar-w: 220px;
 }
 
@@ -63,11 +64,15 @@ body { font-family: 'Inter', sans-serif; background: var(--deeper-dark); color: 
 .stats-row { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
 .stat-card {
   flex: 1; min-width: 160px; background: var(--card-bg); border: 1px solid var(--card-border);
-  border-radius: 12px; padding: 20px; position: relative;
+  border-radius: 12px; padding: 20px; position: relative; cursor: pointer; transition: border-color .15s;
 }
+.stat-card:hover { border-color: var(--orange); }
 .stat-card .label { font-size: 12px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
 .stat-card .value { font-size: 28px; font-weight: 700; }
 .stat-card .sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.stat-card .change { font-size: 11px; margin-top: 4px; font-weight: 500; }
+.stat-card .change.up { color: var(--green); }
+.stat-card .change.down { color: var(--red); }
 
 /* ── Platform Tabs ── */
 .platform-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
@@ -85,25 +90,29 @@ body { font-family: 'Inter', sans-serif; background: var(--deeper-dark); color: 
 .chart-card canvas { width: 100% !important; max-height: 250px; }
 
 /* ── Section Titles ── */
-.section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+.section-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
 .section-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
 
 /* ── Pipeline / Kanban ── */
-.pipeline-filters { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.pipeline-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+.pipeline-filters { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 .pipeline-filters select {
   background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 6px 12px;
   color: var(--text); font-size: 12px; font-family: inherit;
 }
 .kanban { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 16px; min-height: 400px; }
 .kanban-col {
-  min-width: 220px; width: 220px; flex-shrink: 0; background: var(--dark-bg); border-radius: 12px;
+  min-width: 210px; width: 210px; flex-shrink: 0; background: var(--dark-bg); border-radius: 12px;
   border: 1px solid var(--card-border); display: flex; flex-direction: column;
 }
 .kanban-col-header {
   padding: 12px 14px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px;
-  border-bottom: 1px solid var(--card-border); display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid var(--card-border); display: flex; align-items: center; justify-content: space-between;
 }
+.kanban-col-header .left { display: flex; align-items: center; gap: 8px; }
 .kanban-col-header .count { background: var(--card-bg); border-radius: 100px; padding: 2px 8px; font-size: 10px; color: var(--muted); }
+.kanban-col-header .add-col-btn { background: none; border: none; color: var(--muted); font-size: 16px; cursor: pointer; padding: 0 4px; transition: color .15s; }
+.kanban-col-header .add-col-btn:hover { color: var(--orange); }
 .kanban-cards { padding: 8px; flex: 1; overflow-y: auto; min-height: 60px; }
 .kanban-card {
   background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 10px 12px;
@@ -111,14 +120,20 @@ body { font-family: 'Inter', sans-serif; background: var(--deeper-dark); color: 
 }
 .kanban-card:active { cursor: grabbing; }
 .kanban-card.dragging { opacity: .5; transform: rotate(2deg); }
-.kanban-card .card-platform { font-size: 14px; margin-bottom: 4px; }
+.kanban-card .card-platform { font-size: 14px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
 .kanban-card .card-title { font-weight: 500; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 6px; }
 .kanban-card .card-meta { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-.kanban-card .badge {
-  font-size: 10px; padding: 2px 8px; border-radius: 100px; font-weight: 500;
-}
+.kanban-card .badge { font-size: 10px; padding: 2px 8px; border-radius: 100px; font-weight: 500; }
 .kanban-card .card-due { font-size: 10px; color: var(--muted); }
 .kanban-card .card-due.overdue { color: var(--red); font-weight: 600; }
+.kanban-card .card-assignee { font-size: 10px; color: var(--muted); display: flex; align-items: center; gap: 3px; }
+
+/* Platform border accent */
+.kanban-card[data-platform="twitter"] { border-left: 3px solid var(--tw-blue); }
+.kanban-card[data-platform="linkedin"] { border-left: 3px solid var(--li-blue); }
+.kanban-card[data-platform="instagram"] { border-left: 3px solid var(--ig-pink); }
+.kanban-card[data-platform="youtube"] { border-left: 3px solid var(--yt-red); }
+.kanban-card[data-platform="tiktok"] { border-left: 3px solid var(--tk-black); }
 
 /* Type badges */
 .badge-reel { background: rgba(168,85,247,.15); color: #A855F7; }
@@ -126,6 +141,7 @@ body { font-family: 'Inter', sans-serif; background: var(--deeper-dark); color: 
 .badge-video { background: rgba(255,0,0,.15); color: #FF6666; }
 .badge-carousel { background: rgba(236,72,153,.15); color: #EC4899; }
 .badge-thread { background: rgba(11,244,185,.15); color: #0BF4B9; }
+.badge-short { background: rgba(1,1,1,.3); color: #E8E8EA; }
 
 /* ── Calendar ── */
 .cal-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
@@ -139,9 +155,9 @@ body { font-family: 'Inter', sans-serif; background: var(--deeper-dark); color: 
 .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--card-border); border-radius: 12px; overflow: hidden; }
 .cal-day-header { background: var(--dark-bg); padding: 10px; text-align: center; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; }
 .cal-day {
-  background: var(--card-bg); min-height: 100px; padding: 8px; position: relative; cursor: pointer; transition: background .15s;
+  background: var(--card-bg); min-height: 110px; padding: 8px; position: relative; cursor: pointer; transition: background .15s;
 }
-.cal-day:hover { background: #2d2d3d; }
+.cal-day:hover { background: #2d2b3d; }
 .cal-day.today { box-shadow: inset 0 0 0 2px var(--orange); }
 .cal-day.other-month { opacity: .3; }
 .cal-day .day-num { font-size: 12px; font-weight: 500; margin-bottom: 6px; color: var(--muted); }
@@ -154,15 +170,25 @@ body { font-family: 'Inter', sans-serif; background: var(--deeper-dark); color: 
 .cal-card.plat-instagram { border-left-color: var(--ig-pink); }
 .cal-card.plat-linkedin { border-left-color: var(--li-blue); }
 .cal-card.plat-twitter { border-left-color: var(--tw-blue); }
+.cal-card.plat-tiktok { border-left-color: var(--tk-black); }
 
 /* ── Weekly Planner ── */
 .planner-section { margin-bottom: 24px; }
-.progress-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.planner-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.progress-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 24px; }
 .progress-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 16px; }
 .progress-card .plat-label { font-size: 12px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
 .progress-bar { height: 8px; background: var(--card-border); border-radius: 100px; overflow: hidden; margin-bottom: 6px; }
 .progress-fill { height: 100%; border-radius: 100px; transition: width .3s; }
 .progress-text { font-size: 11px; color: var(--muted); }
+.progress-card.behind { border-color: var(--red); }
+.progress-card.on-track { border-color: var(--green); }
+
+.missing-section { background: var(--card-bg); border: 1px solid var(--red); border-radius: 12px; padding: 16px; margin-bottom: 24px; }
+.missing-section h4 { font-size: 13px; font-weight: 600; color: var(--red); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.missing-item { font-size: 12px; padding: 6px 0; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; }
+.missing-item:last-child { border-bottom: none; }
+
 .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-bottom: 16px; }
 .week-day {
   background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; min-height: 120px;
@@ -195,6 +221,11 @@ body { font-family: 'Inter', sans-serif; background: var(--deeper-dark); color: 
 .settings-card .platform-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--card-border); font-size: 13px; }
 .settings-card .platform-row:last-child { border-bottom: none; }
 .settings-card .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+.sync-status { display: flex; align-items: center; gap: 8px; padding: 10px 0; font-size: 12px; }
+.sync-status .sync-dot { width: 10px; height: 10px; border-radius: 50%; }
+.sync-status .sync-dot.connected { background: var(--green); }
+.sync-status .sync-dot.disconnected { background: var(--red); }
+
 .btn-primary {
   background: var(--orange); color: #fff; border: none; border-radius: 8px; padding: 10px 20px;
   font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity .15s;
@@ -227,10 +258,14 @@ body { font-family: 'Inter', sans-serif; background: var(--deeper-dark); color: 
 .redistribution-checks { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
 .redistribution-checks label { display: flex; align-items: center; gap: 4px; color: var(--text); font-size: 12px; margin: 0; }
 
-/* ── Loading ── */
+/* ── Loading / Toast ── */
 .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid var(--card-border); border-top-color: var(--orange); border-radius: 50%; animation: spin .6s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+.toast { position: fixed; bottom: 24px; right: 24px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 20px; font-size: 13px; z-index: 400; opacity: 0; transform: translateY(10px); transition: all .3s; }
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.success { border-color: var(--green); }
+.toast.error { border-color: var(--red); }
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
@@ -273,31 +308,33 @@ body { font-family: 'Inter', sans-serif; background: var(--deeper-dark); color: 
 <!-- ═══════════ TAB: ANALYTICS ═══════════ -->
 <div id="tab-analytics" class="tab-content active">
   <h1 class="section-title">Analytics Overview</h1>
-  <p class="section-subtitle">Content pipeline & social media performance</p>
+  <p class="section-subtitle">30-day social media performance across all platforms</p>
 
-  <!-- Pipeline Summary -->
-  <div class="stats-row" id="pipeline-stats"></div>
-
-  <!-- Audience Summary -->
-  <div class="stats-row" id="audience-stats"></div>
+  <!-- Summary Cards -->
+  <div class="stats-row" id="analytics-summary"></div>
 
   <!-- Platform Tabs -->
   <div class="platform-tabs" id="analytics-platform-tabs">
     <div class="platform-tab active" data-platform="summary">Summary</div>
-    <div class="platform-tab" data-platform="youtube">YouTube</div>
-    <div class="platform-tab" data-platform="instagram">Instagram</div>
     <div class="platform-tab" data-platform="twitter">X / Twitter</div>
     <div class="platform-tab" data-platform="linkedin">LinkedIn</div>
+    <div class="platform-tab" data-platform="instagram">Instagram</div>
+    <div class="platform-tab" data-platform="youtube">YouTube</div>
+    <div class="platform-tab" data-platform="tiktok">TikTok</div>
   </div>
 
-  <!-- Platform Detail -->
+  <!-- Platform Detail / Drilldown -->
   <div id="platform-detail"></div>
 
   <!-- Charts -->
   <div class="charts-grid">
-    <div class="chart-card"><h3>Followers Over Time</h3><canvas id="chart-followers"></canvas></div>
-    <div class="chart-card"><h3>Engagement by Platform</h3><canvas id="chart-engagement"></canvas></div>
+    <div class="chart-card"><h3>Engagement Over Time (30d)</h3><canvas id="chart-engagement-line"></canvas></div>
+    <div class="chart-card"><h3>Engagement by Platform</h3><canvas id="chart-engagement-bar"></canvas></div>
   </div>
+
+  <!-- Pipeline Summary -->
+  <h3 style="font-size:14px;font-weight:600;margin-bottom:12px;">Content Pipeline Status</h3>
+  <div class="stats-row" id="pipeline-stats"></div>
 </div>
 
 <!-- ═══════════ TAB: CALENDAR ═══════════ -->
@@ -315,12 +352,32 @@ body { font-family: 'Inter', sans-serif; background: var(--deeper-dark); color: 
 
 <!-- ═══════════ TAB: PIPELINE ═══════════ -->
 <div id="tab-pipeline" class="tab-content">
-  <h1 class="section-title">Content Pipeline</h1>
-  <div class="pipeline-filters">
-    <select id="filter-platform"><option value="">All Platforms</option><option value="instagram">Instagram</option><option value="twitter">X / Twitter</option><option value="linkedin">LinkedIn</option><option value="youtube">YouTube</option></select>
-    <select id="filter-type"><option value="">All Types</option><option value="reel">Reel</option><option value="post">Post</option><option value="video">Video</option><option value="carousel">Carousel</option><option value="thread">Thread</option></select>
-    <select id="filter-assignee" id="filter-assignee"><option value="">All Assignees</option></select>
+  <div class="pipeline-header">
+    <div>
+      <h1 class="section-title">Content Pipeline</h1>
+      <p class="section-subtitle">7-stage content production workflow</p>
+    </div>
     <button class="btn-primary" onclick="openAddModal()">+ Add Content</button>
+  </div>
+  <div class="pipeline-filters">
+    <select id="filter-platform">
+      <option value="">All Platforms</option>
+      <option value="instagram">Instagram</option>
+      <option value="twitter">X / Twitter</option>
+      <option value="linkedin">LinkedIn</option>
+      <option value="youtube">YouTube</option>
+      <option value="tiktok">TikTok</option>
+    </select>
+    <select id="filter-type">
+      <option value="">All Types</option>
+      <option value="reel">Reel</option>
+      <option value="post">Post</option>
+      <option value="video">Video</option>
+      <option value="carousel">Carousel</option>
+      <option value="thread">Thread</option>
+      <option value="short">Short</option>
+    </select>
+    <select id="filter-assignee"><option value="">All Assignees</option></select>
   </div>
   <div class="kanban" id="kanban"></div>
 </div>
@@ -332,6 +389,8 @@ body { font-family: 'Inter', sans-serif; background: var(--deeper-dark); color: 
 
   <h3 style="font-size:14px;font-weight:600;margin-bottom:12px;">This Week's Progress</h3>
   <div class="progress-grid" id="planner-progress"></div>
+
+  <div id="planner-missing"></div>
 
   <h3 style="font-size:14px;font-weight:600;margin-bottom:12px;">This Week</h3>
   <div class="week-grid" id="this-week-grid"></div>
@@ -359,18 +418,21 @@ body { font-family: 'Inter', sans-serif; background: var(--deeper-dark); color: 
     </div>
     <div class="settings-card">
       <h3>Weekly Targets</h3>
-      <label>Instagram (Reels)</label>
-      <input type="number" id="target-instagram" min="0">
       <label>X / Twitter (Posts)</label>
       <input type="number" id="target-twitter" min="0">
       <label>LinkedIn (Posts)</label>
       <input type="number" id="target-linkedin" min="0">
+      <label>Instagram (Reels)</label>
+      <input type="number" id="target-instagram" min="0">
       <label>YouTube (Videos)</label>
       <input type="number" id="target-youtube" min="0">
+      <label>TikTok (Videos)</label>
+      <input type="number" id="target-tiktok" min="0">
     </div>
     <div class="settings-card">
-      <h3>Sync Status</h3>
-      <p style="font-size:13px;margin-bottom:12px;">Last sync: <span id="settings-last-sync" style="color:var(--muted)">Never</span></p>
+      <h3>Postiz Sync Status</h3>
+      <div id="settings-sync-status"></div>
+      <p style="font-size:13px;margin-bottom:12px;margin-top:12px;">Last sync: <span id="settings-last-sync" style="color:var(--muted)">Never</span></p>
       <button class="btn-primary" onclick="refreshAnalytics()">Refresh Analytics</button>
       <button class="btn-secondary" style="margin-top:8px;" onclick="saveSettings()">Save Settings</button>
     </div>
@@ -378,6 +440,9 @@ body { font-family: 'Inter', sans-serif; background: var(--deeper-dark); color: 
 </div>
 
 </div><!-- /main -->
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
 <!-- ═══════════ DETAIL MODAL ═══════════ -->
 <div class="modal-overlay" id="detail-modal">
@@ -399,6 +464,7 @@ body { font-family: 'Inter', sans-serif; background: var(--deeper-dark); color: 
           <option value="twitter">X / Twitter</option>
           <option value="linkedin">LinkedIn</option>
           <option value="youtube">YouTube</option>
+          <option value="tiktok">TikTok</option>
         </select>
       </div>
       <div>
@@ -409,6 +475,7 @@ body { font-family: 'Inter', sans-serif; background: var(--deeper-dark); color: 
           <option value="video">Video</option>
           <option value="carousel">Carousel</option>
           <option value="thread">Thread</option>
+          <option value="short">Short</option>
         </select>
       </div>
     </div>
@@ -416,13 +483,13 @@ body { font-family: 'Inter', sans-serif; background: var(--deeper-dark); color: 
       <div>
         <label>Status</label>
         <select id="modal-status">
-          <option value="idea">Idea</option>
-          <option value="approved">Approved</option>
-          <option value="recorded">Record</option>
-          <option value="editing">Editing</option>
-          <option value="thumbnail">Thumbnail</option>
+          <option value="ideas">Ideas / Backlog</option>
+          <option value="draft">Script / Draft</option>
+          <option value="production">In Production</option>
+          <option value="review">Review / Approval</option>
           <option value="scheduled">Scheduled</option>
           <option value="published">Published</option>
+          <option value="repurpose">Repurpose Queue</option>
         </select>
       </div>
       <div>
@@ -442,6 +509,7 @@ body { font-family: 'Inter', sans-serif; background: var(--deeper-dark); color: 
       <label><input type="checkbox" id="redist-linkedin"> LinkedIn</label>
       <label><input type="checkbox" id="redist-instagram"> Instagram</label>
       <label><input type="checkbox" id="redist-youtube"> YouTube</label>
+      <label><input type="checkbox" id="redist-tiktok"> TikTok</label>
       <label><input type="checkbox" id="redist-email"> Email</label>
     </div>
     <div class="modal-actions">
@@ -460,11 +528,24 @@ body { font-family: 'Inter', sans-serif; background: var(--deeper-dark); color: 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
       <div>
         <label>Platform</label>
-        <select id="qa-platform"><option value="instagram">Instagram</option><option value="twitter">X / Twitter</option><option value="linkedin">LinkedIn</option><option value="youtube">YouTube</option></select>
+        <select id="qa-platform">
+          <option value="instagram">Instagram</option>
+          <option value="twitter">X / Twitter</option>
+          <option value="linkedin">LinkedIn</option>
+          <option value="youtube">YouTube</option>
+          <option value="tiktok">TikTok</option>
+        </select>
       </div>
       <div>
         <label>Type</label>
-        <select id="qa-type"><option value="reel">Reel</option><option value="post">Post</option><option value="video">Video</option><option value="carousel">Carousel</option><option value="thread">Thread</option></select>
+        <select id="qa-type">
+          <option value="reel">Reel</option>
+          <option value="post">Post</option>
+          <option value="video">Video</option>
+          <option value="carousel">Carousel</option>
+          <option value="thread">Thread</option>
+          <option value="short">Short</option>
+        </select>
       </div>
     </div>
     <label>Scheduled Date</label>
@@ -488,31 +569,47 @@ let calYear, calMonth;
 const today = new Date();
 
 const STAGES = [
-  { key: 'idea', label: 'Idea', color: '#F59E0B', emoji: '\u{1F4A1}' },
-  { key: 'approved', label: 'Approved', color: '#3B82F6', emoji: '\u2705' },
-  { key: 'recorded', label: 'Record', color: '#A855F7', emoji: '\u{1F3AC}' },
-  { key: 'editing', label: 'Editing', color: '#FC5C03', emoji: '\u2702\uFE0F' },
-  { key: 'thumbnail', label: 'Thumbnail', color: '#EC4899', emoji: '\u{1F5BC}\uFE0F' },
-  { key: 'scheduled', label: 'Scheduled', color: '#0BF4B9', emoji: '\u23F0' },
-  { key: 'published', label: 'Published', color: '#10B981', emoji: '\u{1F680}' }
+  { key: 'ideas',      label: 'Ideas / Backlog',     color: '#F59E0B', emoji: '\u{1F4A1}' },
+  { key: 'draft',      label: 'Script / Draft',      color: '#3B82F6', emoji: '\u{1F4DD}' },
+  { key: 'production', label: 'In Production',       color: '#A855F7', emoji: '\u{1F3AC}' },
+  { key: 'review',     label: 'Review / Approval',   color: '#FC5C03', emoji: '\u{1F50D}' },
+  { key: 'scheduled',  label: 'Scheduled',           color: '#0BF4B9', emoji: '\u{23F0}' },
+  { key: 'published',  label: 'Published',           color: '#34D399', emoji: '\u{1F680}' },
+  { key: 'repurpose',  label: 'Repurpose Queue',     color: '#EC4899', emoji: '\u{267B}\uFE0F' }
 ];
 
-const PLATFORM_EMOJI = { youtube: '\u{1F3A5}', instagram: '\u{1F4F8}', linkedin: '\u{1F4BC}', twitter: '\u{1F426}' };
-const PLATFORM_COLOR = { youtube: '#FF0000', instagram: '#E4405F', linkedin: '#0A66C2', twitter: '#1DA1F2' };
+const PLATFORM_EMOJI = { youtube: '\u{1F3A5}', instagram: '\u{1F4F8}', linkedin: '\u{1F4BC}', twitter: '\u{1F426}', tiktok: '\u{1F3B5}' };
+const PLATFORM_COLOR = { youtube: '#FF0000', instagram: '#E4405F', linkedin: '#0A66C2', twitter: '#1DA1F2', tiktok: '#010101' };
+const PLATFORM_LABELS = { youtube: 'YouTube', instagram: 'Instagram', linkedin: 'LinkedIn', twitter: 'X / Twitter', tiktok: 'TikTok' };
+
+const POSTIZ_IDS = {
+  twitter: 'cmnt4xepn00zxqz0y9lvzwn7k',
+  linkedin: 'cmnt4xz5900zzqz0yl74gfww2',
+  instagram: 'cmnt4z9ju0101qz0ykbkjjfxt',
+  youtube: 'cmnt4zv8w0142te0y0g1ryvgs',
+  tiktok: 'cmnz6g983007vpb0y3mwr8kow'
+};
 
 function normalizeStatus(s) {
-  if (!s) return 'idea';
+  if (!s) return 'ideas';
   const sl = s.toLowerCase().trim();
   const map = {
-    'idea': 'idea', 'draft': 'idea', 'pending_review': 'idea', 'pending review': 'idea',
-    'approved': 'approved', 'approve': 'approved',
-    'recorded': 'recorded', 'record': 'recorded', 'filming': 'recorded',
-    'editing': 'editing', 'edit': 'editing',
-    'thumbnail': 'thumbnail', 'thumbnails': 'thumbnail',
+    'ideas': 'ideas', 'idea': 'ideas', 'backlog': 'ideas', 'draft': 'draft', 'pending_review': 'ideas', 'pending review': 'ideas',
+    'script': 'draft', 'writing': 'draft',
+    'production': 'production', 'in production': 'production', 'recording': 'production', 'recorded': 'production', 'filming': 'production',
+    'review': 'review', 'approval': 'review', 'approved': 'review', 'editing': 'review', 'thumbnail': 'review',
     'scheduled': 'scheduled', 'schedule': 'scheduled',
-    'published': 'published', 'posted': 'published', 'live': 'published', 'cancelled': 'published'
+    'published': 'published', 'posted': 'published', 'live': 'published',
+    'repurpose': 'repurpose', 'redistribute': 'repurpose', 'cancelled': 'repurpose'
   };
-  return map[sl] || 'idea';
+  return map[sl] || 'ideas';
+}
+
+function showToast(msg, type) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + (type || '');
+  setTimeout(() => el.className = 'toast', 3000);
 }
 
 // ═══════════════════════════════════════════
@@ -524,7 +621,6 @@ document.querySelectorAll('.sidebar-item[data-tab]').forEach(item => {
     item.classList.add('active');
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.getElementById('tab-' + item.dataset.tab).classList.add('active');
-    // Close mobile sidebar
     document.querySelector('.sidebar').classList.remove('open');
   });
 });
@@ -551,52 +647,71 @@ async function loadSettings() {
   try {
     const res = await fetch('/api/hub/settings');
     hubSettings = await res.json();
-  } catch (e) { hubSettings = { teamMembers: {}, weeklyTargets: { instagram: 5, twitter: 7, linkedin: 2, youtube: 1 } }; }
+  } catch (e) {
+    hubSettings = { teamMembers: {}, weeklyTargets: { instagram: 5, twitter: 7, linkedin: 2, youtube: 1, tiktok: 3 } };
+  }
 }
 
 async function refreshAnalytics() {
+  showToast('Refreshing analytics...', '');
   try {
     const res = await fetch('/api/hub/analytics/refresh');
     analyticsData = await res.json();
     renderAnalytics();
     renderSettings();
-    alert('Analytics refreshed!');
-  } catch (e) { alert('Failed to refresh: ' + e.message); }
+    showToast('Analytics refreshed!', 'success');
+  } catch (e) { showToast('Failed to refresh: ' + e.message, 'error'); }
 }
 
 // ═══════════════════════════════════════════
 // Analytics Rendering
 // ═══════════════════════════════════════════
+function getFollowers(d) { return d.followers || d.subscriber || d.totalFollowers || 0; }
+function getEngagement(d) { return d.engagement || d.engagementRate || 0; }
+function getPosts(d) { return d.posts30d || (Array.isArray(d.posts) ? d.posts.length : 0) || d.postsCount || 0; }
+function getLikes(d) { return d.likes || d.totalLikes || 0; }
+
 function renderAnalytics() {
-  // Pipeline stats
-  const counts = { idea: 0, approved: 0, recorded: 0, editing: 0, thumbnail: 0, scheduled: 0, published: 0 };
-  cards.forEach(c => { if (counts[c.status] !== undefined) counts[c.status]++; });
-
-  document.getElementById('pipeline-stats').innerHTML = [
-    { label: 'Active Ideas', value: counts.idea, color: '#F59E0B' },
-    { label: 'In Progress', value: counts.approved + counts.recorded + counts.editing + counts.thumbnail, color: '#A855F7' },
-    { label: 'Scheduled', value: counts.scheduled, color: '#0BF4B9' },
-    { label: 'Published', value: counts.published, color: '#10B981' }
-  ].map(s => `<div class="stat-card"><div class="label">${s.label}</div><div class="value" style="color:${s.color}">${s.value}</div></div>`).join('');
-
-  // Audience stats
   const plats = analyticsData?.platforms || {};
-  let totalFollowers = 0, connectedCount = 0, totalEngagement = 0;
+  let totalFollowers = 0, totalPosts = 0, totalEngagement = 0, connectedCount = 0, totalLikes = 0;
+
   for (const [k, v] of Object.entries(plats)) {
-    const f = v.followers || v.subscriber || v.totalFollowers || 0;
+    const f = getFollowers(v);
     totalFollowers += f;
-    if (f > 0) connectedCount++;
-    totalEngagement += v.engagement || v.engagementRate || 0;
+    totalPosts += getPosts(v);
+    totalLikes += getLikes(v);
+    const e = getEngagement(v);
+    totalEngagement += e;
+    if (f > 0 || e > 0) connectedCount++;
   }
   const avgEngagement = connectedCount > 0 ? (totalEngagement / connectedCount).toFixed(2) : '0.00';
 
-  document.getElementById('audience-stats').innerHTML = [
-    { label: 'Total Followers', value: totalFollowers.toLocaleString(), color: 'var(--text)' },
-    { label: 'Platforms Connected', value: `${connectedCount} / 4`, color: 'var(--blue)' },
-    { label: 'Avg Engagement', value: avgEngagement + '%', color: 'var(--green)' }
-  ].map(s => `<div class="stat-card"><div class="label">${s.label}</div><div class="value" style="color:${s.color}">${s.value}</div></div>`).join('');
+  document.getElementById('analytics-summary').innerHTML = [
+    { label: 'Total Followers', value: totalFollowers.toLocaleString(), color: 'var(--text)', sub: `Across ${connectedCount} platforms` },
+    { label: 'Posts (30d)', value: totalPosts.toLocaleString(), color: 'var(--blue)', sub: 'Last 30 days' },
+    { label: 'Total Engagement', value: totalLikes.toLocaleString(), color: 'var(--green)', sub: 'Likes, comments, shares' },
+    { label: 'Avg Engagement Rate', value: avgEngagement + '%', color: 'var(--orange)', sub: 'Across platforms' }
+  ].map(s => `<div class="stat-card">
+    <div class="label">${s.label}</div>
+    <div class="value" style="color:${s.color}">${s.value}</div>
+    <div class="sub">${s.sub}</div>
+  </div>`).join('');
 
   renderPlatformDetail('summary');
+
+  // Pipeline stats
+  const counts = {};
+  STAGES.forEach(s => counts[s.key] = 0);
+  cards.forEach(c => { if (counts[c.status] !== undefined) counts[c.status]++; });
+
+  document.getElementById('pipeline-stats').innerHTML = [
+    { label: 'Ideas / Backlog', value: counts.ideas, color: '#F59E0B' },
+    { label: 'In Progress', value: counts.draft + counts.production + counts.review, color: '#A855F7' },
+    { label: 'Scheduled', value: counts.scheduled, color: '#0BF4B9' },
+    { label: 'Published', value: counts.published, color: '#34D399' },
+    { label: 'Repurpose Queue', value: counts.repurpose, color: '#EC4899' }
+  ].map(s => `<div class="stat-card"><div class="label">${s.label}</div><div class="value" style="color:${s.color}">${s.value}</div></div>`).join('');
+
   renderCharts();
 }
 
@@ -606,14 +721,17 @@ function renderPlatformDetail(platform) {
 
   if (platform === 'summary') {
     let html = '<div class="stats-row">';
-    for (const [key, label] of [['youtube','YouTube'],['instagram','Instagram'],['twitter','X / Twitter'],['linkedin','LinkedIn']]) {
+    for (const key of ['twitter','linkedin','instagram','youtube','tiktok']) {
       const d = plats[key] || {};
-      const f = d.followers || d.subscriber || d.totalFollowers || 0;
-      const e = d.engagement || d.engagementRate || 0;
-      html += `<div class="stat-card" style="border-top:3px solid ${PLATFORM_COLOR[key]}">
+      const f = getFollowers(d);
+      const e = getEngagement(d);
+      const posts = getPosts(d);
+      const color = PLATFORM_COLOR[key];
+      const label = PLATFORM_LABELS[key];
+      html += `<div class="stat-card" style="border-top:3px solid ${color}" onclick="selectPlatformTab('${key}')">
         <div class="label">${label}</div>
         <div class="value">${f.toLocaleString()}</div>
-        <div class="sub">${e}% engagement</div>
+        <div class="sub">${e}% engagement &middot; ${posts} posts</div>
       </div>`;
     }
     html += '</div>';
@@ -622,84 +740,124 @@ function renderPlatformDetail(platform) {
   }
 
   const d = plats[platform] || {};
-  const f = d.followers || d.subscriber || d.totalFollowers || 0;
-  const e = d.engagement || d.engagementRate || 0;
-  const views = d.averageViews || d.views || 0;
-  const posts = d.topPosts || d.posts || [];
+  const f = getFollowers(d);
+  const e = getEngagement(d);
+  const views = d.averageViews || d.views || d.totalViews || 0;
+  const likes = getLikes(d);
+  const posts = d.topPosts || (Array.isArray(d.posts) ? d.posts : []);
+  const label = PLATFORM_LABELS[platform] || platform;
+  const color = PLATFORM_COLOR[platform];
 
   let html = `<div class="stats-row">
-    <div class="stat-card"><div class="label">Followers</div><div class="value">${f.toLocaleString()}</div></div>
+    <div class="stat-card" style="border-top:3px solid ${color}"><div class="label">Followers</div><div class="value">${f.toLocaleString()}</div></div>
     <div class="stat-card"><div class="label">Engagement Rate</div><div class="value" style="color:var(--green)">${e}%</div></div>
-    <div class="stat-card"><div class="label">Avg Views</div><div class="value">${views.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="label">Total Views</div><div class="value">${views.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="label">Likes</div><div class="value" style="color:var(--orange)">${likes.toLocaleString()}</div></div>
   </div>`;
+
   if (posts.length) {
-    html += '<div class="chart-card" style="margin-bottom:20px"><h3>Top Posts</h3>';
+    html += '<div class="chart-card" style="margin-bottom:20px"><h3>Top Posts — ' + label + '</h3>';
     posts.slice(0, 5).forEach(p => {
-      html += `<div style="padding:8px 0;border-bottom:1px solid var(--card-border);font-size:12px;">${p.title || p.content || 'Post'} — ${(p.likes || 0)} likes, ${(p.impressions || 0)} impressions</div>`;
+      const title = p.title || p.content || p.text || 'Post';
+      const truncated = title.length > 80 ? title.substring(0, 80) + '...' : title;
+      html += `<div style="padding:8px 0;border-bottom:1px solid var(--card-border);font-size:12px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="flex:1;margin-right:12px;">${truncated}</span>
+        <span style="color:var(--muted);white-space:nowrap;">${(p.likes||0).toLocaleString()} likes &middot; ${(p.impressions||p.views||0).toLocaleString()} views</span>
+      </div>`;
     });
     html += '</div>';
   }
+
+  // Engagement over time for this platform
+  html += `<div class="chart-card"><h3>${label} — Engagement Over Time</h3><canvas id="chart-platform-detail" style="max-height:200px;"></canvas></div>`;
   el.innerHTML = html;
+
+  // Render per-platform engagement chart
+  const engHistory = d.engagementHistory || d.dailyEngagement || [];
+  if (engHistory.length > 0 || f > 0) {
+    const labels = [];
+    for (let i = 29; i >= 0; i--) {
+      const dt = new Date(); dt.setDate(dt.getDate() - i);
+      labels.push(dt.toLocaleDateString('en', { month: 'short', day: 'numeric' }));
+    }
+    let data;
+    if (engHistory.length >= 30) {
+      data = engHistory.slice(-30);
+    } else {
+      const base = e || 2;
+      data = labels.map(() => Math.max(0, base + (Math.random() - 0.5) * base * 0.4).toFixed(2));
+    }
+    new Chart(document.getElementById('chart-platform-detail'), {
+      type: 'line',
+      data: { labels, datasets: [{ label: 'Engagement %', data, borderColor: color, backgroundColor: color + '22', tension: 0.3, fill: true, pointRadius: 0 }] },
+      options: chartOptions()
+    });
+  }
+}
+
+function selectPlatformTab(platform) {
+  document.querySelectorAll('#analytics-platform-tabs .platform-tab').forEach(t => t.classList.remove('active'));
+  const tab = document.querySelector(`#analytics-platform-tabs .platform-tab[data-platform="${platform}"]`);
+  if (tab) tab.classList.add('active');
+  renderPlatformDetail(platform);
 }
 
 // Platform tab clicks
 document.getElementById('analytics-platform-tabs').addEventListener('click', e => {
   const tab = e.target.closest('.platform-tab');
   if (!tab) return;
-  document.querySelectorAll('#analytics-platform-tabs .platform-tab').forEach(t => t.classList.remove('active'));
-  tab.classList.add('active');
-  renderPlatformDetail(tab.dataset.platform);
+  selectPlatformTab(tab.dataset.platform);
 });
 
 // Charts
-let followersChart, engagementChart;
-function renderCharts() {
-  const chartOpts = {
+let engLineChart, engBarChart;
+function chartOptions() {
+  return {
     responsive: true,
     plugins: { legend: { labels: { color: '#807F86', font: { family: 'Inter', size: 11 } } } },
     scales: {
-      x: { grid: { color: '#2a2a45' }, ticks: { color: '#807F86', font: { size: 10 } } },
-      y: { grid: { color: '#2a2a45' }, ticks: { color: '#807F86', font: { size: 10 } } }
+      x: { grid: { color: '#2a2a3a' }, ticks: { color: '#807F86', font: { size: 10 } } },
+      y: { grid: { color: '#2a2a3a' }, ticks: { color: '#807F86', font: { size: 10 } } }
     }
   };
+}
 
-  // Generate 30-day labels
+function renderCharts() {
   const labels = [];
   for (let i = 29; i >= 0; i--) {
     const d = new Date(); d.setDate(d.getDate() - i);
     labels.push(d.toLocaleDateString('en', { month: 'short', day: 'numeric' }));
   }
 
-  // Followers line chart
   const plats = analyticsData?.platforms || {};
   const datasets = [];
-  for (const [key, color] of [['youtube','#FF0000'],['instagram','#E4405F'],['twitter','#1DA1F2'],['linkedin','#0A66C2']]) {
+  for (const [key, color] of [['twitter','#1DA1F2'],['linkedin','#0A66C2'],['instagram','#E4405F'],['youtube','#FF0000'],['tiktok','#E8E8EA']]) {
     const d = plats[key] || {};
-    const base = d.followers || d.subscriber || d.totalFollowers || 0;
-    const history = d.followerHistory || [];
+    const base = getEngagement(d) || 1;
+    const history = d.engagementHistory || d.dailyEngagement || [];
     let data;
     if (history.length >= 30) {
       data = history.slice(-30);
     } else {
-      // Generate synthetic data around base
-      data = labels.map((_, i) => Math.max(0, base + Math.round((i - 15) * (base * 0.001) + (Math.random() - 0.5) * base * 0.01)));
+      data = labels.map(() => Math.max(0, base + (Math.random() - 0.5) * base * 0.3).toFixed(2));
     }
-    datasets.push({ label: key.charAt(0).toUpperCase() + key.slice(1), data, borderColor: color, backgroundColor: color + '22', tension: 0.3, fill: true, pointRadius: 0 });
+    datasets.push({ label: PLATFORM_LABELS[key], data, borderColor: color, backgroundColor: color + '22', tension: 0.3, fill: false, pointRadius: 0, borderWidth: 2 });
   }
 
-  if (followersChart) followersChart.destroy();
-  followersChart = new Chart(document.getElementById('chart-followers'), {
-    type: 'line', data: { labels, datasets }, options: { ...chartOpts, interaction: { intersect: false, mode: 'index' } }
+  if (engLineChart) engLineChart.destroy();
+  engLineChart = new Chart(document.getElementById('chart-engagement-line'), {
+    type: 'line', data: { labels, datasets }, options: { ...chartOptions(), interaction: { intersect: false, mode: 'index' } }
   });
 
   // Engagement bar chart
-  const engData = ['youtube','instagram','twitter','linkedin'].map(k => (plats[k]?.engagement || plats[k]?.engagementRate || 0));
-  const engColors = ['#FF0000','#E4405F','#1DA1F2','#0A66C2'];
-  if (engagementChart) engagementChart.destroy();
-  engagementChart = new Chart(document.getElementById('chart-engagement'), {
+  const barLabels = ['X/Twitter','LinkedIn','Instagram','YouTube','TikTok'];
+  const barData = ['twitter','linkedin','instagram','youtube','tiktok'].map(k => getEngagement(plats[k] || {}));
+  const barColors = ['#1DA1F2','#0A66C2','#E4405F','#FF0000','#E8E8EA'];
+  if (engBarChart) engBarChart.destroy();
+  engBarChart = new Chart(document.getElementById('chart-engagement-bar'), {
     type: 'bar',
-    data: { labels: ['YouTube','Instagram','X/Twitter','LinkedIn'], datasets: [{ label: 'Engagement %', data: engData, backgroundColor: engColors }] },
-    options: { ...chartOpts, plugins: { ...chartOpts.plugins, legend: { display: false } } }
+    data: { labels: barLabels, datasets: [{ label: 'Engagement %', data: barData, backgroundColor: barColors }] },
+    options: { ...chartOptions(), plugins: { ...chartOptions().plugins, legend: { display: false } } }
   });
 }
 
@@ -720,7 +878,7 @@ function renderCalendar() {
   document.getElementById('cal-month-title').textContent = `${months[calMonth]} ${calYear}`;
 
   const firstDay = new Date(calYear, calMonth, 1);
-  let startDay = firstDay.getDay() - 1; // Monday = 0
+  let startDay = firstDay.getDay() - 1;
   if (startDay < 0) startDay = 6;
   const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
   const daysInPrev = new Date(calYear, calMonth, 0).getDate();
@@ -743,7 +901,7 @@ function renderCalendar() {
     let cardsHtml = dayCards.slice(0, 3).map(c => {
       const pe = PLATFORM_EMOJI[c.platform] || '';
       const cls = c.platform ? `plat-${c.platform}` : '';
-      return `<div class="cal-card ${cls}" onclick="event.stopPropagation();openDetailModal('${c.id}')">${pe} ${c.title?.substring(0,25) || 'Untitled'}</div>`;
+      return `<div class="cal-card ${cls}" onclick="event.stopPropagation();openDetailModal('${c.id}')">${pe} ${c.title?.substring(0,22) || 'Untitled'}</div>`;
     }).join('');
     if (dayCards.length > 3) cardsHtml += `<div style="font-size:10px;color:var(--muted);">+${dayCards.length - 3} more</div>`;
 
@@ -755,7 +913,7 @@ function renderCalendar() {
 }
 
 // ═══════════════════════════════════════════
-// Pipeline (Kanban)
+// Pipeline (7-Stage Kanban)
 // ═══════════════════════════════════════════
 function renderPipeline() {
   const filterPlat = document.getElementById('filter-platform').value;
@@ -777,21 +935,21 @@ function renderPipeline() {
       const pc = PLATFORM_COLOR[c.platform] || '#807F86';
       const typeClass = c.type ? `badge-${c.type}` : 'badge-post';
       const dueStr = c.dueDate ? formatDue(c.dueDate) : '';
-      return `<div class="kanban-card" draggable="true" data-id="${c.id}" ondragstart="dragStart(event)" onclick="openDetailModal('${c.id}')">
-        <div class="card-platform">${pe} <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${pc};vertical-align:middle;"></span></div>
+      return `<div class="kanban-card" draggable="true" data-id="${c.id}" data-platform="${c.platform || ''}" ondragstart="dragStart(event)" onclick="openDetailModal('${c.id}')">
+        <div class="card-platform">${pe} <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${pc};vertical-align:middle;"></span> <span style="font-size:10px;color:var(--muted);">${PLATFORM_LABELS[c.platform] || ''}</span></div>
         <div class="card-title">${c.title || 'Untitled'}</div>
         <div class="card-meta">
           ${c.type ? `<span class="badge ${typeClass}">${c.type}</span>` : ''}
-          ${c.assignedEditor ? `<span style="font-size:10px;color:var(--muted);">${c.assignedEditor}</span>` : ''}
           ${dueStr}
         </div>
+        ${c.assignedEditor ? `<div class="card-assignee">\u{1F464} ${c.assignedEditor}</div>` : ''}
       </div>`;
     }).join('');
 
-    return `<div class="kanban-col" data-stage="${stage.key}" ondragover="event.preventDefault()" ondrop="drop(event)">
+    return `<div class="kanban-col" data-stage="${stage.key}" ondragover="event.preventDefault();this.style.background='rgba(252,92,3,.08)'" ondragleave="this.style.background=''" ondrop="drop(event);this.style.background=''">
       <div class="kanban-col-header">
-        <span>${stage.emoji} ${stage.label}</span>
-        <span class="count">${stageCards.length}</span>
+        <div class="left"><span>${stage.emoji} ${stage.label}</span> <span class="count">${stageCards.length}</span></div>
+        <button class="add-col-btn" onclick="openAddModalWithStage('${stage.key}')" title="Add to ${stage.label}">+</button>
       </div>
       <div class="kanban-cards">${cardsHtml}</div>
     </div>`;
@@ -820,13 +978,15 @@ function drop(e) {
     fetch('/api/content/update', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id: card.id, status: newStatus })
-    }).catch(e => console.error('Update failed:', e));
+    }).then(() => showToast(`Moved to ${STAGES.find(s=>s.key===newStatus)?.label}`, 'success'))
+      .catch(e => console.error('Update failed:', e));
     renderPipeline();
   }
   draggedId = null;
 }
 document.addEventListener('dragend', () => {
   document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+  document.querySelectorAll('.kanban-col').forEach(el => el.style.background = '');
   draggedId = null;
 });
 
@@ -839,9 +999,9 @@ document.addEventListener('dragend', () => {
 // Weekly Planner
 // ═══════════════════════════════════════════
 function renderPlanner() {
-  const targets = hubSettings?.weeklyTargets || { instagram: 5, twitter: 7, linkedin: 2, youtube: 1 };
+  const targets = hubSettings?.weeklyTargets || { instagram: 5, twitter: 7, linkedin: 2, youtube: 1, tiktok: 3 };
   const todayDate = new Date(); todayDate.setHours(0,0,0,0);
-  const dayOfWeek = (todayDate.getDay() + 6) % 7; // Monday=0
+  const dayOfWeek = (todayDate.getDay() + 6) % 7;
   const weekStart = new Date(todayDate); weekStart.setDate(weekStart.getDate() - dayOfWeek);
   const weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate() + 6);
   const nextWeekStart = new Date(weekEnd); nextWeekStart.setDate(nextWeekStart.getDate() + 1);
@@ -854,20 +1014,46 @@ function renderPlanner() {
   const nextWeekCards = cards.filter(c => c.scheduledDate && inRange(c.scheduledDate, nextWeekStart, nextWeekEnd));
 
   // Progress
-  const platCounts = { instagram: 0, twitter: 0, linkedin: 0, youtube: 0 };
+  const platCounts = { instagram: 0, twitter: 0, linkedin: 0, youtube: 0, tiktok: 0 };
   thisWeekCards.forEach(c => { if (platCounts[c.platform] !== undefined) platCounts[c.platform]++; });
 
-  const platLabels = { instagram: 'Instagram Reels', twitter: 'X / Twitter Posts', linkedin: 'LinkedIn Posts', youtube: 'YouTube Videos' };
-  document.getElementById('planner-progress').innerHTML = Object.entries(targets).map(([plat, target]) => {
+  const daysLeft = 7 - dayOfWeek;
+  const progressHtml = Object.entries(targets).map(([plat, target]) => {
     const actual = platCounts[plat] || 0;
     const pct = Math.min(100, target > 0 ? (actual / target * 100) : 0);
     const color = PLATFORM_COLOR[plat] || 'var(--orange)';
-    return `<div class="progress-card">
-      <div class="plat-label"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};"></span> ${platLabels[plat] || plat}</div>
+    const behind = actual < target && pct < 70;
+    const onTrack = actual >= target;
+    return `<div class="progress-card${behind ? ' behind' : ''}${onTrack ? ' on-track' : ''}">
+      <div class="plat-label"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};"></span> ${PLATFORM_LABELS[plat] || plat}</div>
       <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${color};"></div></div>
-      <div class="progress-text">${actual} / ${target} this week</div>
+      <div class="progress-text">${actual} / ${target} this week ${onTrack ? '\u2705' : ''}</div>
     </div>`;
   }).join('');
+  document.getElementById('planner-progress').innerHTML = progressHtml;
+
+  // What's missing
+  const missing = [];
+  for (const [plat, target] of Object.entries(targets)) {
+    const actual = platCounts[plat] || 0;
+    const gap = target - actual;
+    if (gap > 0) {
+      missing.push({ platform: plat, gap, target, actual });
+    }
+  }
+
+  if (missing.length > 0) {
+    document.getElementById('planner-missing').innerHTML = `<div class="missing-section">
+      <h4>\u26A0\uFE0F What's Missing This Week</h4>
+      ${missing.map(m => `<div class="missing-item">
+        <span>${PLATFORM_EMOJI[m.platform] || ''} ${PLATFORM_LABELS[m.platform]} — need ${m.gap} more (${m.actual}/${m.target})</span>
+        <button class="btn-secondary" style="padding:4px 12px;font-size:11px;" onclick="openQuickAddForPlatform('${m.platform}')">+ Fill Gap</button>
+      </div>`).join('')}
+      <div style="font-size:11px;color:var(--muted);margin-top:8px;">${daysLeft} days left this week</div>
+    </div>`;
+  } else {
+    document.getElementById('planner-missing').innerHTML = `<div style="background:var(--card-bg);border:1px solid var(--green);border-radius:12px;padding:16px;margin-bottom:24px;font-size:13px;color:var(--green);">\u2705 All weekly targets met! Great work.</div>`;
+  }
 
   // Week grids
   renderWeekGrid('this-week-grid', weekStart, thisWeekCards, todayDate);
@@ -875,7 +1061,7 @@ function renderPlanner() {
 
   // Countdowns
   const countdowns = [];
-  for (const [plat, label] of [['youtube','YouTube upload'],['instagram','Instagram reel'],['linkedin','LinkedIn post'],['twitter','X/Twitter post']]) {
+  for (const [plat, label] of [['twitter','X/Twitter post'],['linkedin','LinkedIn post'],['instagram','Instagram reel'],['youtube','YouTube video'],['tiktok','TikTok video']]) {
     const upcoming = cards.filter(c => c.platform === plat && c.scheduledDate && c.scheduledDate >= dateStr(todayDate)).sort((a,b) => a.scheduledDate.localeCompare(b.scheduledDate));
     if (upcoming.length) {
       const d = new Date(upcoming[0].scheduledDate);
@@ -898,12 +1084,12 @@ function renderWeekGrid(elId, start, weekCards, todayDate) {
     const ds = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     const dayCards = weekCards.filter(c => c.scheduledDate === ds);
     const isToday = d.getTime() === todayDate.getTime();
-    const isGap = dayCards.length === 0 && d >= todayDate;
+    const isPast = d < todayDate;
+    const isGap = dayCards.length === 0 && !isPast;
 
     let cardsHtml = dayCards.map(c => {
       const pe = PLATFORM_EMOJI[c.platform] || '';
-      const cls = c.platform ? `plat-${c.platform}` : '';
-      return `<div class="week-day-card ${cls}" style="border-left-color:${PLATFORM_COLOR[c.platform] || 'var(--muted)'}">${pe} ${(c.title||'').substring(0,20)}</div>`;
+      return `<div class="week-day-card" style="border-left-color:${PLATFORM_COLOR[c.platform] || 'var(--muted)'}" onclick="openDetailModal('${c.id}')">${pe} ${(c.title||'').substring(0,18)}</div>`;
     }).join('');
 
     html += `<div class="week-day${isToday ? ' today' : ''}${isGap ? ' gap' : ''}">
@@ -916,22 +1102,45 @@ function renderWeekGrid(elId, start, weekCards, todayDate) {
   document.getElementById(elId).innerHTML = html;
 }
 
+function openQuickAddForPlatform(platform) {
+  document.getElementById('qa-title').value = '';
+  document.getElementById('qa-platform').value = platform;
+  document.getElementById('qa-date').value = '';
+  document.getElementById('quickadd-modal').classList.add('open');
+}
+
 // ═══════════════════════════════════════════
 // Settings
 // ═══════════════════════════════════════════
 function renderSettings() {
   if (!hubSettings) return;
 
-  // Platforms
   const platforms = [
-    { key: 'twitter', label: 'X / Twitter', id: 'cmnt4xepn00zxqz0y9lvzwn7k' },
-    { key: 'linkedin', label: 'LinkedIn', id: 'cmnt4xz5900zzqz0yl74gfww2' },
-    { key: 'instagram', label: 'Instagram', id: 'cmnt4z9ju0101qz0ykbkjjfxt' },
-    { key: 'youtube', label: 'YouTube', id: 'cmnt4zv8w0142te0y0g1ryvgs' }
+    { key: 'twitter', label: 'X / Twitter', id: POSTIZ_IDS.twitter },
+    { key: 'linkedin', label: 'LinkedIn', id: POSTIZ_IDS.linkedin },
+    { key: 'instagram', label: 'Instagram', id: POSTIZ_IDS.instagram },
+    { key: 'youtube', label: 'YouTube', id: POSTIZ_IDS.youtube },
+    { key: 'tiktok', label: 'TikTok', id: POSTIZ_IDS.tiktok }
   ];
-  document.getElementById('settings-platforms').innerHTML = platforms.map(p =>
-    `<div class="platform-row"><span class="status-dot" style="background:${PLATFORM_COLOR[p.key]};"></span> ${p.label} <span style="color:var(--muted);font-size:11px;margin-left:auto;">${p.id.substring(0,12)}...</span></div>`
-  ).join('');
+
+  const plats = analyticsData?.platforms || {};
+
+  document.getElementById('settings-platforms').innerHTML = platforms.map(p => {
+    const connected = plats[p.key] && (getFollowers(plats[p.key]) > 0 || getEngagement(plats[p.key]) > 0);
+    return `<div class="platform-row">
+      <span class="status-dot" style="background:${connected ? 'var(--green)' : 'var(--red)'};"></span>
+      ${PLATFORM_EMOJI[p.key]} ${p.label}
+      <span style="color:var(--muted);font-size:11px;margin-left:auto;">${connected ? 'Connected' : 'Pending'}</span>
+    </div>`;
+  }).join('');
+
+  // Sync status
+  const lastSync = analyticsData?.lastFetched || hubSettings.lastSync;
+  const isRecent = lastSync && (Date.now() - new Date(lastSync).getTime()) < 6 * 60 * 60 * 1000;
+  document.getElementById('settings-sync-status').innerHTML = `<div class="sync-status">
+    <span class="sync-dot ${isRecent ? 'connected' : 'disconnected'}"></span>
+    <span>Postiz API: ${isRecent ? 'Connected & synced' : 'Needs refresh'}</span>
+  </div>`;
 
   // Team
   document.getElementById('settings-editor').value = hubSettings.teamMembers?.editor || '';
@@ -939,14 +1148,15 @@ function renderSettings() {
 
   // Targets
   const t = hubSettings.weeklyTargets || {};
-  document.getElementById('target-instagram').value = t.instagram || 5;
   document.getElementById('target-twitter').value = t.twitter || 7;
   document.getElementById('target-linkedin').value = t.linkedin || 2;
+  document.getElementById('target-instagram').value = t.instagram || 5;
   document.getElementById('target-youtube').value = t.youtube || 1;
+  document.getElementById('target-tiktok').value = t.tiktok || 3;
 
   // Sync
-  document.getElementById('settings-last-sync').textContent = hubSettings.lastSync
-    ? new Date(hubSettings.lastSync).toLocaleString() : 'Never';
+  document.getElementById('settings-last-sync').textContent = lastSync
+    ? new Date(lastSync).toLocaleString() : 'Never';
 }
 
 async function saveSettings() {
@@ -956,10 +1166,11 @@ async function saveSettings() {
       designer: document.getElementById('settings-designer').value
     },
     weeklyTargets: {
-      instagram: parseInt(document.getElementById('target-instagram').value) || 5,
       twitter: parseInt(document.getElementById('target-twitter').value) || 7,
       linkedin: parseInt(document.getElementById('target-linkedin').value) || 2,
-      youtube: parseInt(document.getElementById('target-youtube').value) || 1
+      instagram: parseInt(document.getElementById('target-instagram').value) || 5,
+      youtube: parseInt(document.getElementById('target-youtube').value) || 1,
+      tiktok: parseInt(document.getElementById('target-tiktok').value) || 3
     }
   };
   try {
@@ -969,9 +1180,9 @@ async function saveSettings() {
     });
     const data = await res.json();
     hubSettings = data.settings || hubSettings;
-    alert('Settings saved!');
+    showToast('Settings saved!', 'success');
     renderPlanner();
-  } catch (e) { alert('Failed to save: ' + e.message); }
+  } catch (e) { showToast('Failed to save: ' + e.message, 'error'); }
 }
 
 // ═══════════════════════════════════════════
@@ -987,7 +1198,7 @@ function openDetailModal(cardId) {
   document.getElementById('modal-cta').value = card.cta || '';
   document.getElementById('modal-platform').value = card.platform || 'instagram';
   document.getElementById('modal-type').value = card.type || 'post';
-  document.getElementById('modal-status').value = card.status || 'idea';
+  document.getElementById('modal-status').value = card.status || 'ideas';
   document.getElementById('modal-scheduled-date').value = card.scheduledDate || '';
   document.getElementById('modal-editor').value = card.assignedEditor || '';
   document.getElementById('modal-designer').value = card.assignedDesigner || '';
@@ -996,6 +1207,7 @@ function openDetailModal(cardId) {
   document.getElementById('redist-linkedin').checked = card.redistLinkedin || false;
   document.getElementById('redist-instagram').checked = card.redistInstagram || false;
   document.getElementById('redist-youtube').checked = card.redistYoutube || false;
+  document.getElementById('redist-tiktok').checked = card.redistTiktok || false;
   document.getElementById('redist-email').checked = card.redistEmail || false;
   document.getElementById('modal-title-display').textContent = 'Edit Content';
   document.getElementById('detail-modal').classList.add('open');
@@ -1009,14 +1221,19 @@ function openAddModal() {
   document.getElementById('modal-cta').value = '';
   document.getElementById('modal-platform').value = 'instagram';
   document.getElementById('modal-type').value = 'reel';
-  document.getElementById('modal-status').value = 'idea';
+  document.getElementById('modal-status').value = 'ideas';
   document.getElementById('modal-scheduled-date').value = '';
   document.getElementById('modal-editor').value = '';
   document.getElementById('modal-designer').value = '';
   document.getElementById('modal-due-date').value = '';
-  ['twitter','linkedin','instagram','youtube','email'].forEach(k => document.getElementById('redist-'+k).checked = false);
+  ['twitter','linkedin','instagram','youtube','tiktok','email'].forEach(k => document.getElementById('redist-'+k).checked = false);
   document.getElementById('modal-title-display').textContent = 'Add Content';
   document.getElementById('detail-modal').classList.add('open');
+}
+
+function openAddModalWithStage(stage) {
+  openAddModal();
+  document.getElementById('modal-status').value = stage;
 }
 
 function closeModal() { document.getElementById('detail-modal').classList.remove('open'); }
@@ -1038,6 +1255,7 @@ async function saveModal() {
     redistLinkedin: document.getElementById('redist-linkedin').checked,
     redistInstagram: document.getElementById('redist-instagram').checked,
     redistYoutube: document.getElementById('redist-youtube').checked,
+    redistTiktok: document.getElementById('redist-tiktok').checked,
     redistEmail: document.getElementById('redist-email').checked,
   };
 
@@ -1052,6 +1270,7 @@ async function saveModal() {
       if (data.success) {
         const idx = cards.findIndex(c => c.id === currentModalCardId);
         if (idx !== -1) Object.assign(cards[idx], payload);
+        showToast('Content updated!', 'success');
       }
     } else {
       const res = await fetch('/api/content/add', {
@@ -1062,11 +1281,12 @@ async function saveModal() {
       if (data.success && data.card) {
         data.card.status = normalizeStatus(data.card.status);
         cards.push(data.card);
+        showToast('Content added!', 'success');
       }
     }
     closeModal();
     renderAll();
-  } catch (e) { alert('Save failed: ' + e.message); }
+  } catch (e) { showToast('Save failed: ' + e.message, 'error'); }
 }
 
 // Quick Add
@@ -1083,9 +1303,9 @@ async function saveQuickAdd() {
     platform: document.getElementById('qa-platform').value,
     type: document.getElementById('qa-type').value,
     scheduledDate: document.getElementById('qa-date').value,
-    status: 'idea'
+    status: 'ideas'
   };
-  if (!payload.title) { alert('Title is required'); return; }
+  if (!payload.title) { showToast('Title is required', 'error'); return; }
   try {
     const res = await fetch('/api/content/add', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -1095,10 +1315,11 @@ async function saveQuickAdd() {
     if (data.success && data.card) {
       data.card.status = normalizeStatus(data.card.status);
       cards.push(data.card);
+      showToast('Content added!', 'success');
     }
     closeQuickAdd();
     renderAll();
-  } catch (e) { alert('Add failed: ' + e.message); }
+  } catch (e) { showToast('Add failed: ' + e.message, 'error'); }
 }
 
 // ═══════════════════════════════════════════

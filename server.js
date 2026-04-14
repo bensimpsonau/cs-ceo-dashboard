@@ -586,7 +586,8 @@ const POSTIZ_INTEGRATIONS = {
   twitter:   'cmnt4xepn00zxqz0y9lvzwn7k',
   linkedin:  'cmnt4xz5900zzqz0yl74gfww2',
   instagram: 'cmnt4z9ju0101qz0ykbkjjfxt',
-  youtube:   'cmnt4zv8w0142te0y0g1ryvgs'
+  youtube:   'cmnt4zv8w0142te0y0g1ryvgs',
+  tiktok:    'cmnz6g983007vpb0y3mwr8kow'
 };
 
 function readAnalyticsCache() {
