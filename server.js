@@ -691,6 +691,189 @@ app.post('/api/hub/settings', (req, res) => {
   }
 });
 
+// ═══════════════════════════════════════════
+// POST /api/hub/schedule — Schedule posts via Postiz
+// ═══════════════════════════════════════════
+const POSTIZ_PLATFORM_SETTINGS = {
+  twitter: { __type: 'x', who_can_reply_post: 'everyone' },
+  linkedin: { __type: 'linkedin' },
+  instagram: { __type: 'instagram-standalone' },
+  tiktok: { __type: 'tiktok', privacy_level: 'PUBLIC_TO_EVERYONE', duet: true, stitch: true, comment: true, autoAddMusic: 'no', brand_content_toggle: false, brand_organic_toggle: false, content_posting_method: 'DIRECT_POST' },
+  youtube: { __type: 'youtube' }
+};
+
+app.post('/api/hub/schedule', async (req, res) => {
+  const POSTIZ_API_KEY = process.env.POSTIZ_API_KEY;
+  if (!POSTIZ_API_KEY) {
+    return res.status(500).json({ error: 'POSTIZ_API_KEY not configured on server' });
+  }
+
+  const { platforms, content, mediaUrl, mediaId, scheduleDate, tags, title } = req.body;
+  if (!platforms || !platforms.length || !content) {
+    return res.status(400).json({ error: 'platforms and content are required' });
+  }
+
+  const results = [];
+  for (const platform of platforms) {
+    const integrationId = POSTIZ_INTEGRATIONS[platform];
+    if (!integrationId) {
+      results.push({ platform, error: 'Unknown platform' });
+      continue;
+    }
+
+    const postBody = {
+      content,
+      integration: integrationId,
+      date: scheduleDate || new Date(Date.now() + 3600000).toISOString(),
+      settings: POSTIZ_PLATFORM_SETTINGS[platform] || {},
+      tags: tags || []
+    };
+
+    if (mediaId) postBody.media = [{ id: mediaId, path: mediaUrl }];
+
+    try {
+      const postRes = await fetch('https://api.postiz.com/public/v1/posts', {
+        method: 'POST',
+        headers: {
+          'Authorization': POSTIZ_API_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(postBody)
+      });
+
+      if (postRes.ok) {
+        const data = await postRes.json();
+        results.push({ platform, success: true, postId: data.id || data.postId });
+      } else {
+        const errText = await postRes.text();
+        results.push({ platform, error: `Postiz API ${postRes.status}: ${errText}` });
+      }
+    } catch (err) {
+      results.push({ platform, error: err.message });
+    }
+  }
+
+  const newCard = {
+    id: 'c' + Date.now(),
+    title: title || content.substring(0, 60),
+    platform: platforms[0],
+    type: 'post',
+    copy: content,
+    content: content,
+    status: 'scheduled',
+    scheduledDate: scheduleDate ? scheduleDate.split('T')[0] : new Date().toISOString().split('T')[0],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    tags: tags || [],
+    scheduledPlatforms: platforms
+  };
+  contentBoard.cards.push(newCard);
+  fs.writeFileSync(CONTENT_BOARD_PATH, JSON.stringify(contentBoard, null, 2));
+  pushFileToGitHub(CONTENT_BOARD_PATH, contentBoard, `Auto-sync: Content scheduled — ${newCard.title}`).catch(() => {});
+
+  res.json({ success: true, results, card: newCard });
+});
+
+// ═══════════════════════════════════════════
+// POST /api/hub/upload — Proxy to Postiz upload
+// ═══════════════════════════════════════════
+const postizUpload = multer({
+  dest: '/tmp/cs-postiz-upload/',
+  limits: { fileSize: 200 * 1024 * 1024 }
+});
+
+app.post('/api/hub/upload', postizUpload.single('file'), async (req, res) => {
+  const POSTIZ_API_KEY = process.env.POSTIZ_API_KEY;
+  if (!POSTIZ_API_KEY) {
+    if (req.file) try { fs.unlinkSync(req.file.path); } catch(e) {}
+    return res.status(500).json({ error: 'POSTIZ_API_KEY not configured on server' });
+  }
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+
+  try {
+    const form = new FormData();
+    form.append('file', fs.createReadStream(req.file.path), {
+      filename: req.file.originalname,
+      contentType: req.file.mimetype
+    });
+
+    const uploadRes = await fetch('https://api.postiz.com/public/v1/upload', {
+      method: 'POST',
+      headers: {
+        'Authorization': POSTIZ_API_KEY,
+        ...form.getHeaders()
+      },
+      body: form
+    });
+
+    if (!uploadRes.ok) {
+      const errText = await uploadRes.text();
+      throw new Error(`Postiz upload ${uploadRes.status}: ${errText}`);
+    }
+
+    const data = await uploadRes.json();
+    res.json({ success: true, mediaId: data.id, mediaUrl: data.path || data.url });
+  } catch (err) {
+    res.status(500).json({ error: 'Upload failed', detail: err.message });
+  } finally {
+    try { fs.unlinkSync(req.file.path); } catch(e) {}
+  }
+});
+
+// ═══════════════════════════════════════════
+// GET /api/hub/content-gaps — Weekly content gap analysis
+// ═══════════════════════════════════════════
+app.get('/api/hub/content-gaps', (req, res) => {
+  const settings = readHubSettings();
+  const targets = settings.weeklyTargets || { instagram: 5, twitter: 7, linkedin: 2, youtube: 1, tiktok: 3 };
+
+  const todayDate = new Date(); todayDate.setHours(0, 0, 0, 0);
+  const dayOfWeek = (todayDate.getDay() + 6) % 7;
+  const weekStart = new Date(todayDate); weekStart.setDate(weekStart.getDate() - dayOfWeek);
+  const weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate() + 6);
+
+  function dateStr(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+
+  const thisWeekCards = contentBoard.cards.filter(c => {
+    if (!c.scheduledDate) return false;
+    return c.scheduledDate >= dateStr(weekStart) && c.scheduledDate <= dateStr(weekEnd);
+  });
+
+  const platCounts = {};
+  thisWeekCards.forEach(c => {
+    if (!platCounts[c.platform]) platCounts[c.platform] = 0;
+    platCounts[c.platform]++;
+  });
+
+  const suggestions = {
+    twitter: 'Text posts with strong opinions and market takes perform best on X',
+    linkedin: 'Long-form educational posts with frameworks drive highest engagement',
+    instagram: 'Carousel posts drive highest engagement on Instagram',
+    youtube: 'Tutorial and analysis videos get the most watch time',
+    tiktok: 'Short-form video performs best on TikTok'
+  };
+
+  const gaps = [];
+  const onTrack = [];
+
+  for (const [plat, target] of Object.entries(targets)) {
+    const actual = platCounts[plat] || 0;
+    const behind = target - actual;
+    if (behind > 0) {
+      gaps.push({ platform: plat, target, actual, behind, suggestion: suggestions[plat] || 'Fill the gap with your best performing content type' });
+    } else {
+      onTrack.push({ platform: plat, target, actual, note: actual > target ? 'Ahead of target' : 'On pace' });
+    }
+  }
+
+  res.json({
+    weekOf: dateStr(weekStart),
+    daysLeft: 7 - dayOfWeek,
+    gaps,
+    onTrack
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`CS CEO Dashboard running on http://localhost:${PORT}`);
 });
