@@ -3,574 +3,1125 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-
-<title>The Collective Shift Operating System</title>
-<script src="https://cdn.tailwindcss.com"></script>
-
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      colors: {
-        cs: {
-          orange: '#FC5C03',
-          'orange-light': '#FC8C4E',
-          'orange-bg': '#FEDECC',
-          'orange-hover': '#FEEEE5',
-          green: '#08C394',
-          purple: '#654FFC',
-          border: '#E8E8EA',
-          text: '#1B1925',
-          secondary: '#4D4C55',
-          muted: '#807F86',
-        }
-      },
-      fontFamily: {
-        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
-        barlow: ['Barlow', 'sans-serif'],
-        mono: ['Source Code Pro', 'monospace'],
-      },
-      borderRadius: {
-        pill: '100px',
-      }
-    }
-  }
-}
-</script>
+<title>Social Hub — Collective Shift</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-  body { font-family: 'Barlow', sans-serif; }
-  h1, h2, h3, h4, h5 { font-family: 'Plus Jakarta Sans', sans-serif; }
-  .label-tag { font-family: 'Source Code Pro', monospace; }
-  /* Sidebar */
-  .sidebar { transition: transform 0.3s ease; }
-  @media (max-width: 1023px) {
-    .sidebar { transform: translateX(-100%); position: fixed; z-index: 50; top: 0; left: 0; height: 100vh; }
-    .sidebar.open { transform: translateX(0); }
-  }
-  .nav-link { transition: all 0.15s; }
-  .nav-link:hover, .nav-link.active { background: rgba(252,92,3,0.12); color: #FC5C03; border-left-color: #FC5C03; }
-  .stat-card { transition: transform 0.2s, border-color 0.2s; }
-  .stat-card:hover { transform: translateY(-2px); border-color: #FC5C03; }
-  .section-card { transition: transform 0.2s, border-color 0.2s; }
-  .section-card:hover { transform: translateY(-3px); border-color: #FC5C03; }
-</style>
+:root {
+  --orange: #FC5C03;
+  --dark-bg: #1B1925;
+  --deeper-dark: #0D0B14;
+  --card-bg: #252530;
+  --card-border: #3A3A3A;
+  --text: #E8E8EA;
+  --muted: #807F86;
+  --green: #08C394;
+  --red: #FF0A00;
+  --blue: #3B82F6;
+  --purple: #A855F7;
+  --teal: #0BF4B9;
+  --yellow: #F59E0B;
+  --pink: #EC4899;
+  --yt-red: #FF0000;
+  --ig-pink: #E4405F;
+  --li-blue: #0A66C2;
+  --tw-blue: #1DA1F2;
+  --sidebar-w: 220px;
+}
 
-  <link rel="stylesheet" href="/shell.css">
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: var(--deeper-dark); color: var(--text); display: flex; min-height: 100vh; }
+
+/* ── Sidebar ── */
+.sidebar {
+  width: var(--sidebar-w); background: var(--dark-bg); border-right: 1px solid var(--card-border);
+  display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
+  transition: transform .2s;
+}
+.sidebar-header { padding: 24px 20px; border-bottom: 1px solid var(--card-border); }
+.sidebar-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--orange); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; margin-bottom: 8px; }
+.sidebar-name { font-weight: 600; font-size: 14px; }
+.sidebar-role { font-size: 12px; color: var(--muted); }
+.sidebar-section { padding: 16px 0 4px 20px; font-size: 10px; font-weight: 600; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; }
+.sidebar-item {
+  display: flex; align-items: center; gap: 10px; padding: 10px 20px; font-size: 13px; color: var(--muted);
+  cursor: pointer; border-left: 3px solid transparent; transition: all .15s;
+}
+.sidebar-item:hover { color: var(--text); background: rgba(252,92,3,.05); }
+.sidebar-item.active { color: var(--text); border-left-color: var(--orange); background: rgba(252,92,3,.08); font-weight: 500; }
+.sidebar-item span.icon { font-size: 16px; width: 20px; text-align: center; }
+
+/* ── Hamburger ── */
+.hamburger { display: none; position: fixed; top: 12px; left: 12px; z-index: 200; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; width: 36px; height: 36px; cursor: pointer; color: var(--text); font-size: 18px; align-items: center; justify-content: center; }
+
+/* ── Main ── */
+.main { margin-left: var(--sidebar-w); flex: 1; padding: 28px 32px; min-width: 0; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── Cards / Grid ── */
+.stats-row { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+.stat-card {
+  flex: 1; min-width: 160px; background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: 12px; padding: 20px; position: relative;
+}
+.stat-card .label { font-size: 12px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+.stat-card .value { font-size: 28px; font-weight: 700; }
+.stat-card .sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+/* ── Platform Tabs ── */
+.platform-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.platform-tab {
+  padding: 8px 16px; border-radius: 100px; font-size: 12px; font-weight: 500; cursor: pointer;
+  border: 1px solid var(--card-border); background: transparent; color: var(--muted); transition: all .15s;
+}
+.platform-tab:hover { border-color: var(--orange); color: var(--text); }
+.platform-tab.active { background: var(--orange); border-color: var(--orange); color: #fff; }
+
+/* ── Charts ── */
+.charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.chart-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px; }
+.chart-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+.chart-card canvas { width: 100% !important; max-height: 250px; }
+
+/* ── Section Titles ── */
+.section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+.section-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+
+/* ── Pipeline / Kanban ── */
+.pipeline-filters { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.pipeline-filters select {
+  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 6px 12px;
+  color: var(--text); font-size: 12px; font-family: inherit;
+}
+.kanban { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 16px; min-height: 400px; }
+.kanban-col {
+  min-width: 220px; width: 220px; flex-shrink: 0; background: var(--dark-bg); border-radius: 12px;
+  border: 1px solid var(--card-border); display: flex; flex-direction: column;
+}
+.kanban-col-header {
+  padding: 12px 14px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px;
+  border-bottom: 1px solid var(--card-border); display: flex; align-items: center; gap: 8px;
+}
+.kanban-col-header .count { background: var(--card-bg); border-radius: 100px; padding: 2px 8px; font-size: 10px; color: var(--muted); }
+.kanban-cards { padding: 8px; flex: 1; overflow-y: auto; min-height: 60px; }
+.kanban-card {
+  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 10px 12px;
+  margin-bottom: 8px; cursor: grab; transition: transform .1s, box-shadow .1s; font-size: 12px;
+}
+.kanban-card:active { cursor: grabbing; }
+.kanban-card.dragging { opacity: .5; transform: rotate(2deg); }
+.kanban-card .card-platform { font-size: 14px; margin-bottom: 4px; }
+.kanban-card .card-title { font-weight: 500; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 6px; }
+.kanban-card .card-meta { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.kanban-card .badge {
+  font-size: 10px; padding: 2px 8px; border-radius: 100px; font-weight: 500;
+}
+.kanban-card .card-due { font-size: 10px; color: var(--muted); }
+.kanban-card .card-due.overdue { color: var(--red); font-weight: 600; }
+
+/* Type badges */
+.badge-reel { background: rgba(168,85,247,.15); color: #A855F7; }
+.badge-post { background: rgba(59,130,246,.15); color: #3B82F6; }
+.badge-video { background: rgba(255,0,0,.15); color: #FF6666; }
+.badge-carousel { background: rgba(236,72,153,.15); color: #EC4899; }
+.badge-thread { background: rgba(11,244,185,.15); color: #0BF4B9; }
+
+/* ── Calendar ── */
+.cal-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.cal-header h2 { font-size: 18px; font-weight: 700; flex: 1; }
+.cal-nav { display: flex; gap: 8px; }
+.cal-nav button, .cal-today-btn {
+  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 6px 14px;
+  color: var(--text); font-size: 12px; cursor: pointer; font-family: inherit; transition: all .15s;
+}
+.cal-nav button:hover, .cal-today-btn:hover { border-color: var(--orange); }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--card-border); border-radius: 12px; overflow: hidden; }
+.cal-day-header { background: var(--dark-bg); padding: 10px; text-align: center; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; }
+.cal-day {
+  background: var(--card-bg); min-height: 100px; padding: 8px; position: relative; cursor: pointer; transition: background .15s;
+}
+.cal-day:hover { background: #2d2d3d; }
+.cal-day.today { box-shadow: inset 0 0 0 2px var(--orange); }
+.cal-day.other-month { opacity: .3; }
+.cal-day .day-num { font-size: 12px; font-weight: 500; margin-bottom: 6px; color: var(--muted); }
+.cal-day.today .day-num { color: var(--orange); font-weight: 700; }
+.cal-card {
+  font-size: 10px; padding: 3px 6px; border-radius: 4px; margin-bottom: 3px; background: rgba(255,255,255,.05);
+  border-left: 3px solid var(--muted); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cal-card.plat-youtube { border-left-color: var(--yt-red); }
+.cal-card.plat-instagram { border-left-color: var(--ig-pink); }
+.cal-card.plat-linkedin { border-left-color: var(--li-blue); }
+.cal-card.plat-twitter { border-left-color: var(--tw-blue); }
+
+/* ── Weekly Planner ── */
+.planner-section { margin-bottom: 24px; }
+.progress-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.progress-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 16px; }
+.progress-card .plat-label { font-size: 12px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.progress-bar { height: 8px; background: var(--card-border); border-radius: 100px; overflow: hidden; margin-bottom: 6px; }
+.progress-fill { height: 100%; border-radius: 100px; transition: width .3s; }
+.progress-text { font-size: 11px; color: var(--muted); }
+.week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-bottom: 16px; }
+.week-day {
+  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; min-height: 120px;
+}
+.week-day.today { border-color: var(--orange); }
+.week-day.gap { border-color: var(--red); border-style: dashed; }
+.week-day .day-label { font-size: 11px; font-weight: 600; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; }
+.week-day .day-date { font-size: 10px; color: var(--muted); margin-bottom: 8px; }
+.week-day-card { font-size: 10px; padding: 4px 6px; background: rgba(255,255,255,.05); border-radius: 4px; margin-bottom: 4px; border-left: 3px solid var(--muted); }
+.quick-add-btn {
+  width: 100%; padding: 4px; border: 1px dashed var(--card-border); border-radius: 4px; background: transparent;
+  color: var(--muted); font-size: 10px; cursor: pointer; margin-top: 4px;
+}
+.quick-add-btn:hover { border-color: var(--orange); color: var(--orange); }
+.countdown-cards { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+.countdown-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px 18px; }
+.countdown-card .countdown-val { font-size: 24px; font-weight: 700; }
+.countdown-card .countdown-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* ── Settings ── */
+.settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.settings-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px; }
+.settings-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+.settings-card label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; margin-top: 12px; }
+.settings-card label:first-of-type { margin-top: 0; }
+.settings-card input, .settings-card select {
+  width: 100%; background: var(--deeper-dark); border: 1px solid var(--card-border); border-radius: 8px; padding: 8px 12px;
+  color: var(--text); font-size: 13px; font-family: inherit;
+}
+.settings-card .platform-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--card-border); font-size: 13px; }
+.settings-card .platform-row:last-child { border-bottom: none; }
+.settings-card .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+.btn-primary {
+  background: var(--orange); color: #fff; border: none; border-radius: 8px; padding: 10px 20px;
+  font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity .15s;
+}
+.btn-primary:hover { opacity: .85; }
+.btn-secondary {
+  background: transparent; color: var(--text); border: 1px solid var(--card-border); border-radius: 8px;
+  padding: 10px 20px; font-size: 13px; cursor: pointer; font-family: inherit;
+}
+.btn-secondary:hover { border-color: var(--orange); }
+
+/* ── Modal ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 300; display: none; align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--dark-bg); border: 1px solid var(--card-border); border-radius: 12px; width: 600px; max-width: 95vw;
+  max-height: 90vh; overflow-y: auto; padding: 24px;
+}
+.modal h2 { font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+.modal-close { background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer; }
+.modal label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; margin-top: 12px; }
+.modal input, .modal select, .modal textarea {
+  width: 100%; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 8px 12px;
+  color: var(--text); font-size: 13px; font-family: inherit; resize: vertical;
+}
+.modal textarea { min-height: 80px; }
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+.redistribution-checks { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+.redistribution-checks label { display: flex; align-items: center; gap: 4px; color: var(--text); font-size: 12px; margin: 0; }
+
+/* ── Loading ── */
+.spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid var(--card-border); border-top-color: var(--orange); border-radius: 50%; animation: spin .6s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .hamburger { display: flex; }
+  .main { margin-left: 0; padding: 16px; padding-top: 56px; }
+  .charts-grid { grid-template-columns: 1fr; }
+  .settings-grid { grid-template-columns: 1fr; }
+  .week-grid { grid-template-columns: repeat(3, 1fr); }
+  .kanban-col { min-width: 180px; width: 180px; }
+}
+</style>
 </head>
 <body>
 
-<!-- ═══ SIDEBAR OVERLAY (mobile) ═══ -->
-<div class="ds-sidebar-overlay" id="dsSidebarOverlay" onclick="document.getElementById('dsSidebar').classList.remove('open');this.classList.remove('open');"></div>
+<!-- Hamburger -->
+<button class="hamburger" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
 
-<!-- ═══ SIDEBAR ═══ -->
-<aside class="ds-sidebar" id="dsSidebar">
-  <div style="padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);">
-    <a href="../index.html" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
-      <div style="width:32px; height:32px; border-radius:8px; background:rgba(252,92,3,0.15); display:flex; align-items:center; justify-content:center;">
-        <span style="color:#FC5C03; font-weight:800; font-size:13px; font-family:'Plus Jakarta Sans',sans-serif;">CS</span>
+<!-- Sidebar -->
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-avatar">BS</div>
+    <div class="sidebar-name">Ben Simpson</div>
+    <div class="sidebar-role">Personal Brand</div>
+  </div>
+  <div class="sidebar-section">Core</div>
+  <div class="sidebar-item active" data-tab="analytics"><span class="icon">&#128202;</span> Analytics</div>
+  <div class="sidebar-item" data-tab="calendar"><span class="icon">&#128197;</span> Calendar</div>
+  <div class="sidebar-section">Content</div>
+  <div class="sidebar-item" data-tab="pipeline"><span class="icon">&#9999;&#65039;</span> Pipeline</div>
+  <div class="sidebar-item" data-tab="planner"><span class="icon">&#128203;</span> Weekly Planner</div>
+  <div class="sidebar-section">Settings</div>
+  <div class="sidebar-item" data-tab="settings"><span class="icon">&#9881;&#65039;</span> Settings</div>
+</nav>
+
+<!-- Main Content -->
+<div class="main">
+
+<!-- ═══════════ TAB: ANALYTICS ═══════════ -->
+<div id="tab-analytics" class="tab-content active">
+  <h1 class="section-title">Analytics Overview</h1>
+  <p class="section-subtitle">Content pipeline & social media performance</p>
+
+  <!-- Pipeline Summary -->
+  <div class="stats-row" id="pipeline-stats"></div>
+
+  <!-- Audience Summary -->
+  <div class="stats-row" id="audience-stats"></div>
+
+  <!-- Platform Tabs -->
+  <div class="platform-tabs" id="analytics-platform-tabs">
+    <div class="platform-tab active" data-platform="summary">Summary</div>
+    <div class="platform-tab" data-platform="youtube">YouTube</div>
+    <div class="platform-tab" data-platform="instagram">Instagram</div>
+    <div class="platform-tab" data-platform="twitter">X / Twitter</div>
+    <div class="platform-tab" data-platform="linkedin">LinkedIn</div>
+  </div>
+
+  <!-- Platform Detail -->
+  <div id="platform-detail"></div>
+
+  <!-- Charts -->
+  <div class="charts-grid">
+    <div class="chart-card"><h3>Followers Over Time</h3><canvas id="chart-followers"></canvas></div>
+    <div class="chart-card"><h3>Engagement by Platform</h3><canvas id="chart-engagement"></canvas></div>
+  </div>
+</div>
+
+<!-- ═══════════ TAB: CALENDAR ═══════════ -->
+<div id="tab-calendar" class="tab-content">
+  <div class="cal-header">
+    <h2 id="cal-month-title"></h2>
+    <button class="cal-today-btn" onclick="calToday()">Today</button>
+    <div class="cal-nav">
+      <button onclick="calPrev()">&larr;</button>
+      <button onclick="calNext()">&rarr;</button>
+    </div>
+  </div>
+  <div class="cal-grid" id="cal-grid"></div>
+</div>
+
+<!-- ═══════════ TAB: PIPELINE ═══════════ -->
+<div id="tab-pipeline" class="tab-content">
+  <h1 class="section-title">Content Pipeline</h1>
+  <div class="pipeline-filters">
+    <select id="filter-platform"><option value="">All Platforms</option><option value="instagram">Instagram</option><option value="twitter">X / Twitter</option><option value="linkedin">LinkedIn</option><option value="youtube">YouTube</option></select>
+    <select id="filter-type"><option value="">All Types</option><option value="reel">Reel</option><option value="post">Post</option><option value="video">Video</option><option value="carousel">Carousel</option><option value="thread">Thread</option></select>
+    <select id="filter-assignee" id="filter-assignee"><option value="">All Assignees</option></select>
+    <button class="btn-primary" onclick="openAddModal()">+ Add Content</button>
+  </div>
+  <div class="kanban" id="kanban"></div>
+</div>
+
+<!-- ═══════════ TAB: WEEKLY PLANNER ═══════════ -->
+<div id="tab-planner" class="tab-content">
+  <h1 class="section-title">Weekly Planner</h1>
+  <p class="section-subtitle">Track content output against weekly targets</p>
+
+  <h3 style="font-size:14px;font-weight:600;margin-bottom:12px;">This Week's Progress</h3>
+  <div class="progress-grid" id="planner-progress"></div>
+
+  <h3 style="font-size:14px;font-weight:600;margin-bottom:12px;">This Week</h3>
+  <div class="week-grid" id="this-week-grid"></div>
+
+  <h3 style="font-size:14px;font-weight:600;margin-bottom:12px;">Next Week</h3>
+  <div class="week-grid" id="next-week-grid"></div>
+
+  <div class="countdown-cards" id="countdown-cards"></div>
+</div>
+
+<!-- ═══════════ TAB: SETTINGS ═══════════ -->
+<div id="tab-settings" class="tab-content">
+  <h1 class="section-title">Settings</h1>
+  <div class="settings-grid">
+    <div class="settings-card">
+      <h3>Connected Platforms</h3>
+      <div id="settings-platforms"></div>
+    </div>
+    <div class="settings-card">
+      <h3>Team Members</h3>
+      <label>Editor</label>
+      <input type="text" id="settings-editor" placeholder="Editor name">
+      <label>Designer</label>
+      <input type="text" id="settings-designer" placeholder="Designer name">
+    </div>
+    <div class="settings-card">
+      <h3>Weekly Targets</h3>
+      <label>Instagram (Reels)</label>
+      <input type="number" id="target-instagram" min="0">
+      <label>X / Twitter (Posts)</label>
+      <input type="number" id="target-twitter" min="0">
+      <label>LinkedIn (Posts)</label>
+      <input type="number" id="target-linkedin" min="0">
+      <label>YouTube (Videos)</label>
+      <input type="number" id="target-youtube" min="0">
+    </div>
+    <div class="settings-card">
+      <h3>Sync Status</h3>
+      <p style="font-size:13px;margin-bottom:12px;">Last sync: <span id="settings-last-sync" style="color:var(--muted)">Never</span></p>
+      <button class="btn-primary" onclick="refreshAnalytics()">Refresh Analytics</button>
+      <button class="btn-secondary" style="margin-top:8px;" onclick="saveSettings()">Save Settings</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<!-- ═══════════ DETAIL MODAL ═══════════ -->
+<div class="modal-overlay" id="detail-modal">
+  <div class="modal">
+    <h2><span id="modal-title-display">Content Detail</span><button class="modal-close" onclick="closeModal()">&times;</button></h2>
+    <label>Title</label>
+    <input type="text" id="modal-title">
+    <label>Script / Content</label>
+    <textarea id="modal-content" rows="4"></textarea>
+    <label>Caption / Copy</label>
+    <textarea id="modal-copy" rows="3"></textarea>
+    <label>CTA</label>
+    <input type="text" id="modal-cta">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div>
+        <label>Platform</label>
+        <select id="modal-platform">
+          <option value="instagram">Instagram</option>
+          <option value="twitter">X / Twitter</option>
+          <option value="linkedin">LinkedIn</option>
+          <option value="youtube">YouTube</option>
+        </select>
       </div>
       <div>
-        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; color:#fff; letter-spacing:0.3px;">Collective Shift</div>
-        <div style="font-size:10px; color:rgba(255,255,255,0.35); font-family:'Source Code Pro',monospace;">CEO Dashboard</div>
+        <label>Content Type</label>
+        <select id="modal-type">
+          <option value="reel">Reel</option>
+          <option value="post">Post</option>
+          <option value="video">Video</option>
+          <option value="carousel">Carousel</option>
+          <option value="thread">Thread</option>
+        </select>
       </div>
-    </a>
-  </div>
-  <nav style="flex:1; padding: 8px 0;">
-    <div class="ds-sidebar-section">Home</div>
-    <a class="ds-sidebar-link" id="nav-brief" href="../index.html">
-      <span class="ds-icon">⭐</span> Morning Brief
-    </a>
-    <a class="ds-sidebar-link" id="nav-tasks" href="../index.html#tasks">
-      <span class="ds-icon">✓</span> Tasks
-    </a>
-    <a class="ds-sidebar-link" id="nav-actions" href="../actions.html">
-      <span class="ds-icon">⚡</span> Actions
-    </a>
-
-    <div class="ds-sidebar-section">Metrics</div>
-    <a class="ds-sidebar-link" id="nav-kpis" href="../index.html#metrics">
-      <span class="ds-icon">📊</span> KPIs
-    </a>
-    <a class="ds-sidebar-link" id="nav-cash" href="../team-cost.html">
-      <span class="ds-icon">💰</span> Cash &amp; Costs
-    </a>
-    <a class="ds-sidebar-link" id="nav-members" href="../hub/products.html">
-      <span class="ds-icon">👥</span> Members
-    </a>
-
-    <div class="ds-sidebar-section">Content</div>
-    <a class="ds-sidebar-link" id="nav-content-board" href="../content-board.html">
-      <span class="ds-icon">🎬</span> Content Board
-    </a>
-    <a class="ds-sidebar-link" id="nav-calendar" href="../asana-board-mockup.html">
-      <span class="ds-icon">📅</span> Calendar
-    </a>
-    <a class="ds-sidebar-link" id="nav-youtube" href="../hub/youtube-strategy.html">
-      <span class="ds-icon">▶</span> YouTube
-    </a>
-
-    <div class="ds-sidebar-section">Strategy</div>
-    <a class="ds-sidebar-link active" id="nav-strategy" href="../hub/operating-system.html">
-      <span class="ds-icon">🧭</span> Strategy Hub
-    </a>
-    <a class="ds-sidebar-link" id="nav-docs" href="../hub/brand.html">
-      <span class="ds-icon">📄</span> Docs
-    </a>
-
-    <div class="ds-sidebar-section">Team</div>
-    <a class="ds-sidebar-link" id="nav-team" href="../team-cost.html">
-      <span class="ds-icon">👤</span> Team
-    </a>
-    <a class="ds-sidebar-link" id="nav-bots" href="../index.html#bots">
-      <span class="ds-icon">🤖</span> Bot Fleet
-    </a>
-  </nav>
-  <div style="padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 10px; color: rgba(255,255,255,0.25); font-family: 'Source Code Pro', monospace;">
-    v2.0 · April 2026
-  </div>
-</aside>
-
-<!-- ═══ TOP BAR ═══ -->
-<header class="ds-topbar">
-  <div style="display:flex; align-items:center; gap:12px;">
-    <button class="ds-mobile-hamburger" onclick="document.getElementById('dsSidebar').classList.toggle('open');document.getElementById('dsSidebarOverlay').classList.toggle('open');" style="background:none; border:none; cursor:pointer; color:#807F86; padding:4px;">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-    </button>
-    <div style="position:relative;">
-      <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:#807F86;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input type="text" class="ds-topbar-search" placeholder="Search dashboard...">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div>
+        <label>Status</label>
+        <select id="modal-status">
+          <option value="idea">Idea</option>
+          <option value="approved">Approved</option>
+          <option value="recorded">Record</option>
+          <option value="editing">Editing</option>
+          <option value="thumbnail">Thumbnail</option>
+          <option value="scheduled">Scheduled</option>
+          <option value="published">Published</option>
+        </select>
+      </div>
+      <div>
+        <label>Scheduled Date</label>
+        <input type="date" id="modal-scheduled-date">
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div><label>Assigned Editor</label><input type="text" id="modal-editor"></div>
+      <div><label>Assigned Designer</label><input type="text" id="modal-designer"></div>
+    </div>
+    <label>Due Date</label>
+    <input type="date" id="modal-due-date">
+    <label>Redistribute To</label>
+    <div class="redistribution-checks">
+      <label><input type="checkbox" id="redist-twitter"> X/Twitter</label>
+      <label><input type="checkbox" id="redist-linkedin"> LinkedIn</label>
+      <label><input type="checkbox" id="redist-instagram"> Instagram</label>
+      <label><input type="checkbox" id="redist-youtube"> YouTube</label>
+      <label><input type="checkbox" id="redist-email"> Email</label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveModal()">Save</button>
     </div>
   </div>
-  <div style="display:flex; align-items:center; gap:16px;">
-    <button style="background:none; border:none; cursor:pointer; color:#807F86; position:relative;">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      <span style="position:absolute; top:-2px; right:-2px; width:8px; height:8px; background:#FC5C03; border-radius:50%; border:2px solid #fff;"></span>
-    </button>
-    <div style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-      <div style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #FC5C03, #FC8C4E); display:flex; align-items:center; justify-content:center;">
-        <span style="color:#fff; font-size:11px; font-weight:700; font-family:'Plus Jakarta Sans',sans-serif;">BB</span>
-      </div>
-      <span style="font-size:13px; font-weight:500; color:#1B1925;">BenBot</span>
-    </div>
-  </div>
-</header>
-
-<!-- ═══ MAIN CONTENT ═══ -->
-<div class="ds-main-content">
-  <div class="ds-page-body">
-<!-- ═══ COLLECTIVE SHIFT TOP NAV ═══ -->
-<style>
-  :root {
-    --csn-h: 56px;
-    --csn-bg: #FFFFFF;
-    --csn-border: #E8E8EA;
-    --csn-text: #1B1925;
-    --csn-muted: #4D4C55;
-    --csn-orange: #FC5C03;
-    --csn-orange-bg: #FEEEE5;
-    --csn-dd-bg: #FFFFFF;
-    --csn-dd-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
-    --csn-z: 9000;
-  }
-  .csn-bar {
-    position: fixed;
-    top: 48px; left: 220px; right: 0;
-    height: var(--csn-h);
-    background: var(--csn-bg);
-    border-bottom: 1px solid var(--csn-border);
-    display: flex;
-    align-items: center;
-    padding: 0 24px;
-    gap: 0;
-    z-index: var(--csn-z);
-    font-family: 'Plus Jakarta Sans', 'Barlow', sans-serif;
-  }
-  .csn-logo {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    color: var(--csn-orange);
-    text-decoration: none;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    margin-right: 32px;
-    flex-shrink: 0;
-  }
-  .csn-nav {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    flex: 1;
-  }
-  .csn-item {
-    position: relative;
-  }
-  .csn-link {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--csn-muted);
-    text-decoration: none;
-    white-space: nowrap;
-    transition: color 0.15s, background 0.15s;
-    cursor: pointer;
-  }
-  .csn-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
-  .csn-item.active > .csn-link { color: var(--csn-orange); font-weight: 600; }
-  .csn-chevron { transition: transform 0.2s; flex-shrink: 0; }
-  .csn-item.csn-has-dd:hover > .csn-link .csn-chevron { transform: rotate(180deg); }
-  /* Dropdown */
-  .csn-dropdown {
-    display: none;
-    position: absolute;
-    top: calc(100% + 6px);
-    left: 0;
-    min-width: 240px;
-    background: var(--csn-dd-bg);
-    border: 1px solid var(--csn-border);
-    border-radius: 12px;
-    box-shadow: var(--csn-dd-shadow);
-    padding: 6px;
-    z-index: calc(var(--csn-z) + 1);
-  }
-  .csn-item.csn-has-dd { position: relative; }
-  .csn-item.csn-has-dd::after { content: ""; position: absolute; top: 100%; left: 0; width: 100%; height: 12px; }
-  .csn-item.csn-has-dd:hover > .csn-dropdown { display: block; }
-  .csn-dd-item {
-    display: block;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--csn-muted);
-    text-decoration: none;
-    transition: color 0.12s, background 0.12s;
-    white-space: nowrap;
-  }
-  .csn-dd-item:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
-  .csn-divider { height: 1px; background: var(--csn-border); margin: 4px 8px; }
-  /* Mobile hamburger */
-  .csn-hamburger {
-    display: none;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--csn-muted);
-    padding: 4px;
-    margin-left: auto;
-  }
-  /* Mobile drawer */
-  .csn-mobile-menu {
-    display: none;
-    position: fixed;
-    top: calc(48px + var(--csn-h));
-    left: 0; right: 0;
-    background: var(--csn-bg);
-    border-bottom: 1px solid var(--csn-border);
-    padding: 8px 16px 16px;
-    z-index: calc(var(--csn-z) - 1);
-    max-height: calc(100vh - var(--csn-h));
-    overflow-y: auto;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-  }
-  .csn-mobile-menu.open { display: block; }
-  .csn-mob-link {
-    display: block;
-    padding: 9px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--csn-muted);
-    text-decoration: none;
-    transition: color 0.12s, background 0.12s;
-  }
-  .csn-mob-link:hover { color: var(--csn-orange); background: var(--csn-orange-bg); }
-  .csn-mob-top { font-weight: 600; color: var(--csn-text); margin-top: 4px; }
-  .csn-mob-sub { font-size: 12px; padding-left: 20px; }
-  /* Body offset */
-  body { padding-top: calc(48px + var(--csn-h)) !important; }
-  @media (max-width: 1023px) {
-    .csn-nav { display: none; }
-    .csn-hamburger { display: block; }
-  }
-  @media (max-width: 640px) {
-    .csn-logo { font-size: 13px; margin-right: 16px; }
-  }
-
-  @media (max-width: 1023px) {
-    .csn-bar { top: 48px !important; left: 0 !important; right: 0 !important; }
-    .csn-mobile-menu { top: calc(48px + var(--csn-h)) !important; left: 0 !important; }
-  }
-</style>
-
-      <div class="csn-item csn-has-dd active">
-        <a href="../hub/operating-system.html" class="csn-link">The Collective Shift Operating System
-          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </a>
-        <div class="csn-dropdown"><a href="../hub/operating-system.html" class="csn-dd-item">Operating System Overview</a><a href="../hub/modules/m1-foundations.html" class="csn-dd-item">Module 1: Foundations</a><a href="../hub/modules/m2-bitcoin.html" class="csn-dd-item">Module 2: Bitcoin</a><a href="../hub/modules/m3-altcoins.html" class="csn-dd-item">Module 3: Digital Assets</a><a href="../hub/modules/m4-how-we-invest.html" class="csn-dd-item">Module 4: How We Invest</a><a href="../hub/modules/m5-buy-sell.html" class="csn-dd-item">Module 5: Buy & Sell</a><a href="../hub/modules/m6-send-store.html" class="csn-dd-item">Module 6: Send & Store</a><a href="../hub/modules/m7-tax.html" class="csn-dd-item">Module 7: Tax</a><a href="../hub/modules/m8-sell-strategy.html" class="csn-dd-item">Module 8: Exit Strategy</a><div class="csn-divider"></div><a href="../8-step-strategy-workbook.html" class="csn-dd-item">8-Step Strategy Workbook</a><a href="../8-step-strategy-workbook-L1.html" class="csn-dd-item">↳ Level 1 Workbook</a><a href="../8-step-strategy-workbook-L2.html" class="csn-dd-item">↳ Level 2 Workbook</a><a href="../portfolio-calculator.html" class="csn-dd-item">Portfolio Allocation Calculator</a></div>
-      </div>
-      <div class="csn-item csn-has-dd ">
-        <a href="../hub/products.html" class="csn-link">Product
-          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </a>
-        <div class="csn-dropdown"><a href="../hub/products.html#platinum" class="csn-dd-item">Platinum</a><a href="../hub/products.html#accelerator" class="csn-dd-item">Accelerator</a><a href="../hub/beginner-journey.html" class="csn-dd-item">Beginner's Journey</a><a href="../hub/products.html#two-track" class="csn-dd-item">Two-Track System</a></div>
-      </div>
-      <div class="csn-item csn-has-dd ">
-        <a href="../hub/youtube-strategy.html" class="csn-link">Social Media
-          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </a>
-        <div class="csn-dropdown"><a href="../hub/youtube-strategy.html" class="csn-dd-item">YouTube Strategy</a><a href="../hub/social-strategy.html" class="csn-dd-item">Social Strategy</a><a href="../hub/instagram-strategy.html" class="csn-dd-item">Instagram Strategy</a><div class="csn-divider"></div><a href="../hub/brand.html" class="csn-dd-item">Brand & Voice</a><a href="../hub/positioning.html" class="csn-dd-item">Positioning & ICP</a><a href="../hub/competitors.html" class="csn-dd-item">Competitors</a></div>
-      </div>
-      <div class="csn-item csn-has-dd ">
-        <a href="../travis-briefing-2026-03-27.html" class="csn-link">Documents
-          <svg class="csn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </a>
-        <div class="csn-dropdown"><a href="../travis-briefing-2026-03-27.html" class="csn-dd-item">Travis CGO Briefing</a><a href="../cs-education-system-overview.html" class="csn-dd-item">Education System Overview</a><a href="../q2-market-briefing.html" class="csn-dd-item">Q2 Market Briefing</a><a href="../webinar-q2-2026-is-now-the-time.html" class="csn-dd-item">Webinar: Is Now The Time?</a></div>
-      </div>
-  </div>
-  <button class="csn-hamburger" onclick="document.getElementById('csnMobileMenu').classList.toggle('open')" aria-label="Toggle navigation">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-  </button>
-</nav>
-<div id="csnMobileMenu" class="csn-mobile-menu">
-  <a href="../index.html" class="csn-mob-link csn-mob-top">CEO Dashboard</a>
-<a href="../hub/operating-system.html" class="csn-mob-link csn-mob-top">The Collective Shift Operating System</a>
-<a href="../hub/operating-system.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Operating System Overview</a>
-<a href="../hub/modules/m1-foundations.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 1: Foundations</a>
-<a href="../hub/modules/m2-bitcoin.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 2: Bitcoin</a>
-<a href="../hub/modules/m3-altcoins.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 3: Digital Assets</a>
-<a href="../hub/modules/m4-how-we-invest.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 4: How We Invest</a>
-<a href="../hub/modules/m5-buy-sell.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 5: Buy & Sell</a>
-<a href="../hub/modules/m6-send-store.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 6: Send & Store</a>
-<a href="../hub/modules/m7-tax.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 7: Tax</a>
-<a href="../hub/modules/m8-sell-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Module 8: Exit Strategy</a>
-<a href="../8-step-strategy-workbook.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;8-Step Strategy Workbook</a>
-<a href="../8-step-strategy-workbook-L1.html" class="csn-mob-link csn-mob-sub">↳ Level 1 Workbook</a>
-<a href="../8-step-strategy-workbook-L2.html" class="csn-mob-link csn-mob-sub">↳ Level 2 Workbook</a>
-<a href="../portfolio-calculator.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Portfolio Allocation Calculator</a>
-<a href="../hub/products.html" class="csn-mob-link csn-mob-top">Product</a>
-<a href="../hub/products.html#platinum" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Platinum</a>
-<a href="../hub/products.html#accelerator" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Accelerator</a>
-<a href="../hub/beginner-journey.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Beginner's Journey</a>
-<a href="../hub/products.html#two-track" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Two-Track System</a>
-<a href="../hub/youtube-strategy.html" class="csn-mob-link csn-mob-top">Social Media</a>
-<a href="../hub/youtube-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;YouTube Strategy</a>
-<a href="../hub/social-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Social Strategy</a>
-<a href="../hub/instagram-strategy.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Instagram Strategy</a>
-<a href="../hub/brand.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Brand & Voice</a>
-<a href="../hub/positioning.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Positioning & ICP</a>
-<a href="../hub/competitors.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Competitors</a>
-<a href="../travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-top">Documents</a>
-<a href="../travis-briefing-2026-03-27.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Travis CGO Briefing</a>
-<a href="../cs-education-system-overview.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Education System Overview</a>
-<a href="../q2-market-briefing.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Q2 Market Briefing</a>
-<a href="../webinar-q2-2026-is-now-the-time.html" class="csn-mob-link csn-mob-sub">&nbsp;&nbsp;&nbsp;Webinar: Is Now The Time?</a>
-</div>
-<!-- ═══ END TOP NAV ═══ -->
-
-
-<!-- Mobile Header -->
-<div class="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-\[#E8E8EA\] sticky top-[56px] z-40">
-  <span class="font-heading text-cs-orange text-lg font-bold tracking-wide">COLLECTIVE SHIFT</span>
-  <button onclick="document.getElementById('sidebar').classList.toggle('open')" class="text-\[#807F86\] hover:text-cs-orange">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-  </button>
 </div>
 
-<!-- Overlay -->
-<div id="overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="document.getElementById('sidebar').classList.remove('open');this.classList.add('hidden')"></div>
-
-<div class="flex">
-  <!-- Sidebar -->
-  
-    <nav class="flex-1 py-4 px-3 space-y-1">
-      <a href="/" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent">
-        <span>📊</span> Dashboard
-      </a>
-      <a href="index.html" class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium border-l-2 border-transparent">
-        <span>🏠</span> Home
-      </a>
-      <a href="positioning.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent">
-        <span>🎯</span> Positioning & ICP
-      </a>
-      <a href="operating-system.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent">
-        <span>⚙️</span> Operating System
-      </a>
-      <a href="products.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent">
-        <span>💎</span> Products
-      </a>
-      <a href="social-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent">
-      <a href="youtube-strategy.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent"><span>🎬</span> YouTube Strategy</a>
-        <span>📱</span> Social & Content
-      </a>
-      <a href="competitors.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent">
-        <span>🏆</span> Competitive Intel
-      </a>
-      <a href="brand.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-\[#807F86\] border-l-2 border-transparent">
-        <span>🎨</span> Brand & Voice
-      </a>
-    </nav>
-    <div class="p-4 border-t border-\[#E8E8EA\]">
-      <p class="text-\[#807F86\] text-xs font-mono">v2.0 · March 2026</p>
-      <p class="text-\[#807F86\] text-xs">Internal use only</p>
-    </div>
-  </aside>
-
-  <!-- Main Content -->
-  <main class="flex-1 min-h-screen">
-    <!-- Breadcrumb -->
-    <div class="px-6 lg:px-10 py-3 border-b border-\[#E8E8EA\] bg-white/50">
-      <div class="flex items-center gap-2 text-xs font-mono text-\[#807F86\]">
-        <span class="text-cs-orange">The Collective Shift Operating System</span>
-        <span>/</span>
-        <span>Home</span>
+<!-- Quick-Add Modal -->
+<div class="modal-overlay" id="quickadd-modal">
+  <div class="modal" style="width:420px;">
+    <h2><span>Quick Add Content</span><button class="modal-close" onclick="closeQuickAdd()">&times;</button></h2>
+    <label>Title</label>
+    <input type="text" id="qa-title">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div>
+        <label>Platform</label>
+        <select id="qa-platform"><option value="instagram">Instagram</option><option value="twitter">X / Twitter</option><option value="linkedin">LinkedIn</option><option value="youtube">YouTube</option></select>
+      </div>
+      <div>
+        <label>Type</label>
+        <select id="qa-type"><option value="reel">Reel</option><option value="post">Post</option><option value="video">Video</option><option value="carousel">Carousel</option><option value="thread">Thread</option></select>
       </div>
     </div>
-
-    <div class="px-6 lg:px-10 py-8 max-w-6xl">
-      <!-- Hero -->
-      <div class="mb-10">
-        <p class="label-tag text-cs-orange text-xs font-semibold tracking-widest uppercase mb-2">Overview</p>
-        <h1 class="text-4xl lg:text-5xl font-bold tracking-tight mb-3">The Collective Shift Operating System</h1>
-        <p class="text-\[#807F86\] text-lg max-w-2xl">To be the world's most trusted digital asset education company, empowering members to build generational wealth through a systematic, research-driven framework.</p>
-      </div>
-
-      <!-- Key Metrics -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-        <div class="stat-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 text-center">
-          <div class="text-3xl font-heading font-bold text-cs-orange">1,163</div>
-          <div class="text-\[#807F86\] text-xs uppercase tracking-wider mt-1 font-mono">Total Members</div>
-        </div>
-        <div class="stat-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 text-center">
-          <div class="text-3xl font-heading font-bold text-cs-orange">402</div>
-          <div class="text-\[#807F86\] text-xs uppercase tracking-wider mt-1 font-mono">Platinum Members</div>
-        </div>
-        <div class="stat-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 text-center">
-          <div class="text-3xl font-heading font-bold text-cs-green">A$7.3M</div>
-          <div class="text-\[#807F86\] text-xs uppercase tracking-wider mt-1 font-mono">ARR</div>
-        </div>
-        <div class="stat-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 text-center">
-          <div class="text-3xl font-heading font-bold text-cs-green">203%</div>
-          <div class="text-\[#807F86\] text-xs uppercase tracking-wider mt-1 font-mono">YoY Growth</div>
-        </div>
-      </div>
-
-      <!-- Quick Links -->
-      <h2 class="text-2xl font-bold mb-5 tracking-tight">Sections</h2>
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
-        <a href="positioning.html" class="section-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 block">
-          <div class="text-2xl mb-2">🎯</div>
-          <h3 class="text-lg font-bold mb-1">Positioning & ICP</h3>
-          <p class="text-\[#807F86\] text-sm">Who we are, who we're for, validated "Why", acquisition path, and language guide.</p>
-        </a>
-        <a href="operating-system.html" class="section-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 block">
-          <div class="text-2xl mb-2">⚙️</div>
-          <h3 class="text-lg font-bold mb-1">Operating System</h3>
-          <p class="text-\[#807F86\] text-sm">The 7-Step Shift OS, 2-track system, onboarding path, module deep-dives, and graduation model.</p>
-        </a>
-        <a href="products.html" class="section-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 block">
-          <div class="text-2xl mb-2">💎</div>
-          <h3 class="text-lg font-bold mb-1">Products</h3>
-          <p class="text-\[#807F86\] text-sm">Accelerator, Platinum, and Black Tier — pricing, features, tier comparison, and the four pillars.</p>
-        </a>
-        <a href="social-strategy.html" class="section-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 block">
-          <div class="text-2xl mb-2">📱</div>
-          <h3 class="text-lg font-bold mb-1">Social & Content Strategy</h3>
-          <p class="text-\[#807F86\] text-sm">YouTube strategy, Instagram playbook, 40 video ideas, 12-week calendar, and content pillars.</p>
-        </a>
-        <a href="competitors.html" class="section-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 block">
-          <div class="text-2xl mb-2">🏆</div>
-          <h3 class="text-lg font-bold mb-1">Competitive Intel</h3>
-          <p class="text-\[#807F86\] text-sm">Invest Diva, Decentralized Masters, Yieldschool — analysis, positioning matrix, and where we win.</p>
-        </a>
-        <a href="brand.html" class="section-card bg-white border border-\[#E8E8EA\] rounded-xl p-5 block">
-          <div class="text-2xl mb-2">🎨</div>
-          <h3 class="text-lg font-bold mb-1">Brand & Voice</h3>
-          <p class="text-\[#807F86\] text-sm">Voice guide, language do/don't table, messaging framework, and outcome-based headline options.</p>
-        </a>
-      </div>
-
-      <!-- Latest Updates -->
-      <h2 class="text-2xl font-bold mb-5 tracking-tight">Latest Updates</h2>
-      <div class="bg-white border border-\[#E8E8EA\] rounded-xl p-6 space-y-4">
-        <div class="flex gap-4 items-start">
-          <span class="label-tag text-cs-green text-xs font-semibold bg-cs-green/10 px-2 py-1 rounded whitespace-nowrap">Mar 27</span>
-          <div>
-            <p class="font-semibold text-sm">The Collective Shift Operating System v2.0 launched</p>
-            <p class="text-\[#807F86\] text-sm">Multi-page hub replaces single-page strategy dashboard. All content migrated and updated.</p>
-          </div>
-        </div>
-        <div class="flex gap-4 items-start">
-          <span class="label-tag text-cs-orange text-xs font-semibold bg-cs-orange/10 px-2 py-1 rounded whitespace-nowrap">Mar 27</span>
-          <div>
-            <p class="font-semibold text-sm">Language rule enforced: "digital assets" everywhere</p>
-            <p class="text-\[#807F86\] text-sm">All content updated. "Bitcoin" stays as Bitcoin. Never use "crypto" in external-facing content.</p>
-          </div>
-        </div>
-        <div class="flex gap-4 items-start">
-          <span class="label-tag text-\[#807F86\] text-xs font-semibold bg-white px-2 py-1 rounded whitespace-nowrap">Mar 27</span>
-          <div>
-            <p class="font-semibold text-sm">ICP updated with validated "Why" from Dee call</p>
-            <p class="text-\[#807F86\] text-sm">Six validated reasons HNW investors join. Acquisition path confirmed: YouTube → comparison → CS.</p>
-          </div>
-        </div>
-        <div class="flex gap-4 items-start">
-          <span class="label-tag text-\[#807F86\] text-xs font-semibold bg-white px-2 py-1 rounded whitespace-nowrap">Mar 26</span>
-          <div>
-            <p class="font-semibold text-sm">Key metrics updated</p>
-            <p class="text-\[#807F86\] text-sm">1,163 total members · 402 Platinum · A$7.3M ARR · 203% YoY growth.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Core Identity -->
-      <div class="mt-10 bg-white border border-\[#E8E8EA\] rounded-xl p-6">
-        <h2 class="text-2xl font-bold mb-4 tracking-tight">Core Identity</h2>
-        <div class="grid md:grid-cols-2 gap-6">
-          <div>
-            <h3 class="text-sm font-mono text-cs-orange uppercase tracking-wider mb-2">What We Are</h3>
-            <ul class="space-y-2 text-sm">
-              <li class="flex gap-2"><span class="text-cs-green">✓</span> Framework-based education</li>
-              <li class="flex gap-2"><span class="text-cs-green">✓</span> 100% independent research</li>
-              <li class="flex gap-2"><span class="text-cs-green">✓</span> Systematic, research-driven</li>
-              <li class="flex gap-2"><span class="text-cs-green">✓</span> Win/Win — we invest alongside members</li>
-            </ul>
-          </div>
-          <div>
-            <h3 class="text-sm font-mono text-red-400 uppercase tracking-wider mb-2">What We Are Not</h3>
-            <ul class="space-y-2 text-sm text-\[#807F86\]">
-              <li class="flex gap-2"><span class="text-red-400">✗</span> Signals group / speculative gambling</li>
-              <li class="flex gap-2"><span class="text-red-400">✗</span> Advertising-funded or token promoters</li>
-              <li class="flex gap-2"><span class="text-red-400">✗</span> Shortcuts or tips</li>
-              <li class="flex gap-2"><span class="text-red-400">✗</span> Affiliate-driven recommendations</li>
-            </ul>
-          </div>
-        </div>
-      </div>
+    <label>Scheduled Date</label>
+    <input type="date" id="qa-date">
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeQuickAdd()">Cancel</button>
+      <button class="btn-primary" onclick="saveQuickAdd()">Add</button>
     </div>
-  </main>
+  </div>
 </div>
 
 <script>
-  // Mobile sidebar toggle
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('overlay');
-  sidebar?.addEventListener('transitionend', () => {
-    if (sidebar.classList.contains('open')) overlay?.classList.remove('hidden');
-    else overlay?.classList.add('hidden');
+// ═══════════════════════════════════════════
+// Global State
+// ═══════════════════════════════════════════
+let cards = [];
+let analyticsData = null;
+let hubSettings = null;
+let currentModalCardId = null;
+let calYear, calMonth;
+const today = new Date();
+
+const STAGES = [
+  { key: 'idea', label: 'Idea', color: '#F59E0B', emoji: '\u{1F4A1}' },
+  { key: 'approved', label: 'Approved', color: '#3B82F6', emoji: '\u2705' },
+  { key: 'recorded', label: 'Record', color: '#A855F7', emoji: '\u{1F3AC}' },
+  { key: 'editing', label: 'Editing', color: '#FC5C03', emoji: '\u2702\uFE0F' },
+  { key: 'thumbnail', label: 'Thumbnail', color: '#EC4899', emoji: '\u{1F5BC}\uFE0F' },
+  { key: 'scheduled', label: 'Scheduled', color: '#0BF4B9', emoji: '\u23F0' },
+  { key: 'published', label: 'Published', color: '#10B981', emoji: '\u{1F680}' }
+];
+
+const PLATFORM_EMOJI = { youtube: '\u{1F3A5}', instagram: '\u{1F4F8}', linkedin: '\u{1F4BC}', twitter: '\u{1F426}' };
+const PLATFORM_COLOR = { youtube: '#FF0000', instagram: '#E4405F', linkedin: '#0A66C2', twitter: '#1DA1F2' };
+
+function normalizeStatus(s) {
+  if (!s) return 'idea';
+  const sl = s.toLowerCase().trim();
+  const map = {
+    'idea': 'idea', 'draft': 'idea', 'pending_review': 'idea', 'pending review': 'idea',
+    'approved': 'approved', 'approve': 'approved',
+    'recorded': 'recorded', 'record': 'recorded', 'filming': 'recorded',
+    'editing': 'editing', 'edit': 'editing',
+    'thumbnail': 'thumbnail', 'thumbnails': 'thumbnail',
+    'scheduled': 'scheduled', 'schedule': 'scheduled',
+    'published': 'published', 'posted': 'published', 'live': 'published', 'cancelled': 'published'
+  };
+  return map[sl] || 'idea';
+}
+
+// ═══════════════════════════════════════════
+// Tab Switching
+// ═══════════════════════════════════════════
+document.querySelectorAll('.sidebar-item[data-tab]').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + item.dataset.tab).classList.add('active');
+    // Close mobile sidebar
+    document.querySelector('.sidebar').classList.remove('open');
   });
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', () => { sidebar?.classList.remove('open'); overlay?.classList.add('hidden'); });
+});
+
+// ═══════════════════════════════════════════
+// Data Loading
+// ═══════════════════════════════════════════
+async function loadCards() {
+  try {
+    const res = await fetch('/api/content/cards');
+    const data = await res.json();
+    cards = (data.cards || []).map(c => ({ ...c, status: normalizeStatus(c.status) }));
+  } catch (e) { console.error('Failed to load cards:', e); cards = []; }
+}
+
+async function loadAnalytics() {
+  try {
+    const res = await fetch('/api/hub/analytics');
+    analyticsData = await res.json();
+  } catch (e) { console.error('Failed to load analytics:', e); analyticsData = { platforms: {} }; }
+}
+
+async function loadSettings() {
+  try {
+    const res = await fetch('/api/hub/settings');
+    hubSettings = await res.json();
+  } catch (e) { hubSettings = { teamMembers: {}, weeklyTargets: { instagram: 5, twitter: 7, linkedin: 2, youtube: 1 } }; }
+}
+
+async function refreshAnalytics() {
+  try {
+    const res = await fetch('/api/hub/analytics/refresh');
+    analyticsData = await res.json();
+    renderAnalytics();
+    renderSettings();
+    alert('Analytics refreshed!');
+  } catch (e) { alert('Failed to refresh: ' + e.message); }
+}
+
+// ═══════════════════════════════════════════
+// Analytics Rendering
+// ═══════════════════════════════════════════
+function renderAnalytics() {
+  // Pipeline stats
+  const counts = { idea: 0, approved: 0, recorded: 0, editing: 0, thumbnail: 0, scheduled: 0, published: 0 };
+  cards.forEach(c => { if (counts[c.status] !== undefined) counts[c.status]++; });
+
+  document.getElementById('pipeline-stats').innerHTML = [
+    { label: 'Active Ideas', value: counts.idea, color: '#F59E0B' },
+    { label: 'In Progress', value: counts.approved + counts.recorded + counts.editing + counts.thumbnail, color: '#A855F7' },
+    { label: 'Scheduled', value: counts.scheduled, color: '#0BF4B9' },
+    { label: 'Published', value: counts.published, color: '#10B981' }
+  ].map(s => `<div class="stat-card"><div class="label">${s.label}</div><div class="value" style="color:${s.color}">${s.value}</div></div>`).join('');
+
+  // Audience stats
+  const plats = analyticsData?.platforms || {};
+  let totalFollowers = 0, connectedCount = 0, totalEngagement = 0;
+  for (const [k, v] of Object.entries(plats)) {
+    const f = v.followers || v.subscriber || v.totalFollowers || 0;
+    totalFollowers += f;
+    if (f > 0) connectedCount++;
+    totalEngagement += v.engagement || v.engagementRate || 0;
+  }
+  const avgEngagement = connectedCount > 0 ? (totalEngagement / connectedCount).toFixed(2) : '0.00';
+
+  document.getElementById('audience-stats').innerHTML = [
+    { label: 'Total Followers', value: totalFollowers.toLocaleString(), color: 'var(--text)' },
+    { label: 'Platforms Connected', value: `${connectedCount} / 4`, color: 'var(--blue)' },
+    { label: 'Avg Engagement', value: avgEngagement + '%', color: 'var(--green)' }
+  ].map(s => `<div class="stat-card"><div class="label">${s.label}</div><div class="value" style="color:${s.color}">${s.value}</div></div>`).join('');
+
+  renderPlatformDetail('summary');
+  renderCharts();
+}
+
+function renderPlatformDetail(platform) {
+  const el = document.getElementById('platform-detail');
+  const plats = analyticsData?.platforms || {};
+
+  if (platform === 'summary') {
+    let html = '<div class="stats-row">';
+    for (const [key, label] of [['youtube','YouTube'],['instagram','Instagram'],['twitter','X / Twitter'],['linkedin','LinkedIn']]) {
+      const d = plats[key] || {};
+      const f = d.followers || d.subscriber || d.totalFollowers || 0;
+      const e = d.engagement || d.engagementRate || 0;
+      html += `<div class="stat-card" style="border-top:3px solid ${PLATFORM_COLOR[key]}">
+        <div class="label">${label}</div>
+        <div class="value">${f.toLocaleString()}</div>
+        <div class="sub">${e}% engagement</div>
+      </div>`;
+    }
+    html += '</div>';
+    el.innerHTML = html;
+    return;
+  }
+
+  const d = plats[platform] || {};
+  const f = d.followers || d.subscriber || d.totalFollowers || 0;
+  const e = d.engagement || d.engagementRate || 0;
+  const views = d.averageViews || d.views || 0;
+  const posts = d.topPosts || d.posts || [];
+
+  let html = `<div class="stats-row">
+    <div class="stat-card"><div class="label">Followers</div><div class="value">${f.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="label">Engagement Rate</div><div class="value" style="color:var(--green)">${e}%</div></div>
+    <div class="stat-card"><div class="label">Avg Views</div><div class="value">${views.toLocaleString()}</div></div>
+  </div>`;
+  if (posts.length) {
+    html += '<div class="chart-card" style="margin-bottom:20px"><h3>Top Posts</h3>';
+    posts.slice(0, 5).forEach(p => {
+      html += `<div style="padding:8px 0;border-bottom:1px solid var(--card-border);font-size:12px;">${p.title || p.content || 'Post'} — ${(p.likes || 0)} likes, ${(p.impressions || 0)} impressions</div>`;
+    });
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
+// Platform tab clicks
+document.getElementById('analytics-platform-tabs').addEventListener('click', e => {
+  const tab = e.target.closest('.platform-tab');
+  if (!tab) return;
+  document.querySelectorAll('#analytics-platform-tabs .platform-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  renderPlatformDetail(tab.dataset.platform);
+});
+
+// Charts
+let followersChart, engagementChart;
+function renderCharts() {
+  const chartOpts = {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#807F86', font: { family: 'Inter', size: 11 } } } },
+    scales: {
+      x: { grid: { color: '#2a2a45' }, ticks: { color: '#807F86', font: { size: 10 } } },
+      y: { grid: { color: '#2a2a45' }, ticks: { color: '#807F86', font: { size: 10 } } }
+    }
+  };
+
+  // Generate 30-day labels
+  const labels = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    labels.push(d.toLocaleDateString('en', { month: 'short', day: 'numeric' }));
+  }
+
+  // Followers line chart
+  const plats = analyticsData?.platforms || {};
+  const datasets = [];
+  for (const [key, color] of [['youtube','#FF0000'],['instagram','#E4405F'],['twitter','#1DA1F2'],['linkedin','#0A66C2']]) {
+    const d = plats[key] || {};
+    const base = d.followers || d.subscriber || d.totalFollowers || 0;
+    const history = d.followerHistory || [];
+    let data;
+    if (history.length >= 30) {
+      data = history.slice(-30);
+    } else {
+      // Generate synthetic data around base
+      data = labels.map((_, i) => Math.max(0, base + Math.round((i - 15) * (base * 0.001) + (Math.random() - 0.5) * base * 0.01)));
+    }
+    datasets.push({ label: key.charAt(0).toUpperCase() + key.slice(1), data, borderColor: color, backgroundColor: color + '22', tension: 0.3, fill: true, pointRadius: 0 });
+  }
+
+  if (followersChart) followersChart.destroy();
+  followersChart = new Chart(document.getElementById('chart-followers'), {
+    type: 'line', data: { labels, datasets }, options: { ...chartOpts, interaction: { intersect: false, mode: 'index' } }
   });
+
+  // Engagement bar chart
+  const engData = ['youtube','instagram','twitter','linkedin'].map(k => (plats[k]?.engagement || plats[k]?.engagementRate || 0));
+  const engColors = ['#FF0000','#E4405F','#1DA1F2','#0A66C2'];
+  if (engagementChart) engagementChart.destroy();
+  engagementChart = new Chart(document.getElementById('chart-engagement'), {
+    type: 'bar',
+    data: { labels: ['YouTube','Instagram','X/Twitter','LinkedIn'], datasets: [{ label: 'Engagement %', data: engData, backgroundColor: engColors }] },
+    options: { ...chartOpts, plugins: { ...chartOpts.plugins, legend: { display: false } } }
+  });
+}
+
+// ═══════════════════════════════════════════
+// Calendar
+// ═══════════════════════════════════════════
+function initCalendar() {
+  calYear = today.getFullYear();
+  calMonth = today.getMonth();
+  renderCalendar();
+}
+function calPrev() { calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } renderCalendar(); }
+function calNext() { calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; } renderCalendar(); }
+function calToday() { calYear = today.getFullYear(); calMonth = today.getMonth(); renderCalendar(); }
+
+function renderCalendar() {
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-month-title').textContent = `${months[calMonth]} ${calYear}`;
+
+  const firstDay = new Date(calYear, calMonth, 1);
+  let startDay = firstDay.getDay() - 1; // Monday = 0
+  if (startDay < 0) startDay = 6;
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const daysInPrev = new Date(calYear, calMonth, 0).getDate();
+
+  let html = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d => `<div class="cal-day-header">${d}</div>`).join('');
+
+  const totalCells = Math.ceil((startDay + daysInMonth) / 7) * 7;
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+
+  for (let i = 0; i < totalCells; i++) {
+    let day, month = calMonth, year = calYear, isOther = false;
+    if (i < startDay) { day = daysInPrev - startDay + i + 1; month--; isOther = true; if (month < 0) { month = 11; year--; } }
+    else if (i >= startDay + daysInMonth) { day = i - startDay - daysInMonth + 1; month++; isOther = true; if (month > 11) { month = 0; year++; } }
+    else { day = i - startDay + 1; }
+
+    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const isToday = dateStr === todayStr;
+    const dayCards = cards.filter(c => c.scheduledDate === dateStr);
+
+    let cardsHtml = dayCards.slice(0, 3).map(c => {
+      const pe = PLATFORM_EMOJI[c.platform] || '';
+      const cls = c.platform ? `plat-${c.platform}` : '';
+      return `<div class="cal-card ${cls}" onclick="event.stopPropagation();openDetailModal('${c.id}')">${pe} ${c.title?.substring(0,25) || 'Untitled'}</div>`;
+    }).join('');
+    if (dayCards.length > 3) cardsHtml += `<div style="font-size:10px;color:var(--muted);">+${dayCards.length - 3} more</div>`;
+
+    html += `<div class="cal-day${isToday ? ' today' : ''}${isOther ? ' other-month' : ''}" onclick="openQuickAdd('${dateStr}')">
+      <div class="day-num">${day}</div>${cardsHtml}
+    </div>`;
+  }
+  document.getElementById('cal-grid').innerHTML = html;
+}
+
+// ═══════════════════════════════════════════
+// Pipeline (Kanban)
+// ═══════════════════════════════════════════
+function renderPipeline() {
+  const filterPlat = document.getElementById('filter-platform').value;
+  const filterType = document.getElementById('filter-type').value;
+  const filterAssignee = document.getElementById('filter-assignee').value;
+
+  const filtered = cards.filter(c => {
+    if (filterPlat && c.platform !== filterPlat) return false;
+    if (filterType && c.type !== filterType) return false;
+    if (filterAssignee && c.assignedEditor !== filterAssignee && c.assignedDesigner !== filterAssignee) return false;
+    return true;
+  });
+
+  const kanbanEl = document.getElementById('kanban');
+  kanbanEl.innerHTML = STAGES.map(stage => {
+    const stageCards = filtered.filter(c => c.status === stage.key);
+    const cardsHtml = stageCards.map(c => {
+      const pe = PLATFORM_EMOJI[c.platform] || '';
+      const pc = PLATFORM_COLOR[c.platform] || '#807F86';
+      const typeClass = c.type ? `badge-${c.type}` : 'badge-post';
+      const dueStr = c.dueDate ? formatDue(c.dueDate) : '';
+      return `<div class="kanban-card" draggable="true" data-id="${c.id}" ondragstart="dragStart(event)" onclick="openDetailModal('${c.id}')">
+        <div class="card-platform">${pe} <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${pc};vertical-align:middle;"></span></div>
+        <div class="card-title">${c.title || 'Untitled'}</div>
+        <div class="card-meta">
+          ${c.type ? `<span class="badge ${typeClass}">${c.type}</span>` : ''}
+          ${c.assignedEditor ? `<span style="font-size:10px;color:var(--muted);">${c.assignedEditor}</span>` : ''}
+          ${dueStr}
+        </div>
+      </div>`;
+    }).join('');
+
+    return `<div class="kanban-col" data-stage="${stage.key}" ondragover="event.preventDefault()" ondrop="drop(event)">
+      <div class="kanban-col-header">
+        <span>${stage.emoji} ${stage.label}</span>
+        <span class="count">${stageCards.length}</span>
+      </div>
+      <div class="kanban-cards">${cardsHtml}</div>
+    </div>`;
+  }).join('');
+}
+
+function formatDue(dateStr) {
+  if (!dateStr) return '';
+  const due = new Date(dateStr);
+  const now = new Date(); now.setHours(0,0,0,0);
+  const isOverdue = due < now;
+  return `<span class="card-due${isOverdue ? ' overdue' : ''}">${due.toLocaleDateString('en',{month:'short',day:'numeric'})}</span>`;
+}
+
+// Drag & Drop
+let draggedId = null;
+function dragStart(e) { draggedId = e.target.dataset.id; e.target.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; }
+function drop(e) {
+  e.preventDefault();
+  const col = e.target.closest('.kanban-col');
+  if (!col || !draggedId) return;
+  const newStatus = col.dataset.stage;
+  const card = cards.find(c => c.id === draggedId);
+  if (card && card.status !== newStatus) {
+    card.status = newStatus;
+    fetch('/api/content/update', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: card.id, status: newStatus })
+    }).catch(e => console.error('Update failed:', e));
+    renderPipeline();
+  }
+  draggedId = null;
+}
+document.addEventListener('dragend', () => {
+  document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+  draggedId = null;
+});
+
+// Filters
+['filter-platform','filter-type','filter-assignee'].forEach(id => {
+  document.getElementById(id)?.addEventListener('change', renderPipeline);
+});
+
+// ═══════════════════════════════════════════
+// Weekly Planner
+// ═══════════════════════════════════════════
+function renderPlanner() {
+  const targets = hubSettings?.weeklyTargets || { instagram: 5, twitter: 7, linkedin: 2, youtube: 1 };
+  const todayDate = new Date(); todayDate.setHours(0,0,0,0);
+  const dayOfWeek = (todayDate.getDay() + 6) % 7; // Monday=0
+  const weekStart = new Date(todayDate); weekStart.setDate(weekStart.getDate() - dayOfWeek);
+  const weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate() + 6);
+  const nextWeekStart = new Date(weekEnd); nextWeekStart.setDate(nextWeekStart.getDate() + 1);
+  const nextWeekEnd = new Date(nextWeekStart); nextWeekEnd.setDate(nextWeekEnd.getDate() + 6);
+
+  function dateStr(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+  function inRange(ds, start, end) { return ds >= dateStr(start) && ds <= dateStr(end); }
+
+  const thisWeekCards = cards.filter(c => c.scheduledDate && inRange(c.scheduledDate, weekStart, weekEnd));
+  const nextWeekCards = cards.filter(c => c.scheduledDate && inRange(c.scheduledDate, nextWeekStart, nextWeekEnd));
+
+  // Progress
+  const platCounts = { instagram: 0, twitter: 0, linkedin: 0, youtube: 0 };
+  thisWeekCards.forEach(c => { if (platCounts[c.platform] !== undefined) platCounts[c.platform]++; });
+
+  const platLabels = { instagram: 'Instagram Reels', twitter: 'X / Twitter Posts', linkedin: 'LinkedIn Posts', youtube: 'YouTube Videos' };
+  document.getElementById('planner-progress').innerHTML = Object.entries(targets).map(([plat, target]) => {
+    const actual = platCounts[plat] || 0;
+    const pct = Math.min(100, target > 0 ? (actual / target * 100) : 0);
+    const color = PLATFORM_COLOR[plat] || 'var(--orange)';
+    return `<div class="progress-card">
+      <div class="plat-label"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};"></span> ${platLabels[plat] || plat}</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${color};"></div></div>
+      <div class="progress-text">${actual} / ${target} this week</div>
+    </div>`;
+  }).join('');
+
+  // Week grids
+  renderWeekGrid('this-week-grid', weekStart, thisWeekCards, todayDate);
+  renderWeekGrid('next-week-grid', nextWeekStart, nextWeekCards, todayDate);
+
+  // Countdowns
+  const countdowns = [];
+  for (const [plat, label] of [['youtube','YouTube upload'],['instagram','Instagram reel'],['linkedin','LinkedIn post'],['twitter','X/Twitter post']]) {
+    const upcoming = cards.filter(c => c.platform === plat && c.scheduledDate && c.scheduledDate >= dateStr(todayDate)).sort((a,b) => a.scheduledDate.localeCompare(b.scheduledDate));
+    if (upcoming.length) {
+      const d = new Date(upcoming[0].scheduledDate);
+      const diff = Math.ceil((d - todayDate) / (1000*60*60*24));
+      countdowns.push({ val: diff, label: `days until next ${label}` });
+    } else {
+      countdowns.push({ val: '?', label: `No ${label} scheduled` });
+    }
+  }
+  document.getElementById('countdown-cards').innerHTML = countdowns.map(c =>
+    `<div class="countdown-card"><div class="countdown-val" style="color:${typeof c.val === 'number' && c.val <= 1 ? 'var(--red)' : 'var(--teal)'}">${c.val}</div><div class="countdown-label">${c.label}</div></div>`
+  ).join('');
+}
+
+function renderWeekGrid(elId, start, weekCards, todayDate) {
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  let html = '';
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(start); d.setDate(d.getDate() + i);
+    const ds = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const dayCards = weekCards.filter(c => c.scheduledDate === ds);
+    const isToday = d.getTime() === todayDate.getTime();
+    const isGap = dayCards.length === 0 && d >= todayDate;
+
+    let cardsHtml = dayCards.map(c => {
+      const pe = PLATFORM_EMOJI[c.platform] || '';
+      const cls = c.platform ? `plat-${c.platform}` : '';
+      return `<div class="week-day-card ${cls}" style="border-left-color:${PLATFORM_COLOR[c.platform] || 'var(--muted)'}">${pe} ${(c.title||'').substring(0,20)}</div>`;
+    }).join('');
+
+    html += `<div class="week-day${isToday ? ' today' : ''}${isGap ? ' gap' : ''}">
+      <div class="day-label">${days[i]}</div>
+      <div class="day-date">${d.toLocaleDateString('en',{month:'short',day:'numeric'})}</div>
+      ${cardsHtml}
+      <button class="quick-add-btn" onclick="openQuickAdd('${ds}')">+ Add</button>
+    </div>`;
+  }
+  document.getElementById(elId).innerHTML = html;
+}
+
+// ═══════════════════════════════════════════
+// Settings
+// ═══════════════════════════════════════════
+function renderSettings() {
+  if (!hubSettings) return;
+
+  // Platforms
+  const platforms = [
+    { key: 'twitter', label: 'X / Twitter', id: 'cmnt4xepn00zxqz0y9lvzwn7k' },
+    { key: 'linkedin', label: 'LinkedIn', id: 'cmnt4xz5900zzqz0yl74gfww2' },
+    { key: 'instagram', label: 'Instagram', id: 'cmnt4z9ju0101qz0ykbkjjfxt' },
+    { key: 'youtube', label: 'YouTube', id: 'cmnt4zv8w0142te0y0g1ryvgs' }
+  ];
+  document.getElementById('settings-platforms').innerHTML = platforms.map(p =>
+    `<div class="platform-row"><span class="status-dot" style="background:${PLATFORM_COLOR[p.key]};"></span> ${p.label} <span style="color:var(--muted);font-size:11px;margin-left:auto;">${p.id.substring(0,12)}...</span></div>`
+  ).join('');
+
+  // Team
+  document.getElementById('settings-editor').value = hubSettings.teamMembers?.editor || '';
+  document.getElementById('settings-designer').value = hubSettings.teamMembers?.designer || '';
+
+  // Targets
+  const t = hubSettings.weeklyTargets || {};
+  document.getElementById('target-instagram').value = t.instagram || 5;
+  document.getElementById('target-twitter').value = t.twitter || 7;
+  document.getElementById('target-linkedin').value = t.linkedin || 2;
+  document.getElementById('target-youtube').value = t.youtube || 1;
+
+  // Sync
+  document.getElementById('settings-last-sync').textContent = hubSettings.lastSync
+    ? new Date(hubSettings.lastSync).toLocaleString() : 'Never';
+}
+
+async function saveSettings() {
+  const updated = {
+    teamMembers: {
+      editor: document.getElementById('settings-editor').value,
+      designer: document.getElementById('settings-designer').value
+    },
+    weeklyTargets: {
+      instagram: parseInt(document.getElementById('target-instagram').value) || 5,
+      twitter: parseInt(document.getElementById('target-twitter').value) || 7,
+      linkedin: parseInt(document.getElementById('target-linkedin').value) || 2,
+      youtube: parseInt(document.getElementById('target-youtube').value) || 1
+    }
+  };
+  try {
+    const res = await fetch('/api/hub/settings', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updated)
+    });
+    const data = await res.json();
+    hubSettings = data.settings || hubSettings;
+    alert('Settings saved!');
+    renderPlanner();
+  } catch (e) { alert('Failed to save: ' + e.message); }
+}
+
+// ═══════════════════════════════════════════
+// Modals
+// ═══════════════════════════════════════════
+function openDetailModal(cardId) {
+  const card = cards.find(c => c.id === cardId);
+  if (!card) return;
+  currentModalCardId = cardId;
+  document.getElementById('modal-title').value = card.title || '';
+  document.getElementById('modal-content').value = card.content || '';
+  document.getElementById('modal-copy').value = card.copy || '';
+  document.getElementById('modal-cta').value = card.cta || '';
+  document.getElementById('modal-platform').value = card.platform || 'instagram';
+  document.getElementById('modal-type').value = card.type || 'post';
+  document.getElementById('modal-status').value = card.status || 'idea';
+  document.getElementById('modal-scheduled-date').value = card.scheduledDate || '';
+  document.getElementById('modal-editor').value = card.assignedEditor || '';
+  document.getElementById('modal-designer').value = card.assignedDesigner || '';
+  document.getElementById('modal-due-date').value = card.dueDate || '';
+  document.getElementById('redist-twitter').checked = card.redistTwitter || false;
+  document.getElementById('redist-linkedin').checked = card.redistLinkedin || false;
+  document.getElementById('redist-instagram').checked = card.redistInstagram || false;
+  document.getElementById('redist-youtube').checked = card.redistYoutube || false;
+  document.getElementById('redist-email').checked = card.redistEmail || false;
+  document.getElementById('modal-title-display').textContent = 'Edit Content';
+  document.getElementById('detail-modal').classList.add('open');
+}
+
+function openAddModal() {
+  currentModalCardId = null;
+  document.getElementById('modal-title').value = '';
+  document.getElementById('modal-content').value = '';
+  document.getElementById('modal-copy').value = '';
+  document.getElementById('modal-cta').value = '';
+  document.getElementById('modal-platform').value = 'instagram';
+  document.getElementById('modal-type').value = 'reel';
+  document.getElementById('modal-status').value = 'idea';
+  document.getElementById('modal-scheduled-date').value = '';
+  document.getElementById('modal-editor').value = '';
+  document.getElementById('modal-designer').value = '';
+  document.getElementById('modal-due-date').value = '';
+  ['twitter','linkedin','instagram','youtube','email'].forEach(k => document.getElementById('redist-'+k).checked = false);
+  document.getElementById('modal-title-display').textContent = 'Add Content';
+  document.getElementById('detail-modal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('detail-modal').classList.remove('open'); }
+
+async function saveModal() {
+  const payload = {
+    title: document.getElementById('modal-title').value,
+    content: document.getElementById('modal-content').value,
+    copy: document.getElementById('modal-copy').value,
+    cta: document.getElementById('modal-cta').value,
+    platform: document.getElementById('modal-platform').value,
+    type: document.getElementById('modal-type').value,
+    status: document.getElementById('modal-status').value,
+    scheduledDate: document.getElementById('modal-scheduled-date').value,
+    assignedEditor: document.getElementById('modal-editor').value,
+    assignedDesigner: document.getElementById('modal-designer').value,
+    dueDate: document.getElementById('modal-due-date').value,
+    redistTwitter: document.getElementById('redist-twitter').checked,
+    redistLinkedin: document.getElementById('redist-linkedin').checked,
+    redistInstagram: document.getElementById('redist-instagram').checked,
+    redistYoutube: document.getElementById('redist-youtube').checked,
+    redistEmail: document.getElementById('redist-email').checked,
+  };
+
+  try {
+    if (currentModalCardId) {
+      payload.id = currentModalCardId;
+      const res = await fetch('/api/content/update', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        const idx = cards.findIndex(c => c.id === currentModalCardId);
+        if (idx !== -1) Object.assign(cards[idx], payload);
+      }
+    } else {
+      const res = await fetch('/api/content/add', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success && data.card) {
+        data.card.status = normalizeStatus(data.card.status);
+        cards.push(data.card);
+      }
+    }
+    closeModal();
+    renderAll();
+  } catch (e) { alert('Save failed: ' + e.message); }
+}
+
+// Quick Add
+function openQuickAdd(dateStr) {
+  document.getElementById('qa-title').value = '';
+  document.getElementById('qa-date').value = dateStr || '';
+  document.getElementById('quickadd-modal').classList.add('open');
+}
+function closeQuickAdd() { document.getElementById('quickadd-modal').classList.remove('open'); }
+
+async function saveQuickAdd() {
+  const payload = {
+    title: document.getElementById('qa-title').value,
+    platform: document.getElementById('qa-platform').value,
+    type: document.getElementById('qa-type').value,
+    scheduledDate: document.getElementById('qa-date').value,
+    status: 'idea'
+  };
+  if (!payload.title) { alert('Title is required'); return; }
+  try {
+    const res = await fetch('/api/content/add', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.success && data.card) {
+      data.card.status = normalizeStatus(data.card.status);
+      cards.push(data.card);
+    }
+    closeQuickAdd();
+    renderAll();
+  } catch (e) { alert('Add failed: ' + e.message); }
+}
+
+// ═══════════════════════════════════════════
+// Init
+// ═══════════════════════════════════════════
+function renderAll() {
+  renderAnalytics();
+  renderCalendar();
+  renderPipeline();
+  renderPlanner();
+  renderSettings();
+}
+
+(async function init() {
+  await Promise.all([loadCards(), loadAnalytics(), loadSettings()]);
+  initCalendar();
+  renderAll();
+  // Populate assignee filter
+  const assignees = new Set();
+  cards.forEach(c => { if (c.assignedEditor) assignees.add(c.assignedEditor); if (c.assignedDesigner) assignees.add(c.assignedDesigner); });
+  const sel = document.getElementById('filter-assignee');
+  assignees.forEach(a => { const o = document.createElement('option'); o.value = a; o.textContent = a; sel.appendChild(o); });
+})();
 </script>
-  </div>
-</div>
 </body>
 </html>

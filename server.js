@@ -9,6 +9,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const SNAPSHOT_PATH = path.join(__dirname, 'dashboard-data', 'snapshot.json');
 const TASKS_PATH = path.join(__dirname, 'public', 'tasks.json');
+const ANALYTICS_CACHE_PATH = path.join(__dirname, 'public', 'data', 'analytics-cache.json');
+const HUB_SETTINGS_PATH = path.join(__dirname, 'public', 'data', 'hub-settings.json');
 
 // TWO-WAY SYNC SETUP:
 // 1. Go to Render dashboard → cs-ceo-dashboard → Environment
@@ -576,6 +578,117 @@ app.post('/api/blueprint-email', (req, res) => {
 //   Body: 3-paragraph educational email about institutional allocation trends (BlackRock 1-2%, Bitwise 5%, etc.)
 //   CTA: Watch the free VSL → https://collectiveshift.io/vsl (placeholder)
 // Implementation: Use SendGrid, Mailgun, or Resend (add SENDGRID_API_KEY or RESEND_API_KEY to Render env vars)
+
+// ═══════════════════════════════════════════
+// Social Hub — Analytics & Settings API
+// ═══════════════════════════════════════════
+const POSTIZ_INTEGRATIONS = {
+  twitter:   'cmnt4xepn00zxqz0y9lvzwn7k',
+  linkedin:  'cmnt4xz5900zzqz0yl74gfww2',
+  instagram: 'cmnt4z9ju0101qz0ykbkjjfxt',
+  youtube:   'cmnt4zv8w0142te0y0g1ryvgs'
+};
+
+function readAnalyticsCache() {
+  try {
+    return JSON.parse(fs.readFileSync(ANALYTICS_CACHE_PATH, 'utf8'));
+  } catch (e) {
+    return { lastFetched: null, platforms: {} };
+  }
+}
+
+function readHubSettings() {
+  try {
+    return JSON.parse(fs.readFileSync(HUB_SETTINGS_PATH, 'utf8'));
+  } catch (e) {
+    return { teamMembers: { editor: '', designer: '' }, weeklyTargets: { instagram: 5, twitter: 7, linkedin: 2, youtube: 1 }, lastSync: null };
+  }
+}
+
+async function fetchPostizAnalytics() {
+  const POSTIZ_API_KEY = process.env.POSTIZ_API_KEY;
+  if (!POSTIZ_API_KEY) {
+    console.log('POSTIZ_API_KEY not set — skipping analytics fetch');
+    return null;
+  }
+
+  const cache = readAnalyticsCache();
+  const results = {};
+
+  for (const [platform, integrationId] of Object.entries(POSTIZ_INTEGRATIONS)) {
+    try {
+      const res = await fetch(`https://api.postiz.com/public/v1/analytics/${integrationId}?date=30`, {
+        headers: { 'Authorization': POSTIZ_API_KEY }
+      });
+      if (res.ok) {
+        results[platform] = await res.json();
+        results[platform].integrationId = integrationId;
+      } else {
+        console.log(`Postiz ${platform} fetch failed:`, res.status);
+        results[platform] = cache.platforms[platform] || { integrationId, followers: 0, engagement: 0, posts: [] };
+      }
+    } catch (err) {
+      console.log(`Postiz ${platform} error:`, err.message);
+      results[platform] = cache.platforms[platform] || { integrationId, followers: 0, engagement: 0, posts: [] };
+    }
+  }
+
+  const newCache = { lastFetched: new Date().toISOString(), platforms: results };
+  fs.writeFileSync(ANALYTICS_CACHE_PATH, JSON.stringify(newCache, null, 2));
+
+  // Update settings lastSync
+  const settings = readHubSettings();
+  settings.lastSync = newCache.lastFetched;
+  fs.writeFileSync(HUB_SETTINGS_PATH, JSON.stringify(settings, null, 2));
+
+  return newCache;
+}
+
+// GET /api/hub/analytics
+app.get('/api/hub/analytics', async (req, res) => {
+  try {
+    const cache = readAnalyticsCache();
+    const sixHoursAgo = Date.now() - (6 * 60 * 60 * 1000);
+    const lastFetched = cache.lastFetched ? new Date(cache.lastFetched).getTime() : 0;
+
+    if (lastFetched > sixHoursAgo) {
+      return res.json(cache);
+    }
+
+    // Cache is stale, fetch fresh
+    const fresh = await fetchPostizAnalytics();
+    res.json(fresh || cache);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch analytics', detail: err.message });
+  }
+});
+
+// GET /api/hub/analytics/refresh
+app.get('/api/hub/analytics/refresh', async (req, res) => {
+  try {
+    const fresh = await fetchPostizAnalytics();
+    res.json(fresh || readAnalyticsCache());
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to refresh analytics', detail: err.message });
+  }
+});
+
+// GET /api/hub/settings
+app.get('/api/hub/settings', (req, res) => {
+  res.json(readHubSettings());
+});
+
+// POST /api/hub/settings
+app.post('/api/hub/settings', (req, res) => {
+  try {
+    const current = readHubSettings();
+    const updated = Object.assign({}, current, req.body);
+    fs.writeFileSync(HUB_SETTINGS_PATH, JSON.stringify(updated, null, 2));
+    res.json({ success: true, settings: updated });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to save settings', detail: err.message });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`CS CEO Dashboard running on http://localhost:${PORT}`);
