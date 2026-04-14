@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collective Shift — ICP v3.2</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Barlow:wght@400;500;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+<style>
+@page { size: A4; margin: 20mm 18mm; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Barlow', sans-serif;
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: #222;
+  background: #fff;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.page { max-width: 780px; margin: 0 auto; padding: 32px 40px; }
+
+/* Header */
+.doc-header { border-bottom: 3px solid #FC5C03; padding-bottom: 16px; margin-bottom: 24px; }
+.doc-header h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 26px; color: #1B1925; letter-spacing: -0.5px; }
+.doc-header h1 span { color: #FC5C03; }
+.doc-header .meta { font-size: 11px; color: #666; margin-top: 6px; }
+.doc-header .meta strong { color: #333; }
+
+/* Labels */
+.label-updated { display: inline-block; background: #FEF3C7; color: #92400E; font-size: 9px; font-weight: 600; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 6px; vertical-align: middle; }
+.label-new { display: inline-block; background: #D1FAE5; color: #065F46; font-size: 9px; font-weight: 600; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 6px; vertical-align: middle; }
+.label-removed { display: inline-block; background: #FEE2E2; color: #991B1B; font-size: 9px; font-weight: 600; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 6px; vertical-align: middle; }
+.label-legal { display: inline-block; background: #FEE2E2; color: #991B1B; font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 6px; vertical-align: middle; border: 1px solid #FECACA; }
+
+/* Section headers */
+h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 18px; color: #1B1925; margin: 24px 0 10px; padding-bottom: 5px; border-bottom: 1px solid #E5E5E5; }
+h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 14px; color: #FC5C03; margin: 16px 0 6px; }
+h4 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 12px; color: #444; margin: 12px 0 4px; }
+
+p { margin-bottom: 8px; color: #333; }
+ul, ol { padding-left: 18px; margin-bottom: 8px; }
+li { margin-bottom: 3px; color: #333; }
+strong { color: #1B1925; }
+blockquote { border-left: 3px solid #FC5C03; padding: 8px 12px; margin: 8px 0 12px; background: #FFF7F0; font-style: italic; color: #555; }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; margin: 8px 0 14px; font-size: 11px; }
+th { text-align: left; font-family: 'Source Code Pro', monospace; font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.4px; color: #666; padding: 6px 8px; border-bottom: 1px solid #DDD; background: #F9F9FB; }
+td { padding: 6px 8px; border-bottom: 1px solid #F0F0F0; color: #333; vertical-align: top; }
+tr:hover td { background: #FAFAFA; }
+
+/* Strikethrough */
+s, del { color: #999; text-decoration: line-through; }
+
+/* Profile cards */
+.profile-card { background: #F9F9FB; border: 1px solid #E5E5E5; border-radius: 10px; padding: 14px 16px; margin: 10px 0; }
+.profile-card.first-timer { border-left: 4px solid #3B82F6; }
+.profile-card.overwhelmed { border-left: 4px solid #FC5C03; }
+.profile-card.burned { border-left: 4px solid #EF4444; }
+.profile-card .profile-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.profile-card .profile-name { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 14px; color: #1B1925; }
+.profile-card .profile-pct { font-family: 'Source Code Pro', monospace; font-weight: 600; font-size: 13px; padding: 2px 10px; border-radius: 20px; }
+.pct-blue { background: #DBEAFE; color: #1D4ED8; }
+.pct-orange { background: #FFF7ED; color: #C2410C; }
+.pct-red { background: #FEE2E2; color: #991B1B; }
+
+/* Change summary box */
+.change-box { background: #FFF7F0; border: 1px solid #FED7AA; border-radius: 10px; padding: 14px 16px; margin: 12px 0; }
+.change-box h3 { color: #C2410C; margin-top: 0; }
+
+/* Do/Don't */
+.do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 8px 0 14px; }
+.do-box { background: #F0FBF7; border: 1px solid #B8E8D5; border-radius: 8px; padding: 10px 12px; font-size: 11px; }
+.do-box h4 { color: #059669; margin: 0 0 6px; }
+.dont-box { background: #FEF5F5; border: 1px solid #F5C5C5; border-radius: 8px; padding: 10px 12px; font-size: 11px; }
+.dont-box h4 { color: #DC2626; margin: 0 0 6px; }
+
+/* Testimonial */
+.testimonial { background: #F9F9FB; border: 1px solid #E5E5E5; border-radius: 8px; padding: 10px 14px; margin: 8px 0; font-size: 11px; }
+.testimonial .name { font-weight: 600; color: #FC5C03; }
+
+/* Footer */
+footer { text-align: center; color: #999; font-size: 10px; margin-top: 24px; padding-top: 12px; border-top: 1px solid #E5E5E5; }
+
+/* Advantage cards */
+.advantage { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 8px; }
+.advantage .num { font-family: 'Source Code Pro', monospace; font-weight: 700; font-size: 14px; color: #FC5C03; min-width: 20px; }
+
+@media print { body { background: #fff; } .page { padding: 0; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="doc-header">
+  <h1>Ideal Customer Profile <span>v3.2</span></h1>
+  <div class="meta">
+    <strong>Collective Shift</strong> - Internal & Confidential<br>
+    Updated April 15, 2026 (v3.2) | Prepared for Ben Simpson, CEO<br>
+    Sources: 76-member onboarding survey (Feb 2026) + Sales call transcripts (Jan 2026) + VSL & funnel audit (Apr 2026) + Travis Thomas review (Apr 15)
+  </div>
+</div>
+
+<!-- CHANGES SUMMARY -->
+<div class="change-box">
+  <h3>What's changed in v3.2</h3>
+  <table>
+    <tr><th>Change</th><th>v3.0</th><th>v3.2</th></tr>
+    <tr><td>"Done-for-you" language</td><td>Used throughout</td><td><span class="label-legal">LEGAL</span> Removed. Replaced with "a team doing the research for you"</td></tr>
+    <tr><td>WhatsApp references</td><td>Core product feature</td><td><span class="label-updated">UPDATED</span> Replaced with Circle community</td></tr>
+    <tr><td>Buyer profile %</td><td>29% / 46% / 25% (current members)</td><td><span class="label-updated">UPDATED</span> 40% / 35% / 25% (Cohort 3 aspirational)</td></tr>
+    <tr><td>Affiliate language</td><td>"No affiliates, no sponsorships"</td><td><span class="label-updated">UPDATED</span> "Independent. Membership-funded. No conflicts."</td></tr>
+    <tr><td>Aspirational messaging</td><td>Missing</td><td><span class="label-new">NEW</span> Generational wealth, lazy capital, family legacy</td></tr>
+    <tr><td>"499% returns"</td><td>Used as primary stat</td><td><span class="label-updated">UPDATED</span> Lead with "116% CAGR" (the audited figure)</td></tr>
+  </table>
+</div>
+
+<!-- 1. WHO THEY ARE -->
+<h2>1. Who They Are <span class="label-updated">UPDATED</span></h2>
+
+<blockquote>"A time-poor professional, business owner, or family investor aged 40+ with $25K-$1M+ they want allocated into digital assets properly - who wants a trusted team doing the research so they don't have to gamble on YouTube, Twitter, and a mate's tip."</blockquote>
+
+<p><strong>Key shift from v3.0:</strong> Removed "done-for-you" framing. CS does NOT manage money or make investment decisions for members. CS provides research, frameworks, community, and education. The <em>feel</em> is that someone has your back. The <em>reality</em> is you still make every decision yourself.</p>
+
+<h3>The 3 Buyer Profiles <span class="label-updated">UPDATED</span></h3>
+<p>Percentages adjusted to reflect <strong>Cohort 3 (aspirational target)</strong> rather than current member mix. First-timers are a much larger addressable market than our current base suggests.</p>
+
+<div class="profile-card first-timer">
+  <div class="profile-header">
+    <span class="profile-name">Profile 1: Dan the First-Timer</span>
+    <span class="profile-pct pct-blue">40% of Cohort 3</span>
+  </div>
+  <p><strong>Was 29% in v3.0.</strong> This is the largest segment of our aspirational audience - people we haven't captured yet.</p>
+  <p><strong>Who:</strong> New to digital assets. Thinking about it for years. Hasn't pulled the trigger. 45-60, professional/retired.</p>
+  <p><strong>Capital:</strong> $25K-$100K ready. Net worth $250K-$1M+.</p>
+  <p><strong>Core fear:</strong> Making an expensive first mistake.</p>
+  <p><strong>Language:</strong> "I don't know who to trust." "I don't know what to actually buy." "I don't want to get this wrong."</p>
+  <p><strong>What converts:</strong> Trust signals, newbie-friendly testimonials, "team guiding every move" promise, Foundations Track.</p>
+  <p><strong>Do NOT use:</strong> HNW language, institutional-grade, sophisticated investor, "done-for-you."</p>
+  <div class="testimonial">
+    <span class="name">Key testimonial - Ted:</span> Mortgage broker, San Diego. Zero crypto. "They're literally here just to help the members."
+  </div>
+</div>
+
+<div class="profile-card overwhelmed">
+  <div class="profile-header">
+    <span class="profile-name">Profile 2: Dan the Overwhelmed</span>
+    <span class="profile-pct pct-orange">35% of Cohort 3</span>
+  </div>
+  <p><strong>Was 46% in v3.0.</strong> Still the largest single segment of current members, but Cohort 3 skews more to first-timers.</p>
+  <p><strong>Who:</strong> Has some exposure but feels lost. Business owner, senior professional. 40-59.</p>
+  <p><strong>Capital:</strong> $50K-$500K+ ready. Net worth $500K-$2M+.</p>
+  <p><strong>Core fear:</strong> Information overload, no strategy, no time. Research confidence: 3.7/10.</p>
+  <p><strong>Language:</strong> "Cut through the noise." "I need a structured plan." "Know when to take profits."</p>
+  <p><strong>What converts:</strong> Ship list, exit framework, "1 hour a week" promise, having a team backing them.</p>
+  <div class="testimonial">
+    <span class="name">Key testimonial - Alex:</span> $2M+ in crypto. "Losing money is more expensive than the membership."
+  </div>
+</div>
+
+<div class="profile-card burned">
+  <div class="profile-header">
+    <span class="profile-name">Profile 3: Dan the Burned</span>
+    <span class="profile-pct pct-red">25% of Cohort 3</span>
+  </div>
+  <p><strong>Unchanged from v3.0.</strong></p>
+  <p><strong>Who:</strong> In digital assets 4+ years. Watched gains evaporate 2021-2022. May have lost on Voyager/FTX.</p>
+  <p><strong>Capital:</strong> $50K-$250K+ existing, $25K-$250K+ more. Net worth $500K-$2M+.</p>
+  <p><strong>Core fear:</strong> Round-tripping gains again. Exit confidence: 2.8/10.</p>
+  <p><strong>Language:</strong> "I should have had a team from day one." "I need to know when to take profits."</p>
+  <p><strong>What converts:</strong> Exit framework, 116% CAGR, Eric's testimonial, Ben's real story.</p>
+  <div class="testimonial">
+    <span class="name">Key testimonial - Sophie:</span> Couple. "You can either pay for help or pay for mistakes. Pick your poison."
+  </div>
+</div>
+
+<p><strong>Why Cohort 3 percentages differ:</strong> v3.0 reflected current members (Overwhelmed + Burned = 71%). Cohort 3 - the aspirational audience we're targeting - skews heavily to first-timers. The repositioned funnel now speaks to them directly, and bear market timing creates a natural entry point. Travis: "If you look at cohort three, more of them are new to market than anything else."</p>
+
+<!-- 2. DEMOGRAPHICS -->
+<h2>2. Demographics & Financial Profile</h2>
+
+<table>
+  <tr><th>Category</th><th>v3.0</th><th>v3.2</th></tr>
+  <tr><td>Core Age</td><td>40+</td><td>40+ (unchanged. Messaging includes 60+ explicitly)</td></tr>
+  <tr><td>Professions</td><td colspan="2">Business Owners, Senior Professionals, Real Estate, Mortgage Brokers, Tech, former Investment Bankers</td></tr>
+  <tr><td>Location</td><td>Australia primary. US growing</td><td>Australia primary. <strong>US is strategic priority</strong> (seed round, Miami, investor nights)</td></tr>
+  <tr><td>Crypto Portfolio</td><td>$50K-$250K (46%). 30% &lt;$50K</td><td>Unchanged. &lt;$50K is <strong>primary audience</strong> for Cohort 3</td></tr>
+  <tr><td>Net Worth</td><td>$250K-$2M+</td><td>$250K-$2M+ (unchanged)</td></tr>
+  <tr><td>Ready to Deploy</td><td>$25K-$1M+</td><td>$25K-$1M+ (unchanged)</td></tr>
+  <tr><td>Experience</td><td>24% in 4+ years still lost. 29% new</td><td>Cohort 3 skews heavier to new (40%+)</td></tr>
+</table>
+
+<!-- 3. PSYCHOGRAPHICS -->
+<h2>3. Psychographics</h2>
+
+<h3>Primary Goals (unchanged)</h3>
+<ul>
+  <li><strong>Build Generational Wealth (53%)</strong> - family legacy + grow faster than traditional investments</li>
+  <li><strong>Buy Back Time / Freedom</strong> - replace active income, more time with family</li>
+  <li><strong>Hedge Systemic Risk</strong> - inflation, debasement, digital assets as resilient component</li>
+</ul>
+
+<h3>Aspirational Goals <span class="label-new">NEW</span></h3>
+<ul>
+  <li><strong>Generational Wealth</strong> - "Build something your kids inherit. Not just money - knowledge."</li>
+  <li><strong>Lazy Capital</strong> - "Put idle capital to work. Your money should work harder than you do."</li>
+  <li><strong>Family Security</strong> - "Protect the people who depend on you."</li>
+  <li><strong>Confidence</strong> - "Make your first move with certainty."</li>
+</ul>
+<p>Content split: 60% pain-based, 40% aspirational.</p>
+
+<h3>The 3 Universal Fears</h3>
+<p><strong>"I don't know who to trust"</strong> - Our answer: Independent. Membership-funded. No conflicts. Coinbase, Swyftx, Coinspot use our research.</p>
+<p><strong>"I don't know what to buy"</strong> - Our answer: Ship list. Research team doing the work. Clear frameworks. 1 hour a week.</p>
+<p><strong>"I'm terrified of getting it wrong"</strong> - Our answer: Full exit framework. Circle community. 116% CAGR audited.</p>
+
+<h3>Pain Points <span class="label-updated">UPDATED</span></h3>
+<table>
+  <tr><th>Pain</th><th>Data</th><th>Our Answer</th></tr>
+  <tr><td><strong>Trust / "Who do I trust?"</strong></td><td><strong>#1 pain (Cohort 3). Biggest blocker for first-timers (40%)</strong></td><td><strong>Independence, audited returns, institutional clients, Circle community</strong></td></tr>
+  <tr><td>Information Overload</td><td>Research confidence: 3.7/10</td><td>"Cut through the noise" + research team</td></tr>
+  <tr><td>Feeling Isolated</td><td>Support network: 3.2/10</td><td><strong>Circle community</strong> - people just like you + team access</td></tr>
+  <tr><td>No Time</td><td>#3 pain. 38% of leads cite this</td><td>"1 hour a week, your team handles the research"</td></tr>
+  <tr><td>No Exit Strategy</td><td>#4 pain. Key for Dabbler + Burned profiles. Confidence: 2.8/10</td><td>Exit framework + ship list (secondary, not lead messaging)</td></tr>
+</table>
+
+<!-- 4. LANGUAGE -->
+<h2>4. Language & Messaging <span class="label-legal">LEGAL</span></h2>
+
+<h3>v3.0 → v3.2 Language Changes (Travis Review)</h3>
+<table>
+  <tr><th>Drop This (v3.0)</th><th>Use This (v3.2)</th><th>Why</th></tr>
+  <tr><td><s>"Done-for-you"</s> (as service claim)</td><td>"A team doing the research so you don't have to"</td><td><span class="label-legal">LEGAL</span> CS does NOT manage money</td></tr>
+  <tr><td><s>"We tell you what to buy and sell"</s></td><td>"We give you the research to make confident decisions"</td><td>Same legal risk</td></tr>
+  <tr><td><s>"WhatsApp group + team access"</s></td><td>"Circle community + team access"</td><td>WhatsApp being phased out</td></tr>
+  <tr><td><s>"No affiliates, no sponsorships"</s></td><td>"Independent. Membership-funded. No conflicts."</td><td>Affiliate model may change</td></tr>
+  <tr><td><s>"499% returns"</s></td><td>"116% CAGR over 6 years (audited)"</td><td>CAGR is the audited figure</td></tr>
+</table>
+
+<h3>The "Done-for-you Feel" Framework <span class="label-new">NEW</span> <span class="label-legal">LEGAL</span></h3>
+<p>Travis's clarification: It's never "done for you" - it's "done for you <em>feel</em>."</p>
+
+<div class="do-dont">
+  <div class="do-box">
+    <h4>✅ Write it like this</h4>
+    <ul>
+      <li>"A team doing the research so you don't have to"</li>
+      <li>"Your research team. Your frameworks. Your decisions."</li>
+      <li>"Everything you need to make confident decisions"</li>
+      <li>"The research is done. The frameworks are built. You follow the system."</li>
+    </ul>
+  </div>
+  <div class="dont-box">
+    <h4>❌ Never write this</h4>
+    <ul>
+      <li>"Done-for-you investing"</li>
+      <li>"We tell you what to buy and sell"</li>
+      <li>"We manage your portfolio"</li>
+      <li>"We handle everything"</li>
+    </ul>
+  </div>
+</div>
+
+<h3>v2.0 → v3.0 Language Shifts (unchanged)</h3>
+<table>
+  <tr><th>Drop This (v2.0)</th><th>Use This (v3.0+)</th></tr>
+  <tr><td><s>"Institutional-grade research"</s></td><td>"A team doing the research for you"</td></tr>
+  <tr><td><s>"Sophisticated investor"</s></td><td>"Busy professional" / "Serious family investor"</td></tr>
+  <tr><td><s>"Strategic allocation"</s></td><td>"A team guiding every move"</td></tr>
+  <tr><td><s>"$1M-$20M+ net worth"</s></td><td>"$25K-$1M+ to allocate"</td></tr>
+  <tr><td><s>"Platinum Inner Circle"</s></td><td>"Platinum"</td></tr>
+  <tr><td><s>Macro-doom / hedge fund tone</s></td><td>Pain-first, proof-second. Educator tone.</td></tr>
+</table>
+
+<h3>Messaging That Works (validated)</h3>
+<ul>
+  <li><strong>"Cut through the noise" / "A structured plan"</strong> - info overload + no strategy</li>
+  <li><strong>"Know when to take profits"</strong> - #1 fear</li>
+  <li><strong>"A team doing the research so you don't have to"</strong> <span class="label-updated">replaces "done-for-you"</span></li>
+  <li><strong>"Generational wealth" / "Building a legacy"</strong> - deepest motivation</li>
+  <li><strong>"Someone I can trust"</strong> - first-timer trigger</li>
+  <li><strong>"A community of people just like you"</strong> <span class="label-updated">replaces WhatsApp language</span></li>
+  <li><strong>"Your money should work harder than you do"</strong> <span class="label-new">NEW</span></li>
+</ul>
+
+<h3>The 5 Competitive Advantages <span class="label-updated">UPDATED</span></h3>
+<div class="advantage"><span class="num">1</span><span><strong>116% 6-year CAGR, independently audited by Crypto Tax Australia.</strong> Hard proof. Lead with it.</span></div>
+<div class="advantage"><span class="num">2</span><span><strong>Circle community + weekly calls with Ben and the team.</strong> 87% say non-negotiable. This IS the product.</span></div>
+<div class="advantage"><span class="num">3</span><span><strong>Independent. Membership-funded. No conflicts of interest.</strong> Biggest trust signal per survey.</span></div>
+<div class="advantage"><span class="num">4</span><span><strong>Built for busy professionals - 1 hour a week, your team handles the research.</strong></span></div>
+<div class="advantage"><span class="num">5</span><span><strong>Full exit framework.</strong> Key for experienced investors (Dabbler/Burned profiles).</span></div>
+
+<!-- CHANGE LOG -->
+<h2>Change Log</h2>
+<table>
+  <tr><th>Version</th><th>Date</th><th>Changes</th></tr>
+  <tr><td>v2.0</td><td>Feb 2026</td><td>Original ICP from survey data</td></tr>
+  <tr><td>v3.0</td><td>Apr 2026</td><td>Funnel audit integration, 3 buyer profiles, language shift</td></tr>
+  <tr><td><strong>v3.2</strong></td><td><strong>Apr 15, 2026</strong></td><td><strong>Travis review: legal-safe language, WhatsApp→Circle, Cohort 3 % (40/35/25), aspirational messaging, affiliate softened, backstory corrected</strong></td></tr>
+  <tr><td><strong>v3.2</strong></td><td><strong>Apr 15, 2026</strong></td><td><strong>Pain rerank: Trust is #1 (Cohort 3 first-timers), Exit Strategy demoted to #4 (Dabbler/Burned only). First-timer-friendly throughout.</strong></td></tr>
+</table>
+
+<footer>Collective Shift Pty Ltd - Confidential | ICP v3.2 - April 2026</footer>
+
+</div>
+</body>
+</html>
