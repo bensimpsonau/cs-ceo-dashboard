@@ -606,6 +606,42 @@ function readHubSettings() {
   }
 }
 
+// Transform Postiz analytics array into structured object
+function parsePostizMetrics(metricsArray, integrationId) {
+  const result = { integrationId, followers: 0, impressions: 0, likes: 0, comments: 0, shares: 0, saves: 0, views: 0, engagement: 0, reach: 0, metrics: {}, timeline: [] };
+  if (!Array.isArray(metricsArray)) return result;
+
+  for (const metric of metricsArray) {
+    const label = (metric.label || '').toLowerCase().replace(/[\s_]+/g, '_');
+    const data = metric.data || [];
+    const latest = data.length > 0 ? parseInt(data[data.length - 1].total || '0', 10) : 0;
+    const change = metric.percentageChange || 0;
+
+    result.metrics[label] = { latest, change, data };
+
+    // Map known labels to top-level fields
+    if (label.includes('follower')) result.followers = latest;
+    if (label === 'impression' || label === 'impressions') result.impressions = latest;
+    if (label === 'like' || label === 'likes') result.likes = latest;
+    if (label === 'comment' || label === 'comments' || label === 'reply' || label === 'replies') result.comments += latest;
+    if (label === 'share' || label === 'shares' || label === 'retweet' || label === 'retweets') result.shares += latest;
+    if (label === 'save' || label === 'saves' || label === 'bookmark' || label === 'bookmarks') result.saves = latest;
+    if (label === 'view' || label === 'views') result.views = latest;
+    if (label === 'reach') result.reach = latest;
+  }
+
+  // Calculate engagement = likes + comments + shares + saves
+  result.engagement = result.likes + result.comments + result.shares + result.saves;
+
+  // Build a unified timeline from impressions/reach data
+  const timelineSource = result.metrics['impression'] || result.metrics['impressions'] || result.metrics['reach'] || result.metrics['view'] || result.metrics['views'];
+  if (timelineSource && timelineSource.data) {
+    result.timeline = timelineSource.data.map(d => ({ date: d.date, value: parseInt(d.total || '0', 10) }));
+  }
+
+  return result;
+}
+
 async function fetchPostizAnalytics() {
   const POSTIZ_API_KEY = process.env.POSTIZ_API_KEY;
   if (!POSTIZ_API_KEY) {
@@ -622,16 +658,51 @@ async function fetchPostizAnalytics() {
         headers: { 'Authorization': POSTIZ_API_KEY }
       });
       if (res.ok) {
-        results[platform] = await res.json();
-        results[platform].integrationId = integrationId;
+        const raw = await res.json();
+        results[platform] = parsePostizMetrics(raw, integrationId);
+        console.log(`Postiz ${platform}: engagement=${results[platform].engagement}, impressions=${results[platform].impressions}`);
       } else {
         console.log(`Postiz ${platform} fetch failed:`, res.status);
-        results[platform] = cache.platforms[platform] || { integrationId, followers: 0, engagement: 0, posts: [] };
+        results[platform] = cache.platforms[platform] || parsePostizMetrics([], integrationId);
       }
     } catch (err) {
       console.log(`Postiz ${platform} error:`, err.message);
-      results[platform] = cache.platforms[platform] || { integrationId, followers: 0, engagement: 0, posts: [] };
+      results[platform] = cache.platforms[platform] || parsePostizMetrics([], integrationId);
     }
+  }
+
+  // Also fetch recent posts from Postiz to get post counts
+  try {
+    const now = new Date();
+    const thirtyAgo = new Date(now - 30*24*60*60*1000);
+    const startDate = thirtyAgo.toISOString().split('T')[0];
+    const endDate = new Date(now.getTime() + 7*24*60*60*1000).toISOString().split('T')[0];
+    const postsRes = await fetch(`https://api.postiz.com/public/v1/posts?startDate=${startDate}&endDate=${endDate}`, {
+      headers: { 'Authorization': POSTIZ_API_KEY }
+    });
+    if (postsRes.ok) {
+      const postsData = await postsRes.json();
+      const posts = postsData.posts || [];
+      // Count posts per platform
+      for (const post of posts) {
+        const provId = (post.integration && post.integration.providerIdentifier) || '';
+        const platMap = { x: 'twitter', twitter: 'twitter', linkedin: 'linkedin', 'instagram-standalone': 'instagram', instagram: 'instagram', youtube: 'youtube', tiktok: 'tiktok' };
+        const plat = platMap[provId] || provId;
+        if (results[plat]) {
+          if (!results[plat].posts) results[plat].posts = [];
+          results[plat].posts.push({
+            id: post.id,
+            content: (post.content || '').substring(0, 200),
+            state: post.state,
+            publishDate: post.publishDate,
+            releaseURL: post.releaseURL
+          });
+        }
+      }
+      console.log(`Postiz posts fetched: ${posts.length} total`);
+    }
+  } catch (err) {
+    console.log('Postiz posts fetch error:', err.message);
   }
 
   const newCache = { lastFetched: new Date().toISOString(), platforms: results };

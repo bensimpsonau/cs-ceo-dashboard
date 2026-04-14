@@ -980,19 +980,22 @@ function renderPlatformDetail(platform) {
   el.innerHTML = html;
 
   // Render per-platform engagement chart
-  const engHistory = d.engagementHistory || d.dailyEngagement || [];
-  if (engHistory.length > 0 || f > 0) {
-    const labels = [];
-    for (let i = 29; i >= 0; i--) {
-      const dt = new Date(); dt.setDate(dt.getDate() - i);
-      labels.push(dt.toLocaleDateString('en', { month: 'short', day: 'numeric' }));
-    }
-    let data;
-    if (engHistory.length >= 30) {
-      data = engHistory.slice(-30);
+  const timeline = d.timeline || d.engagementHistory || d.dailyEngagement || [];
+  if (timeline.length > 0 || f > 0) {
+    let labels, data;
+    if (timeline.length >= 2) {
+      labels = timeline.map(t => {
+        const dt = new Date(t.date || t);
+        return dt.toLocaleDateString('en', { month: 'short', day: 'numeric' });
+      });
+      data = timeline.map(t => typeof t === 'object' ? (t.value || t.total || 0) : t);
     } else {
-      const base = e || 2;
-      data = labels.map(() => Math.max(0, base + (Math.random() - 0.5) * base * 0.4).toFixed(2));
+      labels = [];
+      for (let i = 29; i >= 0; i--) {
+        const dt = new Date(); dt.setDate(dt.getDate() - i);
+        labels.push(dt.toLocaleDateString('en', { month: 'short', day: 'numeric' }));
+      }
+      data = labels.map(() => 0);
     }
     new Chart(document.getElementById('chart-platform-detail'), {
       type: 'line',
@@ -1040,13 +1043,23 @@ function renderCharts() {
   const datasets = [];
   for (const [key, color] of [['twitter','#1DA1F2'],['linkedin','#0A66C2'],['instagram','#E4405F'],['youtube','#FF0000'],['tiktok','#E8E8EA']]) {
     const d = plats[key] || {};
-    const base = getEngagement(d) || 1;
-    const history = d.engagementHistory || d.dailyEngagement || [];
+    const timeline = d.timeline || d.engagementHistory || d.dailyEngagement || [];
     let data;
-    if (history.length >= 30) {
-      data = history.slice(-30);
+    if (timeline.length >= 2) {
+      // Map timeline to the 30-day labels
+      const timeMap = {};
+      timeline.forEach(t => {
+        const dt = typeof t === 'object' ? (t.date || '') : '';
+        const val = typeof t === 'object' ? (t.value || t.total || 0) : t;
+        if (dt) timeMap[dt] = val;
+      });
+      data = labels.map((_, i) => {
+        const d2 = new Date(); d2.setDate(d2.getDate() - (29 - i));
+        const key2 = d2.toISOString().split('T')[0];
+        return timeMap[key2] || 0;
+      });
     } else {
-      data = labels.map(() => Math.max(0, base + (Math.random() - 0.5) * base * 0.3).toFixed(2));
+      data = labels.map(() => 0);
     }
     datasets.push({ label: PLATFORM_LABELS[key], data, borderColor: color, backgroundColor: color + '22', tension: 0.3, fill: false, pointRadius: 0, borderWidth: 2 });
   }
