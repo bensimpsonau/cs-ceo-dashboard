@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS Link Generator</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0a0a0a;
+    color: #e5e5e5;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .container {
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+  .logo {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .logo h1 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+  .logo p {
+    font-size: 13px;
+    color: #666;
+    margin-top: 4px;
+  }
+  .field {
+    margin-bottom: 20px;
+  }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #888;
+    margin-bottom: 8px;
+  }
+  .btn-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .btn-group.cols-4 {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+  .btn {
+    padding: 12px 16px;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    background: #141414;
+    color: #ccc;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .btn:hover {
+    background: #1a1a1a;
+    border-color: #444;
+    color: #fff;
+  }
+  .btn.active {
+    background: #1a3a2a;
+    border-color: #2d8a5e;
+    color: #4ade80;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    background: #141414;
+    color: #e5e5e5;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  input[type="text"]:focus {
+    border-color: #2d8a5e;
+  }
+  input[type="text"]::placeholder {
+    color: #555;
+  }
+  .divider {
+    border-top: 1px solid #1a1a1a;
+    margin: 28px 0;
+  }
+  .output-section {
+    display: none;
+  }
+  .output-section.visible {
+    display: block;
+  }
+  .output-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #888;
+    margin-bottom: 8px;
+  }
+  .output-box {
+    background: #141414;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 16px;
+    word-break: break-all;
+    font-size: 13px;
+    color: #4ade80;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    min-height: 48px;
+  }
+  .copy-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    background: #2d8a5e;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .copy-btn:hover {
+    background: #34a068;
+  }
+  .copy-btn.copied {
+    background: #1a5c3a;
+  }
+  .utm-breakdown {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: #0f0f0f;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.8;
+  }
+  .utm-breakdown span {
+    color: #888;
+  }
+  .destination-select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    background: #141414;
+    color: #e5e5e5;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+  }
+  .destination-select:focus {
+    border-color: #2d8a5e;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="logo">
+    <h1>Collective Shift</h1>
+    <p>Setter Link Generator</p>
+  </div>
+
+  <div class="field">
+    <label>Your Name</label>
+    <div class="btn-group cols-4" id="setterGroup">
+      <button class="btn" data-value="zen">Zen</button>
+      <button class="btn" data-value="james">James</button>
+      <button class="btn" data-value="dereck">Dereck</button>
+      <button class="btn" data-value="ricardo">Ricardo</button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Lead Source</label>
+    <div class="btn-group" id="mediumGroup">
+      <button class="btn" data-value="ig-dm">IG DMs</button>
+      <button class="btn" data-value="vsl-application">VSL Applications</button>
+      <button class="btn" data-value="masterclass">Masterclass</button>
+      <button class="btn" data-value="wpb-lead">WPB Leads</button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Destination</label>
+    <select class="destination-select" id="destinationSelect">
+      <option value="https://calendly.com/cs-consultation/platinum-membership-1-1-call-rr">Calendly - Strategy Call Booking</option>
+      <option value="https://collectiveshift.net/wpb">Wealth Blueprint Quiz</option>
+      <option value="https://collectiveshift.net/trainingvslv5">VSL Training Page</option>
+      <option value="custom">Custom URL...</option>
+    </select>
+  </div>
+
+  <div class="field" id="customUrlField" style="display:none;">
+    <label>Custom URL</label>
+    <input type="text" id="customUrl" placeholder="https://collectiveshift.net/...">
+  </div>
+
+  <div class="field">
+    <label>Campaign Name <span style="color:#555; text-transform:none; font-weight:400;">(optional - defaults to "setter-outreach")</span></label>
+    <input type="text" id="campaignName" placeholder="e.g. masterclass-may-2026">
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="output-section" id="outputSection">
+    <div class="output-label">Your Link</div>
+    <div class="output-box" id="outputBox"></div>
+    <button class="copy-btn" id="copyBtn" onclick="copyLink()">Copy Link</button>
+    <div class="utm-breakdown" id="utmBreakdown"></div>
+  </div>
+</div>
+
+<script>
+  let selectedSetter = '';
+  let selectedMedium = '';
+
+  function setupGroup(groupId, callback) {
+    const group = document.getElementById(groupId);
+    group.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        group.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        callback(btn.dataset.value);
+        generateLink();
+      });
+    });
+  }
+
+  setupGroup('setterGroup', val => selectedSetter = val);
+  setupGroup('mediumGroup', val => selectedMedium = val);
+
+  document.getElementById('campaignName').addEventListener('input', generateLink);
+  document.getElementById('destinationSelect').addEventListener('change', function() {
+    document.getElementById('customUrlField').style.display = this.value === 'custom' ? 'block' : 'none';
+    generateLink();
+  });
+  document.getElementById('customUrl').addEventListener('input', generateLink);
+
+  function generateLink() {
+    const output = document.getElementById('outputSection');
+    const box = document.getElementById('outputBox');
+    const breakdown = document.getElementById('utmBreakdown');
+
+    if (!selectedSetter || !selectedMedium) {
+      output.classList.remove('visible');
+      return;
+    }
+
+    const destSelect = document.getElementById('destinationSelect');
+    let baseUrl = destSelect.value;
+    if (baseUrl === 'custom') {
+      baseUrl = document.getElementById('customUrl').value.trim();
+      if (!baseUrl) {
+        output.classList.remove('visible');
+        return;
+      }
+    }
+
+    const campaign = document.getElementById('campaignName').value.trim().toLowerCase().replace(/\s+/g, '-') || 'setter-outreach';
+    const sep = baseUrl.includes('?') ? '&' : '?';
+    const link = `${baseUrl}${sep}utm_source=${selectedSetter}&utm_medium=${selectedMedium}&utm_campaign=${campaign}&utm_content=booking`;
+
+    box.textContent = link;
+    breakdown.innerHTML = `
+      <span>source:</span> ${selectedSetter} (who sent the lead)<br>
+      <span>medium:</span> ${selectedMedium} (where the lead came from)<br>
+      <span>campaign:</span> ${campaign} (which campaign)<br>
+      <span>destination:</span> ${baseUrl.split('?')[0].split('/').slice(-1)[0] || 'home'}
+    `;
+
+    output.classList.add('visible');
+    document.getElementById('copyBtn').textContent = 'Copy Link';
+    document.getElementById('copyBtn').classList.remove('copied');
+  }
+
+  function copyLink() {
+    const link = document.getElementById('outputBox').textContent;
+    navigator.clipboard.writeText(link).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy Link';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+</script>
+</body>
+</html>
