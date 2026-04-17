@@ -123,23 +123,39 @@
     margin-bottom: 12px;
     min-height: 48px;
   }
-  .copy-btn {
+  .action-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .copy-btn, .open-btn {
     width: 100%;
     padding: 14px;
     border: none;
     border-radius: 8px;
-    background: #2d8a5e;
-    color: #fff;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.15s;
+  }
+  .copy-btn {
+    background: #2d8a5e;
+    color: #fff;
   }
   .copy-btn:hover {
     background: #34a068;
   }
   .copy-btn.copied {
     background: #1a5c3a;
+  }
+  .open-btn {
+    background: #1a1a3a;
+    border: 1px solid #3a3aaa;
+    color: #8a8aff;
+  }
+  .open-btn:hover {
+    background: #2a2a5a;
   }
   .utm-breakdown {
     margin-top: 16px;
@@ -153,24 +169,23 @@
   .utm-breakdown span {
     color: #888;
   }
-  .destination-select {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1px solid #2a2a2a;
-    border-radius: 8px;
-    background: #141414;
-    color: #e5e5e5;
-    font-size: 14px;
-    outline: none;
-    cursor: pointer;
-    -webkit-appearance: none;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
+  .call-type-indicator {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
   }
-  .destination-select:focus {
-    border-color: #2d8a5e;
+  .call-type-indicator.new {
+    background: #1a3a2a;
+    color: #4ade80;
+  }
+  .call-type-indicator.renewal {
+    background: #3a2a1a;
+    color: #f59e0b;
   }
 </style>
 </head>
@@ -192,6 +207,14 @@
   </div>
 
   <div class="field">
+    <label>Call Type</label>
+    <div class="btn-group" id="callTypeGroup">
+      <button class="btn" data-value="new">New Customer</button>
+      <button class="btn" data-value="renewal">Renewal Call</button>
+    </div>
+  </div>
+
+  <div class="field">
     <label>Lead Source</label>
     <div class="btn-group" id="mediumGroup">
       <button class="btn" data-value="ig-dm">IG DMs</button>
@@ -202,21 +225,6 @@
   </div>
 
   <div class="field">
-    <label>Destination</label>
-    <select class="destination-select" id="destinationSelect">
-      <option value="https://calendly.com/cs-consultation/platinum-membership-1-1-call-rr">Calendly - Strategy Call Booking</option>
-      <option value="https://collectiveshift.net/wpb">Wealth Blueprint Quiz</option>
-      <option value="https://collectiveshift.net/trainingvslv5">VSL Training Page</option>
-      <option value="custom">Custom URL...</option>
-    </select>
-  </div>
-
-  <div class="field" id="customUrlField" style="display:none;">
-    <label>Custom URL</label>
-    <input type="text" id="customUrl" placeholder="https://collectiveshift.net/...">
-  </div>
-
-  <div class="field">
     <label>Campaign Name <span style="color:#555; text-transform:none; font-weight:400;">(optional - defaults to "setter-outreach")</span></label>
     <input type="text" id="campaignName" placeholder="e.g. masterclass-may-2026">
   </div>
@@ -224,16 +232,26 @@
   <div class="divider"></div>
 
   <div class="output-section" id="outputSection">
+    <div id="callTypeIndicator"></div>
     <div class="output-label">Your Link</div>
     <div class="output-box" id="outputBox"></div>
-    <button class="copy-btn" id="copyBtn" onclick="copyLink()">Copy Link</button>
+    <div class="action-row">
+      <button class="copy-btn" id="copyBtn" onclick="copyLink()">Copy Link</button>
+      <button class="open-btn" id="openBtn" onclick="openLink()">Open Calendly</button>
+    </div>
     <div class="utm-breakdown" id="utmBreakdown"></div>
   </div>
 </div>
 
 <script>
+  const CALENDLY_URLS = {
+    new: 'https://calendly.com/cs-consultation/platinum-membership-1-1-call-rr',
+    renewal: 'https://calendly.com/cs-consultation/consultation-call'
+  };
+
   let selectedSetter = '';
   let selectedMedium = '';
+  let selectedCallType = '';
 
   function setupGroup(groupId, callback) {
     const group = document.getElementById(groupId);
@@ -248,45 +266,50 @@
   }
 
   setupGroup('setterGroup', val => selectedSetter = val);
+  setupGroup('callTypeGroup', val => selectedCallType = val);
   setupGroup('mediumGroup', val => selectedMedium = val);
 
   document.getElementById('campaignName').addEventListener('input', generateLink);
-  document.getElementById('destinationSelect').addEventListener('change', function() {
-    document.getElementById('customUrlField').style.display = this.value === 'custom' ? 'block' : 'none';
-    generateLink();
-  });
-  document.getElementById('customUrl').addEventListener('input', generateLink);
 
   function generateLink() {
     const output = document.getElementById('outputSection');
     const box = document.getElementById('outputBox');
     const breakdown = document.getElementById('utmBreakdown');
+    const indicator = document.getElementById('callTypeIndicator');
 
-    if (!selectedSetter || !selectedMedium) {
+    if (!selectedSetter || !selectedMedium || !selectedCallType) {
       output.classList.remove('visible');
       return;
     }
 
-    const destSelect = document.getElementById('destinationSelect');
-    let baseUrl = destSelect.value;
-    if (baseUrl === 'custom') {
-      baseUrl = document.getElementById('customUrl').value.trim();
-      if (!baseUrl) {
-        output.classList.remove('visible');
-        return;
-      }
+    const baseUrl = CALENDLY_URLS[selectedCallType];
+    const campaign = document.getElementById('campaignName').value.trim().toLowerCase().replace(/\s+/g, '-') || 'setter-outreach';
+
+    const utmParams = new URLSearchParams({
+      utm_source: selectedSetter,
+      utm_medium: selectedMedium,
+      utm_campaign: campaign,
+      utm_content: selectedCallType === 'renewal' ? 'renewal' : 'booking'
+    });
+
+    const link = `${baseUrl}?${utmParams.toString()}`;
+
+    // Show call type indicator
+    if (selectedCallType === 'new') {
+      indicator.innerHTML = '<span class="call-type-indicator new">New Customer Call</span>';
+    } else {
+      indicator.innerHTML = '<span class="call-type-indicator renewal">Renewal Call</span>';
     }
 
-    const campaign = document.getElementById('campaignName').value.trim().toLowerCase().replace(/\s+/g, '-') || 'setter-outreach';
-    const sep = baseUrl.includes('?') ? '&' : '?';
-    const link = `${baseUrl}${sep}utm_source=${selectedSetter}&utm_medium=${selectedMedium}&utm_campaign=${campaign}&utm_content=booking`;
-
     box.textContent = link;
+
+    const callLabel = selectedCallType === 'new' ? 'Platinum 1:1 (new customer)' : 'Consultation (renewal)';
     breakdown.innerHTML = `
-      <span>source:</span> ${selectedSetter} (who sent the lead)<br>
-      <span>medium:</span> ${selectedMedium} (where the lead came from)<br>
-      <span>campaign:</span> ${campaign} (which campaign)<br>
-      <span>destination:</span> ${baseUrl.split('?')[0].split('/').slice(-1)[0] || 'home'}
+      <span>setter:</span> ${selectedSetter}<br>
+      <span>source:</span> ${selectedMedium}<br>
+      <span>campaign:</span> ${campaign}<br>
+      <span>call type:</span> ${callLabel}<br>
+      <span>calendly form:</span> ${baseUrl.split('/').pop()}
     `;
 
     output.classList.add('visible');
@@ -305,6 +328,11 @@
         btn.classList.remove('copied');
       }, 2000);
     });
+  }
+
+  function openLink() {
+    const link = document.getElementById('outputBox').textContent;
+    if (link) window.open(link, '_blank');
   }
 </script>
 </body>
