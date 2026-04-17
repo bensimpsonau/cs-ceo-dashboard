@@ -214,7 +214,7 @@
     </div>
   </div>
 
-  <div class="field">
+  <div class="field" id="leadSourceField">
     <label>Lead Source</label>
     <div class="btn-group" id="mediumGroup">
       <button class="btn" data-value="ig-dm">IG DMs</button>
@@ -224,7 +224,7 @@
     </div>
   </div>
 
-  <div class="field">
+  <div class="field" id="campaignField">
     <label>Campaign Name <span style="color:#555; text-transform:none; font-weight:400;">(optional - defaults to "setter-outreach")</span></label>
     <input type="text" id="campaignName" placeholder="e.g. masterclass-may-2026">
   </div>
@@ -266,7 +266,21 @@
   }
 
   setupGroup('setterGroup', val => selectedSetter = val);
-  setupGroup('callTypeGroup', val => selectedCallType = val);
+  setupGroup('callTypeGroup', val => {
+    selectedCallType = val;
+    const leadSourceField = document.getElementById('leadSourceField');
+    const campaignField = document.getElementById('campaignField');
+    if (val === 'renewal') {
+      leadSourceField.style.display = 'none';
+      campaignField.style.display = 'none';
+      selectedMedium = 'renewal';
+    } else {
+      leadSourceField.style.display = 'block';
+      campaignField.style.display = 'block';
+      selectedMedium = '';
+      document.getElementById('mediumGroup').querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+    }
+  });
   setupGroup('mediumGroup', val => selectedMedium = val);
 
   document.getElementById('campaignName').addEventListener('input', generateLink);
@@ -277,7 +291,11 @@
     const breakdown = document.getElementById('utmBreakdown');
     const indicator = document.getElementById('callTypeIndicator');
 
-    if (!selectedSetter || !selectedMedium || !selectedCallType) {
+    if (!selectedSetter || !selectedCallType) {
+      output.classList.remove('visible');
+      return;
+    }
+    if (selectedCallType === 'new' && !selectedMedium) {
       output.classList.remove('visible');
       return;
     }
@@ -285,12 +303,15 @@
     const baseUrl = CALENDLY_URLS[selectedCallType];
     const campaign = document.getElementById('campaignName').value.trim().toLowerCase().replace(/\s+/g, '-') || 'setter-outreach';
 
-    const utmParams = new URLSearchParams({
-      utm_source: selectedSetter,
-      utm_medium: selectedMedium,
-      utm_campaign: campaign,
-      utm_content: selectedCallType === 'renewal' ? 'renewal' : 'booking'
-    });
+    const utmParams = new URLSearchParams({ utm_source: selectedSetter });
+    if (selectedCallType === 'new') {
+      utmParams.set('utm_medium', selectedMedium);
+      utmParams.set('utm_campaign', campaign);
+      utmParams.set('utm_content', 'booking');
+    } else {
+      utmParams.set('utm_medium', 'renewal');
+      utmParams.set('utm_content', 'renewal');
+    }
 
     const link = `${baseUrl}?${utmParams.toString()}`;
 
@@ -304,13 +325,12 @@
     box.textContent = link;
 
     const callLabel = selectedCallType === 'new' ? 'Platinum 1:1 (new customer)' : 'Consultation (renewal)';
-    breakdown.innerHTML = `
-      <span>setter:</span> ${selectedSetter}<br>
-      <span>source:</span> ${selectedMedium}<br>
-      <span>campaign:</span> ${campaign}<br>
-      <span>call type:</span> ${callLabel}<br>
-      <span>calendly form:</span> ${baseUrl.split('/').pop()}
-    `;
+    let breakdownHtml = `<span>setter:</span> ${selectedSetter}<br>`;
+    if (selectedCallType === 'new') {
+      breakdownHtml += `<span>source:</span> ${selectedMedium}<br><span>campaign:</span> ${campaign}<br>`;
+    }
+    breakdownHtml += `<span>call type:</span> ${callLabel}<br><span>calendly form:</span> ${baseUrl.split('/').pop()}`;
+    breakdown.innerHTML = breakdownHtml;
 
     output.classList.add('visible');
     document.getElementById('copyBtn').textContent = 'Copy Link';
