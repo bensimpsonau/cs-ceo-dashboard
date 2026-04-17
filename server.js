@@ -35,7 +35,7 @@ const AUTH_PASS = process.env.DASHBOARD_PASSWORD || process.env.AUTH_PASS || 'cs
 
 app.use((req, res, next) => {
   // Public pages - no auth required (lead magnet funnel)
-  const publicPaths = ['/funnel-optin.html', '/funnel-quiz.html', '/funnel-thankyou.html', '/wealth-shift-guide.html', '/blueprint-guide.html'];
+  const publicPaths = ['/funnel-optin.html', '/funnel-quiz.html', '/funnel-thankyou.html', '/wealth-shift-guide.html', '/blueprint-guide.html', '/utm-generator.html'];
   if (publicPaths.includes(req.path)) return next();
 
   const auth = req.headers['authorization'];
