@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BTC Treasury Strategy - Implementation Plan</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cs: {
+          orange: '#FC5C03',
+          green: '#08C394',
+          purple: '#654FFC',
+          navy: '#1A1A2E',
+          'navy-light': '#252540',
+          border: '#E8E8EA',
+        }
+      }
+    }
+  }
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>body{font-family:'Plus Jakarta Sans',sans-serif;background:#F8F8FA;}</style>
+</head>
+<body class="p-4 md:p-8 max-w-5xl mx-auto">
+
+<div class="mb-6">
+  <a href="/" class="text-cs-orange text-sm font-medium hover:underline">← Back to Dashboard</a>
+</div>
+
+<!-- Header -->
+<div class="bg-white rounded-2xl border border-cs-border p-6 md:p-8 mb-6">
+  <div class="flex items-center gap-3 mb-2">
+    <span class="bg-cs-orange text-white text-xs font-bold px-3 py-1 rounded-full">IMPLEMENTATION PLAN</span>
+    <span class="bg-cs-green text-white text-xs font-bold px-3 py-1 rounded-full">PLATINUM</span>
+    <span class="text-gray-400 text-sm">April 19, 2026</span>
+  </div>
+  <h1 class="text-2xl md:text-3xl font-extrabold text-cs-navy mb-2">Bitcoin Treasury Strategy</h1>
+  <p class="text-gray-500">Full implementation plan for CS Platinum. AU workaround, AFSL framework, launch path.</p>
+</div>
+
+<!-- TLDR -->
+<div class="bg-cs-navy text-white rounded-2xl p-6 md:p-8 mb-6">
+  <h2 class="text-lg font-bold mb-4 text-cs-orange">TL;DR</h2>
+  <ul class="space-y-3 text-sm leading-relaxed">
+    <li><strong>The AU workaround is real.</strong> Division 35 does not apply to Pty Ltd companies. A member's SPV can buy, borrow, mine, depreciate, and carry forward losses - legitimately.</li>
+    <li><strong>The $20K instant asset write-off is live for 2025-26.</strong> Per-asset, not per-purchase. A company can instant-write-off multiple ASIC miners this financial year. Closes 30 June 2026 unless extended.</li>
+    <li><strong>Primary AU lender: Block Earner.</strong> ACL 391876, Fireblocks custody, 9.50% p.a. line of credit, up to 40% LVR, SMSF/company/individual eligible.</li>
+    <li><strong>Primary US lender: Arch Lending.</strong> Already the Moss partner. Case-by-case for AU members; not primary.</li>
+    <li><strong>Compliance lane: general education only.</strong> TPB s90-5 carves out general tax information. Bitcoin is not a financial product per ASIC INFO 225 (Oct 2025). CS stays education-side, refers implementation to licensed partners and tax agents.</li>
+    <li><strong>Launch: 10 weeks. Beta: 5 US + 5 AU Platinum members. Embedded in Platinum, not a standalone product.</strong></li>
+  </ul>
+</div>
+
+<!-- Section 1: AU Workaround -->
+<div class="bg-white rounded-2xl border border-cs-border p-6 md:p-8 mb-6">
+  <h2 class="text-xl font-bold text-cs-navy mb-4">1. Australian Business Structure Workaround</h2>
+
+  <div class="bg-cs-green/10 border-l-4 border-cs-green rounded-r-lg p-4 mb-6">
+    <p class="text-sm text-cs-navy font-semibold mb-1">Key finding</p>
+    <p class="text-sm text-gray-700">Division 35 non-commercial loss rules apply to individuals only. <strong>Not to companies.</strong> Confirmed via ATO TR 2001/14 and TR 2003/3. A Pty Ltd running Bitcoin mining can generate real tax losses, offset other company income, and carry losses forward under Subdivision 165-A (COT or SBT).</p>
+  </div>
+
+  <h3 class="font-bold text-cs-navy mb-2">Depreciation paths for a Pty Ltd</h3>
+  <div class="overflow-x-auto mb-6">
+    <table class="w-full text-sm border-collapse">
+      <thead>
+        <tr class="bg-gray-50 text-left">
+          <th class="p-3 border border-cs-border font-bold">Method</th>
+          <th class="p-3 border border-cs-border font-bold">Who qualifies</th>
+          <th class="p-3 border border-cs-border font-bold">Year 1 deduction</th>
+          <th class="p-3 border border-cs-border font-bold">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="p-3 border border-cs-border font-semibold">$20K Instant Asset Write-Off</td>
+          <td class="p-3 border border-cs-border">SBE, turnover &lt;$10M, simplified depreciation</td>
+          <td class="p-3 border border-cs-border text-cs-green font-bold">100% if &lt;$20K per asset</td>
+          <td class="p-3 border border-cs-border">Extended for 2025-26. Reverts to $1K after 30 June 2026.</td>
+        </tr>
+        <tr class="bg-gray-50">
+          <td class="p-3 border border-cs-border font-semibold">Small Business Pool</td>
+          <td class="p-3 border border-cs-border">Turnover &lt;$10M</td>
+          <td class="p-3 border border-cs-border">15% Year 1, 30% thereafter</td>
+          <td class="p-3 border border-cs-border">Pool &lt;$20K at EOY = full write-off</td>
+        </tr>
+        <tr>
+          <td class="p-3 border border-cs-border font-semibold">Standard Div 40</td>
+          <td class="p-3 border border-cs-border">Everyone else</td>
+          <td class="p-3 border border-cs-border">~25% prime cost or ~37.5% DV</td>
+          <td class="p-3 border border-cs-border">Over 4 years (computing hardware effective life)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="bg-cs-orange/10 border-l-4 border-cs-orange rounded-r-lg p-4 mb-6">
+    <p class="text-sm text-cs-navy font-semibold mb-1">The Australian play</p>
+    <p class="text-sm text-gray-700">An Antminer S21 Pro at ~AU$3,700 sits well under $20K per asset. A company SBE can instant-write-off 10-20 of them in Year 1, provided each miner is installed and hashing before 30 June 2026. This is the AU equivalent of Moss's 100% bonus depreciation play. Smaller tax shield than the US version, but real and legitimate.</p>
+  </div>
+
+  <h3 class="font-bold text-cs-navy mb-2">GST, interest, and BTC character</h3>
+  <ul class="text-sm text-gray-700 space-y-2 mb-4 list-disc pl-5">
+    <li><strong>GST credits claimable</strong> on mining equipment, electricity, hosting, internet if company is GST-registered.</li>
+    <li><strong>Mining to non-resident pools = GST-free supply.</strong> Keep credits. Most major pools are non-resident.</li>
+    <li><strong>Interest deductible</strong> where borrowed funds are used to produce assessable income. Nexus is clear if BTC-backed loan funds miner purchase.</li>
+    <li><strong>Collateral BTC = capital asset.</strong> Mined BTC = trading stock. Companies do NOT get the 50% CGT discount. Private binding ruling recommended on BTC-backed loan being a non-CGT event.</li>
+  </ul>
+</div>
+
+<!-- Section 2: Lenders -->
+<div class="bg-white rounded-2xl border border-cs-border p-6 md:p-8 mb-6">
+  <h2 class="text-xl font-bold text-cs-navy mb-4">2. Australian BTC Lending Providers</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+
+    <div class="border border-cs-border rounded-xl p-5 bg-gradient-to-br from-cs-green/5 to-white">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="font-bold text-cs-navy">Block Earner</h3>
+        <span class="bg-cs-green text-white text-xs font-bold px-2 py-1 rounded">PRIMARY AU</span>
+      </div>
+      <p class="text-xs text-gray-500 mb-3">ACL 391876 · AUSTRAC · Fireblocks custody</p>
+      <div class="space-y-1 text-sm text-gray-700">
+        <div><strong>LoC:</strong> 9.50% p.a. (11.93% comp)</div>
+        <div><strong>Fixed:</strong> 11.50% p.a. (12.17% comp)</div>
+        <div><strong>LVR:</strong> up to 40% standard, 80% max</div>
+        <div><strong>Size:</strong> $50 - $5M</div>
+        <div><strong>Eligible:</strong> individuals, companies, SMSFs</div>
+        <div><strong>Fees:</strong> 2% origination, no early repay fee</div>
+      </div>
+    </div>
+
+    <div class="border border-cs-border rounded-xl p-5">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="font-bold text-cs-navy">Vield</h3>
+        <span class="bg-cs-purple text-white text-xs font-bold px-2 py-1 rounded">SECONDARY AU</span>
+      </div>
+      <p class="text-xs text-gray-500 mb-3">ACL 526970 · Zodia Custody · $55M insurance</p>
+      <div class="space-y-1 text-sm text-gray-700">
+        <div><strong>Rate:</strong> 13% p.a. (16.20% comp)</div>
+        <div><strong>LVR:</strong> up to 50%</div>
+        <div><strong>Size:</strong> min $2K, no max specified</div>
+        <div><strong>Term:</strong> max 12 months</div>
+        <div><strong>Note:</strong> $50M credit line finalised 2026</div>
+      </div>
+    </div>
+
+    <div class="border border-cs-border rounded-xl p-5">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="font-bold text-cs-navy">Arch Lending</h3>
+        <span class="bg-cs-orange text-white text-xs font-bold px-2 py-1 rounded">PRIMARY US</span>
+      </div>
+      <p class="text-xs text-gray-500 mb-3">NMLS #2637200 · Anchorage Digital custody</p>
+      <div class="space-y-1 text-sm text-gray-700">
+        <div><strong>Rate:</strong> from ~8.49% APR</div>
+        <div><strong>LTV:</strong> up to 60%</div>
+        <div><strong>US:</strong> 44 states (ex CA, DE, MS, MT, NV, ND, RI, VT)</div>
+        <div><strong>AU:</strong> case-by-case, not primary market</div>
+        <div><strong>Product:</strong> Perpetual Income (no monthly payments)</div>
+      </div>
+    </div>
+
+    <div class="border border-cs-border rounded-xl p-5">
+      <h3 class="font-bold text-cs-navy mb-2">Others (honourable mention)</h3>
+      <div class="space-y-1 text-sm text-gray-700">
+        <div><strong>Ledn:</strong> BTC-only, 9.99-11.49% APR, 50% LTV. AU business/investment only.</div>
+        <div><strong>Crypto.com:</strong> AFSL/ACL holder, 12% APR, retail-grade.</div>
+        <div><strong>Salt Lending:</strong> 8.95-14.45% APR, AU business-only.</div>
+        <div><strong>Aave/Compound (DeFi):</strong> ~2.5% APR, 70-85% LTV. Too technical for CS referrals.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bg-cs-navy/5 rounded-lg p-4">
+    <p class="text-xs text-gray-700"><strong>Regulatory context:</strong> Corporations Amendment (Digital Assets Framework) Act 2026 received Royal Assent 8 April 2026. 18-month transitional window now open. Bitcoin itself remains not a financial product per INFO 225. Partnering with AU-licensed providers (Block Earner, Vield) is the safest path as offshore unlicensed lenders face tighter marketing restrictions from April 2027.</p>
+  </div>
+</div>
+
+<!-- Section 3: AFSL/TPB Compliance -->
+<div class="bg-white rounded-2xl border border-cs-border p-6 md:p-8 mb-6">
+  <h2 class="text-xl font-bold text-cs-navy mb-4">3. AFSL / TPB Compliance Framework</h2>
+
+  <h3 class="font-bold text-cs-navy mb-3">The three lanes</h3>
+  <div class="overflow-x-auto mb-6">
+    <table class="w-full text-sm border-collapse">
+      <thead>
+        <tr class="bg-gray-50 text-left">
+          <th class="p-3 border border-cs-border font-bold">Lane</th>
+          <th class="p-3 border border-cs-border font-bold">What it is</th>
+          <th class="p-3 border border-cs-border font-bold">Licence needed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="p-3 border border-cs-border font-semibold text-cs-green">General education</td>
+          <td class="p-3 border border-cs-border">Explaining rules, strategy concepts, worked examples with fictional numbers</td>
+          <td class="p-3 border border-cs-border font-bold">None</td>
+        </tr>
+        <tr class="bg-gray-50">
+          <td class="p-3 border border-cs-border font-semibold text-cs-orange">Personal tax advice</td>
+          <td class="p-3 border border-cs-border">Applying tax law to a specific member's facts</td>
+          <td class="p-3 border border-cs-border font-bold">TPB registration</td>
+        </tr>
+        <tr>
+          <td class="p-3 border border-cs-border font-semibold text-cs-orange">Personal financial advice</td>
+          <td class="p-3 border border-cs-border">Recommending specific products based on a client's situation</td>
+          <td class="p-3 border border-cs-border font-bold">AFSL</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="bg-cs-green/10 border-l-4 border-cs-green rounded-r-lg p-4 mb-6">
+    <p class="text-sm text-cs-navy font-semibold mb-1">TPB s90-5 education carve-out</p>
+    <p class="text-sm text-gray-700">Per TPB(I) 39/2023, a service is only a tax agent service if a client can reasonably rely on it for their compliance. TPB <strong>explicitly exempts</strong> general tax advice in newsletters, websites, public seminars, and educational content not tailored to a specific tax situation. CS stays inside this carve-out.</p>
+  </div>
+
+  <h3 class="font-bold text-cs-navy mb-3">CAN say vs CANNOT say</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div class="bg-cs-green/5 border border-cs-green/20 rounded-xl p-4">
+      <p class="font-bold text-cs-green mb-2 text-sm">✓ CAN say</p>
+      <ul class="text-xs text-gray-700 space-y-2">
+        <li>"Some members use a Pty Ltd structure to run mining activity"</li>
+        <li>"The $20K instant asset write-off applies for 2025-26"</li>
+        <li>"Block Earner offers BTC-backed loans from 9.50% p.a."</li>
+        <li>"Here is a worked example with a hypothetical profile"</li>
+        <li>"Consult a registered tax agent"</li>
+        <li>Host general Q&A with general answers</li>
+      </ul>
+    </div>
+    <div class="bg-cs-orange/5 border border-cs-orange/20 rounded-xl p-4">
+      <p class="font-bold text-cs-orange mb-2 text-sm">✗ CANNOT say</p>
+      <ul class="text-xs text-gray-700 space-y-2">
+        <li>"You should set up a Pty Ltd"</li>
+        <li>"You can write off these 15 miners against your $400K income"</li>
+        <li>"You should borrow $100K against your 2 BTC"</li>
+        <li>"This will save you $40K in tax this year"</li>
+        <li>"Based on your income, here is what you should do"</li>
+        <li>Host 1:1 strategy calls looking at specific member facts</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="font-bold text-cs-navy mb-3">Sample disclaimer (every module, every page)</h3>
+  <div class="bg-gray-50 border border-cs-border rounded-lg p-4 text-xs text-gray-700 italic leading-relaxed mb-4">
+    <strong>Important disclaimer.</strong> This content is general educational information only. It is not financial, tax, investment, or legal advice. It does not take into account your personal objectives, financial situation, or needs. The strategies discussed involve significant risk, including the risk of losing all capital. Bitcoin prices are volatile. Loans secured by digital assets can be subject to margin calls and forced liquidation. Tax outcomes depend on your specific circumstances and may change with law. Collective Shift is not a licensed tax agent, financial adviser, or credit provider. Before acting on any information in this module, you should consult a registered tax agent, licensed financial adviser, and/or credit provider. Collective Shift may receive referral fees from partner providers mentioned in this module, disclosed in full on our Partners page.
+  </div>
+
+  <p class="text-xs text-gray-500"><strong>Penalties for getting this wrong:</strong> TPB unregistered services: up to $55,500 (individual) or $275,000 (company). AFSL breach: similar scale plus ASIC enforcement. Legal review every module before shipping.</p>
+</div>
+
+<!-- Section 4: Implementation -->
+<div class="bg-white rounded-2xl border border-cs-border p-6 md:p-8 mb-6">
+  <h2 class="text-xl font-bold text-cs-navy mb-4">4. Implementation Plan</h2>
+
+  <h3 class="font-bold text-cs-navy mb-3">Curriculum (6 modules + 2 workshops)</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+    <div class="border border-cs-border rounded-lg p-4">
+      <div class="flex items-center gap-2 mb-1"><span class="bg-cs-navy text-white text-xs font-bold px-2 py-0.5 rounded">M1</span><span class="font-bold text-sm text-cs-navy">Foundations</span></div>
+      <p class="text-xs text-gray-600">Why HNW hold BTC as treasury. Self-custody. Don't-sell principle.</p>
+    </div>
+    <div class="border border-cs-border rounded-lg p-4">
+      <div class="flex items-center gap-2 mb-1"><span class="bg-cs-navy text-white text-xs font-bold px-2 py-0.5 rounded">M2</span><span class="font-bold text-sm text-cs-navy">Borrowing Against BTC</span></div>
+      <p class="text-xs text-gray-600">LTV, margin calls, provider landscape. Worked examples.</p>
+    </div>
+    <div class="border border-cs-border rounded-lg p-4">
+      <div class="flex items-center gap-2 mb-1"><span class="bg-cs-navy text-white text-xs font-bold px-2 py-0.5 rounded">M3</span><span class="font-bold text-sm text-cs-navy">Mining Economics</span></div>
+      <p class="text-xs text-gray-600">Hashprice, difficulty, hardware, electricity sensitivity.</p>
+    </div>
+    <div class="border border-cs-border rounded-lg p-4">
+      <div class="flex items-center gap-2 mb-1"><span class="bg-cs-navy text-white text-xs font-bold px-2 py-0.5 rounded">M4</span><span class="font-bold text-sm text-cs-navy">US Tax (Sec 168k)</span></div>
+      <p class="text-xs text-gray-600">100% bonus depreciation, trade or business test, LLC/S-corp.</p>
+    </div>
+    <div class="border border-cs-border rounded-lg p-4">
+      <div class="flex items-center gap-2 mb-1"><span class="bg-cs-navy text-white text-xs font-bold px-2 py-0.5 rounded">M5</span><span class="font-bold text-sm text-cs-navy">AU Tax (Pty Ltd)</span></div>
+      <p class="text-xs text-gray-600">Division 35 workaround. IAWO. Trading stock vs capital. GST.</p>
+    </div>
+    <div class="border border-cs-border rounded-lg p-4">
+      <div class="flex items-center gap-2 mb-1"><span class="bg-cs-navy text-white text-xs font-bold px-2 py-0.5 rounded">M6</span><span class="font-bold text-sm text-cs-navy">Putting It Together</span></div>
+      <p class="text-xs text-gray-600">Decision framework, risk register, who this fits (and doesn't).</p>
+    </div>
+  </div>
+  <p class="text-xs text-gray-500 mb-6">Plus: <strong>Workshop 1</strong> with Arch Lending (US strategy). <strong>Workshop 2</strong> with Block Earner (AU strategy). <strong>Quarterly partner masterclass.</strong> Members-only Q&A channel in CS community.</p>
+
+  <h3 class="font-bold text-cs-navy mb-3">Timeline (10 weeks to GA)</h3>
+  <div class="overflow-x-auto mb-6">
+    <table class="w-full text-sm border-collapse">
+      <thead>
+        <tr class="bg-gray-50 text-left">
+          <th class="p-2 border border-cs-border font-bold w-20">Week</th>
+          <th class="p-2 border border-cs-border font-bold">Milestone</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="p-2 border border-cs-border font-bold">W1</td><td class="p-2 border border-cs-border">Ben signs off. Legal briefed for scope review.</td></tr>
+        <tr class="bg-gray-50"><td class="p-2 border border-cs-border font-bold">W1-2</td><td class="p-2 border border-cs-border">Legal review of curriculum outline, disclaimers, partner disclosures.</td></tr>
+        <tr><td class="p-2 border border-cs-border font-bold">W2-3</td><td class="p-2 border border-cs-border">Partner outreach: Arch Lending + Block Earner. Close MOUs.</td></tr>
+        <tr class="bg-gray-50"><td class="p-2 border border-cs-border font-bold">W3-5</td><td class="p-2 border border-cs-border">Content production: record 6 modules. Build workshop decks.</td></tr>
+        <tr><td class="p-2 border border-cs-border font-bold">W4-5</td><td class="p-2 border border-cs-border">Identify 2 partner tax agents (1 AU, 1 US). MOU.</td></tr>
+        <tr class="bg-gray-50"><td class="p-2 border border-cs-border font-bold">W6</td><td class="p-2 border border-cs-border">Build module pages in Platinum portal. Add disclaimers.</td></tr>
+        <tr><td class="p-2 border border-cs-border font-bold">W6-7</td><td class="p-2 border border-cs-border">Internal review. Legal sign-off on final content.</td></tr>
+        <tr class="bg-gray-50"><td class="p-2 border border-cs-border font-bold">W7</td><td class="p-2 border border-cs-border">Soft launch: 5 US + 5 AU Platinum beta cohort.</td></tr>
+        <tr><td class="p-2 border border-cs-border font-bold">W8</td><td class="p-2 border border-cs-border">Live workshops 1 (Arch) and 2 (Block Earner).</td></tr>
+        <tr class="bg-gray-50"><td class="p-2 border border-cs-border font-bold">W9</td><td class="p-2 border border-cs-border">Gather feedback, fix issues.</td></tr>
+        <tr><td class="p-2 border border-cs-border font-bold text-cs-green">W10</td><td class="p-2 border border-cs-border"><strong>General release</strong> to all Platinum members.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="font-bold text-cs-navy mb-3">Revenue model (Year 1, assuming 100 active Platinum)</h3>
+  <div class="overflow-x-auto mb-6">
+    <table class="w-full text-sm border-collapse">
+      <thead>
+        <tr class="bg-gray-50 text-left">
+          <th class="p-3 border border-cs-border font-bold">Revenue line</th>
+          <th class="p-3 border border-cs-border font-bold">Assumption</th>
+          <th class="p-3 border border-cs-border font-bold text-right">Year 1 est.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="p-3 border border-cs-border">Platinum retention uplift</td><td class="p-3 border border-cs-border">5pp retention @ $1,497 ARPU</td><td class="p-3 border border-cs-border text-right">$7,500</td></tr>
+        <tr class="bg-gray-50"><td class="p-3 border border-cs-border">Arch referral (US members)</td><td class="p-3 border border-cs-border">10 loans @ avg $1,500 commission</td><td class="p-3 border border-cs-border text-right">$15,000</td></tr>
+        <tr><td class="p-3 border border-cs-border">Block Earner referral (AU members)</td><td class="p-3 border border-cs-border">20 loans @ avg $1,000 commission</td><td class="p-3 border border-cs-border text-right">$20,000</td></tr>
+        <tr class="bg-gray-50"><td class="p-3 border border-cs-border">Blockware hardware commissions</td><td class="p-3 border border-cs-border">5 US member buys @ avg $1,000</td><td class="p-3 border border-cs-border text-right">$5,000</td></tr>
+        <tr class="bg-cs-orange/10"><td class="p-3 border border-cs-border font-bold">Total direct Year 1</td><td class="p-3 border border-cs-border"></td><td class="p-3 border border-cs-border text-right font-bold text-cs-orange">~$47,500</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="text-xs text-gray-500">Plus the larger indirect value: Platinum differentiator, sales-call narrative, price defensibility. The module is the kind of "wouldn't get this on YouTube" content that supports the $1,497 price point.</p>
+</div>
+
+<!-- Section 5: Competitive -->
+<div class="bg-white rounded-2xl border border-cs-border p-6 md:p-8 mb-6">
+  <h2 class="text-xl font-bold text-cs-navy mb-4">5. Competitive Landscape</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+    <div>
+      <h3 class="font-bold text-cs-navy mb-2 text-sm">Australian competitors</h3>
+      <ul class="text-xs text-gray-700 space-y-2">
+        <li><strong>Wealth Safe:</strong> Generalist crypto tax advisory. Professional services model, not education/community.</li>
+        <li><strong>Munros:</strong> Crypto accounting firm. Services, not product.</li>
+        <li><strong>Syla / Koinly:</strong> Tax software and guides. Tools, not strategy.</li>
+        <li><strong>H&R Block / Bentleys:</strong> Generalist with crypto content. No Bitcoin focus.</li>
+        <li><strong>No AU Moss equivalent exists.</strong> This is the gap CS can own.</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="font-bold text-cs-navy mb-2 text-sm">US competitors</h3>
+      <ul class="text-xs text-gray-700 space-y-2">
+        <li><strong>Mark Moss / Market Disruptors:</strong> $5-25K coaching. Huge distribution. Too US-specific.</li>
+        <li><strong>Preston Pysh (TIP Mastermind):</strong> ~$2-5K. Bitcoin macro focus, not mining-specific.</li>
+        <li><strong>Swan Private:</strong> BTC wealth advisory. Institutional. No mining tax depth.</li>
+        <li><strong>Arch Lending's own content:</strong> Conflicted - their education sells their loans.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bg-cs-purple/10 border-l-4 border-cs-purple rounded-r-lg p-4">
+    <p class="text-sm text-cs-navy font-semibold mb-1">CS wedge</p>
+    <p class="text-sm text-gray-700">Nobody in Australia owns the intersection of Bitcoin-native education + HNW professional audience + institutional-grade strategy content + direct partner ecosystem. CS can be the first AU educator to teach this strategy honestly - including being candid that the AU version is a watered-down cousin of the US version. The honesty itself is the differentiator.</p>
+  </div>
+</div>
+
+<!-- Decisions -->
+<div class="bg-cs-navy text-white rounded-2xl p-6 md:p-8 mb-6">
+  <h2 class="text-lg font-bold mb-4 text-cs-orange">Decisions for Ben</h2>
+  <ol class="space-y-2 text-sm list-decimal pl-5">
+    <li>Green-light the module build? <em class="text-cs-green">Recommended yes.</em></li>
+    <li>Arch Lending intro - Ben's network or cold outreach draft?</li>
+    <li>Block Earner - Ben opens, Sales closes?</li>
+    <li>Legal budget: 4-6 hours with existing counsel.</li>
+    <li>Beta cohort - hand-pick from known HNW Platinum members?</li>
+    <li>Stays inside Platinum vs standalone upsell? <em class="text-cs-green">Strong recommendation: stays inside Platinum.</em></li>
+    <li>10 weeks timeline acceptable, or push harder?</li>
+  </ol>
+</div>
+
+<div class="bg-white rounded-2xl border border-cs-border p-6 text-xs text-gray-500">
+  <p class="font-bold text-cs-navy mb-2 text-sm">Full plan</p>
+  <p>Complete implementation plan with all sections, risk register, and source references lives at <code class="bg-gray-100 px-2 py-0.5 rounded">memory/BTC_TREASURY_STRATEGY_IMPLEMENTATION.md</code>.</p>
+  <p class="mt-3"><strong>Key sources:</strong> ATO TR 2001/14, TR 2003/3; ATO crypto mining guidance; Division 40/70 ITAA 1997; Subdivision 165-A ITAA 1997; Treasury Laws Amendment (Tax Incentives and Integrity) Act 2025; TPB(I) 39/2023; TASA 2009 s90-5; ASIC INFO 225 (Oct 2025); Corporations Amendment (Digital Assets Framework) Act 2026; Block Earner, Vield, Arch Lending public terms.</p>
+</div>
+
+</body>
+</html>
