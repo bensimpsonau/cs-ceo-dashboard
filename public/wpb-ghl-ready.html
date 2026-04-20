@@ -1,8 +1,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* GHL Reset - isolate from page styles */
-#wpb-root, #wpb-root * { box-sizing: border-box; margin: 0; padding: 0; }
-#wpb-root *:not(svg):not(svg *) { max-width: 100%; }
+/* ═══════════════════════════════════════════════════════════
+   GHL Reset - isolate from page styles.
+
+   CRITICAL: Do NOT use a universal `margin: 0` / `padding: 0` reset
+   on `#wpb-root *` - it has specificity (0,1,1) and will clobber
+   every `margin: 0 auto` used for centering (.content, #main-content,
+   .hero-personalised-bar, etc), collapsing every centred column to
+   flush-left, full-width. Also never set `max-width: 100%` universally
+   as that overrides explicit max-widths on those same containers.
+   Only reset margin/padding on elements that have a browser default
+   (body, headings, p, ul, ol, figure, blockquote).
+═══════════════════════════════════════════════════════════ */
+#wpb-root, #wpb-root *, #wpb-root *::before, #wpb-root *::after { box-sizing: border-box; }
+#wpb-root body, #wpb-root h1, #wpb-root h2, #wpb-root h3, #wpb-root h4, #wpb-root h5, #wpb-root h6, #wpb-root p, #wpb-root ul, #wpb-root ol, #wpb-root figure, #wpb-root blockquote, #wpb-root dl, #wpb-root dd { margin: 0; padding: 0; }
+#wpb-root ul, #wpb-root ol { list-style: none; }
 #wpb-root { 
   font-family: 'Plus Jakarta Sans', sans-serif;
   background: #1B1925;
@@ -17,13 +29,13 @@
   font-size: 16px;
 }
 #wpb-root a { color: inherit; }
-#wpb-root img { max-width: 100%; }
+#wpb-root img, #wpb-root video, #wpb-root iframe { max-width: 100%; }
 
 
     /* ═══════════════════════════════════════════════════════════
-       GLOBAL RESET & BASE
+       GLOBAL RESET & BASE (scoped to #wpb-root to avoid clobbering centring)
     ═══════════════════════════════════════════════════════════ */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    #wpb-root *, #wpb-root *::before, #wpb-root *::after { box-sizing: border-box; }
     /* scroll-behavior set on html by GHL already */
 
     :root {
