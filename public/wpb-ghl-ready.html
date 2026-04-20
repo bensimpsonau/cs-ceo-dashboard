@@ -1795,13 +1795,25 @@ document.querySelectorAll('.exercise .prompt').forEach(el => {
       bulletsEl.appendChild(li);
     });
 
-    /* Calendly URL */
+    /* Calendly URL with UTM passthrough */
     var fullName = [firstName, lastName].filter(Boolean).join(' ');
     var cal = new URLSearchParams();
     if (fullName) cal.set('name', fullName);
     if (email)    cal.set('email', email);
     cal.set('a1', archetypeName);
     cal.set('a2', 'score-' + score);
+    /* Pass through UTMs from page URL if present */
+    var pageParams = getParams();
+    ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','utm_id'].forEach(function(k) {
+      if (pageParams[k]) cal.set(k, pageParams[k]);
+    });
+    /* Default UTMs for WPB funnel if none provided */
+    if (!pageParams.utm_source) {
+      cal.set('utm_source', 'wpb');
+      cal.set('utm_medium', 'results_page');
+      cal.set('utm_campaign', 'archetype_' + archetype);
+      cal.set('utm_content', 'cta_book_call');
+    }
     document.getElementById('cta-book-btn').href =
       'https://calendly.com/cs-consultation/platinum-membership-1-1-call-rr?' + cal.toString();
   }
