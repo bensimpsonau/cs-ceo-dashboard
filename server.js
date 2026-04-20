@@ -710,9 +710,11 @@ async function pushToGHL(contact, answers, score, category, archetype) {
     q1_goal: answers.q1_goal || '',
     q2_risk: answers.q2_risk || '',
     q3_approach: answers.q3_approach || '',
+    q4_trigger: answers.q4_trigger || '',
     q5_confidence: answers.q5_confidence || '',
     q6_concern: answers.q6_concern || '',
     q7_experience: answers.q7_experience || '',
+    q8_bestcase: answers.q8_bestcase || '',
     q9_capital: answers.q9_capital || ''
   };
 
@@ -795,9 +797,11 @@ app.get('/api/wpb-test', (req, res) => {
     q1_goal: req.query.q1 || '',
     q2_risk: req.query.q2 || 'Actively building wealth',
     q3_approach: req.query.q3 || 'Diversified across multiple asset classes',
+    q4_trigger: req.query.q4 || '',
     q5_confidence: req.query.q5 || '6',
     q6_concern: req.query.q6 || '',
     q7_experience: req.query.q7 || 'without a clear strategy',
+    q8_bestcase: req.query.q8 || '',
     q9_capital: req.query.q9 || '$50k - $100k'
   };
   const score = calculateWpbScore(answers);
@@ -805,11 +809,14 @@ app.get('/api/wpb-test', (req, res) => {
   const archetype = getWpbArchetype(answers, score);
 
   const params = new URLSearchParams({
-    wpb_score: score, wpb_category: category,
+    wpb_score: score, wpb_category: category, wpb_archetype: archetype,
     first_name: req.query.name || 'Test', last_name: '', email: req.query.email || 'test@test.com',
     q1_goal: answers.q1_goal, q2_risk: answers.q2_risk, q3_approach: answers.q3_approach,
+    q4_trigger: answers.q4_trigger,
     q5_confidence: answers.q5_confidence, q6_concern: answers.q6_concern,
-    q7_experience: answers.q7_experience, q9_capital: answers.q9_capital
+    q7_experience: answers.q7_experience,
+    q8_bestcase: answers.q8_bestcase,
+    q9_capital: answers.q9_capital
   });
   res.json({ score, category, archetype, answers, resultsUrl: `https://collectiveshift.net/wpb-pdf?${params.toString()}` });
 });

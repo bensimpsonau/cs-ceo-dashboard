@@ -928,6 +928,49 @@
 </style>
 <div id="wpb-root">
 
+<!-- ════════════════════════════════════════════════════════════════════════════
+     GHL CONTACT MERGE TAGS — personalisation fallback
+
+     GHL server-renders these tags at request time. When a known contact
+     lands on the page (e.g. via an email CTA to /wpb-pdf with no query
+     string), we still personalise using the values on their contact
+     record. URL params always take precedence over these.
+
+     Note on tag syntax: GHL supports `{{contact.custom_field_slug}}` for
+     custom fields and `{{contact.first_name}}` / `{{contact.email}}` for
+     standard fields. When a tag has no value GHL substitutes an empty
+     string, so we read into window.WPB_GHL and filter empties before use.
+════════════════════════════════════════════════════════════════════════════ -->
+<script>
+  window.WPB_GHL = {
+    first_name:      "{{contact.first_name}}",
+    last_name:       "{{contact.last_name}}",
+    email:           "{{contact.email}}",
+    phone_number:    "{{contact.phone}}",
+    wpb_score:       "{{contact.wpb_score}}",
+    wpb_category:    "{{contact.wpb_category}}",
+    wpb_archetype:   "{{contact.wpb_archetype}}",
+    q1_goal:         "{{contact.q1_goal}}",
+    q2_risk:         "{{contact.q2_risk}}",
+    q3_approach:     "{{contact.q3_approach}}",
+    q4_trigger:      "{{contact.q4_trigger}}",
+    q5_confidence:   "{{contact.q5_confidence}}",
+    q6_concern:      "{{contact.q6_concern}}",
+    q7_experience:   "{{contact.q7_experience}}",
+    q8_bestcase:     "{{contact.q8_bestcase}}",
+    q9_capital:      "{{contact.q9_capital}}"
+  };
+  // Strip un-substituted tags (outside GHL) and empty strings so the
+  // URL-param path isn't shadowed by empties or literal "{{contact.x}}".
+  (function () {
+    var g = window.WPB_GHL, k;
+    for (k in g) {
+      if (!g.hasOwnProperty(k)) continue;
+      var v = g[k];
+      if (typeof v !== 'string' || !v || v.indexOf('{{') === 0) delete g[k];
+    }
+  })();
+</script>
 
 <!-- ════════════════════════════════════════════════════════════════════════════
      LOADING SCREEN
@@ -1244,8 +1287,15 @@ document.querySelectorAll('.exercise .prompt').forEach(el => {
   /* ───── Utilities ───── */
   function getParams() {
     var p = {};
+    // 1. GHL contact merge tags (baked in server-side by GHL). Low priority.
+    if (window.WPB_GHL) {
+      for (var k in window.WPB_GHL) {
+        if (window.WPB_GHL.hasOwnProperty(k)) p[k] = window.WPB_GHL[k];
+      }
+    }
+    // 2. URL query string overrides GHL fallback for every key present.
     new URLSearchParams(window.location.search).forEach(function (v, k) {
-      p[k] = decodeURIComponent(v);
+      try { p[k] = decodeURIComponent(v); } catch (_) { p[k] = v; }
     });
     return p;
   }
@@ -2093,8 +2143,10 @@ document.querySelectorAll('.exercise .prompt').forEach(el => {
   /* ───── Bootstrap ───── */
   document.addEventListener('DOMContentLoaded', function () {
     var _params = getParams();
-    var _quizKeys = ['score','wpb_score','first_name','q1_goal','q2_risk',
-                     'q3_approach','q5_confidence','q7_experience','q9_capital',
+    var _quizKeys = ['score','wpb_score','wpb_category','wpb_archetype',
+                     'first_name','q1_goal','q2_risk','q3_approach',
+                     'q4_trigger','q5_confidence','q6_concern',
+                     'q7_experience','q8_bestcase','q9_capital',
                      'nUmbz0gCbhCE','ssVZikYgfbBJ','OvSEoe053uKc'];
     var _hasParams = _quizKeys.some(function(k) { return !!_params[k]; });
 
