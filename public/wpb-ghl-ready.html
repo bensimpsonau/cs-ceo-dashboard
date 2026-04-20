@@ -1240,33 +1240,12 @@ document.querySelectorAll('.exercise .prompt').forEach(el => {
   el.replaceWith(input);
 });
 
-// UTM passthrough to Calendly embed
-(function() {
-  const params = new URLSearchParams(window.location.search);
-  const embed = document.getElementById('calendlyEmbed');
-  if (!embed) return;
-
-  let baseUrl = embed.getAttribute('data-url');
-
-  // Pass UTMs through to Calendly
-  const utmKeys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
-  utmKeys.forEach(function(key) {
-    const val = params.get(key);
-    if (val) baseUrl += '&' + key + '=' + encodeURIComponent(val);
-  });
-
-  // Pass contact pre-fill params if present in URL (from GHL page merge fields)
-  const prefillKeys = ['name','email','a1','a2','a3'];
-  prefillKeys.forEach(function(key) {
-    const val = params.get(key);
-    if (val) baseUrl += '&' + key + '=' + encodeURIComponent(val);
-  });
-
-  embed.setAttribute('data-url', baseUrl);
-
-  // Auto-scroll to #book if hash is present
+// Auto-scroll to #book if the URL ends with that hash. UTM + prefill
+// for the Calendly embed now lives in buildCalendlyUrl() (main script),
+// so this inner block only handles the scroll behaviour.
+(function () {
   if (window.location.hash === '#book') {
-    setTimeout(function() {
+    setTimeout(function () {
       const bookEl = document.getElementById('book');
       if (bookEl) bookEl.scrollIntoView({ behavior: 'smooth' });
     }, 800);
@@ -1857,27 +1836,72 @@ document.querySelectorAll('.exercise .prompt').forEach(el => {
       bulletsEl.appendChild(li);
     });
 
-    /* Calendly URL with UTM passthrough */
-    var fullName = [firstName, lastName].filter(Boolean).join(' ');
-    var cal = new URLSearchParams();
-    if (fullName) cal.set('name', fullName);
-    if (email)    cal.set('email', email);
-    cal.set('a1', archetypeName);
-    cal.set('a2', 'score-' + score);
-    /* Pass through UTMs from page URL if present */
-    var pageParams = getParams();
-    ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','utm_id'].forEach(function(k) {
-      if (pageParams[k]) cal.set(k, pageParams[k]);
-    });
-    /* Default UTMs for WPB funnel if none provided */
-    if (!pageParams.utm_source) {
-      cal.set('utm_source', 'wpb');
-      cal.set('utm_medium', 'results_page');
-      cal.set('utm_campaign', 'archetype_' + archetype);
-      cal.set('utm_content', 'cta_book_call');
+    /* Calendly CTAs: hero button, text link, embedded widget.
+       One shared helper builds every URL so each CTA has UTMs AND a
+       distinct utm_content so Ben can see which placement converts. */
+    var calCtx = {
+      name: [firstName, lastName].filter(Boolean).join(' '),
+      email: email,
+      archetype: archetype,
+      archetypeName: archetypeName,
+      score: score
+    };
+
+    var heroBtn = document.getElementById('cta-book-btn');
+    if (heroBtn) heroBtn.href = buildCalendlyUrl(calCtx, 'cta_hero');
+
+    var callLink = document.getElementById('cta-call-link');
+    if (callLink) callLink.href = buildCalendlyUrl(calCtx, 'cta_text_link');
+
+    var embed = document.getElementById('calendlyEmbed');
+    if (embed) {
+      /* Embed keeps its widget display flags; merge them in so they
+         don't get lost or duplicated across calls. */
+      embed.setAttribute('data-url',
+        buildCalendlyUrl(calCtx, 'cta_embed', {
+          hide_event_type_details: '1',
+          hide_gdpr_banner: '1',
+          primary_color: 'ff8700'
+        }));
     }
-    document.getElementById('cta-book-btn').href =
-      'https://calendly.com/cs-consultation/platinum-membership-1-1-call-rr?' + cal.toString();
+  }
+
+  /* ───── Calendly URL builder ─────
+     Central builder for every Calendly touchpoint so UTMs are always
+     present, per-placement utm_content is set, and incoming UTMs from
+     the page URL are passed through. */
+  function buildCalendlyUrl(ctx, placement, extraParams) {
+    var base = 'https://calendly.com/cs-consultation/platinum-membership-1-1-call-rr';
+    var qs = new URLSearchParams();
+
+    /* Invitee prefill */
+    if (ctx && ctx.name)  qs.set('name', ctx.name);
+    if (ctx && ctx.email) qs.set('email', ctx.email);
+    /* Custom-question prefill so the setter sees archetype + score */
+    if (ctx && ctx.archetypeName) qs.set('a1', ctx.archetypeName);
+    if (ctx && (ctx.score || ctx.score === 0)) qs.set('a2', 'score-' + ctx.score);
+
+    /* Passthrough incoming UTMs first, then fill defaults. */
+    var pageParams = getParams();
+    ['utm_source','utm_medium','utm_campaign','utm_term','utm_id'].forEach(function (k) {
+      if (pageParams[k]) qs.set(k, pageParams[k]);
+    });
+    if (!qs.has('utm_source'))   qs.set('utm_source',   'wpb_results_page');
+    if (!qs.has('utm_medium'))   qs.set('utm_medium',   'quiz');
+    if (!qs.has('utm_campaign')) qs.set('utm_campaign', 'wealth_protection_blueprint');
+    if (!qs.has('utm_term') && ctx && ctx.archetype) qs.set('utm_term', ctx.archetype);
+    /* utm_content always reflects this specific placement so Ben can
+       see which CTA drove the booking. */
+    qs.set('utm_content', placement || 'cta_generic');
+
+    /* Extras (eg Calendly widget display flags). */
+    if (extraParams) {
+      Object.keys(extraParams).forEach(function (k) {
+        qs.set(k, extraParams[k]);
+      });
+    }
+
+    return base + '?' + qs.toString();
   }
 
   /* ───── HTML escape helper ───── */
@@ -2202,38 +2226,8 @@ document.querySelectorAll('.exercise .prompt').forEach(el => {
   el.replaceWith(input);
 });
 
-// UTM passthrough to Calendly embed
-(function() {
-  const params = new URLSearchParams(window.location.search);
-  const embed = document.getElementById('calendlyEmbed');
-  if (!embed) return;
-
-  let baseUrl = embed.getAttribute('data-url');
-
-  // Pass UTMs through to Calendly
-  const utmKeys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
-  utmKeys.forEach(function(key) {
-    const val = params.get(key);
-    if (val) baseUrl += '&' + key + '=' + encodeURIComponent(val);
-  });
-
-  // Pass contact pre-fill params if present in URL (from GHL page merge fields)
-  const prefillKeys = ['name','email','a1','a2','a3'];
-  prefillKeys.forEach(function(key) {
-    const val = params.get(key);
-    if (val) baseUrl += '&' + key + '=' + encodeURIComponent(val);
-  });
-
-  embed.setAttribute('data-url', baseUrl);
-
-  // Auto-scroll to #book if hash is present
-  if (window.location.hash === '#book') {
-    setTimeout(function() {
-      const bookEl = document.getElementById('book');
-      if (bookEl) bookEl.scrollIntoView({ behavior: 'smooth' });
-    }, 800);
-  }
-})();
+// (Trailing UTM passthrough block removed — handled by buildCalendlyUrl
+// in the main script so all CTAs share one definition of UTM behaviour.)
 </script>
 
 
