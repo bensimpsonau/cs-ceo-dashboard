@@ -19,6 +19,11 @@ const HUB_SETTINGS_PATH = path.join(__dirname, 'public', 'data', 'hub-settings.j
 // 4. Once set, task completions and new tasks will post to #ceo-benbot automatically
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL || '';
 
+// WPB Typeform > GHL middleware
+const GHL_API_KEY = process.env.GHL_API_KEY || '';
+const GHL_LOCATION_ID = process.env.GHL_LOCATION_ID || '';
+const GHL_BASE = 'https://services.leadconnectorhq.com';
+
 // TRANSCRIPTION SETUP:
 // Add OPENAI_API_KEY to Render environment variables (the same key used locally in ~/.zshenv)
 // Required for the /api/transcribe endpoint used by Content Studio video upload
@@ -36,6 +41,8 @@ const AUTH_PASS = process.env.DASHBOARD_PASSWORD || process.env.AUTH_PASS || 'cs
 app.use((req, res, next) => {
   // Public pages - no auth required (lead magnet funnel)
   const publicPaths = ['/funnel-optin.html', '/funnel-quiz.html', '/funnel-thankyou.html', '/wealth-shift-guide.html', '/blueprint-guide.html', '/utm-generator.html'];
+  // WPB webhook + test endpoints are public (no auth)
+  if (req.path === '/api/wpb-webhook' || req.path === '/api/wpb-test') return next();
   if (publicPaths.includes(req.path)) return next();
 
   const auth = req.headers['authorization'];
@@ -569,6 +576,226 @@ app.post('/api/blueprint-email', (req, res) => {
   console.log(`[Blueprint Lead] ${name} <${email}> | Score: ${score} | Answers:`, JSON.stringify(answers));
   res.json({ ok: true });
 });
+
+
+// ──────────────────────────────────────────────────────
+// WPB Typeform → GHL Score Middleware
+// Receives Typeform webhook, calculates score, pushes to GHL
+// ──────────────────────────────────────────────────────
+
+function calculateWpbScore(answers) {
+  let total = 0;
+  const q2 = (answers.q2_risk || '').toLowerCase();
+  if (q2.includes('actively building'))             total += 15;
+  else if (q2.includes('preserving and protecting')) total += 12;
+  else if (q2.includes('working toward retirement')) total += 10;
+  else if (q2.includes('already retired'))           total += 8;
+
+  const q3 = (answers.q3_approach || '').toLowerCase();
+  if (q3.includes('digital asset exposure'))         total += 20;
+  else if (q3.includes('diversified'))               total += 15;
+  else if (q3.includes('mostly property'))           total += 10;
+  else if (q3.includes('heavily concentrated'))      total += 5;
+
+  const q5 = parseInt(answers.q5_confidence) || 0;
+  total += Math.min(q5 * 3, 30);
+
+  const q7 = (answers.q7_experience || '').toLowerCase();
+  if (q7.includes('structured approach'))            total += 25;
+  else if (q7.includes('without a clear strategy'))  total += 15;
+  else if (q7.includes('paying attention'))          total += 10;
+  else if (q7.includes("didn't go well") || q7.includes('tried')) total += 5;
+
+  const q9 = (answers.q9_capital || '').toLowerCase();
+  if (q9.includes('more than') || q9.includes('>$250'))         total += 10;
+  else if (q9.includes('$100k') || q9.includes('100k - $250')) total += 8;
+  else if (q9.includes('$50k') && !q9.includes('under'))       total += 6;
+  else if (q9.includes('under'))                               total += 4;
+
+  return Math.min(total, 100);
+}
+
+function getWpbCategory(score) {
+  if (score <= 30) return 'At Risk';
+  if (score <= 50) return 'Vulnerable';
+  if (score <= 70) return 'Building';
+  return 'Well Positioned';
+}
+
+function getWpbArchetype(answers, score) {
+  const q3 = (answers.q3_approach || '').toLowerCase();
+  const q6 = (answers.q6_concern || '').toLowerCase();
+  const q7 = (answers.q7_experience || '').toLowerCase();
+  if (q7.includes("didn't go well") || q7.includes('tried')) return 'burned_investor';
+  if (q3.includes('heavily concentrated')) return 'concentrated_risk';
+  if (q6.includes('retirement') || q6.includes('family') || q6.includes('legacy')) return 'legacy_builder';
+  if (score <= 35) return 'cautious_observer';
+  if (q3.includes('digital asset') && score > 60) return 'strategic_reallocator';
+  return 'unstructured_holder';
+}
+
+function extractTypeformAnswers(payload) {
+  const answers = {};
+  const contact = {};
+  const formResponse = payload.form_response || {};
+  const rawAnswers = formResponse.answers || [];
+
+  rawAnswers.forEach(a => {
+    const ref = (a.field && a.field.ref) || '';
+    let value = '';
+    switch (a.type) {
+      case 'choice': value = (a.choice && a.choice.label) || ''; break;
+      case 'choices': value = ((a.choices && a.choices.labels) || []).join('|'); break;
+      case 'number': case 'opinion_scale': case 'rating': value = String(a.number || ''); break;
+      case 'text': case 'short_text': case 'long_text': value = a.text || ''; break;
+      case 'email': value = a.email || ''; contact.email = value; break;
+      case 'phone_number': value = a.phone_number || ''; contact.phone = value; break;
+      default: value = a[a.type] ? String(a[a.type]) : '';
+    }
+
+    const r = ref.toLowerCase();
+    if (r.includes('goal') || r.includes('q1'))              answers.q1_goal = value;
+    else if (r.includes('risk') || r.includes('stage') || r.includes('q2'))  answers.q2_risk = value;
+    else if (r.includes('approach') || r.includes('portfolio') || r.includes('q3')) answers.q3_approach = value;
+    else if (r.includes('confidence') || r.includes('q5'))   answers.q5_confidence = value;
+    else if (r.includes('concern') || r.includes('worry') || r.includes('q6')) answers.q6_concern = value;
+    else if (r.includes('experience') || r.includes('q7'))   answers.q7_experience = value;
+    else if (r.includes('capital') || r.includes('invest') || r.includes('q9')) answers.q9_capital = value;
+    else if (r.includes('first') && r.includes('name'))      contact.firstName = value;
+    else if (r.includes('last') && r.includes('name'))       contact.lastName = value;
+    else if (r.includes('name') && !r.includes('first') && !r.includes('last')) {
+      const parts = value.trim().split(/\s+/);
+      contact.firstName = parts[0] || '';
+      contact.lastName = parts.slice(1).join(' ') || '';
+    }
+    else if (r.includes('email')) contact.email = value;
+    else if (r.includes('phone')) contact.phone = value;
+  });
+
+  // Check hidden fields for UTM params
+  const hidden = formResponse.hidden || {};
+  Object.keys(hidden).forEach(k => { if (k.startsWith('utm_')) answers[k] = hidden[k]; });
+
+  return { answers, contact };
+}
+
+async function pushToGHL(contact, answers, score, category, archetype) {
+  if (!GHL_API_KEY) {
+    console.log('[WPB] GHL_API_KEY not set - skipping GHL push');
+    return { skipped: true, reason: 'no API key' };
+  }
+  const fetch = require('node-fetch');
+  const customFields = {
+    wpb_score: String(score),
+    wpb_category: category,
+    wpb_archetype: archetype,
+    q1_goal: answers.q1_goal || '',
+    q2_risk: answers.q2_risk || '',
+    q3_approach: answers.q3_approach || '',
+    q5_confidence: answers.q5_confidence || '',
+    q6_concern: answers.q6_concern || '',
+    q7_experience: answers.q7_experience || '',
+    q9_capital: answers.q9_capital || ''
+  };
+
+  try {
+    // Search for existing contact
+    const searchRes = await fetch(
+      `${GHL_BASE}/contacts/search/duplicate?locationId=${GHL_LOCATION_ID}&email=${encodeURIComponent(contact.email)}`,
+      { headers: { 'Authorization': `Bearer ${GHL_API_KEY}`, 'Version': '2021-07-28' } }
+    );
+    const searchData = await searchRes.json();
+    let contactId;
+
+    const cfArray = Object.entries(customFields).map(([key, value]) => ({ key, field_value: value }));
+
+    if (searchData.contact && searchData.contact.id) {
+      contactId = searchData.contact.id;
+      await fetch(`${GHL_BASE}/contacts/${contactId}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${GHL_API_KEY}`, 'Version': '2021-07-28', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ customFields: cfArray })
+      });
+      console.log(`[WPB] Updated GHL contact ${contactId}`);
+    } else {
+      const createRes = await fetch(`${GHL_BASE}/contacts/`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${GHL_API_KEY}`, 'Version': '2021-07-28', 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          locationId: GHL_LOCATION_ID,
+          firstName: contact.firstName || '',
+          lastName: contact.lastName || '',
+          email: contact.email,
+          phone: contact.phone || '',
+          customFields: cfArray
+        })
+      });
+      const createData = await createRes.json();
+      contactId = createData.contact && createData.contact.id;
+      console.log(`[WPB] Created GHL contact ${contactId}`);
+    }
+    return { contactId, ok: true };
+  } catch (err) {
+    console.error('[WPB] GHL push error:', err.message);
+    return { error: err.message };
+  }
+}
+
+app.post('/api/wpb-webhook', async (req, res) => {
+  try {
+    const payload = req.body;
+    console.log('[WPB Webhook] Received:', JSON.stringify(payload).substring(0, 500));
+
+    const { answers, contact } = extractTypeformAnswers(payload);
+    if (!contact.email) {
+      console.log('[WPB Webhook] No email found');
+      return res.status(400).json({ error: 'No email found' });
+    }
+
+    const score = calculateWpbScore(answers);
+    const category = getWpbCategory(score);
+    const archetype = getWpbArchetype(answers, score);
+
+    console.log(`[WPB] ${contact.firstName || ''} ${contact.lastName || ''} <${contact.email}> | Score: ${score} | ${category} | ${archetype}`);
+
+    // Log to file
+    const logEntry = { ts: new Date().toISOString(), contact, answers, score, category, archetype };
+    fs.appendFile(path.join(__dirname, 'dashboard-data', 'wpb-leads.jsonl'), JSON.stringify(logEntry) + '\n', () => {});
+
+    // Push to GHL
+    const ghlResult = await pushToGHL(contact, answers, score, category, archetype);
+
+    res.json({ ok: true, score, category, archetype, ghl: ghlResult });
+  } catch (err) {
+    console.error('[WPB Webhook] Error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/wpb-test', (req, res) => {
+  const answers = {
+    q1_goal: req.query.q1 || '',
+    q2_risk: req.query.q2 || 'Actively building wealth',
+    q3_approach: req.query.q3 || 'Diversified across multiple asset classes',
+    q5_confidence: req.query.q5 || '6',
+    q6_concern: req.query.q6 || '',
+    q7_experience: req.query.q7 || 'without a clear strategy',
+    q9_capital: req.query.q9 || '$50k - $100k'
+  };
+  const score = calculateWpbScore(answers);
+  const category = getWpbCategory(score);
+  const archetype = getWpbArchetype(answers, score);
+
+  const params = new URLSearchParams({
+    wpb_score: score, wpb_category: category,
+    first_name: req.query.name || 'Test', last_name: '', email: req.query.email || 'test@test.com',
+    q1_goal: answers.q1_goal, q2_risk: answers.q2_risk, q3_approach: answers.q3_approach,
+    q5_confidence: answers.q5_confidence, q6_concern: answers.q6_concern,
+    q7_experience: answers.q7_experience, q9_capital: answers.q9_capital
+  });
+  res.json({ score, category, archetype, answers, resultsUrl: `https://collectiveshift.net/wpb-pdf?${params.toString()}` });
+});
+
 
 // EMAIL SEQUENCE:
 // Email 1 (immediate): Subject: "Your Digital Asset Blueprint — [First Name]"
