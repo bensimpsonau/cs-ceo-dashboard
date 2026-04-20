@@ -585,32 +585,38 @@ app.post('/api/blueprint-email', (req, res) => {
 
 function calculateWpbScore(answers) {
   let total = 0;
+
+  // Q2: Risk tolerance / financial stage (max 15)
   const q2 = (answers.q2_risk || '').toLowerCase();
-  if (q2.includes('actively building'))             total += 15;
+  if (q2.includes('actively building'))              total += 15;
   else if (q2.includes('preserving and protecting')) total += 12;
   else if (q2.includes('working toward retirement')) total += 10;
   else if (q2.includes('already retired'))           total += 8;
 
+  // Q3: Current investment approach (max 20)
   const q3 = (answers.q3_approach || '').toLowerCase();
-  if (q3.includes('digital asset exposure'))         total += 20;
+  if (q3.includes('digital asset'))                  total += 20;
   else if (q3.includes('diversified'))               total += 15;
-  else if (q3.includes('mostly property'))           total += 10;
+  else if (q3.includes('mostly property') || q3.includes('retirement accounts')) total += 10;
   else if (q3.includes('heavily concentrated'))      total += 5;
 
+  // Q5: Confidence scale 1-10 (max 30)
   const q5 = parseInt(answers.q5_confidence) || 0;
   total += Math.min(q5 * 3, 30);
 
+  // Q7: Digital asset experience (max 25)
   const q7 = (answers.q7_experience || '').toLowerCase();
-  if (q7.includes('structured approach'))            total += 25;
-  else if (q7.includes('without a clear strategy'))  total += 15;
-  else if (q7.includes('paying attention'))          total += 10;
-  else if (q7.includes("didn't go well") || q7.includes('tried')) total += 5;
+  if (q7.includes('4+ years') || q7.includes('4\u002b'))       total += 25;
+  else if (q7.includes('1-3 years') || q7.includes('1\u20133')) total += 15;
+  else if (q7.includes('less than a year'))                      total += 10;
+  else if (q7.includes("haven't started"))                       total += 5;
 
+  // Q9: Capital to allocate (max 10)
   const q9 = (answers.q9_capital || '').toLowerCase();
-  if (q9.includes('more than') || q9.includes('>$250'))         total += 10;
-  else if (q9.includes('$100k') || q9.includes('100k - $250')) total += 8;
-  else if (q9.includes('$50k') && !q9.includes('under'))       total += 6;
-  else if (q9.includes('under'))                               total += 4;
+  if (q9.includes('more than') || q9.includes('$250k'))         total += 10;
+  else if (q9.includes('$100k'))                                total += 8;
+  else if (q9.includes('$50k') && !q9.includes('under'))        total += 6;
+  else if (q9.includes('under'))                                total += 4;
 
   return Math.min(total, 100);
 }
@@ -640,41 +646,53 @@ function extractTypeformAnswers(payload) {
   const formResponse = payload.form_response || {};
   const rawAnswers = formResponse.answers || [];
 
+  // Exact Typeform field ref → our key mapping (form: aQfJd7JN)
+  const FIELD_MAP = {
+    'bacebc22-d7b5-4fb2-8980-014b431cae8c': 'q1_goal',        // Primary financial goal
+    'ee45c660-63d0-4503-ad3f-3416f77eeded': 'q2_risk',         // Risk tolerance / financial stage
+    'a81d7489-a4ff-4298-a675-a3272f078dad': 'q3_approach',      // Current investment approach
+    '01f318cf-7702-47c5-94cd-3cfc08ce5c13': 'q4_trigger',      // What's making you reconsider
+    '4c022da2-a47b-44e8-bdef-824e97e949b3': 'q5_confidence',    // Confidence scale 1-10
+    '9cccc23c-30b6-48ba-8acc-ff79ed245482': 'q6_concern',       // Biggest concern next 12 months
+    'e4d300ac-dcca-481b-b176-f1f280c0e2f7': 'q7_experience',    // Digital asset experience
+    'd6772900-15c1-4cbe-ae47-1fea8e6479c1': 'q8_bestcase',      // Best-case scenario (free text)
+    '47e19ea7-edff-42a1-b41d-a967069c0e5f': 'q9_capital',       // Capital to allocate
+    '99ab3321-a1a9-4461-9fd2-ccce9fc0e94e': '_phone',           // Phone number
+    'ef326bb9-860e-4ac2-b0a4-618bbf7c2622': '_email',           // Email
+    'dd3674d3-b4e8-4fe4-9dec-2e4673baf427': '_first_name',      // First name
+    '30d71416-e768-4cd9-a41a-9aed90f354ba': '_last_name'         // Last name
+  };
+
   rawAnswers.forEach(a => {
     const ref = (a.field && a.field.ref) || '';
+    const key = FIELD_MAP[ref];
+    if (!key) return; // Unknown field, skip
+
+    // Extract value based on answer type
     let value = '';
     switch (a.type) {
       case 'choice': value = (a.choice && a.choice.label) || ''; break;
       case 'choices': value = ((a.choices && a.choices.labels) || []).join('|'); break;
-      case 'number': case 'opinion_scale': case 'rating': value = String(a.number || ''); break;
+      case 'number': case 'opinion_scale': case 'rating': value = String(a.number != null ? a.number : ''); break;
       case 'text': case 'short_text': case 'long_text': value = a.text || ''; break;
-      case 'email': value = a.email || ''; contact.email = value; break;
-      case 'phone_number': value = a.phone_number || ''; contact.phone = value; break;
-      default: value = a[a.type] ? String(a[a.type]) : '';
+      case 'email': value = a.email || ''; break;
+      case 'phone_number': value = a.phone_number || ''; break;
+      default: value = a[a.type] != null ? String(a[a.type]) : '';
     }
 
-    const r = ref.toLowerCase();
-    if (r.includes('goal') || r.includes('q1'))              answers.q1_goal = value;
-    else if (r.includes('risk') || r.includes('stage') || r.includes('q2'))  answers.q2_risk = value;
-    else if (r.includes('approach') || r.includes('portfolio') || r.includes('q3')) answers.q3_approach = value;
-    else if (r.includes('confidence') || r.includes('q5'))   answers.q5_confidence = value;
-    else if (r.includes('concern') || r.includes('worry') || r.includes('q6')) answers.q6_concern = value;
-    else if (r.includes('experience') || r.includes('q7'))   answers.q7_experience = value;
-    else if (r.includes('capital') || r.includes('invest') || r.includes('q9')) answers.q9_capital = value;
-    else if (r.includes('first') && r.includes('name'))      contact.firstName = value;
-    else if (r.includes('last') && r.includes('name'))       contact.lastName = value;
-    else if (r.includes('name') && !r.includes('first') && !r.includes('last')) {
-      const parts = value.trim().split(/\s+/);
-      contact.firstName = parts[0] || '';
-      contact.lastName = parts.slice(1).join(' ') || '';
-    }
-    else if (r.includes('email')) contact.email = value;
-    else if (r.includes('phone')) contact.phone = value;
+    // Route to contact or answers
+    if (key === '_email')       contact.email = value;
+    else if (key === '_phone')  contact.phone = value;
+    else if (key === '_first_name') contact.firstName = value;
+    else if (key === '_last_name')  contact.lastName = value;
+    else answers[key] = value;
   });
 
-  // Check hidden fields for UTM params
+  // Hidden fields for UTM params
   const hidden = formResponse.hidden || {};
-  Object.keys(hidden).forEach(k => { if (k.startsWith('utm_')) answers[k] = hidden[k]; });
+  Object.keys(hidden).forEach(k => {
+    if (hidden[k]) answers[k] = hidden[k]; // Include all non-empty hidden fields
+  });
 
   return { answers, contact };
 }
