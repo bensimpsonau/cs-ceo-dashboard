@@ -914,7 +914,6 @@
 
   
 </style>
-<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
 <div id="wpb-root">
 
 
@@ -1796,50 +1795,15 @@ document.querySelectorAll('.exercise .prompt').forEach(el => {
       bulletsEl.appendChild(li);
     });
 
-    /* Calendly URL with UTMs + popup embed */
+    /* Calendly URL */
     var fullName = [firstName, lastName].filter(Boolean).join(' ');
     var cal = new URLSearchParams();
     if (fullName) cal.set('name', fullName);
     if (email)    cal.set('email', email);
     cal.set('a1', archetypeName);
     cal.set('a2', 'score-' + score);
-    /* Pass through UTMs from the page URL */
-    var pageParams = getParams();
-    ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','utm_id'].forEach(function(k) {
-      if (pageParams[k]) cal.set(k, pageParams[k]);
-    });
-    /* If no UTMs from URL, set defaults for WPB funnel */
-    if (!pageParams.utm_source) {
-      cal.set('utm_source', 'wpb');
-      cal.set('utm_medium', 'results_page');
-      cal.set('utm_campaign', 'archetype_' + archetype);
-      cal.set('utm_content', 'cta_book_call');
-    }
-    var calendlyUrl = 'https://calendly.com/cs-consultation/platinum-membership-1-1-call-rr?' + cal.toString();
-    /* Use Calendly popup widget instead of navigating away */
-    var bookBtn = document.getElementById('cta-book-btn');
-    bookBtn.href = '#';
-    bookBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      if (window.Calendly) {
-        Calendly.initPopupWidget({ url: calendlyUrl });
-      } else {
-        window.open(calendlyUrl, '_blank');
-      }
-    });
-    /* Also handle the inline call link if it exists */
-    var callLink = document.getElementById('cta-call-link');
-    if (callLink) {
-      callLink.href = '#';
-      callLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        if (window.Calendly) {
-          Calendly.initPopupWidget({ url: calendlyUrl });
-        } else {
-          window.open(calendlyUrl, '_blank');
-        }
-      });
-    }
+    document.getElementById('cta-book-btn').href =
+      'https://calendly.com/cs-consultation/platinum-membership-1-1-call-rr?' + cal.toString();
   }
 
   /* ───── HTML escape helper ───── */
