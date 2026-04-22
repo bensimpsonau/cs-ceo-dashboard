@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Barlow:wght@400;500;600&display=swap');
+
+  :root {
+    --orange: #FC5C03;
+    --dark: #1B1925;
+    --text: #1a1a2e;
+    --muted: #6b6b7b;
+    --border: #e8e8ea;
+    --bg: #f7f7f8;
+    --green: #08C394;
+    --blue: #2563eb;
+    --card: #fff;
+    --radius: 12px;
+  }
+
+  @page {
+    size: A4;
+    margin: 28px 36px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Barlow', sans-serif; font-size: 13px; line-height: 1.65; color: var(--text); background: #fff; }
+  h1,h2,h3,h4 { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+  .doc { max-width: 900px; margin: 0 auto; padding: 44px 52px 60px; }
+
+  /* HEADER */
+  .doc-header { border-bottom: 2px solid var(--orange); padding-bottom: 24px; margin-bottom: 30px; }
+  .doc-eyebrow { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--orange); margin-bottom: 8px; }
+  .doc-title { font-size: 26px; font-weight: 800; color: var(--dark); margin-bottom: 6px; line-height: 1.2; }
+  .doc-subtitle { font-size: 13px; color: var(--muted); }
+  .doc-meta { display: flex; gap: 24px; margin-top: 16px; flex-wrap: wrap; }
+  .doc-meta-item { font-size: 11px; color: var(--muted); }
+  .doc-meta-item strong { color: var(--text); }
+
+  .section { margin-bottom: 32px; }
+  .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--orange); margin-bottom: 14px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+
+  .intro-text p { margin-bottom: 10px; font-size: 13px; line-height: 1.75; }
+
+  /* METRICS */
+  .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0; }
+  .metric { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; text-align: center; }
+  .metric-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 800; color: var(--orange); }
+  .metric-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: 3px; }
+
+  /* MARGIN EXPLAINER */
+  .margin-explainer { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .margin-col { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; }
+  .margin-col h4 { font-size: 11px; font-weight: 700; margin-bottom: 10px; color: var(--dark); }
+  .margin-line { display: flex; justify-content: space-between; font-size: 11px; padding: 4px 0; border-bottom: 1px solid var(--border); }
+  .margin-line:last-child { border-bottom: none; font-weight: 700; font-size: 12px; padding-top: 6px; }
+  .margin-line .lbl { color: var(--muted); }
+  .margin-line .val { font-weight: 600; }
+  .margin-line.result .val { color: var(--orange); }
+  .channel-tag { display: inline-block; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; padding: 2px 8px; border-radius: 20px; margin-bottom: 8px; }
+  .tag-organic { background: rgba(8,195,148,0.1); color: var(--green); border: 1px solid rgba(8,195,148,0.3); }
+  .tag-paid { background: rgba(252,92,3,0.1); color: var(--orange); border: 1px solid rgba(252,92,3,0.3); }
+
+  .exclusion-note { background: rgba(107,107,123,0.06); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+  .exclusion-note strong { color: var(--text); }
+
+  /* OPTIONS */
+  .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .option-card { border: 2px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .option-card.preferred { border-color: var(--orange); }
+  .option-card.highlight { border-color: var(--green); }
+  .option-head { padding: 14px 16px; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .option-card.preferred .option-head { background: rgba(252,92,3,0.05); border-bottom-color: rgba(252,92,3,0.2); }
+  .option-card.highlight .option-head { background: rgba(8,195,148,0.05); border-bottom-color: rgba(8,195,148,0.2); }
+  .option-tag { font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 4px; }
+  .option-card.preferred .option-tag { color: var(--orange); }
+  .option-card.highlight .option-tag { color: var(--green); }
+  .option-tag.alt { color: var(--muted); }
+  .option-title { font-size: 15px; font-weight: 800; color: var(--dark); line-height: 1.3; }
+  .option-body { padding: 14px 16px; }
+  .option-structure { background: var(--bg); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; }
+  .option-structure .line { display: flex; justify-content: space-between; font-size: 11px; padding: 3px 0; border-bottom: 1px solid var(--border); }
+  .option-structure .line:last-child { border-bottom: none; font-weight: 700; }
+  .option-structure .line .lbl { color: var(--muted); }
+  .option-desc { font-size: 11px; color: var(--muted); line-height: 1.65; }
+
+  /* TABLES */
+  table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  th { font-family: 'Plus Jakarta Sans', sans-serif; }
+  .scenario-table thead tr:first-child th { background: var(--dark); color: #fff; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 8px 8px; text-align: left; }
+  .scenario-table td { padding: 8px 8px; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 11px; }
+  .section-divider td { background: rgba(26,26,46,0.04); font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 6px 8px; border-top: 2px solid var(--border); }
+  .floor-row { background: rgba(107,107,123,0.05); }
+  .target-row { background: rgba(252,92,3,0.05); }
+  .stretch-row { background: rgba(37,99,235,0.05); }
+  .scale-row { background: rgba(8,195,148,0.08); }
+  .scale-row td, .target-row td { font-weight: 600; }
+  .tier-badge { display: inline-block; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: var(--bg); color: var(--muted); margin-left: 4px; }
+  .usd { font-size: 10px; color: var(--muted); display: block; }
+
+  /* TIER BAR */
+  .tier-viz { display: grid; grid-template-columns: 3fr 2fr 3fr; gap: 4px; margin: 14px 0; }
+  .tier-block { padding: 12px 14px; border-radius: 8px; text-align: center; color: #fff; }
+  .tier-1 { background: #6b6b7b; }
+  .tier-2 { background: var(--blue); }
+  .tier-3 { background: var(--orange); }
+  .tier-label { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 10px; font-weight: 700; opacity: 0.85; letter-spacing: .08em; text-transform: uppercase; }
+  .tier-rate { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; margin: 2px 0; }
+  .tier-range { font-size: 10px; opacity: 0.85; }
+
+  /* PROJECTION */
+  .projection-card { background: var(--dark); color: #fff; border-radius: var(--radius); padding: 20px 24px; margin: 16px 0; }
+  .projection-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+  .projection-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-top: 16px; }
+  .projection-item { text-align: center; padding: 10px 8px; background: rgba(255,255,255,0.05); border-radius: 8px; }
+  .projection-item .val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; }
+  .projection-item .label { font-size: 10px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: .05em; margin-top: 2px; }
+  .projection-item .sub { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+  .projection-item.floor .val { color: var(--muted); }
+  .projection-item.target .val { color: var(--orange); }
+  .projection-item.stretch .val { color: var(--blue); }
+  .projection-item.scale .val { color: var(--green); }
+
+  /* OPEX BOX */
+  .opex-box { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin: 14px 0; }
+  .opex-line { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; border-bottom: 1px solid var(--border); }
+  .opex-line:last-child { border-bottom: none; font-weight: 700; padding-top: 8px; font-size: 13px; }
+  .opex-line .lbl { color: var(--muted); }
+  .opex-line .val { font-weight: 600; }
+  .opex-savings { background: rgba(8,195,148,0.08); border-left: 3px solid var(--green); padding: 10px 14px; margin-top: 10px; border-radius: 6px; font-size: 11px; color: var(--text); }
+  .opex-savings strong { color: var(--green); }
+
+  /* CLOSING */
+  .closing-block { background: var(--dark); color: #fff; border-radius: var(--radius); padding: 24px 28px; }
+  .closing-block h3 { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+  .closing-block p { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.75; margin-bottom: 8px; }
+  .closing-block p:last-child { margin-bottom: 0; }
+  .closing-block strong { color: var(--orange); }
+
+  .doc-footer { margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
+  .footnote { font-size: 10px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+
+  .page-break { page-break-before: always; }
+
+  @media print {
+    body { background: #fff; }
+    .doc { padding: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div class="doc-eyebrow">Partnership Proposal · April 2026 · v3</div>
+    <h1 class="doc-title">A New Structure for Our Next Chapter Together</h1>
+    <p class="doc-subtitle">Collective Shift x Alchemy — Proposed Compensation Framework</p>
+    <div class="doc-meta">
+      <div class="doc-meta-item"><strong>From:</strong> Ben Simpson, Collective Shift</div>
+      <div class="doc-meta-item"><strong>To:</strong> Sanjay &amp; Kishan, Alchemy</div>
+      <div class="doc-meta-item"><strong>Date:</strong> April 2026</div>
+      <div class="doc-meta-item"><strong>Status:</strong> Proposal — For Discussion</div>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="section">
+    <div class="section-title">Context</div>
+    <div class="intro-text">
+      <p>Boys — we've reworked the numbers to reflect a realistic base case of <strong>3x MER</strong> (every A$1 of ad spend returns A$3 in revenue). That's the honest planning assumption; 5x was optimistic. Everything below is built on 3x.</p>
+      <p>We've landed on two structures worth putting on the table:</p>
+      <p><strong>Option A</strong> is a flat <strong>10% of contribution margin</strong> (revenue after all variable costs and ad spend). Clean, simple, scales linearly. <strong>Option B — the recommended structure — is a tiered model on contribution margin: 10% up to A$300K, 12% from A$300K–A$500K, 15% above A$500K.</strong> It protects both sides at low volume and rewards scale with real upside.</p>
+      <p>We're raising capital, the US market is live, and the next 12 months matter more than any before. We want Alchemy earning A$50K+/month when we scale. Happy to backdate to April.</p>
+    </div>
+    <div class="metrics-row">
+      <div class="metric"><div class="metric-val">3x</div><div class="metric-label">Base MER</div></div>
+      <div class="metric"><div class="metric-val">A$10K</div><div class="metric-label">Floor earnings</div></div>
+      <div class="metric"><div class="metric-val">A$50K+</div><div class="metric-label">Scale earnings</div></div>
+      <div class="metric"><div class="metric-val">Uncapped</div><div class="metric-label">Upside</div></div>
+    </div>
+  </div>
+
+  <!-- UNIT ECONOMICS -->
+  <div class="section">
+    <div class="section-title">Unit Economics — How Contribution Margin Is Calculated</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">
+      Commission is paid on <strong style="color:var(--text);">contribution margin</strong> — gross margin AFTER ad spend is deducted. This is the cleanest alignment: Alchemy earns on what's actually left after marketing costs.
+    </p>
+
+    <div class="margin-explainer">
+      <div class="margin-col">
+        <div class="channel-tag tag-paid">Per Platinum Sale (AU)</div>
+        <h4>A$20,000 sale price</h4>
+        <div class="margin-line"><span class="lbl">Gross revenue</span><span class="val">A$20,000</span></div>
+        <div class="margin-line"><span class="lbl">Less GST (10%)</span><span class="val">−A$2,000</span></div>
+        <div class="margin-line"><span class="lbl">Less merchant (3%)</span><span class="val">−A$600</span></div>
+        <div class="margin-line"><span class="lbl">Less refund reserve (7%)</span><span class="val">−A$1,400</span></div>
+        <div class="margin-line"><span class="lbl">Less closer + setter (15%)</span><span class="val">−A$3,000</span></div>
+        <div class="margin-line"><span class="lbl"><strong>Gross margin</strong></span><span class="val"><strong>A$13,000 (65%)</strong></span></div>
+        <div class="margin-line"><span class="lbl">Less CAC (avg A$3,500)</span><span class="val">−A$3,500</span></div>
+        <div class="margin-line result"><span class="lbl"><strong>Contribution margin</strong></span><span class="val">A$9,500 / sale</span></div>
+      </div>
+      <div class="margin-col">
+        <div class="channel-tag tag-organic">Monthly Aggregate @ 3x MER</div>
+        <h4>Paid channel math</h4>
+        <div class="margin-line"><span class="lbl">MER</span><span class="val">3.0x</span></div>
+        <div class="margin-line"><span class="lbl">Revenue = Ads × 3</span><span class="val">100% of spend × 3</span></div>
+        <div class="margin-line"><span class="lbl">Gross margin (65% of rev)</span><span class="val">195% of ad spend</span></div>
+        <div class="margin-line"><span class="lbl">Less ad spend</span><span class="val">−100% of spend</span></div>
+        <div class="margin-line result"><span class="lbl"><strong>Contribution margin</strong></span><span class="val">95% of ad spend</span></div>
+        <div class="margin-line" style="margin-top:6px;border-top:1px dashed var(--border);padding-top:6px;"><span class="lbl" style="font-size:10px;">Rule of thumb</span><span class="val" style="font-size:10px;color:var(--green);">≈31.7% of revenue</span></div>
+      </div>
+    </div>
+
+    <div class="exclusion-note">
+      <strong>Organic sales (≈A$150K/mo from Ben's socials, podcast, mailing list, referrals)</strong> are in scope for commission at the same tier rate. Zero ad spend on organic means ~A$97.5K/mo of additional contribution margin flowing into Alchemy's fee base — that alone covers the A$10K/mo floor before paid ads even spin up.
+    </div>
+    <p class="footnote">AU rates shown: GST 10%, merchant 3%, refund reserve 7%, sales commissions 15% (closer 10% + setter 5%). Renewals excluded from commission — retained by CS to cover core OPEX.</p>
+  </div>
+
+  <!-- TWO OPTIONS -->
+  <div class="page-break"></div>
+  <div class="section">
+    <div class="section-title">Two Options On The Table</div>
+    <div class="options-grid">
+      <div class="option-card">
+        <div class="option-head">
+          <div class="option-tag alt">Option A — Simple</div>
+          <div class="option-title">Flat 10% of<br>Contribution Margin</div>
+        </div>
+        <div class="option-body">
+          <div class="option-structure">
+            <div class="line"><span class="lbl">Retainer</span><span style="color:var(--green);font-weight:700;">None</span></div>
+            <div class="line"><span class="lbl">Rate</span><span>10% of contribution</span></div>
+            <div class="line"><span class="lbl">Base (A$150K ads, 3x MER)</span><span>~A$14K / mo</span></div>
+            <div class="line"><span class="lbl">At A$500K ads, 3x MER</span><span>~A$48K / mo</span></div>
+            <div class="line"><span class="lbl">Cap</span><span>Uncapped</span></div>
+          </div>
+          <p class="option-desc">Clean one-line formula. Same rate at every volume. Easy to model, easy to reconcile, no tier-boundary gaming.</p>
+        </div>
+      </div>
+      <div class="option-card preferred">
+        <div class="option-head">
+          <div class="option-tag">Option B — Recommended</div>
+          <div class="option-title">Tiered on Contribution Margin<br>10% / 12% / 15%</div>
+        </div>
+        <div class="option-body">
+          <div class="option-structure">
+            <div class="line"><span class="lbl">Tier 1 (≤ A$300K)</span><span>10%</span></div>
+            <div class="line"><span class="lbl">Tier 2 (A$300K–A$500K)</span><span>12%</span></div>
+            <div class="line"><span class="lbl">Tier 3 (&gt; A$500K)</span><span>15%</span></div>
+            <div class="line"><span class="lbl">Base (A$150K ads, 3x MER)</span><span>~A$14K / mo</span></div>
+            <div class="line"><span class="lbl">At A$500K ads, 3x MER</span><span style="color:var(--orange);font-weight:700;">~A$51K / mo</span></div>
+          </div>
+          <p class="option-desc">Low-volume protection for CS, real upside for Alchemy at scale. 15% on every dollar of contribution above A$500K — the more you push the more you earn.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tier visualisation -->
+    <div class="tier-viz" style="margin-top:18px;">
+      <div class="tier-block tier-1">
+        <div class="tier-label">Tier 1</div>
+        <div class="tier-rate">10%</div>
+        <div class="tier-range">on contribution ≤ A$300K / mo</div>
+      </div>
+      <div class="tier-block tier-2">
+        <div class="tier-label">Tier 2</div>
+        <div class="tier-rate">12%</div>
+        <div class="tier-range">A$300K – A$500K</div>
+      </div>
+      <div class="tier-block tier-3">
+        <div class="tier-label">Tier 3</div>
+        <div class="tier-rate">15%</div>
+        <div class="tier-range">above A$500K / mo</div>
+      </div>
+    </div>
+    <p class="footnote">Tiered rates apply marginally (like income tax): the first A$300K of contribution is always paid at 10%, the next A$200K at 12%, and anything above A$500K at 15%. Tier calculated monthly on new-sales contribution margin (paid + organic, renewals excluded). Suggested safeguard: trailing 3-month rolling average for tier qualification to smooth edge-month gaming.</p>
+  </div>
+
+  <!-- SCENARIO TABLE -->
+  <div class="section">
+    <div class="section-title">What Alchemy Earns — 3x MER Base Case (Option B Tiered)</div>
+    <p style="font-size:11px;color:var(--muted);margin-bottom:12px;">
+      All scenarios use MER = 3x (A$1 of ad → A$3 of revenue). Gross margin = 65% of revenue after AU variable costs. Contribution margin = gross margin − ad spend. Organic contribution (A$97,500/mo from ~A$150K organic revenue) shown as a separate upside column.
+    </p>
+
+    <table class="scenario-table">
+      <thead>
+        <tr>
+          <th>Scenario</th>
+          <th>Ad spend</th>
+          <th>Revenue</th>
+          <th>Gross margin (65%)</th>
+          <th>Contribution (post-CAC)</th>
+          <th>Alchemy earns (Option B)</th>
+          <th>Tier applied</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="section-divider"><td colspan="7">Paid-only contribution (excluding organic)</td></tr>
+        <tr class="floor-row">
+          <td><strong>Floor</strong><br><span class="usd">current run-rate</span></td>
+          <td>A$100,000</td>
+          <td>A$300,000</td>
+          <td>A$195,000</td>
+          <td>A$95,000</td>
+          <td><strong>A$9,500</strong></td>
+          <td><span class="tier-badge">Tier 1 · 10%</span></td>
+        </tr>
+        <tr class="target-row">
+          <td><strong>Target</strong><br><span class="usd">healthy base case</span></td>
+          <td>A$150,000</td>
+          <td>A$450,000</td>
+          <td>A$292,500</td>
+          <td>A$142,500</td>
+          <td><strong>A$14,250</strong></td>
+          <td><span class="tier-badge">Tier 1 · 10%</span></td>
+        </tr>
+        <tr class="stretch-row">
+          <td><strong>Stretch</strong><br><span class="usd">scaling phase</span></td>
+          <td>A$300,000</td>
+          <td>A$900,000</td>
+          <td>A$585,000</td>
+          <td>A$285,000</td>
+          <td><strong>A$28,500</strong></td>
+          <td><span class="tier-badge">Tier 1 · 10%</span></td>
+        </tr>
+        <tr class="stretch-row">
+          <td><strong>Stretch+</strong><br><span class="usd">scaling phase</span></td>
+          <td>A$400,000</td>
+          <td>A$1,200,000</td>
+          <td>A$780,000</td>
+          <td>A$380,000</td>
+          <td><strong>A$39,600</strong></td>
+          <td><span class="tier-badge">Tier 1+2</span></td>
+        </tr>
+        <tr class="scale-row">
+          <td><strong>Scale</strong><br><span class="usd">target deployment</span></td>
+          <td>A$500,000</td>
+          <td>A$1,500,000</td>
+          <td>A$975,000</td>
+          <td>A$475,000</td>
+          <td><strong>A$51,000</strong></td>
+          <td><span class="tier-badge">Tier 1+2</span></td>
+        </tr>
+        <tr class="scale-row">
+          <td><strong>Scale+</strong><br><span class="usd">aggressive scale</span></td>
+          <td>A$750,000</td>
+          <td>A$2,250,000</td>
+          <td>A$1,462,500</td>
+          <td>A$712,500</td>
+          <td><strong>A$85,875</strong></td>
+          <td><span class="tier-badge">Tier 1+2+3</span></td>
+        </tr>
+
+        <tr class="section-divider"><td colspan="7">Paid + Organic (realistic blend — organic adds ~A$97.5K contribution)</td></tr>
+        <tr class="floor-row">
+          <td>Floor</td>
+          <td>A$100,000</td>
+          <td>A$300,000 + organic</td>
+          <td>+A$97,500 organic</td>
+          <td>A$192,500</td>
+          <td><strong>A$19,250</strong></td>
+          <td><span class="tier-badge">Tier 1 · 10%</span></td>
+        </tr>
+        <tr class="target-row">
+          <td>Target</td>
+          <td>A$150,000</td>
+          <td>A$450,000 + organic</td>
+          <td>+A$97,500 organic</td>
+          <td>A$240,000</td>
+          <td><strong>A$24,000</strong></td>
+          <td><span class="tier-badge">Tier 1 · 10%</span></td>
+        </tr>
+        <tr class="stretch-row">
+          <td>Stretch</td>
+          <td>A$300,000</td>
+          <td>A$900,000 + organic</td>
+          <td>+A$97,500 organic</td>
+          <td>A$382,500</td>
+          <td><strong>A$39,900</strong></td>
+          <td><span class="tier-badge">Tier 1+2</span></td>
+        </tr>
+        <tr class="scale-row">
+          <td>Scale</td>
+          <td>A$500,000</td>
+          <td>A$1,500,000 + organic</td>
+          <td>+A$97,500 organic</td>
+          <td>A$572,500</td>
+          <td><strong>A$64,875</strong></td>
+          <td><span class="tier-badge">Tier 1+2+3</span></td>
+        </tr>
+        <tr class="scale-row">
+          <td>Scale+</td>
+          <td>A$750,000</td>
+          <td>A$2,250,000 + organic</td>
+          <td>+A$97,500 organic</td>
+          <td>A$810,000</td>
+          <td><strong>A$100,500</strong></td>
+          <td><span class="tier-badge">Tier 1+2+3</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="footnote">Paid-only rows are the conservative floor; paid+organic is the realistic operating case. Tier badges reflect where in the tiered schedule contribution lands — fees are calculated marginally across tiers, not on total.</p>
+  </div>
+
+  <!-- EARNINGS MILESTONES -->
+  <div class="section">
+    <div class="projection-card">
+      <h3>Earnings Milestones — Paid-Only Base Case (Option B)</h3>
+      <p style="color:rgba(255,255,255,0.6);font-size:11px;margin-bottom:4px;">How ad spend maps to Alchemy monthly earnings — conservative (paid-only) case at 3x MER.</p>
+      <div class="projection-grid">
+        <div class="projection-item floor">
+          <div class="val">A$9.5K</div>
+          <div class="label">Floor</div>
+          <div class="sub">A$100K ads · A$300K rev</div>
+        </div>
+        <div class="projection-item target">
+          <div class="val">A$14K</div>
+          <div class="label">Target</div>
+          <div class="sub">A$150K ads · A$450K rev</div>
+        </div>
+        <div class="projection-item stretch">
+          <div class="val">A$40K</div>
+          <div class="label">Stretch</div>
+          <div class="sub">A$400K ads · A$1.2M rev</div>
+        </div>
+        <div class="projection-item scale">
+          <div class="val">A$51K</div>
+          <div class="label">Scale</div>
+          <div class="sub">A$500K ads · A$1.5M rev</div>
+        </div>
+      </div>
+      <p style="margin-top:14px;font-size:11px;color:rgba(255,255,255,0.55);">Add organic contribution (A$97.5K/mo) and the earnings step up: Floor A$19K · Target A$24K · Stretch A$40K · Scale A$65K+. At Scale+ (A$750K ads) Alchemy earns <strong style="color:var(--orange);">A$100K/month</strong> — the 15% tier kicks in hard above A$500K contribution.</p>
+    </div>
+  </div>
+
+  <!-- OPEX TRANSPARENCY -->
+  <div class="page-break"></div>
+  <div class="section">
+    <div class="section-title">Why the Structure Needs to Work This Way — CS OPEX Baseline</div>
+    <p style="font-size:11px;color:var(--muted);margin-bottom:14px;">Full transparency. Here's what it costs to run Collective Shift each month before Alchemy's commission.</p>
+
+    <div class="opex-box">
+      <div class="opex-line"><span class="lbl">Non-ad monthly OPEX (team, platform, ops)</span><span class="val">A$300,000</span></div>
+      <div class="opex-line"><span class="lbl">Baseline ad spend (target)</span><span class="val">A$150,000</span></div>
+      <div class="opex-line"><span class="lbl">Renewal revenue (excluded from commission)</span><span class="val">A$150,000</span></div>
+      <div class="opex-line"><span class="lbl"><strong>Gap covered by new sales</strong></span><span class="val" style="color:var(--orange);">~A$300,000 / month</span></div>
+    </div>
+
+    <div class="opex-savings">
+      <strong>Active OPEX reduction in play.</strong> CS completed a team restructure end of March (Josh, Pat, Alisha off payroll), trimming A$58.7K/mo from fixed OPEX. Effective run-rate non-ad OPEX heading into Q3 is closer to <strong>A$241K/mo</strong>. Further cuts to contractor and SaaS lines under review — target a sub-A$225K non-ad OPEX baseline by end of Q3 which flows straight into a lower new-sales gap and a cleaner path to profitability for both sides.
+    </div>
+    <p class="footnote">Renewals retained by CS to cover core OPEX. Every dollar of additional ROAS drives both sides forward. Sourced from Updated Bull Market Base Case Budget, May/June 2026 average, adjusted for March 2026 restructure.</p>
+  </div>
+
+  <!-- ANNUAL EARNINGS SUMMARY -->
+  <div class="section">
+    <div class="section-title">12-Month Earnings Path — Option B Tiered</div>
+    <p style="font-size:11px;color:var(--muted);margin-bottom:14px;">What the first 12 months of the new structure could look like as ad spend ramps. Paid + organic blend, 3x MER base case.</p>
+
+    <table class="scenario-table">
+      <thead>
+        <tr>
+          <th>Phase</th>
+          <th>Ad spend</th>
+          <th>Monthly revenue</th>
+          <th>Contribution (paid + organic)</th>
+          <th>Alchemy earns (Option B)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="floor-row">
+          <td><strong>Months 1–3</strong> — ramp<br><span class="usd">stabilise at current run-rate</span></td>
+          <td>A$100K/mo</td>
+          <td>A$300K + A$150K organic</td>
+          <td>A$192,500</td>
+          <td><strong>A$19,250 / mo</strong><span class="usd">Q1 ≈ A$58K</span></td>
+        </tr>
+        <tr class="target-row">
+          <td><strong>Months 4–6</strong> — scaling<br><span class="usd">capital deployment begins</span></td>
+          <td>A$200K/mo</td>
+          <td>A$600K + A$150K organic</td>
+          <td>A$287,500</td>
+          <td><strong>A$28,750 / mo</strong><span class="usd">Q2 ≈ A$86K</span></td>
+        </tr>
+        <tr class="stretch-row">
+          <td><strong>Months 7–9</strong> — full deployment<br><span class="usd">US channel at scale</span></td>
+          <td>A$400K/mo</td>
+          <td>A$1.2M + A$150K organic</td>
+          <td>A$477,500</td>
+          <td><strong>A$51,300 / mo</strong><span class="usd">Q3 ≈ A$154K</span></td>
+        </tr>
+        <tr class="scale-row">
+          <td><strong>Months 10–12</strong> — scale<br><span class="usd">target deployment</span></td>
+          <td>A$500K/mo</td>
+          <td>A$1.5M + A$150K organic</td>
+          <td>A$572,500</td>
+          <td><strong>A$64,875 / mo</strong><span class="usd">Q4 ≈ A$195K</span></td>
+        </tr>
+        <tr style="background:rgba(252,92,3,0.08);">
+          <td colspan="4"><strong>Year 1 Total (estimated)</strong></td>
+          <td style="color:var(--orange);"><strong>A$492K / year</strong></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="footnote">Year-one estimate assumes straight-line ramp within each quarter. Organic held flat at A$150K/mo for conservatism; realistically it grows with CS's content and distribution efforts. Once ad spend clears A$500K/mo and stays there, Alchemy is crossing into the 15% tier — that's where the structure really pays.</p>
+  </div>
+
+  <!-- CLOSING -->
+  <div class="section">
+    <div class="closing-block">
+      <h3>The Opportunity Ahead</h3>
+      <p>We've rebuilt this on honest assumptions. 3x MER is the planning base case. 5x is the stretch, not the baseline. On those numbers, <strong>Option B gets Alchemy to A$10K/month from day one, A$40K/month at stretch, and A$50K+/month at scale</strong> — with the 15% top tier waiting above A$500K contribution to reward the upside you push us to.</p>
+      <p>We've kept the structure clean: no retainer, no weird carve-outs, commission on contribution margin only (ads properly deducted), organic in scope. The tier ladder means low-volume protection for us, uncapped upside for you.</p>
+      <p>US expansion is live, the raise is underway, and our OPEX line is moving in the right direction post-restructure. Let's lock in the structure and go.</p>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    <span>Collective Shift Pty Ltd · Confidential · April 2026 · v3</span>
+    <span>ben@collectiveshift.io</span>
+  </div>
+
+</div>
+
+</body>
+</html>
