@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Collective Shift × Alchemy — Proposed Compensation Framework (v3)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Barlow:wght@400;500;600&display=swap');
+
+  :root {
+    --orange: #FC5C03;
+    --dark: #1B1925;
+    --text: #1a1a2e;
+    --muted: #6b6b7b;
+    --border: #e8e8ea;
+    --bg: #f7f7f8;
+    --green: #08C394;
+    --blue: #2563eb;
+    --card: #fff;
+    --radius: 12px;
+  }
+
+  @page { size: A4; margin: 28px 36px; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Barlow', sans-serif; font-size: 13px; line-height: 1.65; color: var(--text); background: #fff; }
+  h1,h2,h3,h4 { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+  .doc { max-width: 900px; margin: 0 auto; padding: 44px 52px 60px; }
+
+  /* HEADER */
+  .doc-header { border-bottom: 2px solid var(--orange); padding-bottom: 24px; margin-bottom: 30px; }
+  .doc-eyebrow { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--orange); margin-bottom: 8px; }
+  .doc-title { font-size: 26px; font-weight: 800; color: var(--dark); margin-bottom: 6px; line-height: 1.2; }
+  .doc-subtitle { font-size: 13px; color: var(--muted); }
+  .doc-meta { display: flex; gap: 24px; margin-top: 16px; flex-wrap: wrap; }
+  .doc-meta-item { font-size: 11px; color: var(--muted); }
+  .doc-meta-item strong { color: var(--text); }
+
+  .section { margin-bottom: 32px; }
+  .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--orange); margin-bottom: 14px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .intro-text p { margin-bottom: 10px; font-size: 13px; line-height: 1.75; }
+
+  /* METRICS */
+  .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0; }
+  .metric { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; text-align: center; }
+  .metric-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 800; color: var(--orange); }
+  .metric-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: 3px; }
+
+  /* STRUCTURE WALKTHROUGH */
+  .walkthrough { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px; }
+  .walk-step { display: grid; grid-template-columns: 40px 1fr; gap: 14px; padding: 10px 0; border-bottom: 1px dashed var(--border); }
+  .walk-step:last-child { border-bottom: none; }
+  .walk-num { background: var(--orange); color: #fff; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; }
+  .walk-num.guard { background: var(--blue); }
+  .walk-num.floor { background: var(--muted); }
+  .walk-body h4 { font-size: 13px; margin-bottom: 3px; color: var(--dark); }
+  .walk-body p { font-size: 12px; color: var(--muted); line-height: 1.65; margin: 0; }
+  .walk-body code { background: #fff; border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; font-family: 'Barlow', monospace; font-size: 11px; color: var(--dark); }
+
+  /* OPTIONS */
+  .option-card.preferred { border-color: var(--orange); border: 2px solid var(--orange); border-radius: var(--radius); overflow: hidden; }
+  .option-head { padding: 14px 16px; background: rgba(252,92,3,0.05); border-bottom: 1px solid rgba(252,92,3,0.2); }
+  .option-tag { font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--orange); margin-bottom: 4px; }
+  .option-title { font-size: 15px; font-weight: 800; color: var(--dark); line-height: 1.3; }
+  .option-body { padding: 14px 16px; }
+
+  /* TIER VIZ */
+  .tier-viz { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 16px 0; }
+  .tier-block { padding: 14px 16px; border-radius: 8px; text-align: center; color: #fff; }
+  .tier-1 { background: #6b6b7b; }
+  .tier-2 { background: var(--orange); }
+  .tier-label { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 10px; font-weight: 700; opacity: 0.85; letter-spacing: .08em; text-transform: uppercase; }
+  .tier-rate { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 26px; font-weight: 800; margin: 4px 0; }
+  .tier-range { font-size: 11px; opacity: 0.9; }
+
+  /* MER FLOOR CARD */
+  .mer-card { background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(37,99,235,0.02)); border: 1px solid rgba(37,99,235,0.25); border-radius: var(--radius); padding: 18px 22px; margin-bottom: 16px; }
+  .mer-card h3 { font-size: 15px; color: var(--blue); margin-bottom: 8px; }
+  .mer-card p { font-size: 12px; color: var(--text); line-height: 1.7; margin-bottom: 6px; }
+
+  /* TABLES */
+  table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  th { font-family: 'Plus Jakarta Sans', sans-serif; }
+  .scenario-table thead th { background: var(--dark); color: #fff; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 10px 8px; text-align: left; }
+  .scenario-table td { padding: 10px 8px; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 11px; }
+  .floor-row { background: rgba(107,107,123,0.05); }
+  .target-row { background: rgba(252,92,3,0.05); font-weight: 600; }
+  .scale-row { background: rgba(8,195,148,0.06); }
+  .tier-badge { display: inline-block; font-size: 9px; font-weight: 700; padding: 3px 8px; border-radius: 4px; background: var(--bg); color: var(--muted); }
+  .usd { font-size: 10px; color: var(--muted); display: block; font-weight: 400; }
+  .channel-tag { display: inline-block; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; padding: 2px 8px; border-radius: 20px; }
+  .tag-organic { background: rgba(8,195,148,0.1); color: var(--green); border: 1px solid rgba(8,195,148,0.3); }
+  .tag-paid { background: rgba(252,92,3,0.1); color: var(--orange); border: 1px solid rgba(252,92,3,0.3); }
+
+  /* PROJECTION */
+  .projection-card { background: var(--dark); color: #fff; border-radius: var(--radius); padding: 24px 28px; margin: 18px 0; }
+  .projection-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+  .projection-card p.sub { font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 14px; }
+  .projection-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .projection-item { text-align: center; padding: 12px 8px; background: rgba(255,255,255,0.05); border-radius: 8px; }
+  .projection-item .val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 800; }
+  .projection-item .aud { font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+  .projection-item .label { font-size: 9px; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: .05em; margin-top: 6px; }
+  .projection-item.target .val { color: var(--orange); }
+  .projection-item.scale-1 .val { color: var(--green); }
+  .projection-item.scale-2 .val { color: #3FD5A8; }
+  .projection-item.scale-3 .val { color: #8BE3C2; }
+
+  /* CLOSING */
+  .closing-block { background: var(--dark); color: #fff; border-radius: var(--radius); padding: 24px 28px; margin-top: 20px; }
+  .closing-block h3 { font-size: 16px; font-weight: 800; margin-bottom: 10px; }
+  .closing-block p { font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.75; margin-bottom: 8px; }
+  .closing-block strong { color: var(--orange); }
+
+  .footnote { font-size: 10px; color: var(--muted); margin-top: 12px; line-height: 1.6; }
+  .doc-footer { margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
+  .page-break { page-break-before: always; }
+
+  @media print {
+    body { background: #fff; }
+    .doc { padding: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div class="doc-eyebrow">Partnership Proposal · April 2026 · v3 (Platform Fee Allocation · MER Floor · USD-Primary)</div>
+    <h1 class="doc-title">A New Structure for Our Next Chapter Together</h1>
+    <p class="doc-subtitle">Collective Shift × Alchemy — Proposed Compensation Framework</p>
+    <div class="doc-meta">
+      <div class="doc-meta-item"><strong>From:</strong> Ben Simpson, Collective Shift</div>
+      <div class="doc-meta-item"><strong>To:</strong> Sanjay &amp; Kishan, Alchemy</div>
+      <div class="doc-meta-item"><strong>Date:</strong> April 2026</div>
+      <div class="doc-meta-item"><strong>Status:</strong> Proposal — For Discussion</div>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="section">
+    <div class="section-title">Context</div>
+    <div class="intro-text">
+      <p>Boys — here's the refreshed framework. We've kept it simple and made the scale upside real. Everything below is built on a realistic planning base of <strong>3x MER</strong> (every $1 of ad spend returns $3 in revenue), with clear triggers that protect both sides.</p>
+      <p>The proposal has three moving parts, designed to be honest, auditable, and aligned:</p>
+      <ol style="padding-left: 20px; margin: 8px 0 10px; font-size: 13px; line-height: 1.85;">
+        <li><strong>Platform Fee Allocation</strong> — a contract-defined flat 15% of gross new-sales revenue, deducted before commission is calculated. Covers our platform OPEX (tech, team, tools) as a mechanical deduction. No audit rights needed — the number is what the contract says it is.</li>
+        <li><strong>Tiered commission</strong> — 12% up to A$500K/mo gross new sales, 15% at or above. The full amount flips to 15% when you cross the threshold, giving a real cliff-sized reward for scaling.</li>
+        <li><strong>MER Floor Protection</strong> — if monthly MER falls below <strong>2.0x</strong> (meaning less than $2 returned per $1 spent), no commission is paid that month. Instead, Alchemy receives a flat A$10K retainer. Protects both sides from subsidising an underperforming media buy.</li>
+      </ol>
+      <p>All numbers lead with USD and show AUD as a secondary reference. The US market is our growth engine, and the US$1M / US$2M / US$4M scenarios below show what this looks like as we scale. FX: 1 USD = 1.587 AUD.</p>
+    </div>
+
+    <div class="metrics-row">
+      <div class="metric"><div class="metric-val">15%</div><div class="metric-label">Platform Fee<br>Allocation</div></div>
+      <div class="metric"><div class="metric-val">12 / 15%</div><div class="metric-label">Tier rates<br>(cliff at A$500K)</div></div>
+      <div class="metric"><div class="metric-val">2.0x</div><div class="metric-label">MER Floor</div></div>
+      <div class="metric"><div class="metric-val">A$10K</div><div class="metric-label">Floor retainer<br>(when below 2x MER)</div></div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section">
+    <div class="section-title">How the Commission is Calculated</div>
+    <div class="walkthrough">
+      <div class="walk-step">
+        <div class="walk-num guard">0</div>
+        <div class="walk-body">
+          <h4>Check MER Floor</h4>
+          <p>Calculate <code>Monthly MER = Gross New Sales Revenue ÷ Ad Spend</code>. If under <strong>2.0x</strong>, skip to Step 4 (floor retainer). If 2.0x or above, continue.</p>
+        </div>
+      </div>
+      <div class="walk-step">
+        <div class="walk-num">1</div>
+        <div class="walk-body">
+          <h4>Apply Platform Fee Allocation</h4>
+          <p><code>PFA = Gross New Sales Revenue × 15%</code>. Deducted first. Mechanical, no audit rights.</p>
+        </div>
+      </div>
+      <div class="walk-step">
+        <div class="walk-num">2</div>
+        <div class="walk-body">
+          <h4>Establish Commission Base</h4>
+          <p><code>Commission Base = Gross Revenue − PFA</code>. That's the pool commission is calculated on.</p>
+        </div>
+      </div>
+      <div class="walk-step">
+        <div class="walk-num">3</div>
+        <div class="walk-body">
+          <h4>Apply Tier Rate (Cliff)</h4>
+          <p>If gross new sales revenue &lt; <strong>A$500K</strong> that month → <code>Commission = Base × 12%</code>. If ≥ A$500K → the whole base flips to <code>Base × 15%</code>. Cliff-sized reward for scaling through the line.</p>
+        </div>
+      </div>
+      <div class="walk-step">
+        <div class="walk-num floor">4</div>
+        <div class="walk-body">
+          <h4>(Or) MER Floor Fallback</h4>
+          <p>If MER &lt; 2.0x: no commission. Alchemy receives a <strong>A$10,000 flat retainer</strong> for that month. Keeps the partnership running during a soft month without rewarding unprofitable spend.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIER CLIFF VIZ -->
+  <div class="section">
+    <div class="section-title">Tier Structure (Cliff)</div>
+    <div class="tier-viz">
+      <div class="tier-block tier-1">
+        <div class="tier-label">Tier 1 · Under A$500K/mo gross</div>
+        <div class="tier-rate">12%</div>
+        <div class="tier-range">of (Gross Revenue − 15% PFA)</div>
+      </div>
+      <div class="tier-block tier-2">
+        <div class="tier-label">Tier 2 · A$500K+/mo gross</div>
+        <div class="tier-rate">15%</div>
+        <div class="tier-range">of (Gross Revenue − 15% PFA) · whole amount</div>
+      </div>
+    </div>
+    <p class="footnote">Cliff trigger: crossing A$500K/month gross new sales revenue flips the entire commission base to 15%. One clean line, one simple rule. Renewals are excluded from commission — retained by CS to cover core platform costs.</p>
+  </div>
+
+  <!-- SCENARIOS -->
+  <div class="section">
+    <div class="section-title">Scenario Matrix — USD Primary · 3x MER</div>
+    <p style="font-size:12px; color: var(--muted); margin-bottom: 10px;">All scenarios assume 3x MER (healthy, clears the 2x floor). USD shown first, AUD secondary.</p>
+    <table class="scenario-table">
+      <thead>
+        <tr>
+          <th>Monthly Gross Rev</th>
+          <th>Ad Spend (@3x)</th>
+          <th>MER</th>
+          <th>PFA (15%)</th>
+          <th>Commission Base</th>
+          <th>Rate</th>
+          <th>Alchemy Commission</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr class="floor-row">
+          <td><strong>US$100K/mo</strong><span class="usd">A$159K</span></td>
+          <td>US$33K<span class="usd">A$53K</span></td>
+          <td>3.0x</td>
+          <td>US$15K<span class="usd">A$24K</span></td>
+          <td>US$85K<span class="usd">A$135K</span></td>
+          <td><span class="tier-badge">12% of post-PFA</span></td>
+          <td style="font-weight:700; color: var(--orange);">US$10K<span class="usd">A$16K</span></td>
+        </tr>
+
+        <tr class="">
+          <td><strong>US$250K/mo</strong><span class="usd">A$397K</span></td>
+          <td>US$83K<span class="usd">A$132K</span></td>
+          <td>3.0x</td>
+          <td>US$38K<span class="usd">A$60K</span></td>
+          <td>US$212K<span class="usd">A$337K</span></td>
+          <td><span class="tier-badge">12% of post-PFA</span></td>
+          <td style="font-weight:700; color: var(--orange);">US$26K<span class="usd">A$40K</span></td>
+        </tr>
+
+        <tr class="target-row">
+          <td><strong>US$500K/mo</strong><span class="usd">A$794K</span></td>
+          <td>US$167K<span class="usd">A$264K</span></td>
+          <td>3.0x</td>
+          <td>US$75K<span class="usd">A$119K</span></td>
+          <td>US$425K<span class="usd">A$674K</span></td>
+          <td><span class="tier-badge">15% of post-PFA</span></td>
+          <td style="font-weight:700; color: var(--orange);">US$64K<span class="usd">A$101K</span></td>
+        </tr>
+
+        <tr class="scale-row">
+          <td><strong>US$1M/mo</strong><span class="usd">A$1.59M</span></td>
+          <td>US$333K<span class="usd">A$529K</span></td>
+          <td>3.0x</td>
+          <td>US$150K<span class="usd">A$238K</span></td>
+          <td>US$850K<span class="usd">A$1.35M</span></td>
+          <td><span class="tier-badge">15% of post-PFA</span></td>
+          <td style="font-weight:700; color: var(--orange);">US$128K<span class="usd">A$202K</span></td>
+        </tr>
+
+        <tr class="scale-row">
+          <td><strong>US$2M/mo</strong><span class="usd">A$3.17M</span></td>
+          <td>US$667K<span class="usd">A$1.06M</span></td>
+          <td>3.0x</td>
+          <td>US$300K<span class="usd">A$476K</span></td>
+          <td>US$1.70M<span class="usd">A$2.70M</span></td>
+          <td><span class="tier-badge">15% of post-PFA</span></td>
+          <td style="font-weight:700; color: var(--orange);">US$255K<span class="usd">A$405K</span></td>
+        </tr>
+
+        <tr class="scale-row">
+          <td><strong>US$4M/mo</strong><span class="usd">A$6.35M</span></td>
+          <td>US$1.33M<span class="usd">A$2.12M</span></td>
+          <td>3.0x</td>
+          <td>US$600K<span class="usd">A$952K</span></td>
+          <td>US$3.40M<span class="usd">A$5.40M</span></td>
+          <td><span class="tier-badge">15% of post-PFA</span></td>
+          <td style="font-weight:700; color: var(--orange);">US$510K<span class="usd">A$809K</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="footnote">Target (orange row) = the immediate plan target: US$500K/mo gross new-sales revenue. Scale-up rows (green) show real Alchemy upside as the US channel compounds. At US$4M/mo, Alchemy earns ~US$510K/mo (A$809K).</p>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- MER FLOOR DEEP DIVE -->
+  <div class="section">
+    <div class="section-title">MER Floor Protection — How It Works</div>
+    <div class="mer-card">
+      <h3>Why the 2.0x floor exists</h3>
+      <p>MER measures how productive each $1 of ad spend is. At 2.0x MER, we're generating $2 of revenue per $1 spent — the threshold where the unit economics cover ad costs, merchant fees, commissions, and leave something for the business. Below that, every scaled $ is destroying value.</p>
+      <p><strong>The rule:</strong> If monthly MER drops below 2.0x, no commission is paid. Alchemy receives A$10,000 flat for that month. Commission returns the following month once MER is back above floor. Each month stands on its own — no carry-forward, no penalty debt.</p>
+    </div>
+    <table class="scenario-table">
+      <thead>
+        <tr>
+          <th>Scenario</th>
+          <th>Revenue</th>
+          <th>Ad Spend</th>
+          <th>MER</th>
+          <th>Status</th>
+          <th>Alchemy Paid</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr class="">
+          <td><strong>Normal month</strong></td>
+          <td>US$250K/mo<br><span class="usd">A$397K</span></td>
+          <td>A$132K</td>
+          <td><strong style="color: var(--green);">3.0x</strong></td>
+          <td><span class="channel-tag tag-organic">Normal</span></td>
+          <td style="font-weight:700;">A$40K<br><span class="usd">US$26K</span></td>
+          <td style="font-size:10px; color: var(--muted);">Healthy MER - full commission paid</td>
+        </tr>
+
+        <tr class="">
+          <td><strong>Soft month</strong></td>
+          <td>US$250K/mo<br><span class="usd">A$397K</span></td>
+          <td>A$198K</td>
+          <td><strong style="color: var(--green);">2.0x</strong></td>
+          <td><span class="channel-tag tag-organic">Normal</span></td>
+          <td style="font-weight:700;">A$40K<br><span class="usd">US$26K</span></td>
+          <td style="font-size:10px; color: var(--muted);">Right at floor - commission paid at minimum</td>
+        </tr>
+
+        <tr class="floor-row">
+          <td><strong>Bad MER month</strong></td>
+          <td>US$250K/mo<br><span class="usd">A$397K</span></td>
+          <td>A$264K</td>
+          <td><strong style="color: var(--orange);">1.5x</strong></td>
+          <td><span class="channel-tag tag-paid">Floor</span></td>
+          <td style="font-weight:700;">A$10K<br><span class="usd">US$6K</span></td>
+          <td style="font-size:10px; color: var(--muted);">Below 2.0x floor - A$10K flat only</td>
+        </tr>
+
+        <tr class="floor-row">
+          <td><strong>Burn month</strong></td>
+          <td>US$250K/mo<br><span class="usd">A$397K</span></td>
+          <td>A$397K</td>
+          <td><strong style="color: var(--orange);">1.0x</strong></td>
+          <td><span class="channel-tag tag-paid">Floor</span></td>
+          <td style="font-weight:700;">A$10K<br><span class="usd">US$6K</span></td>
+          <td style="font-size:10px; color: var(--muted);">Way below floor - A$10K flat only</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="footnote">The floor is asymmetric protection: Alchemy still earns through a bad month (covering their opex), but CS isn't subsidising commission on unprofitable revenue. When MER is restored the next month, the full commission structure resumes.</p>
+  </div>
+
+  <!-- SCALE-UP CARD -->
+  <div class="section">
+    <div class="section-title">Scale-Up Earnings — What Success Looks Like</div>
+    <div class="projection-card">
+      <h3>Alchemy monthly commission as the US channel scales</h3>
+      <p class="sub">All figures assume 3x MER, Platform Fee Allocation applied, 15% tier rate (above A$500K trigger).</p>
+      <div class="projection-grid">
+        <div class="projection-item target">
+          <div class="val">US$64K</div>
+          <div class="aud">A$101K</div>
+          <div class="label">Target · US$500K/mo</div>
+        </div>
+        <div class="projection-item scale-1">
+          <div class="val">US$128K</div>
+          <div class="aud">A$202K</div>
+          <div class="label">Scale · US$1M/mo</div>
+        </div>
+        <div class="projection-item scale-2">
+          <div class="val">US$255K</div>
+          <div class="aud">A$405K</div>
+          <div class="label">Scale · US$2M/mo</div>
+        </div>
+        <div class="projection-item scale-3">
+          <div class="val">US$510K</div>
+          <div class="aud">A$809K</div>
+          <div class="label">Scale · US$4M/mo</div>
+        </div>
+      </div>
+    </div>
+    <p class="footnote">At full-scale run rate (US$4M/month, ~A$6.35M), Alchemy earns US$510K/mo (A$809K). That's the headline number worth building toward.</p>
+  </div>
+
+  <!-- WHY IT WORKS FOR BOTH SIDES -->
+  <div class="section">
+    <div class="section-title">Why This Works for Both Sides</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+      <div class="option-card preferred">
+        <div class="option-head">
+          <div class="option-tag">For Alchemy</div>
+          <div class="option-title">Clean upside · protected downside</div>
+        </div>
+        <div class="option-body">
+          <ul style="padding-left: 18px; font-size: 12px; line-height: 1.85;">
+            <li>Paid on simple, auditable numbers — gross revenue minus a contract-defined 15%.</li>
+            <li>15% headline tier kicks in at A$500K/mo — a real, reachable milestone.</li>
+            <li>A$10K floor retainer during soft months means you're never unpaid.</li>
+            <li>US$4M/mo run rate → <strong>US$510K per month</strong>. Real scale, real money.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="option-card preferred" style="border-color: var(--blue); ">
+        <div class="option-head" style="background: rgba(37,99,235,0.05); border-bottom-color: rgba(37,99,235,0.2);">
+          <div class="option-tag" style="color: var(--blue);">For Collective Shift</div>
+          <div class="option-title">Aligned incentives · protected margin</div>
+        </div>
+        <div class="option-body">
+          <ul style="padding-left: 18px; font-size: 12px; line-height: 1.85;">
+            <li>15% PFA carved off before commission = predictable margin on every dollar.</li>
+            <li>2x MER floor means CS never pays commission on burn months.</li>
+            <li>Commission scales with margin, not vanity revenue.</li>
+            <li>Clear cliff trigger motivates Alchemy to push through A$500K/mo, not coast underneath.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLOSING -->
+  <div class="section">
+    <div class="closing-block">
+      <h3>One partnership, one structure, one trajectory.</h3>
+      <p>This structure is <strong>honest</strong>, <strong>simple</strong>, and <strong>scalable</strong>. Two deductions (PFA + MER floor), two tier rates (12% / 15%), one trigger (A$500K/mo), one floor (2x MER). That's it.</p>
+      <p>If we hit the plan — US$500K/mo sales by Q3 — Alchemy earns US$64K/mo. If we crush it — US$4M/mo in the US channel — that's <strong>US$510K/mo for your team</strong>. The structure rewards the level of growth we're all aiming for.</p>
+      <p>Backdate to April, happy to paper this up next week. Let's push.</p>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    <span>Collective Shift · Confidential · Proposal v3 · 23 April 2026</span>
+    <span>FX: 1 USD = 1.587 AUD</span>
+  </div>
+
+</div>
+</body>
+</html>
