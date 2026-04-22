@@ -621,11 +621,14 @@ function calculateWpbScore(answers) {
   return Math.min(total, 100);
 }
 
+// Playbook v1.5 category rename (2026-04-23). Score bands realigned:
+// 0-40 / 41-65 / 66-85 / 86-100 (was 0-30 / 31-50 / 51-70 / 71-100).
+// Must stay in sync with cs-ai-setter/src/routes/wpb-webhook.js.
 function getWpbCategory(score) {
-  if (score <= 30) return 'At Risk';
-  if (score <= 50) return 'Vulnerable';
-  if (score <= 70) return 'Building';
-  return 'Well Positioned';
+  if (score <= 40) return 'Sideline Watcher';       // watching, never pulled trigger
+  if (score <= 65) return 'Flying Blind';           // in market, no system
+  if (score <= 85) return 'Scarred Operator';       // been through cycle, got hurt
+  return 'Under-Optimised Scaler';                  // sophisticated, $100K+, edge gaps
 }
 
 function getWpbArchetype(answers, score) {
