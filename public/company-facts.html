@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Company Facts — Setter Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Barlow:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cs-dark: #0D0B14;
+  --cs-dark-alt: #1B1925;
+  --brand-orange: #FC5C03;
+  --brand-teal: #0BF4B9;
+  --brand-blue: #2404FC;
+  --white: #FFFFFF;
+  --off-white: #F5F5F5;
+  --light-gray: #A0A0B0;
+  --card-bg: #1E1C28;
+  --card-border: #2A2838;
+  --amber: #FFB800;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Barlow', sans-serif;
+  background: var(--cs-dark);
+  color: var(--white);
+  line-height: 1.55;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  padding: 24px 16px 80px;
+}
+
+.container {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+h1, h2, h3 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.header {
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--brand-teal);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  color: var(--light-gray);
+  font-size: 15px;
+}
+
+.updated {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--light-gray);
+}
+.updated strong { color: var(--amber); }
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 16px;
+}
+
+.card h2 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--brand-orange);
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+
+.fact-grid {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 12px 18px;
+}
+@media (max-width: 600px) {
+  .fact-grid {
+    grid-template-columns: 1fr;
+    gap: 4px 0;
+  }
+  .fact-grid dt { margin-top: 10px; }
+  .fact-grid dt:first-child { margin-top: 0; }
+}
+
+.fact-grid dt {
+  color: var(--light-gray);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+  padding-top: 2px;
+}
+
+.fact-grid dd {
+  color: var(--white);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.fact-grid dd .sub {
+  display: block;
+  color: var(--light-gray);
+  font-size: 13px;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.answer {
+  background: #0F0D18;
+  border: 1px solid var(--card-border);
+  border-left: 3px solid var(--brand-teal);
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-top: 10px;
+}
+
+.answer .q {
+  color: var(--brand-teal);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+.answer .a {
+  color: var(--off-white);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.warn {
+  background: rgba(255, 184, 0, 0.08);
+  border-left-color: var(--amber);
+}
+.warn .q { color: var(--amber); }
+
+.do-dont {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 4px;
+}
+@media (max-width: 600px) {
+  .do-dont { grid-template-columns: 1fr; }
+}
+
+.do-dont .col {
+  background: #0F0D18;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.do-dont h3 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+.do-dont .do h3 { color: var(--brand-teal); }
+.do-dont .dont h3 { color: var(--amber); }
+
+.do-dont ul {
+  list-style: none;
+  padding: 0;
+}
+.do-dont li {
+  font-size: 14px;
+  padding: 4px 0 4px 18px;
+  position: relative;
+  color: var(--off-white);
+}
+.do-dont .do li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--brand-teal);
+  font-weight: 700;
+}
+.do-dont .dont li::before {
+  content: "✕";
+  position: absolute;
+  left: 0;
+  color: var(--amber);
+  font-weight: 700;
+}
+
+code {
+  background: rgba(252, 92, 3, 0.12);
+  color: var(--brand-orange);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 14px;
+}
+
+.footer-note {
+  margin-top: 24px;
+  padding: 16px 20px;
+  background: var(--cs-dark-alt);
+  border: 1px dashed var(--card-border);
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--light-gray);
+  line-height: 1.55;
+}
+.footer-note strong { color: var(--white); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="header">
+    <span class="eyebrow">Setter Reference</span>
+    <h1>Company Facts</h1>
+    <p class="subtitle">The single source of truth for "where are you from", "how long have you been around", and every other about-the-company question on calls.</p>
+    <p class="updated">Last updated: <strong>24 April 2026</strong> &middot; Kept in sync with James (AI setter) prompts.</p>
+  </header>
+
+  <section class="card">
+    <h2>The Core Facts</h2>
+    <dl class="fact-grid">
+      <dt>Company</dt>
+      <dd>Collective Shift
+        <span class="sub">Membership research platform for serious digital asset investors</span>
+      </dd>
+
+      <dt>How long around</dt>
+      <dd>6 years
+        <span class="sub">Founded 2020 by Ben Simpson</span>
+      </dd>
+
+      <dt>Ben's crypto experience</dt>
+      <dd>9 years personally
+        <span class="sub">In digital assets since 2017, full-time operator</span>
+      </dd>
+
+      <dt>Offices</dt>
+      <dd>New York and Melbourne
+        <span class="sub">Two physical hubs. Always say both.</span>
+      </dd>
+
+      <dt>Ben's location</dt>
+      <dd>Splits time between US and Australia
+        <span class="sub">Currently: Miami, FL (as of April 2026)</span>
+      </dd>
+
+      <dt>Members</dt>
+      <dd>1,100+ across 40+ countries
+        <span class="sub">Three tiers: Platinum, Pro, Legacy. Plat = 87% of revenue.</span>
+      </dd>
+
+      <dt>Funding</dt>
+      <dd>Bootstrapped
+        <span class="sub">No outside investors. No debt. Membership-funded only.</span>
+      </dd>
+
+      <dt>Audited returns</dt>
+      <dd>534% over 3 years &middot; 68% last 12 months
+        <span class="sub">116% CAGR over 6 years. Audited by Crypto Tax Australia.</span>
+      </dd>
+
+      <dt>Ben's YouTube</dt>
+      <dd>@BenCollectiveShift
+        <span class="sub">500k+ subscribers. Good proof-point to point leads at.</span>
+      </dd>
+
+      <dt>Who uses our research</dt>
+      <dd>Coinbase, Swyftx, Coinspot
+        <span class="sub">And we're independent of all of them (no affiliate fees, no conflicts).</span>
+      </dd>
+
+      <dt>Press</dt>
+      <dd>Bloomberg, AFR, Cointelegraph, Forbes</dd>
+
+      <dt>Podcast</dt>
+      <dd>Wealth Shift (with Bergs)
+        <span class="sub">Active. Good hook if a lead wants long-form Ben content.</span>
+      </dd>
+
+      <dt>Legal posture</dt>
+      <dd>Educator, not licensed financial adviser
+        <span class="sub">By design. We teach frameworks. Members self-custody or use regulated exchanges in their own name. We never hold member money.</span>
+      </dd>
+    </dl>
+  </section>
+
+  <section class="card">
+    <h2>Ready-to-Say Answers</h2>
+
+    <div class="answer">
+      <div class="q">"Where are you guys based?"</div>
+      <div class="a">"Offices in New York and Melbourne. Ben splits his time between the US and Australia. Members in 40+ countries now, so it's not just an AU thing. Whereabouts are you?"</div>
+    </div>
+
+    <div class="answer">
+      <div class="q">"How long have you been around?"</div>
+      <div class="a">"Collective Shift is 6 years old. Ben's been in crypto personally for 9 years, started in 2017. Bootstrapped the whole way."</div>
+    </div>
+
+    <div class="answer">
+      <div class="q">"Is Ben qualified? Who is he?"</div>
+      <div class="a">"Ben Simpson founded CS 6 years ago. Educator, not a licensed adviser by design. 500k+ on YouTube at @BenCollectiveShift. Audited returns - 534% over 3 years, 68% last 12 months. Independent, no affiliate deals with exchanges. Coinbase and Swyftx use our research."</div>
+    </div>
+
+    <div class="answer">
+      <div class="q">"What if CS goes under?"</div>
+      <div class="a">"Fair question. We're bootstrapped, no outside investors, no debt. And the important bit - we never hold your money. You self-custody or use regulated exchanges in your own name. The frameworks, ship list, education stay with you whether CS exists tomorrow or not."</div>
+    </div>
+
+    <div class="answer">
+      <div class="q">"How many members? Any Aussie-heavy?"</div>
+      <div class="a">"1,100+ across 40+ countries. Started in AU but it's global now. Three membership tiers - Platinum, Pro, Legacy."</div>
+    </div>
+
+    <div class="answer warn">
+      <div class="q">"Are you AFSL-licensed / regulated / can you give me advice?"</div>
+      <div class="a">"We're educators, not licensed financial advisers. I can't tell you what to buy. I can show you the framework we use, the research, the exit rules - and you make the call. For licensed advice, we'd point you at an adviser in your jurisdiction."</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Do and Don't</h2>
+    <div class="do-dont">
+      <div class="col do">
+        <h3>Do</h3>
+        <ul>
+          <li>Always say "offices in New York <strong>and</strong> Melbourne". Both, always.</li>
+          <li>Separate the two numbers: CS is 6 years old. Ben is 9 years in crypto.</li>
+          <li>Lead with the 40+ countries line when they ask about reach.</li>
+          <li>Use the audited returns numbers verbatim (534% / 68% / 116% CAGR).</li>
+          <li>Point to YouTube (@BenCollectiveShift) for proof of Ben's thinking.</li>
+          <li>If asked about competitors, politely decline to comment.</li>
+        </ul>
+      </div>
+      <div class="col dont">
+        <h3>Don't</h3>
+        <ul>
+          <li>Don't say "since 2016" or "founded 2017". Those are wrong now.</li>
+          <li>Don't say "8 years in the space". Ben has 9.</li>
+          <li>Don't say "based in Australia, expanding to the US". That's outdated.</li>
+          <li>Don't say "members across Australia and the US". It's 40+ countries.</li>
+          <li>Don't volunteer biography in the opener. Answer when asked.</li>
+          <li>Don't give licensed-adviser style advice. We educate, we don't prescribe.</li>
+          <li>Don't name-drop affiliate partnerships. We have none, on purpose.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    <strong>Note for the human setter:</strong> James (the AI setter that pre-qualifies leads before they land in your Slack) is briefed off the exact same facts on this page. If a lead comes off a handoff and references something not listed here, check in with Ben before improvising. The goal is the lead hears one consistent story from James's SMS through to your call.
+  </div>
+
+</div>
+</body>
+</html>
